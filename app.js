@@ -1,6 +1,6 @@
 const STORAGE_KEY = "learning-studio-data-v1";
 const SESSION_KEY = "aleph-session";
-const COURSE_PLAN_VERSION = "jun-aug-2026-weekly-schedule-v1";
+const COURSE_PLAN_VERSION = "product-catalog-priyanka-plan-v1";
 
 const state = loadState();
 let deferredInstallPrompt = null;
@@ -8,6 +8,7 @@ ensureCoursePlan();
 
 const views = {
   dashboard: document.querySelector("#dashboard-view"),
+  plans: document.querySelector("#plans-view"),
   subjects: document.querySelector("#subjects-view"),
   tasks: document.querySelector("#tasks-view"),
   schedule: document.querySelector("#schedule-view"),
@@ -19,6 +20,7 @@ const views = {
 
 const titles = {
   dashboard: "Dashboard",
+  plans: "Plans",
   subjects: "Subjects",
   tasks: "Tasks",
   schedule: "Schedule",
@@ -116,6 +118,9 @@ function loadState() {
       feedback: parsed.feedback || [],
       resources: parsed.resources || [],
       tasks: parsed.tasks || [],
+      products: parsed.products?.length ? parsed.products : starter.products,
+      enrollments: parsed.enrollments?.length ? parsed.enrollments : starter.enrollments,
+      lessonPlans: parsed.lessonPlans?.length ? parsed.lessonPlans : starter.lessonPlans,
       coursePlanVersion: parsed.coursePlanVersion || ""
     };
   } catch {
@@ -139,6 +144,33 @@ function ensureCoursePlan() {
 
 function buildCoursePlan() {
   const now = new Date().toISOString();
+  const products = productCatalog(now);
+  const lessonPlans = [
+    {
+      id: "lesson-priyanka-custom",
+      userId: "user-priyanka",
+      title: "Priyanka personalized lesson plan",
+      type: "personalized",
+      subjects: ["Discrete Mathematics", "Data Structures and Algorithms"],
+      startDate: "2026-06-01",
+      endDate: "2026-08-30",
+      status: "active",
+      details: "Personalized June-August plan. This is separate from the public exam prep catalog.",
+      updatedAt: now
+    }
+  ];
+  const enrollments = [
+    {
+      id: "enrollment-priyanka-custom",
+      userId: "user-priyanka",
+      productId: "custom-personalized",
+      planVariant: "Personalized lesson plan",
+      paymentStatus: "active",
+      lessonPlanId: "lesson-priyanka-custom",
+      status: "active",
+      updatedAt: now
+    }
+  ];
   const subjects = [
     {
       id: crypto.randomUUID(),
@@ -305,6 +337,9 @@ function buildCoursePlan() {
     schedule,
     tests,
     tasks,
+    products,
+    enrollments,
+    lessonPlans,
     feedback: [
       {
         id: crypto.randomUUID(),
@@ -358,6 +393,35 @@ function buildCoursePlan() {
     ],
     coursePlanVersion: COURSE_PLAN_VERSION
   };
+}
+
+function productCatalog(updatedAt = new Date().toISOString()) {
+  const variants = ["Study material + mocks", "Mocks only"];
+  return [
+    ["gate-da", "GATE DA", "Data science and AI entrance preparation.", variants],
+    ["iit-jam-statistics", "IIT JAM Statistics", "Statistics entrance preparation with topic practice and mocks.", variants],
+    ["gate-statistics", "GATE Statistics", "Statistics-focused GATE preparation.", variants],
+    ["cmi-ms-data-science", "CMI MS Data Science", "CMI entrance preparation for data science.", variants],
+    ["isi-msqe", "ISI MSQE", "Quantitative economics entrance preparation.", variants],
+    ["dse-economics", "DSE Masters in Economics", "Delhi School of Economics masters entrance preparation.", variants],
+    ["isi-mstat", "ISI MStat", "ISI MStat entrance preparation.", variants],
+    ["dsa-interview", "DSA Interview Prep", "Data structures and algorithms interview preparation for coding roles.", ["Study material + mocks", "Mocks only", "Interview practice"]],
+    ["hybrid-general", "Hybrid General Study + Mock Tests", "Access to general study material and mock tests across supported exams.", ["Hybrid access"]]
+  ].map(([id, title, description, planVariants]) => ({
+    id,
+    title,
+    description,
+    variants: planVariants,
+    status: "planned",
+    updatedAt
+  })).concat({
+    id: "custom-personalized",
+    title: "Personalized Lesson Plan",
+    description: "Private learner-specific schedule, resources, tasks, reviews, and spaced review.",
+    variants: ["Personalized lesson plan"],
+    status: "active",
+    updatedAt
+  });
 }
 
 function discreteMathMilestones() {
@@ -699,6 +763,7 @@ function collectionFor(type) {
 
 function render() {
   document.querySelector("#learner-subtitle").textContent = `Learner: ${state.user.name}`;
+  document.querySelector("#plan-count").textContent = state.products.length;
   document.querySelector("#subject-count").textContent = state.subjects.length;
   document.querySelector("#task-count").textContent = state.tasks.length;
   document.querySelector("#schedule-count").textContent = state.schedule.length;
@@ -707,6 +772,8 @@ function render() {
   document.querySelector("#resource-count").textContent = state.resources.length;
 
   renderProfile();
+  renderPlanCatalog();
+  renderEnrollments();
   renderList("subjects-list", state.subjects, "subject");
   renderSchedule();
   renderList("tests-list", state.tests, "test");
@@ -720,6 +787,46 @@ function render() {
   normalizeTaskStatuses();
   renderTaskList();
   renderCurrentTasks();
+}
+
+function renderPlanCatalog() {
+  const container = document.querySelector("#plan-catalog-list");
+  container.innerHTML = state.products.map((product) => `
+    <article class="catalog-card">
+      <div class="catalog-card-header">
+        <h4>${escapeHtml(product.title)}</h4>
+        <span class="tag">${escapeHtml(product.status)}</span>
+      </div>
+      <p>${escapeHtml(product.description)}</p>
+      <div class="variant-list">
+        ${product.variants.map((variant) => `<span>${escapeHtml(variant)}</span>`).join("")}
+      </div>
+    </article>
+  `).join("");
+}
+
+function renderEnrollments() {
+  const container = document.querySelector("#enrollment-list");
+  if (!state.enrollments.length) {
+    container.innerHTML = '<div class="empty">No active enrollments yet.</div>';
+    return;
+  }
+
+  container.innerHTML = state.enrollments.map((enrollment) => {
+    const product = state.products.find((entry) => entry.id === enrollment.productId);
+    const lessonPlan = state.lessonPlans.find((entry) => entry.id === enrollment.lessonPlanId);
+    return `
+      <article class="item">
+        <div class="item-top">
+          <div>
+            <h4>${escapeHtml(product?.title || "Enrollment")}</h4>
+            <p>${escapeHtml(enrollment.planVariant)} - ${escapeHtml(lessonPlan?.details || "No lesson plan attached.")}</p>
+          </div>
+          <span class="tag">${escapeHtml(enrollment.paymentStatus)}</span>
+        </div>
+      </article>
+    `;
+  }).join("");
 }
 
 function renderList(containerId, items, type) {
@@ -1221,6 +1328,9 @@ function importData(event) {
       state.feedback = imported.feedback || [];
       state.resources = imported.resources || [];
       state.tasks = imported.tasks || [];
+      state.products = imported.products || productCatalog();
+      state.enrollments = imported.enrollments || [];
+      state.lessonPlans = imported.lessonPlans || [];
       state.coursePlanVersion = imported.coursePlanVersion || "";
       persist();
       render();

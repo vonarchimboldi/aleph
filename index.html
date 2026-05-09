@@ -80,6 +80,7 @@
 
       <nav class="nav" aria-label="Primary">
         <button class="nav-item active" data-view="dashboard">Dashboard</button>
+        <button class="nav-item" data-view="plans">Plans</button>
         <button class="nav-item" data-view="subjects">Subjects</button>
         <button class="nav-item" data-view="tasks">Tasks</button>
         <button class="nav-item" data-view="schedule">Schedule</button>
@@ -107,6 +108,10 @@
       <section class="view active" id="dashboard-view">
         <div class="metrics">
           <article class="metric">
+            <span id="plan-count">0</span>
+            <p>available plans</p>
+          </article>
+          <article class="metric">
             <span id="subject-count">0</span>
             <p>active subjects</p>
           </article>
@@ -133,6 +138,14 @@
         </div>
 
         <div class="two-column">
+          <section class="panel wide-panel">
+            <div class="panel-header">
+              <h3>Enrollment</h3>
+              <button class="text-btn" data-view-link="plans" type="button">Open plans</button>
+            </div>
+            <div class="list" id="enrollment-list"></div>
+          </section>
+
           <section class="panel wide-panel">
             <div class="panel-header">
               <h3>Course Pages</h3>
@@ -173,6 +186,18 @@
             <div class="list" id="activity-list"></div>
           </section>
         </div>
+      </section>
+
+      <section class="view" id="plans-view">
+        <section class="panel">
+          <div class="panel-header">
+            <div>
+              <h3>Plan Catalog</h3>
+              <p class="muted">Exam and interview prep products users can buy after account creation.</p>
+            </div>
+          </div>
+          <div class="catalog-grid" id="plan-catalog-list"></div>
+        </section>
       </section>
 
       <section class="view" id="tasks-view">

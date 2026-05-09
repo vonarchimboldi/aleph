@@ -325,6 +325,53 @@ textarea {
   gap: 18px;
 }
 
+.catalog-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 14px;
+}
+
+.catalog-card {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 14px;
+  display: grid;
+  gap: 12px;
+}
+
+.catalog-card-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.catalog-card h4,
+.catalog-card p {
+  margin: 0;
+}
+
+.catalog-card p {
+  color: var(--muted);
+  line-height: 1.45;
+}
+
+.variant-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.variant-list span {
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 700;
+  padding: 6px 9px;
+}
+
 .panel {
   padding: 18px;
   box-shadow: var(--shadow);
