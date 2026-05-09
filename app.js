@@ -107,9 +107,7 @@ function loadState() {
     const starter = initialState();
     const user = { ...defaultUser(), ...(parsed.user || {}) };
     user.password = user.password || user.tempPassword;
-    if (typeof user.mustChangePassword !== "boolean") {
-      user.mustChangePassword = user.password === user.tempPassword;
-    }
+    user.mustChangePassword = false;
     return {
       user,
       subjects: parsed.subjects?.length ? parsed.subjects : starter.subjects,
@@ -790,8 +788,8 @@ function defaultUser() {
     email: "priyankakatoch95@gmail.com",
     tempPassword: "l!pschitz",
     password: "l!pschitz",
-    mustChangePassword: true,
-    passwordStatus: "Temporary password set",
+    mustChangePassword: false,
+    passwordStatus: "Prototype login enabled",
     registeredAt: new Date().toISOString()
   };
 }
