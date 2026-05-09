@@ -35,6 +35,10 @@
           </label>
           <p class="error-text" id="login-error" aria-live="polite"></p>
           <button class="primary-btn" type="submit">Sign in</button>
+          <div class="login-links">
+            <button class="text-btn" id="show-password-change-btn" type="button">Change temporary password</button>
+            <button class="text-btn" id="forgot-password-btn" type="button">Forgot password?</button>
+          </div>
           <p class="fine-print">This prototype uses local demo authentication. Use a real backend before sharing private learner data.</p>
         </form>
 
@@ -43,6 +47,14 @@
             <h2>Change password</h2>
             <p class="muted">Set a new password before entering the workspace.</p>
           </div>
+          <label>
+            <span>Username</span>
+            <input id="change-name" autocomplete="username" required>
+          </label>
+          <label>
+            <span>Current password</span>
+            <input id="current-password" type="password" autocomplete="current-password" required>
+          </label>
           <label>
             <span>New password</span>
             <input id="new-password" type="password" autocomplete="new-password" minlength="8" required>
@@ -53,6 +65,7 @@
           </label>
           <p class="error-text" id="password-error" aria-live="polite"></p>
           <button class="primary-btn" type="submit">Update password</button>
+          <button class="text-btn" id="back-to-login-btn" type="button">Back to sign in</button>
         </form>
       </div>
     </section>

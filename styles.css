@@ -117,6 +117,13 @@ body:not(.is-authenticated) .shell {
   width: 100%;
 }
 
+.login-links {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 12px;
+}
+
 .error-text {
   color: #a33b2f;
   font-weight: 700;

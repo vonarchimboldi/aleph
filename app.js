@@ -62,6 +62,9 @@ document.querySelector("#import-input").addEventListener("change", importData);
 document.querySelector("#week-select").addEventListener("change", renderTaskList);
 document.querySelector("#login-form").addEventListener("submit", login);
 document.querySelector("#password-change-form").addEventListener("submit", changePassword);
+document.querySelector("#show-password-change-btn").addEventListener("click", showPasswordChange);
+document.querySelector("#back-to-login-btn").addEventListener("click", showLogin);
+document.querySelector("#forgot-password-btn").addEventListener("click", forgotPassword);
 document.querySelector("#user-email-form").addEventListener("submit", saveUserEmail);
 document.querySelector("#send-credentials-btn").addEventListener("click", sendCredentialEmail);
 
@@ -581,9 +584,17 @@ function login(event) {
 
 function changePassword(event) {
   event.preventDefault();
+  const name = document.querySelector("#change-name").value.trim();
+  const currentPassword = document.querySelector("#current-password").value;
   const password = document.querySelector("#new-password").value;
   const confirmation = document.querySelector("#confirm-password").value;
   const error = document.querySelector("#password-error");
+  const storedPassword = state.user.password || state.user.tempPassword;
+
+  if (name !== state.user.name || currentPassword !== storedPassword) {
+    error.textContent = "Username or current password is incorrect.";
+    return;
+  }
 
   if (password.length < 8) {
     error.textContent = "Password must be at least 8 characters.";
@@ -604,9 +615,54 @@ function changePassword(event) {
   state.user.mustChangePassword = false;
   state.user.passwordStatus = "Password changed";
   persist();
+  sessionStorage.setItem(SESSION_KEY, state.user.name);
   error.textContent = "";
   document.querySelector("#password-change-form").reset();
   applyAuthState();
+}
+
+function showPasswordChange() {
+  document.querySelector("#login-form").classList.add("hidden");
+  document.querySelector("#password-change-form").classList.add("active");
+  document.querySelector("#change-name").value = document.querySelector("#login-name").value.trim() || state.user.name;
+}
+
+function showLogin() {
+  document.querySelector("#password-change-form").classList.remove("active");
+  document.querySelector("#login-form").classList.remove("hidden");
+  document.querySelector("#password-error").textContent = "";
+}
+
+async function forgotPassword() {
+  const email = state.user.email;
+  const error = document.querySelector("#login-error");
+  if (!email) {
+    error.textContent = "No registered email is available for this account.";
+    return;
+  }
+
+  error.textContent = "Sending login email...";
+  try {
+    const result = await fetch("/api/send-credentials", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        email,
+        name: state.user.name,
+        username: state.user.name,
+        temporaryPassword: state.user.password || state.user.tempPassword,
+        appUrl: window.location.origin
+      })
+    });
+
+    error.textContent = result.ok
+      ? `Login email sent to ${email}.`
+      : "Could not send login email. Please contact the administrator.";
+  } catch {
+    error.textContent = "Could not reach the email service.";
+  }
 }
 
 function logout() {
@@ -621,6 +677,10 @@ function applyAuthState() {
   document.querySelector("#landing-view").classList.toggle("active", !signedIn || mustChangePassword);
   document.querySelector("#login-form").classList.toggle("hidden", signedIn);
   document.querySelector("#password-change-form").classList.toggle("active", mustChangePassword);
+  if (mustChangePassword) {
+    document.querySelector("#change-name").value = state.user.name;
+    document.querySelector("#current-password").value = state.user.tempPassword;
+  }
 }
 
 function openForm(type, item = null) {
