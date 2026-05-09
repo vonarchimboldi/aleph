@@ -64,7 +64,6 @@ document.querySelector("#login-form").addEventListener("submit", login);
 document.querySelector("#password-change-form").addEventListener("submit", changePassword);
 document.querySelector("#show-password-change-btn").addEventListener("click", showPasswordChange);
 document.querySelector("#back-to-login-btn").addEventListener("click", showLogin);
-document.querySelector("#forgot-password-btn").addEventListener("click", forgotPassword);
 document.querySelector("#user-email-form").addEventListener("submit", saveUserEmail);
 document.querySelector("#send-credentials-btn").addEventListener("click", sendCredentialEmail);
 
@@ -631,38 +630,6 @@ function showLogin() {
   document.querySelector("#password-change-form").classList.remove("active");
   document.querySelector("#login-form").classList.remove("hidden");
   document.querySelector("#password-error").textContent = "";
-}
-
-async function forgotPassword() {
-  const email = state.user.email;
-  const error = document.querySelector("#login-error");
-  if (!email) {
-    error.textContent = "No registered email is available for this account.";
-    return;
-  }
-
-  error.textContent = "Sending login email...";
-  try {
-    const result = await fetch("/api/send-credentials", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        email,
-        name: state.user.name,
-        username: state.user.name,
-        temporaryPassword: state.user.password || state.user.tempPassword,
-        appUrl: window.location.origin
-      })
-    });
-
-    error.textContent = result.ok
-      ? `Login email sent to ${email}.`
-      : "Could not send login email. Please contact the administrator.";
-  } catch {
-    error.textContent = "Could not reach the email service.";
-  }
 }
 
 function logout() {

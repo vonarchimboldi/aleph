@@ -1,4 +1,4 @@
-const CACHE_NAME = "learning-studio-v16";
+const CACHE_NAME = "learning-studio-v17";
 const ASSETS = [
   "./",
   "./index.html",
