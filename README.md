@@ -1,32 +1,33 @@
 # Aleph
 
-Aleph is an installable learning-management workspace for structured independent study. The first prototype is built around a June-August learning plan for Priyanka, with weekly schedules, course resources, review quizzes, spaced review, and task tracking.
+Aleph is an installable test-prep learning workspace for structured independent study. It organizes a learner's preparation around curated resources, weekly schedules, review quizzes, spaced review quizzes, and task tracking.
 
 The app is currently a static Progressive Web App. It runs entirely in the browser and stores learner progress locally. This is enough for an early shareable demo, but production authentication, shared data, quiz attempts, feedback, and analytics will require a backend.
 
 ## Current Features
 
 - Prototype landing page with local demo sign-in.
-- Registered learner workspace for `priyanka`.
 - Installable PWA shell with service-worker caching.
-- Subject planning for:
-  - Discrete Mathematics
-  - Data Structures and Algorithms
-  - Probability and Statistics placeholder
-- Discrete Mathematics 13-week plan using:
-  - CMU 21-228 Discrete Mathematics by Po-Shen Loh
-  - MIT 6.1200J Mathematics for Computer Science, Spring 2024
-  - MIT 18.200 Principles of Discrete Applied Mathematics, Spring 2024
-- Data Structures and Algorithms 13-week plan using:
-  - Aho/Ullman Foundations of Computer Science
-  - Cartesian interactive DSA handbook
+- Curated subject resources.
 - Weekly schedule grouped by week and subject.
+- Review quizzes attached to each week of study.
+- Spaced review quizzes every other week.
 - Weekly task tiles for lectures, assignments, review quizzes, and spaced reviews.
 - Task boards for `To do`, `Completed`, and `Not completed`.
 - Completion rule: a task can only move to `Completed` after its `Done` checkbox is checked.
 - Course resource links on the dashboard.
 - JSON import/export for local workspace data.
 - Reset button to regenerate the current course plan.
+
+## Current Test-Prep Content
+
+- Discrete Mathematics plan using:
+  - CMU 21-228 Discrete Mathematics by Po-Shen Loh
+  - MIT 6.1200J Mathematics for Computer Science, Spring 2024
+  - MIT 18.200 Principles of Discrete Applied Mathematics, Spring 2024
+- Data Structures and Algorithms plan using:
+  - Aho/Ullman Foundations of Computer Science
+  - Cartesian interactive DSA handbook
 
 ## Demo Credentials
 
@@ -58,7 +59,7 @@ If the app appears stale after code changes, hard refresh the page. The service 
 The next deployment milestone is:
 
 1. Deploy the current `main` branch to Netlify, Vercel, or Cloudflare Pages.
-2. Share the deployed URL with Priyanka.
+2. Share the deployed URL with the first test user.
 3. Verify sign-in, resources, schedule, and task boards.
 4. Push a small visible change to GitHub.
 5. Confirm the deployed app updates after redeploy.
@@ -74,7 +75,8 @@ The next deployment milestone is:
 - Add an update-available prompt for service-worker refreshes.
 - Improve schedule filtering by subject and week.
 - Add richer resource metadata for readings, lectures, assignments, and problem sets.
-- Add quiz placeholders for weekly review and spaced-review sessions.
+- Add in-app review quizzes and spaced review quizzes.
+- Add flashcards for spaced repetition.
 
 ### Backend Phase
 
@@ -83,13 +85,16 @@ The next deployment milestone is:
 - Add role support for learner/admin workflows.
 - Store learner progress across devices.
 - Add file/resource storage for PDFs, notes, and assignment materials.
+- Add persistent flashcards, review queues, and due dates.
 
 ### Quiz and Analytics Phase
 
-- Build review quizzes inside the app.
+- Build review quizzes and spaced review quizzes inside the app.
 - Track quiz attempts, answers, scores, and topic-level mastery.
-- Generate feedback from quiz results.
-- Create spaced-review queues from missed questions and weak topics.
+- Generate detailed analysis from review quiz results.
+- Create spaced-review queues from missed questions, weak topics, and low-confidence answers.
+- Generate personalized remedial material from quiz feedback.
+- Recommend follow-up resources and flashcards based on mastery gaps.
 - Add dashboards for progress, effort, mastery, and upcoming review load.
 
 ## Architecture Direction
