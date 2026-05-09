@@ -1,6 +1,6 @@
 const STORAGE_KEY = "learning-studio-data-v1";
 const SESSION_KEY = "aleph-session";
-const COURSE_PLAN_VERSION = "product-catalog-priyanka-plan-v1";
+const COURSE_PLAN_VERSION = "product-catalog-priyanka-probability-v1";
 
 const state = loadState();
 let deferredInstallPrompt = null;
@@ -151,7 +151,7 @@ function buildCoursePlan() {
       userId: "user-priyanka",
       title: "Priyanka personalized lesson plan",
       type: "personalized",
-      subjects: ["Discrete Mathematics", "Data Structures and Algorithms"],
+      subjects: ["Discrete Mathematics", "Data Structures and Algorithms", "Probability and Statistics"],
       startDate: "2026-06-01",
       endDate: "2026-08-30",
       status: "active",
@@ -193,7 +193,7 @@ function buildCoursePlan() {
       title: "Probability and Statistics",
       date: "2026-08-30",
       status: "Not started",
-      details: "Learning plan: descriptive statistics, probability rules, random variables, distributions, expectation, variance, sampling, estimation, hypothesis testing, and applied review.",
+      details: "Learning plan: ISI MStat PSB-oriented probability and statistics practice across five recurring patterns: NP/MP tests, MLE and estimation, conditional expectation with indicators, distributions and order statistics, and regression/OLS. Monday-Saturday uses daily 5-problem sets; every Sunday has a test with default solution feedback.",
       updatedAt: now
     }
   ];
@@ -210,12 +210,20 @@ function buildCoursePlan() {
       label: "Data Structures and Algorithms",
       resources: "Aho/Ullman Foundations of Computer Science and Cartesian",
       milestones: dsaMilestones()
+    },
+    {
+      key: "PS",
+      label: "Probability and Statistics",
+      resources: "ISI MStat PSB pattern notes and themed practice sets",
+      milestones: probabilityStatsMilestones(),
+      dailyProblemSets: true
     }
   ];
 
   const schedule = [];
   const tests = [];
   const tasks = [];
+  const feedback = [];
   plans.forEach((plan) => {
     plan.milestones.forEach((milestone, index) => {
       const week = index + 1;
@@ -223,6 +231,88 @@ function buildCoursePlan() {
       const sunday = addDays(monday, 6);
       const spaced = spacedReviewDetails(week, plan.milestones, plan.label);
       const weekWindow = `${formatShortDate(monday)}-${formatShortDate(sunday)}`;
+
+      if (plan.dailyProblemSets) {
+        schedule.push({
+          id: crypto.randomUUID(),
+          title: `Week ${week}: ${plan.label} pattern cycle`,
+          week,
+          subject: plan.label,
+          kind: "Milestone",
+          date: monday,
+          details: milestoneDetails(milestone),
+          updatedAt: now
+        });
+
+        milestone.problemDays.forEach((dayPlan, dayIndex) => {
+          const date = addDays(monday, dayIndex);
+          const details = probabilityProblemSetDetails(dayPlan, week);
+
+          schedule.push({
+            id: crypto.randomUUID(),
+            title: `Week ${week} ${dayPlan.day}: ${dayPlan.topic} problem set`,
+            week,
+            subject: plan.label,
+            kind: "Problem set",
+            date,
+            details,
+            updatedAt: now
+          });
+
+          tasks.push({
+            id: crypto.randomUUID(),
+            week,
+            title: `${plan.key} W${week} ${dayPlan.day}: 5-problem ${dayPlan.topic} set`,
+            type: "Problem set",
+            date,
+            status: "todo",
+            done: false,
+            details,
+            updatedAt: now
+          });
+        });
+
+        schedule.push({
+          id: crypto.randomUUID(),
+          title: `Week ${week}: ${plan.label} Sunday PSB test`,
+          week,
+          subject: plan.label,
+          kind: "Test",
+          date: sunday,
+          details: probabilitySundayTestDetails(milestone),
+          updatedAt: now
+        });
+
+        tasks.push({
+          id: crypto.randomUUID(),
+          week,
+          title: `${plan.key} W${week}: Take Sunday PSB pattern test`,
+          type: "Test",
+          date: sunday,
+          status: "todo",
+          done: false,
+          details: probabilitySundayTestDetails(milestone),
+          updatedAt: now
+        });
+
+        tests.push({
+          id: crypto.randomUUID(),
+          title: `Week ${week}: ${plan.label} Sunday PSB pattern test`,
+          date: sunday,
+          details: probabilitySundayTestDetails(milestone),
+          updatedAt: now
+        });
+
+        feedback.push({
+          id: crypto.randomUUID(),
+          title: `Week ${week}: ${plan.label} default solution feedback`,
+          date: sunday,
+          details: probabilityDefaultFeedback(milestone),
+          updatedAt: now
+        });
+
+        return;
+      }
 
       schedule.push(
         {
@@ -343,12 +433,12 @@ function buildCoursePlan() {
     feedback: [
       {
         id: crypto.randomUUID(),
-        title: "Discrete Math and DSA 13-week plans created",
+        title: "Three-subject 13-week plan created",
         date: "2026-06-01",
-        details: "13-week plans map Discrete Math and Data Structures and Algorithms into weekly milestones with one Sunday combined review quiz and every-other-week cumulative spaced review per subject.",
+        details: "13-week plans map Discrete Math, Data Structures and Algorithms, and Probability and Statistics into weekly work. Discrete Math and DSA use weekly coursework with Sunday reviews; Probability and Statistics uses Monday-Saturday 5-problem sets with Sunday PSB-style tests and default solution feedback.",
         updatedAt: now
       }
-    ],
+    ].concat(feedback),
     resources: [
       {
         id: crypto.randomUUID(),
@@ -388,6 +478,22 @@ function buildCoursePlan() {
         date: "2026-06-01",
         details: "Use Cartesian for interactive visualizations, code playback, Python practice, and end-of-topic challenges.",
         link: "https://cartesian.app/",
+        updatedAt: now
+      },
+      {
+        id: crypto.randomUUID(),
+        title: "ISI MStat PSB Probability and Statistics Pattern Notes",
+        date: "2026-06-01",
+        details: "Use the local ISI pattern notes to drive daily 5-problem sets across NP/MP tests, MLE and estimation, conditional expectation with indicators, distributions and order statistics, and regression/OLS.",
+        link: "",
+        updatedAt: now
+      },
+      {
+        id: crypto.randomUUID(),
+        title: "Probability and Statistics Themed HTML Practice Sets",
+        date: "2026-06-01",
+        details: "Use the organized local practice folders as the problem bank: 01-np-mp-tests, 02-mle-estimation, 03-conditional-expectation-indicators, 04-distributions-order-statistics, 05-regression-ols, and 99-mixed-review.",
+        link: "",
         updatedAt: now
       }
     ],
@@ -577,11 +683,87 @@ function dsaMilestones() {
   ];
 }
 
+function probabilityStatsMilestones() {
+  const cycle = [
+    {
+      topic: "NP/MP tests",
+      pattern: "likelihood-ratio construction with size calibration",
+      variations: "simple vs simple; one-sided UMP; two-sided non-UMP; transformed samples; mixed sufficient statistics"
+    },
+    {
+      topic: "MLE and estimation",
+      pattern: "likelihood setup, optimizer location, and estimator quality",
+      variations: "regular families; support-dependent likelihoods; boundary MLEs; constrained MLEs; bias, MSE, sufficiency, UMVUE"
+    },
+    {
+      topic: "conditional expectation and indicators",
+      pattern: "conditioning choice, tower property, and decomposition into indicators",
+      variations: "law of total expectation; law of total variance; stopping-time counts; exchangeability; non-overlap indicators"
+    },
+    {
+      topic: "distributions and order statistics",
+      pattern: "exact distribution from CDF/PDF transformations and order-statistic identities",
+      variations: "uniform/beta order statistics; exponential spacings; min/max scaling; joint order statistics; Bayes and geometric/Poisson drills"
+    },
+    {
+      topic: "regression and OLS",
+      pattern: "normal equations, projection geometry, and estimator interpretation",
+      variations: "simple regression; matrix OLS; constrained OLS; slope invariance; non-Gaussian errors; residual and fitted-value identities"
+    }
+  ];
+
+  const weeklyFocus = [
+    "baseline diagnostic cycle across all five patterns",
+    "conditioning and LR-statistic selection under time pressure",
+    "support-dependent likelihoods plus exact distribution calculations",
+    "indicator decompositions and OLS algebra fluency",
+    "NP/MP tests with composite alternatives and one-sided UMP arguments",
+    "MLE edge cases, sufficiency, Rao-Blackwell improvement, and UMVUE recognition",
+    "order-statistic joint laws, conditional laws, and asymptotic scaling",
+    "conditional expectation, stopping-time counts, and variance decomposition",
+    "regression/OLS plus mixed estimation and testing arguments",
+    "full PSB reconstruction: identify the pattern before calculating",
+    "weak-area rotation using errors from the first ten weeks",
+    "timed mixed PSB sets with written-solution discipline",
+    "final cumulative synthesis across all five recurring patterns"
+  ];
+
+  return weeklyFocus.map((focus, weekIndex) => ({
+    focus,
+    problemDays: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"].map((day, dayIndex) => {
+      const theme = cycle[(weekIndex + dayIndex) % cycle.length];
+      const intensity = dayIndex < 2 ? "core drill" : dayIndex < 4 ? "variation drill" : "mixed PSB-style drill";
+      return {
+        day,
+        intensity,
+        ...theme
+      };
+    })
+  }));
+}
+
 function milestoneDetails(milestone) {
+  if (milestone.problemDays) {
+    const topics = milestone.problemDays.map((day) => `${day.day}: ${day.topic}`).join(" | ");
+    return `Daily 5-problem PSB practice sets. Weekly focus: ${milestone.focus}. Pattern rotation: ${topics}`;
+  }
   if (milestone.focs) {
     return `FOCS: ${milestone.focs} Cartesian: ${milestone.cartesian}`;
   }
   return `CMU 21-228: ${milestone.cmu} MIT 6.1200J: ${milestone.mitMcs} MIT 18.200: ${milestone.mitApplied}`;
+}
+
+function probabilityProblemSetDetails(dayPlan, week) {
+  return `Complete 5 problems for Week ${week} ${dayPlan.day}. Theme: ${dayPlan.topic}. Pattern: ${dayPlan.pattern}. Variations to include: ${dayPlan.variations}. Mode: ${dayPlan.intensity}. After solving, write a short correction note for every missed setup, wrong statistic, algebra slip, or unsupported conclusion.`;
+}
+
+function probabilitySundayTestDetails(milestone) {
+  const topics = [...new Set(milestone.problemDays.map((day) => day.topic))].join(", ");
+  return `Sunday test covering the week's Probability and Statistics pattern cycle: ${topics}. Use 5-7 PSB-style questions, require full written solutions, and include one cumulative question that combines at least two patterns. Default feedback should mark: pattern recognition, setup, calculation, justification, final answer, and correction note quality.`;
+}
+
+function probabilityDefaultFeedback(milestone) {
+  return `Default feedback template for the Sunday Probability and Statistics test. Weekly focus: ${milestone.focus}. For each produced solution, score: 1) did Priyanka identify the recurring pattern, 2) did she choose the right statistic/conditioning/event, 3) is the calculation correct, 4) is the argument justified, 5) is the final answer clearly stated, and 6) does the correction note explain the fix. Tag each miss by theme so the next week's daily sets can repeat the weak pattern.`;
 }
 
 function spacedReviewDetails(week, milestones, label = "subject") {
