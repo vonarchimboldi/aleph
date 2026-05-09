@@ -224,9 +224,9 @@
               </label>
               <div class="stack">
                 <button class="primary-btn" type="submit">Save email</button>
-                <button class="ghost-btn" id="send-credentials-btn" type="button">Draft login email</button>
+                <button class="ghost-btn" id="send-credentials-btn" type="button">Send login email</button>
               </div>
-              <p class="fine-print">Email sending will use your mail client for now. Automated email requires a backend email service.</p>
+              <p class="fine-print" id="email-status">Automated email requires `RESEND_API_KEY` and `FROM_EMAIL` in Vercel.</p>
             </form>
           </section>
           <section class="panel">

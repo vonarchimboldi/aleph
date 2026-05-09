@@ -62,7 +62,7 @@ document.querySelector("#import-input").addEventListener("change", importData);
 document.querySelector("#week-select").addEventListener("change", renderTaskList);
 document.querySelector("#login-form").addEventListener("submit", login);
 document.querySelector("#user-email-form").addEventListener("submit", saveUserEmail);
-document.querySelector("#send-credentials-btn").addEventListener("click", draftCredentialEmail);
+document.querySelector("#send-credentials-btn").addEventListener("click", sendCredentialEmail);
 
 document.querySelector("#item-form").addEventListener("submit", (event) => {
   if (event.submitter?.value === "cancel") return;
@@ -796,8 +796,9 @@ function saveUserEmail(event) {
   renderProfile();
 }
 
-function draftCredentialEmail() {
+async function sendCredentialEmail() {
   const email = state.user.email || document.querySelector("#user-email").value.trim();
+  const status = document.querySelector("#email-status");
   if (!email) {
     alert("Add an email address first.");
     return;
@@ -807,6 +808,38 @@ function draftCredentialEmail() {
   persist();
   renderProfile();
 
+  status.textContent = "Sending login email...";
+
+  try {
+    const result = await fetch("/api/send-credentials", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        email,
+        name: state.user.name,
+        username: state.user.name,
+        temporaryPassword: state.user.tempPassword,
+        appUrl: window.location.origin
+      })
+    });
+
+    if (result.ok) {
+      status.textContent = `Login email sent to ${email}.`;
+      return;
+    }
+
+    const payload = await result.json().catch(() => ({}));
+    status.textContent = payload.error || "Email API is not available. Opening a mail draft instead.";
+    draftCredentialEmail(email);
+  } catch {
+    status.textContent = "Email API is not available locally. Opening a mail draft instead.";
+    draftCredentialEmail(email);
+  }
+}
+
+function draftCredentialEmail(email) {
   const subject = "Your Aleph learning workspace login";
   const body = [
     `Hi ${state.user.name},`,

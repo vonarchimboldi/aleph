@@ -56,6 +56,19 @@ The next deployment milestone is:
 5. Confirm the deployed app updates after redeploy.
 6. Decide whether the service worker needs an in-app update prompt.
 
+## Email Setup
+
+Aleph can send the learner login email through a Vercel serverless function backed by Resend.
+
+Required Vercel environment variables:
+
+```text
+RESEND_API_KEY=...
+FROM_EMAIL=Aleph <onboarding@your-verified-domain.com>
+```
+
+The `FROM_EMAIL` address must use a domain or sender that is verified in Resend. If the email API is not configured, the app falls back to opening a prefilled mail draft in the user's email client.
+
 ## Roadmap
 
 ### Near Term
