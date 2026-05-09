@@ -1,4 +1,5 @@
 const STORAGE_KEY = "learning-studio-data-v1";
+const SESSION_KEY = "aleph-session";
 const COURSE_PLAN_VERSION = "jun-aug-2026-weekly-schedule-v1";
 
 const state = loadState();
@@ -55,9 +56,11 @@ document.querySelector("#quick-add-btn").addEventListener("click", () => {
 
 document.querySelector("#seed-btn").addEventListener("click", loadSampleData);
 document.querySelector("#reset-plan-btn").addEventListener("click", resetPlanData);
+document.querySelector("#logout-btn").addEventListener("click", logout);
 document.querySelector("#export-btn").addEventListener("click", exportData);
 document.querySelector("#import-input").addEventListener("change", importData);
 document.querySelector("#week-select").addEventListener("change", renderTaskList);
+document.querySelector("#login-form").addEventListener("submit", login);
 
 document.querySelector("#item-form").addEventListener("submit", (event) => {
   if (event.submitter?.value === "cancel") return;
@@ -85,6 +88,7 @@ if ("serviceWorker" in navigator) {
 
 persist();
 render();
+applyAuthState();
 
 function loadState() {
   const saved = localStorage.getItem(STORAGE_KEY);
@@ -544,6 +548,34 @@ function showView(name) {
   document.querySelectorAll(".nav-item").forEach((button) => {
     button.classList.toggle("active", button.dataset.view === name);
   });
+}
+
+function login(event) {
+  event.preventDefault();
+  const name = document.querySelector("#login-name").value.trim();
+  const password = document.querySelector("#login-password").value;
+  const error = document.querySelector("#login-error");
+
+  if (name === state.user.name && password === state.user.tempPassword) {
+    sessionStorage.setItem(SESSION_KEY, state.user.name);
+    error.textContent = "";
+    document.querySelector("#login-form").reset();
+    applyAuthState();
+    return;
+  }
+
+  error.textContent = "Username or password is incorrect.";
+}
+
+function logout() {
+  sessionStorage.removeItem(SESSION_KEY);
+  applyAuthState();
+}
+
+function applyAuthState() {
+  const signedIn = sessionStorage.getItem(SESSION_KEY) === state.user.name;
+  document.body.classList.toggle("is-authenticated", signedIn);
+  document.querySelector("#landing-view").classList.toggle("active", !signedIn);
 }
 
 function openForm(type, item = null) {

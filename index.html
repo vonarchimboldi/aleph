@@ -9,6 +9,37 @@
     <link rel="stylesheet" href="styles.css">
   </head>
   <body>
+    <section class="landing active" id="landing-view">
+      <div class="landing-panel">
+        <div class="landing-copy">
+          <span class="brand-mark">A</span>
+          <p class="eyebrow">Aleph Learning Studio</p>
+          <h1>A focused workspace for structured independent learning.</h1>
+          <p>
+            Weekly plans, linked course resources, review quizzes, spaced review, and task tracking in one installable app.
+          </p>
+        </div>
+
+        <form class="login-card" id="login-form">
+          <div>
+            <h2>Sign in</h2>
+            <p class="muted">Prototype access for the current learner workspace.</p>
+          </div>
+          <label>
+            <span>Username</span>
+            <input id="login-name" autocomplete="username" required>
+          </label>
+          <label>
+            <span>Password</span>
+            <input id="login-password" type="password" autocomplete="current-password" required>
+          </label>
+          <p class="error-text" id="login-error" aria-live="polite"></p>
+          <button class="primary-btn" type="submit">Sign in</button>
+          <p class="fine-print">This prototype uses local demo authentication. Use a real backend before sharing private learner data.</p>
+        </form>
+      </div>
+    </section>
+
     <aside class="sidebar">
       <div class="brand">
         <span class="brand-mark">LS</span>
@@ -39,6 +70,7 @@
         <div class="top-actions">
           <button class="ghost-btn" id="seed-btn" type="button">Load 13-week plan</button>
           <button class="ghost-btn" id="reset-plan-btn" type="button">Reset plan data</button>
+          <button class="ghost-btn" id="logout-btn" type="button">Sign out</button>
           <button class="primary-btn" id="quick-add-btn" type="button">Add item</button>
         </div>
       </header>
