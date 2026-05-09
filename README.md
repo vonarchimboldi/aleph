@@ -29,15 +29,6 @@ The app is currently a static Progressive Web App. It runs entirely in the brows
   - Aho/Ullman Foundations of Computer Science
   - Cartesian interactive DSA handbook
 
-## Demo Credentials
-
-```text
-username: priyanka
-password: l!pschitz
-```
-
-These credentials are for the local prototype only. They are not production authentication.
-
 ## Local Development
 
 From the project directory:
