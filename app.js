@@ -61,6 +61,8 @@ document.querySelector("#export-btn").addEventListener("click", exportData);
 document.querySelector("#import-input").addEventListener("change", importData);
 document.querySelector("#week-select").addEventListener("change", renderTaskList);
 document.querySelector("#login-form").addEventListener("submit", login);
+document.querySelector("#user-email-form").addEventListener("submit", saveUserEmail);
+document.querySelector("#send-credentials-btn").addEventListener("click", draftCredentialEmail);
 
 document.querySelector("#item-form").addEventListener("submit", (event) => {
   if (event.submitter?.value === "cancel") return;
@@ -531,6 +533,7 @@ function formatShortDate(value) {
 function defaultUser() {
   return {
     name: "priyanka",
+    email: "",
     tempPassword: "l!pschitz",
     passwordStatus: "Temporary password set",
     registeredAt: new Date().toISOString()
@@ -774,14 +777,52 @@ function itemTemplate(item, type) {
 }
 
 function renderProfile() {
+  document.querySelector("#user-email").value = state.user.email || "";
   document.querySelector("#profile-card").innerHTML = `
     <dl>
       <div><dt>Name</dt><dd>${escapeHtml(state.user.name)}</dd></div>
+      <div><dt>Email</dt><dd>${escapeHtml(state.user.email || "Not set")}</dd></div>
       <div><dt>Temp password</dt><dd><code>${escapeHtml(state.user.tempPassword)}</code></dd></div>
       <div><dt>Status</dt><dd>${escapeHtml(state.user.passwordStatus)}</dd></div>
     </dl>
     <p class="fine-print">This prototype stores profile data locally in this browser. Use a real authentication backend before sharing sensitive learner data publicly.</p>
   `;
+}
+
+function saveUserEmail(event) {
+  event.preventDefault();
+  state.user.email = document.querySelector("#user-email").value.trim();
+  persist();
+  renderProfile();
+}
+
+function draftCredentialEmail() {
+  const email = state.user.email || document.querySelector("#user-email").value.trim();
+  if (!email) {
+    alert("Add an email address first.");
+    return;
+  }
+
+  state.user.email = email;
+  persist();
+  renderProfile();
+
+  const subject = "Your Aleph learning workspace login";
+  const body = [
+    `Hi ${state.user.name},`,
+    "",
+    "Your Aleph learning workspace is ready.",
+    "",
+    "Sign in with:",
+    `Username: ${state.user.name}`,
+    `Temporary password: ${state.user.tempPassword}`,
+    "",
+    "Please keep these credentials private.",
+    "",
+    "Aleph"
+  ].join("\n");
+
+  window.location.href = `mailto:${encodeURIComponent(email)}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
 }
 
 function renderPlans() {

@@ -217,6 +217,17 @@
           <section class="panel">
             <h3>Registered User</h3>
             <div class="profile-card" id="profile-card"></div>
+            <form class="user-form" id="user-email-form">
+              <label>
+                <span>Email</span>
+                <input id="user-email" type="email" autocomplete="email" placeholder="learner@example.com">
+              </label>
+              <div class="stack">
+                <button class="primary-btn" type="submit">Save email</button>
+                <button class="ghost-btn" id="send-credentials-btn" type="button">Draft login email</button>
+              </div>
+              <p class="fine-print">Email sending will use your mail client for now. Automated email requires a backend email service.</p>
+            </form>
           </section>
           <section class="panel">
             <h3>Import and Export</h3>

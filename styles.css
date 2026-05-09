@@ -647,6 +647,11 @@ textarea {
   margin-top: 14px;
 }
 
+.user-form {
+  margin-top: 18px;
+  padding: 0;
+}
+
 .profile-card dl {
   display: grid;
   gap: 10px;
