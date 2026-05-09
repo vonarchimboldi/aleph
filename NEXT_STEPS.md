@@ -1,12 +1,27 @@
 # Next Steps
 
-## Next Session: Deploy and Share
+## Tomorrow: Deploy, Onboard, Verify Updates
 
-- Create a GitHub repository for this project.
-- Push the local repository to GitHub.
-- Deploy the static PWA to a public host such as Cloudflare Pages, Netlify, Vercel, or GitHub Pages.
-- Share the deployed URL with the first user.
-- Verify the user can open the app, install it, view the schedule, open resources, and use the task board.
+- Deploy the current `main` branch from GitHub to a public host.
+- Preferred deployment targets: Netlify, Vercel, or Cloudflare Pages.
+- Confirm the deployed landing page loads.
+- Onboard the first user:
+  - username: `priyanka`
+  - temporary password: `l!pschitz`
+- Verify Priyanka can sign in and view:
+  - grouped weekly schedule
+  - Discrete Math and DSA resources
+  - weekly task tiles
+  - task movement rules
+- Push a small visible change to GitHub.
+- Confirm the deployed app updates after the host redeploys.
+- Check whether the service worker requires a hard refresh or whether we need an in-app update prompt.
+
+## Completed
+
+- Created the GitHub repository.
+- Pushed the local repository to GitHub.
+- Added prototype landing/auth for first-user review.
 
 ## Before Sharing Widely
 
