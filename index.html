@@ -1,0 +1,253 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#1f5f70">
+    <title>Learning Studio</title>
+    <link rel="manifest" href="manifest.webmanifest">
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <aside class="sidebar">
+      <div class="brand">
+        <span class="brand-mark">LS</span>
+        <div>
+          <h1>Learning Studio</h1>
+          <p id="learner-subtitle">Schedules, tests, feedback, resources</p>
+        </div>
+      </div>
+
+      <nav class="nav" aria-label="Primary">
+        <button class="nav-item active" data-view="dashboard">Dashboard</button>
+        <button class="nav-item" data-view="subjects">Subjects</button>
+        <button class="nav-item" data-view="tasks">Tasks</button>
+        <button class="nav-item" data-view="schedule">Schedule</button>
+        <button class="nav-item" data-view="tests">Tests</button>
+        <button class="nav-item" data-view="feedback">Feedback</button>
+        <button class="nav-item" data-view="resources">Resources</button>
+        <button class="nav-item" data-view="settings">Share</button>
+      </nav>
+    </aside>
+
+    <main class="shell">
+      <header class="topbar">
+        <div>
+          <p class="eyebrow">Workspace</p>
+          <h2 id="view-title">Dashboard</h2>
+        </div>
+        <div class="top-actions">
+          <button class="ghost-btn" id="seed-btn" type="button">Load 13-week plan</button>
+          <button class="ghost-btn" id="reset-plan-btn" type="button">Reset plan data</button>
+          <button class="primary-btn" id="quick-add-btn" type="button">Add item</button>
+        </div>
+      </header>
+
+      <section class="view active" id="dashboard-view">
+        <div class="metrics">
+          <article class="metric">
+            <span id="subject-count">0</span>
+            <p>active subjects</p>
+          </article>
+          <article class="metric">
+            <span id="task-count">0</span>
+            <p>weekly tasks</p>
+          </article>
+          <article class="metric">
+            <span id="schedule-count">0</span>
+            <p>scheduled sessions</p>
+          </article>
+          <article class="metric">
+            <span id="test-count">0</span>
+            <p>tests and assignments</p>
+          </article>
+          <article class="metric">
+            <span id="feedback-count">0</span>
+            <p>feedback notes</p>
+          </article>
+          <article class="metric">
+            <span id="resource-count">0</span>
+            <p>learning resources</p>
+          </article>
+        </div>
+
+        <div class="two-column">
+          <section class="panel wide-panel">
+            <div class="panel-header">
+              <h3>Course Pages</h3>
+              <button class="text-btn" data-view-link="resources" type="button">Open resources</button>
+            </div>
+            <div class="list resource-links" id="course-links-list"></div>
+          </section>
+
+          <section class="panel">
+            <div class="panel-header">
+              <h3>Learning Plans</h3>
+              <button class="text-btn" data-view-link="subjects" type="button">Open subjects</button>
+            </div>
+            <div class="list" id="plan-list"></div>
+          </section>
+
+          <section class="panel">
+            <div class="panel-header">
+              <h3>Today and Upcoming</h3>
+              <button class="text-btn" data-view-link="schedule" type="button">Open schedule</button>
+            </div>
+            <div class="list" id="upcoming-list"></div>
+          </section>
+
+          <section class="panel wide-panel">
+            <div class="panel-header">
+              <h3>Current Week Tasks</h3>
+              <button class="text-btn" data-view-link="tasks" type="button">Open board</button>
+            </div>
+            <div class="list" id="current-task-list"></div>
+          </section>
+
+          <section class="panel wide-panel">
+            <div class="panel-header">
+              <h3>Recent Activity</h3>
+              <button class="text-btn" data-view-link="feedback" type="button">Open feedback</button>
+            </div>
+            <div class="list" id="activity-list"></div>
+          </section>
+        </div>
+      </section>
+
+      <section class="view" id="tasks-view">
+        <section class="panel">
+          <div class="panel-header board-header">
+            <div>
+              <h3>Weekly Task List</h3>
+              <p class="muted">Move task tiles between boards. A task can only enter Completed after Done is checked.</p>
+            </div>
+            <label class="week-picker">
+              <span>Week</span>
+              <select id="week-select"></select>
+            </label>
+          </div>
+          <div class="task-tile-board" id="task-list-board"></div>
+        </section>
+      </section>
+
+      <section class="view" id="subjects-view">
+        <section class="panel">
+          <div class="panel-header">
+            <h3>Subjects</h3>
+            <button class="primary-btn" data-open-form="subject" type="button">New subject</button>
+          </div>
+          <div class="list" id="subjects-list"></div>
+        </section>
+      </section>
+
+      <section class="view" id="schedule-view">
+        <section class="panel">
+          <div class="panel-header">
+            <h3>Schedule</h3>
+            <button class="primary-btn" data-open-form="schedule" type="button">New session</button>
+          </div>
+          <div class="list" id="schedule-list"></div>
+        </section>
+      </section>
+
+      <section class="view" id="tests-view">
+        <section class="panel">
+          <div class="panel-header">
+            <h3>Tests</h3>
+            <button class="primary-btn" data-open-form="test" type="button">New test</button>
+          </div>
+          <div class="list" id="tests-list"></div>
+        </section>
+      </section>
+
+      <section class="view" id="feedback-view">
+        <section class="panel">
+          <div class="panel-header">
+            <h3>Feedback</h3>
+            <button class="primary-btn" data-open-form="feedback" type="button">New note</button>
+          </div>
+          <div class="list" id="feedback-list"></div>
+        </section>
+      </section>
+
+      <section class="view" id="resources-view">
+        <section class="panel">
+          <div class="panel-header">
+            <h3>Resources</h3>
+            <button class="primary-btn" data-open-form="resource" type="button">New resource</button>
+          </div>
+          <div class="list" id="resources-list"></div>
+        </section>
+      </section>
+
+      <section class="view" id="settings-view">
+        <div class="two-column">
+          <section class="panel">
+            <h3>Registered User</h3>
+            <div class="profile-card" id="profile-card"></div>
+          </section>
+          <section class="panel">
+            <h3>Import and Export</h3>
+            <p class="muted">Export a workspace file to share with a learner or move this data to another copy of the app.</p>
+            <div class="stack">
+              <button class="primary-btn" id="export-btn" type="button">Export JSON</button>
+              <label class="file-control">
+                <span>Import JSON</span>
+                <input id="import-input" type="file" accept="application/json">
+              </label>
+            </div>
+          </section>
+          <section class="panel">
+            <h3>Installable App</h3>
+            <p class="muted">When hosted on the web, learners can install this app from the browser. It also works offline after first load.</p>
+            <div class="stack">
+              <button class="primary-btn" id="install-btn" type="button" disabled>Install app</button>
+              <p class="fine-print" id="install-status">Installation appears when the browser supports it.</p>
+            </div>
+          </section>
+        </div>
+      </section>
+    </main>
+
+    <dialog id="item-dialog">
+      <form method="dialog" id="item-form">
+        <div class="dialog-header">
+          <h3 id="dialog-title">Add item</h3>
+          <button class="icon-btn" value="cancel" type="submit" aria-label="Close">x</button>
+        </div>
+        <input type="hidden" id="item-type">
+        <label>
+          <span>Title</span>
+          <input id="item-title" required maxlength="100">
+        </label>
+        <label>
+          <span>Date</span>
+          <input id="item-date" type="date">
+        </label>
+        <label id="status-field">
+          <span>Status</span>
+          <select id="item-status">
+            <option value="Not started">Not started</option>
+            <option value="In progress">In progress</option>
+            <option value="Needs review">Needs review</option>
+            <option value="Complete">Complete</option>
+          </select>
+        </label>
+        <label>
+          <span id="details-label">Details</span>
+          <textarea id="item-details" rows="5" maxlength="800"></textarea>
+        </label>
+        <label id="link-field">
+          <span>Link</span>
+          <input id="item-link" type="url" placeholder="https://...">
+        </label>
+        <div class="dialog-actions">
+          <button class="ghost-btn" value="cancel" type="submit">Cancel</button>
+          <button class="primary-btn" id="save-item-btn" value="default" type="submit">Save</button>
+        </div>
+      </form>
+    </dialog>
+
+    <script src="app.js"></script>
+  </body>
+</html>
