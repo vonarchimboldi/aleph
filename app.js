@@ -61,6 +61,7 @@ document.querySelector("#export-btn").addEventListener("click", exportData);
 document.querySelector("#import-input").addEventListener("change", importData);
 document.querySelector("#week-select").addEventListener("change", renderTaskList);
 document.querySelector("#login-form").addEventListener("submit", login);
+document.querySelector("#password-change-form").addEventListener("submit", changePassword);
 document.querySelector("#user-email-form").addEventListener("submit", saveUserEmail);
 document.querySelector("#send-credentials-btn").addEventListener("click", sendCredentialEmail);
 
@@ -100,8 +101,13 @@ function loadState() {
   try {
     const parsed = JSON.parse(saved);
     const starter = initialState();
+    const user = { ...defaultUser(), ...(parsed.user || {}) };
+    user.password = user.password || user.tempPassword;
+    if (typeof user.mustChangePassword !== "boolean") {
+      user.mustChangePassword = user.password === user.tempPassword;
+    }
     return {
-      user: parsed.user || defaultUser(),
+      user,
       subjects: parsed.subjects?.length ? parsed.subjects : starter.subjects,
       schedule: parsed.schedule?.length ? parsed.schedule : starter.schedule,
       tests: parsed.tests || [],
@@ -533,8 +539,10 @@ function formatShortDate(value) {
 function defaultUser() {
   return {
     name: "priyanka",
-    email: "",
+    email: "priyankakatoch95@gmail.com",
     tempPassword: "l!pschitz",
+    password: "l!pschitz",
+    mustChangePassword: true,
     passwordStatus: "Temporary password set",
     registeredAt: new Date().toISOString()
   };
@@ -558,8 +566,9 @@ function login(event) {
   const name = document.querySelector("#login-name").value.trim();
   const password = document.querySelector("#login-password").value;
   const error = document.querySelector("#login-error");
+  const currentPassword = state.user.password || state.user.tempPassword;
 
-  if (name === state.user.name && password === state.user.tempPassword) {
+  if (name === state.user.name && password === currentPassword) {
     sessionStorage.setItem(SESSION_KEY, state.user.name);
     error.textContent = "";
     document.querySelector("#login-form").reset();
@@ -570,6 +579,36 @@ function login(event) {
   error.textContent = "Username or password is incorrect.";
 }
 
+function changePassword(event) {
+  event.preventDefault();
+  const password = document.querySelector("#new-password").value;
+  const confirmation = document.querySelector("#confirm-password").value;
+  const error = document.querySelector("#password-error");
+
+  if (password.length < 8) {
+    error.textContent = "Password must be at least 8 characters.";
+    return;
+  }
+
+  if (password !== confirmation) {
+    error.textContent = "Passwords do not match.";
+    return;
+  }
+
+  if (password === state.user.tempPassword) {
+    error.textContent = "Choose a password different from the temporary password.";
+    return;
+  }
+
+  state.user.password = password;
+  state.user.mustChangePassword = false;
+  state.user.passwordStatus = "Password changed";
+  persist();
+  error.textContent = "";
+  document.querySelector("#password-change-form").reset();
+  applyAuthState();
+}
+
 function logout() {
   sessionStorage.removeItem(SESSION_KEY);
   applyAuthState();
@@ -577,8 +616,11 @@ function logout() {
 
 function applyAuthState() {
   const signedIn = sessionStorage.getItem(SESSION_KEY) === state.user.name;
-  document.body.classList.toggle("is-authenticated", signedIn);
-  document.querySelector("#landing-view").classList.toggle("active", !signedIn);
+  const mustChangePassword = signedIn && state.user.mustChangePassword;
+  document.body.classList.toggle("is-authenticated", signedIn && !mustChangePassword);
+  document.querySelector("#landing-view").classList.toggle("active", !signedIn || mustChangePassword);
+  document.querySelector("#login-form").classList.toggle("hidden", signedIn);
+  document.querySelector("#password-change-form").classList.toggle("active", mustChangePassword);
 }
 
 function openForm(type, item = null) {
@@ -778,11 +820,14 @@ function itemTemplate(item, type) {
 
 function renderProfile() {
   document.querySelector("#user-email").value = state.user.email || "";
+  const passwordRow = state.user.mustChangePassword
+    ? `<div><dt>Temp password</dt><dd><code>${escapeHtml(state.user.tempPassword)}</code></dd></div>`
+    : "";
   document.querySelector("#profile-card").innerHTML = `
     <dl>
       <div><dt>Name</dt><dd>${escapeHtml(state.user.name)}</dd></div>
       <div><dt>Email</dt><dd>${escapeHtml(state.user.email || "Not set")}</dd></div>
-      <div><dt>Temp password</dt><dd><code>${escapeHtml(state.user.tempPassword)}</code></dd></div>
+      ${passwordRow}
       <div><dt>Status</dt><dd>${escapeHtml(state.user.passwordStatus)}</dd></div>
     </dl>
     <p class="fine-print">This prototype stores profile data locally in this browser. Use a real authentication backend before sharing sensitive learner data publicly.</p>
@@ -820,7 +865,7 @@ async function sendCredentialEmail() {
         email,
         name: state.user.name,
         username: state.user.name,
-        temporaryPassword: state.user.tempPassword,
+        temporaryPassword: state.user.password || state.user.tempPassword,
         appUrl: window.location.origin
       })
     });
@@ -848,7 +893,7 @@ function draftCredentialEmail(email) {
     "",
     "Sign in with:",
     `Username: ${state.user.name}`,
-    `Temporary password: ${state.user.tempPassword}`,
+    `Temporary password: ${state.user.password || state.user.tempPassword}`,
     "",
     "Please keep these credentials private.",
     "",
@@ -1110,8 +1155,9 @@ function renderActivity() {
 }
 
 function loadSampleData() {
-  state.user = defaultUser();
+  const user = state.user || defaultUser();
   Object.assign(state, buildCoursePlan());
+  state.user = user;
   persist();
   render();
 }

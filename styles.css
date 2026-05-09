@@ -52,6 +52,15 @@ body:not(.is-authenticated) .shell {
   display: flex;
 }
 
+.hidden,
+.password-card {
+  display: none;
+}
+
+.password-card.active {
+  display: block;
+}
+
 .landing-panel {
   width: min(1060px, 100%);
   display: grid;
