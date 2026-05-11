@@ -146,26 +146,26 @@ function buildCoursePlan() {
   const accountTypes = accountTypeCatalog(now);
   const lessonPlans = [
     {
-      id: "lesson-priyanka-custom",
-      userId: "user-priyanka",
-      title: "Priyanka GATE DA Platinum plan",
+      id: "lesson-platinum-demo",
+      userId: "user-platinum-demo",
+      title: "GATE DA Platinum learner plan",
       type: "personalized",
       subjects: ["Discrete Mathematics", "Data Structures and Algorithms", "Probability and Statistics"],
       startDate: "2026-06-01",
       endDate: "2026-08-30",
       status: "active",
-      details: "Personalized June-August Platinum plan for the GATE DA exam. Priyanka's workspace, subjects, tasks, schedules, tests, feedback, and resources live inside this GATE DA plan.",
+      details: "Personalized June-August Platinum plan for the GATE DA exam. The learner workspace, subjects, tasks, schedules, tests, feedback, and resources live inside this GATE DA plan.",
       updatedAt: now
     }
   ];
   const enrollments = [
     {
-      id: "enrollment-priyanka-custom",
-      userId: "user-priyanka",
+      id: "enrollment-platinum-demo",
+      userId: "user-platinum-demo",
       accountTypeId: "gate-da-platinum",
       planVariant: "Platinum",
       paymentStatus: "active",
-      lessonPlanId: "lesson-priyanka-custom",
+      lessonPlanId: "lesson-platinum-demo",
       status: "active",
       updatedAt: now
     }
@@ -192,7 +192,7 @@ function buildCoursePlan() {
       title: "Probability and Statistics",
       date: "2026-08-30",
       status: "Not started",
-      details: "GATE DA Probability and Statistics. Basic content is being developed one section at a time; Priyanka's enrolled plan is Platinum and can include custom pacing, feedback, and additional review.",
+      details: "GATE DA Probability and Statistics. Basic content is being developed one section at a time; the enrolled learner plan is Platinum and can include custom pacing, feedback, and additional review.",
       updatedAt: now
     }
   ];
@@ -1065,7 +1065,7 @@ function probabilitySundayTestDetails(milestone) {
 }
 
 function probabilityDefaultFeedback(milestone) {
-  return `Default feedback template for the Sunday Probability and Statistics test. Weekly focus: ${milestone.focus}. For each produced solution, score: 1) did Priyanka identify the recurring pattern, 2) did she choose the right statistic/conditioning/event, 3) is the calculation correct, 4) is the argument justified, 5) is the final answer clearly stated, and 6) does the correction note explain the fix. Tag each miss by theme so the next week's daily sets can repeat the weak pattern.`;
+  return `Default feedback template for the Sunday Probability and Statistics test. Weekly focus: ${milestone.focus}. For each produced solution, score: 1) did the learner identify the recurring pattern, 2) did they choose the right statistic/conditioning/event, 3) is the calculation correct, 4) is the argument justified, 5) is the final answer clearly stated, and 6) does the correction note explain the fix. Tag each miss by theme so the next week's daily sets can repeat the weak pattern.`;
 }
 
 function spacedReviewDetails(week, milestones, label = "subject") {
@@ -1088,10 +1088,10 @@ function formatShortDate(value) {
 
 function defaultUser() {
   return {
-    name: "priyanka",
-    email: "priyankakatoch95@gmail.com",
-    tempPassword: "l!pschitz",
-    password: "l!pschitz",
+    name: "platinum-demo",
+    email: "platinum.demo@aleph.local",
+    tempPassword: "platinum!demo",
+    password: "platinum!demo",
     mustChangePassword: false,
     passwordStatus: "Prototype login enabled",
     registeredAt: new Date().toISOString()
@@ -1367,7 +1367,7 @@ function renderGateDaWorkspace() {
     <article class="item workspace-summary">
       <div class="item-top">
         <div>
-          <h4>Priyanka Workspace: GATE DA Platinum</h4>
+          <h4>GATE DA Platinum Learner Workspace</h4>
           <p>${escapeHtml(lessonPlan?.details || "Personalized GATE DA Platinum learner workspace.")}</p>
         </div>
         <span class="tag">${escapeHtml(platinumEnrollment?.paymentStatus || "active")}</span>

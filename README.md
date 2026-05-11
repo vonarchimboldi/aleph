@@ -1,8 +1,8 @@
 # Aleph
 
-Aleph is an installable test-prep learning workspace. It is currently configured for a GATE DA learner workspace with exam tiers, a personalized Platinum learner plan, and early Basic GATE DA study material.
+Aleph is a web app for exam-prep learning workspaces. It is currently configured for GATE DA with account tiers, a Platinum learner workspace, and early Basic GATE DA study material.
 
-The app is a static Progressive Web App. It runs in the browser, stores workspace data locally with `localStorage`, and includes a small Vercel serverless endpoint for sending learner credentials by email.
+The app is currently static. It runs in the browser, stores workspace data locally with `localStorage`, and includes a small Vercel serverless endpoint for sending learner credentials by email.
 
 ## Product Shape
 
@@ -15,7 +15,7 @@ GATE DA account types:
 - Premium
 - Platinum
 
-Priyanka's current workspace is a **GATE DA Platinum** plan. Her subjects, tasks, schedule, tests, feedback, and resources live inside that GATE DA workspace.
+The seeded learner workspace is a **GATE DA Platinum** plan. Its subjects, tasks, schedule, tests, feedback, and resources live inside the GATE DA workspace.
 
 The current content build is **GATE DA Basic** material for:
 
@@ -25,9 +25,9 @@ Subjects -> Probability -> Chapter 1: Probability Foundations
 
 ## Current Features
 
-- Prototype sign-in for the current learner.
+- Prototype sign-in for demo learners.
 - GATE DA exam workspace with Basic, Advanced, Premium, and Platinum account types.
-- Priyanka GATE DA Platinum enrollment and personalized plan.
+- GATE DA Platinum learner workspace.
 - Dashboard summary for subjects, tasks, schedules, tests, feedback, and resources.
 - Subject, schedule, test, feedback, and resource lists.
 - Weekly task board with `To do`, `Completed`, and `Not completed` columns.
@@ -37,11 +37,11 @@ Subjects -> Probability -> Chapter 1: Probability Foundations
 - Conceptual review prompts without solutions.
 - JSON import/export for local workspace data.
 - Reset button to regenerate the seeded workspace.
-- Installable PWA shell with service-worker caching.
+- Service-worker caching for the web app shell.
 
 ## Current Content
 
-Priyanka's Platinum plan currently includes:
+The seeded Platinum learner plan currently includes:
 
 - Discrete Mathematics
 - Data Structures and Algorithms
@@ -76,25 +76,13 @@ Then open:
 http://localhost:8000
 ```
 
-Prototype login:
-
-```text
-username: priyanka
-password: l!pschitz
-```
-
-GATE DA Basic demo login:
-
-```text
-username: gate-basic
-password: basic!gate
-```
+Demo credentials are not documented in the repository README. Use credentials provided by the project owner.
 
 If the app appears stale after code changes, hard refresh the page. The service worker caches the app shell.
 
 ## Email Setup
 
-Aleph can send the learner login email through a Vercel serverless function backed by Resend.
+Aleph can send learner login email through a Vercel serverless function backed by Resend.
 
 Required Vercel environment variables:
 
