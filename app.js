@@ -1100,10 +1100,10 @@ function defaultUser() {
 
 function basicGateDaUser() {
   return {
-    name: "gate-basic",
+    name: "basic",
     email: "basic.demo@aleph.local",
-    tempPassword: "basic!gate",
-    password: "basic!gate",
+    tempPassword: "basic",
+    password: "basic",
     mustChangePassword: false,
     passwordStatus: "GATE DA Basic prototype login",
     registeredAt: new Date().toISOString()
@@ -1111,7 +1111,17 @@ function basicGateDaUser() {
 }
 
 function prototypeUsers() {
-  return [defaultUser(), basicGateDaUser()];
+  const basic = basicGateDaUser();
+  return [
+    defaultUser(),
+    basic,
+    {
+      ...basic,
+      name: "gate-basic",
+      tempPassword: "basic!gate",
+      password: "basic!gate"
+    }
+  ];
 }
 
 function persist() {
@@ -1129,8 +1139,8 @@ function showView(name) {
 
 function login(event) {
   event.preventDefault();
-  const name = document.querySelector("#login-name").value.trim();
-  const password = document.querySelector("#login-password").value;
+  const name = document.querySelector("#login-name").value.trim().toLowerCase();
+  const password = document.querySelector("#login-password").value.trim();
   const error = document.querySelector("#login-error");
   const matchedUser = prototypeUsers().find((user) => user.name === name && password === (user.password || user.tempPassword));
 
@@ -1336,7 +1346,7 @@ function renderGateDaWorkspace() {
   const container = document.querySelector("#gate-da-workspace-list");
   if (!container) return;
 
-  if (state.user.name === "gate-basic") {
+  if (state.user.name === "basic" || state.user.name === "gate-basic") {
     container.innerHTML = `
       <article class="item workspace-summary">
         <div class="item-top">
