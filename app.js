@@ -1087,6 +1087,10 @@ function formatShortDate(value) {
 }
 
 function defaultUser() {
+  return basicGateDaUser();
+}
+
+function platinumDemoUser() {
   return {
     name: "platinum-demo",
     email: "platinum.demo@aleph.local",
@@ -1113,8 +1117,8 @@ function basicGateDaUser() {
 function prototypeUsers() {
   const basic = basicGateDaUser();
   return [
-    defaultUser(),
     basic,
+    platinumDemoUser(),
     {
       ...basic,
       name: "gate-basic",

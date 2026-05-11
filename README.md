@@ -1,6 +1,6 @@
 # Aleph
 
-Aleph is a web app for exam-prep learning workspaces. It is currently configured for GATE DA with account tiers, a Platinum learner workspace, and early Basic GATE DA study material.
+Aleph is a web app for exam-prep learning workspaces. It is currently configured for GATE DA with Basic, Advanced, Premium, and Platinum plans. The active product work is the Basic GATE DA material.
 
 The app is currently static. It runs in the browser, stores workspace data locally with `localStorage`, and includes a small Vercel serverless endpoint for sending learner credentials by email.
 
@@ -15,7 +15,7 @@ GATE DA account types:
 - Premium
 - Platinum
 
-The seeded learner workspace is a **GATE DA Platinum** plan. Its subjects, tasks, schedule, tests, feedback, and resources live inside the GATE DA workspace.
+Each GATE DA plan has plan-level surfaces for subjects, tasks, schedule, tests, feedback, resources, and share. Higher plans can add more support and personalization on top of the same base surfaces.
 
 The current content build is **GATE DA Basic** material for:
 
@@ -27,7 +27,7 @@ Subjects -> Probability -> Chapter 1: Probability Foundations
 
 - Prototype sign-in for demo learners.
 - GATE DA exam workspace with Basic, Advanced, Premium, and Platinum account types.
-- GATE DA Platinum learner workspace.
+- GATE DA plan workspace surfaces.
 - Dashboard summary for subjects, tasks, schedules, tests, feedback, and resources.
 - Subject, schedule, test, feedback, and resource lists.
 - Weekly task board with `To do`, `Completed`, and `Not completed` columns.
@@ -41,7 +41,7 @@ Subjects -> Probability -> Chapter 1: Probability Foundations
 
 ## Current Content
 
-The seeded Platinum learner plan currently includes:
+The seeded GATE DA plan currently includes:
 
 - Discrete Mathematics
 - Data Structures and Algorithms
