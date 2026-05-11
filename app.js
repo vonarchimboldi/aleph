@@ -1,10 +1,12 @@
 const STORAGE_KEY = "learning-studio-data-v1";
 const SESSION_KEY = "aleph-session";
-const COURSE_PLAN_VERSION = "gate-da-basic-probability-only-v1";
+const COURSE_PLAN_VERSION = "gate-da-basic-probability-chapter-pages-v6";
 
 const state = loadState();
 let deferredInstallPrompt = null;
 let selectedSubjectId = null;
+let selectedSectionId = null;
+let activeTestId = null;
 ensureCoursePlan();
 
 const views = {
@@ -114,6 +116,7 @@ function loadState() {
       subjects: parsed.subjects?.length ? parsed.subjects : starter.subjects,
       schedule: parsed.schedule?.length ? parsed.schedule : starter.schedule,
       tests: parsed.tests || [],
+      quizAttempts: parsed.quizAttempts || [],
       feedback: parsed.feedback || [],
       resources: parsed.resources || [],
       tasks: parsed.tasks || [],
@@ -151,8 +154,11 @@ function buildCoursePlan() {
 
 function buildGateDaBasicPlan(now, accountTypes, sections) {
   const probabilitySection = sections[0];
+  const conditionalSection = sections[1];
   const monday = "2026-06-01";
   const sunday = addDays(monday, 6);
+  const weekTwoMonday = addDays(monday, 7);
+  const weekTwoSunday = addDays(weekTwoMonday, 6);
   return {
     subjects: [
       {
@@ -160,8 +166,8 @@ function buildGateDaBasicPlan(now, accountTypes, sections) {
         title: "Probability",
         date: "2026-08-30",
         status: "In progress",
-        details: "GATE DA Basic Probability, aligned to the official GATE DA syllabus. Start with Chapter 1: Probability Foundations.",
-        sectionIds: [probabilitySection.id],
+        details: "GATE DA Basic Probability, aligned to the official GATE DA syllabus. Start with Chapter 1, then move to conditional probability and Bayes' theorem.",
+        sectionIds: sections.map((section) => section.id),
         updatedAt: now
       }
     ],
@@ -195,6 +201,36 @@ function buildGateDaBasicPlan(now, accountTypes, sections) {
         date: sunday,
         details: "Answer the conceptual review prompts without solutions. Use misses to identify weak understanding.",
         updatedAt: now
+      },
+      {
+        id: "schedule-probability-chapter-2-study",
+        title: "Probability Chapter 2: Conditional Probability",
+        week: 2,
+        subject: "Probability",
+        kind: "Study",
+        date: weekTwoMonday,
+        details: "Study conditional probability, total probability, Bayes' theorem, and independence.",
+        updatedAt: now
+      },
+      {
+        id: "schedule-probability-chapter-2-practice",
+        title: "Probability Chapter 2: Labelled Practice",
+        week: 2,
+        subject: "Probability",
+        kind: "Practice",
+        date: addDays(weekTwoMonday, 2),
+        details: "Solve the Chapter 2 practice problems before opening worked solutions.",
+        updatedAt: now
+      },
+      {
+        id: "schedule-probability-chapter-2-review",
+        title: "Probability Chapter 2: Objective Review",
+        week: 2,
+        subject: "Probability",
+        kind: "Review",
+        date: weekTwoSunday,
+        details: "Take the conditional probability objective quiz and use the logged feedback to review weak concepts.",
+        updatedAt: now
       }
     ],
     tests: [
@@ -202,10 +238,22 @@ function buildGateDaBasicPlan(now, accountTypes, sections) {
         id: "test-probability-chapter-1-conceptual-review",
         title: "Probability Chapter 1 Conceptual Review",
         date: sunday,
-        details: "No-solution conceptual review for sample spaces, events, complements, counting, and inclusion-exclusion.",
+        details: "Objective end-of-chapter quiz for sample spaces, events, equal likelihood, counting, complements, and inclusion-exclusion. Attempts are logged in the learner record.",
+        sectionId: probabilitySection.id,
+        quizId: "quiz-probability-chapter-1-conceptual-review",
+        updatedAt: now
+      },
+      {
+        id: "test-probability-chapter-2-objective-review",
+        title: "Probability Chapter 2 Objective Review",
+        date: weekTwoSunday,
+        details: "Objective end-of-chapter quiz for conditional probability, Bayes' theorem, total probability, and independence. Attempts are logged in the learner record.",
+        sectionId: conditionalSection.id,
+        quizId: "quiz-probability-chapter-2-objective-review",
         updatedAt: now
       }
     ],
+    quizAttempts: [],
     tasks: [
       {
         id: "task-probability-chapter-1-read",
@@ -239,6 +287,39 @@ function buildGateDaBasicPlan(now, accountTypes, sections) {
         done: false,
         details: "Answer the conceptual review prompts without solutions.",
         updatedAt: now
+      },
+      {
+        id: "task-probability-chapter-2-read",
+        week: 2,
+        title: "Probability Ch 2: Read conditional probability",
+        type: "Study",
+        date: weekTwoMonday,
+        status: "todo",
+        done: false,
+        details: "Open Subjects -> Probability -> Chapter 2 and study the exposition through Bayes' theorem.",
+        updatedAt: now
+      },
+      {
+        id: "task-probability-chapter-2-practice",
+        week: 2,
+        title: "Probability Ch 2: Solve labelled practice",
+        type: "Practice",
+        date: addDays(weekTwoMonday, 2),
+        status: "todo",
+        done: false,
+        details: "Attempt the conditional probability practice problems before reading worked solutions.",
+        updatedAt: now
+      },
+      {
+        id: "task-probability-chapter-2-review",
+        week: 2,
+        title: "Probability Ch 2: Take objective review",
+        type: "Review",
+        date: weekTwoSunday,
+        status: "todo",
+        done: false,
+        details: "Submit the Chapter 2 objective quiz so the learner record logs strengths and weaknesses.",
+        updatedAt: now
       }
     ],
     accountTypes,
@@ -264,7 +345,7 @@ function buildGateDaBasicPlan(now, accountTypes, sections) {
         startDate: monday,
         endDate: "2026-08-30",
         status: "active",
-        details: "GATE DA Basic plan surfaces: Subjects, Tasks, Schedule, Tests, Feedback, Resources, and Share. Current material build: Probability Chapter 1.",
+        details: "GATE DA Basic plan surfaces: Subjects, Tasks, Schedule, Tests, Feedback, Resources, and Share. Current material build: Probability Chapters 1 and 2.",
         updatedAt: now
       }
     ],
@@ -292,6 +373,14 @@ function buildGateDaBasicPlan(now, accountTypes, sections) {
         title: "Probability Chapter 1: Probability Foundations",
         date: "2026-06-01",
         details: "Open Subjects -> Probability to study Chapter 1 in Open Math-style format.",
+        link: "",
+        updatedAt: now
+      },
+      {
+        id: "resource-probability-conditional",
+        title: "Probability Chapter 2: Conditional Probability",
+        date: weekTwoMonday,
+        details: "Open Subjects -> Probability to study Chapter 2 and then take the objective review in Tests.",
         link: "",
         updatedAt: now
       }
@@ -331,6 +420,123 @@ function gateDaProbabilitySections(updatedAt = new Date().toISOString()) {
       summary: "Sample spaces, events, counting, complements, inclusion-exclusion, and the basic probability moves needed before conditional probability.",
       sectionPreview: "Probability begins by making the experiment precise. Before using any formula, decide what the outcomes are, which outcomes are favourable, and whether all outcomes are equally likely. Most mistakes in basic probability come from counting the numerator and denominator from different sample spaces.",
       previewActivity: "A password is formed using two distinct letters followed by two distinct digits. How many passwords are possible, and what is the probability that a randomly chosen valid password starts with a vowel? Try it before reading the formulas. The point is to see that probability is often counting divided by counting.",
+      chapterIntro: [
+        "This chapter builds the small set of habits that make probability problems reliable. The first habit is to describe the experiment before doing arithmetic. A die roll, a card draw, a password, and a committee selection all produce outcomes, but the outcomes are not shaped the same way.",
+        "For GATE DA, many early probability questions are counting questions in disguise. Once the sample space is chosen correctly, the probability is often a ratio. The hard part is deciding whether order matters, whether repetition is allowed, and whether the event is easier to count directly or by its complement.",
+        "Read this chapter as a toolkit. Each numbered section introduces one decision a problem solver must make, then the practice set labels the technique being used."
+      ],
+      bookSections: [
+        {
+          number: "1.1",
+          title: "Sample Spaces and Events",
+          paragraphs: [
+            "A random experiment is a process whose outcome is not known in advance, even though the set of possible outcomes can be described. The sample space is the set of all outcomes we agree to consider. An event is any subset of that sample space.",
+            "The phrase we agree to consider matters. If two dice are rolled, the natural sample space for most questions is the 36 ordered pairs. If the question only records the sum, the possible values are 2 through 12, but those values are not equally likely. Confusing those two sample spaces is a common source of wrong answers."
+          ],
+          blocks: [
+            {
+              type: "definition",
+              title: "Definition: sample space and event",
+              body: "The sample space S is the set of all possible outcomes of the experiment. An event A is a subset of S. The event occurs exactly when the observed outcome lies in A."
+            },
+            {
+              type: "example",
+              title: "Example 1.1: two dice",
+              body: "Roll two fair dice. If outcomes are ordered pairs, then S has 36 outcomes. The event 'sum is 7' is {(1,6), (2,5), (3,4), (4,3), (5,2), (6,1)}."
+            },
+            {
+              type: "checkpoint",
+              title: "Checkpoint",
+              body: "If one card is drawn from a deck, describe the event 'king or heart' as a set operation before counting it."
+            }
+          ]
+        },
+        {
+          number: "1.2",
+          title: "Equally Likely Outcomes",
+          paragraphs: [
+            "The formula favourable outcomes divided by total outcomes is valid only when the outcomes in the chosen sample space are equally likely. This is automatic for a fair die if the outcomes are faces, and for a well-shuffled deck if the outcomes are cards. It is not automatic when outcomes are summaries such as sums, maximum values, or categories.",
+            "A useful test is to ask whether the experiment gives every listed outcome the same number of ways to occur. For two dice, the sum 7 has six ordered pairs, while the sum 2 has one ordered pair. So the sums 2 through 12 are not an equally likely sample space."
+          ],
+          blocks: [
+            {
+              type: "principle",
+              title: "Principle: ratio rule",
+              body: "If every outcome in S is equally likely, then P(A) = |A| / |S|. Use this only after defining S and checking equal likelihood."
+            },
+            {
+              type: "warning",
+              title: "Common trap",
+              body: "Do not count possible values of a statistic unless those values are equally likely. Count the underlying outcomes instead."
+            },
+            {
+              type: "checkpoint",
+              title: "Checkpoint",
+              body: "For two dice, why is the probability that the maximum is 4 not simply 1/6?"
+            }
+          ]
+        },
+        {
+          number: "1.3",
+          title: "Counting for Probability",
+          paragraphs: [
+            "Counting enters probability through the numerator and denominator. Use the multiplication rule for staged choices, permutations when order matters, and combinations when order does not matter. The probability step comes after the count is organized.",
+            "When the sample space has constraints, count only valid outcomes. For a password with two distinct letters followed by two distinct digits, the denominator is not 26^2 x 10^2 because repetition is disallowed inside each block."
+          ],
+          blocks: [
+            {
+              type: "example",
+              title: "Example 1.2: password count",
+              body: "Two distinct letters followed by two distinct digits can be formed in 26 x 25 x 10 x 9 ways. If the first letter must be a vowel, the favourable count is 5 x 25 x 10 x 9, so the probability is 5/26."
+            },
+            {
+              type: "strategy",
+              title: "Strategy",
+              body: "Write the denominator first. Then write the numerator using the same kind of object: ordered sequences with ordered sequences, committees with committees, subsets with subsets."
+            }
+          ]
+        },
+        {
+          number: "1.4",
+          title: "Complements and At Least One",
+          paragraphs: [
+            "The complement of an event A is the event that A does not occur. Since every outcome is either in A or outside A, P(A) + P(A complement) = 1. This is often the shortest route when a direct count splits into many cases.",
+            "Phrases such as at least one, not all, no repeated value, and neither often signal a complement. For example, counting at least one head in five tosses directly requires five cases. Counting no heads takes one case."
+          ],
+          blocks: [
+            {
+              type: "principle",
+              title: "Principle: complement rule",
+              body: "P(A) = 1 - P(A complement). Use it when the opposite event is sharper than the original event."
+            },
+            {
+              type: "example",
+              title: "Example 1.3: repeated birthday-style count",
+              body: "If four people choose a favourite weekday, the event 'at least two match' is easier by complement. Count all different choices, then subtract that probability from 1."
+            }
+          ]
+        },
+        {
+          number: "1.5",
+          title: "Inclusion-Exclusion",
+          paragraphs: [
+            "When a question says A or B, first decide whether A and B can happen together. If they cannot overlap, add the probabilities. If they can overlap, adding P(A) and P(B) counts the intersection twice.",
+            "Inclusion-exclusion corrects that double count. For two events, P(A union B) = P(A) + P(B) - P(A intersection B). The same idea works for counts: count A, count B, subtract the objects counted in both."
+          ],
+          blocks: [
+            {
+              type: "example",
+              title: "Example 1.4: card event",
+              body: "For one card, 'king or heart' has 4 kings and 13 hearts, but the king of hearts is in both groups. The favourable count is 4 + 13 - 1."
+            },
+            {
+              type: "checkpoint",
+              title: "Checkpoint",
+              body: "An integer from 1 to 100 is chosen. Which numbers are counted twice if you count multiples of 2 and multiples of 5 separately?"
+            }
+          ]
+        }
+      ],
       concepts: [
         {
           name: "Sample space",
@@ -393,6 +599,12 @@ function gateDaProbabilitySections(updatedAt = new Date().toISOString()) {
         "Create a two-dice event whose probability is easiest by complement.",
         "Create a card problem where inclusion-exclusion is necessary."
       ],
+      reviewQuiz: {
+        id: "quiz-probability-chapter-1-conceptual-review",
+        title: "Probability Chapter 1 Objective Review",
+        instructions: "Complete this after finishing the chapter exposition and labelled practice. The quiz is objective so the app can log what happened and diagnose concept strengths and weaknesses.",
+        questions: probabilityFoundationReviewQuestions()
+      },
       readingQuestions: [
         "What is the sample space in a probability problem?",
         "What is the difference between an outcome and an event?",
@@ -407,6 +619,221 @@ function gateDaProbabilitySections(updatedAt = new Date().toISOString()) {
         "Use complements for at least one, none, not all, and similar phrases.",
         "Use inclusion-exclusion when A or B has overlap.",
         "Use permutations when order matters and combinations when order does not matter."
+      ],
+      updatedAt
+    },
+    {
+      id: "gate-da-conditional-probability",
+      exam: "GATE DA",
+      accountTier: "Basic",
+      subject: "Probability",
+      chapter: "Chapter 2",
+      section: "2",
+      title: "Conditional Probability",
+      summary: "Conditional probability, Bayes' theorem, total probability, independence, and the exam moves needed when information changes the sample space.",
+      sectionPreview: "Conditional probability starts when the question gives extra information. The denominator changes from the whole sample space to the event you are conditioning on. Many wrong answers come from keeping the old denominator after new information has arrived.",
+      previewActivity: "A disease affects 3% of a population. A test is positive for 95% of diseased people and false positive for 4% of healthy people. A randomly chosen person tests positive. What is the probability the person actually has the disease? Try this before reading Bayes' theorem; the answer is not 95%.",
+      chapterIntro: [
+        "In Chapter 1, probability was mostly counting inside a fixed sample space. In this chapter, the sample space changes after information is given. That is the whole point of conditional probability.",
+        "When you are told that B has happened, outcomes outside B are no longer possible. The probability of A given B is therefore the fraction of B in which A also happens. This is why the denominator is P(B), not P(A).",
+        "GATE-style questions use this idea in four common ways: direct conditioning, Bayes inversion, total probability over cases, and independence checks."
+      ],
+      bookSections: [
+        {
+          number: "2.1",
+          title: "Conditioning Changes the Denominator",
+          paragraphs: [
+            "The notation P(A|B) means the probability that A occurs given that B has occurred. Once B is known, only outcomes in B remain relevant. The event A occurs under this new information exactly when the outcome lies in A and B.",
+            "So the numerator is P(A and B), and the denominator is P(B). This is not a trick formula. It is just the ratio rule applied inside the smaller sample space B."
+          ],
+          blocks: [
+            {
+              type: "definition",
+              title: "Definition: conditional probability",
+              body: "If P(B) > 0, then P(A|B) = P(A intersection B) / P(B). Read this as probability of A after restricting attention to B."
+            },
+            {
+              type: "example",
+              title: "Example 2.1: one die with information",
+              body: "A fair die is rolled. Let A be 'number is even' and B be 'number is at least 4'. Inside B = {4,5,6}, the favourable outcomes for A are {4,6}. Therefore P(A|B) = 2/3."
+            },
+            {
+              type: "warning",
+              title: "Common trap",
+              body: "Do not divide by P(A). The denominator is the event after the word given."
+            }
+          ]
+        },
+        {
+          number: "2.2",
+          title: "Multiplication Rule and Probability Trees",
+          paragraphs: [
+            "The conditional probability formula can be rearranged as P(A and B) = P(B)P(A|B). This is the multiplication rule. It is useful when a process happens in stages.",
+            "A probability tree is just the multiplication rule drawn as branches. Multiply along a path. Add paths only when they are disjoint ways for the required event to occur."
+          ],
+          blocks: [
+            {
+              type: "principle",
+              title: "Principle: multiplication rule",
+              body: "P(A intersection B) = P(A)P(B|A) = P(B)P(A|B). Choose the order that matches the story."
+            },
+            {
+              type: "example",
+              title: "Example 2.2: drawing without replacement",
+              body: "A box has 5 red and 3 blue balls. Two balls are drawn without replacement. P(first red and second red) = (5/8)(4/7) = 5/14."
+            }
+          ]
+        },
+        {
+          number: "2.3",
+          title: "Total Probability",
+          paragraphs: [
+            "Sometimes an event can happen through several cases. If the cases are disjoint and cover all possibilities, compute the probability inside each case and add.",
+            "This is called the law of total probability. It is the formal version of splitting a problem by source, box, machine, urn, or prior class."
+          ],
+          blocks: [
+            {
+              type: "principle",
+              title: "Principle: total probability",
+              body: "If B1, B2, ..., Bk form a partition, then P(A) = P(A|B1)P(B1) + P(A|B2)P(B2) + ... + P(A|Bk)P(Bk)."
+            },
+            {
+              type: "strategy",
+              title: "Recognition cue",
+              body: "Use total probability when the problem gives several sources with different success rates, such as factories, boxes, tests, or groups."
+            }
+          ]
+        },
+        {
+          number: "2.4",
+          title: "Bayes' Theorem",
+          paragraphs: [
+            "Bayes' theorem reverses the direction of conditioning. It is used when the question asks for the probability of a cause after seeing an effect.",
+            "The denominator is found by total probability: all ways the observed evidence could have happened. This is why medical-test and defective-item questions often have surprisingly small posterior probabilities."
+          ],
+          blocks: [
+            {
+              type: "principle",
+              title: "Principle: Bayes' theorem",
+              body: "P(Bi|A) = P(A|Bi)P(Bi) / [P(A|B1)P(B1) + ... + P(A|Bk)P(Bk)]."
+            },
+            {
+              type: "example",
+              title: "Example 2.3: test positive",
+              body: "If disease prevalence is 3%, sensitivity is 95%, and false positive rate is 4%, then P(disease|positive) = (0.95)(0.03) / [(0.95)(0.03) + (0.04)(0.97)]."
+            },
+            {
+              type: "checkpoint",
+              title: "Checkpoint",
+              body: "In Bayes' theorem, identify which event is evidence and which event is the hidden cause before substituting."
+            }
+          ]
+        },
+        {
+          number: "2.5",
+          title: "Independence",
+          paragraphs: [
+            "Events A and B are independent when knowing B does not change the probability of A. In notation, P(A|B) = P(A), provided P(B) > 0.",
+            "Independence is not the same as mutual exclusivity. Mutually exclusive events cannot occur together. Independent events can occur together, but one gives no probability information about the other."
+          ],
+          blocks: [
+            {
+              type: "definition",
+              title: "Definition: independence",
+              body: "A and B are independent if P(A intersection B) = P(A)P(B). Equivalently, P(A|B) = P(A) when P(B) > 0."
+            },
+            {
+              type: "warning",
+              title: "Common trap",
+              body: "If A and B are mutually exclusive and both have positive probability, they are not independent."
+            }
+          ]
+        }
+      ],
+      concepts: [
+        {
+          name: "Conditional probability",
+          description: "Compute probability after restricting the sample space to the given event.",
+          cue: "The problem says given, among, if it is known, or selected from those satisfying a condition."
+        },
+        {
+          name: "Multiplication rule",
+          description: "Multiply staged probabilities along one path.",
+          cue: "The story happens in order or without replacement."
+        },
+        {
+          name: "Total probability",
+          description: "Split an event across a partition of cases and add the disjoint contributions.",
+          cue: "Several boxes, factories, groups, or causes have different rates."
+        },
+        {
+          name: "Bayes' theorem",
+          description: "Reverse conditioning from effect back to cause.",
+          cue: "The problem gives P(evidence|cause) but asks P(cause|evidence)."
+        },
+        {
+          name: "Independence",
+          description: "Knowing one event does not change the probability of the other.",
+          cue: "Check whether P(A and B) equals P(A)P(B)."
+        }
+      ],
+      techniques: [
+        {
+          name: "Restrict the sample space",
+          when: "the problem gives information that has already happened.",
+          move: "Use P(A|B) = P(A and B) / P(B), with B as the denominator."
+        },
+        {
+          name: "Draw a probability tree",
+          when: "the process has stages or different cases.",
+          move: "Multiply along branches and add disjoint paths that produce the target event."
+        },
+        {
+          name: "Use total probability",
+          when: "an event can occur through one of several complete cases.",
+          move: "Partition by the cases, compute conditional probability inside each case, multiply by the case probability, and add."
+        },
+        {
+          name: "Apply Bayes inversion",
+          when: "you observe evidence and need the probability of a hidden source or cause.",
+          move: "Compute likelihood times prior, then divide by total probability of the evidence."
+        },
+        {
+          name: "Test independence",
+          when: "the problem asks whether two events are independent or implies no influence.",
+          move: "Compare P(A and B) with P(A)P(B), or compare P(A|B) with P(A)."
+        }
+      ],
+      practiceProblems: conditionalProbabilityProblems(),
+      reviewPrompts: [
+        "What changes when you condition on an event?",
+        "In P(A|B), which event belongs in the denominator?",
+        "When is a probability tree better than a direct formula?",
+        "Why does Bayes' theorem need total probability in the denominator?",
+        "Give an example where P(A|B) and P(B|A) are very different.",
+        "Why are mutually exclusive positive-probability events not independent?"
+      ],
+      reviewQuiz: {
+        id: "quiz-probability-chapter-2-objective-review",
+        title: "Probability Chapter 2 Objective Review",
+        instructions: "Complete this after finishing Chapter 2 exposition and labelled practice. The quiz logs objective answers and diagnoses conditional probability, Bayes, total probability, and independence.",
+        questions: conditionalProbabilityReviewQuestions()
+      },
+      readingQuestions: [
+        "What does P(A|B) mean in words?",
+        "Why does conditioning change the denominator?",
+        "State the multiplication rule.",
+        "When do you use total probability?",
+        "What does Bayes' theorem reverse?",
+        "How can you test whether two events are independent?"
+      ],
+      chapterSummary: [
+        "Conditional probability restricts the sample space to the given event.",
+        "P(A|B) = P(A and B) / P(B), provided P(B) > 0.",
+        "The multiplication rule handles staged events: P(A and B) = P(A)P(B|A).",
+        "Total probability splits an event across complete disjoint cases.",
+        "Bayes' theorem reverses conditioning from evidence to cause.",
+        "Independence means P(A and B) = P(A)P(B), not that the events cannot occur together."
       ],
       updatedAt
     }
@@ -606,6 +1033,441 @@ function probabilityFoundationProblems() {
       difficulty: "stretch",
       prompt: "A number is chosen uniformly from all three-digit numbers with distinct digits. What is the probability that it is even?",
       solution: "Total distinct-digit three-digit numbers: hundreds has 9 choices, tens then 9 choices including 0 except the hundreds digit, units then 8 choices, total 648. Even units: if units is 0, hundreds has 9 choices and tens 8 choices, giving 72. If units is 2,4,6,8, choose units in 4 ways, hundreds in 8 ways because it cannot be 0 or the units digit, tens in 8 ways, giving 256. Favourable = 328. Probability = 328/648 = 41/81."
+    }
+  ];
+}
+
+function conditionalProbabilityProblems() {
+  return [
+    {
+      label: "Concept Problem 1: Direct conditioning",
+      concept: "Conditional probability",
+      technique: "Restrict the sample space",
+      difficulty: "intro",
+      prompt: "A fair die is rolled. Given that the result is at least 4, what is the probability that it is even?",
+      solution: "The given event is {4,5,6}. Inside this restricted sample space, the even outcomes are {4,6}. Probability = 2/3."
+    },
+    {
+      label: "Concept Problem 2: Conditional denominator",
+      concept: "Conditional probability",
+      technique: "Use P(A|B)",
+      difficulty: "intro",
+      prompt: "For events A and B, P(A and B) = 0.18 and P(B) = 0.30. Find P(A|B).",
+      solution: "P(A|B) = P(A and B)/P(B) = 0.18/0.30 = 0.6."
+    },
+    {
+      label: "Concept Problem 3: Bayes inversion",
+      concept: "Bayes' theorem",
+      technique: "Reverse conditioning",
+      difficulty: "intro",
+      prompt: "A box is chosen at random. Box 1 has 2 red and 3 blue balls. Box 2 has 4 red and 1 blue ball. One ball drawn from the chosen box is red. What is the probability that Box 2 was chosen?",
+      solution: "P(red|Box1)=2/5, P(red|Box2)=4/5, and each box has prior 1/2. P(Box2|red) = (4/5)(1/2) / [(2/5)(1/2) + (4/5)(1/2)] = 4/(2+4) = 2/3."
+    },
+    {
+      label: "Problem 4: Card conditioning",
+      concept: "Conditional probability",
+      technique: "Restrict the sample space",
+      difficulty: "warmup",
+      prompt: "One card is drawn from a standard deck. Given that it is a face card, what is the probability that it is a king?",
+      solution: "There are 12 face cards: J, Q, K in four suits. There are 4 kings among them. Probability = 4/12 = 1/3."
+    },
+    {
+      label: "Problem 5: Two draws without replacement",
+      concept: "Multiplication rule",
+      technique: "Multiply staged probabilities",
+      difficulty: "warmup",
+      prompt: "A box has 5 red and 3 blue balls. Two balls are drawn without replacement. What is the probability both are blue?",
+      solution: "P(first blue) = 3/8. Given first blue, P(second blue) = 2/7. Probability = (3/8)(2/7) = 3/28."
+    },
+    {
+      label: "Problem 6: At least one by complement",
+      concept: "Conditional probability",
+      technique: "Use complement with stages",
+      difficulty: "warmup",
+      prompt: "A box has 4 defective and 6 good items. Two items are selected without replacement. What is the probability that at least one is defective?",
+      solution: "Use complement: no defective means both good. P(both good) = (6/10)(5/9) = 1/3. Required probability = 1 - 1/3 = 2/3."
+    },
+    {
+      label: "Problem 7: Total probability with machines",
+      concept: "Total probability",
+      technique: "Split by source",
+      difficulty: "standard",
+      prompt: "Machine A produces 60% of items and has 2% defective rate. Machine B produces 40% and has 5% defective rate. What is the probability that a randomly chosen item is defective?",
+      solution: "P(defective) = P(def|A)P(A) + P(def|B)P(B) = (0.02)(0.60) + (0.05)(0.40) = 0.012 + 0.020 = 0.032."
+    },
+    {
+      label: "Problem 8: Bayes with machines",
+      concept: "Bayes' theorem",
+      technique: "Source after evidence",
+      difficulty: "standard",
+      prompt: "Using the machines in Problem 7, an item is found defective. What is the probability it came from Machine B?",
+      solution: "P(B|def) = P(def|B)P(B)/P(def) = (0.05)(0.40)/0.032 = 0.020/0.032 = 5/8."
+    },
+    {
+      label: "Problem 9: Independence check",
+      concept: "Independence",
+      technique: "Compare product",
+      difficulty: "standard",
+      prompt: "Suppose P(A)=0.4, P(B)=0.5, and P(A and B)=0.2. Are A and B independent?",
+      solution: "P(A)P(B) = 0.4 x 0.5 = 0.2, which equals P(A and B). Therefore A and B are independent."
+    },
+    {
+      label: "Problem 10: Not independent",
+      concept: "Independence",
+      technique: "Compare conditional probability",
+      difficulty: "standard",
+      prompt: "Suppose P(A)=0.6, P(B)=0.5, and P(A|B)=0.8. Are A and B independent?",
+      solution: "If independent, P(A|B) would equal P(A). Here 0.8 is not 0.6, so the events are not independent."
+    },
+    {
+      label: "Problem 11: Conditional probability from a table",
+      concept: "Conditional probability",
+      technique: "Restrict to row or column",
+      difficulty: "standard",
+      prompt: "In a class, 30 students take Python, 20 take R, and 10 take both. A student is chosen at random from those who take Python. What is the probability the student also takes R?",
+      solution: "Condition on Python. Among 30 Python students, 10 also take R. Probability = 10/30 = 1/3."
+    },
+    {
+      label: "Problem 12: Total probability with boxes",
+      concept: "Total probability",
+      technique: "Partition by box",
+      difficulty: "standard",
+      prompt: "Box A has 3 red and 2 blue balls. Box B has 1 red and 4 blue balls. A box is chosen with probabilities 2/3 for A and 1/3 for B. What is the probability of drawing a red ball?",
+      solution: "P(red) = P(red|A)P(A) + P(red|B)P(B) = (3/5)(2/3) + (1/5)(1/3) = 2/5 + 1/15 = 7/15."
+    },
+    {
+      label: "Problem 13: Bayes with boxes",
+      concept: "Bayes' theorem",
+      technique: "Reverse box choice",
+      difficulty: "standard",
+      prompt: "Using the boxes in Problem 12, a red ball is drawn. What is the probability that Box A was chosen?",
+      solution: "P(A|red) = P(red|A)P(A)/P(red) = (3/5)(2/3)/(7/15) = (2/5)/(7/15) = 6/7."
+    },
+    {
+      label: "Problem 14: Medical test",
+      concept: "Bayes' theorem",
+      technique: "Likelihood times prior",
+      difficulty: "standard",
+      prompt: "A disease has prevalence 1%. A test has sensitivity 90% and false positive rate 5%. If a person tests positive, what is the probability the person has the disease?",
+      solution: "P(D|+) = (0.90)(0.01) / [(0.90)(0.01) + (0.05)(0.99)] = 0.009 / 0.0585 = 2/13."
+    },
+    {
+      label: "Problem 15: Conditional dice event",
+      concept: "Conditional probability",
+      technique: "Count inside the given event",
+      difficulty: "standard",
+      prompt: "Two fair dice are rolled. Given that their sum is at least 10, what is the probability that at least one die shows 6?",
+      solution: "Sum at least 10 has outcomes: sum 10 gives 3, sum 11 gives 2, sum 12 gives 1, total 6 outcomes. Outcomes among these with at least one 6 are (4,6),(6,4),(5,6),(6,5),(6,6), total 5. Probability = 5/6."
+    },
+    {
+      label: "Problem 16: Conditional complement",
+      concept: "Conditional probability",
+      technique: "Complement after conditioning",
+      difficulty: "challenging",
+      prompt: "Three cards are drawn without replacement from a deck. Given that the first card is an ace, what is the probability that at least one of the next two cards is also an ace?",
+      solution: "After the first ace, 51 cards remain with 3 aces and 48 non-aces. Use complement: no ace in next two cards has probability (48/51)(47/50). Required probability = 1 - (48 x 47)/(51 x 50) = 49/425."
+    },
+    {
+      label: "Problem 17: Bayes with three sources",
+      concept: "Bayes' theorem",
+      technique: "Total probability denominator",
+      difficulty: "challenging",
+      prompt: "A file is generated by model A, B, or C with probabilities 0.5, 0.3, and 0.2. The probability of an error is 0.01, 0.03, and 0.08 respectively. If an error is observed, what is the probability model C generated the file?",
+      solution: "P(error) = (0.01)(0.5) + (0.03)(0.3) + (0.08)(0.2) = 0.005 + 0.009 + 0.016 = 0.030. P(C|error) = 0.016/0.030 = 8/15."
+    },
+    {
+      label: "Problem 18: Conditional independence trap",
+      concept: "Independence",
+      technique: "Check after conditioning",
+      difficulty: "challenging",
+      prompt: "Two fair dice are rolled. Let A be 'first die is 6' and B be 'sum is 7'. Are A and B independent?",
+      solution: "P(A)=1/6. P(B)=1/6. A and B together means (6,1), so P(A and B)=1/36. Since P(A)P(B)=1/36, A and B are independent."
+    },
+    {
+      label: "Problem 19: Mutually exclusive vs independent",
+      concept: "Independence",
+      technique: "Use product criterion",
+      difficulty: "challenging",
+      prompt: "A fair die is rolled. Let A be 'roll is 1' and B be 'roll is 2'. Are A and B independent?",
+      solution: "P(A and B)=0 because both cannot occur. But P(A)P(B)=(1/6)(1/6)=1/36. Since 0 is not 1/36, they are not independent."
+    },
+    {
+      label: "Problem 20: Mixed Bayes and complement",
+      concept: "Bayes' theorem",
+      technique: "Reverse after a negative result",
+      difficulty: "stretch",
+      prompt: "A disease affects 2% of people. A test has sensitivity 95% and specificity 90%. A person tests negative. What is the probability the person still has the disease?",
+      solution: "Specificity 90% means P(-|no disease)=0.90. Sensitivity 95% means P(-|disease)=0.05. P(D|-) = (0.05)(0.02) / [(0.05)(0.02) + (0.90)(0.98)] = 0.001 / 0.883 = 1/883."
+    }
+  ];
+}
+
+function conditionalProbabilityReviewQuestions() {
+  return [
+    {
+      id: "cp-review-1",
+      kind: "single concept",
+      tags: ["conditional-probability"],
+      prompt: "In P(A|B), which event determines the denominator?",
+      options: [
+        { id: "a", text: "A" },
+        { id: "b", text: "B" },
+        { id: "c", text: "A union B" },
+        { id: "d", text: "The complement of B" }
+      ],
+      answer: "b"
+    },
+    {
+      id: "cp-review-2",
+      kind: "single concept",
+      tags: ["multiplication-rule"],
+      prompt: "Which identity is the multiplication rule?",
+      options: [
+        { id: "a", text: "P(A and B) = P(A) + P(B)" },
+        { id: "b", text: "P(A and B) = P(A)P(B|A)" },
+        { id: "c", text: "P(A|B) = P(B|A)" },
+        { id: "d", text: "P(A or B) = P(A)P(B)" }
+      ],
+      answer: "b"
+    },
+    {
+      id: "cp-review-3",
+      kind: "single concept",
+      tags: ["total-probability"],
+      prompt: "When is total probability the natural method?",
+      options: [
+        { id: "a", text: "When an event can occur through complete disjoint cases" },
+        { id: "b", text: "Only when events are independent" },
+        { id: "c", text: "Only when outcomes are equally likely" },
+        { id: "d", text: "When two events are mutually exclusive and positive" }
+      ],
+      answer: "a"
+    },
+    {
+      id: "cp-review-4",
+      kind: "single concept",
+      tags: ["bayes-theorem"],
+      prompt: "Bayes' theorem is mainly used to:",
+      options: [
+        { id: "a", text: "Reverse conditioning from evidence back to cause" },
+        { id: "b", text: "Count permutations" },
+        { id: "c", text: "Avoid using priors" },
+        { id: "d", text: "Prove events are mutually exclusive" }
+      ],
+      answer: "a"
+    },
+    {
+      id: "cp-review-5",
+      kind: "single concept",
+      tags: ["independence"],
+      prompt: "Which condition is equivalent to independence of A and B?",
+      options: [
+        { id: "a", text: "P(A and B) = 0" },
+        { id: "b", text: "P(A or B) = P(A) + P(B)" },
+        { id: "c", text: "P(A and B) = P(A)P(B)" },
+        { id: "d", text: "P(A|B) = P(B|A)" }
+      ],
+      answer: "c"
+    },
+    {
+      id: "cp-review-6",
+      kind: "mixed: two concepts",
+      tags: ["conditional-probability", "sample-space"],
+      prompt: "A die is rolled. Given the result is at least 4, what sample space should be used?",
+      options: [
+        { id: "a", text: "{1,2,3,4,5,6}" },
+        { id: "b", text: "{4,5,6}" },
+        { id: "c", text: "{2,4,6}" },
+        { id: "d", text: "{1,2,3}" }
+      ],
+      answer: "b"
+    },
+    {
+      id: "cp-review-7",
+      kind: "mixed: two concepts",
+      tags: ["bayes-theorem", "total-probability"],
+      prompt: "In a medical-test Bayes problem, what belongs in the denominator?",
+      options: [
+        { id: "a", text: "Only the true positive probability" },
+        { id: "b", text: "Only the disease prevalence" },
+        { id: "c", text: "The total probability of the observed test result" },
+        { id: "d", text: "The false positive rate alone" }
+      ],
+      answer: "c"
+    },
+    {
+      id: "cp-review-8",
+      kind: "mixed: two concepts",
+      tags: ["independence", "conditional-probability"],
+      prompt: "If P(A|B) = P(A), with P(B)>0, what can you conclude?",
+      options: [
+        { id: "a", text: "A and B are mutually exclusive" },
+        { id: "b", text: "A and B are independent" },
+        { id: "c", text: "A is impossible" },
+        { id: "d", text: "B is certain" }
+      ],
+      answer: "b"
+    },
+    {
+      id: "cp-review-9",
+      kind: "mixed: three concepts",
+      tags: ["bayes-theorem", "total-probability", "multiplication-rule"],
+      prompt: "A source is chosen, then an item is observed defective. Which expression is the numerator for P(Source A | defective)?",
+      options: [
+        { id: "a", text: "P(Source A) + P(defective|Source A)" },
+        { id: "b", text: "P(defective|Source A)P(Source A)" },
+        { id: "c", text: "P(defective)" },
+        { id: "d", text: "P(Source A|defective)P(defective)" }
+      ],
+      answer: "b"
+    },
+    {
+      id: "cp-review-10",
+      kind: "mixed: two concepts",
+      tags: ["independence", "mutual-exclusivity"],
+      prompt: "If A and B are mutually exclusive and both have positive probability, what is true?",
+      options: [
+        { id: "a", text: "They must be independent." },
+        { id: "b", text: "They cannot be independent." },
+        { id: "c", text: "P(A|B) = P(A)." },
+        { id: "d", text: "P(A and B) = P(A)P(B)." }
+      ],
+      answer: "b"
+    }
+  ];
+}
+
+function probabilityFoundationReviewQuestions() {
+  return [
+    {
+      id: "pf-review-1",
+      kind: "single concept",
+      tags: ["sample-space"],
+      prompt: "Two fair dice are rolled and the ordered pair is recorded. Which sample space is appropriate for computing the probability that the sum is 7?",
+      options: [
+        { id: "a", text: "{2, 3, 4, ..., 12}" },
+        { id: "b", text: "All 36 ordered pairs (i, j), where i and j are in {1, 2, ..., 6}" },
+        { id: "c", text: "{1, 2, 3, 4, 5, 6}" },
+        { id: "d", text: "Only the pairs whose sum is 7" }
+      ],
+      answer: "b"
+    },
+    {
+      id: "pf-review-2",
+      kind: "single concept",
+      tags: ["event-translation", "inclusion-exclusion"],
+      prompt: "One card is drawn from a standard deck. Which expression counts the event 'king or heart' correctly?",
+      options: [
+        { id: "a", text: "4 + 13" },
+        { id: "b", text: "4 + 13 - 1" },
+        { id: "c", text: "4 x 13" },
+        { id: "d", text: "52 - 4 - 13" }
+      ],
+      answer: "b"
+    },
+    {
+      id: "pf-review-3",
+      kind: "single concept",
+      tags: ["equally-likely"],
+      prompt: "For two fair dice, why is it invalid to say P(sum is 7) = 1/11 because there are 11 possible sums?",
+      options: [
+        { id: "a", text: "The sums are not equally likely." },
+        { id: "b", text: "There are only 6 possible sums." },
+        { id: "c", text: "The dice are independent." },
+        { id: "d", text: "The answer must always use combinations." }
+      ],
+      answer: "a"
+    },
+    {
+      id: "pf-review-4",
+      kind: "single concept",
+      tags: ["complement"],
+      prompt: "A fair coin is tossed 5 times. Which event is the complement of 'at least one head'?",
+      options: [
+        { id: "a", text: "Exactly one head" },
+        { id: "b", text: "At least one tail" },
+        { id: "c", text: "No heads" },
+        { id: "d", text: "No tails" }
+      ],
+      answer: "c"
+    },
+    {
+      id: "pf-review-5",
+      kind: "single concept",
+      tags: ["counting"],
+      prompt: "A password has two distinct letters followed by two distinct digits. Which denominator counts all valid passwords?",
+      options: [
+        { id: "a", text: "26^2 x 10^2" },
+        { id: "b", text: "26 x 25 x 10 x 9" },
+        { id: "c", text: "C(26,2) x C(10,2)" },
+        { id: "d", text: "26 x 10" }
+      ],
+      answer: "b"
+    },
+    {
+      id: "pf-review-6",
+      kind: "mixed: two concepts",
+      tags: ["counting", "complement"],
+      prompt: "From 6 men and 4 women, a committee of 3 is chosen. Which setup gives the probability of at least one woman?",
+      options: [
+        { id: "a", text: "C(4,1) / C(10,3)" },
+        { id: "b", text: "1 - C(6,3) / C(10,3)" },
+        { id: "c", text: "C(6,3) / C(10,3)" },
+        { id: "d", text: "1 - C(4,3) / C(10,3)" }
+      ],
+      answer: "b"
+    },
+    {
+      id: "pf-review-7",
+      kind: "mixed: two concepts",
+      tags: ["event-translation", "inclusion-exclusion"],
+      prompt: "An integer is chosen from 1 to 100. Which count gives numbers divisible by 2 or 5?",
+      options: [
+        { id: "a", text: "50 + 20" },
+        { id: "b", text: "50 + 20 - 10" },
+        { id: "c", text: "100 - 50 - 20" },
+        { id: "d", text: "10" }
+      ],
+      answer: "b"
+    },
+    {
+      id: "pf-review-8",
+      kind: "mixed: three concepts",
+      tags: ["sample-space", "equally-likely", "counting"],
+      prompt: "Two fair dice are rolled. Which method correctly computes P(maximum is 4)?",
+      options: [
+        { id: "a", text: "Use 1/6 because the maximum can be 1 through 6." },
+        { id: "b", text: "Count ordered pairs with both dice at most 4, then subtract ordered pairs with both dice at most 3, and divide by 36." },
+        { id: "c", text: "Count sums equal to 4 and divide by 11." },
+        { id: "d", text: "Use C(6,2) because there are two dice." }
+      ],
+      answer: "b"
+    },
+    {
+      id: "pf-review-9",
+      kind: "mixed: three concepts",
+      tags: ["counting", "complement", "equally-likely"],
+      prompt: "Four people independently choose one weekday as their favourite. Which expression gives the probability that at least two people choose the same day?",
+      options: [
+        { id: "a", text: "1 - (7 x 6 x 5 x 4) / 7^4" },
+        { id: "b", text: "(7 x 6 x 5 x 4) / 7^4" },
+        { id: "c", text: "1 - 4 / 7" },
+        { id: "d", text: "C(7,4) / 7^4" }
+      ],
+      answer: "a"
+    },
+    {
+      id: "pf-review-10",
+      kind: "mixed: two concepts",
+      tags: ["sample-space", "event-translation"],
+      prompt: "A two-digit number is chosen uniformly from 10 to 99. Which denominator should be used for probabilities over this experiment?",
+      options: [
+        { id: "a", text: "100" },
+        { id: "b", text: "99" },
+        { id: "c", text: "90" },
+        { id: "d", text: "9" }
+      ],
+      answer: "c"
     }
   ];
 }
@@ -870,6 +1732,7 @@ function defaultUser() {
 
 function platinumDemoUser() {
   return {
+    id: "user-platinum-demo",
     name: "platinum-demo",
     email: "platinum.demo@aleph.local",
     tempPassword: "platinum!demo",
@@ -882,6 +1745,7 @@ function platinumDemoUser() {
 
 function basicGateDaUser() {
   return {
+    id: "user-basic-demo",
     name: "basic",
     email: "basic.demo@aleph.local",
     tempPassword: "basic",
@@ -917,7 +1781,10 @@ function showView(name) {
   document.querySelectorAll(".nav-item").forEach((button) => {
     button.classList.toggle("active", button.dataset.view === name);
   });
-  if (name !== "subjects") selectedSubjectId = null;
+  if (name !== "subjects") {
+    selectedSubjectId = null;
+    selectedSectionId = null;
+  }
 }
 
 function login(event) {
@@ -1053,6 +1920,105 @@ function saveItem() {
   render();
 }
 
+function submitQuizAttempt(event) {
+  event.preventDefault();
+  const form = event.currentTarget;
+  const test = state.tests.find((entry) => entry.id === form.dataset.testId);
+  const section = state.gateDaSections.find((entry) => entry.id === test?.sectionId);
+  const quiz = section?.reviewQuiz;
+  if (!test || !quiz) return;
+
+  const formData = new FormData(form);
+  const answers = quiz.questions.map((question) => {
+    const selected = formData.get(question.id);
+    return {
+      questionId: question.id,
+      selected,
+      correctAnswer: question.answer,
+      isCorrect: selected === question.answer,
+      tags: question.tags,
+      kind: question.kind
+    };
+  });
+  const score = answers.filter((answer) => answer.isCorrect).length;
+  const total = quiz.questions.length;
+  const feedback = buildQuizFeedback(answers);
+  const attempt = {
+    id: `attempt-${quiz.id}-${Date.now()}`,
+    userId: state.user.id,
+    testId: test.id,
+    quizId: quiz.id,
+    sectionId: section.id,
+    subject: section.subject,
+    title: quiz.title,
+    date: new Date().toISOString(),
+    score,
+    total,
+    percent: Math.round((score / total) * 100),
+    answers,
+    feedback
+  };
+
+  state.quizAttempts.push(attempt);
+  state.feedback.unshift({
+    id: `feedback-${attempt.id}`,
+    title: `${quiz.title}: Attempt ${state.quizAttempts.filter((entry) => entry.quizId === quiz.id).length}`,
+    date: new Date().toISOString().slice(0, 10),
+    details: `${score}/${total} (${attempt.percent}%). ${feedback.summary} Strong: ${feedback.strong.join(", ") || "none yet"}. Review: ${feedback.weak.join(", ") || "none flagged"}.`,
+    attemptId: attempt.id,
+    updatedAt: attempt.date
+  });
+
+  activeTestId = null;
+  persist();
+  render();
+}
+
+function buildQuizFeedback(answers) {
+  const conceptScores = {};
+  answers.forEach((answer) => {
+    answer.tags.forEach((tag) => {
+      if (!conceptScores[tag]) conceptScores[tag] = { correct: 0, total: 0 };
+      conceptScores[tag].total += 1;
+      if (answer.isCorrect) conceptScores[tag].correct += 1;
+    });
+  });
+
+  const strong = [];
+  const weak = [];
+  const developing = [];
+  Object.entries(conceptScores).forEach(([tag, score]) => {
+    const percent = score.correct / score.total;
+    if (percent >= 0.8) strong.push(conceptLabel(tag));
+    else if (percent < 0.6) weak.push(conceptLabel(tag));
+    else developing.push(conceptLabel(tag));
+  });
+
+  const missedMixed = answers.filter((answer) => !answer.isCorrect && answer.tags.length > 1).length;
+  const summary = missedMixed
+    ? "Mixed-concept misses suggest practising event translation before choosing a counting method."
+    : "Misses are mostly isolated concept checks; review the flagged concepts and retake.";
+
+  return { summary, strong, developing, weak, conceptScores };
+}
+
+function conceptLabel(tag) {
+  const labels = {
+    "sample-space": "sample spaces",
+    "event-translation": "event translation",
+    "equally-likely": "equally likely outcomes",
+    counting: "counting setup",
+    complement: "complements",
+    "inclusion-exclusion": "inclusion-exclusion",
+    "conditional-probability": "conditional probability",
+    "multiplication-rule": "multiplication rule",
+    "total-probability": "total probability",
+    "bayes-theorem": "Bayes' theorem",
+    "mutual-exclusivity": "mutual exclusivity"
+  };
+  return labels[tag] || tag;
+}
+
 function collectionFor(type) {
   if (type === "subject") return state.subjects;
   return type === "test" ? state.tests : state[`${type}s`] || state[type];
@@ -1075,7 +2041,7 @@ function render() {
   renderEnrollments();
   renderSubjects();
   renderSchedule();
-  renderList("tests-list", state.tests, "test");
+  renderTests();
   renderList("feedback-list", state.feedback, "feedback");
   renderList("resources-list", state.resources, "resource");
   renderUpcoming();
@@ -1100,7 +2066,23 @@ function renderSubjects() {
     container.innerHTML = subjectReaderTemplate(selectedSubject);
     container.querySelector("[data-subject-back]")?.addEventListener("click", () => {
       selectedSubjectId = null;
+      selectedSectionId = null;
       renderSubjects();
+    });
+    container.querySelector("[data-chapter-back]")?.addEventListener("click", () => {
+      selectedSectionId = null;
+      renderSubjects();
+    });
+    container.querySelectorAll("[data-open-section]").forEach((button) => {
+      button.addEventListener("click", () => {
+        selectedSectionId = button.dataset.openSection;
+        renderSubjects();
+      });
+    });
+    container.querySelector("[data-open-section-quiz]")?.addEventListener("click", (event) => {
+      activeTestId = event.currentTarget.dataset.openSectionQuiz;
+      showView("tests");
+      renderTests();
     });
     return;
   }
@@ -1114,9 +2096,121 @@ function renderSubjects() {
   container.querySelectorAll("[data-open-subject]").forEach((button) => {
     button.addEventListener("click", () => {
       selectedSubjectId = button.dataset.openSubject;
+      selectedSectionId = null;
       renderSubjects();
     });
   });
+}
+
+function renderTests() {
+  const container = document.querySelector("#tests-list");
+  if (!state.tests.length) {
+    container.innerHTML = '<div class="empty">No test items yet.</div>';
+    return;
+  }
+
+  container.innerHTML = `
+    ${state.tests.map(testTemplate).join("")}
+    ${activeTestId ? activeQuizTemplate(activeTestId) : ""}
+  `;
+
+  container.querySelectorAll("[data-start-test]").forEach((button) => {
+    button.addEventListener("click", () => {
+      activeTestId = button.dataset.startTest;
+      renderTests();
+    });
+  });
+
+  container.querySelectorAll("[data-edit]").forEach((button) => {
+    button.addEventListener("click", () => {
+      const item = state.tests.find((entry) => entry.id === button.dataset.edit);
+      openForm("test", item);
+    });
+  });
+
+  container.querySelectorAll("[data-delete]").forEach((button) => {
+    button.addEventListener("click", () => {
+      const index = state.tests.findIndex((entry) => entry.id === button.dataset.delete);
+      state.tests.splice(index, 1);
+      persist();
+      render();
+    });
+  });
+
+  container.querySelector("[data-quiz-form]")?.addEventListener("submit", submitQuizAttempt);
+}
+
+function testTemplate(test) {
+  const attempts = state.quizAttempts.filter((attempt) => attempt.testId === test.id);
+  const latestAttempt = attempts[attempts.length - 1];
+  const quizAction = test.quizId
+    ? `<button class="primary-btn" data-start-test="${test.id}" type="button">${latestAttempt ? "Retake objective quiz" : "Start objective quiz"}</button>`
+    : "";
+  const attemptSummary = latestAttempt
+    ? `<p class="muted">Latest logged score: ${latestAttempt.score}/${latestAttempt.total} (${latestAttempt.percent}%). ${escapeHtml(latestAttempt.feedback.summary)}</p>`
+    : test.quizId ? '<p class="muted">No attempt logged yet.</p>' : "";
+
+  return `
+    <article class="item">
+      <div class="item-top">
+        <div>
+          <h4>${escapeHtml(test.title)}</h4>
+          <p>${escapeHtml(test.details || "No details added.")}</p>
+          ${attemptSummary}
+        </div>
+        <span class="tag">${test.date ? formatDate(test.date) : "No date"}</span>
+      </div>
+      <div class="item-actions">
+        ${quizAction}
+        <button class="small-btn" data-edit="${test.id}" type="button">Edit</button>
+        <button class="small-btn" data-delete="${test.id}" type="button">Delete</button>
+      </div>
+    </article>
+  `;
+}
+
+function activeQuizTemplate(testId) {
+  const test = state.tests.find((entry) => entry.id === testId);
+  const section = state.gateDaSections.find((entry) => entry.id === test?.sectionId);
+  const quiz = section?.reviewQuiz;
+  if (!test || !quiz) return "";
+
+  return `
+    <form class="quiz-form" data-quiz-form data-test-id="${test.id}">
+      <div class="quiz-header">
+        <div>
+          <p class="eyebrow">Objective review</p>
+          <h4>${escapeHtml(quiz.title)}</h4>
+          <p>${escapeHtml(quiz.instructions)}</p>
+        </div>
+        <span class="tag">${quiz.questions.length} questions</span>
+      </div>
+      ${quiz.questions.map((question, index) => quizQuestionTemplate(question, index)).join("")}
+      <div class="quiz-actions">
+        <button class="primary-btn" type="submit">Submit and log attempt</button>
+      </div>
+    </form>
+  `;
+}
+
+function quizQuestionTemplate(question, index) {
+  return `
+    <fieldset class="quiz-question">
+      <legend>
+        <span>Question ${index + 1}</span>
+        ${escapeHtml(question.prompt)}
+      </legend>
+      <p>${escapeHtml(question.kind)} - ${question.tags.map(escapeHtml).join(", ")}</p>
+      <div class="quiz-options">
+        ${question.options.map((option) => `
+          <label>
+            <input type="radio" name="${question.id}" value="${option.id}" required>
+            <span>${escapeHtml(option.text)}</span>
+          </label>
+        `).join("")}
+      </div>
+    </fieldset>
+  `;
 }
 
 function subjectMenuCardTemplate(subject) {
@@ -1139,18 +2233,52 @@ function subjectReaderTemplate(subject) {
   const sections = (subject.sectionIds || [])
     .map((sectionId) => state.gateDaSections.find((section) => section.id === sectionId))
     .filter(Boolean);
+  const selectedSection = sections.find((section) => section.id === selectedSectionId);
 
   return `
     <article class="subject-reader">
       <div class="subject-reader-header">
-        <button class="small-btn" data-subject-back type="button">Back to subjects</button>
-        <div>
-          <p class="eyebrow">Subjects</p>
-          <h4>${escapeHtml(subject.title)}</h4>
-          <p>${escapeHtml(subject.details || "No subject details added.")}</p>
-        </div>
+        <button class="text-btn" data-subject-back type="button">Back to subjects</button>
+        ${selectedSection ? '<button class="text-btn" data-chapter-back type="button">Back to chapters</button>' : ""}
       </div>
-      ${sections.length ? sections.map(sectionTemplate).join("") : '<div class="empty small-empty">No chapters added yet.</div>'}
+      ${selectedSection ? sectionTemplate(selectedSection) : chapterMenuTemplate(subject, sections)}
+    </article>
+  `;
+}
+
+function chapterMenuTemplate(subject, sections) {
+  if (!sections.length) return '<div class="empty small-empty">No chapters added yet.</div>';
+  return `
+    <section class="chapter-menu">
+      <div class="chapter-menu-header">
+        <p class="eyebrow">${escapeHtml(subject.title)} textbook</p>
+        <h4>Chapters</h4>
+        <p>${escapeHtml(subject.details || "Choose a chapter to begin.")}</p>
+      </div>
+      <div class="chapter-card-list">
+        ${sections.map(chapterCardTemplate).join("")}
+      </div>
+    </section>
+  `;
+}
+
+function chapterCardTemplate(section) {
+  const test = state.tests.find((entry) => entry.sectionId === section.id);
+  const attempts = state.quizAttempts.filter((attempt) => attempt.testId === test?.id);
+  const latestAttempt = attempts[attempts.length - 1];
+  return `
+    <article class="chapter-card">
+      <div>
+        <p class="eyebrow">${escapeHtml(section.chapter)}</p>
+        <h5>${escapeHtml(section.title)}</h5>
+        <p>${escapeHtml(section.summary)}</p>
+      </div>
+      <div class="chapter-card-meta">
+        <span>${section.practiceProblems.length} practice</span>
+        <span>${section.reviewQuiz?.questions.length || 0} quiz questions</span>
+        <span>${latestAttempt ? `Latest quiz ${latestAttempt.percent}%` : "No quiz attempt"}</span>
+      </div>
+      <button class="primary-btn" data-open-section="${section.id}" type="button">Open chapter</button>
     </article>
   `;
 }
@@ -1255,91 +2383,141 @@ function renderGateDaSections() {
 
 function sectionTemplate(section) {
   return `
-    <article class="section-card">
-      <div class="section-title">
-        <div>
-          <p class="eyebrow">Exams -> ${escapeHtml(section.exam)} -> ${escapeHtml(section.accountTier)} -> Subjects -> ${escapeHtml(section.subject)} -> ${escapeHtml(section.chapter)}</p>
-          <h4>${escapeHtml(section.title)}</h4>
-          <p>${escapeHtml(section.summary)}</p>
-        </div>
-        <span class="tag">${section.practiceProblems.length} solved problems</span>
-      </div>
-
-      <section class="section-block">
-        <h5>Subject</h5>
-        <div class="subject-path">
-          <span>${escapeHtml(section.exam)}</span>
+    <article class="book-reader">
+      <header class="book-header">
+        <p class="eyebrow">${escapeHtml(section.subject)} textbook</p>
+        <h4>${escapeHtml(section.chapter)}. ${escapeHtml(section.title)}</h4>
+        <p>${escapeHtml(section.summary)}</p>
+        <div class="book-meta">
           <span>${escapeHtml(section.accountTier)}</span>
-          <span>${escapeHtml(section.subject)}</span>
-          <span>${escapeHtml(section.chapter)}</span>
+          <span>${section.practiceProblems.length} practice problems</span>
+          <span>Conceptual review included</span>
         </div>
-      </section>
+      </header>
 
-      <section class="section-block">
-        <h5>Section Preview</h5>
-        <p>${escapeHtml(section.sectionPreview)}</p>
-      </section>
+      <div class="book-page">
+        <nav class="book-contents" aria-label="Chapter contents">
+          <p>Contents</p>
+          <div>
+            <a href="#${section.id}-preview">Preview</a>
+            ${(section.bookSections || []).map((bookSection) => `
+              <a href="#${section.id}-${bookSection.number.replace(".", "-")}">${escapeHtml(bookSection.number)}</a>
+            `).join("")}
+            <a href="#${section.id}-reading">Reading</a>
+            <a href="#${section.id}-practice">Practice</a>
+            <a href="#${section.id}-review">Review</a>
+            <a href="#${section.id}-quiz">Quiz</a>
+            <a href="#${section.id}-summary">Summary</a>
+          </div>
+        </nav>
 
-      <section class="section-block">
-        <h5>Preview Activity</h5>
-        <p>${escapeHtml(section.previewActivity)}</p>
-      </section>
+          <section class="book-section book-intro" id="${section.id}-preview">
+            <p class="book-kicker">Section Preview</p>
+            ${paragraphListTemplate(section.chapterIntro || [section.sectionPreview])}
+            <div class="math-callout preview">
+              <strong>Preview Activity</strong>
+              <p>${escapeHtml(section.previewActivity)}</p>
+            </div>
+          </section>
 
-      <section class="section-block">
-        <h5>Core Ideas</h5>
-        <div class="concept-grid">
-          ${section.concepts.map((concept) => `
-            <article class="concept-card">
-              <strong>${escapeHtml(concept.name)}</strong>
-              <p>${escapeHtml(concept.description)}</p>
-              <span>${escapeHtml(concept.cue)}</span>
-            </article>
-          `).join("")}
-        </div>
-      </section>
+          ${(section.bookSections || []).map((bookSection) => bookSectionTemplate(section, bookSection)).join("")}
 
-      <section class="section-block">
-        <h5>Problem-Solving Techniques</h5>
-        <div class="technique-list">
-          ${section.techniques.map((technique) => `
-            <article>
-              <strong>${escapeHtml(technique.name)}</strong>
-              <p><b>Use when:</b> ${escapeHtml(technique.when)}</p>
-              <p><b>Move:</b> ${escapeHtml(technique.move)}</p>
-            </article>
-          `).join("")}
-        </div>
-      </section>
+          <section class="book-section" id="${section.id}-concepts">
+            <p class="book-kicker">Core Ideas</p>
+            <div class="concept-strip">
+              ${section.concepts.map((concept) => `
+                <article>
+                  <strong>${escapeHtml(concept.name)}</strong>
+                  <p>${escapeHtml(concept.description)}</p>
+                  <span>${escapeHtml(concept.cue)}</span>
+                </article>
+              `).join("")}
+            </div>
+          </section>
 
-      <section class="section-block">
-        <h5>Reading Questions</h5>
-        <ol class="review-list">
-          ${section.readingQuestions.map((question) => `<li>${escapeHtml(question)}</li>`).join("")}
-        </ol>
-      </section>
+          <section class="book-section" id="${section.id}-techniques">
+            <p class="book-kicker">Problem-Solving Techniques</p>
+            <div class="technique-list book-techniques">
+              ${section.techniques.map((technique) => `
+                <article>
+                  <strong>${escapeHtml(technique.name)}</strong>
+                  <p><b>Use when:</b> ${escapeHtml(technique.when)}</p>
+                  <p><b>Move:</b> ${escapeHtml(technique.move)}</p>
+                </article>
+              `).join("")}
+            </div>
+          </section>
 
-      <section class="section-block">
-        <h5>Labelled Practice Problems</h5>
-        <div class="problem-list">
-          ${section.practiceProblems.map(practiceProblemTemplate).join("")}
-        </div>
-      </section>
+          <section class="book-section" id="${section.id}-reading">
+            <p class="book-kicker">Reading Questions</p>
+            <ol class="review-list">
+              ${section.readingQuestions.map((question) => `<li>${escapeHtml(question)}</li>`).join("")}
+            </ol>
+          </section>
 
-      <section class="section-block">
-        <h5>Conceptual Review: No Solutions</h5>
-        <p class="muted">These are meant to expose weak understanding. The student should answer in words and then discuss the reasoning with a teacher or reviewer.</p>
-        <ol class="review-list">
-          ${section.reviewPrompts.map((prompt) => `<li>${escapeHtml(prompt)}</li>`).join("")}
-        </ol>
-      </section>
+          <section class="book-section" id="${section.id}-practice">
+            <p class="book-kicker">Labelled Practice Problems</p>
+            <div class="problem-list book-problems">
+              ${section.practiceProblems.map(practiceProblemTemplate).join("")}
+            </div>
+          </section>
 
-      <section class="section-block">
-        <h5>Chapter Summary</h5>
-        <ul class="summary-list">
-          ${section.chapterSummary.map((item) => `<li>${escapeHtml(item)}</li>`).join("")}
-        </ul>
-      </section>
+          <section class="book-section" id="${section.id}-review">
+            <p class="book-kicker">Review Problems: No Solutions</p>
+            <p class="muted">Do these after finishing the chapter and practice set. These are meant to expose conceptual weaknesses before the objective quiz.</p>
+            <ol class="review-list">
+              ${section.reviewPrompts.map((prompt) => `<li>${escapeHtml(prompt)}</li>`).join("")}
+            </ol>
+          </section>
+
+          <section class="book-section" id="${section.id}-quiz">
+            <p class="book-kicker">Objective Review Quiz</p>
+            <p class="muted">${escapeHtml(section.reviewQuiz.instructions)}</p>
+            <ul class="summary-list">
+              <li>Single-concept questions check each key concept in this chapter.</li>
+              <li>Mixed questions combine two or three concepts so feedback can identify where reasoning breaks.</li>
+              <li>Attempts are logged in Tests with concept-level feedback in the learner record.</li>
+            </ul>
+            <div class="book-action-row">
+              <button class="primary-btn" data-open-section-quiz="${escapeHtml(sectionTestId(section.id))}" type="button">Open review quiz</button>
+            </div>
+          </section>
+
+          <section class="book-section" id="${section.id}-summary">
+            <p class="book-kicker">Chapter Summary</p>
+            <ul class="summary-list">
+              ${section.chapterSummary.map((item) => `<li>${escapeHtml(item)}</li>`).join("")}
+            </ul>
+          </section>
+      </div>
     </article>
+  `;
+}
+
+function sectionTestId(sectionId) {
+  return state.tests.find((test) => test.sectionId === sectionId)?.id || "";
+}
+
+function paragraphListTemplate(paragraphs) {
+  return paragraphs.map((paragraph) => `<p>${escapeHtml(paragraph)}</p>`).join("");
+}
+
+function bookSectionTemplate(chapter, bookSection) {
+  return `
+    <section class="book-section" id="${chapter.id}-${bookSection.number.replace(".", "-")}">
+      <h5>${escapeHtml(bookSection.number)} ${escapeHtml(bookSection.title)}</h5>
+      ${paragraphListTemplate(bookSection.paragraphs)}
+      ${(bookSection.blocks || []).map(bookBlockTemplate).join("")}
+    </section>
+  `;
+}
+
+function bookBlockTemplate(block) {
+  return `
+    <div class="math-callout ${escapeHtml(block.type)}">
+      <strong>${escapeHtml(block.title)}</strong>
+      <p>${escapeHtml(block.body)}</p>
+    </div>
   `;
 }
 
@@ -1883,6 +3061,7 @@ function importData(event) {
       state.subjects = imported.subjects || [];
       state.schedule = imported.schedule || [];
       state.tests = imported.tests || [];
+      state.quizAttempts = imported.quizAttempts || [];
       state.feedback = imported.feedback || [];
       state.resources = imported.resources || [];
       state.tasks = imported.tasks || [];

@@ -15,14 +15,22 @@
   - show the current week by subject
   - show pending tasks, Sunday tests, and not-completed work
   - surface upcoming review/spaced-review work clearly
+- Reorganize exam content:
+  - keep exams as the top-level account/program container
+  - show GATE DA account types as Basic, Advanced, Premium, and Platinum
+  - keep Priyanka's customized learner workspace under GATE DA Platinum
+  - build current GATE DA material under the Basic version
+  - show GATE DA subjects inside the selected GATE DA account type
+  - make Probability chapters follow the Open Math textbook structure
 - Clean up prototype auth/admin flows:
   - keep local login simple for testing
   - separate learner login from admin actions
   - make credential email/password flows clearer
 - Attach real problem-set content:
-  - use the organized ISI practice HTML files
-  - map questions into the five Probability and Statistics themes
-  - connect daily 5-problem sets to actual problems
+  - review the Probability Foundations pilot section in the app
+  - build the remaining GATE DA Probability sections one at a time
+  - later attach past exam PDFs and replace/annotate pilot problems with source citations
+  - connect daily problem sets to the section practice and review flow
 - Deploy and verify:
   - push changes to GitHub
   - deploy to Vercel
@@ -36,9 +44,11 @@
 - Deployed the app to Vercel.
 - Configured `https://aleph-alpha.io`.
 - Added credential email sending through Resend.
-- Added product catalog and personalized learner plan structure.
+- Added exam containers and personalized learner plan structure.
 - Added Discrete Mathematics and Data Structures and Algorithms 13-week plans.
 - Added Probability and Statistics 13-week plan with daily problem sets and Sunday tests.
+- Added a GATE DA Basic -> Probability -> Chapter 1 pilot section with labelled practice, worked solutions, conceptual review prompts, and Open Math-style reading/summary structure.
+- Added Probability Chapter 2: Conditional Probability with textbook exposition, labelled practice, and objective review logging.
 - Organized ISI practice HTML files by theme.
 - Disabled forced password change for the local prototype.
 - Added `AGENTS.md` so future Codex sessions load project instructions from the repo.
