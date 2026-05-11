@@ -347,6 +347,15 @@ textarea {
   padding: 16px;
 }
 
+.subject-detail {
+  display: grid;
+  gap: 14px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--surface);
+  padding: 14px;
+}
+
 .section-title {
   display: flex;
   align-items: flex-start;

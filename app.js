@@ -1,6 +1,6 @@
 const STORAGE_KEY = "learning-studio-data-v1";
 const SESSION_KEY = "aleph-session";
-const COURSE_PLAN_VERSION = "gate-da-basic-test-account-v1";
+const COURSE_PLAN_VERSION = "gate-da-basic-probability-only-v1";
 
 const state = loadState();
 let deferredInstallPrompt = null;
@@ -142,6 +142,164 @@ function ensureCoursePlan() {
 }
 
 function buildCoursePlan() {
+  const now = new Date().toISOString();
+  const accountTypes = accountTypeCatalog(now);
+  const sections = gateDaProbabilitySections(now);
+  return buildGateDaBasicPlan(now, accountTypes, sections);
+}
+
+function buildGateDaBasicPlan(now, accountTypes, sections) {
+  const probabilitySection = sections[0];
+  const monday = "2026-06-01";
+  const sunday = addDays(monday, 6);
+  return {
+    subjects: [
+      {
+        id: "subject-gate-da-probability",
+        title: "Probability",
+        date: "2026-08-30",
+        status: "In progress",
+        details: "GATE DA Basic Probability, aligned to the official GATE DA syllabus. Start with Chapter 1: Probability Foundations.",
+        sectionIds: [probabilitySection.id],
+        updatedAt: now
+      }
+    ],
+    schedule: [
+      {
+        id: "schedule-probability-chapter-1-study",
+        title: "Probability Chapter 1: Section Preview and Core Ideas",
+        week: 1,
+        subject: "Probability",
+        kind: "Study",
+        date: monday,
+        details: "Read Section Preview, attempt the Preview Activity, and study Core Ideas for Probability Foundations.",
+        updatedAt: now
+      },
+      {
+        id: "schedule-probability-chapter-1-practice",
+        title: "Probability Chapter 1: Labelled Practice",
+        week: 1,
+        subject: "Probability",
+        kind: "Practice",
+        date: addDays(monday, 2),
+        details: "Solve the labelled Probability Foundations practice problems. Reveal worked solutions only after attempting.",
+        updatedAt: now
+      },
+      {
+        id: "schedule-probability-chapter-1-review",
+        title: "Probability Chapter 1: Conceptual Review",
+        week: 1,
+        subject: "Probability",
+        kind: "Review",
+        date: sunday,
+        details: "Answer the conceptual review prompts without solutions. Use misses to identify weak understanding.",
+        updatedAt: now
+      }
+    ],
+    tests: [
+      {
+        id: "test-probability-chapter-1-conceptual-review",
+        title: "Probability Chapter 1 Conceptual Review",
+        date: sunday,
+        details: "No-solution conceptual review for sample spaces, events, complements, counting, and inclusion-exclusion.",
+        updatedAt: now
+      }
+    ],
+    tasks: [
+      {
+        id: "task-probability-chapter-1-read",
+        week: 1,
+        title: "Probability Ch 1: Read preview and core ideas",
+        type: "Study",
+        date: monday,
+        status: "todo",
+        done: false,
+        details: "Open Subjects -> Probability -> Chapter 1 and read the Section Preview, Preview Activity, and Core Ideas.",
+        updatedAt: now
+      },
+      {
+        id: "task-probability-chapter-1-practice",
+        week: 1,
+        title: "Probability Ch 1: Solve labelled practice",
+        type: "Practice",
+        date: addDays(monday, 2),
+        status: "todo",
+        done: false,
+        details: "Attempt the labelled practice problems before opening the worked solutions.",
+        updatedAt: now
+      },
+      {
+        id: "task-probability-chapter-1-review",
+        week: 1,
+        title: "Probability Ch 1: Complete conceptual review",
+        type: "Review",
+        date: sunday,
+        status: "todo",
+        done: false,
+        details: "Answer the conceptual review prompts without solutions.",
+        updatedAt: now
+      }
+    ],
+    accountTypes,
+    enrollments: [
+      {
+        id: "enrollment-gate-da-basic-demo",
+        userId: "user-basic-demo",
+        accountTypeId: "gate-da-basic",
+        planVariant: "Basic",
+        paymentStatus: "active",
+        lessonPlanId: "lesson-gate-da-basic-demo",
+        status: "active",
+        updatedAt: now
+      }
+    ],
+    lessonPlans: [
+      {
+        id: "lesson-gate-da-basic-demo",
+        userId: "user-basic-demo",
+        title: "GATE DA Basic plan",
+        type: "exam",
+        subjects: ["Probability"],
+        startDate: monday,
+        endDate: "2026-08-30",
+        status: "active",
+        details: "GATE DA Basic plan surfaces: Subjects, Tasks, Schedule, Tests, Feedback, Resources, and Share. Current material build: Probability Chapter 1.",
+        updatedAt: now
+      }
+    ],
+    gateDaSections: sections,
+    feedback: [
+      {
+        id: "feedback-probability-chapter-1",
+        title: "Probability Chapter 1 feedback focus",
+        date: sunday,
+        details: "Review conceptual answers for sample-space choice, complement use, overlap in A or B, and confusion between permutations and combinations.",
+        updatedAt: now
+      }
+    ],
+    resources: [
+      {
+        id: "resource-gate-da-2026-syllabus",
+        title: "Official GATE 2026 DA Syllabus",
+        date: "2026-06-01",
+        details: "Official GATE DA syllabus. Use the Probability and Statistics portion to organize the Basic content build.",
+        link: "https://gate2026.iitg.ac.in/doc/GATE2026_Syllabus/DA_2026_Syllabus.pdf",
+        updatedAt: now
+      },
+      {
+        id: "resource-probability-foundations",
+        title: "Probability Chapter 1: Probability Foundations",
+        date: "2026-06-01",
+        details: "Open Subjects -> Probability to study Chapter 1 in Open Math-style format.",
+        link: "",
+        updatedAt: now
+      }
+    ],
+    coursePlanVersion: COURSE_PLAN_VERSION
+  };
+}
+
+function buildLegacyPlatinumPlan() {
   const now = new Date().toISOString();
   const accountTypes = accountTypeCatalog(now);
   const lessonPlans = [
@@ -1281,7 +1439,6 @@ function collectionFor(type) {
 
 function render() {
   document.querySelector("#learner-subtitle").textContent = `Learner: ${state.user.name}`;
-  document.querySelector("#plan-count").textContent = state.accountTypes.length;
   document.querySelector("#subject-count").textContent = state.subjects.length;
   document.querySelector("#task-count").textContent = state.tasks.length;
   document.querySelector("#schedule-count").textContent = state.schedule.length;
@@ -1295,7 +1452,7 @@ function render() {
   renderGateDaWorkspace();
   renderGateDaSections();
   renderEnrollments();
-  renderList("subjects-list", state.subjects, "subject");
+  renderSubjects();
   renderSchedule();
   renderList("tests-list", state.tests, "test");
   renderList("feedback-list", state.feedback, "feedback");
@@ -1308,6 +1465,32 @@ function render() {
   normalizeTaskStatuses();
   renderTaskList();
   renderCurrentTasks();
+}
+
+function renderSubjects() {
+  const container = document.querySelector("#subjects-list");
+  if (!state.subjects.length) {
+    container.innerHTML = '<div class="empty">No subjects are available for this plan yet.</div>';
+    return;
+  }
+
+  container.innerHTML = state.subjects.map((subject) => {
+    const sections = (subject.sectionIds || [])
+      .map((sectionId) => state.gateDaSections.find((section) => section.id === sectionId))
+      .filter(Boolean);
+    return `
+      <article class="subject-detail">
+        <div class="item-top">
+          <div>
+            <h4>${escapeHtml(subject.title)}</h4>
+            <p>${escapeHtml(subject.details || "No subject details added.")}</p>
+          </div>
+          <span class="tag">${escapeHtml(subject.status || "Not started")}</span>
+        </div>
+        ${sections.length ? sections.map(sectionTemplate).join("") : '<div class="empty small-empty">No chapters added yet.</div>'}
+      </article>
+    `;
+  }).join("");
 }
 
 function renderPlanCatalog() {

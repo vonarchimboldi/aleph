@@ -81,7 +81,6 @@
 
       <nav class="nav" aria-label="Primary">
         <button class="nav-item active" data-view="dashboard">Dashboard</button>
-        <button class="nav-item" data-view="plans">Exams</button>
         <button class="nav-item" data-view="subjects">Subjects</button>
         <button class="nav-item" data-view="tasks">Tasks</button>
         <button class="nav-item" data-view="schedule">Schedule</button>
@@ -99,8 +98,8 @@
           <h2 id="view-title">Dashboard</h2>
         </div>
         <div class="top-actions">
-          <button class="ghost-btn" id="seed-btn" type="button">Load 13-week plan</button>
-          <button class="ghost-btn" id="reset-plan-btn" type="button">Reset plan data</button>
+          <button class="ghost-btn" id="seed-btn" type="button">Load Basic plan</button>
+          <button class="ghost-btn" id="reset-plan-btn" type="button">Reset Basic data</button>
           <button class="ghost-btn" id="logout-btn" type="button">Sign out</button>
           <button class="primary-btn" id="quick-add-btn" type="button">Add item</button>
         </div>
@@ -108,10 +107,6 @@
 
       <section class="view active" id="dashboard-view">
         <div class="metrics">
-          <article class="metric">
-            <span id="plan-count">0</span>
-            <p>GATE DA tiers</p>
-          </article>
           <article class="metric">
             <span id="subject-count">0</span>
             <p>plan subjects</p>
@@ -141,8 +136,8 @@
         <div class="two-column">
           <section class="panel wide-panel">
             <div class="panel-header">
-              <h3>Enrollment</h3>
-              <button class="text-btn" data-view-link="plans" type="button">Open exams</button>
+              <h3>GATE DA Basic Plan</h3>
+              <button class="text-btn" data-view-link="subjects" type="button">Open subjects</button>
             </div>
             <div class="list" id="enrollment-list"></div>
           </section>
@@ -165,8 +160,8 @@
 
           <section class="panel">
             <div class="panel-header">
-              <h3>GATE DA Basic</h3>
-              <button class="text-btn" data-view-link="plans" type="button">Open material</button>
+              <h3>GATE DA Basic Material</h3>
+              <button class="text-btn" data-view-link="subjects" type="button">Open Probability</button>
             </div>
             <div class="list" id="gate-da-summary-list"></div>
           </section>

@@ -41,13 +41,7 @@ Subjects -> Probability -> Chapter 1: Probability Foundations
 
 ## Current Content
 
-The seeded GATE DA plan currently includes:
-
-- Discrete Mathematics
-- Data Structures and Algorithms
-- Probability and Statistics
-
-The GATE DA Basic content currently includes:
+The GATE DA Basic plan currently includes:
 
 - Probability, Chapter 1: Probability Foundations
 
