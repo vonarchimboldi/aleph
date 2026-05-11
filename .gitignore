@@ -1,1 +1,6 @@
 .vercel
+experimentation_harness_prompt.md
+probability_module_spec.md
+logs/
+skills/
+scripts/harness.js

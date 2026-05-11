@@ -331,6 +331,170 @@ textarea {
   gap: 14px;
 }
 
+.content-list,
+.section-card,
+.section-block,
+.problem-list,
+.technique-list {
+  display: grid;
+  gap: 14px;
+}
+
+.section-card {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #fbfcfb;
+  padding: 16px;
+}
+
+.section-title {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.section-title h4,
+.section-title p,
+.section-block h5,
+.practice-problem p,
+.concept-card p,
+.technique-list p {
+  margin: 0;
+}
+
+.section-title h4 {
+  font-size: 22px;
+  margin-bottom: 6px;
+}
+
+.section-title p,
+.section-block > p,
+.concept-card p,
+.technique-list p,
+.practice-problem p {
+  color: var(--muted);
+  line-height: 1.5;
+}
+
+.section-block {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 14px;
+}
+
+.section-block h5 {
+  font-size: 16px;
+}
+
+.concept-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+  gap: 10px;
+}
+
+.subject-path {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.workspace-summary {
+  margin-bottom: 14px;
+}
+
+.workspace-counts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.workspace-counts span {
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 800;
+  padding: 6px 9px;
+}
+
+.subject-path span {
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: #f7f9f8;
+  color: var(--green);
+  font-size: 13px;
+  font-weight: 800;
+  padding: 6px 10px;
+}
+
+.concept-card,
+.technique-list article,
+.practice-problem {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #ffffff;
+  padding: 12px;
+}
+
+.concept-card {
+  display: grid;
+  gap: 7px;
+}
+
+.concept-card span {
+  color: var(--green);
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.problem-heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.problem-heading p {
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.practice-problem {
+  display: grid;
+  gap: 10px;
+}
+
+.practice-problem details {
+  border-top: 1px solid var(--line);
+  padding-top: 10px;
+}
+
+.practice-problem summary {
+  color: var(--accent);
+  cursor: pointer;
+  font-weight: 800;
+}
+
+.review-list {
+  display: grid;
+  gap: 9px;
+  margin: 0;
+  padding-left: 22px;
+  color: var(--ink);
+  line-height: 1.45;
+}
+
+.summary-list {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding-left: 20px;
+  color: var(--ink);
+  line-height: 1.45;
+}
+
 .catalog-card {
   background: var(--surface);
   border: 1px solid var(--line);
@@ -802,6 +966,8 @@ a {
 
   .topbar,
   .item-top,
+  .section-title,
+  .problem-heading,
   .board-header,
   .week-schedule-header,
   .schedule-row {

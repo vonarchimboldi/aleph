@@ -80,7 +80,7 @@
 
       <nav class="nav" aria-label="Primary">
         <button class="nav-item active" data-view="dashboard">Dashboard</button>
-        <button class="nav-item" data-view="plans">Plans</button>
+        <button class="nav-item" data-view="plans">Exams</button>
         <button class="nav-item" data-view="subjects">Subjects</button>
         <button class="nav-item" data-view="tasks">Tasks</button>
         <button class="nav-item" data-view="schedule">Schedule</button>
@@ -109,7 +109,7 @@
         <div class="metrics">
           <article class="metric">
             <span id="plan-count">0</span>
-            <p>available plans</p>
+            <p>GATE DA tiers</p>
           </article>
           <article class="metric">
             <span id="subject-count">0</span>
@@ -141,7 +141,7 @@
           <section class="panel wide-panel">
             <div class="panel-header">
               <h3>Enrollment</h3>
-              <button class="text-btn" data-view-link="plans" type="button">Open plans</button>
+              <button class="text-btn" data-view-link="plans" type="button">Open exams</button>
             </div>
             <div class="list" id="enrollment-list"></div>
           </section>
@@ -160,6 +160,14 @@
               <button class="text-btn" data-view-link="subjects" type="button">Open subjects</button>
             </div>
             <div class="list" id="plan-list"></div>
+          </section>
+
+          <section class="panel">
+            <div class="panel-header">
+              <h3>GATE DA Basic</h3>
+              <button class="text-btn" data-view-link="plans" type="button">Open material</button>
+            </div>
+            <div class="list" id="gate-da-summary-list"></div>
           </section>
 
           <section class="panel">
@@ -192,11 +200,21 @@
         <section class="panel">
           <div class="panel-header">
             <div>
-              <h3>Plan Catalog</h3>
-              <p class="muted">Exam and interview prep products users can buy after account creation.</p>
+              <h3>GATE DA Account Types</h3>
+              <p class="muted">GATE DA has Basic, Advanced, Premium, and Platinum accounts. Priyanka is enrolled in Platinum; the Basic material is currently being developed.</p>
             </div>
           </div>
-          <div class="catalog-grid" id="plan-catalog-list"></div>
+          <div class="catalog-grid" id="account-type-list"></div>
+        </section>
+        <section class="panel">
+          <div class="panel-header content-header">
+            <div>
+              <h3>GATE DA Basic</h3>
+              <p class="muted">Current build: Basic -> Subjects -> Probability -> Chapter 1. Priyanka's active learner workspace is GATE DA Platinum.</p>
+            </div>
+          </div>
+          <div class="list" id="gate-da-workspace-list"></div>
+          <div class="content-list" id="gate-da-section-list"></div>
         </section>
       </section>
 

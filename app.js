@@ -1,6 +1,6 @@
 const STORAGE_KEY = "learning-studio-data-v1";
 const SESSION_KEY = "aleph-session";
-const COURSE_PLAN_VERSION = "product-catalog-priyanka-probability-v1";
+const COURSE_PLAN_VERSION = "gate-da-basic-probability-platinum-priyanka-v1";
 
 const state = loadState();
 let deferredInstallPrompt = null;
@@ -20,7 +20,7 @@ const views = {
 
 const titles = {
   dashboard: "Dashboard",
-  plans: "Plans",
+  plans: "Exams",
   subjects: "Subjects",
   tasks: "Tasks",
   schedule: "Schedule",
@@ -116,9 +116,10 @@ function loadState() {
       feedback: parsed.feedback || [],
       resources: parsed.resources || [],
       tasks: parsed.tasks || [],
-      products: parsed.products?.length ? parsed.products : starter.products,
+      accountTypes: parsed.accountTypes?.length ? parsed.accountTypes : parsed.products?.length ? parsed.products : starter.accountTypes,
       enrollments: parsed.enrollments?.length ? parsed.enrollments : starter.enrollments,
       lessonPlans: parsed.lessonPlans?.length ? parsed.lessonPlans : starter.lessonPlans,
+      gateDaSections: parsed.gateDaSections?.length ? parsed.gateDaSections : starter.gateDaSections,
       coursePlanVersion: parsed.coursePlanVersion || ""
     };
   } catch {
@@ -142,18 +143,18 @@ function ensureCoursePlan() {
 
 function buildCoursePlan() {
   const now = new Date().toISOString();
-  const products = productCatalog(now);
+  const accountTypes = accountTypeCatalog(now);
   const lessonPlans = [
     {
       id: "lesson-priyanka-custom",
       userId: "user-priyanka",
-      title: "Priyanka personalized lesson plan",
+      title: "Priyanka GATE DA Platinum plan",
       type: "personalized",
       subjects: ["Discrete Mathematics", "Data Structures and Algorithms", "Probability and Statistics"],
       startDate: "2026-06-01",
       endDate: "2026-08-30",
       status: "active",
-      details: "Personalized June-August plan. This is separate from the public exam prep catalog.",
+      details: "Personalized June-August Platinum plan for the GATE DA exam. Priyanka's workspace, subjects, tasks, schedules, tests, feedback, and resources live inside this GATE DA plan.",
       updatedAt: now
     }
   ];
@@ -161,8 +162,8 @@ function buildCoursePlan() {
     {
       id: "enrollment-priyanka-custom",
       userId: "user-priyanka",
-      productId: "custom-personalized",
-      planVariant: "Personalized lesson plan",
+      accountTypeId: "gate-da-platinum",
+      planVariant: "Platinum",
       paymentStatus: "active",
       lessonPlanId: "lesson-priyanka-custom",
       status: "active",
@@ -191,7 +192,7 @@ function buildCoursePlan() {
       title: "Probability and Statistics",
       date: "2026-08-30",
       status: "Not started",
-      details: "Learning plan: ISI MStat PSB-oriented probability and statistics practice across five recurring patterns: NP/MP tests, MLE and estimation, conditional expectation with indicators, distributions and order statistics, and regression/OLS. Monday-Saturday uses daily 5-problem sets; every Sunday has a test with default solution feedback.",
+      details: "GATE DA Probability and Statistics. Basic content is being developed one section at a time; Priyanka's enrolled plan is Platinum and can include custom pacing, feedback, and additional review.",
       updatedAt: now
     }
   ];
@@ -212,7 +213,7 @@ function buildCoursePlan() {
     {
       key: "PS",
       label: "Probability and Statistics",
-      resources: "ISI MStat PSB pattern notes and themed practice sets",
+      resources: "GATE DA Basic Probability sections and themed practice sets",
       milestones: probabilityStatsMilestones(),
       dailyProblemSets: true
     }
@@ -269,6 +270,20 @@ function buildCoursePlan() {
             updatedAt: now
           });
         });
+
+        if (plan.key === "PS" && week === 1) {
+          tasks.push({
+            id: crypto.randomUUID(),
+            week,
+            title: "PS W1: Study Probability Foundations pilot section",
+            type: "Section",
+            date: monday,
+            status: "todo",
+            done: false,
+            details: "Read the GATE DA Probability Foundations section, solve the labelled practice problems with solutions, and attempt the conceptual review prompts without solutions.",
+            updatedAt: now
+          });
+        }
 
         schedule.push({
           id: crypto.randomUUID(),
@@ -425,9 +440,10 @@ function buildCoursePlan() {
     schedule,
     tests,
     tasks,
-    products,
+    accountTypes,
     enrollments,
     lessonPlans,
+    gateDaSections: gateDaProbabilitySections(now),
     feedback: [
       {
         id: crypto.randomUUID(),
@@ -438,6 +454,13 @@ function buildCoursePlan() {
       }
     ].concat(feedback),
     resources: [
+      {
+        id: crypto.randomUUID(),
+        title: "GATE DA Probability Foundations Pilot Section",
+        date: "2026-06-01",
+        details: "Section 1 pilot with concept teaching, 24 labelled practice problems with solutions, and conceptual review prompts without solutions.",
+        updatedAt: now
+      },
       {
         id: crypto.randomUUID(),
         title: "CMU 21-228 Discrete Mathematics - Po-Shen Loh",
@@ -499,33 +522,314 @@ function buildCoursePlan() {
   };
 }
 
-function productCatalog(updatedAt = new Date().toISOString()) {
-  const variants = ["Study material + mocks", "Mocks only"];
-  return [
-    ["gate-da", "GATE DA", "Data science and AI entrance preparation.", variants],
-    ["iit-jam-statistics", "IIT JAM Statistics", "Statistics entrance preparation with topic practice and mocks.", variants],
-    ["gate-statistics", "GATE Statistics", "Statistics-focused GATE preparation.", variants],
-    ["cmi-ms-data-science", "CMI MS Data Science", "CMI entrance preparation for data science.", variants],
-    ["isi-msqe", "ISI MSQE", "Quantitative economics entrance preparation.", variants],
-    ["dse-economics", "DSE Masters in Economics", "Delhi School of Economics masters entrance preparation.", variants],
-    ["isi-mstat", "ISI MStat", "ISI MStat entrance preparation.", variants],
-    ["dsa-interview", "DSA Interview Prep", "Data structures and algorithms interview preparation for coding roles.", ["Study material + mocks", "Mocks only", "Interview practice"]],
-    ["hybrid-general", "Hybrid General Study + Mock Tests", "Access to general study material and mock tests across supported exams.", ["Hybrid access"]]
-  ].map(([id, title, description, planVariants]) => ({
+function accountTypeCatalog(updatedAt = new Date().toISOString()) {
+  const tiers = [
+    ["gate-da-basic", "GATE DA Basic", "Core GATE DA study material, chapter practice, and conceptual review.", ["Basic"]],
+    ["gate-da-advanced", "GATE DA Advanced", "Basic material plus additional practice, quizzes, and deeper review sets.", ["Advanced"]],
+    ["gate-da-premium", "GATE DA Premium", "Advanced preparation plus mocks, analytics, and stronger feedback workflows.", ["Premium"]],
+    ["gate-da-platinum", "GATE DA Platinum", "Premium preparation plus personalized planning, custom feedback, and learner-specific review.", ["Platinum"]]
+  ];
+
+  return tiers.map(([id, title, description, planVariants]) => ({
     id,
     title,
     description,
     variants: planVariants,
-    status: "planned",
+    status: id === "gate-da-basic" || id === "gate-da-platinum" ? "active" : "planned",
     updatedAt
-  })).concat({
-    id: "custom-personalized",
-    title: "Personalized Lesson Plan",
-    description: "Private learner-specific schedule, resources, tasks, reviews, and spaced review.",
-    variants: ["Personalized lesson plan"],
-    status: "active",
-    updatedAt
-  });
+  }));
+}
+
+function gateDaProbabilitySections(updatedAt = new Date().toISOString()) {
+  return [
+    {
+      id: "gate-da-probability-foundations",
+      exam: "GATE DA",
+      accountTier: "Basic",
+      subject: "Probability",
+      chapter: "Chapter 1",
+      section: "1",
+      title: "Probability Foundations",
+      summary: "Sample spaces, events, counting, complements, inclusion-exclusion, and the basic probability moves needed before conditional probability.",
+      sectionPreview: "Probability begins by making the experiment precise. Before using any formula, decide what the outcomes are, which outcomes are favourable, and whether all outcomes are equally likely. Most mistakes in basic probability come from counting the numerator and denominator from different sample spaces.",
+      previewActivity: "A password is formed using two distinct letters followed by two distinct digits. How many passwords are possible, and what is the probability that a randomly chosen valid password starts with a vowel? Try it before reading the formulas. The point is to see that probability is often counting divided by counting.",
+      concepts: [
+        {
+          name: "Sample space",
+          description: "List the outcomes that are possible under the rules of the experiment.",
+          cue: "The question asks what can happen before asking how likely it is."
+        },
+        {
+          name: "Event",
+          description: "An event is a set of favourable outcomes inside the sample space.",
+          cue: "Translate words like at least, exactly, neither, or either into a set condition."
+        },
+        {
+          name: "Complement",
+          description: "Sometimes it is easier to count what you do not want and subtract from 1.",
+          cue: "Use when the phrase is at least one, not all, or no repeated failure."
+        },
+        {
+          name: "Inclusion-exclusion",
+          description: "When two counts overlap, add both and subtract the overlap once.",
+          cue: "Use for A or B when A and B can both happen."
+        },
+        {
+          name: "Counting as deployment",
+          description: "Use permutations, combinations, and multiplication rule only to count the numerator and denominator.",
+          cue: "The probability is simple after the correct count is built."
+        }
+      ],
+      techniques: [
+        {
+          name: "Count favourable over total",
+          when: "all valid outcomes are equally likely.",
+          move: "Define the sample space, count total outcomes, count favourable outcomes, then divide."
+        },
+        {
+          name: "Use the complement",
+          when: "the direct event has many cases, but its opposite is clean.",
+          move: "Compute 1 - P(opposite event)."
+        },
+        {
+          name: "Split into disjoint cases",
+          when: "the event can happen in different non-overlapping ways.",
+          move: "Count each case separately and add."
+        },
+        {
+          name: "Apply inclusion-exclusion",
+          when: "the event says A or B and A and B can overlap.",
+          move: "Use P(A or B) = P(A) + P(B) - P(A and B)."
+        }
+      ],
+      practiceProblems: probabilityFoundationProblems(),
+      reviewPrompts: [
+        "Explain in your own words why probability is not always the same as counting favourable-looking cases.",
+        "When should you use the complement instead of direct counting?",
+        "A and B are mutually exclusive. What does that say about P(A and B)? What does it not say?",
+        "Why is P(A or B) not always P(A) + P(B)?",
+        "Give one example where order matters and one example where order does not matter.",
+        "In a problem with at least one success, what is usually the opposite event?",
+        "What mistake happens if the numerator and denominator are counted from different sample spaces?",
+        "Why must disjoint cases be genuinely non-overlapping before you add their counts?",
+        "Create a two-dice event whose probability is easiest by complement.",
+        "Create a card problem where inclusion-exclusion is necessary."
+      ],
+      readingQuestions: [
+        "What is the sample space in a probability problem?",
+        "What is the difference between an outcome and an event?",
+        "Why does at least one usually suggest using the complement?",
+        "When can P(A or B) be computed by simple addition?",
+        "Why must equally likely outcomes be checked before using favourable over total?"
+      ],
+      chapterSummary: [
+        "Define the sample space before counting.",
+        "An event is a set of outcomes.",
+        "For equally likely outcomes, probability = favourable outcomes / total outcomes.",
+        "Use complements for at least one, none, not all, and similar phrases.",
+        "Use inclusion-exclusion when A or B has overlap.",
+        "Use permutations when order matters and combinations when order does not matter."
+      ],
+      updatedAt
+    }
+  ];
+}
+
+function probabilityFoundationProblems() {
+  return [
+    {
+      label: "Concept Problem 1: Build the sample space",
+      concept: "Sample space",
+      technique: "Count favourable over total",
+      difficulty: "intro",
+      prompt: "A fair die is rolled twice. What is the probability that the ordered pair has sum 7?",
+      solution: "There are 6 x 6 = 36 ordered outcomes. Sum 7 occurs in (1,6), (2,5), (3,4), (4,3), (5,2), (6,1), so there are 6 favourable outcomes. Probability = 6/36 = 1/6."
+    },
+    {
+      label: "Concept Problem 2: Event translation",
+      concept: "Events",
+      technique: "Count favourable over total",
+      difficulty: "intro",
+      prompt: "One card is drawn from a standard 52-card deck. What is the probability that it is a king or a heart?",
+      solution: "There are 4 kings and 13 hearts. The king of hearts is counted in both, so subtract it once. Favourable = 4 + 13 - 1 = 16. Probability = 16/52 = 4/13."
+    },
+    {
+      label: "Concept Problem 3: Complement",
+      concept: "Complement",
+      technique: "Use the complement",
+      difficulty: "intro",
+      prompt: "A coin is tossed 5 times. What is the probability of getting at least one head?",
+      solution: "The opposite of at least one head is no heads, i.e. all tails. P(all tails) = (1/2)^5 = 1/32. Required probability = 1 - 1/32 = 31/32."
+    },
+    {
+      label: "Problem 4: Exactly one condition",
+      concept: "Counting",
+      technique: "Split into disjoint cases",
+      difficulty: "warmup",
+      prompt: "A two-digit number is chosen uniformly from 10 to 99. What is the probability that exactly one digit is 7?",
+      solution: "There are 90 two-digit numbers. Tens digit 7 and units not 7 gives 9 numbers: 70-76 and 78-79. Units digit 7 and tens not 7 gives 8 numbers because tens can be 1-9 except 7. Total = 17. Probability = 17/90."
+    },
+    {
+      label: "Problem 5: Without replacement",
+      concept: "Counting",
+      technique: "Count favourable over total",
+      difficulty: "warmup",
+      prompt: "Two balls are drawn without replacement from a box with 5 red and 3 blue balls. What is the probability both are red?",
+      solution: "Total ways to choose 2 balls from 8 is C(8,2) = 28. Favourable ways are C(5,2) = 10. Probability = 10/28 = 5/14."
+    },
+    {
+      label: "Problem 6: With replacement",
+      concept: "Counting",
+      technique: "Multiply independent stages",
+      difficulty: "warmup",
+      prompt: "Two balls are drawn with replacement from a box with 5 red and 3 blue balls. What is the probability both are red?",
+      solution: "Each draw has P(red) = 5/8. Replacement keeps the second probability the same. Probability = (5/8)(5/8) = 25/64."
+    },
+    {
+      label: "Problem 7: At least one repeat",
+      concept: "Complement",
+      technique: "Use the complement",
+      difficulty: "standard",
+      prompt: "Four people independently choose one day of the week as their favourite. What is the probability that at least two people choose the same day?",
+      solution: "Use the complement: all four choose different days. Total choices = 7^4. Different choices = 7 x 6 x 5 x 4. Probability = 1 - (7 x 6 x 5 x 4)/7^4 = 1 - 840/2401 = 1561/2401."
+    },
+    {
+      label: "Problem 8: Ordered arrangement",
+      concept: "Permutations",
+      technique: "Count favourable over total",
+      difficulty: "standard",
+      prompt: "The letters of GATE are arranged randomly. What is the probability that the vowels are adjacent?",
+      solution: "Total arrangements = 4! = 24. Treat A and E as one block. Then we arrange the block, G, T in 3! ways, and A/E inside the block in 2! ways. Favourable = 12. Probability = 12/24 = 1/2."
+    },
+    {
+      label: "Problem 9: Committee count",
+      concept: "Combinations",
+      technique: "Count favourable over total",
+      difficulty: "standard",
+      prompt: "From 6 men and 4 women, a committee of 3 is chosen. What is the probability that the committee has at least one woman?",
+      solution: "Total committees = C(10,3) = 120. Opposite event: no woman, so all 3 from 6 men = C(6,3) = 20. Probability = 1 - 20/120 = 5/6."
+    },
+    {
+      label: "Problem 10: Inclusion-exclusion with numbers",
+      concept: "Inclusion-exclusion",
+      technique: "Apply inclusion-exclusion",
+      difficulty: "standard",
+      prompt: "An integer is chosen uniformly from 1 to 100. What is the probability it is divisible by 2 or 5?",
+      solution: "Multiples of 2: 50. Multiples of 5: 20. Multiples of both, i.e. 10: 10. Favourable = 50 + 20 - 10 = 60. Probability = 60/100 = 3/5."
+    },
+    {
+      label: "Problem 11: Neither event",
+      concept: "Complement",
+      technique: "Use inclusion-exclusion then complement",
+      difficulty: "standard",
+      prompt: "An integer is chosen uniformly from 1 to 60. What is the probability it is divisible by neither 3 nor 4?",
+      solution: "Divisible by 3: 20. Divisible by 4: 15. Divisible by both, i.e. 12: 5. Divisible by 3 or 4 = 20 + 15 - 5 = 30. Neither = 60 - 30 = 30. Probability = 30/60 = 1/2."
+    },
+    {
+      label: "Problem 12: Exactly two heads",
+      concept: "Binomial counting",
+      technique: "Choose positions",
+      difficulty: "standard",
+      prompt: "A fair coin is tossed 6 times. What is the probability of exactly two heads?",
+      solution: "Choose the 2 head positions from 6: C(6,2) = 15. Each sequence has probability (1/2)^6. Probability = 15/64."
+    },
+    {
+      label: "Problem 13: Dice maximum",
+      concept: "Complement",
+      technique: "Count by maximum",
+      difficulty: "standard",
+      prompt: "Two fair dice are rolled. What is the probability that the maximum of the two numbers is 4?",
+      solution: "Both dice must be at most 4, and at least one must be 4. Count pairs with both at most 4: 4^2 = 16. Count pairs with both at most 3: 3^2 = 9. Favourable = 16 - 9 = 7. Probability = 7/36."
+    },
+    {
+      label: "Problem 14: Password restriction",
+      concept: "Multiplication rule",
+      technique: "Count favourable over total",
+      difficulty: "standard",
+      prompt: "A 4-digit PIN is formed from digits 0-9, repetition allowed. What is the probability that it has no repeated digit?",
+      solution: "Total PINs = 10^4. No repeated digit: 10 x 9 x 8 x 7. Probability = 5040/10000 = 63/125."
+    },
+    {
+      label: "Problem 15: First and last condition",
+      concept: "Permutations",
+      technique: "Count positions",
+      difficulty: "standard",
+      prompt: "A 5-letter word is made by arranging A, B, C, D, E. What is the probability that A appears before B?",
+      solution: "By symmetry, in exactly half of all arrangements A appears before B and in the other half B appears before A. Probability = 1/2."
+    },
+    {
+      label: "Problem 16: Non-overlapping cases",
+      concept: "Disjoint cases",
+      technique: "Split into disjoint cases",
+      difficulty: "challenging",
+      prompt: "Three fair dice are rolled. What is the probability that the sum is 5?",
+      solution: "Positive triples adding to 5 are permutations of (3,1,1) and (2,2,1). The first gives 3 arrangements, the second gives 3 arrangements. Favourable = 6. Total = 216. Probability = 6/216 = 1/36."
+    },
+    {
+      label: "Problem 17: At least two sixes",
+      concept: "Complement",
+      technique: "Subtract zero and one success",
+      difficulty: "challenging",
+      prompt: "A die is rolled 5 times. What is the probability of getting at least two sixes?",
+      solution: "Use complement: zero sixes or exactly one six. P(0) = (5/6)^5. P(1) = C(5,1)(1/6)(5/6)^4. Required probability = 1 - (5/6)^5 - 5(1/6)(5/6)^4 = 1 - 3125/7776 - 3125/7776 = 763/3888."
+    },
+    {
+      label: "Problem 18: Two constraints in cards",
+      concept: "Inclusion-exclusion",
+      technique: "Apply inclusion-exclusion",
+      difficulty: "challenging",
+      prompt: "A 5-card hand is drawn from a standard deck. What is the probability that it contains at least one ace or at least one king?",
+      solution: "Total hands = C(52,5). No ace hands = C(48,5). No king hands = C(48,5). No ace and no king hands = C(44,5). By complement/inclusion-exclusion, favourable = C(52,5) - C(48,5) - C(48,5) + C(44,5). Divide by C(52,5)."
+    },
+    {
+      label: "Problem 19: Divisibility with overlap",
+      concept: "Inclusion-exclusion",
+      technique: "Apply inclusion-exclusion",
+      difficulty: "challenging",
+      prompt: "A number is chosen uniformly from 1 to 1000. What is the probability that it is divisible by 6, 10, or 15?",
+      solution: "Counts: by 6 is 166, by 10 is 100, by 15 is 66. Pair overlaps: lcm(6,10)=30 gives 33, lcm(6,15)=30 gives 33, lcm(10,15)=30 gives 33. Triple overlap lcm is 30, also 33. Favourable = 166 + 100 + 66 - 33 - 33 - 33 + 33 = 266. Probability = 266/1000 = 133/500."
+    },
+    {
+      label: "Problem 20: Seating with adjacency",
+      concept: "Permutations",
+      technique: "Block method",
+      difficulty: "challenging",
+      prompt: "Five people A, B, C, D, E sit in a row randomly. What is the probability that A and B are not adjacent?",
+      solution: "Total arrangements = 5! = 120. Adjacent A and B: treat AB as a block, arrange block, C, D, E in 4! ways and order A/B inside in 2 ways. Adjacent = 48. Not adjacent = 72. Probability = 72/120 = 3/5."
+    },
+    {
+      label: "Problem 21: Distribution of balls",
+      concept: "Sample space choice",
+      technique: "Count assignments",
+      difficulty: "challenging",
+      prompt: "Three distinct balls are placed independently and uniformly into three distinct boxes. What is the probability that no box is empty?",
+      solution: "Total assignments = 3^3 = 27. No box empty with 3 balls and 3 boxes means one ball in each box. Assign balls to boxes in 3! = 6 ways. Probability = 6/27 = 2/9."
+    },
+    {
+      label: "Problem 22: Matching positions",
+      concept: "Complement and cases",
+      technique: "Derangement count",
+      difficulty: "stretch",
+      prompt: "A random permutation of 1, 2, 3, 4 is chosen. What is the probability that no number remains in its original position?",
+      solution: "Total permutations = 4! = 24. Derangements of 4 can be counted by inclusion-exclusion: 24 - C(4,1)3! + C(4,2)2! - C(4,3)1! + C(4,4)0! = 24 - 24 + 12 - 4 + 1 = 9. Probability = 9/24 = 3/8."
+    },
+    {
+      label: "Problem 23: Mixed complement",
+      concept: "Complement",
+      technique: "Avoid repeated casework",
+      difficulty: "stretch",
+      prompt: "A fair die is rolled 8 times. What is the probability that every face appears at least once?",
+      solution: "Use inclusion-exclusion on missing faces. Favourable sequences = 6^8 - C(6,1)5^8 + C(6,2)4^8 - C(6,3)3^8 + C(6,4)2^8 - C(6,5)1^8. Probability is this quantity divided by 6^8."
+    },
+    {
+      label: "Problem 24: Conditional-looking but foundational",
+      concept: "Sample space restriction",
+      technique: "Count within the stated universe",
+      difficulty: "stretch",
+      prompt: "A number is chosen uniformly from all three-digit numbers with distinct digits. What is the probability that it is even?",
+      solution: "Total distinct-digit three-digit numbers: hundreds has 9 choices, tens then 9 choices including 0 except the hundreds digit, units then 8 choices, total 648. Even units: if units is 0, hundreds has 9 choices and tens 8 choices, giving 72. If units is 2,4,6,8, choose units in 4 ways, hundreds in 8 ways because it cannot be 0 or the units digit, tens in 8 ways, giving 256. Favourable = 328. Probability = 328/648 = 41/81."
+    }
+  ];
 }
 
 function discreteMathMilestones() {
@@ -943,7 +1247,7 @@ function collectionFor(type) {
 
 function render() {
   document.querySelector("#learner-subtitle").textContent = `Learner: ${state.user.name}`;
-  document.querySelector("#plan-count").textContent = state.products.length;
+  document.querySelector("#plan-count").textContent = state.accountTypes.length;
   document.querySelector("#subject-count").textContent = state.subjects.length;
   document.querySelector("#task-count").textContent = state.tasks.length;
   document.querySelector("#schedule-count").textContent = state.schedule.length;
@@ -953,6 +1257,9 @@ function render() {
 
   renderProfile();
   renderPlanCatalog();
+  renderGateDaSummary();
+  renderGateDaWorkspace();
+  renderGateDaSections();
   renderEnrollments();
   renderList("subjects-list", state.subjects, "subject");
   renderSchedule();
@@ -970,19 +1277,189 @@ function render() {
 }
 
 function renderPlanCatalog() {
-  const container = document.querySelector("#plan-catalog-list");
-  container.innerHTML = state.products.map((product) => `
+  const container = document.querySelector("#account-type-list");
+  container.innerHTML = state.accountTypes.map((accountType) => `
     <article class="catalog-card">
       <div class="catalog-card-header">
-        <h4>${escapeHtml(product.title)}</h4>
-        <span class="tag">${escapeHtml(product.status)}</span>
+        <h4>${escapeHtml(accountType.title)}</h4>
+        <span class="tag">${escapeHtml(accountType.status)}</span>
       </div>
-      <p>${escapeHtml(product.description)}</p>
+      <p>${escapeHtml(accountType.description)}</p>
       <div class="variant-list">
-        ${product.variants.map((variant) => `<span>${escapeHtml(variant)}</span>`).join("")}
+        ${accountType.variants.map((variant) => `<span>${escapeHtml(variant)}</span>`).join("")}
       </div>
     </article>
   `).join("");
+}
+
+function renderGateDaSummary() {
+  const container = document.querySelector("#gate-da-summary-list");
+  if (!state.gateDaSections?.length) {
+    container.innerHTML = '<div class="empty">No GATE DA material seeded yet.</div>';
+    return;
+  }
+
+  container.innerHTML = state.gateDaSections.slice(0, 3).map((section) => `
+    <article class="item">
+      <div class="item-top">
+        <div>
+          <h4>${escapeHtml(section.title)}</h4>
+          <p>${escapeHtml(section.summary)}</p>
+        </div>
+        <span class="tag">${section.practiceProblems.length} practice</span>
+      </div>
+    </article>
+  `).join("");
+}
+
+function renderGateDaWorkspace() {
+  const container = document.querySelector("#gate-da-workspace-list");
+  if (!container) return;
+
+  const platinumEnrollment = state.enrollments.find((enrollment) => {
+    const accountTypeId = enrollment.accountTypeId || enrollment.productId;
+    return accountTypeId === "gate-da-platinum";
+  });
+  const lessonPlan = state.lessonPlans.find((entry) => entry.id === platinumEnrollment?.lessonPlanId);
+
+  container.innerHTML = `
+    <article class="item workspace-summary">
+      <div class="item-top">
+        <div>
+          <h4>Priyanka Workspace: GATE DA Platinum</h4>
+          <p>${escapeHtml(lessonPlan?.details || "Personalized GATE DA Platinum learner workspace.")}</p>
+        </div>
+        <span class="tag">${escapeHtml(platinumEnrollment?.paymentStatus || "active")}</span>
+      </div>
+      <div class="workspace-counts">
+        <span>${state.subjects.length} subjects</span>
+        <span>${state.tasks.length} tasks</span>
+        <span>${state.schedule.length} schedule items</span>
+        <span>${state.tests.length} tests</span>
+        <span>${state.feedback.length} feedback notes</span>
+        <span>${state.resources.length} resources</span>
+      </div>
+    </article>
+  `;
+}
+
+function renderGateDaSections() {
+  const container = document.querySelector("#gate-da-section-list");
+  if (!state.gateDaSections?.length) {
+    container.innerHTML = '<div class="empty">No GATE DA sections are available yet.</div>';
+    return;
+  }
+
+  container.innerHTML = state.gateDaSections.map(sectionTemplate).join("");
+}
+
+function sectionTemplate(section) {
+  return `
+    <article class="section-card">
+      <div class="section-title">
+        <div>
+          <p class="eyebrow">Exams -> ${escapeHtml(section.exam)} -> ${escapeHtml(section.accountTier)} -> Subjects -> ${escapeHtml(section.subject)} -> ${escapeHtml(section.chapter)}</p>
+          <h4>${escapeHtml(section.title)}</h4>
+          <p>${escapeHtml(section.summary)}</p>
+        </div>
+        <span class="tag">${section.practiceProblems.length} solved problems</span>
+      </div>
+
+      <section class="section-block">
+        <h5>Subject</h5>
+        <div class="subject-path">
+          <span>${escapeHtml(section.exam)}</span>
+          <span>${escapeHtml(section.accountTier)}</span>
+          <span>${escapeHtml(section.subject)}</span>
+          <span>${escapeHtml(section.chapter)}</span>
+        </div>
+      </section>
+
+      <section class="section-block">
+        <h5>Section Preview</h5>
+        <p>${escapeHtml(section.sectionPreview)}</p>
+      </section>
+
+      <section class="section-block">
+        <h5>Preview Activity</h5>
+        <p>${escapeHtml(section.previewActivity)}</p>
+      </section>
+
+      <section class="section-block">
+        <h5>Core Ideas</h5>
+        <div class="concept-grid">
+          ${section.concepts.map((concept) => `
+            <article class="concept-card">
+              <strong>${escapeHtml(concept.name)}</strong>
+              <p>${escapeHtml(concept.description)}</p>
+              <span>${escapeHtml(concept.cue)}</span>
+            </article>
+          `).join("")}
+        </div>
+      </section>
+
+      <section class="section-block">
+        <h5>Problem-Solving Techniques</h5>
+        <div class="technique-list">
+          ${section.techniques.map((technique) => `
+            <article>
+              <strong>${escapeHtml(technique.name)}</strong>
+              <p><b>Use when:</b> ${escapeHtml(technique.when)}</p>
+              <p><b>Move:</b> ${escapeHtml(technique.move)}</p>
+            </article>
+          `).join("")}
+        </div>
+      </section>
+
+      <section class="section-block">
+        <h5>Reading Questions</h5>
+        <ol class="review-list">
+          ${section.readingQuestions.map((question) => `<li>${escapeHtml(question)}</li>`).join("")}
+        </ol>
+      </section>
+
+      <section class="section-block">
+        <h5>Labelled Practice Problems</h5>
+        <div class="problem-list">
+          ${section.practiceProblems.map(practiceProblemTemplate).join("")}
+        </div>
+      </section>
+
+      <section class="section-block">
+        <h5>Conceptual Review: No Solutions</h5>
+        <p class="muted">These are meant to expose weak understanding. The student should answer in words and then discuss the reasoning with a teacher or reviewer.</p>
+        <ol class="review-list">
+          ${section.reviewPrompts.map((prompt) => `<li>${escapeHtml(prompt)}</li>`).join("")}
+        </ol>
+      </section>
+
+      <section class="section-block">
+        <h5>Chapter Summary</h5>
+        <ul class="summary-list">
+          ${section.chapterSummary.map((item) => `<li>${escapeHtml(item)}</li>`).join("")}
+        </ul>
+      </section>
+    </article>
+  `;
+}
+
+function practiceProblemTemplate(problem) {
+  return `
+    <article class="practice-problem">
+      <div class="problem-heading">
+        <div>
+          <strong>${escapeHtml(problem.label)}</strong>
+          <p>${escapeHtml(problem.technique)} - ${escapeHtml(problem.difficulty)}</p>
+        </div>
+        <span class="tag">${escapeHtml(problem.concept)}</span>
+      </div>
+      <p>${escapeHtml(problem.prompt)}</p>
+      <details>
+        <summary>Show solution</summary>
+        <p>${escapeHtml(problem.solution)}</p>
+      </details>
+    </article>
+  `;
 }
 
 function renderEnrollments() {
@@ -993,13 +1470,14 @@ function renderEnrollments() {
   }
 
   container.innerHTML = state.enrollments.map((enrollment) => {
-    const product = state.products.find((entry) => entry.id === enrollment.productId);
+    const accountTypeId = enrollment.accountTypeId || enrollment.productId;
+    const accountType = state.accountTypes.find((entry) => entry.id === accountTypeId);
     const lessonPlan = state.lessonPlans.find((entry) => entry.id === enrollment.lessonPlanId);
     return `
       <article class="item">
         <div class="item-top">
           <div>
-            <h4>${escapeHtml(product?.title || "Enrollment")}</h4>
+            <h4>${escapeHtml(accountType?.title || "Account")}</h4>
             <p>${escapeHtml(enrollment.planVariant)} - ${escapeHtml(lessonPlan?.details || "No lesson plan attached.")}</p>
           </div>
           <span class="tag">${escapeHtml(enrollment.paymentStatus)}</span>
@@ -1508,9 +1986,10 @@ function importData(event) {
       state.feedback = imported.feedback || [];
       state.resources = imported.resources || [];
       state.tasks = imported.tasks || [];
-      state.products = imported.products || productCatalog();
+      state.accountTypes = imported.accountTypes || imported.products || accountTypeCatalog();
       state.enrollments = imported.enrollments || [];
       state.lessonPlans = imported.lessonPlans || [];
+      state.gateDaSections = imported.gateDaSections || gateDaProbabilitySections();
       state.coursePlanVersion = imported.coursePlanVersion || "";
       persist();
       render();

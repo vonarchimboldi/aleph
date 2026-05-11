@@ -1,60 +1,89 @@
 # Aleph
 
-Aleph is an installable test-prep learning workspace for structured independent study. It organizes a learner's preparation around curated resources, weekly schedules, review quizzes, spaced review quizzes, and task tracking.
+Aleph is an installable test-prep learning workspace. It is currently configured for a GATE DA learner workspace with exam tiers, a personalized Platinum learner plan, and early Basic GATE DA study material.
 
-The app is currently a static Progressive Web App. It runs entirely in the browser and stores learner progress locally. This is enough for an early shareable demo, but production authentication, shared data, quiz attempts, feedback, and analytics will require a backend.
+The app is a static Progressive Web App. It runs in the browser, stores workspace data locally with `localStorage`, and includes a small Vercel serverless endpoint for sending learner credentials by email.
+
+## Product Shape
+
+Aleph is organized around exams. The current exam is **GATE DA**.
+
+GATE DA account types:
+
+- Basic
+- Advanced
+- Premium
+- Platinum
+
+Priyanka's current workspace is a **GATE DA Platinum** plan. Her subjects, tasks, schedule, tests, feedback, and resources live inside that GATE DA workspace.
+
+The current content build is **GATE DA Basic** material for:
+
+```text
+Subjects -> Probability -> Chapter 1: Probability Foundations
+```
 
 ## Current Features
 
-- Prototype landing page with local demo sign-in.
-- Installable PWA shell with service-worker caching.
-- Curated subject resources.
-- Weekly schedule grouped by week and subject.
-- Review quizzes attached to each week of study.
-- Spaced review quizzes every other week.
-- Weekly task tiles for lectures, assignments, review quizzes, and spaced reviews.
-- Task boards for `To do`, `Completed`, and `Not completed`.
-- Completion rule: a task can only move to `Completed` after its `Done` checkbox is checked.
-- Course resource links on the dashboard.
+- Prototype sign-in for the current learner.
+- GATE DA exam workspace with Basic, Advanced, Premium, and Platinum account types.
+- Priyanka GATE DA Platinum enrollment and personalized plan.
+- Dashboard summary for subjects, tasks, schedules, tests, feedback, and resources.
+- Subject, schedule, test, feedback, and resource lists.
+- Weekly task board with `To do`, `Completed`, and `Not completed` columns.
+- Completion rule: a task can only move to `Completed` after `Done` is checked.
+- GATE DA Basic Probability Chapter 1 content in an Open Math-style structure.
+- Labelled practice problems with hidden worked solutions.
+- Conceptual review prompts without solutions.
 - JSON import/export for local workspace data.
-- Reset button to regenerate the current course plan.
+- Reset button to regenerate the seeded workspace.
+- Installable PWA shell with service-worker caching.
 
-## Current Test-Prep Content
+## Current Content
 
-- Discrete Mathematics plan using:
-  - CMU 21-228 Discrete Mathematics by Po-Shen Loh
-  - MIT 6.1200J Mathematics for Computer Science, Spring 2024
-  - MIT 18.200 Principles of Discrete Applied Mathematics, Spring 2024
-- Data Structures and Algorithms plan using:
-  - Aho/Ullman Foundations of Computer Science
-  - Cartesian interactive DSA handbook
+Priyanka's Platinum plan currently includes:
+
+- Discrete Mathematics
+- Data Structures and Algorithms
+- Probability and Statistics
+
+The GATE DA Basic content currently includes:
+
+- Probability, Chapter 1: Probability Foundations
+
+Chapter 1 includes:
+
+- Section Preview
+- Preview Activity
+- Core Ideas
+- Problem-Solving Techniques
+- Reading Questions
+- Labelled Practice Problems
+- Conceptual Review
+- Chapter Summary
 
 ## Local Development
 
 From the project directory:
 
 ```bash
-python3 -m http.server 4180
+python3 -m http.server 8000
 ```
 
 Then open:
 
 ```text
-http://127.0.0.1:4180/index.html
+http://localhost:8000
+```
+
+Prototype login:
+
+```text
+username: priyanka
+password: l!pschitz
 ```
 
 If the app appears stale after code changes, hard refresh the page. The service worker caches the app shell.
-
-## Deployment Plan
-
-The next deployment milestone is:
-
-1. Deploy the current `main` branch to Netlify, Vercel, or Cloudflare Pages.
-2. Share the deployed URL with the first test user.
-3. Verify sign-in, resources, schedule, and task boards.
-4. Push a small visible change to GitHub.
-5. Confirm the deployed app updates after redeploy.
-6. Decide whether the service worker needs an in-app update prompt.
 
 ## Email Setup
 
@@ -67,58 +96,13 @@ RESEND_API_KEY=...
 FROM_EMAIL=Aleph <onboarding@your-verified-domain.com>
 ```
 
-The `FROM_EMAIL` address must use a domain or sender that is verified in Resend. If the email API is not configured, the app falls back to opening a prefilled mail draft in the user's email client.
+If the email API is not configured, the app falls back to opening a prefilled mail draft in the user's email client.
 
-## Roadmap
+## Verification
 
-### Near Term
+For JavaScript changes:
 
-- Deploy the app publicly.
-- Onboard the first user.
-- Add a visible app version/build indicator.
-- Add an update-available prompt for service-worker refreshes.
-- Improve schedule filtering by subject and week.
-- Add richer resource metadata for readings, lectures, assignments, and problem sets.
-- Add in-app review quizzes and spaced review quizzes.
-- Add flashcards for spaced repetition.
-
-### Backend Phase
-
-- Replace local demo auth with real authentication.
-- Add persistent database storage for users, subjects, plans, resources, tasks, quizzes, attempts, answers, and feedback.
-- Add role support for learner/admin workflows.
-- Store learner progress across devices.
-- Add file/resource storage for PDFs, notes, and assignment materials.
-- Add persistent flashcards, review queues, and due dates.
-
-### Quiz and Analytics Phase
-
-- Build review quizzes and spaced review quizzes inside the app.
-- Track quiz attempts, answers, scores, and topic-level mastery.
-- Generate detailed analysis from review quiz results.
-- Create spaced-review queues from missed questions, weak topics, and low-confidence answers.
-- Generate personalized remedial material from quiz feedback.
-- Recommend follow-up resources and flashcards based on mastery gaps.
-- Add dashboards for progress, effort, mastery, and upcoming review load.
-
-## Architecture Direction
-
-For the prototype, Aleph is static:
-
-```text
-Browser PWA
-  -> localStorage/sessionStorage
-  -> JSON import/export
+```bash
+node --check app.js
+node --check service-worker.js
 ```
-
-For the first production version, the likely architecture is:
-
-```text
-Frontend PWA
-  -> Auth
-  -> API/backend
-  -> Postgres database
-  -> Object storage for resources
-```
-
-Supabase is a strong candidate for the first backend because it provides authentication, Postgres, storage, and row-level security in one platform.
