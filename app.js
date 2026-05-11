@@ -1,6 +1,6 @@
 const STORAGE_KEY = "learning-studio-data-v1";
 const SESSION_KEY = "aleph-session";
-const COURSE_PLAN_VERSION = "gate-da-basic-probability-platinum-priyanka-v1";
+const COURSE_PLAN_VERSION = "gate-da-basic-test-account-v1";
 
 const state = loadState();
 let deferredInstallPrompt = null;
@@ -1098,6 +1098,22 @@ function defaultUser() {
   };
 }
 
+function basicGateDaUser() {
+  return {
+    name: "gate-basic",
+    email: "basic.demo@aleph.local",
+    tempPassword: "basic!gate",
+    password: "basic!gate",
+    mustChangePassword: false,
+    passwordStatus: "GATE DA Basic prototype login",
+    registeredAt: new Date().toISOString()
+  };
+}
+
+function prototypeUsers() {
+  return [defaultUser(), basicGateDaUser()];
+}
+
 function persist() {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
 }
@@ -1116,12 +1132,15 @@ function login(event) {
   const name = document.querySelector("#login-name").value.trim();
   const password = document.querySelector("#login-password").value;
   const error = document.querySelector("#login-error");
-  const currentPassword = state.user.password || state.user.tempPassword;
+  const matchedUser = prototypeUsers().find((user) => user.name === name && password === (user.password || user.tempPassword));
 
-  if (name === state.user.name && password === currentPassword) {
-    sessionStorage.setItem(SESSION_KEY, state.user.name);
+  if (matchedUser) {
+    state.user = { ...matchedUser };
+    persist();
+    sessionStorage.setItem(SESSION_KEY, matchedUser.name);
     error.textContent = "";
     document.querySelector("#login-form").reset();
+    render();
     applyAuthState();
     return;
   }
@@ -1186,7 +1205,8 @@ function logout() {
 }
 
 function applyAuthState() {
-  const signedIn = sessionStorage.getItem(SESSION_KEY) === state.user.name;
+  const sessionUser = sessionStorage.getItem(SESSION_KEY);
+  const signedIn = sessionUser === state.user.name;
   const mustChangePassword = signedIn && state.user.mustChangePassword;
   document.body.classList.toggle("is-authenticated", signedIn && !mustChangePassword);
   document.querySelector("#landing-view").classList.toggle("active", !signedIn || mustChangePassword);
@@ -1315,6 +1335,27 @@ function renderGateDaSummary() {
 function renderGateDaWorkspace() {
   const container = document.querySelector("#gate-da-workspace-list");
   if (!container) return;
+
+  if (state.user.name === "gate-basic") {
+    container.innerHTML = `
+      <article class="item workspace-summary">
+        <div class="item-top">
+          <div>
+            <h4>GATE DA Basic Demo Workspace</h4>
+            <p>Basic account preview for the GATE DA material currently under development. Use this account to inspect Subjects -> Probability -> Chapter 1.</p>
+          </div>
+          <span class="tag">Basic</span>
+        </div>
+        <div class="workspace-counts">
+          <span>${state.gateDaSections.length} chapter</span>
+          <span>${state.gateDaSections[0]?.practiceProblems.length || 0} practice problems</span>
+          <span>conceptual review</span>
+          <span>worked solutions</span>
+        </div>
+      </article>
+    `;
+    return;
+  }
 
   const platinumEnrollment = state.enrollments.find((enrollment) => {
     const accountTypeId = enrollment.accountTypeId || enrollment.productId;

@@ -83,6 +83,13 @@ username: priyanka
 password: l!pschitz
 ```
 
+GATE DA Basic demo login:
+
+```text
+username: gate-basic
+password: basic!gate
+```
+
 If the app appears stale after code changes, hard refresh the page. The service worker caches the app shell.
 
 ## Email Setup
