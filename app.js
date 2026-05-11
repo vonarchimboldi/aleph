@@ -4,6 +4,7 @@ const COURSE_PLAN_VERSION = "gate-da-basic-probability-only-v1";
 
 const state = loadState();
 let deferredInstallPrompt = null;
+let selectedSubjectId = null;
 ensureCoursePlan();
 
 const views = {
@@ -916,6 +917,7 @@ function showView(name) {
   document.querySelectorAll(".nav-item").forEach((button) => {
     button.classList.toggle("active", button.dataset.view === name);
   });
+  if (name !== "subjects") selectedSubjectId = null;
 }
 
 function login(event) {
@@ -1093,23 +1095,64 @@ function renderSubjects() {
     return;
   }
 
-  container.innerHTML = state.subjects.map((subject) => {
-    const sections = (subject.sectionIds || [])
-      .map((sectionId) => state.gateDaSections.find((section) => section.id === sectionId))
-      .filter(Boolean);
-    return `
-      <article class="subject-detail">
-        <div class="item-top">
-          <div>
-            <h4>${escapeHtml(subject.title)}</h4>
-            <p>${escapeHtml(subject.details || "No subject details added.")}</p>
-          </div>
-          <span class="tag">${escapeHtml(subject.status || "Not started")}</span>
+  const selectedSubject = state.subjects.find((subject) => subject.id === selectedSubjectId);
+  if (selectedSubject) {
+    container.innerHTML = subjectReaderTemplate(selectedSubject);
+    container.querySelector("[data-subject-back]")?.addEventListener("click", () => {
+      selectedSubjectId = null;
+      renderSubjects();
+    });
+    return;
+  }
+
+  container.innerHTML = `
+    <div class="subject-menu">
+      ${state.subjects.map(subjectMenuCardTemplate).join("")}
+    </div>
+  `;
+
+  container.querySelectorAll("[data-open-subject]").forEach((button) => {
+    button.addEventListener("click", () => {
+      selectedSubjectId = button.dataset.openSubject;
+      renderSubjects();
+    });
+  });
+}
+
+function subjectMenuCardTemplate(subject) {
+  const chapterCount = (subject.sectionIds || []).length;
+  return `
+    <article class="subject-menu-card">
+      <div>
+        <h4>${escapeHtml(subject.title)}</h4>
+        <p>${escapeHtml(subject.details || "No subject details added.")}</p>
+      </div>
+      <div class="subject-menu-footer">
+        <span class="tag">${chapterCount} chapter${chapterCount === 1 ? "" : "s"}</span>
+        <button class="primary-btn" data-open-subject="${subject.id}" type="button">Open subject</button>
+      </div>
+    </article>
+  `;
+}
+
+function subjectReaderTemplate(subject) {
+  const sections = (subject.sectionIds || [])
+    .map((sectionId) => state.gateDaSections.find((section) => section.id === sectionId))
+    .filter(Boolean);
+
+  return `
+    <article class="subject-reader">
+      <div class="subject-reader-header">
+        <button class="small-btn" data-subject-back type="button">Back to subjects</button>
+        <div>
+          <p class="eyebrow">Subjects</p>
+          <h4>${escapeHtml(subject.title)}</h4>
+          <p>${escapeHtml(subject.details || "No subject details added.")}</p>
         </div>
-        ${sections.length ? sections.map(sectionTemplate).join("") : '<div class="empty small-empty">No chapters added yet.</div>'}
-      </article>
-    `;
-  }).join("");
+      </div>
+      ${sections.length ? sections.map(sectionTemplate).join("") : '<div class="empty small-empty">No chapters added yet.</div>'}
+    </article>
+  `;
 }
 
 function renderPlanCatalog() {
