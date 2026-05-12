@@ -1,6 +1,6 @@
 const STORAGE_KEY = "learning-studio-data-v1";
 const SESSION_KEY = "aleph-session";
-const COURSE_PLAN_VERSION = "gate-da-basic-probability-chapter-pages-v6";
+const COURSE_PLAN_VERSION = "gate-da-basic-probability-chapter-3-expanded-v9";
 
 const state = loadState();
 let deferredInstallPrompt = null;
@@ -159,6 +159,7 @@ function buildGateDaBasicPlan(now, accountTypes, sections) {
   const sunday = addDays(monday, 6);
   const weekTwoMonday = addDays(monday, 7);
   const weekTwoSunday = addDays(weekTwoMonday, 6);
+  const weekThreeMonday = addDays(monday, 14);
   return {
     subjects: [
       {
@@ -166,7 +167,7 @@ function buildGateDaBasicPlan(now, accountTypes, sections) {
         title: "Probability",
         date: "2026-08-30",
         status: "In progress",
-        details: "GATE DA Basic Probability, aligned to the official GATE DA syllabus. Start with Chapter 1, then move to conditional probability and Bayes' theorem.",
+        details: "GATE DA Basic Probability, aligned to the official GATE DA syllabus. Chapters 1-3 now cover foundations, conditioning, random variables, expectation, and core expectation techniques.",
         sectionIds: sections.map((section) => section.id),
         updatedAt: now
       }
@@ -230,6 +231,16 @@ function buildGateDaBasicPlan(now, accountTypes, sections) {
         kind: "Review",
         date: weekTwoSunday,
         details: "Take the conditional probability objective quiz and use the logged feedback to review weak concepts.",
+        updatedAt: now
+      },
+      {
+        id: "schedule-probability-chapter-3-study-1",
+        title: "Probability Chapter 3: Random Variables, PMF/CDF, PDF/CDF, Expectation",
+        week: 3,
+        subject: "Probability",
+        kind: "Study",
+        date: weekThreeMonday,
+        details: "Study Chapter 3 parts 1-8: random variables, distributions, expectation, linearity, indicators, tail sums, and transformations.",
         updatedAt: now
       }
     ],
@@ -320,6 +331,17 @@ function buildGateDaBasicPlan(now, accountTypes, sections) {
         done: false,
         details: "Submit the Chapter 2 objective quiz so the learner record logs strengths and weaknesses.",
         updatedAt: now
+      },
+      {
+        id: "task-probability-chapter-3-read-1",
+        week: 3,
+        title: "Probability Ch 3: Read parts 1-4",
+        type: "Study",
+        date: weekThreeMonday,
+        status: "todo",
+        done: false,
+        details: "Open Subjects -> Probability -> Chapter 3 and study random variables, expectation, linearity, indicators, tail sums, and transformations. Review problems and quiz will be added separately.",
+        updatedAt: now
       }
     ],
     accountTypes,
@@ -345,7 +367,7 @@ function buildGateDaBasicPlan(now, accountTypes, sections) {
         startDate: monday,
         endDate: "2026-08-30",
         status: "active",
-        details: "GATE DA Basic plan surfaces: Subjects, Tasks, Schedule, Tests, Feedback, Resources, and Share. Current material build: Probability Chapters 1 and 2.",
+        details: "GATE DA Basic plan surfaces: Subjects, Tasks, Schedule, Tests, Feedback, Resources, and Share. Current material build: Probability Chapters 1-2 and Chapter 3 parts 1-8.",
         updatedAt: now
       }
     ],
@@ -381,6 +403,14 @@ function buildGateDaBasicPlan(now, accountTypes, sections) {
         title: "Probability Chapter 2: Conditional Probability",
         date: weekTwoMonday,
         details: "Open Subjects -> Probability to study Chapter 2 and then take the objective review in Tests.",
+        link: "",
+        updatedAt: now
+      },
+      {
+        id: "resource-probability-random-variables",
+        title: "Probability Chapter 3: Random Variables and Expectation",
+        date: weekThreeMonday,
+        details: "Open Subjects -> Probability to study Chapter 3 parts 1-8. Review problems and quiz are pending.",
         link: "",
         updatedAt: now
       }
@@ -540,50 +570,50 @@ function gateDaProbabilitySections(updatedAt = new Date().toISOString()) {
       concepts: [
         {
           name: "Sample space",
-          description: "List the outcomes that are possible under the rules of the experiment.",
-          cue: "The question asks what can happen before asking how likely it is."
+          description: "The full list of things that can happen.",
+          cue: "First ask: what are all the possible results?"
         },
         {
           name: "Event",
-          description: "An event is a set of favourable outcomes inside the sample space.",
-          cue: "Translate words like at least, exactly, neither, or either into a set condition."
+          description: "The outcomes you want from the full list.",
+          cue: "Words like at least, exactly, neither, and either describe the event."
         },
         {
           name: "Complement",
-          description: "Sometimes it is easier to count what you do not want and subtract from 1.",
-          cue: "Use when the phrase is at least one, not all, or no repeated failure."
+          description: "Count the opposite case, then subtract from 1.",
+          cue: "Look for phrases like at least one, none, not all, or no repeat."
         },
         {
           name: "Inclusion-exclusion",
-          description: "When two counts overlap, add both and subtract the overlap once.",
-          cue: "Use for A or B when A and B can both happen."
+          description: "When two groups overlap, do not count the middle twice.",
+          cue: "Use for A or B when A and B can both happen together."
         },
         {
           name: "Counting as deployment",
-          description: "Use permutations, combinations, and multiplication rule only to count the numerator and denominator.",
-          cue: "The probability is simple after the correct count is built."
+          description: "Use counting to find total cases and good cases.",
+          cue: "After the counting is right, probability is good cases divided by total cases."
         }
       ],
       techniques: [
         {
           name: "Count favourable over total",
-          when: "all valid outcomes are equally likely.",
-          move: "Define the sample space, count total outcomes, count favourable outcomes, then divide."
+          when: "every outcome has the same chance.",
+          move: "Count all outcomes. Count the outcomes you want. Divide."
         },
         {
           name: "Use the complement",
-          when: "the direct event has many cases, but its opposite is clean.",
-          move: "Compute 1 - P(opposite event)."
+          when: "the wanted case has many parts, but the opposite is simple.",
+          move: "Find the probability of the opposite. Subtract it from 1."
         },
         {
           name: "Split into disjoint cases",
-          when: "the event can happen in different non-overlapping ways.",
-          move: "Count each case separately and add."
+          when: "the event can happen in separate ways that do not overlap.",
+          move: "Count each way separately. Then add."
         },
         {
           name: "Apply inclusion-exclusion",
-          when: "the event says A or B and A and B can overlap.",
-          move: "Use P(A or B) = P(A) + P(B) - P(A and B)."
+          when: "the event says A or B, and both can happen together.",
+          move: "Add A and B. Then subtract the overlap once."
         }
       ],
       practiceProblems: probabilityFoundationProblems(),
@@ -753,55 +783,55 @@ function gateDaProbabilitySections(updatedAt = new Date().toISOString()) {
       concepts: [
         {
           name: "Conditional probability",
-          description: "Compute probability after restricting the sample space to the given event.",
-          cue: "The problem says given, among, if it is known, or selected from those satisfying a condition."
+          description: "Probability after some information is already known.",
+          cue: "Look for given, among, known that, or selected from."
         },
         {
           name: "Multiplication rule",
-          description: "Multiply staged probabilities along one path.",
-          cue: "The story happens in order or without replacement."
+          description: "Multiply probabilities along one step-by-step path.",
+          cue: "Use when the story happens in stages, like first draw then second draw."
         },
         {
           name: "Total probability",
-          description: "Split an event across a partition of cases and add the disjoint contributions.",
-          cue: "Several boxes, factories, groups, or causes have different rates."
+          description: "Break one probability into cases, then add the case answers.",
+          cue: "Use when there are different boxes, factories, groups, or sources."
         },
         {
           name: "Bayes' theorem",
-          description: "Reverse conditioning from effect back to cause.",
-          cue: "The problem gives P(evidence|cause) but asks P(cause|evidence)."
+          description: "Use evidence to guess which cause was likely.",
+          cue: "The problem gives cause to evidence, but asks evidence to cause."
         },
         {
           name: "Independence",
-          description: "Knowing one event does not change the probability of the other.",
-          cue: "Check whether P(A and B) equals P(A)P(B)."
+          description: "Knowing one thing happened does not change the chance of the other.",
+          cue: "Check if P(A and B) is the same as P(A) times P(B)."
         }
       ],
       techniques: [
         {
           name: "Restrict the sample space",
-          when: "the problem gives information that has already happened.",
-          move: "Use P(A|B) = P(A and B) / P(B), with B as the denominator."
+          when: "the problem tells you something has already happened.",
+          move: "Keep only the given event B. Divide by P(B)."
         },
         {
           name: "Draw a probability tree",
-          when: "the process has stages or different cases.",
-          move: "Multiply along branches and add disjoint paths that produce the target event."
+          when: "the process has steps or cases.",
+          move: "Multiply along one branch. Add branches that lead to the answer."
         },
         {
           name: "Use total probability",
-          when: "an event can occur through one of several complete cases.",
-          move: "Partition by the cases, compute conditional probability inside each case, multiply by the case probability, and add."
+          when: "the same result can come from different sources.",
+          move: "For each source, multiply source chance by success chance. Add."
         },
         {
           name: "Apply Bayes inversion",
-          when: "you observe evidence and need the probability of a hidden source or cause.",
-          move: "Compute likelihood times prior, then divide by total probability of the evidence."
+          when: "you see the result and need to find the likely source.",
+          move: "For each source, compute source chance times result chance. Divide by the total result chance."
         },
         {
           name: "Test independence",
-          when: "the problem asks whether two events are independent or implies no influence.",
-          move: "Compare P(A and B) with P(A)P(B), or compare P(A|B) with P(A)."
+          when: "the problem asks whether two events affect each other.",
+          move: "Compare P(A and B) with P(A)P(B). If they match, independent."
         }
       ],
       practiceProblems: conditionalProbabilityProblems(),
@@ -835,6 +865,456 @@ function gateDaProbabilitySections(updatedAt = new Date().toISOString()) {
         "Bayes' theorem reverses conditioning from evidence to cause.",
         "Independence means P(A and B) = P(A)P(B), not that the events cannot occur together."
       ],
+      updatedAt
+    },
+    {
+      id: "gate-da-random-variables-expectation",
+      exam: "GATE DA",
+      accountTier: "Basic",
+      subject: "Probability",
+      chapter: "Chapter 3",
+      section: "3",
+      title: "Random Variables and Expectation",
+      summary: "Random variables, PMF/CDF, first discrete distributions, PDF/CDF through uniform, and expectation as the tool that turns probability models into numbers.",
+      sectionPreview: "A probability problem often asks for a number, not just whether an event happens. The number of heads, the waiting time for the first success, the number of selected defective items, or a random point on an interval are all random variables. This chapter starts building the language for those quantities.",
+      previewActivity: "A fair coin is tossed 10 times. Let X be the number of heads. What values can X take? What is P(X = 3)? What is P(X <= 3)? Try to answer these three questions before reading. You are already using a random variable, a PMF, and a CDF.",
+      chapterIntro: [
+        "In Chapters 1 and 2, most questions were about events. In Chapter 3, the object of study becomes a number produced by the experiment. That number is a random variable.",
+        "Random variables let us ask sharper questions. Instead of only asking whether a selected item is defective, we can ask how many defectives appear in a sample. Instead of asking whether the first toss is heads, we can ask how long we wait for the first heads.",
+        "This chapter introduces the basic language and the first expectation techniques: random variables, PMFs, CDFs, PDFs, a few essential distributions, expectation, linearity, indicators, tail sums, and transformations."
+      ],
+      bookSections: [
+        {
+          number: "3.1",
+          title: "What Is a Random Variable?",
+          paragraphs: [
+            "A random variable is a numerical value determined by the outcome of a random experiment. It is not the outcome itself. It is a function that takes an outcome and returns a number.",
+            "For example, if three coins are tossed, the outcome could be HTH. The random variable X = number of heads gives X = 2 for this outcome. The outcome is HTH, the event could be 'at least two heads', and the random variable is the number X.",
+            "This distinction matters. Events are true or false after the experiment. Random variables take numerical values. Once we have numbers, we can discuss distributions, averages, variances, and transformations."
+          ],
+          blocks: [
+            {
+              type: "definition",
+              title: "Definition: random variable",
+              body: "A random variable X assigns a real number X(s) to each outcome s in the sample space."
+            },
+            {
+              type: "example",
+              title: "Example 3.1: two dice",
+              body: "Roll two dice. The ordered pair (2,5) is an outcome. The event 'sum is 7' is a set of outcomes. The random variable S = sum of the two dice gives S(2,5) = 7."
+            },
+            {
+              type: "warning",
+              title: "Common trap",
+              body: "Do not confuse X with an event such as X = 3. The random variable is X. The statement X = 3 is an event."
+            }
+          ]
+        },
+        {
+          number: "3.2",
+          title: "PMF, CDF, and First Discrete Distributions",
+          paragraphs: [
+            "A discrete random variable takes separated values like 0, 1, 2, 3. Think of counts: number of heads, number of defectives, number of calls received, number of attempts until success.",
+            "The PMF is a value-by-value chance table. It answers questions like P(X = 3). The CDF is the running total of the PMF. It answers questions like P(X <= 3).",
+            "We introduce four simple distributions here because they give names to common stories. Bernoulli is one yes/no trial. Binomial is many independent yes/no trials. Geometric is waiting for the first success. Hypergeometric is counting successes when you sample without replacement."
+          ],
+          blocks: [
+            {
+              type: "definition",
+              title: "Bernoulli",
+              body: "A Bernoulli(p) random variable takes value 1 with probability p and 0 with probability 1 - p. It is the indicator of one success event."
+            },
+            {
+              type: "example",
+              title: "Example 3.2: one item check",
+              body: "A factory item is defective with probability 0.04. Let X = 1 if the item is defective and X = 0 otherwise. Then X is Bernoulli(0.04). Its PMF is P(X = 1) = 0.04 and P(X = 0) = 0.96."
+            },
+            {
+              type: "definition",
+              title: "Binomial",
+              body: "A Binomial(n, p) random variable counts successes in n independent identical Bernoulli(p) trials."
+            },
+            {
+              type: "example",
+              title: "Example 3.3: repeated calls",
+              body: "A candidate answers each multiple-choice question correctly with probability 1/4 by guessing. If there are 8 independent questions and X is the number correct, then X is Binomial(8, 1/4)."
+            },
+            {
+              type: "definition",
+              title: "Geometric",
+              body: "A Geometric(p) random variable counts the trial on which the first success occurs in repeated independent Bernoulli(p) trials."
+            },
+            {
+              type: "example",
+              title: "Example 3.4: first success",
+              body: "A server request succeeds with probability 0.8 each time. If X is the attempt number on which the first success happens, then X is Geometric(0.8)."
+            },
+            {
+              type: "definition",
+              title: "Hypergeometric",
+              body: "A Hypergeometric random variable counts successes in a sample drawn without replacement from a finite population."
+            },
+            {
+              type: "example",
+              title: "Example 3.5: no replacement",
+              body: "A batch has 20 items, 5 defective. You inspect 4 items without replacement. If X is the number of defectives inspected, then X is hypergeometric. The draws affect each other because the item is not put back."
+            },
+            {
+              type: "checkpoint",
+              title: "Checkpoint",
+              body: "A coin is tossed until the first head appears. Is this binomial or geometric? What is X counting?"
+            }
+          ]
+        },
+        {
+          number: "3.3",
+          title: "PDF, CDF, and the Uniform Distribution",
+          paragraphs: [
+            "A continuous random variable measures something on a line: time, distance, weight, voltage, or a randomly chosen point in an interval. There are too many possible exact values to list one by one.",
+            "For a continuous variable, the chance of one exact value is usually 0. So we ask for interval chances: P(2 <= X <= 5), P(X > 10), or P(X <= x).",
+            "The PDF is a height curve. Probability is area under the curve. The CDF is still the running probability F(x) = P(X <= x). The first useful example is Uniform(a, b), where every interval of the same length has the same chance."
+          ],
+          blocks: [
+            {
+              type: "definition",
+              title: "PDF",
+              body: "For a continuous random variable X with density f, P(a <= X <= b) is the integral of f(x) from a to b. A point has zero probability; an interval has area."
+            },
+            {
+              type: "definition",
+              title: "Uniform(a, b)",
+              body: "X is Uniform(a, b) if its density is constant on [a, b]. Its CDF rises linearly from 0 to 1 across that interval."
+            },
+            {
+              type: "example",
+              title: "Example 3.6: bus arrival",
+              body: "A bus arrives at a random time between 0 and 10 minutes from now, equally likely across the interval. If X is the waiting time, then X is Uniform(0,10). P(X <= 3) = 3/10, and P(4 <= X <= 7) = 3/10."
+            },
+            {
+              type: "example",
+              title: "Example 3.7: random point",
+              body: "Choose a point uniformly from the interval [2, 8]. The chance it lies between 5 and 6 is length 1 divided by total length 6, so the probability is 1/6."
+            },
+            {
+              type: "warning",
+              title: "Common trap",
+              body: "For a continuous random variable, f(x) is not P(X = x). It is density. Probability is area."
+            }
+          ]
+        },
+        {
+          number: "3.4",
+          title: "Expectation",
+          paragraphs: [
+            "Expectation is the average value you would see if the same experiment were repeated many times. It is not a guarantee for the next trial. It is the long-run balance point.",
+            "For a discrete random variable, multiply each value by its chance and add. For a continuous random variable, multiply x by the density and integrate. In this chapter, focus first on what the average means.",
+            "The distributions above have useful expectations. Bernoulli(p) has mean p. Binomial(n, p) has mean np. Geometric(p), when it counts the trial of first success, has mean 1/p. Hypergeometric has mean sample size times population success fraction. Uniform(a, b) has mean (a + b)/2."
+          ],
+          blocks: [
+            {
+              type: "principle",
+              title: "Discrete expectation",
+              body: "For a discrete random variable X, E[X] = sum over x of x P(X = x)."
+            },
+            {
+              type: "principle",
+              title: "Continuous expectation",
+              body: "For a continuous random variable X with density f, E[X] = integral of x f(x) over the support."
+            },
+            {
+              type: "example",
+              title: "Example 3.8: Bernoulli expectation",
+              body: "If X is 1 when an item is defective and 0 otherwise, with P(defective) = 0.04, then E[X] = 1(0.04) + 0(0.96) = 0.04. A 0-1 variable averages to the chance it is 1."
+            },
+            {
+              type: "example",
+              title: "Example 3.9: binomial expectation",
+              body: "If X counts heads in 10 fair coin tosses, then X is Binomial(10, 1/2), so E[X] = 10 x 1/2 = 5."
+            },
+            {
+              type: "example",
+              title: "Example 3.10: geometric expectation",
+              body: "If each attempt succeeds with probability 0.2 and X is the attempt number of the first success, then E[X] = 1/0.2 = 5. On average, success takes 5 attempts."
+            },
+            {
+              type: "example",
+              title: "Example 3.11: hypergeometric expectation",
+              body: "A batch has 20 items, 5 defective. You inspect 4 without replacement. The expected number of defectives is 4 x (5/20) = 1. Even though the draws are dependent, the average count is sample size times defective fraction."
+            },
+            {
+              type: "example",
+              title: "Example 3.12: uniform expectation",
+              body: "If a bus arrives uniformly between 0 and 10 minutes, the average waiting time is the midpoint: (0 + 10)/2 = 5 minutes."
+            },
+            {
+              type: "checkpoint",
+              title: "Checkpoint",
+              body: "A box has 8 good and 2 defective items. You sample 3 without replacement. What should the expectation of the number of defectives look like before doing any heavy counting?"
+            }
+          ]
+        },
+        {
+          number: "3.5",
+          title: "Linearity of Expectation",
+          paragraphs: [
+            "Linearity of expectation says: average of a total equals total of the averages. If X is made from smaller pieces, find the average of each piece and add.",
+            "The important point is that the pieces do not need to be independent. This is surprising at first. But it is exactly what makes expectation easier than full distribution finding.",
+            "Use this when a problem asks for an expected count or expected total and direct distribution is messy."
+          ],
+          blocks: [
+            {
+              type: "principle",
+              title: "Principle: linearity",
+              body: "For random variables X1, X2, ..., Xn with finite expectations, E[X1 + X2 + ... + Xn] = E[X1] + E[X2] + ... + E[Xn]. No independence is required."
+            },
+            {
+              type: "example",
+              title: "Example 3.13: dependent draws still work",
+              body: "If 3 items are sampled from 10 items of which 2 are defective, let Xi indicate whether the ith draw is defective. Then X = X1 + X2 + X3 and E[Xi] = 2/10, so E[X] = 3 x 2/10 = 3/5."
+            },
+            {
+              type: "example",
+              title: "Example 3.14: total marks",
+              body: "A test has 10 one-mark questions. For question i, let Xi be the mark obtained. Total score S = X1 + ... + X10. Even if the questions are not independent, E[S] = E[X1] + ... + E[X10]."
+            },
+            {
+              type: "example",
+              title: "Example 3.15: two dependent cards",
+              body: "Draw 2 cards without replacement. Let X be the number of aces. Write X = X1 + X2, where Xi is 1 if draw i is an ace. E[X1] = 4/52 and E[X2] = 4/52, so E[X] = 8/52 = 2/13. The draws are dependent, but expectation still adds."
+            },
+            {
+              type: "warning",
+              title: "Common trap",
+              body: "Do not wait for independence before using linearity. Even dependent random variables have additive expectations."
+            }
+          ]
+        },
+        {
+          number: "3.6",
+          title: "Indicator Method",
+          paragraphs: [
+            "An indicator is a small switch. It is 1 if a particular thing happens, and 0 if it does not. The average value of this switch is just the chance that it turns on.",
+            "This turns many hard expected-count problems into easy probability problems. Do not try to find the full distribution of the count. Count by switches.",
+            "Use one switch per person, card, box, position, component, or pair. Then add the switch averages."
+          ],
+          blocks: [
+            {
+              type: "definition",
+              title: "Definition: indicator",
+              body: "For an event A, the indicator IA equals 1 if A occurs and 0 if A does not occur. Its expectation is E[IA] = P(A)."
+            },
+            {
+              type: "strategy",
+              title: "Procedure",
+              body: "To find the expected count, define one indicator per object, write total count as their sum, compute each indicator expectation, and add."
+            },
+            {
+              type: "example",
+              title: "Example 3.16: fixed points",
+              body: "In a random permutation of n people, let Xi indicate whether person i gets their own item. P(Xi = 1) = 1/n, so the expected number of fixed points is n x 1/n = 1."
+            },
+            {
+              type: "example",
+              title: "Example 3.17: nonempty boxes",
+              body: "Throw 5 balls independently into 4 boxes. Let Ii be 1 if box i is nonempty. P(box i is empty) = (3/4)^5, so E[Ii] = 1 - (3/4)^5. Expected nonempty boxes = 4[1 - (3/4)^5]."
+            },
+            {
+              type: "example",
+              title: "Example 3.18: matches in two lists",
+              body: "A random permutation of 1 to n is compared with the original list. Let Ii be 1 if position i matches. Each position matches with probability 1/n. Expected matches = n x 1/n = 1."
+            },
+            {
+              type: "checkpoint",
+              title: "Checkpoint",
+              body: "If 5 balls are thrown independently into 4 boxes, what indicator would you define to find the expected number of nonempty boxes?"
+            }
+          ]
+        },
+        {
+          number: "3.7",
+          title: "Tail-Sum Formula",
+          paragraphs: [
+            "Tail-sum is another shortcut for averages. Instead of asking exactly where X stops, ask whether X reaches level 1, level 2, level 3, and so on.",
+            "This is vivid for waiting time. If X is the number of attempts until first success, then X >= 4 means the first 3 attempts all failed. That is often simpler than writing P(X = 4).",
+            "Use tail sums when X is 0, 1, 2, ... or 1, 2, 3, ... and the question 'does X reach this level?' is easy."
+          ],
+          blocks: [
+            {
+              type: "principle",
+              title: "Principle: tail-sum formula",
+              body: "If X is nonnegative and integer-valued, then E[X] = sum from k = 1 to infinity of P(X >= k), whenever the expectation exists."
+            },
+            {
+              type: "example",
+              title: "Example 3.19: geometric expectation",
+              body: "If X is the trial number of the first success with success probability p, then P(X >= k) = (1 - p)^(k - 1). Summing the geometric series gives E[X] = 1/p."
+            },
+            {
+              type: "example",
+              title: "Example 3.20: first head",
+              body: "Toss a fair coin until the first head. P(X >= 1)=1, P(X >= 2)=1/2, P(X >= 3)=1/4, and so on. The average waiting time is 1 + 1/2 + 1/4 + ... = 2 tosses."
+            },
+            {
+              type: "example",
+              title: "Example 3.21: why it is easier",
+              body: "For waiting time, P(X = k) says fail k - 1 times and then succeed. P(X >= k) says only fail k - 1 times. The tail event has one less condition."
+            },
+            {
+              type: "warning",
+              title: "Common trap",
+              body: "Use P(X >= k), not P(X = k), in the tail-sum formula."
+            }
+          ]
+        },
+        {
+          number: "3.8",
+          title: "Functions of Random Variables",
+          paragraphs: [
+            "Often the number you need is made from another random variable. If X is waiting time, then X^2, 2X + 5, |X - 5|, and max(X, 3) are also random variables.",
+            "For averages, do not first find the full distribution of the new variable unless you must. If you need E[g(X)], average g(x) using the probabilities of X.",
+            "For probabilities, translate the event about Y back into an event about X. Monotone transformations keep the order simple. Non-monotone transformations need cases because two different X values can give the same Y."
+          ],
+          blocks: [
+            {
+              type: "principle",
+              title: "LOTUS",
+              body: "To find E[g(X)], use the values of X directly: add g(x)P(X = x) in the discrete case, or integrate g(x)f(x) in the continuous case."
+            },
+            {
+              type: "strategy",
+              title: "Monotone transformation",
+              body: "If g only goes up, then Y <= y is the same as X <= the matching cutoff. If g only goes down, the inequality flips."
+            },
+            {
+              type: "strategy",
+              title: "Non-monotone transformation",
+              body: "If g goes down and then up, or gives the same Y from two X values, split into cases. For Y = X^2, both X = 2 and X = -2 give Y = 4."
+            },
+            {
+              type: "example",
+              title: "Example 3.22: cost from number of attempts",
+              body: "If each attempt costs Rs. 50 and X is the number of attempts, then total cost is Y = 50X. So E[Y] = 50E[X]. You do not need a new distribution."
+            },
+            {
+              type: "example",
+              title: "Example 3.23: square of a uniform variable",
+              body: "If X is Uniform(0,1) and Y = X^2, then for 0 <= y <= 1, FY(y) = P(X^2 <= y) = P(X <= sqrt(y)) = sqrt(y)."
+            },
+            {
+              type: "example",
+              title: "Example 3.24: absolute error",
+              body: "If X is an error that can be positive or negative, |X| is the size of the error. To find P(|X| <= 2), translate it to -2 <= X <= 2."
+            }
+          ]
+        }
+      ],
+      concepts: [
+        {
+          name: "Random variable",
+          description: "A number you get after the experiment happens.",
+          cue: "Look for a count, sum, waiting time, score, maximum, or measurement."
+        },
+        {
+          name: "PMF",
+          description: "A table of chances for each possible value.",
+          cue: "Use when the question asks for an exact value, like P(X = k)."
+        },
+        {
+          name: "CDF",
+          description: "The chance that X is up to a value.",
+          cue: "Use when the question asks at most, no more than, or P(X <= k)."
+        },
+        {
+          name: "PDF",
+          description: "A curve for continuous values. Probability is area under the curve.",
+          cue: "Use when X is a measurement, like time, length, or a point on an interval."
+        },
+        {
+          name: "Expectation",
+          description: "The long-run average value of X.",
+          cue: "Look for expected value, mean, average count, or long-run average."
+        },
+        {
+          name: "Linearity of expectation",
+          description: "Average of a total equals total of the averages.",
+          cue: "Use when the total can be split into small pieces."
+        },
+        {
+          name: "Indicator variable",
+          description: "A switch: 1 if the thing happens, 0 if it does not.",
+          cue: "Use when you need the expected number of things that satisfy a condition."
+        },
+        {
+          name: "Tail-sum formula",
+          description: "Find an average by adding the chances that X reaches each level.",
+          cue: "Use when P(X >= k) is easier than P(X = k), often for waiting time."
+        },
+        {
+          name: "Function of a random variable",
+          description: "Make a new random variable from X, like X squared or |X|.",
+          cue: "Use when the question changes X into another quantity."
+        }
+      ],
+      techniques: [
+        {
+          name: "Identify the random variable",
+          when: "the experiment gives a number, not just yes or no.",
+          move: "Say what X counts or measures. List possible values. Decide discrete or continuous."
+        },
+        {
+          name: "Choose the distribution family",
+          when: "the story matches a familiar pattern.",
+          move: "One success switch is Bernoulli. Many independent tries is binomial. First success time is geometric. Sampling without replacement is hypergeometric."
+        },
+        {
+          name: "Use PMF or CDF deliberately",
+          when: "the question asks exact value or at most value.",
+          move: "Use PMF for P(X = k). Use CDF for P(X <= k). Use complement for at least."
+        },
+        {
+          name: "Compute expectation from the model",
+          when: "you know which distribution X follows.",
+          move: "Use the known mean, or multiply each value by its chance and add."
+        },
+        {
+          name: "Apply linearity",
+          when: "X is a total made from many small parts.",
+          move: "Find the average of each part. Add those averages. Independence is not needed."
+        },
+        {
+          name: "Use indicators",
+          when: "X counts how many objects pass a test.",
+          move: "Give each object a 0-1 switch. The average of that switch is the chance it turns on."
+        },
+        {
+          name: "Use tail sums",
+          when: "X is 0, 1, 2, ... and it is easy to ask whether X reaches level k.",
+          move: "Add P(X >= 1), P(X >= 2), P(X >= 3), and so on."
+        },
+        {
+          name: "Transform using CDF or LOTUS",
+          when: "the question asks about a changed version of X.",
+          move: "For average, plug g(X) into the expectation. For distribution, write the event in terms of X and solve."
+        }
+      ],
+      practiceProblems: [],
+      reviewPrompts: [],
+      reviewQuiz: null,
+      readingQuestions: [],
+      chapterSummary: [
+        "A random variable is a numerical function of the outcome.",
+        "For discrete random variables, the PMF gives P(X = x).",
+        "The CDF is F(x) = P(X <= x) for both discrete and continuous random variables.",
+        "For continuous random variables, probabilities are areas under a PDF.",
+        "Bernoulli, binomial, geometric, and hypergeometric are the first discrete models to recognise.",
+        "Uniform(a, b) is the first continuous model to recognise.",
+        "Expectation is a weighted average, not necessarily a possible observed value.",
+        "Linearity of expectation does not require independence.",
+        "Indicators turn expected-count problems into probability problems.",
+        "Tail sums compute expectations from survival probabilities.",
+        "Functions of random variables can be handled by LOTUS for expectation and by the CDF method for distributions."
+      ],
+      buildStatus: "Parts 1-8 complete. Review problems, practice set, and objective quiz pending.",
       updatedAt
     }
   ];
@@ -2274,9 +2754,9 @@ function chapterCardTemplate(section) {
         <p>${escapeHtml(section.summary)}</p>
       </div>
       <div class="chapter-card-meta">
-        <span>${section.practiceProblems.length} practice</span>
-        <span>${section.reviewQuiz?.questions.length || 0} quiz questions</span>
-        <span>${latestAttempt ? `Latest quiz ${latestAttempt.percent}%` : "No quiz attempt"}</span>
+        <span>${section.practiceProblems.length ? `${section.practiceProblems.length} practice` : "Practice pending"}</span>
+        <span>${section.reviewQuiz ? `${section.reviewQuiz.questions.length} quiz questions` : "Quiz pending"}</span>
+        <span>${latestAttempt ? `Latest quiz ${latestAttempt.percent}%` : section.reviewQuiz ? "No quiz attempt" : "In progress"}</span>
       </div>
       <button class="primary-btn" data-open-section="${section.id}" type="button">Open chapter</button>
     </article>
@@ -2391,7 +2871,7 @@ function sectionTemplate(section) {
         <div class="book-meta">
           <span>${escapeHtml(section.accountTier)}</span>
           <span>${section.practiceProblems.length} practice problems</span>
-          <span>Conceptual review included</span>
+          <span>${section.reviewQuiz ? "Objective quiz included" : "Partial chapter"}</span>
         </div>
       </header>
 
@@ -2403,10 +2883,10 @@ function sectionTemplate(section) {
             ${(section.bookSections || []).map((bookSection) => `
               <a href="#${section.id}-${bookSection.number.replace(".", "-")}">${escapeHtml(bookSection.number)}</a>
             `).join("")}
-            <a href="#${section.id}-reading">Reading</a>
-            <a href="#${section.id}-practice">Practice</a>
-            <a href="#${section.id}-review">Review</a>
-            <a href="#${section.id}-quiz">Quiz</a>
+            ${section.readingQuestions?.length ? `<a href="#${section.id}-reading">Reading</a>` : ""}
+            ${section.practiceProblems?.length ? `<a href="#${section.id}-practice">Practice</a>` : ""}
+            ${section.reviewPrompts?.length ? `<a href="#${section.id}-review">Review</a>` : ""}
+            ${section.reviewQuiz ? `<a href="#${section.id}-quiz">Quiz</a>` : ""}
             <a href="#${section.id}-summary">Summary</a>
           </div>
         </nav>
@@ -2448,29 +2928,29 @@ function sectionTemplate(section) {
             </div>
           </section>
 
-          <section class="book-section" id="${section.id}-reading">
+          ${section.readingQuestions?.length ? `<section class="book-section" id="${section.id}-reading">
             <p class="book-kicker">Reading Questions</p>
             <ol class="review-list">
               ${section.readingQuestions.map((question) => `<li>${escapeHtml(question)}</li>`).join("")}
             </ol>
-          </section>
+          </section>` : ""}
 
-          <section class="book-section" id="${section.id}-practice">
+          ${section.practiceProblems?.length ? `<section class="book-section" id="${section.id}-practice">
             <p class="book-kicker">Labelled Practice Problems</p>
             <div class="problem-list book-problems">
               ${section.practiceProblems.map(practiceProblemTemplate).join("")}
             </div>
-          </section>
+          </section>` : ""}
 
-          <section class="book-section" id="${section.id}-review">
+          ${section.reviewPrompts?.length ? `<section class="book-section" id="${section.id}-review">
             <p class="book-kicker">Review Problems: No Solutions</p>
             <p class="muted">Do these after finishing the chapter and practice set. These are meant to expose conceptual weaknesses before the objective quiz.</p>
             <ol class="review-list">
               ${section.reviewPrompts.map((prompt) => `<li>${escapeHtml(prompt)}</li>`).join("")}
             </ol>
-          </section>
+          </section>` : ""}
 
-          <section class="book-section" id="${section.id}-quiz">
+          ${section.reviewQuiz ? `<section class="book-section" id="${section.id}-quiz">
             <p class="book-kicker">Objective Review Quiz</p>
             <p class="muted">${escapeHtml(section.reviewQuiz.instructions)}</p>
             <ul class="summary-list">
@@ -2481,7 +2961,7 @@ function sectionTemplate(section) {
             <div class="book-action-row">
               <button class="primary-btn" data-open-section-quiz="${escapeHtml(sectionTestId(section.id))}" type="button">Open review quiz</button>
             </div>
-          </section>
+          </section>` : ""}
 
           <section class="book-section" id="${section.id}-summary">
             <p class="book-kicker">Chapter Summary</p>
