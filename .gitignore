@@ -1,4 +1,6 @@
 .vercel
+AGENTS.md
+NEXT_STEPS.md
 experimentation_harness_prompt.md
 probability_module_spec.md
 logs/
