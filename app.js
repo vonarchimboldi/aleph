@@ -1,6 +1,6 @@
 const STORAGE_KEY = "learning-studio-data-v1";
 const SESSION_KEY = "aleph-session";
-const COURSE_PLAN_VERSION = "gate-da-basic-probability-chapter-3-expanded-v9";
+const COURSE_PLAN_VERSION = "gate-da-basic-probability-chapter-3-shortcuts-v13";
 
 const state = loadState();
 let deferredInstallPrompt = null;
@@ -960,6 +960,61 @@ function gateDaProbabilitySections(updatedAt = new Date().toISOString()) {
               body: "A batch has 20 items, 5 defective. You inspect 4 items without replacement. If X is the number of defectives inspected, then X is hypergeometric. The draws affect each other because the item is not put back."
             },
             {
+              type: "principle",
+              title: "Closed forms to recognise",
+              body: "These formulas are not separate tricks. Each one comes from the story of the experiment: one switch, many independent switches, waiting for first success, or sampling without replacement.",
+              formulas: [
+                {
+                  label: "Bernoulli(p)",
+                  formula: "P(X=1)=p, P(X=0)=1-p; E[X]=p",
+                  note: "one yes/no trial"
+                },
+                {
+                  label: "Binomial(n,p)",
+                  formula: "P(X=k)=C(n,k)p^k(1-p)^(n-k); E[X]=np",
+                  note: "k successes in n independent trials"
+                },
+                {
+                  label: "Geometric(p)",
+                  formula: "P(X=k)=(1-p)^(k-1)p; E[X]=1/p",
+                  note: "first success happens on trial k"
+                },
+                {
+                  label: "Hypergeometric(N,K,n)",
+                  formula: "P(X=k)=C(K,k)C(N-K,n-k)/C(N,n); E[X]=nK/N",
+                  note: "N total, K successes, n draws without replacement"
+                }
+              ]
+            },
+            {
+              type: "example",
+              title: "Picture: Binomial(4, 1/2)",
+              body: "The PMF is a bar chart. For four fair coin tosses, the possible head counts are 0, 1, 2, 3, 4. The middle count is most likely because there are more ways to get two heads than zero heads.",
+              visual: {
+                type: "bars",
+                caption: "Bar heights are proportional to 1, 4, 6, 4, 1 over 16.",
+                bars: [
+                  { label: "0", height: 14 },
+                  { label: "1", height: 42 },
+                  { label: "2", height: 64 },
+                  { label: "3", height: 42 },
+                  { label: "4", height: 14 }
+                ]
+              }
+            },
+            {
+              type: "example",
+              title: "Picture: CDF as running total",
+              body: "The CDF adds PMF bars from the left. For Binomial(4, 1/2), F(2)=P(X<=2)=(1+4+6)/16=11/16. That is why CDF questions often say at most, no more than, or up to.",
+              formulas: [
+                { label: "F(0)", formula: "1/16", note: "only 0 heads" },
+                { label: "F(1)", formula: "5/16", note: "0 or 1 head" },
+                { label: "F(2)", formula: "11/16", note: "0, 1, or 2 heads" },
+                { label: "F(3)", formula: "15/16", note: "all except 4 heads" },
+                { label: "F(4)", formula: "1", note: "all possible values" }
+              ]
+            },
+            {
               type: "checkpoint",
               title: "Checkpoint",
               body: "A coin is tossed until the first head appears. Is this binomial or geometric? What is X counting?"
@@ -994,6 +1049,29 @@ function gateDaProbabilitySections(updatedAt = new Date().toISOString()) {
               type: "example",
               title: "Example 3.7: random point",
               body: "Choose a point uniformly from the interval [2, 8]. The chance it lies between 5 and 6 is length 1 divided by total length 6, so the probability is 1/6."
+            },
+            {
+              type: "example",
+              title: "Picture: Uniform probability is length",
+              body: "For Uniform(0,10), the density is flat. The interval from 4 to 7 takes 3 of the 10 equal-length units, so the area is 3/10.",
+              visual: {
+                type: "area",
+                leftLabel: "0",
+                rightLabel: "10",
+                start: 40,
+                width: 30,
+                caption: "The shaded region is P(4 <= X <= 7)."
+              }
+            },
+            {
+              type: "principle",
+              title: "Uniform formulas",
+              body: "Uniform(a,b) is the simplest continuous distribution because every interval is judged only by its length.",
+              formulas: [
+                { label: "PDF", formula: "f(x)=1/(b-a), a <= x <= b", note: "flat height" },
+                { label: "CDF", formula: "F(x)=(x-a)/(b-a), a <= x <= b", note: "running length divided by total length" },
+                { label: "Mean", formula: "E[X]=(a+b)/2", note: "midpoint of the interval" }
+              ]
             },
             {
               type: "warning",
@@ -1047,6 +1125,92 @@ function gateDaProbabilitySections(updatedAt = new Date().toISOString()) {
               body: "If a bus arrives uniformly between 0 and 10 minutes, the average waiting time is the midpoint: (0 + 10)/2 = 5 minutes."
             },
             {
+              type: "principle",
+              title: "Deriving the common expectations",
+              body: "Do not treat these as magic formulas. Each mean comes from a small picture: a switch, a row of switches, a waiting ladder, a sample without replacement, or the middle of an interval.",
+              formulas: [
+                { label: "Bernoulli", formula: "E[X]=0(1-p)+1p=p", note: "a switch averages to its on-probability" },
+                { label: "Binomial", formula: "X=I1+...+In, so E[X]=p+...+p=np", note: "n independent success switches" },
+                { label: "Geometric", formula: "E[X]=sum P(X>=k)=1+(1-p)+(1-p)^2+...=1/p", note: "tail sum avoids k times a PMF" },
+                { label: "Hypergeometric", formula: "X=I1+...+In, E[Ij]=K/N, so E[X]=nK/N", note: "draws are dependent, but linearity still works" },
+                { label: "Uniform", formula: "E[X]=integral_a^b x/(b-a) dx=(a+b)/2", note: "the balance point is the midpoint" }
+              ]
+            },
+            {
+              type: "example",
+              title: "Worked derivation: Bernoulli mean",
+              body: "A Bernoulli variable is just a switch. It is off at 0 and on at 1. Since the zero value contributes nothing to the average, only the chance of being on remains.",
+              steps: [
+                { label: "Start from the definition", math: "E[X] = sum x P(X=x)", note: "There are only two possible values: 0 and 1." },
+                { label: "Put in the two values", math: "E[X] = 0 P(X=0) + 1 P(X=1)", note: "The first term disappears because it is multiplied by 0." },
+                { label: "Use the Bernoulli probabilities", math: "E[X] = 0(1-p) + 1(p) = p", note: "So the average of a 0-1 switch is the probability that it is 1." }
+              ]
+            },
+            {
+              type: "example",
+              title: "Worked derivation: Binomial mean",
+              body: "A binomial count is many Bernoulli switches added together. If each question, toss, or trial has the same success chance p, then each switch contributes p to the average count.",
+              steps: [
+                { label: "Split the count", math: "X = I1 + I2 + ... + In", note: "Here Ii is 1 if trial i succeeds, and 0 otherwise." },
+                { label: "Average the pieces", math: "E[X] = E[I1] + E[I2] + ... + E[In]", note: "This is linearity of expectation." },
+                { label: "Each switch has mean p", math: "E[X] = p + p + ... + p = np", note: "There are n copies of p." }
+              ]
+            },
+            {
+              type: "example",
+              title: "Worked derivation: Geometric mean",
+              body: "For a waiting time, asking exactly when success happens is a little heavy. Asking whether the wait reaches level k is simpler: to reach level k, the first k-1 attempts must fail.",
+              steps: [
+                { label: "Use tail sum", math: "E[X] = sum from k=1 to infinity P(X>=k)", note: "This works for positive integer waiting times." },
+                { label: "Translate the tail", math: "P(X>=k) = (1-p)^(k-1)", note: "Reaching trial k means trials 1 through k-1 failed." },
+                { label: "Add the geometric series", math: "E[X] = 1 + (1-p) + (1-p)^2 + ...", note: "The first term is 1 because X always reaches level 1." },
+                { label: "Use the series sum", math: "E[X] = 1 / (1-(1-p)) = 1/p", note: "Small p means success is rare, so the average wait is large." }
+              ]
+            },
+            {
+              type: "example",
+              title: "Worked derivation: Hypergeometric mean",
+              body: "Sampling without replacement creates dependence. That makes the full PMF more annoying, but it does not hurt expectation. Each draw has the same success fraction K/N before you look at its position.",
+              steps: [
+                { label: "Name the sample positions", math: "X = I1 + I2 + ... + In", note: "Ij is 1 if draw j is a success." },
+                { label: "Use symmetry", math: "P(Ij=1) = K/N", note: "Every draw position is equally likely to receive any of the N population items." },
+                { label: "Average each switch", math: "E[Ij] = K/N", note: "A 0-1 switch averages to its on-probability." },
+                { label: "Add n positions", math: "E[X] = n(K/N)", note: "Dependence changes variance and the PMF, but not this expectation calculation." }
+              ]
+            },
+            {
+              type: "example",
+              title: "Worked derivation: Uniform mean",
+              body: "Uniform(a,b) is a flat rectangle. The average point is the balance point of that rectangle, so we expect the midpoint. The integral confirms the picture.",
+              steps: [
+                { label: "Density height", math: "f(x) = 1/(b-a), for a <= x <= b", note: "The rectangle has width b-a and total area 1." },
+                { label: "Set up expectation", math: "E[X] = integral from a to b of x/(b-a) dx", note: "For continuous variables, average means area-weighted average." },
+                { label: "Integrate", math: "E[X] = [x^2/(2(b-a))] from a to b = (b^2-a^2)/(2(b-a))", note: "This is the algebraic balance point." },
+                { label: "Factor", math: "E[X] = (b-a)(b+a)/(2(b-a)) = (a+b)/2", note: "So the mean is exactly the midpoint." }
+              ]
+            },
+            {
+              type: "example",
+              title: "Application: expected wrong answers",
+              body: "A student guesses on 12 four-option questions. This is a useful exam model because each question is a small success-or-failure trial. We can compute expected wrong answers without listing all possible scores.",
+              steps: [
+                { label: "Define the count", math: "X = number of wrong answers", note: "X counts wrong answers, not correct answers." },
+                { label: "Find one-question probability", math: "P(wrong) = 3/4", note: "Three choices are wrong out of four." },
+                { label: "Choose the model", math: "X ~ Binomial(12, 3/4)", note: "There are 12 independent guesses with the same wrong-answer probability." },
+                { label: "Use the mean", math: "E[X] = np = 12 x 3/4 = 9", note: "On average, guessing gives 9 wrong and 3 correct." }
+              ]
+            },
+            {
+              type: "strategy",
+              title: "Connection map",
+              body: "First identify what X counts or measures. Then choose the probability description. After that, pick the easiest expectation route instead of doing unnecessary algebra.",
+              visual: {
+                type: "flow",
+                steps: ["Story", "Random variable X", "PMF/PDF/CDF", "Expectation", "Shortcut if useful"],
+                caption: "The goal is not to memorise isolated formulas. The goal is to move from a story to the simplest computation."
+              }
+            },
+            {
               type: "checkpoint",
               title: "Checkpoint",
               body: "A box has 8 good and 2 defective items. You sample 3 without replacement. What should the expectation of the number of defectives look like before doing any heavy counting?"
@@ -1083,6 +1247,31 @@ function gateDaProbabilitySections(updatedAt = new Date().toISOString()) {
               body: "Draw 2 cards without replacement. Let X be the number of aces. Write X = X1 + X2, where Xi is 1 if draw i is an ace. E[X1] = 4/52 and E[X2] = 4/52, so E[X] = 8/52 = 2/13. The draws are dependent, but expectation still adds."
             },
             {
+              type: "example",
+              title: "Hard way versus easy way",
+              body: "For two cards, the full distribution of ace count needs P(X=0), P(X=1), and P(X=2). That is not wrong, but it is more work than the expectation needs. The easier question is: how many ace switches turn on?",
+              formulas: [
+                { label: "Hard way", formula: "E[X]=0P(X=0)+1P(X=1)+2P(X=2)", note: "requires the whole PMF" },
+                { label: "Easy way", formula: "X=I1+I2, E[X]=4/52+4/52", note: "only needs two ace probabilities" }
+              ],
+              steps: [
+                { label: "Define switches", math: "I1 = 1 if card 1 is an ace, I2 = 1 if card 2 is an ace", note: "The cards are dependent, but each position still has the same ace chance." },
+                { label: "Write the count", math: "X = I1 + I2", note: "The number of aces is the number of ace switches that turn on." },
+                { label: "Average the switches", math: "E[X] = E[I1] + E[I2] = 4/52 + 4/52", note: "No independence is being used here." },
+                { label: "Simplify", math: "E[X] = 8/52 = 2/13", note: "This is much shorter than building the full distribution." }
+              ]
+            },
+            {
+              type: "example",
+              title: "Application: sampled defectives",
+              body: "A warehouse has 100 sensors, 7 defective. You test 10 without replacement. The tests are dependent, but for expectation each test position still has defective chance 7/100.",
+              steps: [
+                { label: "Split by test position", math: "X = I1 + I2 + ... + I10", note: "Ij is 1 if the jth tested sensor is defective." },
+                { label: "Use the common chance", math: "E[Ij] = P(jth sensor is defective) = 7/100", note: "Before testing, each position is equally likely to be any of the 100 sensors." },
+                { label: "Add", math: "E[X] = 10 x 7/100 = 0.7", note: "The expected count can be less than 1; it is a long-run average, not a promised observed value." }
+              ]
+            },
+            {
               type: "warning",
               title: "Common trap",
               body: "Do not wait for independence before using linearity. Even dependent random variables have additive expectations."
@@ -1093,40 +1282,82 @@ function gateDaProbabilitySections(updatedAt = new Date().toISOString()) {
           number: "3.6",
           title: "Indicator Method",
           paragraphs: [
-            "An indicator is a small switch. It is 1 if a particular thing happens, and 0 if it does not. The average value of this switch is just the chance that it turns on.",
-            "This turns many hard expected-count problems into easy probability problems. Do not try to find the full distribution of the count. Count by switches.",
-            "Use one switch per person, card, box, position, component, or pair. Then add the switch averages."
+            "The indicator method is for expected counts. The word count is the clue: number of matches, number of empty boxes, number of selected defective items, number of people who get their own item.",
+            "The mistake many students make is to first try to find the full distribution of the count. That can be painful. The indicator method says: break the count into small yes/no switches. A switch is 1 if one particular thing happens and 0 otherwise.",
+            "The kind part of the method is this: the average of a switch is just the chance it turns on. So the work becomes concrete. Define the switches, find each switch probability, and add."
           ],
           blocks: [
             {
               type: "definition",
               title: "Definition: indicator",
-              body: "For an event A, the indicator IA equals 1 if A occurs and 0 if A does not occur. Its expectation is E[IA] = P(A)."
+              body: "For an event A, the indicator IA equals 1 if A occurs and 0 if A does not occur. Its expectation is E[IA] = P(A). This is because 1 times P(A) plus 0 times P(not A) leaves only P(A).",
+              steps: [
+                { label: "Two possible values", math: "IA = 1 if A happens, IA = 0 if A does not happen", note: "It is a switch, not a complicated variable." },
+                { label: "Take the average", math: "E[IA] = 1 P(A) + 0 P(not A)", note: "The off case contributes zero." },
+                { label: "Simplify", math: "E[IA] = P(A)", note: "This is the whole reason indicators are useful." }
+              ]
             },
             {
               type: "strategy",
               title: "Procedure",
-              body: "To find the expected count, define one indicator per object, write total count as their sum, compute each indicator expectation, and add."
+              body: "Use the same four moves every time. First decide what objects could contribute to the count. Then give each object its own 0-1 switch.",
+              visual: {
+                type: "flow",
+                steps: ["Count X", "Split into switches", "Find P(switch on)", "Add"],
+                caption: "Indicator method replaces one hard count distribution with many small yes/no probabilities."
+              }
             },
             {
               type: "example",
               title: "Example 3.16: fixed points",
-              body: "In a random permutation of n people, let Xi indicate whether person i gets their own item. P(Xi = 1) = 1/n, so the expected number of fixed points is n x 1/n = 1."
+              body: "Suppose n students submit phones, the phones are shuffled, and each student gets one phone back at random. Let X be the number of students who get their own phone. This is a count, so indicators are a natural fit.",
+              steps: [
+                { label: "Define the count", math: "X = number of students who get their own phone", note: "Finding the full distribution of X is hard because many matching patterns are possible." },
+                { label: "Make one switch per student", math: "Ii = 1 if student i gets their own phone, otherwise Ii = 0", note: "Now each student only asks one yes/no question." },
+                { label: "Write the count as switches", math: "X = I1 + I2 + ... + In", note: "Every student who matches contributes exactly 1." },
+                { label: "Compute one switch probability", math: "P(Ii=1) = 1/n", note: "Student i is equally likely to receive any one of the n phones." },
+                { label: "Average and add", math: "E[X] = n x (1/n) = 1", note: "No matter how large the class is, the expected number of exact matches is 1." }
+              ]
             },
             {
               type: "example",
               title: "Example 3.17: nonempty boxes",
-              body: "Throw 5 balls independently into 4 boxes. Let Ii be 1 if box i is nonempty. P(box i is empty) = (3/4)^5, so E[Ii] = 1 - (3/4)^5. Expected nonempty boxes = 4[1 - (3/4)^5]."
+              body: "Five jobs are assigned independently to four servers, each server equally likely. What is the expected number of servers that receive at least one job? Again, this asks for an expected count.",
+              steps: [
+                { label: "Define the count", math: "X = number of nonempty servers", note: "A server is nonempty if at least one job lands there." },
+                { label: "Make one switch per server", math: "Ii = 1 if server i is nonempty", note: "There are four switches: I1, I2, I3, I4." },
+                { label: "Write the total", math: "X = I1 + I2 + I3 + I4", note: "Each used server contributes 1 to the count." },
+                { label: "Use the complement", math: "P(Ii=1) = 1 - P(server i is empty)", note: "Nonempty is easier by subtracting empty from 1." },
+                { label: "Compute empty", math: "P(server i is empty) = (3/4)^5", note: "Each of the 5 jobs must choose one of the other 3 servers." },
+                { label: "Compute switch mean", math: "E[Ii] = P(Ii=1) = 1 - (3/4)^5", note: "This is the average contribution of one server." },
+                { label: "Add four equal switches", math: "E[X] = 4[1 - (3/4)^5] = 4[1 - 243/1024] = 781/256", note: "That is about 3.05 used servers on average." }
+              ]
             },
             {
               type: "example",
               title: "Example 3.18: matches in two lists",
-              body: "A random permutation of 1 to n is compared with the original list. Let Ii be 1 if position i matches. Each position matches with probability 1/n. Expected matches = n x 1/n = 1."
+              body: "A random permutation of 1 to n is compared with the original list. We want the expected number of positions that match. This is the same shape as the phone problem: one switch per position.",
+              steps: [
+                { label: "Define the switch", math: "Ii = 1 if position i matches", note: "For example, position 3 matches if the number 3 lands in position 3." },
+                { label: "Probability of one match", math: "P(Ii=1) = 1/n", note: "Position i is equally likely to contain any of the n numbers." },
+                { label: "Add positions", math: "E[X] = E[I1 + ... + In] = n x (1/n) = 1", note: "The expected number of matches is 1." }
+              ]
+            },
+            {
+              type: "example",
+              title: "Application: expected occupied servers",
+              body: "How do you know an indicator solution is coming? Look for a phrase like expected number of objects that satisfy a condition. Then choose the objects. Here the objects are servers; in a card problem they might be card positions; in a graph problem they might be edges or pairs.",
+              items: [
+                "Expected number of occupied boxes: one switch per box.",
+                "Expected number of fixed points: one switch per position.",
+                "Expected number of defective items in a sample: one switch per draw or per sampled item.",
+                "Expected number of matching pairs: one switch per pair."
+              ]
             },
             {
               type: "checkpoint",
               title: "Checkpoint",
-              body: "If 5 balls are thrown independently into 4 boxes, what indicator would you define to find the expected number of nonempty boxes?"
+              body: "If 8 balls are thrown independently into 5 boxes, and X is the number of nonempty boxes, define the indicators before doing any arithmetic. You should write Ii = 1 if box i is nonempty, then X = I1 + I2 + I3 + I4 + I5."
             }
           ]
         },
@@ -1134,30 +1365,110 @@ function gateDaProbabilitySections(updatedAt = new Date().toISOString()) {
           number: "3.7",
           title: "Tail-Sum Formula",
           paragraphs: [
-            "Tail-sum is another shortcut for averages. Instead of asking exactly where X stops, ask whether X reaches level 1, level 2, level 3, and so on.",
-            "This is vivid for waiting time. If X is the number of attempts until first success, then X >= 4 means the first 3 attempts all failed. That is often simpler than writing P(X = 4).",
-            "Use tail sums when X is 0, 1, 2, ... or 1, 2, 3, ... and the question 'does X reach this level?' is easy."
+            "Tail-sum is for nonnegative integer values: 0, 1, 2, 3, and so on, or waiting times 1, 2, 3, and so on. It finds an average by asking whether X reaches each level.",
+            "The idea is visual. If X = 4, imagine a stack of four blocks. That stack contributes one block to level 1, one to level 2, one to level 3, and one to level 4. So the average height can be found by adding the chances that the stack reaches each level.",
+            "For waiting-time problems this is often much easier than exact probabilities. Exact means 'fail, fail, fail, then succeed.' Tail means only 'fail, fail, fail.' Fewer conditions usually means cleaner computation."
           ],
           blocks: [
             {
               type: "principle",
               title: "Principle: tail-sum formula",
-              body: "If X is nonnegative and integer-valued, then E[X] = sum from k = 1 to infinity of P(X >= k), whenever the expectation exists."
+              body: "If X is nonnegative and integer-valued, then E[X] = sum from k = 1 to infinity of P(X >= k), whenever the expectation exists. Read P(X >= k) as: the value of X reaches level k.",
+              steps: [
+                { label: "Example value", math: "If X = 4, then X>=1, X>=2, X>=3, X>=4 are true", note: "The value 4 is counted once at each of the first four levels." },
+                { label: "Counting by levels", math: "X = 1{X>=1} + 1{X>=2} + 1{X>=3} + ...", note: "Only the levels up to X turn on." },
+                { label: "Take expectation", math: "E[X] = P(X>=1) + P(X>=2) + P(X>=3) + ...", note: "This is just the indicator idea applied to height levels." }
+              ]
             },
             {
               type: "example",
               title: "Example 3.19: geometric expectation",
-              body: "If X is the trial number of the first success with success probability p, then P(X >= k) = (1 - p)^(k - 1). Summing the geometric series gives E[X] = 1/p."
+              body: "A request succeeds with probability p on each attempt, independently. Let X be the attempt number of the first success. We want E[X], the average number of attempts until success.",
+              steps: [
+                { label: "Understand X >= 1", math: "P(X>=1) = 1", note: "You always make at least one attempt." },
+                { label: "Understand X >= 2", math: "P(X>=2) = 1-p", note: "To need a second attempt, the first attempt must fail." },
+                { label: "Understand X >= 3", math: "P(X>=3) = (1-p)^2", note: "To need a third attempt, the first two attempts must fail." },
+                { label: "General level", math: "P(X>=k) = (1-p)^(k-1)", note: "To reach attempt k, the first k-1 attempts must fail." },
+                { label: "Add the tails", math: "E[X] = 1 + (1-p) + (1-p)^2 + ...", note: "This is an infinite geometric series." },
+                { label: "Sum the series", math: "E[X] = 1 / (1-(1-p)) = 1/p", note: "If success chance is small, the average wait is large." }
+              ]
             },
             {
               type: "example",
               title: "Example 3.20: first head",
-              body: "Toss a fair coin until the first head. P(X >= 1)=1, P(X >= 2)=1/2, P(X >= 3)=1/4, and so on. The average waiting time is 1 + 1/2 + 1/4 + ... = 2 tosses."
+              body: "Toss a fair coin until the first head. Let X be the toss number of the first head. We will compute the expectation slowly using tail sums.",
+              steps: [
+                { label: "Reach toss 1", math: "P(X>=1) = 1", note: "You must toss once." },
+                { label: "Reach toss 2", math: "P(X>=2) = P(first toss is T) = 1/2", note: "You need a second toss only if the first toss failed to be H." },
+                { label: "Reach toss 3", math: "P(X>=3) = P(first two tosses are TT) = 1/4", note: "Two failures are needed." },
+                { label: "Reach toss 4", math: "P(X>=4) = P(first three tosses are TTT) = 1/8", note: "Three failures are needed." },
+                { label: "Add the levels", math: "E[X] = 1 + 1/2 + 1/4 + 1/8 + ...", note: "Each term is the chance that the waiting time reaches that level." },
+                { label: "Compute", math: "E[X] = 1/(1-1/2) = 2", note: "On average, the first head appears after 2 tosses." }
+              ]
+            },
+            {
+              type: "example",
+              title: "Picture: shrinking tails",
+              body: "Each row asks whether the waiting time reaches that level. For first head, reaching level 4 means the first three tosses were tails.",
+              visual: {
+                type: "tail",
+                caption: "Tail probabilities for a fair coin: 1, 1/2, 1/4, 1/8, ...",
+                levels: [
+                  { label: "X >= 1", width: 100, value: "1" },
+                  { label: "X >= 2", width: 50, value: "1/2" },
+                  { label: "X >= 3", width: 25, value: "1/4" },
+                  { label: "X >= 4", width: 13, value: "1/8" }
+                ]
+              }
             },
             {
               type: "example",
               title: "Example 3.21: why it is easier",
-              body: "For waiting time, P(X = k) says fail k - 1 times and then succeed. P(X >= k) says only fail k - 1 times. The tail event has one less condition."
+              body: "For waiting time, P(X = k) says fail k - 1 times and then succeed. P(X >= k) says only fail k - 1 times. The tail event has one less condition, so the algebra is usually cleaner.",
+              steps: [
+                { label: "Exact event", math: "P(X=k) = (1-p)^(k-1)p", note: "This includes the final success on trial k." },
+                { label: "Tail event", math: "P(X>=k) = (1-p)^(k-1)", note: "This only says the first k-1 trials failed." },
+                { label: "Why this helps", math: "E[X] = sum P(X>=k)", note: "The tail formula removes the extra p and the multiplier k." }
+              ]
+            },
+            {
+              type: "example",
+              title: "Worked comparison with p = 1/5",
+              body: "Suppose each attempt succeeds with probability 1/5. Direct PMF calculation is possible, but tail sums show the answer with less clutter.",
+              steps: [
+                { label: "Exact probabilities", math: "P(X=k) = (4/5)^(k-1)(1/5)", note: "This says fail k-1 times, then succeed." },
+                { label: "Direct expectation", math: "E[X] = sum k(4/5)^(k-1)(1/5)", note: "This is correct, but the factor k makes the series harder to sum." },
+                { label: "Tail probabilities", math: "P(X>=k) = (4/5)^(k-1)", note: "This says only that the first k-1 attempts failed." },
+                { label: "Tail expectation", math: "E[X] = 1 + 4/5 + (4/5)^2 + (4/5)^3 + ...", note: "Now it is a plain geometric series." },
+                { label: "Compute the sum", math: "E[X] = 1/(1-4/5) = 5", note: "With success chance 1/5, the average wait is 5 attempts." }
+              ]
+            },
+            {
+              type: "example",
+              title: "Finite tail-sum example",
+              body: "Tail sums are not only for infinite waiting times. They also work for a bounded count. Suppose X is the number of heads in three fair coin tosses.",
+              steps: [
+                { label: "Possible values", math: "X can be 0, 1, 2, or 3", note: "So the tail sum stops after level 3." },
+                { label: "Reach level 1", math: "P(X>=1) = 1 - P(no heads) = 1 - 1/8 = 7/8", note: "At least one head." },
+                { label: "Reach level 2", math: "P(X>=2) = P(exactly 2 heads) + P(3 heads) = 3/8 + 1/8 = 4/8", note: "Two or more heads." },
+                { label: "Reach level 3", math: "P(X>=3) = P(3 heads) = 1/8", note: "All three tosses are heads." },
+                { label: "Add tails", math: "E[X] = 7/8 + 4/8 + 1/8 = 12/8 = 3/2", note: "This matches the usual binomial mean np = 3 x 1/2." }
+              ]
+            },
+            {
+              type: "principle",
+              title: "Direct PMF versus tail sum",
+              body: "Both methods are correct. The direct PMF method asks for exact stopping times and then weights them by k. The tail-sum method stacks the waiting-time bars by height, which is often easier to add.",
+              formulas: [
+                { label: "Direct", formula: "E[X]=sum k(1-p)^(k-1)p", note: "correct, but algebra is heavier" },
+                { label: "Tail", formula: "E[X]=sum (1-p)^(k-1)=1/p", note: "same answer, cleaner series" }
+              ],
+              steps: [
+                { label: "Start with tails", math: "E[X] = P(X>=1) + P(X>=2) + P(X>=3) + ...", note: "Think of adding horizontal layers of the waiting time." },
+                { label: "Substitute", math: "E[X] = 1 + (1-p) + (1-p)^2 + ...", note: "Each extra level requires one more failure." },
+                { label: "Use geometric sum", math: "1 + r + r^2 + ... = 1/(1-r), where r=1-p", note: "This is the standard infinite geometric series." },
+                { label: "Finish", math: "E[X] = 1/(1-(1-p)) = 1/p", note: "If p=1/5, the average wait is 5 attempts." }
+              ]
             },
             {
               type: "warning",
@@ -1204,6 +1515,16 @@ function gateDaProbabilitySections(updatedAt = new Date().toISOString()) {
               type: "example",
               title: "Example 3.24: absolute error",
               body: "If X is an error that can be positive or negative, |X| is the size of the error. To find P(|X| <= 2), translate it to -2 <= X <= 2."
+            },
+            {
+              type: "example",
+              title: "Picture: monotone and non-monotone",
+              body: "For Y=2X+5, one X value gives one Y value and the order stays the same. For Y=X^2, both -2 and 2 give 4, so probability questions must collect pieces from both sides.",
+              visual: {
+                type: "flow",
+                steps: ["Y=2X+5: one cutoff", "Y=X^2: split into cases", "translate back to X"],
+                caption: "Transformations are solved by turning the Y question into an X question."
+              }
             }
           ]
         }
@@ -2997,6 +3318,146 @@ function bookBlockTemplate(block) {
     <div class="math-callout ${escapeHtml(block.type)}">
       <strong>${escapeHtml(block.title)}</strong>
       <p>${escapeHtml(block.body)}</p>
+      ${block.items ? `<ul class="callout-list">${block.items.map((item) => `<li>${escapeHtml(item)}</li>`).join("")}</ul>` : ""}
+      ${block.formulas ? formulaRowsTemplate(block.formulas) : ""}
+      ${block.steps ? workedStepsTemplate(block.steps) : ""}
+      ${block.visual ? visualTemplate(block.visual) : ""}
+    </div>
+  `;
+}
+
+function formulaRowsTemplate(rows) {
+  return `
+    <div class="formula-list">
+      ${rows.map((row) => `
+        <div class="formula-row">
+          <span>${escapeHtml(row.label)}</span>
+          <code>${mathHtml(row.formula)}</code>
+          ${row.note ? `<em>${escapeHtml(row.note)}</em>` : ""}
+        </div>
+      `).join("")}
+    </div>
+  `;
+}
+
+function workedStepsTemplate(steps) {
+  return `
+    <ol class="worked-steps">
+      ${steps.map((step) => `
+        <li>
+          ${step.label ? `<span>${escapeHtml(step.label)}</span>` : ""}
+          <code>${mathHtml(step.math)}</code>
+          ${step.note ? `<p>${escapeHtml(step.note)}</p>` : ""}
+        </li>
+      `).join("")}
+    </ol>
+  `;
+}
+
+function visualTemplate(visual) {
+  if (visual.type === "bars") return barDiagramTemplate(visual);
+  if (visual.type === "area") return areaDiagramTemplate(visual);
+  if (visual.type === "flow") return flowDiagramTemplate(visual);
+  if (visual.type === "tail") return tailDiagramTemplate(visual);
+  return "";
+}
+
+function barDiagramTemplate(visual) {
+  const bars = visual.bars || [];
+  const maxHeight = Math.max(...bars.map((bar) => Number(bar.height) || 1), 1);
+  const chartWidth = 420;
+  const chartHeight = 170;
+  const leftPad = 40;
+  const bottomPad = 34;
+  const topPad = 16;
+  const gap = 14;
+  const barWidth = bars.length ? (chartWidth - leftPad - 20 - gap * (bars.length - 1)) / bars.length : 32;
+  return `
+    <div class="mini-diagram">
+      <svg class="diagram-svg" viewBox="0 0 ${chartWidth} ${chartHeight}" role="img" aria-label="${escapeHtml(visual.caption || "Bar diagram")}">
+        <line x1="${leftPad}" y1="${chartHeight - bottomPad}" x2="${chartWidth - 10}" y2="${chartHeight - bottomPad}" class="diagram-axis"></line>
+        <line x1="${leftPad}" y1="${topPad}" x2="${leftPad}" y2="${chartHeight - bottomPad}" class="diagram-axis"></line>
+        ${bars.map((bar, index) => {
+          const height = Math.max(8, ((Number(bar.height) || 1) / maxHeight) * 105);
+          const x = leftPad + 12 + index * (barWidth + gap);
+          const y = chartHeight - bottomPad - height;
+          return `
+            <rect x="${x}" y="${y}" width="${barWidth}" height="${height}" rx="4" class="diagram-bar"></rect>
+            <text x="${x + barWidth / 2}" y="${chartHeight - 11}" text-anchor="middle" class="diagram-label">${escapeHtml(bar.label)}</text>
+          `;
+        }).join("")}
+        <text x="${leftPad - 8}" y="${topPad + 8}" text-anchor="end" class="diagram-label">chance</text>
+        <text x="${chartWidth - 10}" y="${chartHeight - 11}" text-anchor="end" class="diagram-label">X</text>
+      </svg>
+      ${visual.caption ? `<small>${escapeHtml(visual.caption)}</small>` : ""}
+    </div>
+  `;
+}
+
+function areaDiagramTemplate(visual) {
+  const start = Math.max(0, Number(visual.start) || 0);
+  const width = Math.min(100 - start, Math.max(0, Number(visual.width) || 0));
+  const x = 42 + start * 3.36;
+  const w = width * 3.36;
+  return `
+    <div class="mini-diagram">
+      <svg class="diagram-svg" viewBox="0 0 420 150" role="img" aria-label="${escapeHtml(visual.caption || "Area diagram")}">
+        <line x1="42" y1="116" x2="378" y2="116" class="diagram-axis"></line>
+        <rect x="42" y="42" width="336" height="74" rx="5" class="diagram-area"></rect>
+        <rect x="${x}" y="42" width="${w}" height="74" rx="3" class="diagram-shade"></rect>
+        <text x="42" y="136" text-anchor="middle" class="diagram-label">${escapeHtml(visual.leftLabel || "")}</text>
+        <text x="378" y="136" text-anchor="middle" class="diagram-label">${escapeHtml(visual.rightLabel || "")}</text>
+        <text x="210" y="29" text-anchor="middle" class="diagram-label">flat density</text>
+      </svg>
+      ${visual.caption ? `<small>${escapeHtml(visual.caption)}</small>` : ""}
+    </div>
+  `;
+}
+
+function flowDiagramTemplate(visual) {
+  const steps = visual.steps || [];
+  const width = 460;
+  const height = 70 + Math.ceil(steps.length / 3) * 64;
+  return `
+    <div class="mini-diagram">
+      <svg class="diagram-svg" viewBox="0 0 ${width} ${height}" role="img" aria-label="${escapeHtml(visual.caption || "Flow diagram")}">
+        ${steps.map((step, index) => {
+          const col = index % 3;
+          const row = Math.floor(index / 3);
+          const x = 20 + col * 148;
+          const y = 24 + row * 64;
+          const nextCol = (index + 1) % 3;
+          const nextRow = Math.floor((index + 1) / 3);
+          const nextX = 20 + nextCol * 148;
+          const nextY = 24 + nextRow * 64;
+          return `
+            <rect x="${x}" y="${y}" width="122" height="38" rx="19" class="diagram-pill"></rect>
+            <text x="${x + 61}" y="${y + 24}" text-anchor="middle" class="diagram-label">${escapeHtml(step)}</text>
+            ${index < steps.length - 1 ? `<line x1="${x + 126}" y1="${y + 19}" x2="${nextX - 6}" y2="${nextY + 19}" class="diagram-arrow"></line>` : ""}
+          `;
+        }).join("")}
+      </svg>
+      ${visual.caption ? `<small>${escapeHtml(visual.caption)}</small>` : ""}
+    </div>
+  `;
+}
+
+function tailDiagramTemplate(visual) {
+  const levels = visual.levels || [];
+  return `
+    <div class="mini-diagram">
+      <svg class="diagram-svg" viewBox="0 0 420 ${70 + levels.length * 34}" role="img" aria-label="${escapeHtml(visual.caption || "Tail diagram")}">
+        ${levels.map((level, index) => {
+          const y = 30 + index * 34;
+          const width = Math.max(18, Math.min(260, (Number(level.width) || 10) * 2.6));
+          return `
+            <text x="22" y="${y + 5}" class="diagram-label">${escapeHtml(level.label)}</text>
+            <rect x="110" y="${y - 8}" width="${width}" height="16" rx="8" class="diagram-bar"></rect>
+            <text x="385" y="${y + 5}" text-anchor="end" class="diagram-label">${escapeHtml(level.value)}</text>
+          `;
+        }).join("")}
+      </svg>
+      ${visual.caption ? `<small>${escapeHtml(visual.caption)}</small>` : ""}
     </div>
   `;
 }
@@ -3586,4 +4047,15 @@ function escapeHtml(value) {
     .replaceAll(">", "&gt;")
     .replaceAll('"', "&quot;")
     .replaceAll("'", "&#039;");
+}
+
+function mathHtml(value) {
+  return escapeHtml(value)
+    .replaceAll("&lt;=", "&le;")
+    .replaceAll("&gt;=", "&ge;")
+    .replaceAll("!=", "&ne;")
+    .replaceAll("...", "&hellip;")
+    .replaceAll(" x ", " &times; ")
+    .replaceAll("sum", "&Sigma;")
+    .replaceAll("integral", "&int;");
 }
