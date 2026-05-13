@@ -1,6 +1,6 @@
 const STORAGE_KEY = "learning-studio-data-v1";
 const SESSION_KEY = "aleph-session";
-const COURSE_PLAN_VERSION = "gate-da-basic-probability-chapter-8-continuous-distributions-v19";
+const COURSE_PLAN_VERSION = "gate-da-basic-probability-chapter-10-hypothesis-testing-v21";
 
 const state = loadState();
 let deferredInstallPrompt = null;
@@ -171,6 +171,10 @@ function buildGateDaBasicPlan(now, accountTypes, sections) {
   const weekSevenSunday = addDays(weekSevenMonday, 6);
   const weekEightMonday = addDays(monday, 49);
   const weekEightSunday = addDays(weekEightMonday, 6);
+  const weekNineMonday = addDays(monday, 56);
+  const weekNineSunday = addDays(weekNineMonday, 6);
+  const weekTenMonday = addDays(monday, 63);
+  const weekTenSunday = addDays(weekTenMonday, 6);
   return {
     subjects: [
       {
@@ -178,7 +182,7 @@ function buildGateDaBasicPlan(now, accountTypes, sections) {
         title: "Probability",
         date: "2026-08-30",
         status: "In progress",
-        details: "GATE DA Basic Probability, aligned to the official GATE DA syllabus. Chapters 1-8 now cover foundations, conditioning, random variables, expectation, variance, tail bounds, joint distributions, covariance, correlation, conditional expectation, continuous distributions, and order statistics.",
+        details: "GATE DA Basic Probability, aligned to the official GATE DA syllabus. Chapters 1-10 now cover foundations, conditioning, random variables, expectation, variance, tail bounds, joint distributions, covariance, correlation, conditional expectation, continuous distributions, order statistics, limit theorems, approximations, confidence intervals, and hypothesis tests.",
         sectionIds: sections.map((section) => section.id),
         updatedAt: now
       }
@@ -403,6 +407,66 @@ function buildGateDaBasicPlan(now, accountTypes, sections) {
         date: weekEightSunday,
         details: "Take the continuous distributions objective quiz and use the logged feedback to review weak concepts.",
         updatedAt: now
+      },
+      {
+        id: "schedule-probability-chapter-9-study",
+        title: "Probability Chapter 9: Limit Theorems and Approximations",
+        week: 9,
+        subject: "Probability",
+        kind: "Study",
+        date: weekNineMonday,
+        details: "Study sample means, standard errors, LLN, CLT, standardized sums, normal and Poisson approximations, continuity correction, and approximation diagnostics.",
+        updatedAt: now
+      },
+      {
+        id: "schedule-probability-chapter-9-practice",
+        title: "Probability Chapter 9: Labelled Practice",
+        week: 9,
+        subject: "Probability",
+        kind: "Practice",
+        date: addDays(weekNineMonday, 2),
+        details: "Solve the Chapter 9 limit-theorem and approximation practice problems before opening worked solutions.",
+        updatedAt: now
+      },
+      {
+        id: "schedule-probability-chapter-9-review",
+        title: "Probability Chapter 9: Objective Review",
+        week: 9,
+        subject: "Probability",
+        kind: "Review",
+        date: weekNineSunday,
+        details: "Take the limit theorems objective quiz and use the logged feedback to review weak concepts.",
+        updatedAt: now
+      },
+      {
+        id: "schedule-probability-chapter-10-study",
+        title: "Probability Chapter 10: Confidence Intervals and Hypothesis Tests",
+        week: 10,
+        subject: "Probability",
+        kind: "Study",
+        date: weekTenMonday,
+        details: "Study inference through a delivery-app matching case study: CIs, Wald and score methods, z-tests, t-tests, chi-squared tests, p-values, rejection regions, and power.",
+        updatedAt: now
+      },
+      {
+        id: "schedule-probability-chapter-10-practice",
+        title: "Probability Chapter 10: Labelled Practice",
+        week: 10,
+        subject: "Probability",
+        kind: "Practice",
+        date: addDays(weekTenMonday, 2),
+        details: "Solve the Chapter 10 confidence-interval and hypothesis-testing practice problems before opening worked solutions.",
+        updatedAt: now
+      },
+      {
+        id: "schedule-probability-chapter-10-review",
+        title: "Probability Chapter 10: Objective Review",
+        week: 10,
+        subject: "Probability",
+        kind: "Review",
+        date: weekTenSunday,
+        details: "Take the inference objective quiz and use the logged feedback to review weak concepts.",
+        updatedAt: now
       }
     ],
     tests: [
@@ -467,6 +531,24 @@ function buildGateDaBasicPlan(now, accountTypes, sections) {
         details: "Objective end-of-chapter quiz for exponential, Poisson, gamma, normal, standard normal, order statistics, uniform spacings, beta, and exponential-family recognition. Attempts are logged in the learner record.",
         sectionId: sections[7]?.id,
         quizId: "quiz-probability-chapter-8-objective-review",
+        updatedAt: now
+      },
+      {
+        id: "test-probability-chapter-9-objective-review",
+        title: "Probability Chapter 9 Objective Review",
+        date: weekNineSunday,
+        details: "Objective end-of-chapter quiz for standard errors, LLN, CLT, standardized sums, normal approximation, continuity correction, Poisson approximation, and approximation diagnostics. Attempts are logged in the learner record.",
+        sectionId: sections[8]?.id,
+        quizId: "quiz-probability-chapter-9-objective-review",
+        updatedAt: now
+      },
+      {
+        id: "test-probability-chapter-10-objective-review",
+        title: "Probability Chapter 10 Objective Review",
+        date: weekTenSunday,
+        details: "Objective end-of-chapter quiz for confidence intervals, z-tests, t-tests, chi-squared tests, p-values, rejection regions, and power. Attempts are logged in the learner record.",
+        sectionId: sections[9]?.id,
+        quizId: "quiz-probability-chapter-10-objective-review",
         updatedAt: now
       }
     ],
@@ -713,6 +795,72 @@ function buildGateDaBasicPlan(now, accountTypes, sections) {
         done: false,
         details: "Submit the Chapter 8 objective quiz so the learner record logs continuous distribution and order-statistic strengths and weaknesses.",
         updatedAt: now
+      },
+      {
+        id: "task-probability-chapter-9-read",
+        week: 9,
+        title: "Probability Ch 9: Read limit theorems",
+        type: "Study",
+        date: weekNineMonday,
+        status: "todo",
+        done: false,
+        details: "Open Subjects -> Probability -> Chapter 9 and study LLN, CLT, standard errors, normal approximations, Poisson approximations, and diagnostics.",
+        updatedAt: now
+      },
+      {
+        id: "task-probability-chapter-9-practice",
+        week: 9,
+        title: "Probability Ch 9: Solve approximation practice",
+        type: "Practice",
+        date: addDays(weekNineMonday, 2),
+        status: "todo",
+        done: false,
+        details: "Attempt the Chapter 9 labelled practice problems before reading worked solutions.",
+        updatedAt: now
+      },
+      {
+        id: "task-probability-chapter-9-review",
+        week: 9,
+        title: "Probability Ch 9: Take objective review",
+        type: "Review",
+        date: weekNineSunday,
+        status: "todo",
+        done: false,
+        details: "Submit the Chapter 9 objective quiz so the learner record logs limit-theorem and approximation strengths and weaknesses.",
+        updatedAt: now
+      },
+      {
+        id: "task-probability-chapter-10-read",
+        week: 10,
+        title: "Probability Ch 10: Read inference case study",
+        type: "Study",
+        date: weekTenMonday,
+        status: "todo",
+        done: false,
+        details: "Open Subjects -> Probability -> Chapter 10 and study confidence intervals and hypothesis tests through the delivery-app matching case study.",
+        updatedAt: now
+      },
+      {
+        id: "task-probability-chapter-10-practice",
+        week: 10,
+        title: "Probability Ch 10: Solve inference practice",
+        type: "Practice",
+        date: addDays(weekTenMonday, 2),
+        status: "todo",
+        done: false,
+        details: "Attempt the Chapter 10 labelled practice problems before reading worked solutions.",
+        updatedAt: now
+      },
+      {
+        id: "task-probability-chapter-10-review",
+        week: 10,
+        title: "Probability Ch 10: Take objective review",
+        type: "Review",
+        date: weekTenSunday,
+        status: "todo",
+        done: false,
+        details: "Submit the Chapter 10 objective quiz so the learner record logs confidence-interval and hypothesis-testing strengths and weaknesses.",
+        updatedAt: now
       }
     ],
     accountTypes,
@@ -738,7 +886,7 @@ function buildGateDaBasicPlan(now, accountTypes, sections) {
         startDate: monday,
         endDate: "2026-08-30",
         status: "active",
-        details: "GATE DA Basic plan surfaces: Subjects, Tasks, Schedule, Tests, Feedback, Resources, and Share. Current material build: Probability Chapters 1-8.",
+        details: "GATE DA Basic plan surfaces: Subjects, Tasks, Schedule, Tests, Feedback, Resources, and Share. Current material build: Probability Chapters 1-10.",
         updatedAt: now
       }
     ],
@@ -822,6 +970,22 @@ function buildGateDaBasicPlan(now, accountTypes, sections) {
         title: "Probability Chapter 8: Continuous Distributions and Order Statistics",
         date: weekEightMonday,
         details: "Open Subjects -> Probability to study Chapter 8 and then take the objective review in Tests.",
+        link: "",
+        updatedAt: now
+      },
+      {
+        id: "resource-probability-limit-theorems",
+        title: "Probability Chapter 9: Limit Theorems and Approximations",
+        date: weekNineMonday,
+        details: "Open Subjects -> Probability to study Chapter 9 and then take the objective review in Tests.",
+        link: "",
+        updatedAt: now
+      },
+      {
+        id: "resource-probability-hypothesis-testing",
+        title: "Probability Chapter 10: Confidence Intervals and Hypothesis Tests",
+        date: weekTenMonday,
+        details: "Open Subjects -> Probability to study Chapter 10 and then take the objective review in Tests.",
         link: "",
         updatedAt: now
       }
@@ -3996,6 +4160,606 @@ function gateDaProbabilitySections(updatedAt = new Date().toISOString()) {
         "The exponential family is a unifying structure behind many common models."
       ],
       updatedAt
+    },
+    {
+      id: "gate-da-limit-theorems-approximations",
+      exam: "GATE DA",
+      accountTier: "Basic",
+      subject: "Probability",
+      chapter: "Chapter 9",
+      section: "9",
+      title: "Limit Theorems and Approximations",
+      summary: "Why averages stabilize, why standardized sums become nearly normal, and how to choose between exact probability, tail bounds, normal approximations, and Poisson approximations.",
+      sectionPreview: "This chapter turns the earlier tools into judgement. We derive the ideas behind LLN and CLT from mean and variance, then use them to decide when an approximation is trustworthy.",
+      previewActivity: "Imagine flipping a coin 1000 times. The exact number of heads moves around, but the proportion of heads usually stays close to 0.5. Why does the proportion stabilize while the raw count keeps growing?",
+      chapterIntro: [
+        "Limit theorems explain why probability becomes useful at scale. One trial can be noisy. Many independent trials have structure.",
+        "The law of large numbers says averages settle near the mean. The central limit theorem says many standardized sums have an approximately normal shape.",
+        "Approximations are not shortcuts for laziness. They are controlled replacements for exact calculations when the exact calculation is bulky or when the problem asks for insight."
+      ],
+      bookSections: [
+        {
+          number: "9.1",
+          title: "Why Approximation Is Needed",
+          paragraphs: [
+            "Exact probability is the starting point. But exact binomial tails, long convolutions, and large sums can become tedious.",
+            "A bound gives guaranteed safety but may be loose. An approximation gives a numerical estimate but needs conditions. Chapter 9 is about knowing which tool is being used and what information it consumes.",
+            "The same question can have three answers: exact, bounded, and approximate. They are not interchangeable."
+          ],
+          blocks: [
+            {
+              type: "strategy",
+              title: "Three levels of information",
+              body: "Ask how much of the random variable's structure you are using.",
+              items: [
+                "Exact distribution: uses the full model and gives the sharpest answer.",
+                "Tail bound: often uses only mean, variance, or independence and gives a guaranteed inequality.",
+                "Approximation: uses limiting shape and gives a fast estimate when conditions are good."
+              ]
+            }
+          ]
+        },
+        {
+          number: "9.2",
+          title: "Sample Means and Standard Error",
+          paragraphs: [
+            "Let X_1,...,X_n be independent observations with mean mu and variance sigma^2. The sample mean is Xbar=(X_1+...+X_n)/n.",
+            "Linearity gives E[Xbar]=mu. Independence gives Var(Xbar)=sigma^2/n. Therefore the standard deviation of Xbar is sigma/sqrt(n). This is called the standard error.",
+            "The important lesson is square-root improvement: to cut standard error in half, you need four times as much data."
+          ],
+          blocks: [
+            {
+              type: "example",
+              title: "Derivation: why averages stabilize",
+              body: "The average divides the sum by n. The mean stays at mu, but the variance shrinks because independent fluctuations partially cancel.",
+              steps: [
+                { label: "Mean", math: "E[Xbar]=E[(X_1+...+X_n)/n]=mu", note: "Averages target the population mean." },
+                { label: "Variance of sum", math: "Var(X_1+...+X_n)=n sigma^2", note: "Use independence." },
+                { label: "Scale by 1/n", math: "Var(Xbar)=n sigma^2/n^2=sigma^2/n", note: "Scaling by 1/n squares inside variance." },
+                { label: "Standard error", math: "SD(Xbar)=sigma/sqrt(n)", note: "This measures typical error of the sample mean." }
+              ]
+            },
+            {
+              type: "example",
+              title: "Demonstration: average marks",
+              body: "If individual scores have mean 70 and standard deviation 12, the average of 36 independent scores has standard error 12/sqrt(36)=2.",
+              steps: [
+                { label: "One score", math: "SD(X)=12", note: "A single score is noisy." },
+                { label: "Average of 36", math: "SE(Xbar)=12/6=2", note: "The average is much more stable." },
+                { label: "Interpretation", math: "typical error about 2 marks", note: "Not because every student is close to 70, but because averaging cancels noise." }
+              ]
+            }
+          ]
+        },
+        {
+          number: "9.3",
+          title: "Law of Large Numbers",
+          paragraphs: [
+            "The law of large numbers is the formal version of averages stabilizing. It says that Xbar gets close to mu with high probability as n grows.",
+            "One way to see the idea is through Chebyshev's inequality. Since Var(Xbar)=sigma^2/n, the probability of being far from mu must shrink.",
+            "LLN is about the average, not the raw sum. The sum grows, but the average settles."
+          ],
+          blocks: [
+            {
+              type: "example",
+              title: "Derivation idea from Chebyshev",
+              body: "For any epsilon>0, Chebyshev gives a direct bound on the chance that the sample mean is more than epsilon away from mu.",
+              steps: [
+                { label: "Start with Chebyshev", math: "P(|Xbar-mu|>=epsilon)<=Var(Xbar)/epsilon^2", note: "Use Chapter 4." },
+                { label: "Substitute variance", math: "P(|Xbar-mu|>=epsilon)<=sigma^2/(n epsilon^2)", note: "The numerator is fixed; n grows." },
+                { label: "Let n grow", math: "sigma^2/(n epsilon^2) -> 0", note: "Large samples make persistent average error unlikely." }
+              ]
+            }
+          ]
+        },
+        {
+          number: "9.4",
+          title: "Central Limit Theorem",
+          paragraphs: [
+            "LLN says the average gets close to the mean. CLT says what the remaining error looks like after we zoom in by the standard error.",
+            "For many independent observations with finite variance, the standardized sum or sample mean is approximately standard normal when n is large.",
+            "The CLT is why normal probabilities appear even when the original observations are not normal."
+          ],
+          blocks: [
+            {
+              type: "principle",
+              title: "CLT forms",
+              body: "These are the same statement written for sums and averages.",
+              formulas: [
+                { label: "Sum", formula: "(S_n-n mu)/(sigma sqrt(n)) approximately N(0,1)", note: "S_n=X_1+...+X_n" },
+                { label: "Average", formula: "(Xbar-mu)/(sigma/sqrt(n)) approximately N(0,1)", note: "standardize by standard error" }
+              ]
+            },
+            {
+              type: "example",
+              title: "Demonstration: average waiting time",
+              body: "Suppose service times have mean 10 minutes and standard deviation 4 minutes. For 64 independent services, approximate P(Xbar>11).",
+              steps: [
+                { label: "Standard error", math: "SE=4/sqrt(64)=0.5", note: "Average of 64 service times." },
+                { label: "Standardize", math: "z=(11-10)/0.5=2", note: "Two standard errors above the mean." },
+                { label: "Use normal", math: "P(Xbar>11) about P(Z>2)=1-Phi(2)", note: "CLT approximation." }
+              ]
+            }
+          ]
+        },
+        {
+          number: "9.5",
+          title: "Normal Approximation to Binomial",
+          paragraphs: [
+            "A binomial count is a sum of independent Bernoulli variables. That makes it a direct CLT target.",
+            "If X~Binomial(n,p), then E[X]=np and Var(X)=np(1-p). When both np and n(1-p) are reasonably large, the count is approximately normal.",
+            "The normal is continuous while the binomial is discrete, so a continuity correction often improves tail estimates."
+          ],
+          blocks: [
+            {
+              type: "principle",
+              title: "Binomial to normal",
+              body: "Use when successes and failures both have enough expected count.",
+              formulas: [
+                { label: "Approximation", formula: "X approximately Normal(np, np(1-p))", note: "for X~Binomial(n,p)" },
+                { label: "Standardize", formula: "Z=(X-np)/sqrt(np(1-p))", note: "convert to standard normal" },
+                { label: "Rule of thumb", formula: "np>=10 and n(1-p)>=10", note: "diagnostic, not a theorem" }
+              ]
+            },
+            {
+              type: "example",
+              title: "Demonstration: at least 55 heads",
+              body: "Let X~Binomial(100,0.5). Approximate P(X>=55).",
+              steps: [
+                { label: "Mean and SD", math: "mu=50, sigma=sqrt(25)=5", note: "Binomial mean and standard deviation." },
+                { label: "Continuity correction", math: "P(X>=55) becomes P(Y>=54.5)", note: "The normal interval starts halfway before 55." },
+                { label: "Standardize", math: "z=(54.5-50)/5=0.9", note: "Use Y~Normal(50,25)." },
+                { label: "Approximate", math: "P(X>=55) about P(Z>=0.9)=1-Phi(0.9)", note: "A fast tail estimate." }
+              ]
+            }
+          ]
+        },
+        {
+          number: "9.6",
+          title: "Poisson Approximation to Binomial",
+          paragraphs: [
+            "When n is large and p is small, a binomial count is many trials with rare success. That is exactly the rare-event story behind the Poisson distribution.",
+            "Keep lambda=np moderate. Then Binomial(n,p) can be approximated by Poisson(lambda).",
+            "This approximation is for rare counts, not for balanced coin flips."
+          ],
+          blocks: [
+            {
+              type: "example",
+              title: "Derivation idea: rare successes",
+              body: "For fixed lambda=np, the binomial probability starts to look Poisson as n grows and p=lambda/n shrinks.",
+              steps: [
+                { label: "Binomial setup", math: "P(X=k)=C(n,k)(lambda/n)^k(1-lambda/n)^(n-k)", note: "Write p=lambda/n." },
+                { label: "Limit pieces", math: "C(n,k)(lambda/n)^k -> lambda^k/k!", note: "The combinatorial part settles." },
+                { label: "No-success mass", math: "(1-lambda/n)^n -> exp(-lambda)", note: "The exponential appears again." },
+                { label: "Poisson result", math: "P(X=k) about exp(-lambda)lambda^k/k!", note: "Use lambda=np." }
+              ]
+            },
+            {
+              type: "example",
+              title: "Demonstration: rare defective items",
+              body: "A factory has defect probability 0.01 per item. In 200 independent items, approximate the probability of exactly 3 defects.",
+              steps: [
+                { label: "Check story", math: "n=200, p=0.01, lambda=np=2", note: "Many trials, rare success." },
+                { label: "Approximate model", math: "X approximately Poisson(2)", note: "Use rare-event approximation." },
+                { label: "Compute", math: "P(X=3) about exp(-2)2^3/3!", note: "Avoid a bulky binomial calculation." }
+              ]
+            }
+          ]
+        },
+        {
+          number: "9.7",
+          title: "Exact, Bound, or Approximation",
+          paragraphs: [
+            "A good solution begins by naming the kind of answer being produced. Exact answers use the model directly. Bounds guarantee an inequality. Approximations estimate the numerical value.",
+            "In exams, exact small cases are often best. For large binomial tails, normal or Poisson approximations can be faster. For guarantee-style questions, use Markov, Chebyshev, or Chernoff.",
+            "Do not use a normal approximation just because a normal table is available. Check the story and the expected counts."
+          ],
+          blocks: [
+            {
+              type: "strategy",
+              title: "Method choice checklist",
+              body: "Choose the method by reading the problem, not by hunting for a formula.",
+              items: [
+                "Small exact count: compute directly with binomial, Poisson, or distribution rules.",
+                "Average of many independent observations: use standard error and CLT.",
+                "Binomial with many expected successes and failures: use normal approximation, usually with continuity correction.",
+                "Binomial with many trials and rare success: use Poisson approximation with lambda=np.",
+                "Need a guaranteed upper bound or only mean/variance is known: use a tail bound."
+              ]
+            },
+            {
+              type: "example",
+              title: "Diagnostic comparison",
+              body: "For X~Binomial(1000,0.002), the expected count is 2. A normal approximation is poor because expected failures are large but expected successes are tiny. Poisson(2) matches the rare-event structure.",
+              steps: [
+                { label: "Expected successes", math: "np=2", note: "Too small for normal." },
+                { label: "Expected failures", math: "n(1-p)=998", note: "Large failures alone are not enough." },
+                { label: "Choose approximation", math: "X approximately Poisson(2)", note: "Rare-event count." }
+              ]
+            }
+          ]
+        }
+      ],
+      concepts: [
+        { name: "Standard error", description: "The standard deviation of an estimator such as the sample mean.", cue: "Look for variability of an average." },
+        { name: "Law of large numbers", description: "Sample averages get close to the population mean with high probability.", cue: "Look for long-run average or stability." },
+        { name: "Central limit theorem", description: "Standardized sums and averages become approximately normal.", cue: "Look for many independent contributions with finite variance." },
+        { name: "Normal approximation", description: "Approximate a large binomial or standardized average using a normal distribution.", cue: "Check expected successes and failures." },
+        { name: "Continuity correction", description: "Adjust a discrete cutoff by 0.5 before using a continuous normal.", cue: "Use when a binomial count is approximated by normal." },
+        { name: "Poisson approximation", description: "Approximate many rare independent successes by Poisson(np).", cue: "Look for large n, small p, and moderate np." },
+        { name: "Approximation diagnostics", description: "Conditions that tell whether an approximation is plausible.", cue: "Check independence, sample size, expected counts, and rare-event structure." }
+      ],
+      techniques: [
+        { name: "Compute standard error", when: "a sample mean appears.", move: "Use sigma/sqrt(n), or sqrt(p(1-p)/n) for a sample proportion." },
+        { name: "Use LLN reasoning", when: "a problem asks why averages stabilize.", move: "Show Var(Xbar)=sigma^2/n and apply Chebyshev if needed." },
+        { name: "Use CLT for averages", when: "many independent observations are averaged.", move: "Standardize by the standard error and use Phi." },
+        { name: "Use normal approximation to binomial", when: "X~Binomial(n,p) and np, n(1-p) are both large.", move: "Approximate by Normal(np,np(1-p)) and apply continuity correction." },
+        { name: "Use Poisson approximation to binomial", when: "n is large, p is small, and lambda=np is moderate.", move: "Approximate by Poisson(lambda)." },
+        { name: "Compare tools", when: "exact, bound, and approximation methods all seem possible.", move: "State whether the answer is exact, guaranteed, or approximate." }
+      ],
+      practiceProblems: limitTheoremPracticeProblems(),
+      reviewPrompts: [
+        "Why does the standard error of an average shrink like 1/sqrt(n)?",
+        "What is the difference between LLN and CLT?",
+        "When is normal approximation to binomial reasonable?",
+        "Why do we use continuity correction?",
+        "When is Poisson approximation better than normal approximation?",
+        "How do exact answers, bounds, and approximations differ?"
+      ],
+      reviewQuiz: {
+        id: "quiz-probability-chapter-9-objective-review",
+        title: "Probability Chapter 9 Objective Review",
+        instructions: "Complete this after finishing Chapter 9 exposition and labelled practice. The quiz logs objective answers and diagnoses LLN, CLT, standard error, normal approximation, continuity correction, Poisson approximation, and method choice.",
+        questions: limitTheoremReviewQuestions()
+      },
+      readingQuestions: [
+        "What quantity becomes stable in the law of large numbers?",
+        "Why is standard error smaller than the standard deviation of one observation?",
+        "What does the CLT say after standardization?",
+        "Why is a binomial count a sum of Bernoulli variables?",
+        "What does continuity correction fix?",
+        "What rare-event pattern leads to Poisson approximation?",
+        "How can you tell whether a requested answer is exact, bounded, or approximate?"
+      ],
+      chapterSummary: [
+        "Sample averages target mu and have standard error sigma/sqrt(n).",
+        "LLN says averages become close to the mean with high probability.",
+        "CLT says standardized sums and averages are approximately normal in many large-sample settings.",
+        "Binomial counts can be approximated by normal when expected successes and failures are both large.",
+        "Continuity correction improves normal approximations to discrete counts.",
+        "Binomial counts can be approximated by Poisson(lambda=np) when successes are rare.",
+        "Exact probabilities, tail bounds, and approximations answer different kinds of questions."
+      ],
+      updatedAt
+    },
+    {
+      id: "gate-da-confidence-intervals-hypothesis-tests",
+      exam: "GATE DA",
+      accountTier: "Basic",
+      subject: "Probability",
+      chapter: "Chapter 10",
+      section: "10",
+      title: "Confidence Intervals and Hypothesis Tests",
+      summary: "Inference built from one delivery-app matching case study: compatible parameter values, Wald and score intervals, z-tests, t-tests, chi-squared tests, p-values, rejection regions, and power.",
+      sectionPreview: "We are designing a matching algorithm for a delivery app. Every test is a product question: did the new algorithm reduce delivery time, improve acceptance, change category mix, or create dependence between region and delay?",
+      previewActivity: "A new matcher reduces average observed delivery time from 32.0 to 30.8 minutes in a sample. Is that proof, noise, or evidence? What extra information do you need before making a launch decision?",
+      chapterIntro: [
+        "Hypothesis testing is organized skepticism. The null hypothesis is the boring baseline: no improvement, no difference, no dependence, no mismatch. The alternative is the product claim we are investigating.",
+        "A test statistic is chosen by asking: under the null, what standardized quantity should have a known reference distribution? z-statistics use normal standard errors, t-statistics repair unknown sigma, and chi-squared statistics add squared standardized count discrepancies.",
+        "The significance level alpha controls false alarms. The p-value measures how surprising the observed statistic would be under the null. Power measures how often the test catches a real effect."
+      ],
+      bookSections: [
+        {
+          number: "10.1",
+          title: "The Delivery Matching Case Study",
+          paragraphs: [
+            "The app matches delivery persons to restaurants and then to customer homes. A new matching algorithm claims to reduce delay, increase driver acceptance, and keep assignments fair across restaurant types and regions.",
+            "Each data question has the same hypothesis-testing skeleton: define a parameter, state H0 and H1, choose alpha, choose a statistic whose null distribution we understand, compute the statistic, compare to a rejection region or p-value, and interpret the decision.",
+            "The test does not prove the product claim true. It tells us whether the observed data are difficult to reconcile with the null model."
+          ],
+          blocks: [
+            {
+              type: "strategy",
+              title: "Hypothesis-test skeleton",
+              body: "Use this structure every time.",
+              items: [
+                "Parameter: what unknown population quantity is being studied?",
+                "Null H0: the baseline claim, usually no improvement or no difference.",
+                "Alternative H1: the direction or difference the product team cares about.",
+                "Significance alpha: the tolerated Type I error rate before seeing the data.",
+                "Statistic: a standardized estimate or discrepancy with a known null reference distribution.",
+                "Decision: reject H0 if the statistic falls in the rejection region, or if p-value <= alpha.",
+                "Power: probability of rejecting H0 when a specific alternative is true."
+              ]
+            }
+          ]
+        },
+        {
+          number: "10.2",
+          title: "Confidence Intervals: Compatible Values",
+          paragraphs: [
+            "A confidence interval lists parameter values that are compatible with the data at a chosen confidence level. For the delivery app, we might estimate the mean delivery time or the driver acceptance probability.",
+            "The common Wald pattern is estimator plus or minus critical value times standard error. It comes from standardizing the estimator around the true parameter.",
+            "A confidence interval and a two-sided test are two views of the same idea: values outside the interval would be rejected by the matching two-sided test."
+          ],
+          blocks: [
+            {
+              type: "example",
+              title: "Derivation: Wald interval for mean delivery time",
+              body: "Let Xbar estimate the true mean delivery time mu. If n is large, (Xbar-mu)/SE is approximately N(0,1).",
+              steps: [
+                { label: "Start from reference event", math: "P(-z* <= (Xbar-mu)/SE <= z*) about 1-alpha", note: "z* is the normal critical value." },
+                { label: "Solve for mu", math: "Xbar-z*SE <= mu <= Xbar+z*SE", note: "Rearrange the inequality." },
+                { label: "Wald interval", math: "estimate +/- critical value x SE", note: "This is the reusable pattern." }
+              ]
+            },
+            {
+              type: "example",
+              title: "Case question: average delivery time",
+              body: "For 100 deliveries under the new matcher, Xbar=30.8 minutes and sample standard deviation is 8 minutes. A 95% large-sample interval is 30.8 +/- 1.96(8/sqrt(100)).",
+              steps: [
+                { label: "Standard error", math: "SE=8/10=0.8", note: "Estimated variability of the sample mean." },
+                { label: "Margin", math: "1.96 x 0.8=1.568", note: "95% normal critical value." },
+                { label: "Interval", math: "(29.232, 32.368)", note: "Compatible mean delivery times under this approximation." }
+              ]
+            }
+          ]
+        },
+        {
+          number: "10.3",
+          title: "Wald and Score for Acceptance Rates",
+          paragraphs: [
+            "Acceptance rate is a proportion. If 420 out of 600 offered deliveries are accepted, phat=0.70 estimates the true acceptance probability p.",
+            "The Wald interval plugs phat into the standard error sqrt(p(1-p)/n). This is simple, but near 0 or 1, or for small samples, it can behave badly.",
+            "The score interval asks a better question: for which null values p0 would the standardized score (phat-p0)/sqrt(p0(1-p0)/n) not be too extreme? It uses the null value inside the standard error and then solves the inequality."
+          ],
+          blocks: [
+            {
+              type: "example",
+              title: "Derivation: score idea",
+              body: "Instead of centering uncertainty at phat, test each possible p0 and keep values that are not rejected.",
+              steps: [
+                { label: "Score statistic", math: "Z(p0)=(phat-p0)/sqrt(p0(1-p0)/n)", note: "Use standard error under the hypothesized p0." },
+                { label: "Keep compatible p0", math: "|Z(p0)| <= z*", note: "These values survive the two-sided test." },
+                { label: "Score interval", math: "solve (phat-p0)^2 <= z*^2 p0(1-p0)/n", note: "The interval is obtained by inverting the test." }
+              ]
+            },
+            {
+              type: "principle",
+              title: "When to remember which",
+              body: "Wald is the quick estimator-centered method. Score is the test-inversion method and is often more stable for proportions.",
+              formulas: [
+                { label: "Wald proportion", formula: "phat +/- z*sqrt(phat(1-phat)/n)", note: "simple large-sample interval" },
+                { label: "Score test statistic", formula: "(phat-p0)/sqrt(p0(1-p0)/n)", note: "uses null standard error" }
+              ]
+            }
+          ]
+        },
+        {
+          number: "10.4",
+          title: "z-Test: Did Mean Delivery Time Improve?",
+          paragraphs: [
+            "The old average delivery time is 32 minutes. The product claim is that the new matcher reduces mean delivery time. So H0: mu=32 and H1: mu<32.",
+            "The statistic is chosen by the same standardization logic as the confidence interval. If H0 is true, Xbar should be near 32, with standard error sigma/sqrt(n) if sigma is known or a large-sample estimate if not.",
+            "A left-tailed test rejects for very negative z-values."
+          ],
+          blocks: [
+            {
+              type: "example",
+              title: "Derivation and test",
+              body: "Suppose n=100, Xbar=30.8, and historical sigma=8 is trusted. Test at alpha=0.05.",
+              steps: [
+                { label: "Hypotheses", math: "H0: mu=32, H1: mu<32", note: "The claim is improvement, so use left tail." },
+                { label: "Statistic choice", math: "Z=(Xbar-mu0)/(sigma/sqrt(n))", note: "Under H0 this is approximately N(0,1)." },
+                { label: "Compute", math: "Z=(30.8-32)/(8/10)=-1.5", note: "Observed mean is 1.5 SEs below the null mean." },
+                { label: "Rejection rule", math: "reject if Z<=-1.645", note: "5% left-tail normal cutoff." },
+                { label: "Decision", math: "-1.5>-1.645", note: "Do not reject at 5%; evidence is not strong enough by this rule." }
+              ]
+            }
+          ]
+        },
+        {
+          number: "10.5",
+          title: "t-Test: When sigma Is Unknown",
+          paragraphs: [
+            "In real app experiments, the true standard deviation of delivery time is usually unknown. Replacing sigma by the sample standard deviation s adds uncertainty.",
+            "For normal data, (Xbar-mu0)/(s/sqrt(n)) follows a t distribution with n-1 degrees of freedom under H0. For large n, t looks close to normal.",
+            "The t-test is the mean test that accounts for estimating sigma from the same sample."
+          ],
+          blocks: [
+            {
+              type: "example",
+              title: "Derivation: why t appears",
+              body: "If sigma were known, standardization gives Z. If sigma is replaced by random s, the denominator is noisier, so the reference distribution has heavier tails.",
+              steps: [
+                { label: "Known sigma", math: "(Xbar-mu0)/(sigma/sqrt(n)) ~ N(0,1)", note: "Normal reference." },
+                { label: "Unknown sigma", math: "T=(Xbar-mu0)/(s/sqrt(n))", note: "Estimated standard error." },
+                { label: "Reference", math: "T ~ t_(n-1) under H0", note: "Assuming normal population, or approximately for large samples." }
+              ]
+            },
+            {
+              type: "example",
+              title: "Case question: paired driver routes",
+              body: "The same 20 restaurants are tested with old and new matching on comparable evenings. Let D=old time minus new time. Positive D means improvement. Test H0: mu_D=0 vs H1: mu_D>0.",
+              steps: [
+                { label: "Why paired", math: "D_i=old_i-new_i", note: "Pairing removes restaurant-specific baseline difficulty." },
+                { label: "Statistic", math: "T=(Dbar-0)/(s_D/sqrt(20))", note: "One-sample t-test on differences." },
+                { label: "Reject", math: "large positive T", note: "Right-tailed because positive difference means faster delivery." }
+              ]
+            }
+          ]
+        },
+        {
+          number: "10.6",
+          title: "p-Values, Critical Regions, and Power",
+          paragraphs: [
+            "A critical region is the set of statistic values that cause rejection. It is chosen so that, under H0, the probability of landing there is alpha.",
+            "A p-value is the probability under H0 of a result at least as extreme as what was observed. Small p-values mean the observed statistic is unusual under H0.",
+            "Power is P(reject H0 when the alternative is true). Power increases when the effect is larger, sample size is larger, noise is smaller, or alpha is larger."
+          ],
+          blocks: [
+            {
+              type: "example",
+              title: "Case question: power for launch detection",
+              body: "Suppose the team will launch if a one-sided z-test rejects H0: mu=32 at alpha=0.05. If the true mean under the new matcher is 30.4, power is the probability the test statistic crosses the rejection cutoff under mu=30.4.",
+              steps: [
+                { label: "Cutoff in Xbar units", math: "reject if Xbar <= 32-1.645(sigma/sqrt(n))", note: "Translate statistic rule back to the observed average." },
+                { label: "Power", math: "P_mu=30.4(Xbar <= cutoff)", note: "Compute probability under the alternative distribution." },
+                { label: "Levers", math: "larger n or smaller sigma increases power", note: "The distributions under H0 and H1 overlap less." }
+              ]
+            }
+          ]
+        },
+        {
+          number: "10.7",
+          title: "Chi-Squared Distribution",
+          paragraphs: [
+            "The chi-squared distribution appears when squared standardized normal errors are added.",
+            "If Z_1,...,Z_k are independent standard normals, then Z_1^2+...+Z_k^2 has a chi-squared distribution with k degrees of freedom.",
+            "Degrees of freedom count how many independent pieces of squared discrepancy remain after constraints are used."
+          ],
+          blocks: [
+            {
+              type: "principle",
+              title: "Why squared discrepancies",
+              body: "Counts can be above or below expectation. Squaring makes both directions contribute positive evidence against the null.",
+              formulas: [
+                { label: "Chi-squared variable", formula: "Z_1^2+...+Z_k^2 ~ chi-square_k", note: "sum of squared independent standard normals" },
+                { label: "Count discrepancy", formula: "(observed-expected)^2/expected", note: "squared standardized count gap" }
+              ]
+            }
+          ]
+        },
+        {
+          number: "10.8",
+          title: "Chi-Squared Goodness-of-Fit",
+          paragraphs: [
+            "Suppose the matcher promises restaurant assignments in the mix 50% quick-service, 30% casual, and 20% grocery. In 200 assignments, we observe counts 120, 50, and 30.",
+            "The null says the category probabilities are 0.5, 0.3, and 0.2. The expected counts are 100, 60, and 40. The statistic adds squared standardized gaps.",
+            "Large chi-squared values mean observed counts are too far from expected counts to fit the null mix comfortably."
+          ],
+          blocks: [
+            {
+              type: "example",
+              title: "Derivation and test",
+              body: "Use X^2=sum (O-E)^2/E with degrees of freedom categories minus one.",
+              steps: [
+                { label: "Hypotheses", math: "H0: p=(0.5,0.3,0.2), H1: not this mix", note: "Goodness-of-fit test." },
+                { label: "Expected counts", math: "E=(100,60,40)", note: "Multiply probabilities by 200." },
+                { label: "Statistic", math: "X^2=(120-100)^2/100+(50-60)^2/60+(30-40)^2/40", note: "Add standardized squared count gaps." },
+                { label: "Degrees of freedom", math: "df=3-1=2", note: "Three counts constrained by total 200." },
+                { label: "Decision", math: "reject for large X^2", note: "Compare to chi-square_2 critical value or p-value." }
+              ]
+            }
+          ]
+        },
+        {
+          number: "10.9",
+          title: "Chi-Squared Test of Independence",
+          paragraphs: [
+            "Now ask whether late delivery is independent of city region. The data form a contingency table: rows are regions, columns are on-time/late.",
+            "Under independence, expected count in a cell equals row total times column total divided by grand total.",
+            "The same chi-squared discrepancy statistic applies, but degrees of freedom become (rows-1)(columns-1)."
+          ],
+          blocks: [
+            {
+              type: "example",
+              title: "Case question: region and lateness",
+              body: "For 2 regions and 2 outcomes, observed counts are North: 90 on-time, 30 late; South: 70 on-time, 10 late. Test whether region and lateness are independent.",
+              steps: [
+                { label: "Hypotheses", math: "H0: region and lateness are independent", note: "H1: they are associated." },
+                { label: "Expected counts", math: "E_ij=(row total)(column total)/(grand total)", note: "Use marginal totals under independence." },
+                { label: "Statistic", math: "X^2=sum over cells (O_ij-E_ij)^2/E_ij", note: "Add all four cell discrepancies." },
+                { label: "Degrees of freedom", math: "df=(2-1)(2-1)=1", note: "One independent association direction." },
+                { label: "Decision", math: "reject for large X^2", note: "Large discrepancy suggests dependence." }
+              ]
+            }
+          ]
+        },
+        {
+          number: "10.10",
+          title: "Choosing the Right Test",
+          paragraphs: [
+            "The test statistic is picked from the data type and the null model. Means lead to standardized averages. Proportions lead to standardized Bernoulli averages. Paired before/after designs lead to differences. Count patterns lead to chi-squared discrepancies.",
+            "A one-sided alternative is used only when the direction is decided before seeing data. Otherwise use a two-sided alternative.",
+            "The final answer should always include the product interpretation: what the data say about the matching algorithm, and what they do not say."
+          ],
+          blocks: [
+            {
+              type: "strategy",
+              title: "Test chooser",
+              body: "Use the product question to choose the statistic.",
+              items: [
+                "Mean with known sigma or large sample: z statistic.",
+                "Mean with unknown sigma: t statistic.",
+                "Same unit measured old and new: paired t on differences.",
+                "One proportion or large-sample rate: z statistic or score statistic.",
+                "Observed counts versus promised category mix: chi-squared goodness-of-fit.",
+                "Two categorical variables in a table: chi-squared independence test.",
+                "Need an interval: invert the same standardized statistic to get compatible parameter values."
+              ]
+            }
+          ]
+        }
+      ],
+      concepts: [
+        { name: "Null hypothesis", description: "The baseline model used to judge surprise.", cue: "Look for no improvement, no difference, no dependence, or promised mix." },
+        { name: "Alternative hypothesis", description: "The claim that would make the statistic extreme.", cue: "Check whether the product question is one-sided or two-sided." },
+        { name: "Significance level", description: "The planned Type I error probability.", cue: "Usually alpha=0.05 unless stated otherwise." },
+        { name: "Test statistic", description: "A standardized estimate or discrepancy with a known null distribution.", cue: "Ask what would be predictable under H0." },
+        { name: "p-value", description: "Under H0, probability of a result at least as extreme as observed.", cue: "Small p-values are evidence against H0." },
+        { name: "Power", description: "Probability of rejecting H0 under a specified alternative.", cue: "Depends on effect size, n, noise, and alpha." },
+        { name: "Wald interval", description: "Estimate plus/minus critical value times standard error.", cue: "Quick large-sample interval." },
+        { name: "Score method", description: "Invert a null-based standardized statistic.", cue: "Especially useful for proportions." },
+        { name: "z-test", description: "Normal-reference test for standardized estimates.", cue: "Known sigma or large-sample mean/proportion." },
+        { name: "t-test", description: "Mean test using sample standard deviation and t reference.", cue: "Unknown sigma for mean, especially small samples." },
+        { name: "Chi-squared test", description: "Test based on summed squared standardized count discrepancies.", cue: "Observed versus expected counts." }
+      ],
+      techniques: [
+        { name: "Build a CI from a statistic", when: "a compatible range is asked.", move: "Start with a central probability statement and solve for the parameter." },
+        { name: "Derive a z-statistic", when: "an estimator is approximately normal under H0.", move: "Subtract the null value and divide by the null standard error." },
+        { name: "Derive a t-statistic", when: "testing a mean with unknown sigma.", move: "Replace sigma with sample s and use t degrees of freedom." },
+        { name: "Use paired differences", when: "old and new are measured on the same restaurant, driver, or route.", move: "Convert each pair to a difference and run a one-sample t-test." },
+        { name: "Compute chi-squared GOF", when: "counts are compared to a promised distribution.", move: "Compute expected counts and sum (O-E)^2/E." },
+        { name: "Compute chi-squared independence", when: "two categorical variables are in a table.", move: "Use row total times column total divided by grand total for expected counts." },
+        { name: "Interpret p-values and power", when: "making a launch decision.", move: "Separate evidence against H0 from probability of detecting a real effect." }
+      ],
+      practiceProblems: inferencePracticeProblems(),
+      reviewPrompts: [
+        "For each delivery-app question, identify the parameter, null, alternative, statistic, and decision rule.",
+        "Explain how a confidence interval is built by solving a probability statement for the parameter.",
+        "Explain why a t-test is different from a z-test.",
+        "Explain how the score method differs from the Wald method for proportions.",
+        "Explain why chi-squared tests add squared standardized count differences.",
+        "Explain what power changes when sample size increases."
+      ],
+      reviewQuiz: {
+        id: "quiz-probability-chapter-10-objective-review",
+        title: "Probability Chapter 10 Objective Review",
+        instructions: "Complete this after finishing Chapter 10 exposition and labelled practice. The quiz logs objective answers and diagnoses confidence intervals, z-tests, t-tests, score methods, chi-squared tests, p-values, rejection regions, and power.",
+        questions: inferenceReviewQuestions()
+      },
+      readingQuestions: [
+        "What is the null hypothesis in the delivery-time improvement test?",
+        "How is a test statistic chosen from the null model?",
+        "Why does unknown sigma lead to a t statistic?",
+        "Why does a score interval put p0 inside the standard error?",
+        "What makes a p-value small?",
+        "Why do chi-squared tests reject for large values?",
+        "What is the difference between significance and power?"
+      ],
+      chapterSummary: [
+        "Hypothesis tests compare observed data to a null model.",
+        "The significance level alpha controls Type I error probability.",
+        "A test statistic is chosen so its null distribution is known or approximately known.",
+        "Wald intervals use estimate plus/minus critical value times standard error.",
+        "Score intervals invert a null-based test statistic.",
+        "z-tests standardize estimates using known or large-sample standard errors.",
+        "t-tests handle unknown sigma by using the sample standard deviation and t reference.",
+        "Chi-squared tests add squared standardized count discrepancies.",
+        "p-values measure surprise under H0; power measures detection probability under an alternative."
+      ],
+      updatedAt
     }
   ];
 }
@@ -4889,6 +5653,576 @@ function continuousDistributionReviewQuestions() {
         { id: "b", text: "P(T>s)" },
         { id: "c", text: "P(T>s)P(T>t)" },
         { id: "d", text: "0" }
+      ],
+      answer: "a"
+    }
+  ];
+}
+
+function limitTheoremPracticeProblems() {
+  return [
+    {
+      label: "Concept Problem 1: Standard error",
+      concept: "Standard error",
+      technique: "Derive variability of an average",
+      difficulty: "intro",
+      prompt: "Independent observations have mean 40 and standard deviation 10. For n=25 observations, what are E[Xbar] and SD(Xbar)? Explain why the average is less noisy than one observation.",
+      solution: "E[Xbar]=40. SD(Xbar)=10/sqrt(25)=2. The average is less noisy because independent positive and negative fluctuations partly cancel, and Var(Xbar)=sigma^2/n."
+    },
+    {
+      label: "Concept Problem 2: LLN from variance",
+      concept: "Law of large numbers",
+      technique: "Use Chebyshev on the sample mean",
+      difficulty: "intro",
+      prompt: "Let X_1,...,X_n be iid with mean mu and variance 9. Use Chebyshev to bound P(|Xbar-mu|>=1). What happens as n grows?",
+      solution: "Var(Xbar)=9/n. Chebyshev gives P(|Xbar-mu|>=1)<=9/n. This bound goes to 0, so large-sample averages are unlikely to stay at least 1 unit away from mu."
+    },
+    {
+      label: "Concept Problem 3: CLT standardization",
+      concept: "Central limit theorem",
+      technique: "Standardize a sample mean",
+      difficulty: "intro",
+      prompt: "A population has mean 100 and standard deviation 15. For n=36 independent observations, write the CLT z-score for Xbar=105.",
+      solution: "The standard error is 15/sqrt(36)=2.5. The z-score is (105-100)/2.5=2. CLT says this standardized average is approximately standard normal."
+    },
+    {
+      label: "Problem 4: CLT probability for an average",
+      concept: "CLT for averages",
+      technique: "Use Phi after standardization",
+      difficulty: "standard",
+      prompt: "Service times have mean 10 minutes and standard deviation 4 minutes. For 64 independent services, approximate P(Xbar>11).",
+      solution: "SE=4/sqrt(64)=0.5. z=(11-10)/0.5=2. Therefore P(Xbar>11) is approximately P(Z>2)=1-Phi(2)."
+    },
+    {
+      label: "Problem 5: Normal approximation conditions",
+      concept: "Normal approximation",
+      technique: "Check expected successes and failures",
+      difficulty: "warmup",
+      prompt: "For X~Binomial(80,0.25), check whether the normal approximation is reasonable using np and n(1-p).",
+      solution: "np=80(0.25)=20 and n(1-p)=80(0.75)=60. Both are at least 10, so the normal approximation is reasonable."
+    },
+    {
+      label: "Problem 6: Normal approximation with continuity correction",
+      concept: "Continuity correction",
+      technique: "Move the cutoff by 0.5",
+      difficulty: "standard",
+      prompt: "Let X~Binomial(100,0.5). Approximate P(X>=55) using a normal approximation with continuity correction.",
+      solution: "Use Y~Normal(50,25). Since X>=55 becomes Y>=54.5, z=(54.5-50)/5=0.9. The probability is approximately P(Z>=0.9)=1-Phi(0.9)."
+    },
+    {
+      label: "Problem 7: Below-or-equal continuity correction",
+      concept: "Continuity correction",
+      technique: "Translate a discrete tail",
+      difficulty: "standard",
+      prompt: "Let X~Binomial(200,0.4). Set up a normal approximation for P(X<=70) with continuity correction.",
+      solution: "Mean np=80 and variance np(1-p)=48. Use Y~Normal(80,48). The event X<=70 becomes Y<=70.5, so use Phi((70.5-80)/sqrt(48))."
+    },
+    {
+      label: "Problem 8: Poisson approximation",
+      concept: "Poisson approximation",
+      technique: "Use lambda=np",
+      difficulty: "standard",
+      prompt: "A defect occurs with probability 0.01 independently for each item. In 200 items, approximate P(exactly 3 defects).",
+      solution: "Here n=200, p=0.01, lambda=np=2. Since this is many trials with rare success, X is approximately Poisson(2). P(X=3) about exp(-2)2^3/3!."
+    },
+    {
+      label: "Problem 9: Choose Poisson instead of normal",
+      concept: "Approximation diagnostics",
+      technique: "Read the rare-event structure",
+      difficulty: "standard",
+      prompt: "For X~Binomial(1000,0.002), should you use normal approximation or Poisson approximation for P(X=0)? Explain.",
+      solution: "Use Poisson approximation. np=2 is too small for normal approximation, while n is large and p is small. So X is approximately Poisson(2), and P(X=0) about exp(-2)."
+    },
+    {
+      label: "Problem 10: Exact versus approximation",
+      concept: "Method choice",
+      technique: "Classify the answer type",
+      difficulty: "standard",
+      prompt: "For X~Binomial(10,0.5), should P(X=7) be computed exactly or approximated by normal? Why?",
+      solution: "Compute exactly. The sample size is small and the exact binomial formula is easy: P(X=7)=C(10,7)(0.5)^10. Approximation is unnecessary."
+    },
+    {
+      label: "Problem 11: Bound versus approximation",
+      concept: "Tail bounds",
+      technique: "Distinguish guarantee from estimate",
+      difficulty: "challenging",
+      prompt: "A random variable has mean 50 and variance 16, but no distribution is given. Can you compute P(|X-50|>=8) exactly? What can Chebyshev say?",
+      solution: "Without the distribution, the exact probability cannot be computed. Chebyshev gives P(|X-50|>=8)<=16/8^2=1/4. This is a guaranteed bound, not an estimate."
+    },
+    {
+      label: "Problem 12: Sample proportion standard error",
+      concept: "Standard error",
+      technique: "Use Bernoulli variance",
+      difficulty: "standard",
+      prompt: "A sample proportion is the average of n Bernoulli(p) variables. Derive its standard error.",
+      solution: "For Bernoulli(p), variance is p(1-p). The sample proportion phat is the average, so Var(phat)=p(1-p)/n and SE(phat)=sqrt(p(1-p)/n)."
+    },
+    {
+      label: "Problem 13: LLN interpretation",
+      concept: "Law of large numbers",
+      technique: "Separate average from count",
+      difficulty: "warmup",
+      prompt: "In repeated fair coin flips, does LLN say the number of heads gets close to 1/2? State the correct version.",
+      solution: "No. The number of heads grows with n. LLN says the proportion of heads, H_n/n, gets close to 1/2 with high probability."
+    },
+    {
+      label: "Problem 14: CLT interpretation",
+      concept: "Central limit theorem",
+      technique: "Identify the standardized quantity",
+      difficulty: "standard",
+      prompt: "Does CLT say Xbar itself becomes N(0,1)? If not, what becomes approximately N(0,1)?",
+      solution: "No. The standardized average becomes approximately standard normal: (Xbar-mu)/(sigma/sqrt(n)) approximately N(0,1). Xbar is centered near mu and has standard error sigma/sqrt(n)."
+    },
+    {
+      label: "Problem 15: Approximation trap",
+      concept: "Approximation diagnostics",
+      technique: "Check assumptions before calculating",
+      difficulty: "stretch",
+      prompt: "A sum of 50 measurements is strongly dependent because each measurement reuses the same faulty sensor shift. Why should you be cautious about a direct CLT approximation?",
+      solution: "The basic CLT used here relies on independent observations, or at least weak dependence under extra theory. A shared sensor shift creates dependence, so the usual sigma/sqrt(n) cancellation can be misleading."
+    }
+  ];
+}
+
+function limitTheoremReviewQuestions() {
+  return [
+    {
+      id: "lt-review-1",
+      kind: "single concept",
+      tags: ["standard-error"],
+      prompt: "If iid observations have standard deviation sigma, what is the standard error of Xbar?",
+      options: [
+        { id: "a", text: "sigma/sqrt(n)" },
+        { id: "b", text: "sigma n" },
+        { id: "c", text: "sigma^2/n" },
+        { id: "d", text: "sqrt(n)/sigma" }
+      ],
+      answer: "a"
+    },
+    {
+      id: "lt-review-2",
+      kind: "single concept",
+      tags: ["law-of-large-numbers"],
+      prompt: "What does the law of large numbers describe?",
+      options: [
+        { id: "a", text: "Sample averages getting close to the population mean" },
+        { id: "b", text: "Every sample value becoming equal" },
+        { id: "c", text: "The raw sum staying bounded" },
+        { id: "d", text: "Every distribution becoming Poisson" }
+      ],
+      answer: "a"
+    },
+    {
+      id: "lt-review-3",
+      kind: "single concept",
+      tags: ["central-limit-theorem"],
+      prompt: "What does the basic CLT make approximately normal?",
+      options: [
+        { id: "a", text: "Standardized sums or averages" },
+        { id: "b", text: "Only individual observations" },
+        { id: "c", text: "Only maximum values" },
+        { id: "d", text: "Only conditional probabilities" }
+      ],
+      answer: "a"
+    },
+    {
+      id: "lt-review-4",
+      kind: "mixed: two concepts",
+      tags: ["normal-approximation", "binomial"],
+      prompt: "For X~Binomial(n,p), when is normal approximation usually reasonable?",
+      options: [
+        { id: "a", text: "When np and n(1-p) are both reasonably large" },
+        { id: "b", text: "Whenever p is tiny" },
+        { id: "c", text: "Only when n=1" },
+        { id: "d", text: "Only when p=0" }
+      ],
+      answer: "a"
+    },
+    {
+      id: "lt-review-5",
+      kind: "mixed: two concepts",
+      tags: ["continuity-correction", "normal-approximation"],
+      prompt: "When approximating P(X>=55) for a binomial count by a normal, which cutoff is used with continuity correction?",
+      options: [
+        { id: "a", text: "54.5" },
+        { id: "b", text: "55.5" },
+        { id: "c", text: "55 exactly" },
+        { id: "d", text: "0.55" }
+      ],
+      answer: "a"
+    },
+    {
+      id: "lt-review-6",
+      kind: "mixed: two concepts",
+      tags: ["poisson-approximation", "binomial"],
+      prompt: "For a binomial with large n and small p, which parameter is used for the Poisson approximation?",
+      options: [
+        { id: "a", text: "lambda=np" },
+        { id: "b", text: "lambda=n+p" },
+        { id: "c", text: "lambda=p/n" },
+        { id: "d", text: "lambda=1-p" }
+      ],
+      answer: "a"
+    },
+    {
+      id: "lt-review-7",
+      kind: "mixed: two concepts",
+      tags: ["tail-bound", "approximation"],
+      prompt: "How is a Chebyshev answer different from a normal approximation?",
+      options: [
+        { id: "a", text: "Chebyshev gives a guaranteed bound; normal approximation gives an estimate" },
+        { id: "b", text: "Chebyshev is always exact" },
+        { id: "c", text: "Normal approximation never uses mean or variance" },
+        { id: "d", text: "They are the same calculation" }
+      ],
+      answer: "a"
+    },
+    {
+      id: "lt-review-8",
+      kind: "mixed: two concepts",
+      tags: ["approximation-diagnostics", "poisson-approximation"],
+      prompt: "For X~Binomial(1000,0.002), which approximation is more natural?",
+      options: [
+        { id: "a", text: "Poisson approximation with lambda=2" },
+        { id: "b", text: "Normal approximation because n is large" },
+        { id: "c", text: "Uniform approximation" },
+        { id: "d", text: "No probability model applies" }
+      ],
+      answer: "a"
+    },
+    {
+      id: "lt-review-9",
+      kind: "single concept",
+      tags: ["sample-proportion"],
+      prompt: "A sample proportion is best viewed as:",
+      options: [
+        { id: "a", text: "An average of Bernoulli variables" },
+        { id: "b", text: "A maximum order statistic" },
+        { id: "c", text: "A fixed constant with no variability" },
+        { id: "d", text: "A covariance" }
+      ],
+      answer: "a"
+    },
+    {
+      id: "lt-review-10",
+      kind: "mixed: three concepts",
+      tags: ["method-choice", "exact-probability", "approximation"],
+      prompt: "For X~Binomial(10,0.5), what is the best way to compute P(X=7)?",
+      options: [
+        { id: "a", text: "Use the exact binomial formula" },
+        { id: "b", text: "Use Poisson approximation" },
+        { id: "c", text: "Use CLT because every binomial is large" },
+        { id: "d", text: "Use Markov inequality for the exact value" }
+      ],
+      answer: "a"
+    }
+  ];
+}
+
+function inferencePracticeProblems() {
+  return [
+    {
+      label: "Concept Problem 1: State the hypotheses",
+      concept: "Hypothesis setup",
+      technique: "Translate product claim to H0 and H1",
+      difficulty: "intro",
+      prompt: "The old mean delivery time is 32 minutes. The new matcher claims to reduce mean time. State H0 and H1 for the population mean mu under the new matcher.",
+      solution: "Use H0: mu=32 as the no-improvement baseline and H1: mu<32 as the one-sided improvement claim."
+    },
+    {
+      label: "Concept Problem 2: Choose the statistic",
+      concept: "Test statistic",
+      technique: "Standardize the estimator under H0",
+      difficulty: "intro",
+      prompt: "For n deliveries, Xbar estimates mu and sigma is known. Why is Z=(Xbar-mu0)/(sigma/sqrt(n)) the natural statistic for testing H0: mu=mu0?",
+      solution: "Under H0, Xbar is centered at mu0 and has standard error sigma/sqrt(n). Subtracting mu0 and dividing by the standard error creates a quantity with standard normal reference distribution."
+    },
+    {
+      label: "Problem 3: z-test for delivery time",
+      concept: "z-test",
+      technique: "Compute statistic and compare to rejection region",
+      difficulty: "standard",
+      prompt: "Old mean delivery time is 32. For n=100 new deliveries, Xbar=30.8 and known sigma=8. Test H0: mu=32 vs H1: mu<32 at alpha=0.05.",
+      solution: "Z=(30.8-32)/(8/sqrt(100))=-1.5. The 5% left-tail cutoff is -1.645. Since -1.5>-1.645, do not reject H0 at 5%."
+    },
+    {
+      label: "Problem 4: Wald CI for mean time",
+      concept: "Wald interval",
+      technique: "Estimator plus/minus critical value times SE",
+      difficulty: "standard",
+      prompt: "For the same sample, build a 95% large-sample CI for mean delivery time using Xbar=30.8, s=8, n=100.",
+      solution: "SE=8/sqrt(100)=0.8. The interval is 30.8 +/- 1.96(0.8) = 30.8 +/- 1.568, or (29.232,32.368)."
+    },
+    {
+      label: "Problem 5: Acceptance-rate Wald interval",
+      concept: "Wald interval",
+      technique: "Proportion standard error",
+      difficulty: "standard",
+      prompt: "In 600 offered deliveries, 420 are accepted. Build the Wald 95% CI for acceptance probability p.",
+      solution: "phat=420/600=0.70. SE=sqrt(0.70(0.30)/600). The 95% Wald interval is 0.70 +/- 1.96 sqrt(0.21/600)."
+    },
+    {
+      label: "Problem 6: Score test statistic for a rate",
+      concept: "Score method",
+      technique: "Use null standard error",
+      difficulty: "standard",
+      prompt: "The old acceptance rate is p0=0.65. In the new matcher, phat=0.70 from n=600 offers. Write the score z-statistic for testing H0: p=0.65.",
+      solution: "The score statistic uses the null standard error: Z=(0.70-0.65)/sqrt(0.65(0.35)/600)."
+    },
+    {
+      label: "Problem 7: One-sided proportion test",
+      concept: "z-test",
+      technique: "Right-tail score/proportion test",
+      difficulty: "standard",
+      prompt: "Using the statistic from Problem 6, what is the rejection direction for H1: p>0.65 at alpha=0.05?",
+      solution: "Reject for large positive Z because the alternative says the new acceptance probability is higher than 0.65. The 5% right-tail cutoff is about 1.645."
+    },
+    {
+      label: "Problem 8: t-test for paired routes",
+      concept: "Paired t-test",
+      technique: "Convert pairs to differences",
+      difficulty: "standard",
+      prompt: "For 20 restaurants, define D=old delivery time minus new delivery time. If Dbar=1.4 and s_D=3.5, test H0: mu_D=0 vs H1: mu_D>0. Write the statistic and degrees of freedom.",
+      solution: "Use T=(Dbar-0)/(s_D/sqrt(20))=1.4/(3.5/sqrt(20)). Degrees of freedom are 19. Reject for large positive T."
+    },
+    {
+      label: "Problem 9: Why paired instead of two-sample",
+      concept: "Test choice",
+      technique: "Identify matched design",
+      difficulty: "intermediate",
+      prompt: "The old and new algorithms are compared on the same restaurants at similar times. Why should we use paired differences instead of treating the two samples as unrelated?",
+      solution: "The same restaurants share baseline difficulty. Pairing subtracts that restaurant-specific effect and focuses on old-new difference, usually reducing noise and increasing power."
+    },
+    {
+      label: "Problem 10: p-value interpretation",
+      concept: "p-value",
+      technique: "Interpret under H0",
+      difficulty: "standard",
+      prompt: "A one-sided z-test for mean delivery time gives p-value 0.03. Interpret this in the delivery-app setting.",
+      solution: "If the new matcher truly had mean 32 minutes, the probability of seeing a result at least this favorable to a lower mean is 0.03. At alpha=0.05, reject H0."
+    },
+    {
+      label: "Problem 11: Power interpretation",
+      concept: "Power",
+      technique: "Connect to alternative distribution",
+      difficulty: "intermediate",
+      prompt: "What does 80% power mean for detecting a true reduction from 32 minutes to 30.5 minutes?",
+      solution: "If the true mean under the new matcher is 30.5 and the test is repeated many times under the same design, the test rejects H0 about 80% of the time."
+    },
+    {
+      label: "Problem 12: Power levers",
+      concept: "Power",
+      technique: "Reason without calculation",
+      difficulty: "intermediate",
+      prompt: "Name three changes that increase power for detecting a delivery-time improvement.",
+      solution: "Increase sample size, reduce delivery-time variability, or test for a larger true effect. Increasing alpha also increases power but raises Type I error risk."
+    },
+    {
+      label: "Problem 13: Chi-squared goodness-of-fit",
+      concept: "Chi-squared goodness-of-fit",
+      technique: "Observed versus expected counts",
+      difficulty: "standard",
+      prompt: "Promised restaurant mix is 50% quick-service, 30% casual, 20% grocery. In 200 matches, observed counts are 120, 50, 30. Compute expected counts and the chi-squared statistic setup.",
+      solution: "Expected counts are 100, 60, 40. X^2=(120-100)^2/100+(50-60)^2/60+(30-40)^2/40 with df=3-1=2."
+    },
+    {
+      label: "Problem 14: Chi-squared independence expected count",
+      concept: "Chi-squared independence",
+      technique: "Use row and column totals",
+      difficulty: "standard",
+      prompt: "A 2x2 table has North: 90 on-time, 30 late; South: 70 on-time, 10 late. What is the expected count for North-late under independence?",
+      solution: "North row total is 120, late column total is 40, grand total is 200. Expected North-late count is 120*40/200=24."
+    },
+    {
+      label: "Problem 15: Independence test degrees of freedom",
+      concept: "Chi-squared independence",
+      technique: "Compute df from table shape",
+      difficulty: "warmup",
+      prompt: "For a table with 3 regions and 2 lateness outcomes, what are the degrees of freedom for a chi-squared independence test?",
+      solution: "df=(rows-1)(columns-1)=(3-1)(2-1)=2."
+    },
+    {
+      label: "Problem 16: Pick the correct test",
+      concept: "Test choice",
+      technique: "Match data shape to statistic",
+      difficulty: "challenging",
+      prompt: "You want to know whether restaurant category and driver cancellation status are associated. The data are counts in a category-by-cancelled table. Which test structure fits and why?",
+      solution: "Use a chi-squared test of independence because both variables are categorical and the data are contingency-table counts. Expected counts come from row and column totals under independence."
+    },
+    {
+      label: "Problem 17: Mixed inference decision",
+      concept: "Method choice",
+      technique: "Separate CI and test evidence",
+      difficulty: "challenging",
+      prompt: "A 95% CI for mean delivery time under the new matcher is (29.2,32.4). Can we reject H0: mu=32 against a two-sided alternative at alpha=0.05? What about H0: mu=33?",
+      solution: "For a two-sided 5% test, null values inside the 95% CI are not rejected and values outside are rejected. Since 32 is inside, do not reject H0: mu=32. Since 33 is outside, reject H0: mu=33."
+    },
+    {
+      label: "Problem 18: One-sided trap",
+      concept: "Alternative hypothesis",
+      technique: "Choose direction before seeing data",
+      difficulty: "challenging",
+      prompt: "After seeing data, the team notices the new matcher changed average delivery time, but they had not specified direction. Should they switch to a one-sided test because the observed mean is lower?",
+      solution: "No. The alternative direction should be chosen before seeing the data. If the pre-specified question was any change, use a two-sided test."
+    }
+  ];
+}
+
+function inferenceReviewQuestions() {
+  return [
+    {
+      id: "inf-review-1",
+      kind: "single concept",
+      tags: ["null-hypothesis"],
+      prompt: "In the delivery-time improvement test, what is the usual role of H0?",
+      options: [
+        { id: "a", text: "The no-improvement baseline model" },
+        { id: "b", text: "The result the team wants to prove true" },
+        { id: "c", text: "The sample mean" },
+        { id: "d", text: "The observed p-value" }
+      ],
+      answer: "a"
+    },
+    {
+      id: "inf-review-2",
+      kind: "single concept",
+      tags: ["test-statistic"],
+      prompt: "Why do many test statistics subtract the null value and divide by a standard error?",
+      options: [
+        { id: "a", text: "To measure how many standard errors the estimate is from H0" },
+        { id: "b", text: "To make every p-value equal alpha" },
+        { id: "c", text: "To remove the need for assumptions" },
+        { id: "d", text: "To turn counts into probabilities without a model" }
+      ],
+      answer: "a"
+    },
+    {
+      id: "inf-review-3",
+      kind: "mixed: two concepts",
+      tags: ["z-test", "rejection-region"],
+      prompt: "For H1: mu<32 in a z-test at alpha=0.05, where is the rejection region?",
+      options: [
+        { id: "a", text: "In the far left tail" },
+        { id: "b", text: "In the far right tail" },
+        { id: "c", text: "Only at Z=0" },
+        { id: "d", text: "Everywhere outside the sample" }
+      ],
+      answer: "a"
+    },
+    {
+      id: "inf-review-4",
+      kind: "mixed: two concepts",
+      tags: ["t-test", "unknown-sigma"],
+      prompt: "Why does a one-sample t-test use a t reference distribution instead of standard normal?",
+      options: [
+        { id: "a", text: "Because sigma is replaced by the sample standard deviation" },
+        { id: "b", text: "Because the null hypothesis is always false" },
+        { id: "c", text: "Because the sample mean is categorical" },
+        { id: "d", text: "Because t-tests never use standard errors" }
+      ],
+      answer: "a"
+    },
+    {
+      id: "inf-review-5",
+      kind: "mixed: two concepts",
+      tags: ["paired-t-test", "test-choice"],
+      prompt: "Old and new matchers are tested on the same restaurants. What is the right first move?",
+      options: [
+        { id: "a", text: "Form old-new differences and test their mean" },
+        { id: "b", text: "Ignore the pairing" },
+        { id: "c", text: "Use a chi-squared goodness-of-fit test" },
+        { id: "d", text: "Use only the largest delivery time" }
+      ],
+      answer: "a"
+    },
+    {
+      id: "inf-review-6",
+      kind: "mixed: two concepts",
+      tags: ["score-method", "proportion-test"],
+      prompt: "In a score test for H0: p=p0, which standard error is used?",
+      options: [
+        { id: "a", text: "sqrt(p0(1-p0)/n)" },
+        { id: "b", text: "sqrt(phat(1-phat)/n) only" },
+        { id: "c", text: "sigma/sqrt(n)" },
+        { id: "d", text: "n p0" }
+      ],
+      answer: "a"
+    },
+    {
+      id: "inf-review-7",
+      kind: "single concept",
+      tags: ["p-value"],
+      prompt: "What is a p-value?",
+      options: [
+        { id: "a", text: "Under H0, probability of a result at least as extreme as observed" },
+        { id: "b", text: "Probability that H0 is true" },
+        { id: "c", text: "Probability that H1 is true" },
+        { id: "d", text: "The chosen significance level" }
+      ],
+      answer: "a"
+    },
+    {
+      id: "inf-review-8",
+      kind: "mixed: two concepts",
+      tags: ["power", "sample-size"],
+      prompt: "Holding effect size and noise fixed, what usually happens to power when sample size increases?",
+      options: [
+        { id: "a", text: "Power increases" },
+        { id: "b", text: "Power must decrease" },
+        { id: "c", text: "Power becomes the p-value" },
+        { id: "d", text: "Power becomes alpha exactly" }
+      ],
+      answer: "a"
+    },
+    {
+      id: "inf-review-9",
+      kind: "single concept",
+      tags: ["chi-squared-distribution"],
+      prompt: "A chi-squared variable can be built by:",
+      options: [
+        { id: "a", text: "Adding squares of independent standard normals" },
+        { id: "b", text: "Adding raw categorical labels" },
+        { id: "c", text: "Taking the median of Bernoulli trials" },
+        { id: "d", text: "Subtracting two p-values" }
+      ],
+      answer: "a"
+    },
+    {
+      id: "inf-review-10",
+      kind: "mixed: two concepts",
+      tags: ["chi-squared-goodness-of-fit", "expected-counts"],
+      prompt: "In a chi-squared goodness-of-fit test, expected counts come from:",
+      options: [
+        { id: "a", text: "The null category probabilities times total sample size" },
+        { id: "b", text: "The observed counts copied exactly" },
+        { id: "c", text: "The sample mean divided by alpha" },
+        { id: "d", text: "The p-value" }
+      ],
+      answer: "a"
+    },
+    {
+      id: "inf-review-11",
+      kind: "mixed: three concepts",
+      tags: ["chi-squared-independence", "expected-counts", "test-choice"],
+      prompt: "For a region-by-late contingency table, what expected count is used under independence?",
+      options: [
+        { id: "a", text: "row total times column total divided by grand total" },
+        { id: "b", text: "row total plus column total" },
+        { id: "c", text: "observed count minus alpha" },
+        { id: "d", text: "sample standard deviation" }
+      ],
+      answer: "a"
+    },
+    {
+      id: "inf-review-12",
+      kind: "mixed: three concepts",
+      tags: ["wald-interval", "hypothesis-test", "confidence-interval"],
+      prompt: "A two-sided 95% CI for mu is (29.2,32.4). What happens to H0: mu=33 at alpha=0.05?",
+      options: [
+        { id: "a", text: "Reject it because 33 is outside the interval" },
+        { id: "b", text: "Do not reject it because 33 is larger" },
+        { id: "c", text: "Reject only if alpha is 0" },
+        { id: "d", text: "No test is related to the interval" }
       ],
       answer: "a"
     }
@@ -6583,7 +7917,42 @@ function conceptLabel(tag) {
     beta: "beta distribution",
     "uniform-spacings": "uniform spacings",
     multinomial: "multinomial counts",
-    "exponential-family": "exponential family"
+    "exponential-family": "exponential family",
+    "standard-error": "standard error",
+    "law-of-large-numbers": "law of large numbers",
+    "central-limit-theorem": "central limit theorem",
+    "clt-for-averages": "CLT for averages",
+    "normal-approximation": "normal approximation",
+    binomial: "binomial distribution",
+    "continuity-correction": "continuity correction",
+    "poisson-approximation": "Poisson approximation",
+    "approximation-diagnostics": "approximation diagnostics",
+    "method-choice": "method choice",
+    "exact-probability": "exact probability",
+    "sample-proportion": "sample proportions",
+    "hypothesis-setup": "hypothesis setup",
+    "null-hypothesis": "null hypotheses",
+    "alternative-hypothesis": "alternative hypotheses",
+    "significance-level": "significance levels",
+    "test-statistic": "test statistics",
+    "rejection-region": "rejection regions",
+    "p-value": "p-values",
+    power: "power",
+    "wald-interval": "Wald intervals",
+    "score-method": "score methods",
+    "proportion-test": "proportion tests",
+    "z-test": "z-tests",
+    "t-test": "t-tests",
+    "unknown-sigma": "unknown sigma",
+    "paired-t-test": "paired t-tests",
+    "test-choice": "test choice",
+    "chi-squared-distribution": "chi-squared distribution",
+    "chi-squared-goodness-of-fit": "chi-squared goodness-of-fit",
+    "chi-squared-independence": "chi-squared independence",
+    "expected-counts": "expected counts",
+    "confidence-interval": "confidence intervals",
+    "hypothesis-test": "hypothesis tests",
+    "sample-size": "sample size"
   };
   return labels[tag] || tag;
 }
@@ -6898,7 +8267,7 @@ function renderGateDaWorkspace() {
         <div class="item-top">
           <div>
             <h4>GATE DA Basic Demo Workspace</h4>
-            <p>Basic account preview for the GATE DA material currently under development. Use this account to inspect Subjects -> Probability -> Chapters 1-8.</p>
+            <p>Basic account preview for the GATE DA material currently under development. Use this account to inspect Subjects -> Probability -> Chapters 1-10.</p>
           </div>
           <span class="tag">Basic</span>
         </div>
@@ -7802,26 +9171,68 @@ function escapeHtml(value) {
 }
 
 function mathHtml(value) {
-  let html = escapeHtml(value)
-    .replaceAll("&lt;=", "&le;")
-    .replaceAll("&gt;=", "&ge;")
-    .replaceAll("!=", "&ne;")
-    .replaceAll("...", "&hellip;")
-    .replaceAll(" x ", " &times; ")
-    .replaceAll(" + ... + ", " + &ctdot; + ")
-    .replaceAll("->", "&rarr;")
-    .replaceAll("sqrt", "&radic;")
-    .replaceAll("mu", "&mu;")
-    .replaceAll("sigma", "&sigma;")
-    .replaceAll("lambda", "&lambda;")
-    .replaceAll("infinity", "&infin;")
-    .replaceAll("not equal", "&ne;")
-    .replaceAll("less than or equal", "&le;")
-    .replaceAll("greater than or equal", "&ge;")
-    .replaceAll("sum", "&Sigma;")
-    .replaceAll("integral", "&int;");
+  let html = escapeHtml(value);
 
-  html = html.replace(/\^(\([^)]+\)|[A-Za-z0-9+-]+)/g, (_, exponent) => `<sup>${exponent.replace(/^\((.*)\)$/, "$1")}</sup>`);
-  html = html.replace(/_([A-Za-z0-9]+)/g, "<sub>$1</sub>");
+  const replacements = [
+    [/&lt;=/g, "&le;"],
+    [/&gt;=/g, "&ge;"],
+    [/!=/g, "&ne;"],
+    [/\.\.\./g, "&hellip;"],
+    [/\+ &hellip; \+/g, "+ &ctdot; +"],
+    [/-&gt;/g, "&rarr;"],
+    [/\+\/-/g, "&plusmn;"],
+    [/\bapproximately\b/g, "&asymp;"],
+    [/\bimplies\b/g, "&rArr;"],
+    [/\bsqrt(?=\()/g, "&radic;"],
+    [/\binfinity\b/g, "&infin;"],
+    [/\bnot equal\b/g, "&ne;"],
+    [/\bless than or equal\b/g, "&le;"],
+    [/\bgreater than or equal\b/g, "&ge;"],
+    [/\bchi-square(?=_|\b)/g, "@@CHI@@<sup>2</sup>"],
+    [/\bP_mu=([0-9.]+)/g, "P<sub>@@MU@@=$1</sub>"],
+    [/\bP_mu\b/g, "P<sub>@@MU@@</sub>"],
+    [/\bmu0\b/g, "@@MU@@<sub>0</sub>"],
+    [/\bphat\b/g, "<span class=\"math-hat\">p</span>"],
+    [/\bXbar\b/g, "<span class=\"math-overline\">X</span>"],
+    [/\bDbar\b/g, "<span class=\"math-overline\">D</span>"],
+    [/\bH0\b/g, "H<sub>0</sub>"],
+    [/\bH1\b/g, "H<sub>1</sub>"],
+    [/\bp0\b/g, "p<sub>0</sub>"],
+    [/\bz\*/g, "z<sup>*</sup>"],
+    [/\bZ\*/g, "Z<sup>*</sup>"],
+    [/\bPhi\b/g, "@@PHI@@"],
+    [/\balpha\b/g, "@@ALPHA@@"],
+    [/\bepsilon\b/g, "@@EPSILON@@"],
+    [/\blambda\b/g, "@@LAMBDA@@"],
+    [/\bsigma\b/g, "@@SIGMA@@"],
+    [/\bmu\b/g, "@@MU@@"],
+    [/\bN\(0,1\)/g, "N(0, 1)"],
+    [/\bN\(([^)]+)\)/g, "N($1)"],
+    [/\bdf\b/g, "df"],
+    [/\bsum\b/g, "@@SUM@@"],
+    [/\bintegral\b/g, "@@INTEGRAL@@"],
+    [/ x /g, " &times; "]
+  ];
+
+  replacements.forEach(([pattern, replacement]) => {
+    html = html.replace(pattern, replacement);
+  });
+
+  html = html.replace(/_\(([^)]+)\)|_\{([^}]+)\}|_([A-Za-z0-9.+-]+)/g, (_, paren, braced, simple) => {
+    const subscript = paren || braced || simple || "";
+    return `<sub>${subscript}</sub>`;
+  });
+  html = html.replace(/\^(\([^)]+\)|[A-Za-z0-9.]+)/g, (_, exponent) => `<sup>${exponent.replace(/^\((.*)\)$/, "$1")}</sup>`);
+
+  html = html
+    .replaceAll("@@ALPHA@@", "&alpha;")
+    .replaceAll("@@CHI@@", "&chi;")
+    .replaceAll("@@EPSILON@@", "&epsilon;")
+    .replaceAll("@@INTEGRAL@@", "&int;")
+    .replaceAll("@@LAMBDA@@", "&lambda;")
+    .replaceAll("@@MU@@", "&mu;")
+    .replaceAll("@@PHI@@", "&Phi;")
+    .replaceAll("@@SIGMA@@", "&sigma;")
+    .replaceAll("@@SUM@@", "&Sigma;");
   return html;
 }

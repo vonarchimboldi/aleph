@@ -619,6 +619,30 @@ textarea {
   overflow-wrap: anywhere;
 }
 
+.math-expr span {
+  color: inherit;
+  font-weight: inherit;
+}
+
+.math-overline {
+  text-decoration: overline;
+  text-decoration-thickness: 1px;
+}
+
+.math-hat {
+  position: relative;
+}
+
+.math-hat::before {
+  content: "^";
+  font-size: 0.7em;
+  left: 50%;
+  line-height: 1;
+  position: absolute;
+  top: -0.72em;
+  transform: translateX(-50%);
+}
+
 .formula-row em {
   color: var(--muted);
   font-style: normal;
