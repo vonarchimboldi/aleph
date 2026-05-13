@@ -1,6 +1,6 @@
 const STORAGE_KEY = "learning-studio-data-v1";
 const SESSION_KEY = "aleph-session";
-const COURSE_PLAN_VERSION = "gate-da-basic-probability-chapter-7-conditional-expectation-v18";
+const COURSE_PLAN_VERSION = "gate-da-basic-probability-chapter-8-continuous-distributions-v19";
 
 const state = loadState();
 let deferredInstallPrompt = null;
@@ -169,6 +169,8 @@ function buildGateDaBasicPlan(now, accountTypes, sections) {
   const weekSixSunday = addDays(weekSixMonday, 6);
   const weekSevenMonday = addDays(monday, 42);
   const weekSevenSunday = addDays(weekSevenMonday, 6);
+  const weekEightMonday = addDays(monday, 49);
+  const weekEightSunday = addDays(weekEightMonday, 6);
   return {
     subjects: [
       {
@@ -176,7 +178,7 @@ function buildGateDaBasicPlan(now, accountTypes, sections) {
         title: "Probability",
         date: "2026-08-30",
         status: "In progress",
-        details: "GATE DA Basic Probability, aligned to the official GATE DA syllabus. Chapters 1-7 now cover foundations, conditioning, random variables, expectation, variance, tail bounds, joint distributions, covariance, correlation, and conditional expectation.",
+        details: "GATE DA Basic Probability, aligned to the official GATE DA syllabus. Chapters 1-8 now cover foundations, conditioning, random variables, expectation, variance, tail bounds, joint distributions, covariance, correlation, conditional expectation, continuous distributions, and order statistics.",
         sectionIds: sections.map((section) => section.id),
         updatedAt: now
       }
@@ -371,6 +373,36 @@ function buildGateDaBasicPlan(now, accountTypes, sections) {
         date: weekSevenSunday,
         details: "Take the conditional expectation objective quiz and use the logged feedback to review weak concepts.",
         updatedAt: now
+      },
+      {
+        id: "schedule-probability-chapter-8-study",
+        title: "Probability Chapter 8: Continuous Distributions and Order Statistics",
+        week: 8,
+        subject: "Probability",
+        kind: "Study",
+        date: weekEightMonday,
+        details: "Study exponential, Poisson, gamma, normal, standard normal, order statistics, uniform spacings, beta, and the exponential-family overview.",
+        updatedAt: now
+      },
+      {
+        id: "schedule-probability-chapter-8-practice",
+        title: "Probability Chapter 8: Labelled Practice",
+        week: 8,
+        subject: "Probability",
+        kind: "Practice",
+        date: addDays(weekEightMonday, 2),
+        details: "Solve the Chapter 8 continuous-distribution and order-statistic practice problems before opening worked solutions.",
+        updatedAt: now
+      },
+      {
+        id: "schedule-probability-chapter-8-review",
+        title: "Probability Chapter 8: Objective Review",
+        week: 8,
+        subject: "Probability",
+        kind: "Review",
+        date: weekEightSunday,
+        details: "Take the continuous distributions objective quiz and use the logged feedback to review weak concepts.",
+        updatedAt: now
       }
     ],
     tests: [
@@ -426,6 +458,15 @@ function buildGateDaBasicPlan(now, accountTypes, sections) {
         details: "Objective end-of-chapter quiz for conditional expectation, tower property, total expectation, conditional variance, total variance, prediction, and fair-game intuition. Attempts are logged in the learner record.",
         sectionId: sections[6]?.id,
         quizId: "quiz-probability-chapter-7-objective-review",
+        updatedAt: now
+      },
+      {
+        id: "test-probability-chapter-8-objective-review",
+        title: "Probability Chapter 8 Objective Review",
+        date: weekEightSunday,
+        details: "Objective end-of-chapter quiz for exponential, Poisson, gamma, normal, standard normal, order statistics, uniform spacings, beta, and exponential-family recognition. Attempts are logged in the learner record.",
+        sectionId: sections[7]?.id,
+        quizId: "quiz-probability-chapter-8-objective-review",
         updatedAt: now
       }
     ],
@@ -639,6 +680,39 @@ function buildGateDaBasicPlan(now, accountTypes, sections) {
         done: false,
         details: "Submit the Chapter 7 objective quiz so the learner record logs conditional expectation and variance strengths and weaknesses.",
         updatedAt: now
+      },
+      {
+        id: "task-probability-chapter-8-read",
+        week: 8,
+        title: "Probability Ch 8: Read continuous distributions",
+        type: "Study",
+        date: weekEightMonday,
+        status: "todo",
+        done: false,
+        details: "Open Subjects -> Probability -> Chapter 8 and study continuous distributions, order statistics, uniform spacings, and beta.",
+        updatedAt: now
+      },
+      {
+        id: "task-probability-chapter-8-practice",
+        week: 8,
+        title: "Probability Ch 8: Solve distribution practice",
+        type: "Practice",
+        date: addDays(weekEightMonday, 2),
+        status: "todo",
+        done: false,
+        details: "Attempt the Chapter 8 labelled practice problems before reading worked solutions.",
+        updatedAt: now
+      },
+      {
+        id: "task-probability-chapter-8-review",
+        week: 8,
+        title: "Probability Ch 8: Take objective review",
+        type: "Review",
+        date: weekEightSunday,
+        status: "todo",
+        done: false,
+        details: "Submit the Chapter 8 objective quiz so the learner record logs continuous distribution and order-statistic strengths and weaknesses.",
+        updatedAt: now
       }
     ],
     accountTypes,
@@ -664,7 +738,7 @@ function buildGateDaBasicPlan(now, accountTypes, sections) {
         startDate: monday,
         endDate: "2026-08-30",
         status: "active",
-        details: "GATE DA Basic plan surfaces: Subjects, Tasks, Schedule, Tests, Feedback, Resources, and Share. Current material build: Probability Chapters 1-7.",
+        details: "GATE DA Basic plan surfaces: Subjects, Tasks, Schedule, Tests, Feedback, Resources, and Share. Current material build: Probability Chapters 1-8.",
         updatedAt: now
       }
     ],
@@ -740,6 +814,14 @@ function buildGateDaBasicPlan(now, accountTypes, sections) {
         title: "Probability Chapter 7: Conditional Expectation and Conditional Variance",
         date: weekSevenMonday,
         details: "Open Subjects -> Probability to study Chapter 7 and then take the objective review in Tests.",
+        link: "",
+        updatedAt: now
+      },
+      {
+        id: "resource-probability-continuous-distributions",
+        title: "Probability Chapter 8: Continuous Distributions and Order Statistics",
+        date: weekEightMonday,
+        details: "Open Subjects -> Probability to study Chapter 8 and then take the objective review in Tests.",
         link: "",
         updatedAt: now
       }
@@ -3471,6 +3553,449 @@ function gateDaProbabilitySections(updatedAt = new Date().toISOString()) {
         "Fair-game intuition says expected future value equals current value when future increments have conditional mean zero."
       ],
       updatedAt
+    },
+    {
+      id: "gate-da-continuous-distributions-order-statistics",
+      exam: "GATE DA",
+      accountTier: "Basic",
+      subject: "Probability",
+      chapter: "Chapter 8",
+      section: "8",
+      title: "Continuous Distributions and Order Statistics",
+      summary: "Continuous distributions and order statistics derived from first-principles stories: counts, waits, accumulated waits, measurement error, sorted samples, spacings, beta laws, and the exponential-family pattern.",
+      sectionPreview: "This chapter is not a table of distributions to memorise. Each distribution appears because a simple experiment forces it to appear. We start from the experiment, derive the useful probability statement, and only then keep the result as a reusable fact.",
+      previewActivity: "A help desk receives calls randomly at an average rate of 3 per hour. In a tiny time interval of length h, the chance of one call is about 3h and the chance of two or more calls is tiny. From that small-interval story, what should the chance of no calls for one hour look like? Try to reason before seeing the formula.",
+      chapterIntro: [
+        "This chapter builds a practical distribution toolkit from first principles. The point is not to carry a bag of formulas. The point is to see why the formulas are true enough to trust and use.",
+        "Poisson counts come from many tiny chances of an event. Exponential waits come from the probability of seeing no event for a while. Gamma waits come from adding several exponential waits. Normal variables come from standardising measurement error and, later, from sums of many small effects.",
+        "Order statistics come from sorting. Beta appears when a sorted uniform point lands at a certain position. Uniform spacing problems often become simple multinomial count problems."
+      ],
+      bookSections: [
+        {
+          number: "8.1",
+          title: "First-Principles Distribution Stories",
+          paragraphs: [
+            "A distribution is a compressed description of an experiment. To understand it, ask what operation creates the random variable: are we counting, waiting, adding waits, measuring error, sorting observations, or cutting an interval into gaps?",
+            "Once the operation is clear, many facts can be derived instead of memorised. If no event has happened by time t, the first waiting time is bigger than t. If the maximum is below m, every observation is below m. If points are thrown into fixed intervals, the counts must be multinomial.",
+            "The formulas in this chapter are reusable facts, but the reasoning behind them is the real tool."
+          ],
+          blocks: [
+            {
+              type: "strategy",
+              title: "Recognition map",
+              body: "Start by asking what the random variable represents.",
+              visual: {
+                type: "flow",
+                steps: ["Count events", "Wait for events", "Measure error", "Sort sample", "Model proportion"],
+                caption: "The story usually chooses the distribution before the formula does."
+              }
+            },
+            {
+              type: "principle",
+              title: "Reasoning cues",
+              body: "Use the cue to choose the first-principles argument, not merely to recall a formula.",
+              items: [
+                "Count in a fixed interval: split time into many tiny pieces and count rare successes.",
+                "Wait until the next event: no event has happened yet.",
+                "Wait until the kth event: at least k events have happened by time t.",
+                "Measurement error or standardized value: compare distance from mean in standard-deviation units.",
+                "Minimum or maximum: translate into all observations being above or below a cutoff.",
+                "Uniform order statistic: count how many sample points fall to the left of a cutoff.",
+                "Fixed intervals: count how many points land in each interval."
+              ]
+            }
+          ]
+        },
+        {
+          number: "8.2",
+          title: "Exponential Distribution: Waiting for One Event",
+          paragraphs: [
+            "Start from the event, not the formula. Let T be the time until the next call. The statement T>t means no call has arrived during the first t units of time.",
+            "If arrivals have a steady rate lambda and disjoint time intervals behave independently, the chance of no arrival for time t should shrink like repeated multiplication over tiny intervals. That repeated multiplication becomes exp(-lambda t).",
+            "Once we know P(T>t)=exp(-lambda t), the CDF and PDF follow by complement and differentiation."
+          ],
+          blocks: [
+            {
+              type: "example",
+              title: "Derivation: no arrival becomes exponential survival",
+              body: "Split time t into n tiny pieces. In each small piece, the chance of no event is about 1-lambda t/n. No event in the whole interval means no event in every tiny piece.",
+              steps: [
+                { label: "Tiny interval", math: "P(no event in length t/n) about 1-lambda t/n", note: "Rate times length gives approximate event chance." },
+                { label: "All tiny intervals empty", math: "P(T>t) about (1-lambda t/n)^n", note: "Multiply because disjoint tiny intervals act independently." },
+                { label: "Take the limit", math: "lim_n (1-lambda t/n)^n = exp(-lambda t)", note: "This is where the exponential function appears." },
+                { label: "Reusable fact", math: "P(T>t)=exp(-lambda t)", note: "The formula is a consequence of the no-arrival story." }
+              ]
+            },
+            {
+              type: "principle",
+              title: "Facts derived from survival",
+              body: "Once the survival function is known, the rest follows.",
+              formulas: [
+                { label: "PDF", formula: "f(t)=lambda exp(-lambda t), t>=0", note: "waiting-time density" },
+                { label: "CDF", formula: "P(T<=t)=1-exp(-lambda t)", note: "event arrives by time t" },
+                { label: "Survival", formula: "P(T>t)=exp(-lambda t)", note: "no event by time t" },
+                { label: "Mean", formula: "E[T]=1/lambda", note: "average wait" }
+              ]
+            },
+            {
+              type: "example",
+              title: "Demonstration: next call",
+              body: "Calls arrive at rate 3 per hour. Let T be the waiting time in hours until the next call.",
+              steps: [
+                { label: "Recognise story", math: "T = waiting time until next event", note: "Use exponential." },
+                { label: "Use survival", math: "P(T>1)=exp(-3)", note: "No call in the next hour." },
+                { label: "Mean wait", math: "E[T]=1/3 hour", note: "About 20 minutes." }
+              ]
+            },
+            {
+              type: "principle",
+              title: "Memorylessness",
+              body: "Exponential waiting time does not age. If no event has happened yet, the remaining wait has the same distribution as a fresh wait. This is not a separate fact to memorize; it falls directly out of the survival function.",
+              formulas: [
+                { label: "Memoryless property", formula: "P(T>s+t | T>s)=P(T>t)", note: "future wait ignores elapsed wait" }
+              ]
+            },
+            {
+              type: "example",
+              title: "Derivation: why memorylessness follows",
+              body: "Conditioning on T>s means we already know the event did not happen during the first s units. To wait at least t more units is the same as waiting past s+t in total.",
+              steps: [
+                { label: "Start with conditional probability", math: "P(T>s+t | T>s)=P(T>s+t and T>s)/P(T>s)", note: "Use the definition of conditional probability." },
+                { label: "Simplify the event", math: "T>s+t implies T>s", note: "If the wait is longer than s+t, it is automatically longer than s." },
+                { label: "Use survival", math: "P(T>s+t | T>s)=exp(-lambda(s+t))/exp(-lambda s)", note: "Substitute P(T>u)=exp(-lambda u)." },
+                { label: "Cancel elapsed time", math: "exp(-lambda(s+t))/exp(-lambda s)=exp(-lambda t)=P(T>t)", note: "The old waiting time s disappears." }
+              ]
+            },
+            {
+              type: "example",
+              title: "Why it matters: already waiting at a help desk",
+              body: "Suppose support calls arrive like a Poisson process at rate 3 per hour. You have waited 20 minutes with no call. The chance that you wait at least 10 more minutes is still exp(-3 x 1/6), the same as the chance of waiting 10 minutes from a fresh start.",
+              steps: [
+                { label: "Translate the question", math: "P(T>30 minutes | T>20 minutes)", note: "Already waited 20 minutes; waiting 10 more means total wait exceeds 30 minutes." },
+                { label: "Use memorylessness", math: "P(T>30 | T>20)=P(T>10)", note: "Use consistent time units." },
+                { label: "Compute in hours", math: "P(T>1/6)=exp(-3/6)=exp(-1/2)", note: "The previous 20 minutes do not make a call due." },
+                { label: "Model warning", math: "Memoryless means no aging", note: "It is plausible for idealized arrivals or radioactive decay, but not for lifetimes of machines that wear out." }
+              ]
+            }
+          ]
+        },
+        {
+          number: "8.3",
+          title: "Poisson Distribution: Counts in a Fixed Interval",
+          paragraphs: [
+            "Poisson counts come from a rare-event limit. Split a fixed interval into many tiny pieces. Each piece has a tiny chance of one event and almost no chance of two or more.",
+            "Counting events across the whole interval is approximately binomial: many tiny trials, each with small success probability. When the number of tiny trials grows and the expected count stays fixed, the binomial probabilities become Poisson.",
+            "So Poisson is not a random formula. It is the limiting count law for many tiny independent opportunities."
+          ],
+          blocks: [
+            {
+              type: "example",
+              title: "Derivation idea: binomial rare-event limit",
+              body: "Suppose the expected number of events in the interval is lambda. Split the interval into n tiny pieces. Each tiny piece has event chance about lambda/n.",
+              steps: [
+                { label: "Approximate count", math: "N_n ~ Binomial(n, lambda/n)", note: "n tiny opportunities, tiny success chance." },
+                { label: "Exactly k events", math: "P(N_n=k)=C(n,k)(lambda/n)^k(1-lambda/n)^(n-k)", note: "Binomial probability." },
+                { label: "Let n grow", math: "P(N=k)=exp(-lambda)lambda^k/k!", note: "The rare-event limit is Poisson." }
+              ]
+            },
+            {
+              type: "principle",
+              title: "Poisson(lambda) facts",
+              body: "The parameter lambda is the expected count in the interval.",
+              formulas: [
+                { label: "PMF", formula: "P(N=k)=exp(-lambda)lambda^k/k!", note: "k=0,1,2,..." },
+                { label: "Mean", formula: "E[N]=lambda", note: "average count" },
+                { label: "Variance", formula: "Var(N)=lambda", note: "count variability" }
+              ]
+            },
+            {
+              type: "example",
+              title: "Demonstration: calls per hour",
+              body: "If calls arrive at average rate 3 per hour, then the number of calls in one hour can be modelled as Poisson(3).",
+              steps: [
+                { label: "Recognise story", math: "N = number of calls in one hour", note: "Use Poisson count." },
+                { label: "Exactly two calls", math: "P(N=2)=exp(-3)3^2/2!", note: "Plug into the PMF." },
+                { label: "No calls", math: "P(N=0)=exp(-3)", note: "Same as exponential survival for one hour." }
+              ]
+            }
+          ]
+        },
+        {
+          number: "8.4",
+          title: "Poisson Process: Counts and Waiting Times Together",
+          paragraphs: [
+            "Counts and waits are not separate memorisation boxes. They are two questions about the same arrival process.",
+            "If T_1 is the first arrival time, then T_1>t means no arrivals by time t. If N(t) is the count by time t, that same event is N(t)=0.",
+            "This identity lets us derive the exponential waiting-time survival from the Poisson count model and move between count and wait questions."
+          ],
+          blocks: [
+            {
+              type: "principle",
+              title: "Poisson process connection",
+              body: "One rate controls both counts and waits.",
+              formulas: [
+                { label: "Count by time t", formula: "N(t) ~ Poisson(lambda t)", note: "events in interval length t" },
+                { label: "First wait", formula: "T_1 ~ Exponential(lambda)", note: "time to first event" }
+              ]
+            },
+            {
+              type: "example",
+              title: "Demonstration: no event means wait is long",
+              body: "The event T_1>t means the first arrival has not happened by time t. That is the same as N(t)=0.",
+              steps: [
+                { label: "Translate waiting to count", math: "T_1>t is same as N(t)=0", note: "No arrival by time t." },
+                { label: "Use Poisson zero count", math: "P(N(t)=0)=exp(-lambda t)", note: "Poisson(lambda t) at k=0." },
+                { label: "Get exponential survival", math: "P(T_1>t)=exp(-lambda t)", note: "The two stories agree." }
+              ]
+            }
+          ]
+        },
+        {
+          number: "8.5",
+          title: "Gamma Distribution: Waiting for Several Events",
+          paragraphs: [
+            "Gamma is what appears when one wait is not enough. If the first waiting time is exponential, the waiting time until the kth event is the sum of k exponential gaps.",
+            "There is another first-principles view: T_k<=t means at least k events have arrived by time t. So gamma waiting probabilities can be reasoned about through Poisson counts.",
+            "The formula is less important than the two identities: wait to kth event equals sum of k gaps, and T_k<=t equals N(t)>=k."
+          ],
+          blocks: [
+            {
+              type: "principle",
+              title: "Gamma from first principles",
+              body: "The kth waiting time can be built from exponential gaps or from Poisson counts.",
+              formulas: [
+                { label: "As a sum", formula: "T_k = E_1+...+E_k", note: "independent Exponential(lambda) waits" },
+                { label: "As a count event", formula: "P(T_k<=t)=P(N(t)>=k)", note: "kth event has arrived by t" },
+                { label: "Mean", formula: "E[T_k]=k/lambda", note: "k average waits" },
+                { label: "Variance", formula: "Var(T_k)=k/lambda^2", note: "sum of k exponential variances" }
+              ]
+            },
+            {
+              type: "example",
+              title: "Demonstration: third call",
+              body: "Calls arrive at rate 3 per hour. The waiting time until the third call is Gamma(3,3).",
+              steps: [
+                { label: "Recognise story", math: "wait until 3rd event", note: "Use gamma." },
+                { label: "Mean wait", math: "E[T_3]=3/3=1 hour", note: "Average time to third call." },
+                { label: "Count connection", math: "P(T_3<=t)=P(N(t)>=3)", note: "Third call by time t means at least three calls by time t." }
+              ]
+            }
+          ]
+        },
+        {
+          number: "8.6",
+          title: "Normal and Standard Normal",
+          paragraphs: [
+            "The normal distribution is the language of deviations from a centre when many small sources of variation are blended. Chapter 9 will give the limit-theorem reason. Here we learn how to reason with a normal once it is a good model.",
+            "The first-principles move is standardisation. Instead of asking where 85 sits on the raw score scale, ask how many standard deviations it is from the mean.",
+            "A z-score is a unit conversion: raw distance from the mean divided by the standard deviation."
+          ],
+          blocks: [
+            {
+              type: "principle",
+              title: "Standardisation is unit conversion",
+              body: "Subtract the centre, then measure distance in standard-deviation units.",
+              formulas: [
+                { label: "Normal", formula: "X ~ Normal(mu, sigma^2)", note: "mean mu, variance sigma^2" },
+                { label: "Standardise", formula: "Z=(X-mu)/sigma", note: "Z has standard normal distribution" },
+                { label: "CDF notation", formula: "Phi(z)=P(Z<=z)", note: "standard normal table/CDF" }
+              ]
+            },
+            {
+              type: "example",
+              title: "Demonstration: z-score",
+              body: "Suppose exam scores are approximately Normal(70,10^2). Find the probability a score is at most 85.",
+              steps: [
+                { label: "Standardise", math: "Z=(85-70)/10=1.5", note: "85 is 1.5 standard deviations above mean." },
+                { label: "Use CDF", math: "P(X<=85)=P(Z<=1.5)=Phi(1.5)", note: "Look up or compute standard normal CDF." },
+                { label: "Interpret", math: "Phi(1.5) is about 0.933", note: "About 93.3 percent are below 85." }
+              ]
+            }
+          ]
+        },
+        {
+          number: "8.7",
+          title: "Order Statistics",
+          paragraphs: [
+            "Order statistics come from sorting. The smallest, largest, and kth smallest are not new random mechanisms; they are functions of the sample.",
+            "The first-principles trick is to translate order statements into count statements. The maximum is at most m exactly when all observations are at most m. The kth smallest is at most x exactly when at least k observations are at most x.",
+            "This count translation is the engine behind order-statistic formulas."
+          ],
+          blocks: [
+            {
+              type: "definition",
+              title: "Order statistics",
+              body: "Sort the sample from smallest to largest.",
+              formulas: [
+                { label: "Sorted sample", formula: "X_(1) <= X_(2) <= ... <= X_(n)", note: "parentheses mean order statistic" },
+                { label: "Minimum", formula: "X_(1)", note: "smallest value" },
+                { label: "Maximum", formula: "X_(n)", note: "largest value" }
+              ]
+            },
+            {
+              type: "example",
+              title: "Demonstration: maximum by CDF",
+              body: "If M=X_(n), then M<=m means every sample value is at most m.",
+              steps: [
+                { label: "Translate", math: "M<=m means X_1<=m, ..., X_n<=m", note: "All observations must be below m." },
+                { label: "Use independence", math: "P(M<=m)=F(m)^n", note: "For iid samples." },
+                { label: "Uniform case", math: "P(M<=m)=m^n, 0<=m<=1", note: "If F(m)=m." }
+              ]
+            }
+            ,
+            {
+              type: "example",
+              title: "Demonstration: kth smallest by counting",
+              body: "For iid observations with CDF F, the event X_(k)<=x means at least k of the n observations are <=x.",
+              steps: [
+                { label: "Turn order into count", math: "X_(k)<=x means count{X_i<=x} >= k", note: "The kth smallest is below x if enough points are below x." },
+                { label: "Use binomial count", math: "count{X_i<=x} ~ Binomial(n,F(x))", note: "Each observation lands left of x with probability F(x)." },
+                { label: "CDF setup", math: "P(X_(k)<=x)=sum_{j=k}^n C(n,j)F(x)^j(1-F(x))^(n-j)", note: "This is derived from counting, not memorised." }
+              ]
+            }
+          ]
+        },
+        {
+          number: "8.8",
+          title: "Uniform Order Statistics and Beta",
+          paragraphs: [
+            "Uniform order statistics make the count argument especially visible because F(x)=x on [0,1].",
+            "The kth uniform order statistic is connected to the beta distribution because the event U_(k)<=u is a binomial count event: at least k points landed in [0,u].",
+            "Beta is therefore not introduced as an arbitrary density. It appears as the law of a random sorted position inside the unit interval."
+          ],
+          blocks: [
+            {
+              type: "principle",
+              title: "Beta from counting left of u",
+              body: "For U_(k), count how many sample points fall in [0,u]. Differentiating that CDF gives the beta density.",
+              formulas: [
+                { label: "Law", formula: "U_(k) ~ Beta(k, n+1-k)", note: "iid Uniform(0,1) sample" },
+                { label: "Minimum", formula: "U_(1) ~ Beta(1,n)", note: "first order statistic" },
+                { label: "Maximum", formula: "U_(n) ~ Beta(n,1)", note: "last order statistic" }
+              ]
+            },
+            {
+              type: "example",
+              title: "Demonstration: maximum of uniforms",
+              body: "For n uniform points, the maximum M has CDF m^n, so its density is n m^(n-1). That is Beta(n,1).",
+              steps: [
+                { label: "CDF", math: "P(M<=m)=m^n", note: "All n points are <=m." },
+                { label: "Differentiate", math: "f_M(m)=n m^(n-1)", note: "Density on 0<m<1." },
+                { label: "Recognise", math: "M ~ Beta(n,1)", note: "Maximum is a beta order statistic." }
+              ]
+            }
+          ]
+        },
+        {
+          number: "8.9",
+          title: "Uniform Spacings and Interval Counts",
+          paragraphs: [
+            "Sorted uniform points cut [0,1] into gaps called spacings. Some spacing questions are hard if we try to write every ordered density directly.",
+            "A powerful first-principles move is to replace exact positions by counts in fixed intervals. Each point independently chooses an interval, with probability equal to the interval length.",
+            "That is why fixed interval counts are multinomial. The deeper law of all random spacings is Dirichlet, but many exam-style interval problems only need the multinomial count view."
+          ],
+          blocks: [
+            {
+              type: "principle",
+              title: "Fixed interval count pattern",
+              body: "If n independent uniform points are thrown into intervals of lengths p1, ..., pk, the interval counts are multinomial.",
+              formulas: [
+                { label: "Counts", formula: "(N_1,...,N_k) ~ Multinomial(n; p_1,...,p_k)", note: "fixed intervals" },
+                { label: "One interval", formula: "N_i ~ Binomial(n,p_i)", note: "count in a chosen interval" }
+              ]
+            },
+            {
+              type: "example",
+              title: "Demonstration: points in intervals",
+              body: "Five random points are placed uniformly on [0,1]. What is the probability exactly two fall in [0,0.3]?",
+              steps: [
+                { label: "Recognise count", math: "N = number in interval length 0.3", note: "Each point independently lands there with probability 0.3." },
+                { label: "Use binomial", math: "N ~ Binomial(5,0.3)", note: "Single interval count from multinomial." },
+                { label: "Compute setup", math: "P(N=2)=C(5,2)(0.3)^2(0.7)^3", note: "No order-statistic density needed." }
+              ]
+            }
+          ]
+        },
+        {
+          number: "8.10",
+          title: "Exponential Family: Why These Keep Appearing",
+          paragraphs: [
+            "After deriving these distributions from different stories, it is useful to notice a second pattern: many of their formulas have a shared algebraic shape. This shared shape is called the exponential family.",
+            "The practical meaning is that the same distributions that arise from clean probability stories also behave well when we do statistics with data. Their likelihoods simplify, and a few summary quantities often carry the important information.",
+            "No heavy theory is needed here. The point is that these models are important twice: they describe natural random mechanisms, and they are mathematically convenient for inference."
+          ],
+          blocks: [
+            {
+              type: "principle",
+              title: "Big picture",
+              body: "The exponential family is a unifying language for common probability models.",
+              items: [
+                "Poisson: count model.",
+                "Exponential and gamma: waiting-time models.",
+                "Normal: measurement and aggregate-noise model.",
+                "Beta: proportion/order-statistic model.",
+                "Shared structure makes inference cleaner later."
+              ]
+            }
+          ]
+        }
+      ],
+      concepts: [
+        { name: "Exponential", description: "Waiting time until the next event.", cue: "Look for time until first/next arrival." },
+        { name: "Poisson", description: "Count of events in a fixed interval.", cue: "Look for number of arrivals, defects, or calls in a fixed time/area/length." },
+        { name: "Gamma", description: "Waiting time until several events.", cue: "Look for time until the kth event or sum of exponential waits." },
+        { name: "Normal", description: "Bell-shaped measurement or aggregate-noise model.", cue: "Look for z-scores, measurement error, or approximate normality." },
+        { name: "Standard normal", description: "Normal with mean 0 and variance 1.", cue: "Standardise using Z=(X-mu)/sigma." },
+        { name: "Order statistic", description: "A sorted sample value.", cue: "Look for min, max, kth smallest, kth largest, median, or rank." },
+        { name: "Uniform spacing", description: "A gap between sorted uniform points.", cue: "Use interval counts when fixed intervals matter." },
+        { name: "Beta", description: "Distribution on [0,1] for proportions and uniform order statistics.", cue: "Look for U_(k), random proportions, or values constrained to [0,1]." }
+      ],
+      techniques: [
+        { name: "Match story to distribution", when: "a named distribution might apply.", move: "Identify whether the variable is a count, wait, measurement, order, gap, or proportion." },
+        { name: "Use exponential survival", when: "waiting beyond time t is asked.", move: "Use P(T>t)=exp(-lambda t)." },
+        { name: "Use Poisson count PMF", when: "the number of events in a fixed interval is asked.", move: "Use exp(-lambda)lambda^k/k! with the interval's expected count." },
+        { name: "Connect counts and waits", when: "a Poisson-process waiting question is easier as a count.", move: "Translate T_k<=t into N(t)>=k." },
+        { name: "Standardise normal values", when: "a normal probability is asked.", move: "Convert X to Z=(X-mu)/sigma and use Phi." },
+        { name: "Use CDF method for order statistics", when: "min or max is asked.", move: "Translate max<=m to all observations <=m, and min>m to all observations >m." },
+        { name: "Use multinomial interval counts", when: "uniform points fall into fixed intervals.", move: "Use interval lengths as cell probabilities." },
+        { name: "Recognise beta from uniform order stats", when: "the kth sorted uniform value appears.", move: "Use U_(k) ~ Beta(k,n+1-k)." }
+      ],
+      practiceProblems: continuousDistributionPracticeProblems(),
+      reviewPrompts: [
+        "Explain the difference between a Poisson count and an exponential wait.",
+        "Give a real situation where gamma is more natural than exponential.",
+        "Why do we standardise a normal variable?",
+        "How do you recognise an order-statistic problem?",
+        "When should fixed-interval counts replace direct order-statistic calculation?",
+        "Why does beta naturally appear from uniform order statistics?"
+      ],
+      reviewQuiz: {
+        id: "quiz-probability-chapter-8-objective-review",
+        title: "Probability Chapter 8 Objective Review",
+        instructions: "Complete this after finishing Chapter 8 exposition and labelled practice. The quiz logs objective answers and diagnoses continuous distribution recognition, Poisson/exponential/gamma use, normal standardisation, order statistics, spacings, beta, and exponential-family recognition.",
+        questions: continuousDistributionReviewQuestions()
+      },
+      readingQuestions: [
+        "What phrase tells you to use exponential rather than Poisson?",
+        "How are Poisson counts and exponential waits connected?",
+        "Why is gamma a waiting-time distribution?",
+        "What does a z-score measure?",
+        "What event is equivalent to max(X1,...,Xn)<=m?",
+        "How do fixed interval counts lead to a multinomial distribution?",
+        "Why does the beta distribution live on [0,1]?"
+      ],
+      chapterSummary: [
+        "Exponential models waiting time until the next event.",
+        "Poisson models event counts in fixed intervals.",
+        "In a Poisson process, counts and waiting times are two views of the same arrival story.",
+        "Gamma models waiting time until the kth event or sums of exponential waits.",
+        "Normal variables are standardised with Z=(X-mu)/sigma.",
+        "Order statistics are sorted sample values such as minimum, maximum, and kth smallest.",
+        "Uniform order statistics lead to beta distributions.",
+        "Fixed interval counts for uniform points are multinomial.",
+        "The exponential family is a unifying structure behind many common models."
+      ],
+      updatedAt
     }
   ];
 }
@@ -4091,6 +4616,279 @@ function jointDistributionReviewQuestions() {
         { id: "b", text: "They must stay uniformly distributed over all original values" },
         { id: "c", text: "They become impossible" },
         { id: "d", text: "They no longer have probabilities" }
+      ],
+      answer: "a"
+    }
+  ];
+}
+
+function continuousDistributionPracticeProblems() {
+  return [
+    {
+      label: "Concept Problem 1: Count or wait",
+      concept: "Distribution recognition",
+      technique: "Match story to variable type",
+      difficulty: "intro",
+      prompt: "Calls arrive at rate 3 per hour. Which distribution models the number of calls in one hour? Which models the waiting time until the next call?",
+      solution: "The number of calls in one hour is Poisson(3). The waiting time until the next call is Exponential(3), measured in hours."
+    },
+    {
+      label: "Concept Problem 2: Exponential survival",
+      concept: "Exponential",
+      technique: "Derive from no-event story",
+      difficulty: "intro",
+      prompt: "Events arrive at rate 4 per unit time. Explain why P(T>0.5) is a no-event probability, then compute it.",
+      solution: "T>0.5 means no event occurs in the first 0.5 units. The no-event probability for rate lambda over time t is exp(-lambda t), so P(T>0.5)=exp(-4 x 0.5)=exp(-2)."
+    },
+    {
+      label: "Concept Problem 3: Poisson count",
+      concept: "Poisson",
+      technique: "Reason from rare-event count",
+      difficulty: "intro",
+      prompt: "A one-hour interval has expected count 3. Why is Poisson a reasonable model, and what is P(N=2)?",
+      solution: "Poisson is reasonable when the count comes from many tiny independent event opportunities with total expected count 3. Then P(N=2)=exp(-3)3^2/2!."
+    },
+    {
+      label: "Problem 4: Rate scaling",
+      concept: "Poisson",
+      technique: "Scale lambda by interval length",
+      difficulty: "warmup",
+      prompt: "Defects occur at average rate 2 per metre. What is the distribution of the number of defects in 3 metres?",
+      solution: "The expected count in 3 metres is 2 x 3 = 6. The count is Poisson(6)."
+    },
+    {
+      label: "Problem 5: Memorylessness after waiting",
+      concept: "Memorylessness",
+      technique: "Use conditional survival",
+      difficulty: "warmup",
+      prompt: "Calls arrive at rate 3 per hour. You have already waited 20 minutes with no call. What is the probability you wait at least 10 more minutes, and why does the first 20 minutes disappear from the final answer?",
+      solution: "The question is P(T>30 minutes | T>20 minutes). With hours as units, this is exp(-3 x 1/2)/exp(-3 x 1/3)=exp(-3 x 1/6)=exp(-1/2). The first 20 minutes disappear because exponential survival ratios cancel elapsed time."
+    },
+    {
+      label: "Problem 6: Gamma waiting time",
+      concept: "Gamma",
+      technique: "Build from exponential gaps",
+      difficulty: "standard",
+      prompt: "Calls arrive at rate 5 per hour. Let T_4 be the waiting time until the fourth call. Explain why T_4 is a sum of four waiting gaps, then find E[T_4].",
+      solution: "The time to the fourth call is the sum of the waits between call 0 and 1, 1 and 2, 2 and 3, and 3 and 4. Each gap has mean 1/5 hour, so E[T_4]=4(1/5)=4/5 hour."
+    },
+    {
+      label: "Problem 7: Gamma-count connection",
+      concept: "Gamma",
+      technique: "Translate kth wait to count",
+      difficulty: "standard",
+      prompt: "For a Poisson process, express P(T_3<=t) using N(t).",
+      solution: "T_3<=t means the third event has happened by time t, so at least 3 events occurred by t. Thus P(T_3<=t)=P(N(t)>=3)."
+    },
+    {
+      label: "Problem 8: Standard normal conversion",
+      concept: "Standard normal",
+      technique: "Measure distance in standard-deviation units",
+      difficulty: "standard",
+      prompt: "If X is Normal(70,10^2), explain what the z-score of X=85 means and compute it.",
+      solution: "A z-score is raw distance from the mean measured in standard deviations. Here 85 is 15 above the mean and the standard deviation is 10, so z=(85-70)/10=1.5."
+    },
+    {
+      label: "Problem 9: Normal probability setup",
+      concept: "Normal",
+      technique: "Standardise and use Phi",
+      difficulty: "standard",
+      prompt: "If X is Normal(100,15^2), write P(X<=130) using the standard normal CDF Phi.",
+      solution: "Z=(130-100)/15=2. Therefore P(X<=130)=P(Z<=2)=Phi(2)."
+    },
+    {
+      label: "Problem 10: Maximum order statistic",
+      concept: "Order statistics",
+      technique: "Use CDF method",
+      difficulty: "standard",
+      prompt: "Let U_1,...,U_5 be independent Uniform(0,1). If M is the maximum, find P(M<=m) for 0<=m<=1.",
+      solution: "M<=m means all five uniforms are <=m. By independence, P(M<=m)=m^5."
+    },
+    {
+      label: "Problem 11: Minimum order statistic",
+      concept: "Order statistics",
+      technique: "Use survival method",
+      difficulty: "standard",
+      prompt: "Let U_1,...,U_5 be independent Uniform(0,1). If L is the minimum, find P(L>m) for 0<=m<=1.",
+      solution: "L>m means all five uniforms are >m. This has probability (1-m)^5."
+    },
+    {
+      label: "Problem 12: Beta from order statistics",
+      concept: "Beta",
+      technique: "Derive from counting points to the left",
+      difficulty: "standard",
+      prompt: "If U_(3) is the third smallest of 7 independent Uniform(0,1) samples, explain why the event U_(3)<=u is a counting event. What beta distribution does U_(3) have?",
+      solution: "U_(3)<=u means at least 3 of the 7 sample points landed in [0,u]. That count is Binomial(7,u). This count-derived CDF leads to U_(3) ~ Beta(3,5)."
+    },
+    {
+      label: "Problem 13: Fixed interval count",
+      concept: "Uniform spacings",
+      technique: "Use binomial interval count",
+      difficulty: "challenging",
+      prompt: "Ten independent uniform points are placed on [0,1]. What is the probability exactly 3 fall in [0.2,0.5]?",
+      solution: "The interval length is 0.3. The count in that interval is Binomial(10,0.3). Probability = C(10,3)(0.3)^3(0.7)^7."
+    },
+    {
+      label: "Problem 14: Multinomial interval counts",
+      concept: "Multinomial counts",
+      technique: "Use interval lengths as probabilities",
+      difficulty: "challenging",
+      prompt: "Six uniform points are placed on [0,1]. Intervals have lengths 0.2, 0.5, and 0.3. What is the probability the counts are 1, 3, and 2?",
+      solution: "Use multinomial counts: probability = 6!/(1!3!2!) (0.2)^1(0.5)^3(0.3)^2."
+    },
+    {
+      label: "Problem 15: Exponential family recognition",
+      concept: "Exponential family",
+      technique: "Identify shared model family",
+      difficulty: "stretch",
+      prompt: "We derived Poisson from counts, exponential/gamma from waits, normal from standardized measurement error, and beta from sorted uniforms. Why is it still useful to notice that many of them share an exponential-family algebraic form?",
+      solution: "The derivations explain why the models describe the world. The shared algebra explains why they are useful for inference: likelihoods simplify, summary statistics often matter, and the same models reappear in estimation and testing."
+    }
+  ];
+}
+
+function continuousDistributionReviewQuestions() {
+  return [
+    {
+      id: "cd-review-1",
+      kind: "single concept",
+      tags: ["exponential"],
+      prompt: "Which story naturally suggests an exponential distribution?",
+      options: [
+        { id: "a", text: "Waiting time until the next event" },
+        { id: "b", text: "Number of events in one hour" },
+        { id: "c", text: "The third smallest sample value" },
+        { id: "d", text: "A sample correlation" }
+      ],
+      answer: "a"
+    },
+    {
+      id: "cd-review-2",
+      kind: "single concept",
+      tags: ["poisson"],
+      prompt: "Which story naturally suggests a Poisson distribution?",
+      options: [
+        { id: "a", text: "A count of events in a fixed interval" },
+        { id: "b", text: "A z-score" },
+        { id: "c", text: "A sorted sample value" },
+        { id: "d", text: "A conditional variance" }
+      ],
+      answer: "a"
+    },
+    {
+      id: "cd-review-3",
+      kind: "single concept",
+      tags: ["gamma"],
+      prompt: "Gamma is especially natural for:",
+      options: [
+        { id: "a", text: "Waiting time until the kth event" },
+        { id: "b", text: "A single Bernoulli trial" },
+        { id: "c", text: "A finite sample without replacement" },
+        { id: "d", text: "A row total in a joint table" }
+      ],
+      answer: "a"
+    },
+    {
+      id: "cd-review-4",
+      kind: "single concept",
+      tags: ["standard-normal"],
+      prompt: "How do you standardise X ~ Normal(mu, sigma^2)?",
+      options: [
+        { id: "a", text: "Z=(X-mu)/sigma" },
+        { id: "b", text: "Z=X+mu" },
+        { id: "c", text: "Z=sigma/X" },
+        { id: "d", text: "Z=X^2" }
+      ],
+      answer: "a"
+    },
+    {
+      id: "cd-review-5",
+      kind: "single concept",
+      tags: ["order-statistics"],
+      prompt: "What is X_(1)?",
+      options: [
+        { id: "a", text: "The smallest sample value" },
+        { id: "b", text: "The largest sample value" },
+        { id: "c", text: "The sample mean" },
+        { id: "d", text: "The sample variance" }
+      ],
+      answer: "a"
+    },
+    {
+      id: "cd-review-6",
+      kind: "mixed: two concepts",
+      tags: ["poisson-process", "exponential"],
+      prompt: "In a Poisson process, what is equivalent to T_1>t?",
+      options: [
+        { id: "a", text: "N(t)=0" },
+        { id: "b", text: "N(t)=1 always" },
+        { id: "c", text: "T_1<=t" },
+        { id: "d", text: "The rate is zero" }
+      ],
+      answer: "a"
+    },
+    {
+      id: "cd-review-7",
+      kind: "mixed: two concepts",
+      tags: ["order-statistics", "cdf"],
+      prompt: "If M=max(X_1,...,X_n), what event equals M<=m?",
+      options: [
+        { id: "a", text: "All X_i are <= m" },
+        { id: "b", text: "At least one X_i is > m" },
+        { id: "c", text: "Exactly one X_i equals m" },
+        { id: "d", text: "The mean is m" }
+      ],
+      answer: "a"
+    },
+    {
+      id: "cd-review-8",
+      kind: "mixed: two concepts",
+      tags: ["beta", "order-statistics"],
+      prompt: "If U_(k) is the kth smallest of n iid Uniform(0,1) samples, what is its distribution?",
+      options: [
+        { id: "a", text: "Beta(k, n+1-k)" },
+        { id: "b", text: "Poisson(k)" },
+        { id: "c", text: "Exponential(k)" },
+        { id: "d", text: "Normal(0,1)" }
+      ],
+      answer: "a"
+    },
+    {
+      id: "cd-review-9",
+      kind: "mixed: three concepts",
+      tags: ["uniform-spacings", "multinomial"],
+      prompt: "Counts of iid uniform points falling into fixed intervals follow which distribution?",
+      options: [
+        { id: "a", text: "Multinomial with interval lengths as probabilities" },
+        { id: "b", text: "Always standard normal" },
+        { id: "c", text: "Always geometric" },
+        { id: "d", text: "Always beta" }
+      ],
+      answer: "a"
+    },
+    {
+      id: "cd-review-10",
+      kind: "mixed: two concepts",
+      tags: ["exponential-family"],
+      prompt: "Why mention the exponential family here?",
+      options: [
+        { id: "a", text: "It explains why many common models reappear in inference" },
+        { id: "b", text: "It means every distribution is exponential" },
+        { id: "c", text: "It replaces all probability calculations" },
+        { id: "d", text: "It only applies to dice" }
+      ],
+      answer: "a"
+    },
+    {
+      id: "cd-review-11",
+      kind: "mixed: two concepts",
+      tags: ["memorylessness", "exponential"],
+      prompt: "If T is exponential, what does P(T>s+t | T>s) equal?",
+      options: [
+        { id: "a", text: "P(T>t)" },
+        { id: "b", text: "P(T>s)" },
+        { id: "c", text: "P(T>s)P(T>t)" },
+        { id: "d", text: "0" }
       ],
       answer: "a"
     }
@@ -5773,7 +6571,19 @@ function conceptLabel(tag) {
     "total-variance": "total variance",
     prediction: "prediction",
     "fair-game": "fair-game intuition",
-    recognition: "concept recognition"
+    recognition: "concept recognition",
+    exponential: "exponential distribution",
+    memorylessness: "memorylessness",
+    poisson: "Poisson distribution",
+    gamma: "gamma distribution",
+    normal: "normal distribution",
+    "standard-normal": "standard normal",
+    "order-statistics": "order statistics",
+    "poisson-process": "Poisson process",
+    beta: "beta distribution",
+    "uniform-spacings": "uniform spacings",
+    multinomial: "multinomial counts",
+    "exponential-family": "exponential family"
   };
   return labels[tag] || tag;
 }
