@@ -611,10 +611,12 @@ textarea {
   font-weight: 900;
 }
 
-.formula-row code {
+.formula-row .math-expr {
   color: var(--ink);
-  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-  white-space: normal;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 17px;
+  line-height: 1.45;
+  overflow-wrap: anywhere;
 }
 
 .formula-row em {
@@ -665,11 +667,12 @@ textarea {
   font-weight: 900;
 }
 
-.worked-steps code {
+.worked-steps .math-expr {
   color: var(--ink);
-  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-  font-size: 15px;
-  white-space: normal;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 17px;
+  line-height: 1.45;
+  overflow-wrap: anywhere;
 }
 
 .worked-steps p {
@@ -682,6 +685,7 @@ textarea {
   border: 1px solid var(--line);
   border-radius: 6px;
   margin-top: 12px;
+  overflow-x: auto;
   padding: 12px;
 }
 
@@ -696,7 +700,8 @@ textarea {
 .diagram-svg {
   display: block;
   height: auto;
-  max-width: 620px;
+  max-width: min(620px, 100%);
+  min-width: 360px;
   overflow: visible;
   width: 100%;
 }
@@ -798,25 +803,29 @@ textarea {
 
 .flow-diagram {
   align-items: center;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
+  display: grid;
+  gap: 10px;
+  grid-template-columns: repeat(auto-fit, minmax(132px, 1fr));
 }
 
 .flow-diagram span {
+  align-items: center;
   background: #f7f9f8;
   border: 1px solid var(--line);
-  border-radius: 999px;
+  border-radius: 6px;
   color: var(--green);
+  display: flex;
   font-size: 13px;
   font-weight: 900;
-  padding: 7px 10px;
+  justify-content: center;
+  min-height: 40px;
+  padding: 8px 10px;
+  position: relative;
+  text-align: center;
 }
 
 .flow-diagram span:not(:last-child)::after {
-  color: var(--muted);
-  content: " ->";
-  margin-left: 8px;
+  content: none;
 }
 
 .tail-diagram {

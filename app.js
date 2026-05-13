@@ -1,6 +1,6 @@
 const STORAGE_KEY = "learning-studio-data-v1";
 const SESSION_KEY = "aleph-session";
-const COURSE_PLAN_VERSION = "gate-da-basic-probability-chapter-3-shortcuts-v13";
+const COURSE_PLAN_VERSION = "gate-da-basic-probability-chapter-7-conditional-expectation-v18";
 
 const state = loadState();
 let deferredInstallPrompt = null;
@@ -160,6 +160,15 @@ function buildGateDaBasicPlan(now, accountTypes, sections) {
   const weekTwoMonday = addDays(monday, 7);
   const weekTwoSunday = addDays(weekTwoMonday, 6);
   const weekThreeMonday = addDays(monday, 14);
+  const weekThreeSunday = addDays(weekThreeMonday, 6);
+  const weekFourMonday = addDays(monday, 21);
+  const weekFourSunday = addDays(weekFourMonday, 6);
+  const weekFiveMonday = addDays(monday, 28);
+  const weekFiveSunday = addDays(weekFiveMonday, 6);
+  const weekSixMonday = addDays(monday, 35);
+  const weekSixSunday = addDays(weekSixMonday, 6);
+  const weekSevenMonday = addDays(monday, 42);
+  const weekSevenSunday = addDays(weekSevenMonday, 6);
   return {
     subjects: [
       {
@@ -167,7 +176,7 @@ function buildGateDaBasicPlan(now, accountTypes, sections) {
         title: "Probability",
         date: "2026-08-30",
         status: "In progress",
-        details: "GATE DA Basic Probability, aligned to the official GATE DA syllabus. Chapters 1-3 now cover foundations, conditioning, random variables, expectation, and core expectation techniques.",
+        details: "GATE DA Basic Probability, aligned to the official GATE DA syllabus. Chapters 1-7 now cover foundations, conditioning, random variables, expectation, variance, tail bounds, joint distributions, covariance, correlation, and conditional expectation.",
         sectionIds: sections.map((section) => section.id),
         updatedAt: now
       }
@@ -242,6 +251,126 @@ function buildGateDaBasicPlan(now, accountTypes, sections) {
         date: weekThreeMonday,
         details: "Study Chapter 3 parts 1-8: random variables, distributions, expectation, linearity, indicators, tail sums, and transformations.",
         updatedAt: now
+      },
+      {
+        id: "schedule-probability-chapter-4-study",
+        title: "Probability Chapter 4: Variance, Standard Deviation, and Tail Bounds",
+        week: 4,
+        subject: "Probability",
+        kind: "Study",
+        date: weekFourMonday,
+        details: "Study spread around the mean, variance shortcuts, distribution variances, and Markov, Chebyshev, and Chernoff tail bounds.",
+        updatedAt: now
+      },
+      {
+        id: "schedule-probability-chapter-4-practice",
+        title: "Probability Chapter 4: Labelled Practice",
+        week: 4,
+        subject: "Probability",
+        kind: "Practice",
+        date: addDays(weekFourMonday, 2),
+        details: "Solve the Chapter 4 variance and tail-bound practice problems before opening worked solutions.",
+        updatedAt: now
+      },
+      {
+        id: "schedule-probability-chapter-4-review",
+        title: "Probability Chapter 4: Objective Review",
+        week: 4,
+        subject: "Probability",
+        kind: "Review",
+        date: weekFourSunday,
+        details: "Take the variance objective quiz and use the logged feedback to review weak derivation techniques.",
+        updatedAt: now
+      },
+      {
+        id: "schedule-probability-chapter-5-study",
+        title: "Probability Chapter 5: Joint Distributions",
+        week: 5,
+        subject: "Probability",
+        kind: "Study",
+        date: weekFiveMonday,
+        details: "Study joint PMFs/PDFs, marginals, conditionals, independence, support regions, and simple transformations.",
+        updatedAt: now
+      },
+      {
+        id: "schedule-probability-chapter-5-practice",
+        title: "Probability Chapter 5: Labelled Practice",
+        week: 5,
+        subject: "Probability",
+        kind: "Practice",
+        date: addDays(weekFiveMonday, 2),
+        details: "Solve the Chapter 5 joint distribution practice problems before opening worked solutions.",
+        updatedAt: now
+      },
+      {
+        id: "schedule-probability-chapter-5-review",
+        title: "Probability Chapter 5: Objective Review",
+        week: 5,
+        subject: "Probability",
+        kind: "Review",
+        date: weekFiveSunday,
+        details: "Take the joint distributions objective quiz and use the logged feedback to review weak concepts.",
+        updatedAt: now
+      },
+      {
+        id: "schedule-probability-chapter-6-study",
+        title: "Probability Chapter 6: Covariance and Correlation",
+        week: 6,
+        subject: "Probability",
+        kind: "Study",
+        date: weekSixMonday,
+        details: "Study E[XY], covariance, correlation, independence versus zero covariance, variance of sums, and indicator-pair covariance.",
+        updatedAt: now
+      },
+      {
+        id: "schedule-probability-chapter-6-practice",
+        title: "Probability Chapter 6: Labelled Practice",
+        week: 6,
+        subject: "Probability",
+        kind: "Practice",
+        date: addDays(weekSixMonday, 2),
+        details: "Solve the Chapter 6 covariance and correlation practice problems before opening worked solutions.",
+        updatedAt: now
+      },
+      {
+        id: "schedule-probability-chapter-6-review",
+        title: "Probability Chapter 6: Objective Review",
+        week: 6,
+        subject: "Probability",
+        kind: "Review",
+        date: weekSixSunday,
+        details: "Take the covariance and correlation objective quiz and use the logged feedback to review weak concepts.",
+        updatedAt: now
+      },
+      {
+        id: "schedule-probability-chapter-7-study",
+        title: "Probability Chapter 7: Conditional Expectation and Conditional Variance",
+        week: 7,
+        subject: "Probability",
+        kind: "Study",
+        date: weekSevenMonday,
+        details: "Study conditional expectation as updated average, tower property, total expectation, conditional variance, total variance, prediction, and fair-game intuition.",
+        updatedAt: now
+      },
+      {
+        id: "schedule-probability-chapter-7-practice",
+        title: "Probability Chapter 7: Labelled Practice",
+        week: 7,
+        subject: "Probability",
+        kind: "Practice",
+        date: addDays(weekSevenMonday, 2),
+        details: "Solve the Chapter 7 conditional expectation and variance practice problems before opening worked solutions.",
+        updatedAt: now
+      },
+      {
+        id: "schedule-probability-chapter-7-review",
+        title: "Probability Chapter 7: Objective Review",
+        week: 7,
+        subject: "Probability",
+        kind: "Review",
+        date: weekSevenSunday,
+        details: "Take the conditional expectation objective quiz and use the logged feedback to review weak concepts.",
+        updatedAt: now
       }
     ],
     tests: [
@@ -261,6 +390,42 @@ function buildGateDaBasicPlan(now, accountTypes, sections) {
         details: "Objective end-of-chapter quiz for conditional probability, Bayes' theorem, total probability, and independence. Attempts are logged in the learner record.",
         sectionId: conditionalSection.id,
         quizId: "quiz-probability-chapter-2-objective-review",
+        updatedAt: now
+      },
+      {
+        id: "test-probability-chapter-4-objective-review",
+        title: "Probability Chapter 4 Objective Review",
+        date: weekFourSunday,
+        details: "Objective end-of-chapter quiz for variance, standard deviation, distribution variance derivations, and Markov/Chebyshev/Chernoff tail bounds. Attempts are logged in the learner record.",
+        sectionId: sections[3]?.id,
+        quizId: "quiz-probability-chapter-4-objective-review",
+        updatedAt: now
+      },
+      {
+        id: "test-probability-chapter-5-objective-review",
+        title: "Probability Chapter 5 Objective Review",
+        date: weekFiveSunday,
+        details: "Objective end-of-chapter quiz for joint PMFs/PDFs, marginals, conditionals, independence, support regions, and transformations. Attempts are logged in the learner record.",
+        sectionId: sections[4]?.id,
+        quizId: "quiz-probability-chapter-5-objective-review",
+        updatedAt: now
+      },
+      {
+        id: "test-probability-chapter-6-objective-review",
+        title: "Probability Chapter 6 Objective Review",
+        date: weekSixSunday,
+        details: "Objective end-of-chapter quiz for E[XY], covariance, correlation, variance of sums, independence, and indicator-pair covariance. Attempts are logged in the learner record.",
+        sectionId: sections[5]?.id,
+        quizId: "quiz-probability-chapter-6-objective-review",
+        updatedAt: now
+      },
+      {
+        id: "test-probability-chapter-7-objective-review",
+        title: "Probability Chapter 7 Objective Review",
+        date: weekSevenSunday,
+        details: "Objective end-of-chapter quiz for conditional expectation, tower property, total expectation, conditional variance, total variance, prediction, and fair-game intuition. Attempts are logged in the learner record.",
+        sectionId: sections[6]?.id,
+        quizId: "quiz-probability-chapter-7-objective-review",
         updatedAt: now
       }
     ],
@@ -342,6 +507,138 @@ function buildGateDaBasicPlan(now, accountTypes, sections) {
         done: false,
         details: "Open Subjects -> Probability -> Chapter 3 and study random variables, expectation, linearity, indicators, tail sums, and transformations. Review problems and quiz will be added separately.",
         updatedAt: now
+      },
+      {
+        id: "task-probability-chapter-4-read",
+        week: 4,
+        title: "Probability Ch 4: Read variance and spread",
+        type: "Study",
+        date: weekFourMonday,
+        status: "todo",
+        done: false,
+        details: "Open Subjects -> Probability -> Chapter 4 and study variance, standard deviation, distribution derivations, and tail bounds.",
+        updatedAt: now
+      },
+      {
+        id: "task-probability-chapter-4-practice",
+        week: 4,
+        title: "Probability Ch 4: Solve variance practice",
+        type: "Practice",
+        date: addDays(weekFourMonday, 2),
+        status: "todo",
+        done: false,
+        details: "Attempt the Chapter 4 labelled practice problems before reading worked solutions.",
+        updatedAt: now
+      },
+      {
+        id: "task-probability-chapter-4-review",
+        week: 4,
+        title: "Probability Ch 4: Take objective review",
+        type: "Review",
+        date: weekFourSunday,
+        status: "todo",
+        done: false,
+        details: "Submit the Chapter 4 objective quiz so the learner record logs variance and tail-bound strengths and weaknesses.",
+        updatedAt: now
+      },
+      {
+        id: "task-probability-chapter-5-read",
+        week: 5,
+        title: "Probability Ch 5: Read joint distributions",
+        type: "Study",
+        date: weekFiveMonday,
+        status: "todo",
+        done: false,
+        details: "Open Subjects -> Probability -> Chapter 5 and study joint PMFs/PDFs, marginals, conditionals, independence, and support regions.",
+        updatedAt: now
+      },
+      {
+        id: "task-probability-chapter-5-practice",
+        week: 5,
+        title: "Probability Ch 5: Solve joint practice",
+        type: "Practice",
+        date: addDays(weekFiveMonday, 2),
+        status: "todo",
+        done: false,
+        details: "Attempt the Chapter 5 labelled practice problems before reading worked solutions.",
+        updatedAt: now
+      },
+      {
+        id: "task-probability-chapter-5-review",
+        week: 5,
+        title: "Probability Ch 5: Take objective review",
+        type: "Review",
+        date: weekFiveSunday,
+        status: "todo",
+        done: false,
+        details: "Submit the Chapter 5 objective quiz so the learner record logs joint distribution strengths and weaknesses.",
+        updatedAt: now
+      },
+      {
+        id: "task-probability-chapter-6-read",
+        week: 6,
+        title: "Probability Ch 6: Read covariance and correlation",
+        type: "Study",
+        date: weekSixMonday,
+        status: "todo",
+        done: false,
+        details: "Open Subjects -> Probability -> Chapter 6 and study E[XY], covariance, correlation, variance of sums, and indicator-pair covariance.",
+        updatedAt: now
+      },
+      {
+        id: "task-probability-chapter-6-practice",
+        week: 6,
+        title: "Probability Ch 6: Solve covariance practice",
+        type: "Practice",
+        date: addDays(weekSixMonday, 2),
+        status: "todo",
+        done: false,
+        details: "Attempt the Chapter 6 labelled practice problems before reading worked solutions.",
+        updatedAt: now
+      },
+      {
+        id: "task-probability-chapter-6-review",
+        week: 6,
+        title: "Probability Ch 6: Take objective review",
+        type: "Review",
+        date: weekSixSunday,
+        status: "todo",
+        done: false,
+        details: "Submit the Chapter 6 objective quiz so the learner record logs covariance and correlation strengths and weaknesses.",
+        updatedAt: now
+      },
+      {
+        id: "task-probability-chapter-7-read",
+        week: 7,
+        title: "Probability Ch 7: Read conditional expectation",
+        type: "Study",
+        date: weekSevenMonday,
+        status: "todo",
+        done: false,
+        details: "Open Subjects -> Probability -> Chapter 7 and study conditional expectation, total expectation, conditional variance, and fair-game intuition.",
+        updatedAt: now
+      },
+      {
+        id: "task-probability-chapter-7-practice",
+        week: 7,
+        title: "Probability Ch 7: Solve conditional expectation practice",
+        type: "Practice",
+        date: addDays(weekSevenMonday, 2),
+        status: "todo",
+        done: false,
+        details: "Attempt the Chapter 7 labelled practice problems before reading worked solutions.",
+        updatedAt: now
+      },
+      {
+        id: "task-probability-chapter-7-review",
+        week: 7,
+        title: "Probability Ch 7: Take objective review",
+        type: "Review",
+        date: weekSevenSunday,
+        status: "todo",
+        done: false,
+        details: "Submit the Chapter 7 objective quiz so the learner record logs conditional expectation and variance strengths and weaknesses.",
+        updatedAt: now
       }
     ],
     accountTypes,
@@ -367,7 +664,7 @@ function buildGateDaBasicPlan(now, accountTypes, sections) {
         startDate: monday,
         endDate: "2026-08-30",
         status: "active",
-        details: "GATE DA Basic plan surfaces: Subjects, Tasks, Schedule, Tests, Feedback, Resources, and Share. Current material build: Probability Chapters 1-2 and Chapter 3 parts 1-8.",
+        details: "GATE DA Basic plan surfaces: Subjects, Tasks, Schedule, Tests, Feedback, Resources, and Share. Current material build: Probability Chapters 1-7.",
         updatedAt: now
       }
     ],
@@ -411,6 +708,38 @@ function buildGateDaBasicPlan(now, accountTypes, sections) {
         title: "Probability Chapter 3: Random Variables and Expectation",
         date: weekThreeMonday,
         details: "Open Subjects -> Probability to study Chapter 3 parts 1-8. Review problems and quiz are pending.",
+        link: "",
+        updatedAt: now
+      },
+      {
+        id: "resource-probability-variance",
+        title: "Probability Chapter 4: Variance, Standard Deviation, and Tail Bounds",
+        date: weekFourMonday,
+        details: "Open Subjects -> Probability to study Chapter 4 and then take the objective review in Tests.",
+        link: "",
+        updatedAt: now
+      },
+      {
+        id: "resource-probability-joint-distributions",
+        title: "Probability Chapter 5: Joint Distributions",
+        date: weekFiveMonday,
+        details: "Open Subjects -> Probability to study Chapter 5 and then take the objective review in Tests.",
+        link: "",
+        updatedAt: now
+      },
+      {
+        id: "resource-probability-covariance-correlation",
+        title: "Probability Chapter 6: Covariance and Correlation",
+        date: weekSixMonday,
+        details: "Open Subjects -> Probability to study Chapter 6 and then take the objective review in Tests.",
+        link: "",
+        updatedAt: now
+      },
+      {
+        id: "resource-probability-conditional-expectation",
+        title: "Probability Chapter 7: Conditional Expectation and Conditional Variance",
+        date: weekSevenMonday,
+        details: "Open Subjects -> Probability to study Chapter 7 and then take the objective review in Tests.",
         link: "",
         updatedAt: now
       }
@@ -1637,6 +1966,1511 @@ function gateDaProbabilitySections(updatedAt = new Date().toISOString()) {
       ],
       buildStatus: "Parts 1-8 complete. Review problems, practice set, and objective quiz pending.",
       updatedAt
+    },
+    {
+      id: "gate-da-variance-standard-deviation-tail-bounds",
+      exam: "GATE DA",
+      accountTier: "Basic",
+      subject: "Probability",
+      chapter: "Chapter 4",
+      section: "4",
+      title: "Variance, Standard Deviation, and Tail Bounds",
+      summary: "Variance and standard deviation as measures of spread, distribution variance derivations from Chapter 3 models, and Markov, Chebyshev, and Chernoff tail bounds.",
+      sectionPreview: "Expectation tells us the centre of a random variable, but it does not tell us whether values usually stay near that centre. Variance measures average squared distance from the mean. Standard deviation turns that spread back into the original units. Tail bounds then ask: using only this limited information, how much can we say about being far from the mean?",
+      previewActivity: "Two variables both have mean 5. Variable A is always 5. Variable B is 0 half the time and 10 half the time. Which one is more predictable? Try to describe the difference before using formulas. This chapter gives that difference a number.",
+      chapterIntro: [
+        "Chapter 3 built the language of random variables and expectation. Chapter 4 asks the next question: how much does the random variable move around its mean?",
+        "The mean is one piece of information. It is the balance point, but many different distributions can share the same mean. Variance adds a second piece of information: the average squared distance from that balance point.",
+        "This chapter keeps the focus concrete. We define variance and standard deviation, learn the main computational shortcut, derive the variance of the distributions from Chapter 3, and end with tail bounds that show how each guarantee depends on the information we know."
+      ],
+      bookSections: [
+        {
+          number: "4.1",
+          title: "Why Spread Matters",
+          paragraphs: [
+            "A mean without a spread measure can be misleading. If X is always 5, then X has mean 5 and no uncertainty. If Y is 0 with probability 1/2 and 10 with probability 1/2, then Y also has mean 5, but it is never equal to 5.",
+            "Both variables have the same centre. They do not have the same reliability. Spread measures how far values usually sit from the centre.",
+            "For exam problems, this distinction matters whenever the question asks for risk, error, fluctuation, concentration, or probability of being far from the mean."
+          ],
+          blocks: [
+            {
+              type: "example",
+              title: "Same mean, different spread",
+              body: "Let X=5 always. Let Y be 0 or 10 with equal probability. E[X]=5 and E[Y]=5, but X is perfectly stable while Y is always 5 units away from its mean.",
+              formulas: [
+                { label: "Stable variable", formula: "E[X]=5, distance from mean is always 0", note: "no spread" },
+                { label: "Variable with swings", formula: "E[Y]=5, distance from mean is always 5", note: "large spread" }
+              ]
+            },
+            {
+              type: "principle",
+              title: "Information levels",
+              body: "Mean, variance, and full distribution are different levels of information. Each extra level can answer sharper questions.",
+              formulas: [
+                { label: "Mean", formula: "E[X]", note: "centre only" },
+                { label: "Mean plus variance", formula: "E[X], Var(X)", note: "centre plus average squared distance" },
+                { label: "Full distribution", formula: "PMF/PDF/CDF", note: "exact probabilities when available" }
+              ]
+            }
+          ]
+        },
+        {
+          number: "4.2",
+          title: "Variance and Standard Deviation",
+          paragraphs: [
+            "Variance is the expected squared distance from the mean. If mu = E[X], then Var(X) = E[(X-mu)^2].",
+            "We square the distance for two reasons. First, positive and negative deviations should not cancel. Second, large deviations should count more heavily than small deviations.",
+            "Because variance uses squared deviations, its unit is squared. If X is measured in marks, variance is in squared marks. Standard deviation is the square root of variance, so it returns to the original unit."
+          ],
+          blocks: [
+            {
+              type: "definition",
+              title: "Definition: variance",
+              body: "Variance is the average squared distance from the mean.",
+              formulas: [
+                { label: "Variance", formula: "Var(X)=E[(X-E[X])^2]", note: "average squared deviation" },
+                { label: "Standard deviation", formula: "SD(X)=sqrt(Var(X))", note: "spread in the original unit" }
+              ]
+            },
+            {
+              type: "warning",
+              title: "Common trap",
+              body: "Variance cannot be negative. It is an average of squared quantities. If your answer is negative, the algebra has gone wrong."
+            }
+          ]
+        },
+        {
+          number: "4.3",
+          title: "The Computational Formula",
+          paragraphs: [
+            "The definition Var(X)=E[(X-mu)^2] explains the meaning, but the shortcut Var(X)=E[X^2]-(E[X])^2 is usually easier for computation.",
+            "This formula says variance needs two moments: the first moment E[X] and the second moment E[X^2]. The mean alone is not enough.",
+            "A good exam habit is to ask: do I know E[X] and E[X^2], or can I compute them quickly from the PMF, PDF, indicators, or tail-sum style identities?"
+          ],
+          blocks: [
+            {
+              type: "example",
+              title: "Derivation of the shortcut",
+              body: "Expand the squared deviation and use linearity of expectation.",
+              steps: [
+                { label: "Name the mean", math: "mu = E[X]", note: "Treat mu as a constant." },
+                { label: "Start from definition", math: "Var(X)=E[(X-mu)^2]", note: "This is the meaning of variance." },
+                { label: "Expand the square", math: "E[(X-mu)^2]=E[X^2-2mu X+mu^2]", note: "Ordinary algebra inside expectation." },
+                { label: "Use linearity", math: "E[X^2]-2mu E[X]+mu^2", note: "Constants pull out of expectation." },
+                { label: "Substitute E[X]=mu", math: "E[X^2]-2mu^2+mu^2=E[X^2]-mu^2", note: "So Var(X)=E[X^2]-(E[X])^2." }
+              ]
+            },
+            {
+              type: "principle",
+              title: "Main computation route",
+              body: "Most variance computations in this chapter follow the same path.",
+              visual: {
+                type: "flow",
+                steps: ["Find E[X]", "Find E[X^2]", "Subtract (E[X])^2"],
+                caption: "Variance uses second-moment information, not only the mean."
+              }
+            }
+          ]
+        },
+        {
+          number: "4.4",
+          title: "Shifting and Scaling",
+          paragraphs: [
+            "Adding a constant moves every value by the same amount, so it changes the mean but not the spread. Multiplying by a constant stretches all distances from the mean.",
+            "If Y=aX+b, then Var(Y)=a^2 Var(X). Standard deviation scales by |a|.",
+            "This is a useful check on units. If marks are doubled, the standard deviation doubles, while the variance is multiplied by four."
+          ],
+          blocks: [
+            {
+              type: "example",
+              title: "Derivation",
+              body: "Use the definition of variance and the fact that E[aX+b]=aE[X]+b.",
+              steps: [
+                { label: "Mean of transformed variable", math: "E[aX+b]=aE[X]+b", note: "The centre shifts and scales." },
+                { label: "Subtract the new mean", math: "(aX+b)-(aE[X]+b)=a(X-E[X])", note: "The b cancels." },
+                { label: "Square the deviation", math: "[a(X-E[X])]^2=a^2(X-E[X])^2", note: "Distances are squared." },
+                { label: "Take expectation", math: "Var(aX+b)=a^2 Var(X)", note: "Only the scale affects spread." }
+              ]
+            },
+            {
+              type: "principle",
+              title: "Shortcut",
+              body: "Location changes do not change variance. Scale changes variance by the square of the scale.",
+              formulas: [
+                { label: "Shift", formula: "Var(X+b)=Var(X)", note: "same spread" },
+                { label: "Scale", formula: "Var(aX)=a^2 Var(X)", note: "squared scale" },
+                { label: "Standard deviation", formula: "SD(aX+b)=|a| SD(X)", note: "original unit scale" }
+              ]
+            }
+          ]
+        },
+        {
+          number: "4.5",
+          title: "Bernoulli and Binomial Variance",
+          paragraphs: [
+            "Bernoulli variance is the base case. Since a Bernoulli variable is only 0 or 1, X^2=X. That makes the second moment easy.",
+            "A binomial variable is a sum of independent Bernoulli switches. For independent variables, variances add. This gives Var(X)=np(1-p).",
+            "The result also makes sense: if p is near 0 or 1, the count is more predictable. The spread is largest around p=1/2."
+          ],
+          blocks: [
+            {
+              type: "example",
+              title: "Bernoulli(p) derivation",
+              body: "Use X^2=X for a 0-1 switch.",
+              steps: [
+                { label: "Mean", math: "E[X]=p", note: "From Chapter 3." },
+                { label: "Second moment", math: "E[X^2]=0^2(1-p)+1^2p=p", note: "For 0 and 1 values, squaring changes nothing." },
+                { label: "Subtract square of mean", math: "Var(X)=p-p^2=p(1-p)", note: "This is the variance of one switch." }
+              ]
+            },
+            {
+              type: "example",
+              title: "Binomial(n,p) derivation",
+              body: "Write the binomial count as independent Bernoulli switches.",
+              steps: [
+                { label: "Split the count", math: "X=I1+I2+...+In", note: "Each Ii is Bernoulli(p)." },
+                { label: "Use independent variance addition", math: "Var(X)=Var(I1)+...+Var(In)", note: "Independence matters for variance." },
+                { label: "Use Bernoulli variance", math: "Var(X)=p(1-p)+...+p(1-p)=np(1-p)", note: "There are n identical switches." }
+              ]
+            }
+          ]
+        },
+        {
+          number: "4.6",
+          title: "Geometric Variance",
+          paragraphs: [
+            "For the geometric distribution in this course, X is the trial number of the first success. Its mean is 1/p.",
+            "A direct computation from the PMF is possible, but the series with k^2 is heavy. A cleaner route is to compute E[X(X-1)] first, then use X^2=X(X-1)+X.",
+            "The final answer Var(X)=(1-p)/p^2 shows that rare success creates large spread. When p is small, the waiting time is not only large on average; it also fluctuates a lot."
+          ],
+          blocks: [
+            {
+              type: "example",
+              title: "Geometric(p) derivation",
+              body: "Use the second factorial moment, then convert to E[X^2].",
+              steps: [
+                { label: "Known mean", math: "E[X]=1/p", note: "From the tail-sum formula in Chapter 3." },
+                { label: "Use a series identity", math: "E[X(X-1)] = sum k(k-1)(1-p)^(k-1)p = 2(1-p)/p^2", note: "This follows from differentiating the geometric series twice." },
+                { label: "Convert to second moment", math: "X^2=X(X-1)+X", note: "So E[X^2]=E[X(X-1)]+E[X]." },
+                { label: "Compute E[X^2]", math: "E[X^2]=2(1-p)/p^2+1/p=(2-p)/p^2", note: "Put terms over p^2." },
+                { label: "Subtract mean square", math: "Var(X)=(2-p)/p^2-1/p^2=(1-p)/p^2", note: "This is the waiting-time variance." }
+              ]
+            },
+            {
+              type: "warning",
+              title: "Convention check",
+              body: "This formula uses the convention X=1,2,3,... for the first success trial. If a book counts failures before first success, the mean and variance formulas look different."
+            }
+          ]
+        },
+        {
+          number: "4.7",
+          title: "Hypergeometric Variance",
+          paragraphs: [
+            "Hypergeometric counts successes when sampling without replacement. The mean n(K/N) came easily from indicators, even though the draws are dependent.",
+            "Variance is more sensitive. Dependence now matters because two sampled positions are not independent. If one draw is a success, there are fewer successes left for another draw.",
+            "The final variance is the binomial-looking term n p(1-p) multiplied by a finite population correction: (N-n)/(N-1), where p=K/N."
+          ],
+          blocks: [
+            {
+              type: "example",
+              title: "Hypergeometric(N,K,n) derivation idea",
+              body: "Use indicators and include pair terms. This shows exactly where dependence enters.",
+              steps: [
+                { label: "Split the count", math: "X=I1+I2+...+In", note: "Ij is 1 if draw j is a success." },
+                { label: "One switch variance", math: "Var(Ij)=p(1-p), where p=K/N", note: "Each position has success probability K/N." },
+                { label: "Pair dependence", math: "E[Ii Ij]=K(K-1)/(N(N-1)) for i not equal j", note: "Both positions must receive success items." },
+                { label: "Covariance is negative", math: "E[Ii Ij]-p^2 = -p(1-p)/(N-1)", note: "Sampling without replacement creates negative dependence." },
+                { label: "Add variances and pair terms", math: "Var(X)=n p(1-p)+n(n-1)[-p(1-p)/(N-1)]", note: "There are n(n-1) ordered pair terms." },
+                { label: "Factor", math: "Var(X)=n p(1-p)(N-n)/(N-1)", note: "This is the finite population correction." }
+              ]
+            },
+            {
+              type: "principle",
+              title: "Interpretation",
+              body: "Without replacement reduces spread compared with independent sampling because successes get used up.",
+              formulas: [
+                { label: "Binomial-style part", formula: "n p(1-p)", note: "what independent draws would give" },
+                { label: "Correction", formula: "(N-n)/(N-1)", note: "less than or equal to 1" }
+              ]
+            }
+          ]
+        },
+        {
+          number: "4.8",
+          title: "Uniform Variance",
+          paragraphs: [
+            "Uniform(a,b) spreads probability evenly over an interval. Its mean is the midpoint (a+b)/2.",
+            "The variance depends only on the interval length b-a, not on where the interval sits on the number line. This matches the shifting rule: moving an interval should not change its spread.",
+            "The cleanest derivation computes E[X^2] by integration and subtracts the square of the mean."
+          ],
+          blocks: [
+            {
+              type: "example",
+              title: "Uniform(a,b) derivation",
+              body: "Use the density f(x)=1/(b-a) on [a,b].",
+              steps: [
+                { label: "Mean", math: "E[X]=(a+b)/2", note: "From Chapter 3." },
+                { label: "Second moment", math: "E[X^2]=integral_a^b x^2/(b-a) dx", note: "Use LOTUS for a continuous variable." },
+                { label: "Integrate", math: "E[X^2]=(b^3-a^3)/(3(b-a))=(a^2+ab+b^2)/3", note: "Factor b^3-a^3=(b-a)(b^2+ab+a^2)." },
+                { label: "Subtract mean square", math: "Var(X)=(a^2+ab+b^2)/3 - (a+b)^2/4", note: "Put over denominator 12." },
+                { label: "Simplify", math: "Var(X)=(b-a)^2/12", note: "Only interval length matters." }
+              ]
+            },
+            {
+              type: "example",
+              title: "Uniform(0,1)",
+              body: "For a random point on [0,1], the variance is 1/12 and the standard deviation is sqrt(1/12).",
+              formulas: [
+                { label: "Mean", formula: "1/2", note: "midpoint" },
+                { label: "Variance", formula: "1/12", note: "unit interval spread" }
+              ]
+            }
+          ]
+        },
+        {
+          number: "4.9",
+          title: "What Variance Can Tell Us",
+          paragraphs: [
+            "Variance does not give the whole distribution. It compresses spread into one number. That compression is useful, but it loses shape information.",
+            "If we know the full PMF or PDF, we can compute exact tail probabilities such as P(|X-mu|>=t). If we know only mean and variance, we can still say something, but the statement must be more conservative.",
+            "This is the idea behind tail bounds. A tail bound gives an upper limit on the probability that a random variable is far from its mean."
+          ],
+          blocks: [
+            {
+              type: "principle",
+              title: "From information to guarantee",
+              body: "Less information means weaker but more general guarantees.",
+              visual: {
+                type: "flow",
+                steps: ["Mean only: centre", "Mean + variance: spread guarantee", "Full distribution: exact tail probability"],
+                caption: "Tail bounds trade precision for generality."
+              }
+            }
+          ]
+        },
+        {
+          number: "4.10",
+          title: "Markov Tail Bound",
+          paragraphs: [
+            "Markov's inequality is the first tail bound. It applies to nonnegative random variables and uses only the mean.",
+            "If X is nonnegative, then P(X >= a) <= E[X]/a for a>0. The idea is simple: if the average amount is small, not too much probability can sit very far to the right.",
+            "Markov is broad but weak. It knows only the mean, so it cannot see whether the distribution is tightly concentrated or very spread out."
+          ],
+          blocks: [
+            {
+              type: "principle",
+              title: "Markov's inequality",
+              body: "For a nonnegative random variable, the chance of being at least a is at most the mean divided by a.",
+              formulas: [
+                { label: "Markov", formula: "P(X >= a) <= E[X]/a", note: "requires X >= 0 and a > 0" },
+                { label: "Mean-only information", formula: "uses E[X]", note: "no variance or distribution shape" }
+              ]
+            },
+            {
+              type: "example",
+              title: "Example: waiting cost",
+              body: "If a nonnegative cost X has mean 20, then Markov says the chance that X is at least 100 is at most 20/100.",
+              steps: [
+                { label: "Identify mean and cutoff", math: "E[X]=20, a=100", note: "X must be nonnegative." },
+                { label: "Apply Markov", math: "P(X >= 100) <= 20/100 = 1/5", note: "This is a guarantee, not an exact probability." }
+              ]
+            },
+            {
+              type: "warning",
+              title: "Use condition",
+              body: "Do not apply Markov directly to a variable that can be negative. For distance from the mean, apply Markov to a nonnegative transformed variable such as (X-mu)^2. That gives Chebyshev."
+            }
+          ]
+        },
+        {
+          number: "4.11",
+          title: "Chebyshev Tail Bound",
+          paragraphs: [
+            "Chebyshev's inequality says that any random variable with finite variance is unlikely to be many standard deviations away from its mean. It does not require normality, symmetry, or a known distribution shape.",
+            "If mu=E[X] and sigma=SD(X), then P(|X-mu| >= k sigma) <= 1/k^2 for k>0.",
+            "The strength is that the result uses only mean and variance. The weakness is that the bound can be loose because it must work for many possible distributions with the same mean and variance."
+          ],
+          blocks: [
+            {
+              type: "principle",
+              title: "Chebyshev's inequality",
+              body: "At least 1 - 1/k^2 of the probability lies within k standard deviations of the mean.",
+              formulas: [
+                { label: "Tail form", formula: "P(|X-mu| >= k sigma) <= 1/k^2", note: "outside k standard deviations" },
+                { label: "Inside form", formula: "P(|X-mu| < k sigma) >= 1 - 1/k^2", note: "within k standard deviations" }
+              ]
+            },
+            {
+              type: "example",
+              title: "Derivation from Markov",
+              body: "Chebyshev is Markov applied to squared distance from the mean.",
+              steps: [
+                { label: "Make a nonnegative variable", math: "Y=(X-mu)^2", note: "Squared distance is always nonnegative." },
+                { label: "Apply Markov", math: "P(Y >= a^2) <= E[Y]/a^2", note: "Use cutoff a^2." },
+                { label: "Translate back", math: "P(|X-mu| >= a) <= Var(X)/a^2", note: "The event Y >= a^2 is the same as distance at least a." },
+                { label: "Use standard deviations", math: "a=k sigma", note: "Then Var(X)/a^2 = sigma^2/(k^2 sigma^2)=1/k^2." }
+              ]
+            },
+            {
+              type: "example",
+              title: "Example: two standard deviations",
+              body: "For any distribution with finite variance, the chance of being at least 2 standard deviations from the mean is at most 1/4.",
+              steps: [
+                { label: "Use k=2", math: "P(|X-mu| >= 2sigma) <= 1/2^2", note: "Chebyshev uses standard-deviation units." },
+                { label: "Compute", math: "P(|X-mu| >= 2sigma) <= 1/4", note: "So at least 3/4 lies within 2 standard deviations." }
+              ]
+            },
+            {
+              type: "warning",
+              title: "Interpretation trap",
+              body: "Chebyshev gives an upper bound, not the exact probability. If the bound says at most 1/4, the true probability might be much smaller."
+            }
+          ]
+        },
+        {
+          number: "4.12",
+          title: "Chernoff Bounds for Independent Counts",
+          paragraphs: [
+            "Chernoff bounds are sharper tail bounds for sums of independent Bernoulli variables. They use more information than Chebyshev: not only the mean and variance, but also the independence and bounded 0-1 structure of the summands.",
+            "For GATE-style probability, the main idea is more important than memorising every version. Markov uses the mean of X. Chebyshev uses the mean and variance of X. Chernoff applies Markov to an exponential transform and uses independence to multiply moment-generating pieces.",
+            "When X is a binomial-style count with mean mu=np, Chernoff gives exponentially small upper bounds for large deviations. This is why it is much stronger than Chebyshev for many independent-trial counts."
+          ],
+          blocks: [
+            {
+              type: "principle",
+              title: "Multiplicative Chernoff forms",
+              body: "If X is a sum of independent Bernoulli variables with mean mu, then these common forms bound upper and lower tails.",
+              formulas: [
+                { label: "Upper tail", formula: "P(X >= (1+delta)mu) <= exp(-mu delta^2/3)", note: "for 0 < delta <= 1" },
+                { label: "Lower tail", formula: "P(X <= (1-delta)mu) <= exp(-mu delta^2/2)", note: "for 0 < delta < 1" }
+              ]
+            },
+            {
+              type: "example",
+              title: "Why exponentials appear",
+              body: "Chernoff uses Markov on exp(tX), which is nonnegative. Independence lets us factor E[exp(tX)] across the Bernoulli pieces.",
+              steps: [
+                { label: "Start from a tail", math: "P(X >= a)", note: "Hard to bound directly." },
+                { label: "Exponentiate", math: "P(exp(tX) >= exp(ta))", note: "For t>0, this is the same upper-tail event." },
+                { label: "Apply Markov", math: "P(exp(tX) >= exp(ta)) <= E[exp(tX)]/exp(ta)", note: "Now Markov can be used." },
+                { label: "Use independence", math: "E[exp(tX)] = product E[exp(tIi)]", note: "This is where independent Bernoulli structure enters." },
+                { label: "Optimise t", math: "choose t to make the bound smallest", note: "The simplified result becomes an exponential tail bound." }
+              ]
+            },
+            {
+              type: "example",
+              title: "Example: independent successes",
+              body: "Suppose X counts successes in 100 independent trials with p=0.2, so mu=20. Bound the chance of seeing at least 30 successes.",
+              steps: [
+                { label: "Find relative deviation", math: "30=(1+delta)20", note: "So delta=1/2." },
+                { label: "Apply upper-tail Chernoff", math: "P(X >= 30) <= exp(-20(1/2)^2/3)", note: "Use the 0 < delta <= 1 form." },
+                { label: "Simplify exponent", math: "exp(-20/12)=exp(-5/3)", note: "The bound is about 0.19. It is not exact, but it decays exponentially as mu grows." }
+              ]
+            },
+            {
+              type: "warning",
+              title: "Use condition",
+              body: "Chernoff is not a generic variance bound. Use it for sums of independent bounded variables, especially Bernoulli indicators. If you only know mean and variance, use Chebyshev instead."
+            }
+          ]
+        }
+      ],
+      concepts: [
+        {
+          name: "Variance",
+          description: "Average squared distance from the mean.",
+          cue: "Use when the question asks about spread, fluctuation, or distance from the expected value."
+        },
+        {
+          name: "Standard deviation",
+          description: "Square root of variance, measured in the original units.",
+          cue: "Use when spread needs to be interpreted in the same unit as X."
+        },
+        {
+          name: "Second moment",
+          description: "The value E[X^2], used with E[X] to compute variance.",
+          cue: "Use the shortcut Var(X)=E[X^2]-(E[X])^2."
+        },
+        {
+          name: "Independent variance addition",
+          description: "For independent variables, variance of a sum is the sum of variances.",
+          cue: "Use for binomial counts built from independent Bernoulli switches."
+        },
+        {
+          name: "Dependence in variance",
+          description: "Dependence affects variance even when it did not affect expectation.",
+          cue: "Use pair terms for hypergeometric or without-replacement counts."
+        },
+        {
+          name: "Tail bound",
+          description: "A guarantee about the probability of being far from the mean.",
+          cue: "Use when exact tail probabilities are unavailable or unnecessary."
+        },
+        {
+          name: "Markov's inequality",
+          description: "A mean-only upper-tail bound for nonnegative random variables.",
+          cue: "Use P(X >= a) <= E[X]/a when X cannot be negative."
+        },
+        {
+          name: "Chebyshev's inequality",
+          description: "A distribution-free bound based on mean and variance.",
+          cue: "Use P(|X-mu| >= k sigma) <= 1/k^2."
+        },
+        {
+          name: "Chernoff bound",
+          description: "An exponential tail bound for sums of independent Bernoulli variables.",
+          cue: "Use for binomial-style counts when independence and 0-1 structure are known."
+        }
+      ],
+      techniques: [
+        {
+          name: "Compute by second moment",
+          when: "you know or can compute E[X] and E[X^2].",
+          move: "Use Var(X)=E[X^2]-(E[X])^2."
+        },
+        {
+          name: "Use 0-1 simplification",
+          when: "X is Bernoulli or an indicator.",
+          move: "Use X^2=X, so E[X^2]=E[X]=P(X=1)."
+        },
+        {
+          name: "Split independent counts",
+          when: "X is a sum of independent switches.",
+          move: "Add the switch variances to get the variance of the total."
+        },
+        {
+          name: "Track pair terms",
+          when: "the count is built from dependent indicators.",
+          move: "Compute E[Ii Ij] or the covariance contribution instead of assuming variance adds."
+        },
+        {
+          name: "Use integration for continuous variables",
+          when: "X has a PDF and the question asks for variance.",
+          move: "Integrate x^2 f(x) to get E[X^2], then subtract the square of the mean."
+        },
+        {
+          name: "Apply scaling rules",
+          when: "the variable is transformed as aX+b.",
+          move: "Use Var(aX+b)=a^2 Var(X) and SD(aX+b)=|a| SD(X)."
+        },
+        {
+          name: "Use Markov",
+          when: "X is nonnegative and only its mean is known.",
+          move: "Bound P(X >= a) by E[X]/a."
+        },
+        {
+          name: "Use Chebyshev",
+          when: "you only know mean and variance but need a far-from-mean probability bound.",
+          move: "Convert the distance to k standard deviations, then bound the tail by 1/k^2."
+        },
+        {
+          name: "Use Chernoff",
+          when: "X is a sum of independent Bernoulli indicators and the deviation is from a binomial-style mean.",
+          move: "Convert the cutoff to (1+delta)mu or (1-delta)mu, then apply the matching exponential bound."
+        }
+      ],
+      practiceProblems: variancePracticeProblems(),
+      reviewPrompts: [
+        "Give two random variables with the same mean but different variance, and explain the difference in words.",
+        "Why does Var(X+c)=Var(X), but Var(cX)=c^2 Var(X)?",
+        "Derive Bernoulli variance without memorising the formula.",
+        "Explain why binomial variance uses independence but binomial expectation did not need to emphasise it.",
+        "In hypergeometric sampling, why should the variance be smaller than the corresponding binomial variance?",
+        "What information does Markov use, and why is it usually weak?",
+        "What information does Chebyshev use, and what information does it ignore?",
+        "Why can Chernoff be much sharper than Chebyshev for independent Bernoulli sums?"
+      ],
+      reviewQuiz: {
+        id: "quiz-probability-chapter-4-objective-review",
+        title: "Probability Chapter 4 Objective Review",
+        instructions: "Complete this after finishing Chapter 4 exposition and labelled practice. The quiz logs objective answers and diagnoses variance, standard deviation, distribution derivations, and tail-bound reasoning.",
+        questions: varianceReviewQuestions()
+      },
+      readingQuestions: [
+        "What does variance measure that expectation does not?",
+        "Why is standard deviation often easier to interpret than variance?",
+        "What are the two quantities needed for Var(X)=E[X^2]-(E[X])^2?",
+        "Where does independence enter the binomial variance derivation?",
+        "How does Markov lead to Chebyshev?",
+        "Why is Chebyshev useful even when it is not sharp?",
+        "What extra information does Chernoff use beyond mean and variance?"
+      ],
+      chapterSummary: [
+        "Variance is the average squared distance from the mean.",
+        "Standard deviation is the square root of variance and has the same unit as X.",
+        "The main computational shortcut is Var(X)=E[X^2]-(E[X])^2.",
+        "Shifting a random variable does not change variance; scaling by a changes variance by a^2.",
+        "Bernoulli(p) has variance p(1-p).",
+        "Binomial(n,p) has variance np(1-p), using independent Bernoulli switches.",
+        "Geometric(p), counting the first success trial, has variance (1-p)/p^2.",
+        "Hypergeometric(N,K,n) has variance n p(1-p)(N-n)/(N-1), where p=K/N.",
+        "Uniform(a,b) has variance (b-a)^2/12.",
+        "Markov's inequality bounds a nonnegative upper tail using only the mean.",
+        "Chebyshev's inequality bounds distance from the mean using only mean and variance.",
+        "Chernoff bounds use independent Bernoulli structure to give exponential tail bounds."
+      ],
+      updatedAt
+    },
+    {
+      id: "gate-da-joint-distributions",
+      exam: "GATE DA",
+      accountTier: "Basic",
+      subject: "Probability",
+      chapter: "Chapter 5",
+      section: "5",
+      title: "Joint Distributions",
+      summary: "Joint PMFs and PDFs, marginals, conditional distributions, independence of random variables, support regions, and simple transformations from joint laws.",
+      sectionPreview: "A single random variable tells one part of a story. Many probability questions need two quantities at once: two dice, height and weight, score and time, two component lifetimes, or two measurements from the same experiment. A joint distribution describes how two random variables behave together.",
+      previewActivity: "Two fair dice are rolled. Let X be the first die and S be the sum. If you know S=10, what values can X take? Is X still uniform on {1,2,3,4,5,6}? Try this before reading. The point is that information about one variable changes the distribution of another.",
+      chapterIntro: [
+        "Chapters 3 and 4 mostly studied one random variable at a time. Chapter 5 starts the two-variable language needed for covariance, correlation, and conditional expectation.",
+        "A joint distribution is the full probability description for a pair. From it, we can recover each variable's own distribution, ask conditional questions, check independence, and find probabilities over regions.",
+        "The most important habit in this chapter is to respect the support. For discrete variables, the support is the set of allowed pairs. For continuous variables, it is the region where the density lives."
+      ],
+      bookSections: [
+        {
+          number: "5.1",
+          title: "Why One Random Variable Is Not Enough",
+          paragraphs: [
+            "Many experiments produce more than one useful number. In two dice, we may care about the first die and the sum. In a data problem, we may care about study time and score. In reliability, we may care about the lifetimes of two components.",
+            "Knowing the distribution of each variable separately is not always enough. Two variables can have the same individual distributions but very different relationships.",
+            "The joint distribution records probabilities for pairs. It is the object that lets us ask how variables interact."
+          ],
+          blocks: [
+            {
+              type: "example",
+              title: "Example: first die and sum",
+              body: "Roll two fair dice. Let X be the first die and S be the sum. X alone is uniform on 1 through 6. S alone has a triangular distribution. Their joint distribution answers questions like P(X=4 and S=9).",
+              steps: [
+                { label: "Translate the pair", math: "X=4 and S=9", note: "The first die is 4 and the total is 9." },
+                { label: "Find second die", math: "second die = 5", note: "Only outcome (4,5) works." },
+                { label: "Compute probability", math: "P(X=4, S=9)=1/36", note: "There are 36 ordered dice outcomes." }
+              ]
+            },
+            {
+              type: "principle",
+              title: "Joint information",
+              body: "The joint distribution is stronger than the two marginal distributions because it keeps the pairing information.",
+              visual: {
+                type: "flow",
+                steps: ["Experiment", "Pair (X,Y)", "Joint law", "Marginals and conditionals"],
+                caption: "The joint law is the source; marginals and conditionals are derived from it."
+              }
+            }
+          ]
+        },
+        {
+          number: "5.2",
+          title: "Joint PMF for Discrete Random Variables",
+          paragraphs: [
+            "For discrete random variables X and Y, the joint PMF is p(x,y)=P(X=x and Y=y). It gives a probability for each allowed pair.",
+            "All entries must be nonnegative, and the probabilities over all allowed pairs must add to 1.",
+            "A joint PMF is often easiest to read as a table. Rows are values of X, columns are values of Y, and each cell is the probability of that pair."
+          ],
+          blocks: [
+            {
+              type: "definition",
+              title: "Definition: joint PMF",
+              body: "For discrete X and Y, the joint PMF is p(x,y)=P(X=x, Y=y).",
+              formulas: [
+                { label: "Nonnegative", formula: "p(x,y) >= 0", note: "each cell is a probability" },
+                { label: "Total mass", formula: "sum_x sum_y p(x,y)=1", note: "all allowed pairs together" }
+              ]
+            },
+            {
+              type: "example",
+              title: "Small joint table",
+              body: "Suppose X and Y each take values 0 and 1, with p(0,0)=0.2, p(0,1)=0.3, p(1,0)=0.1, p(1,1)=0.4. The probabilities add to 1, so this is a valid joint PMF.",
+              formulas: [
+                { label: "Check", formula: "0.2+0.3+0.1+0.4=1", note: "valid total probability" },
+                { label: "One pair", formula: "P(X=1,Y=1)=0.4", note: "read from the cell" }
+              ]
+            }
+          ]
+        },
+        {
+          number: "5.3",
+          title: "Joint PDF for Continuous Random Variables",
+          paragraphs: [
+            "For continuous random variables, probabilities come from area under a surface. The joint PDF f(x,y) is a density over the plane or over a smaller support region.",
+            "The probability of a region A is the double integral of f(x,y) over that region. The total integral over the full support must be 1.",
+            "The density value f(x,y) is not itself a probability. Probability is volume under the density surface above a region."
+          ],
+          blocks: [
+            {
+              type: "definition",
+              title: "Definition: joint PDF",
+              body: "For continuous X and Y with joint density f, probabilities are found by integrating over regions.",
+              formulas: [
+                { label: "Region probability", formula: "P((X,Y) in A)=integral integral_A f(x,y) dx dy", note: "area in the xy-plane, volume under density" },
+                { label: "Total mass", formula: "integral integral_support f(x,y) dx dy = 1", note: "valid density" }
+              ]
+            },
+            {
+              type: "example",
+              title: "Uniform on a square",
+              body: "If (X,Y) is uniform on the unit square 0<=x<=1, 0<=y<=1, then f(x,y)=1 on the square. The probability of any rectangle is its area.",
+              steps: [
+                { label: "Region", math: "0 <= X <= 1/2, 0 <= Y <= 1/3", note: "This is a rectangle inside the unit square." },
+                { label: "Area", math: "(1/2)(1/3)=1/6", note: "Density is 1, so probability equals area." }
+              ]
+            }
+          ]
+        },
+        {
+          number: "5.4",
+          title: "Marginal Distributions",
+          paragraphs: [
+            "A marginal distribution is the distribution of one variable after ignoring the other variable.",
+            "For a joint PMF, add across the other variable. For a joint PDF, integrate out the other variable.",
+            "The word marginal comes from table margins: row totals and column totals."
+          ],
+          blocks: [
+            {
+              type: "principle",
+              title: "Marginal formulas",
+              body: "Recover one-variable distributions from the joint law by summing or integrating out the other variable.",
+              formulas: [
+                { label: "Discrete X marginal", formula: "p_X(x)=sum_y p(x,y)", note: "add across y" },
+                { label: "Discrete Y marginal", formula: "p_Y(y)=sum_x p(x,y)", note: "add across x" },
+                { label: "Continuous X marginal", formula: "f_X(x)=integral f(x,y) dy", note: "integrate over allowed y" },
+                { label: "Continuous Y marginal", formula: "f_Y(y)=integral f(x,y) dx", note: "integrate over allowed x" }
+              ]
+            },
+            {
+              type: "example",
+              title: "Marginal from a table",
+              body: "Using the small table from Section 5.2, P(X=0)=p(0,0)+p(0,1)=0.2+0.3=0.5. P(Y=1)=p(0,1)+p(1,1)=0.3+0.4=0.7.",
+              steps: [
+                { label: "Row total", math: "p_X(0)=0.2+0.3=0.5", note: "fix X=0, add over Y." },
+                { label: "Column total", math: "p_Y(1)=0.3+0.4=0.7", note: "fix Y=1, add over X." }
+              ]
+            }
+          ]
+        },
+        {
+          number: "5.5",
+          title: "Conditional Distributions",
+          paragraphs: [
+            "A conditional distribution tells us how one variable behaves after the other variable is known.",
+            "For discrete variables, condition by dividing the joint probability by the marginal probability of the given value.",
+            "For continuous variables, divide the joint density by the marginal density, within values where the marginal density is positive."
+          ],
+          blocks: [
+            {
+              type: "definition",
+              title: "Conditional distribution",
+              body: "Conditioning restricts the joint law to the slice where the observed variable has the given value, then renormalizes.",
+              formulas: [
+                { label: "Discrete", formula: "P(X=x | Y=y)=p(x,y)/p_Y(y)", note: "when p_Y(y)>0" },
+                { label: "Continuous", formula: "f_{X|Y}(x|y)=f(x,y)/f_Y(y)", note: "when f_Y(y)>0" }
+              ]
+            },
+            {
+              type: "example",
+              title: "Dice conditional distribution",
+              body: "Roll two dice. Let X be the first die and S be the sum. Given S=10, the possible ordered outcomes are (4,6), (5,5), and (6,4). Therefore X can be 4, 5, or 6, each with conditional probability 1/3.",
+              formulas: [
+                { label: "Conditional support", formula: "X in {4,5,6} given S=10", note: "not all six values remain possible" },
+                { label: "One value", formula: "P(X=4 | S=10)=1/3", note: "one of three equally likely sum-10 outcomes" }
+              ]
+            }
+          ]
+        },
+        {
+          number: "5.6",
+          title: "Independence of Random Variables",
+          paragraphs: [
+            "Random variables X and Y are independent when knowing one gives no probability information about the other.",
+            "For discrete variables, the joint PMF must factor into the product of marginals for every pair. For continuous variables, the joint PDF must factor on the support.",
+            "Independence is a strong statement about the whole joint distribution, not just one event or one pair of values."
+          ],
+          blocks: [
+            {
+              type: "principle",
+              title: "Factorization test",
+              body: "Independence means the joint law is exactly the product of the marginal laws.",
+              formulas: [
+                { label: "Discrete", formula: "p(x,y)=p_X(x)p_Y(y) for all x,y", note: "all cells must match" },
+                { label: "Continuous", formula: "f(x,y)=f_X(x)f_Y(y) on support", note: "density factorization" }
+              ]
+            },
+            {
+              type: "warning",
+              title: "Common trap",
+              body: "Checking one pair is not enough to prove independence. One failed pair can disprove independence, but proving independence requires the factorization to hold everywhere."
+            }
+          ]
+        },
+        {
+          number: "5.7",
+          title: "Support Regions and Bounds",
+          paragraphs: [
+            "For continuous joint densities, the support region is often the hardest part of the problem. The formula may be simple, but the integration bounds carry the real information.",
+            "A rectangular support is usually easier because x and y bounds are independent. A triangular support or curved support forces one bound to depend on the other variable.",
+            "Always draw or describe the support before integrating. This prevents using impossible pairs."
+          ],
+          blocks: [
+            {
+              type: "example",
+              title: "Triangular support",
+              body: "Suppose f(x,y)=2 on the triangle 0<y<x<1. To find f_X(x), hold x fixed and integrate y from 0 to x.",
+              steps: [
+                { label: "Support", math: "0 < y < x < 1", note: "For each x, y runs from 0 to x." },
+                { label: "Marginal", math: "f_X(x)=integral_0^x 2 dy = 2x", note: "valid for 0<x<1." },
+                { label: "Check", math: "integral_0^1 2x dx = 1", note: "The marginal integrates to 1." }
+              ]
+            },
+            {
+              type: "strategy",
+              title: "Support-first procedure",
+              body: "Before doing calculus, identify the allowed region and choose the easier order of integration.",
+              visual: {
+                type: "flow",
+                steps: ["Write inequalities", "Sketch region", "Choose bounds", "Integrate"],
+                caption: "Most joint-density mistakes are support mistakes."
+              }
+            }
+          ]
+        },
+        {
+          number: "5.8",
+          title: "Sums, Min, Max, and Simple Transformations",
+          paragraphs: [
+            "A joint distribution lets us compute probabilities for new variables made from X and Y, such as X+Y, min(X,Y), max(X,Y), or X/Y.",
+            "For discrete variables, collect all pairs that produce the target value. For continuous variables, CDF methods are often cleaner for min and max.",
+            "The main idea is always translation: rewrite the event about the new variable as a region or set of pairs in the original (X,Y) space."
+          ],
+          blocks: [
+            {
+              type: "example",
+              title: "Sum from pairs",
+              body: "For two dice, P(X+Y=7) is found by collecting all ordered pairs on the line x+y=7.",
+              formulas: [
+                { label: "Pairs", formula: "(1,6),(2,5),(3,4),(4,3),(5,2),(6,1)", note: "six ordered pairs" },
+                { label: "Probability", formula: "P(X+Y=7)=6/36=1/6", note: "sum event as a set of pairs" }
+              ]
+            },
+            {
+              type: "example",
+              title: "Maximum of independent uniforms",
+              body: "If X and Y are independent Uniform(0,1), then M=max(X,Y). The event M<=m means both X<=m and Y<=m.",
+              steps: [
+                { label: "Translate event", math: "M <= m means X <= m and Y <= m", note: "Both variables must be below m." },
+                { label: "Use independence", math: "P(M<=m)=P(X<=m)P(Y<=m)", note: "For 0<=m<=1." },
+                { label: "Compute", math: "P(M<=m)=m^2", note: "This is the CDF of the maximum." }
+              ]
+            }
+          ]
+        }
+      ],
+      concepts: [
+        { name: "Joint distribution", description: "The probability law for a pair of random variables.", cue: "Use when a problem asks about two quantities together." },
+        { name: "Joint PMF", description: "A probability table for discrete pairs.", cue: "Use P(X=x,Y=y) cells and make sure all cells add to 1." },
+        { name: "Joint PDF", description: "A density over a two-dimensional support region.", cue: "Use double integrals over regions." },
+        { name: "Marginal distribution", description: "The distribution of one variable after ignoring the other.", cue: "Sum or integrate out the other variable." },
+        { name: "Conditional distribution", description: "The distribution of one variable after the other is known.", cue: "Divide joint by the relevant marginal." },
+        { name: "Independence", description: "Knowing one variable does not change the law of the other.", cue: "Check whether the joint law factors into marginals." },
+        { name: "Support region", description: "The allowed set of (x,y) pairs.", cue: "Draw or describe it before integrating." },
+        { name: "Transformation", description: "A new variable made from X and Y.", cue: "Translate the new-variable event back to pairs or regions." }
+      ],
+      techniques: [
+        { name: "Read a joint table", when: "X and Y are discrete.", move: "Use cells for joint probabilities, row totals for one marginal, and column totals for the other." },
+        { name: "Integrate over a region", when: "X and Y are continuous.", move: "Write the support inequalities, choose bounds, and integrate the density over the target region." },
+        { name: "Find marginals", when: "you need the distribution of one variable alone.", move: "Sum or integrate out the other variable." },
+        { name: "Condition from the joint law", when: "one variable is observed.", move: "Divide the joint probability or density by the marginal of the observed value." },
+        { name: "Test independence", when: "you need to decide whether variables interact.", move: "Check whether joint equals product of marginals everywhere." },
+        { name: "Use support first", when: "the density has non-rectangular bounds.", move: "Draw the region and decide bounds before doing algebra." },
+        { name: "Translate transformations", when: "the question asks about X+Y, min, max, or another function.", move: "Rewrite the event as a set of original (X,Y) pairs." }
+      ],
+      practiceProblems: jointDistributionPracticeProblems(),
+      reviewPrompts: [
+        "Why do marginal distributions not always determine the joint distribution?",
+        "How do you recover p_X(x) from p(x,y)?",
+        "What does f(x,y) represent in a continuous joint density?",
+        "Why must support regions be handled before integration?",
+        "How is a conditional distribution different from a marginal distribution?",
+        "What does independence require beyond one matching probability?"
+      ],
+      reviewQuiz: {
+        id: "quiz-probability-chapter-5-objective-review",
+        title: "Probability Chapter 5 Objective Review",
+        instructions: "Complete this after finishing Chapter 5 exposition and labelled practice. The quiz logs objective answers and diagnoses joint PMF/PDF, marginal, conditional, independence, support, and transformation reasoning.",
+        questions: jointDistributionReviewQuestions()
+      },
+      readingQuestions: [
+        "What information is present in a joint distribution but missing from two separate marginals?",
+        "How do row and column totals connect to marginal distributions?",
+        "Why is f(x,y) not itself a probability in the continuous case?",
+        "How do you condition one random variable on another?",
+        "What does independence look like as a factorization statement?",
+        "Why are min and max problems often solved using CDF events?"
+      ],
+      chapterSummary: [
+        "A joint distribution describes two random variables together.",
+        "A joint PMF assigns probabilities to discrete pairs and all probabilities sum to 1.",
+        "A joint PDF assigns density over a support region; probabilities are double integrals.",
+        "Marginals are found by summing or integrating out the other variable.",
+        "Conditional distributions divide the joint law by the relevant marginal law.",
+        "Independence means the joint law factors into the product of the marginal laws.",
+        "Support regions determine integration bounds and must be handled before calculation.",
+        "Transformations such as sums, minima, and maxima are solved by translating events back to pairs or regions."
+      ],
+      updatedAt
+    },
+    {
+      id: "gate-da-covariance-correlation",
+      exam: "GATE DA",
+      accountTier: "Basic",
+      subject: "Probability",
+      chapter: "Chapter 6",
+      section: "6",
+      title: "Covariance and Correlation",
+      summary: "E[XY], covariance, correlation, independence versus zero covariance, variance of sums, and indicator-pair covariance.",
+      sectionPreview: "A joint distribution tells us how two random variables behave together. Covariance turns that joint information into one number: do the variables tend to move in the same direction, in opposite directions, or not linearly together? Correlation scales covariance so the answer is easier to compare.",
+      previewActivity: "Let X be 1 if a randomly chosen student studies at least two hours and 0 otherwise. Let Y be 1 if the student scores above 80 and 0 otherwise. What would positive covariance mean in words? What would negative covariance mean? Try answering before using formulas.",
+      chapterIntro: [
+        "Chapter 5 built joint distributions. Chapter 6 uses joint distributions to measure paired movement.",
+        "The central quantity is E[XY]. It is not just another expectation; it measures how products behave under the joint law. From E[XY], we build covariance.",
+        "Covariance has units and scale, so correlation standardizes it. This chapter also explains why independence is stronger than zero covariance, and why variance of a sum needs covariance terms."
+      ],
+      bookSections: [
+        {
+          number: "6.1",
+          title: "Why Paired Movement Matters",
+          paragraphs: [
+            "Two variables can each have a clear individual distribution, but the useful question may be how they move together. Higher study time may come with higher score. More waiting time may come with more total cost. One component failing early may or may not tell us about another component.",
+            "Covariance measures direction of paired movement around the two means. It is positive when high values of X tend to appear with high values of Y, negative when high values of X tend to appear with low values of Y, and near zero when there is no linear paired movement.",
+            "The word linear matters. Covariance is designed to detect linear association, not every possible relationship."
+          ],
+          blocks: [
+            {
+              type: "principle",
+              title: "Direction of movement",
+              body: "Covariance watches the signs of deviations from the two means.",
+              formulas: [
+                { label: "Same direction", formula: "(X-E[X])(Y-E[Y]) positive", note: "both above mean or both below mean" },
+                { label: "Opposite direction", formula: "(X-E[X])(Y-E[Y]) negative", note: "one above mean, one below mean" }
+              ]
+            }
+          ]
+        },
+        {
+          number: "6.2",
+          title: "Computing E[XY] from a Joint Distribution",
+          paragraphs: [
+            "Before covariance, we need E[XY]. The product XY is a function of the pair (X,Y), so we average xy using the joint distribution.",
+            "For a discrete joint PMF, sum xy p(x,y). For a continuous joint PDF, integrate xy f(x,y) over the support.",
+            "This is the same LOTUS idea from Chapter 3, now applied to a function of two variables."
+          ],
+          blocks: [
+            {
+              type: "definition",
+              title: "Product expectation",
+              body: "E[XY] is computed from the joint law, not from the two marginals alone unless independence is known.",
+              formulas: [
+                { label: "Discrete", formula: "E[XY]=sum_x sum_y xy p(x,y)", note: "sum over allowed pairs" },
+                { label: "Continuous", formula: "E[XY]=integral integral xy f(x,y) dx dy", note: "integrate over support" }
+              ]
+            },
+            {
+              type: "example",
+              title: "Joint table example",
+              body: "Suppose p(0,0)=0.2, p(0,1)=0.3, p(1,0)=0.1, p(1,1)=0.4. Since xy is 1 only at (1,1), E[XY]=0.4.",
+              steps: [
+                { label: "Products", math: "xy=0 except at (1,1)", note: "The variables are 0-1 switches." },
+                { label: "Average", math: "E[XY]=1 x p(1,1)=0.4", note: "Only the both-on cell contributes." }
+              ]
+            }
+          ]
+        },
+        {
+          number: "6.3",
+          title: "Covariance Definition and Shortcut",
+          paragraphs: [
+            "Covariance is the expected product of the two deviations from their means.",
+            "The definition explains the meaning. The shortcut Cov(X,Y)=E[XY]-E[X]E[Y] is usually easier for computation.",
+            "Covariance can be positive, negative, or zero. Its size depends on the units of X and Y, which is why correlation is introduced next."
+          ],
+          blocks: [
+            {
+              type: "definition",
+              title: "Definition: covariance",
+              body: "Covariance measures average paired deviation from the two means.",
+              formulas: [
+                { label: "Definition", formula: "Cov(X,Y)=E[(X-E[X])(Y-E[Y])]", note: "meaning" },
+                { label: "Shortcut", formula: "Cov(X,Y)=E[XY]-E[X]E[Y]", note: "calculation" }
+              ]
+            },
+            {
+              type: "example",
+              title: "Deriving the shortcut",
+              body: "Expand the product of deviations and use linearity of expectation.",
+              steps: [
+                { label: "Name means", math: "mu_X=E[X], mu_Y=E[Y]", note: "These are constants." },
+                { label: "Expand", math: "E[(X-mu_X)(Y-mu_Y)]", note: "Start from definition." },
+                { label: "Multiply out", math: "E[XY - mu_X Y - mu_Y X + mu_X mu_Y]", note: "Ordinary algebra." },
+                { label: "Take expectation", math: "E[XY]-mu_X E[Y]-mu_Y E[X]+mu_X mu_Y", note: "Constants pull out." },
+                { label: "Simplify", math: "Cov(X,Y)=E[XY]-E[X]E[Y]", note: "The middle terms combine." }
+              ]
+            }
+          ]
+        },
+        {
+          number: "6.4",
+          title: "Correlation as Unit-Free Covariance",
+          paragraphs: [
+            "Covariance depends on the units of X and Y. If X is measured in rupees instead of thousands of rupees, the covariance changes scale.",
+            "Correlation divides covariance by the product of standard deviations. This removes units and gives a number between -1 and 1.",
+            "Correlation near 1 means strong positive linear association. Near -1 means strong negative linear association. Near 0 means little linear association, not necessarily no relationship."
+          ],
+          blocks: [
+            {
+              type: "definition",
+              title: "Definition: correlation",
+              body: "Correlation is covariance measured in standard-deviation units.",
+              formulas: [
+                { label: "Correlation", formula: "rho = Cov(X,Y)/(SD(X)SD(Y))", note: "when both standard deviations are positive" },
+                { label: "Range", formula: "-1 <= rho <= 1", note: "unit-free linear association" }
+              ]
+            },
+            {
+              type: "warning",
+              title: "Common trap",
+              body: "Correlation near zero does not prove there is no relationship. It only says there is little linear relationship."
+            }
+          ]
+        },
+        {
+          number: "6.5",
+          title: "Independence Versus Zero Covariance",
+          paragraphs: [
+            "If X and Y are independent, then E[XY]=E[X]E[Y], provided the expectations exist. Therefore independent variables have zero covariance.",
+            "The converse is false: zero covariance does not always imply independence. Variables can have a curved relationship that covariance misses.",
+            "This distinction is important for exams. Independence is a statement about the full joint law. Zero covariance is only one moment equation."
+          ],
+          blocks: [
+            {
+              type: "principle",
+              title: "Independence implies zero covariance",
+              body: "Under independence, the expectation of a product factors.",
+              steps: [
+                { label: "Independence gives factorization", math: "E[XY]=E[X]E[Y]", note: "This uses the joint law." },
+                { label: "Substitute into covariance", math: "Cov(X,Y)=E[X]E[Y]-E[X]E[Y]=0", note: "So covariance is zero." }
+              ]
+            },
+            {
+              type: "example",
+              title: "Zero covariance without independence",
+              body: "Let X be equally likely to be -1, 0, or 1, and let Y=X^2. Then Y is determined by X, so they are not independent. But E[X]=0 and E[XY]=E[X^3]=0, so Cov(X,Y)=0.",
+              formulas: [
+                { label: "Dependence", formula: "Y=X^2", note: "Y is fully determined by X" },
+                { label: "Covariance", formula: "Cov(X,Y)=0", note: "curved relationship missed by covariance" }
+              ]
+            }
+          ]
+        },
+        {
+          number: "6.6",
+          title: "Variance of Sums",
+          paragraphs: [
+            "Variance of a sum is not always the sum of variances. The missing piece is covariance.",
+            "For two variables, Var(X+Y)=Var(X)+Var(Y)+2Cov(X,Y). Positive covariance increases spread of the sum. Negative covariance reduces spread of the sum.",
+            "For many variables, every pair covariance matters. This is why dependence matters so much for totals."
+          ],
+          blocks: [
+            {
+              type: "principle",
+              title: "Variance of a sum",
+              body: "The covariance term records whether the variables move together inside the total.",
+              formulas: [
+                { label: "Two variables", formula: "Var(X+Y)=Var(X)+Var(Y)+2Cov(X,Y)", note: "general formula" },
+                { label: "Independent case", formula: "Var(X+Y)=Var(X)+Var(Y)", note: "because covariance is zero" }
+              ]
+            },
+            {
+              type: "example",
+              title: "Derivation",
+              body: "Use the shortcut for variance and expand the square.",
+              steps: [
+                { label: "Center the sum", math: "(X+Y)-E[X+Y]=(X-E[X])+(Y-E[Y])", note: "Deviation of total is total of deviations." },
+                { label: "Square", math: "[(X-E[X])+(Y-E[Y])]^2", note: "Expand a plus b squared." },
+                { label: "Average", math: "Var(X)+Var(Y)+2Cov(X,Y)", note: "The cross term is covariance." }
+              ]
+            }
+          ]
+        },
+        {
+          number: "6.7",
+          title: "Indicator-Pair Covariance",
+          paragraphs: [
+            "Many exam problems ask for the variance of a count. A count can often be written as a sum of indicators. Chapter 4 used this for expectation and variance in simple cases.",
+            "When the indicators are dependent, variance needs pair terms. For indicators I and J, Cov(I,J)=P(I=1 and J=1)-P(I=1)P(J=1).",
+            "This method is useful for matching problems, collisions, occupied boxes, and sampling without replacement."
+          ],
+          blocks: [
+            {
+              type: "principle",
+              title: "Indicator covariance",
+              body: "For 0-1 indicators, the product IJ is 1 exactly when both events happen.",
+              formulas: [
+                { label: "Product expectation", formula: "E[IJ]=P(I=1 and J=1)", note: "both switches on" },
+                { label: "Covariance", formula: "Cov(I,J)=P(I=1,J=1)-P(I=1)P(J=1)", note: "compare joint chance with independent product" }
+              ]
+            },
+            {
+              type: "example",
+              title: "Without replacement gives negative covariance",
+              body: "Draw two cards without replacement. Let I be 1 if the first card is an ace and J be 1 if the second card is an ace. Since seeing an ace first leaves fewer aces, the covariance is negative.",
+              steps: [
+                { label: "Single chances", math: "P(I=1)=4/52, P(J=1)=4/52", note: "Before drawing, each position has ace chance 4/52." },
+                { label: "Both aces", math: "P(I=1,J=1)=(4/52)(3/51)", note: "After first ace, only 3 aces remain." },
+                { label: "Compare", math: "(4/52)(3/51) < (4/52)(4/52)", note: "So covariance is negative." }
+              ]
+            }
+          ]
+        },
+        {
+          number: "6.8",
+          title: "Common Covariance Traps",
+          paragraphs: [
+            "The first trap is treating zero covariance as independence. That is only safe in special families, not in general probability.",
+            "The second trap is adding variances without checking dependence. Expectation always adds; variance only adds cleanly when covariance terms vanish.",
+            "The third trap is interpreting covariance size without units. Use correlation when you need a scale-free comparison."
+          ],
+          blocks: [
+            {
+              type: "strategy",
+              title: "Decision checklist",
+              body: "Use this quick sequence before calculating.",
+              visual: {
+                type: "flow",
+                steps: ["Need paired movement?", "Compute E[XY]", "Find covariance", "Scale to correlation if needed", "Check dependence before summing variances"],
+                caption: "Covariance problems usually start from the joint law."
+              }
+            }
+          ]
+        }
+      ],
+      concepts: [
+        { name: "Product expectation", description: "The joint average E[XY].", cue: "Compute it from the joint PMF/PDF before covariance." },
+        { name: "Covariance", description: "Average product of deviations from the two means.", cue: "Use to measure direction of paired linear movement." },
+        { name: "Correlation", description: "Unit-free covariance scaled by standard deviations.", cue: "Use to compare strength and direction across different units." },
+        { name: "Zero covariance", description: "No linear paired movement by this moment measure.", cue: "Do not automatically treat it as independence." },
+        { name: "Variance of sums", description: "Variance of a total includes covariance terms.", cue: "Use when dependent variables are added." },
+        { name: "Indicator-pair covariance", description: "Covariance between two 0-1 switches.", cue: "Use for variance of counts with dependent pieces." }
+      ],
+      techniques: [
+        { name: "Compute E[XY]", when: "a joint law is given.", move: "Average xy over all pairs or integrate xy over the support." },
+        { name: "Use covariance shortcut", when: "E[X], E[Y], and E[XY] are available.", move: "Compute Cov(X,Y)=E[XY]-E[X]E[Y]." },
+        { name: "Scale to correlation", when: "you need a unit-free measure.", move: "Divide covariance by SD(X)SD(Y)." },
+        { name: "Separate independence from zero covariance", when: "a problem asks whether variables are independent.", move: "Use joint factorization for independence; covariance alone is not enough." },
+        { name: "Use variance of sums", when: "a total contains dependent variables.", move: "Add individual variances and all covariance cross terms." },
+        { name: "Use indicator covariance", when: "a count is a sum of dependent indicators.", move: "Compute P(both on)-P(first on)P(second on) for pair terms." }
+      ],
+      practiceProblems: covariancePracticeProblems(),
+      reviewPrompts: [
+        "Why does covariance need the joint distribution?",
+        "Explain the sign of covariance in words.",
+        "Why is correlation easier to compare than covariance?",
+        "Give an example where independence implies zero covariance.",
+        "Why does zero covariance not always imply independence?",
+        "When does Var(X+Y)=Var(X)+Var(Y) fail?"
+      ],
+      reviewQuiz: {
+        id: "quiz-probability-chapter-6-objective-review",
+        title: "Probability Chapter 6 Objective Review",
+        instructions: "Complete this after finishing Chapter 6 exposition and labelled practice. The quiz logs objective answers and diagnoses product expectation, covariance, correlation, independence, variance of sums, and indicator-pair covariance.",
+        questions: covarianceReviewQuestions()
+      },
+      readingQuestions: [
+        "What does E[XY] measure that E[X] and E[Y] alone do not?",
+        "How does the shortcut Cov(X,Y)=E[XY]-E[X]E[Y] come from the definition?",
+        "Why does correlation always lie between -1 and 1?",
+        "What is the difference between no linear association and independence?",
+        "Why do covariance terms appear in variance of sums?",
+        "How do indicators turn count-variance problems into pair-probability problems?"
+      ],
+      chapterSummary: [
+        "E[XY] is computed from the joint distribution.",
+        "Covariance is E[(X-E[X])(Y-E[Y])] and equals E[XY]-E[X]E[Y].",
+        "Positive covariance means variables tend to move in the same direction; negative covariance means opposite directions.",
+        "Correlation is covariance divided by the product of standard deviations.",
+        "Independence implies zero covariance when moments exist, but zero covariance does not imply independence in general.",
+        "Var(X+Y)=Var(X)+Var(Y)+2Cov(X,Y).",
+        "For dependent indicator counts, covariance pair terms are often the key to variance."
+      ],
+      updatedAt
+    },
+    {
+      id: "gate-da-conditional-expectation-variance",
+      exam: "GATE DA",
+      accountTier: "Basic",
+      subject: "Probability",
+      chapter: "Chapter 7",
+      section: "7",
+      title: "Conditional Expectation and Conditional Variance",
+      summary: "Conditional expectation as updated average, E[X|Y=y] versus E[X|Y], tower property, total expectation, conditional variance, total variance, prediction, and fair-game intuition.",
+      sectionPreview: "Conditional expectation is what an average becomes after information arrives. Before seeing the information, you use one average. After seeing the group, source, score band, queue, box, or first-stage result, you update the average inside that smaller world.",
+      previewActivity: "A learner can receive an easy test or a hard test. Easy-test average score is 80. Hard-test average score is 55. Before knowing the test type, can one number describe the expected score? After knowing the test type, should the expected score change? This is the idea of conditional expectation.",
+      chapterIntro: [
+        "Chapter 5 taught us how to condition a distribution. Chapter 7 asks what happens to an average after conditioning.",
+        "The main question is always: what information do we know now? If we know the group, source, queue, box, or first-stage result, we average inside that information.",
+        "This chapter moves from concrete grouped averages to the abstract notation E[X|Y]. We will also measure how much uncertainty remains after the information is known."
+      ],
+      bookSections: [
+        {
+          number: "7.1",
+          title: "Conditional Expectation as Updated Average",
+          paragraphs: [
+            "Start with a plain example. A class has two test versions. Students who get the easy version average 80. Students who get the hard version average 55. If you do not know which version a student received, you use a blended average. If you do know the version, you use the group average.",
+            "Conditional expectation is this group average idea written in probability language. It is not a new kind of magic average. It is the average after information is known.",
+            "In the wild, look for phrases like given the source, after observing Y, among people in this group, if the first draw is red, or after the first stage."
+          ],
+          blocks: [
+            {
+              type: "example",
+              title: "Demonstration: easy or hard test",
+              body: "Suppose P(easy)=0.6 and P(hard)=0.4. The expected score is 80 after easy is known and 55 after hard is known. Before knowing the version, average the two group averages.",
+              steps: [
+                { label: "Conditional averages", math: "E[Score | easy]=80, E[Score | hard]=55", note: "These are averages inside groups." },
+                { label: "Blend groups", math: "E[Score]=0.6(80)+0.4(55)", note: "Average the group averages using group probabilities." },
+                { label: "Compute", math: "E[Score]=48+22=70", note: "The overall average is 70." }
+              ]
+            },
+            {
+              type: "strategy",
+              title: "How to recognise it",
+              body: "A conditional expectation problem usually gives information that sorts outcomes into groups, then asks for an average.",
+              visual: {
+                type: "flow",
+                steps: ["What is being averaged?", "What information is known?", "Average inside that information", "Blend later if needed"],
+                caption: "Conditional expectation is average after information."
+              }
+            }
+          ]
+        },
+        {
+          number: "7.2",
+          title: "E[X|Y=y] in Discrete and Continuous Problems",
+          paragraphs: [
+            "The expression E[X|Y=y] is a number. It means: once Y has the value y, average X using the conditional distribution of X given that value.",
+            "For discrete variables, use the conditional PMF from the joint table. For continuous variables, use the conditional density.",
+            "The calculation looks like ordinary expectation, but the probabilities or density are conditional."
+          ],
+          blocks: [
+            {
+              type: "definition",
+              title: "Conditional expectation at a value",
+              body: "After Y=y is known, average X inside the conditional law of X given Y=y.",
+              formulas: [
+                { label: "Discrete", formula: "E[X|Y=y]=sum_x x P(X=x|Y=y)", note: "conditional PMF" },
+                { label: "Continuous", formula: "E[X|Y=y]=integral x f_{X|Y}(x|y) dx", note: "conditional density" }
+              ]
+            },
+            {
+              type: "example",
+              title: "Demonstration: dice sum",
+              body: "Roll two dice. Let X be the first die and S be the sum. Given S=10, the possible first die values are 4, 5, and 6 equally likely.",
+              steps: [
+                { label: "Conditional support", math: "X in {4,5,6} given S=10", note: "Only sum-10 outcomes remain." },
+                { label: "Average inside support", math: "E[X|S=10]=(4+5+6)/3", note: "Use conditional probabilities." },
+                { label: "Compute", math: "E[X|S=10]=5", note: "The updated average first die is 5." }
+              ]
+            },
+            {
+              type: "example",
+              title: "Continuous demonstration",
+              body: "For the triangular density f(x,y)=2 on 0<y<x<1, Chapter 5 found that given X=x, Y is uniform on (0,x). So the conditional average of Y is the midpoint.",
+              steps: [
+                { label: "Conditional density", math: "f_{Y|X}(y|x)=1/x, 0<y<x", note: "Uniform on the interval (0,x)." },
+                { label: "Average", math: "E[Y|X=x]=x/2", note: "The midpoint of 0 and x." }
+              ]
+            }
+          ]
+        },
+        {
+          number: "7.3",
+          title: "E[X|Y] as a Random Variable",
+          paragraphs: [
+            "E[X|Y=y] is a number for one fixed value y. E[X|Y] is different: it is a random variable because Y is random.",
+            "Before Y is observed, you do not know which conditional average you will use. After Y is observed, E[X|Y] takes the corresponding value.",
+            "In problems, this appears when the answer changes depending on the observed group or first-stage result."
+          ],
+          blocks: [
+            {
+              type: "example",
+              title: "Demonstration: random test version",
+              body: "If Y is the test version, then E[Score|Y] is 80 when Y=easy and 55 when Y=hard. Since Y is random before observation, E[Score|Y] is also random.",
+              formulas: [
+                { label: "If Y=easy", formula: "E[Score|Y]=80", note: "one conditional average" },
+                { label: "If Y=hard", formula: "E[Score|Y]=55", note: "another conditional average" }
+              ]
+            },
+            {
+              type: "warning",
+              title: "Common trap",
+              body: "Do not confuse E[X|Y=y] with E[X|Y]. The first is a number after fixing y. The second is a random variable whose value depends on Y."
+            }
+          ]
+        },
+        {
+          number: "7.4",
+          title: "Tower Property",
+          paragraphs: [
+            "The tower property says that if you average after information, then average those conditional averages, you return to the original average.",
+            "Plain language: average the subgroup averages using the subgroup weights.",
+            "This is one of the most useful simplification tools in probability. It lets us compute a hard expectation by conditioning on a helpful first piece of information."
+          ],
+          blocks: [
+            {
+              type: "principle",
+              title: "Tower property",
+              body: "Averaging the conditional average gives the unconditional average.",
+              formulas: [
+                { label: "Tower", formula: "E[E[X|Y]]=E[X]", note: "average after averaging within Y" }
+              ]
+            },
+            {
+              type: "example",
+              title: "Demonstration: subgroup averages",
+              body: "Using the test example, E[Score|Y] is 80 with probability 0.6 and 55 with probability 0.4. Averaging those conditional averages gives the original mean.",
+              steps: [
+                { label: "Random conditional average", math: "E[Score|Y] is 80 or 55", note: "depending on test version." },
+                { label: "Average it", math: "E[E[Score|Y]]=0.6(80)+0.4(55)", note: "Average the conditional averages." },
+                { label: "Same result", math: "E[E[Score|Y]]=70=E[Score]", note: "This is the tower property." }
+              ]
+            }
+          ]
+        },
+        {
+          number: "7.5",
+          title: "Law of Total Expectation",
+          paragraphs: [
+            "The law of total expectation is the tower property written for cases. Split the experiment into useful cases, compute the expected value inside each case, then average over cases.",
+            "Use it when direct averaging is messy but the problem becomes simple after knowing a source, box, group, first draw, first stage, or hidden type.",
+            "The key skill is choosing the conditioning variable. Good conditioning makes the inside expectation easy."
+          ],
+          blocks: [
+            {
+              type: "principle",
+              title: "Total expectation over cases",
+              body: "If Y splits the world into cases, average the conditional means over those cases.",
+              formulas: [
+                { label: "Discrete cases", formula: "E[X]=sum_y E[X|Y=y]P(Y=y)", note: "weighted average of case averages" }
+              ]
+            },
+            {
+              type: "example",
+              title: "Demonstration: choose a box first",
+              body: "A box is chosen. Box A is chosen with probability 0.7 and has expected red draws 3. Box B is chosen with probability 0.3 and has expected red draws 8. The overall expected red count is the weighted average.",
+              steps: [
+                { label: "Condition on box", math: "E[R|A]=3, E[R|B]=8", note: "Inside each box, the average is simple." },
+                { label: "Weight by box probabilities", math: "E[R]=0.7(3)+0.3(8)", note: "Total expectation." },
+                { label: "Compute", math: "E[R]=2.1+2.4=4.5", note: "Overall expected red count." }
+              ]
+            },
+            {
+              type: "strategy",
+              title: "How to identify it",
+              body: "Look for a first-stage random choice that changes the later average.",
+              items: [
+                "A source is chosen, then an item is observed.",
+                "A box, machine, model, group, or queue is chosen first.",
+                "The expected value is hard globally but easy inside cases.",
+                "The problem asks for an overall average after describing subgroups."
+              ]
+            }
+          ]
+        },
+        {
+          number: "7.6",
+          title: "Conditional Variance",
+          paragraphs: [
+            "Conditional expectation asks for the updated centre after information. Conditional variance asks how much uncertainty remains after information.",
+            "If the group is known but values still vary inside the group, the conditional variance measures that within-group spread.",
+            "In notation, Var(X|Y=y) is a number for fixed y. Var(X|Y) is a random variable whose value depends on Y."
+          ],
+          blocks: [
+            {
+              type: "definition",
+              title: "Conditional variance",
+              body: "Conditional variance is variance computed inside the conditional distribution.",
+              formulas: [
+                { label: "At a value", formula: "Var(X|Y=y)=E[(X-E[X|Y=y])^2 | Y=y]", note: "remaining spread after Y=y" },
+                { label: "Shortcut", formula: "Var(X|Y=y)=E[X^2|Y=y]-(E[X|Y=y])^2", note: "same variance shortcut, inside the condition" }
+              ]
+            },
+            {
+              type: "example",
+              title: "Demonstration: dice sum again",
+              body: "Given S=10, X is equally likely to be 4, 5, or 6. The conditional mean is 5. The remaining spread is the variance of {4,5,6}.",
+              steps: [
+                { label: "Mean", math: "E[X|S=10]=5", note: "From Section 7.2." },
+                { label: "Squared deviations", math: "(4-5)^2, (5-5)^2, (6-5)^2", note: "These are 1, 0, 1." },
+                { label: "Average", math: "Var(X|S=10)=(1+0+1)/3=2/3", note: "Some uncertainty remains." }
+              ]
+            }
+          ]
+        },
+        {
+          number: "7.7",
+          title: "Law of Total Variance",
+          paragraphs: [
+            "Total variance splits uncertainty into two parts. First, how much spread remains inside each group? Second, how much do the group means themselves move?",
+            "Plain language: total uncertainty equals average within-group uncertainty plus between-group uncertainty.",
+            "This is useful when the population is a mixture of groups, boxes, sources, machines, or difficulty levels."
+          ],
+          blocks: [
+            {
+              type: "principle",
+              title: "Law of total variance",
+              body: "Total variance is within-group variance plus variance of group means.",
+              formulas: [
+                { label: "Formula", formula: "Var(X)=E[Var(X|Y)] + Var(E[X|Y])", note: "within plus between" }
+              ]
+            },
+            {
+              type: "example",
+              title: "Demonstration: test versions",
+              body: "Suppose easy tests have mean 80 and variance 25. Hard tests have mean 55 and variance 16. Easy occurs with probability 0.6 and hard with probability 0.4.",
+              steps: [
+                { label: "Within-group part", math: "E[Var(Score|Y)]=0.6(25)+0.4(16)=21.4", note: "Average remaining uncertainty inside versions." },
+                { label: "Group means", math: "E[Score|Y] is 80 or 55", note: "These group means vary." },
+                { label: "Between-group part", math: "Var(E[Score|Y])=0.6(80-70)^2+0.4(55-70)^2=150", note: "Overall mean is 70." },
+                { label: "Total", math: "Var(Score)=21.4+150=171.4", note: "Most uncertainty here comes from test-version difference." }
+              ]
+            }
+          ]
+        },
+        {
+          number: "7.8",
+          title: "Prediction and Mean Squared Error",
+          paragraphs: [
+            "Conditional expectation is also a prediction tool. If you must predict X after seeing Y, the best prediction under mean squared error is E[X|Y].",
+            "This gives a practical interpretation: conditional expectation is the best updated average prediction after the information Y is known.",
+            "You do not need the proof for most exam problems, but the idea helps you identify the concept in data and modelling questions."
+          ],
+          blocks: [
+            {
+              type: "principle",
+              title: "Best squared-error prediction",
+              body: "Among predictions that use Y, the conditional expectation has the smallest mean squared error.",
+              formulas: [
+                { label: "Best prediction", formula: "prediction of X after seeing Y = E[X|Y]", note: "under squared loss" }
+              ]
+            },
+            {
+              type: "example",
+              title: "Demonstration: score prediction",
+              body: "If you know the test version, predicting 80 for easy and 55 for hard beats using the same overall prediction 70 for everyone, when squared error is the scoring rule.",
+              items: [
+                "No information: predict the overall average.",
+                "Version known: predict the version average.",
+                "More useful information usually means a sharper prediction."
+              ]
+            }
+          ]
+        },
+        {
+          number: "7.9",
+          title: "Fair-Game Intuition",
+          paragraphs: [
+            "A game is fair when its expected gain, after the current information is known, is zero. Fair does not mean safe. You can still win or lose money on the next step. Fair means there is no average advantage.",
+            "For example, suppose you pay nothing to play a coin game. Heads gives Rs. 10 and tails takes Rs. 10. The expected change is 0.5(10)+0.5(-10)=0, so the game is fair. If heads gave Rs. 15 and tails took Rs. 10, the expected change would be positive, so it would favour the player.",
+            "A fair-game process has the pattern: expected next value equals current value after current information. This is the intuition behind martingales. We mention the name so you can recognise it later, but this chapter only needs the conditional expected-value idea."
+          ],
+          blocks: [
+            {
+              type: "example",
+              title: "Demonstration: why the coin game is fair",
+              body: "The fairness check is done on the increment, not on whether every outcome is harmless. A fair coin game can still move your fortune up or down.",
+              steps: [
+                { label: "Name the increment", math: "Delta = +10 on heads, -10 on tails", note: "This is the change in fortune." },
+                { label: "Average the increment", math: "E[Delta]=0.5(10)+0.5(-10)", note: "Heads and tails are equally likely." },
+                { label: "Compute", math: "E[Delta]=0", note: "Zero expected gain means fair." },
+                { label: "Connect to fortune", math: "E[next fortune | current fortune] = current fortune + E[Delta]", note: "So the expected next fortune equals the current fortune." }
+              ]
+            },
+            {
+              type: "example",
+              title: "Demonstration: fair coin fortune",
+              body: "You currently have Rs. 100. A fair coin gives +Rs. 10 on heads and -Rs. 10 on tails. After seeing your current fortune, the expected next fortune is still Rs. 100.",
+              steps: [
+                { label: "Next values", math: "110 with probability 1/2, 90 with probability 1/2", note: "Fair up or down move." },
+                { label: "Conditional average", math: "E[next fortune | current fortune=100]=0.5(110)+0.5(90)", note: "Average after current information." },
+                { label: "Compute", math: "E[next fortune | current fortune=100]=100", note: "No expected gain from the fair step." }
+              ]
+            },
+            {
+              type: "strategy",
+              title: "How to recognise fair-game expectation",
+              body: "Look for zero-mean future increments after the present information is known.",
+              items: [
+                "The next change is fair after conditioning on current information.",
+                "Expected future increment is 0.",
+                "Expected next value equals current value.",
+                "This is martingale intuition, but no formal martingale machinery is needed here."
+              ]
+            }
+          ]
+        }
+      ],
+      concepts: [
+        { name: "Conditional expectation", description: "Average after information is known.", cue: "Look for grouped averages, observed sources, given information, or first-stage outcomes." },
+        { name: "E[X|Y=y]", description: "A number: the average of X after fixing Y=y.", cue: "Use when the condition gives a specific value or case." },
+        { name: "E[X|Y]", description: "A random variable: the conditional average as Y varies.", cue: "Use when the answer depends on the observed value of Y." },
+        { name: "Tower property", description: "Average the conditional averages to get the original average.", cue: "Use E[E[X|Y]]=E[X]." },
+        { name: "Total expectation", description: "Weighted average of case-specific expected values.", cue: "Use when a problem becomes easy after splitting by source, group, or first stage." },
+        { name: "Conditional variance", description: "Spread that remains after information is known.", cue: "Use when asked how much uncertainty remains inside a group." },
+        { name: "Total variance", description: "Within-group uncertainty plus between-group uncertainty.", cue: "Use Var(X)=E[Var(X|Y)]+Var(E[X|Y])." },
+        { name: "Fair-game intuition", description: "Expected future value equals current value after current information.", cue: "Look for zero-mean future increments." }
+      ],
+      techniques: [
+        { name: "Condition on useful information", when: "the direct expectation is messy.", move: "Choose a group/source/stage that makes the inside average simple." },
+        { name: "Compute E[X|Y=y]", when: "a specific condition is given.", move: "Use the conditional PMF/PDF and compute an ordinary expectation inside it." },
+        { name: "Build E[X|Y]", when: "the conditional mean changes with Y.", move: "Write the rule that maps each Y value to the corresponding average." },
+        { name: "Use tower property", when: "you have conditional means and need the overall mean.", move: "Average the conditional means over Y." },
+        { name: "Use total expectation", when: "cases are clear.", move: "Multiply each case mean by its case probability and add." },
+        { name: "Use conditional variance shortcut", when: "you need remaining spread after information.", move: "Compute E[X^2|Y=y]-(E[X|Y=y])^2 inside the condition." },
+        { name: "Use total variance", when: "uncertainty has within-group and between-group parts.", move: "Add E[Var(X|Y)] and Var(E[X|Y])." },
+        { name: "Check fair-game structure", when: "a process evolves by future increments.", move: "Ask whether the expected next increment is zero after current information." }
+      ],
+      practiceProblems: conditionalExpectationPracticeProblems(),
+      reviewPrompts: [
+        "Explain conditional expectation without using symbols.",
+        "Give one example where E[X|Y=y] changes as y changes.",
+        "Why is E[X|Y] a random variable?",
+        "Describe the tower property as a grouped-average statement.",
+        "What are the two parts in the law of total variance?",
+        "Give a fair-game example where the expected next value equals the current value."
+      ],
+      reviewQuiz: {
+        id: "quiz-probability-chapter-7-objective-review",
+        title: "Probability Chapter 7 Objective Review",
+        instructions: "Complete this after finishing Chapter 7 exposition and labelled practice. The quiz logs objective answers and diagnoses conditional expectation, tower property, total expectation, conditional variance, total variance, prediction, and fair-game intuition.",
+        questions: conditionalExpectationReviewQuestions()
+      },
+      readingQuestions: [
+        "What information is known when you compute a conditional expectation?",
+        "What is the difference between E[X|Y=y] and E[X|Y]?",
+        "How does the tower property average subgroup averages?",
+        "When is total expectation easier than direct expectation?",
+        "What uncertainty remains after conditioning?",
+        "How does the fair-game example connect to conditional expectation?"
+      ],
+      chapterSummary: [
+        "Conditional expectation is the average after information is known.",
+        "E[X|Y=y] is a number; E[X|Y] is a random variable.",
+        "The tower property says E[E[X|Y]]=E[X].",
+        "The law of total expectation averages case-specific expectations.",
+        "Conditional variance measures remaining spread after information is known.",
+        "The law of total variance splits uncertainty into within-group and between-group parts.",
+        "Conditional expectation is the best squared-error prediction after observing Y.",
+        "Fair-game intuition says expected future value equals current value when future increments have conditional mean zero."
+      ],
+      updatedAt
     }
   ];
 }
@@ -1999,6 +3833,1088 @@ function conditionalProbabilityProblems() {
       difficulty: "stretch",
       prompt: "A disease affects 2% of people. A test has sensitivity 95% and specificity 90%. A person tests negative. What is the probability the person still has the disease?",
       solution: "Specificity 90% means P(-|no disease)=0.90. Sensitivity 95% means P(-|disease)=0.05. P(D|-) = (0.05)(0.02) / [(0.05)(0.02) + (0.90)(0.98)] = 0.001 / 0.883 = 1/883."
+    }
+  ];
+}
+
+function jointDistributionPracticeProblems() {
+  return [
+    {
+      label: "Concept Problem 1: Read a joint PMF",
+      concept: "Joint PMF",
+      technique: "Read table cells",
+      difficulty: "intro",
+      prompt: "Suppose p(0,0)=0.2, p(0,1)=0.3, p(1,0)=0.1, and p(1,1)=0.4. Find P(X=1,Y=0) and P(X=0).",
+      solution: "P(X=1,Y=0) is the cell p(1,0)=0.1. For P(X=0), add across Y: p(0,0)+p(0,1)=0.2+0.3=0.5."
+    },
+    {
+      label: "Concept Problem 2: Conditional from a table",
+      concept: "Conditional distribution",
+      technique: "Divide joint by marginal",
+      difficulty: "intro",
+      prompt: "Using the same table, find P(Y=1 | X=0).",
+      solution: "P(Y=1 | X=0)=P(X=0,Y=1)/P(X=0)=0.3/0.5=0.6."
+    },
+    {
+      label: "Concept Problem 3: Independence check",
+      concept: "Independence",
+      technique: "Compare joint with product of marginals",
+      difficulty: "intro",
+      prompt: "Using the same table, are X and Y independent?",
+      solution: "P(X=1)=0.1+0.4=0.5 and P(Y=1)=0.3+0.4=0.7. If independent, p(1,1) would be 0.5 x 0.7=0.35. But p(1,1)=0.4, so X and Y are not independent."
+    },
+    {
+      label: "Problem 4: Dice joint probability",
+      concept: "Joint distribution",
+      technique: "Translate pair events",
+      difficulty: "warmup",
+      prompt: "Two fair dice are rolled. Let X be the first die and S be the sum. Find P(X=3,S=8).",
+      solution: "X=3 and S=8 means the second die must be 5. Only ordered outcome (3,5) works, so the probability is 1/36."
+    },
+    {
+      label: "Problem 5: Dice conditional distribution",
+      concept: "Conditional distribution",
+      technique: "Restrict to compatible pairs",
+      difficulty: "warmup",
+      prompt: "Two fair dice are rolled. Given that the sum is 9, what is P(first die is 4)?",
+      solution: "Sum 9 outcomes are (3,6),(4,5),(5,4),(6,3). Exactly one has first die 4, so the conditional probability is 1/4."
+    },
+    {
+      label: "Problem 6: Continuous rectangle",
+      concept: "Joint PDF",
+      technique: "Integrate density over a region",
+      difficulty: "warmup",
+      prompt: "Let (X,Y) be uniform on the unit square. Find P(X<=1/2, Y<=3/4).",
+      solution: "The density is 1 on the unit square. The region is a rectangle with area (1/2)(3/4)=3/8, so the probability is 3/8."
+    },
+    {
+      label: "Problem 7: Marginal from triangular support",
+      concept: "Support region",
+      technique: "Choose correct bounds",
+      difficulty: "standard",
+      prompt: "Let f(x,y)=2 on 0<y<x<1. Find f_X(x).",
+      solution: "For fixed x between 0 and 1, y runs from 0 to x. Therefore f_X(x)=integral_0^x 2 dy = 2x for 0<x<1."
+    },
+    {
+      label: "Problem 8: Conditional density from triangle",
+      concept: "Conditional PDF",
+      technique: "Divide joint by marginal",
+      difficulty: "standard",
+      prompt: "For f(x,y)=2 on 0<y<x<1, find f_{Y|X}(y|x).",
+      solution: "From Problem 7, f_X(x)=2x. So f_{Y|X}(y|x)=f(x,y)/f_X(x)=2/(2x)=1/x for 0<y<x. Given X=x, Y is uniform on (0,x)."
+    },
+    {
+      label: "Problem 9: Independent joint density",
+      concept: "Independence",
+      technique: "Factor the joint density",
+      difficulty: "standard",
+      prompt: "Let f(x,y)=6xy^2 on 0<x<1, 0<y<1. Are X and Y independent?",
+      solution: "Compute marginals: f_X(x)=integral_0^1 6xy^2 dy = 2x, and f_Y(y)=integral_0^1 6xy^2 dx = 3y^2. Their product is (2x)(3y^2)=6xy^2=f(x,y), so X and Y are independent."
+    },
+    {
+      label: "Problem 10: Non-independent support",
+      concept: "Independence",
+      technique: "Use support shape",
+      difficulty: "standard",
+      prompt: "Let f(x,y)=2 on 0<y<x<1. Can X and Y be independent?",
+      solution: "No. The support is triangular: if X is small, Y must be even smaller. Independence would require a rectangular-style support after factoring marginals. The allowed values of Y depend on X."
+    },
+    {
+      label: "Problem 11: Sum of two dice",
+      concept: "Transformation",
+      technique: "Collect pairs",
+      difficulty: "standard",
+      prompt: "Two fair dice are rolled. Find P(X+Y=5).",
+      solution: "The ordered pairs are (1,4),(2,3),(3,2),(4,1), so there are 4 favourable outcomes out of 36. Probability = 4/36 = 1/9."
+    },
+    {
+      label: "Problem 12: Maximum of two uniforms",
+      concept: "Max transformation",
+      technique: "Use CDF event",
+      difficulty: "standard",
+      prompt: "Let X and Y be independent Uniform(0,1). If M=max(X,Y), find P(M<=m) for 0<=m<=1.",
+      solution: "M<=m means both X<=m and Y<=m. By independence, P(M<=m)=P(X<=m)P(Y<=m)=m x m = m^2."
+    },
+    {
+      label: "Problem 13: Minimum of two uniforms",
+      concept: "Min transformation",
+      technique: "Use complement",
+      difficulty: "standard",
+      prompt: "Let X and Y be independent Uniform(0,1). If L=min(X,Y), find P(L>t) for 0<=t<=1.",
+      solution: "L>t means both X>t and Y>t. By independence, P(L>t)=(1-t)^2."
+    },
+    {
+      label: "Problem 14: Region probability",
+      concept: "Joint PDF",
+      technique: "Integrate over triangle",
+      difficulty: "challenging",
+      prompt: "Let (X,Y) be uniform on the unit square. Find P(X+Y<=1).",
+      solution: "The region X+Y<=1 inside the unit square is a right triangle with area 1/2. Since the density is 1, the probability is 1/2."
+    },
+    {
+      label: "Problem 15: Marginal does not determine joint",
+      concept: "Joint versus marginal",
+      technique: "Compare relationship structures",
+      difficulty: "challenging",
+      prompt: "Give an example idea showing why knowing the marginal distributions of X and Y does not determine their joint distribution.",
+      solution: "Let X be a fair 0/1 variable. In one model, set Y=X. In another model, choose Y independently fair 0/1. In both models, X and Y each have marginal probabilities 1/2 and 1/2, but the joint behaviour is different."
+    }
+  ];
+}
+
+function jointDistributionReviewQuestions() {
+  return [
+    {
+      id: "joint-review-1",
+      kind: "single concept",
+      tags: ["joint-distribution"],
+      prompt: "What does a joint distribution describe?",
+      options: [
+        { id: "a", text: "Only the mean of one random variable" },
+        { id: "b", text: "How two or more random variables behave together" },
+        { id: "c", text: "Only the variance of a random variable" },
+        { id: "d", text: "Only independent events" }
+      ],
+      answer: "b"
+    },
+    {
+      id: "joint-review-2",
+      kind: "single concept",
+      tags: ["joint-pmf"],
+      prompt: "For discrete X and Y, what is p(x,y)?",
+      options: [
+        { id: "a", text: "P(X=x and Y=y)" },
+        { id: "b", text: "P(X=x) + P(Y=y)" },
+        { id: "c", text: "E[X+Y]" },
+        { id: "d", text: "Var(XY)" }
+      ],
+      answer: "a"
+    },
+    {
+      id: "joint-review-3",
+      kind: "single concept",
+      tags: ["marginal"],
+      prompt: "How do you find p_X(x) from a joint PMF p(x,y)?",
+      options: [
+        { id: "a", text: "Multiply over all y" },
+        { id: "b", text: "Sum p(x,y) over all y" },
+        { id: "c", text: "Divide by p_Y(y)" },
+        { id: "d", text: "Take a square root" }
+      ],
+      answer: "b"
+    },
+    {
+      id: "joint-review-4",
+      kind: "single concept",
+      tags: ["conditional-distribution"],
+      prompt: "For discrete variables, which formula gives P(X=x | Y=y)?",
+      options: [
+        { id: "a", text: "p(x,y)p_Y(y)" },
+        { id: "b", text: "p(x,y)/p_Y(y)" },
+        { id: "c", text: "p_X(x)/p(x,y)" },
+        { id: "d", text: "p_X(x)+p_Y(y)" }
+      ],
+      answer: "b"
+    },
+    {
+      id: "joint-review-5",
+      kind: "single concept",
+      tags: ["independence"],
+      prompt: "Which condition expresses independence of discrete X and Y?",
+      options: [
+        { id: "a", text: "p(x,y)=p_X(x)p_Y(y) for all x,y" },
+        { id: "b", text: "p(x,y)=p_X(x)+p_Y(y) for all x,y" },
+        { id: "c", text: "E[X]=E[Y]" },
+        { id: "d", text: "X and Y have the same support" }
+      ],
+      answer: "a"
+    },
+    {
+      id: "joint-review-6",
+      kind: "mixed: two concepts",
+      tags: ["joint-pdf", "support-region"],
+      prompt: "For continuous random variables, how is P((X,Y) in A) computed?",
+      options: [
+        { id: "a", text: "By reading f(x,y) at one point" },
+        { id: "b", text: "By integrating the joint density over A" },
+        { id: "c", text: "By adding x and y" },
+        { id: "d", text: "By taking only the marginal of X" }
+      ],
+      answer: "b"
+    },
+    {
+      id: "joint-review-7",
+      kind: "mixed: two concepts",
+      tags: ["support-region", "marginal"],
+      prompt: "For f(x,y)=2 on 0<y<x<1, what are the y-bounds when finding f_X(x)?",
+      options: [
+        { id: "a", text: "0<y<1" },
+        { id: "b", text: "0<y<x" },
+        { id: "c", text: "x<y<1" },
+        { id: "d", text: "-infinity<y<infinity" }
+      ],
+      answer: "b"
+    },
+    {
+      id: "joint-review-8",
+      kind: "mixed: three concepts",
+      tags: ["transformation", "independence", "cdf"],
+      prompt: "If M=max(X,Y), what event is equivalent to M<=m?",
+      options: [
+        { id: "a", text: "X<=m or Y<=m" },
+        { id: "b", text: "X<=m and Y<=m" },
+        { id: "c", text: "X+Y<=m" },
+        { id: "d", text: "X=Y=m" }
+      ],
+      answer: "b"
+    },
+    {
+      id: "joint-review-9",
+      kind: "mixed: two concepts",
+      tags: ["joint-versus-marginal", "independence"],
+      prompt: "Why do marginals alone usually not determine the joint distribution?",
+      options: [
+        { id: "a", text: "They do not record how the variables are paired together" },
+        { id: "b", text: "They always imply independence" },
+        { id: "c", text: "They are never valid probabilities" },
+        { id: "d", text: "They only work for continuous variables" }
+      ],
+      answer: "a"
+    },
+    {
+      id: "joint-review-10",
+      kind: "mixed: two concepts",
+      tags: ["conditional-distribution", "support-region"],
+      prompt: "Given a condition such as S=10 for two dice, what happens to the possible values of another variable?",
+      options: [
+        { id: "a", text: "They may be restricted to values compatible with the condition" },
+        { id: "b", text: "They must stay uniformly distributed over all original values" },
+        { id: "c", text: "They become impossible" },
+        { id: "d", text: "They no longer have probabilities" }
+      ],
+      answer: "a"
+    }
+  ];
+}
+
+function conditionalExpectationPracticeProblems() {
+  return [
+    {
+      label: "Concept Problem 1: Updated average",
+      concept: "Conditional expectation",
+      technique: "Average inside the known group",
+      difficulty: "intro",
+      prompt: "A test is easy with probability 0.6 and hard with probability 0.4. E[Score|easy]=80 and E[Score|hard]=55. What is E[Score]?",
+      solution: "Use total expectation: E[Score]=0.6(80)+0.4(55)=70. We average the group averages using group probabilities."
+    },
+    {
+      label: "Concept Problem 2: Identify the condition",
+      concept: "Recognition",
+      technique: "Find the information being used",
+      difficulty: "intro",
+      prompt: "A machine is chosen first, then a part is produced. The expected defect count depends on which machine was chosen. What should you condition on?",
+      solution: "Condition on the machine. The phrase 'depends on which machine was chosen' tells us the machine is the useful information."
+    },
+    {
+      label: "Concept Problem 3: E[X|Y=y] is a number",
+      concept: "E[X|Y=y]",
+      technique: "Average over conditional support",
+      difficulty: "intro",
+      prompt: "Two dice are rolled. Let X be the first die and S be the sum. Find E[X|S=10].",
+      solution: "Given S=10, the possible first die values are 4, 5, 6 equally likely. E[X|S=10]=(4+5+6)/3=5."
+    },
+    {
+      label: "Problem 4: E[X|Y] as a random variable",
+      concept: "E[X|Y]",
+      technique: "Write the conditional mean rule",
+      difficulty: "warmup",
+      prompt: "A box type Y is A or B. E[X|Y=A]=3 and E[X|Y=B]=8. What values can E[X|Y] take?",
+      solution: "E[X|Y] is 3 when Y=A and 8 when Y=B. It is random before Y is observed because Y is random."
+    },
+    {
+      label: "Problem 5: Tower property",
+      concept: "Tower property",
+      technique: "Average conditional averages",
+      difficulty: "warmup",
+      prompt: "In Problem 4, suppose P(Y=A)=0.7 and P(Y=B)=0.3. Find E[X].",
+      solution: "By tower property, E[X]=E[E[X|Y]]=0.7(3)+0.3(8)=4.5."
+    },
+    {
+      label: "Problem 6: Conditional expectation from table",
+      concept: "Conditional expectation",
+      technique: "Use conditional PMF",
+      difficulty: "standard",
+      prompt: "Suppose P(X=0,Y=0)=0.2, P(X=2,Y=0)=0.3, P(X=0,Y=1)=0.1, P(X=2,Y=1)=0.4. Find E[X|Y=1].",
+      solution: "Given Y=1, total probability is 0.1+0.4=0.5. P(X=0|Y=1)=0.1/0.5=0.2 and P(X=2|Y=1)=0.4/0.5=0.8. E[X|Y=1]=0(0.2)+2(0.8)=1.6."
+    },
+    {
+      label: "Problem 7: Continuous conditional mean",
+      concept: "Conditional density",
+      technique: "Average inside conditional density",
+      difficulty: "standard",
+      prompt: "For f(x,y)=2 on 0<y<x<1, Chapter 5 showed Y|X=x is Uniform(0,x). Find E[Y|X=x].",
+      solution: "Uniform(0,x) has midpoint x/2, so E[Y|X=x]=x/2."
+    },
+    {
+      label: "Problem 8: Total expectation with first draw",
+      concept: "Total expectation",
+      technique: "Condition on first-stage result",
+      difficulty: "standard",
+      prompt: "An urn has 2 red and 3 blue balls. One ball is drawn and not replaced. Let X be the number of red balls in the next two draws. What information should you condition on to compute E[X] easily?",
+      solution: "Condition on the colour of the first draw. After a red first draw, the urn has 1 red and 3 blue; after a blue first draw, it has 2 red and 2 blue. The first-stage result changes the later average."
+    },
+    {
+      label: "Problem 9: Finish the first-draw expectation",
+      concept: "Total expectation",
+      technique: "Blend case expectations",
+      difficulty: "standard",
+      prompt: "Continue Problem 8. Compute E[X], where X is the number of red balls in the next two draws.",
+      solution: "P(first red)=2/5 and P(first blue)=3/5. If first red, expected reds in next two draws is 2(1/4)=1/2. If first blue, expected reds is 2(2/4)=1. Thus E[X]=(2/5)(1/2)+(3/5)(1)=1/5+3/5=4/5."
+    },
+    {
+      label: "Problem 10: Conditional variance from dice",
+      concept: "Conditional variance",
+      technique: "Compute spread inside condition",
+      difficulty: "standard",
+      prompt: "Two dice are rolled. Let X be the first die and S be the sum. Find Var(X|S=10).",
+      solution: "Given S=10, X is equally likely to be 4, 5, 6. The mean is 5. Variance is [(4-5)^2+(5-5)^2+(6-5)^2]/3=2/3."
+    },
+    {
+      label: "Problem 11: Total variance pieces",
+      concept: "Total variance",
+      technique: "Identify within and between parts",
+      difficulty: "standard",
+      prompt: "A score has Var(Score|easy)=25, Var(Score|hard)=16, E[Score|easy]=80, E[Score|hard]=55, and P(easy)=0.6. Which part measures within-version uncertainty?",
+      solution: "The within-version part is E[Var(Score|Y)]=0.6(25)+0.4(16). It averages the remaining spread inside each test version."
+    },
+    {
+      label: "Problem 12: Law of total variance",
+      concept: "Total variance",
+      technique: "Add within and between uncertainty",
+      difficulty: "challenging",
+      prompt: "Using Problem 11, the overall mean is 70. Compute Var(Score).",
+      solution: "Within part: 0.6(25)+0.4(16)=21.4. Between part: Var(E[Score|Y])=0.6(80-70)^2+0.4(55-70)^2=60+90=150. Total variance = 21.4+150=171.4."
+    },
+    {
+      label: "Problem 13: Prediction",
+      concept: "Prediction",
+      technique: "Use conditional expectation as best average prediction",
+      difficulty: "challenging",
+      prompt: "If you must predict Score after learning the test is hard, should you use the overall mean 70 or E[Score|hard]=55 under squared-error thinking?",
+      solution: "Use E[Score|hard]=55. Conditional expectation is the best updated average prediction after the information is known."
+    },
+    {
+      label: "Problem 14: Fair game",
+      concept: "Fair-game intuition",
+      technique: "Check zero-mean increment",
+      difficulty: "challenging",
+      prompt: "You have Rs. 200. A fair step adds Rs. 20 with probability 1/2 and subtracts Rs. 20 with probability 1/2. What is the expected next fortune given the current fortune?",
+      solution: "Expected next fortune = 0.5(220)+0.5(180)=200. The expected future value equals the current value because the next increment has conditional mean 0."
+    },
+    {
+      label: "Problem 15: Fair or favourable game",
+      concept: "Fair-game intuition",
+      technique: "Compute conditional expected increment",
+      difficulty: "stretch",
+      prompt: "Your current fortune is Rs. 200. A coin has P(heads)=0.4. Heads adds Rs. 30 and tails subtracts Rs. 20. Is this step fair? What is the expected next fortune given the current fortune?",
+      solution: "The expected increment is 0.4(30)+0.6(-20)=12-12=0. So the step is fair even though the coin is not fair. The expected next fortune given the current fortune is 200+0=Rs. 200."
+    }
+  ];
+}
+
+function conditionalExpectationReviewQuestions() {
+  return [
+    {
+      id: "ce-review-1",
+      kind: "single concept",
+      tags: ["conditional-expectation"],
+      prompt: "What is conditional expectation in plain language?",
+      options: [
+        { id: "a", text: "Average after information is known" },
+        { id: "b", text: "The largest possible value" },
+        { id: "c", text: "A probability that must equal 1" },
+        { id: "d", text: "Variance before observing anything" }
+      ],
+      answer: "a"
+    },
+    {
+      id: "ce-review-2",
+      kind: "single concept",
+      tags: ["conditional-expectation-value"],
+      prompt: "What kind of object is E[X|Y=y]?",
+      options: [
+        { id: "a", text: "A number after y is fixed" },
+        { id: "b", text: "Always a variance" },
+        { id: "c", text: "Always a full joint table" },
+        { id: "d", text: "An impossible event" }
+      ],
+      answer: "a"
+    },
+    {
+      id: "ce-review-3",
+      kind: "single concept",
+      tags: ["conditional-expectation-random-variable"],
+      prompt: "Why is E[X|Y] a random variable?",
+      options: [
+        { id: "a", text: "Because its value depends on the random value of Y" },
+        { id: "b", text: "Because it is always equal to X" },
+        { id: "c", text: "Because it has no possible values" },
+        { id: "d", text: "Because it ignores Y" }
+      ],
+      answer: "a"
+    },
+    {
+      id: "ce-review-4",
+      kind: "single concept",
+      tags: ["tower-property"],
+      prompt: "Which identity is the tower property?",
+      options: [
+        { id: "a", text: "E[E[X|Y]]=E[X]" },
+        { id: "b", text: "E[X|Y]=E[Y|X] always" },
+        { id: "c", text: "Var(X)=E[X]" },
+        { id: "d", text: "P(X)=E[Y]" }
+      ],
+      answer: "a"
+    },
+    {
+      id: "ce-review-5",
+      kind: "single concept",
+      tags: ["total-expectation"],
+      prompt: "When is total expectation useful?",
+      options: [
+        { id: "a", text: "When cases make the inside expectation easier" },
+        { id: "b", text: "Only when all variables are independent" },
+        { id: "c", text: "Only when variance is zero" },
+        { id: "d", text: "When no information is given" }
+      ],
+      answer: "a"
+    },
+    {
+      id: "ce-review-6",
+      kind: "mixed: two concepts",
+      tags: ["conditional-variance"],
+      prompt: "What does conditional variance measure?",
+      options: [
+        { id: "a", text: "Spread remaining after information is known" },
+        { id: "b", text: "Only the overall mean" },
+        { id: "c", text: "The maximum of Y" },
+        { id: "d", text: "A probability of exactly one event" }
+      ],
+      answer: "a"
+    },
+    {
+      id: "ce-review-7",
+      kind: "mixed: two concepts",
+      tags: ["total-variance"],
+      prompt: "What is the law of total variance?",
+      options: [
+        { id: "a", text: "Var(X)=E[Var(X|Y)]+Var(E[X|Y])" },
+        { id: "b", text: "Var(X)=E[X|Y]" },
+        { id: "c", text: "Var(X)=P(X|Y)" },
+        { id: "d", text: "Var(X)=0 always" }
+      ],
+      answer: "a"
+    },
+    {
+      id: "ce-review-8",
+      kind: "mixed: two concepts",
+      tags: ["prediction", "conditional-expectation"],
+      prompt: "Under mean squared error, what is the best prediction of X after observing Y?",
+      options: [
+        { id: "a", text: "E[X|Y]" },
+        { id: "b", text: "Var(Y)" },
+        { id: "c", text: "The largest value of X" },
+        { id: "d", text: "P(Y)" }
+      ],
+      answer: "a"
+    },
+    {
+      id: "ce-review-9",
+      kind: "mixed: three concepts",
+      tags: ["fair-game", "conditional-expectation"],
+      prompt: "What is the fair-game conditional expectation pattern?",
+      options: [
+        { id: "a", text: "Expected next value equals current value after current information" },
+        { id: "b", text: "The next value is always larger" },
+        { id: "c", text: "Variance is always negative" },
+        { id: "d", text: "Conditioning is forbidden" }
+      ],
+      answer: "a"
+    },
+    {
+      id: "ce-review-10",
+      kind: "mixed: three concepts",
+      tags: ["recognition", "total-expectation"],
+      prompt: "Which phrase most strongly suggests conditioning on a first-stage variable?",
+      options: [
+        { id: "a", text: "A box is chosen first, then a ball is drawn" },
+        { id: "b", text: "There is only one possible outcome" },
+        { id: "c", text: "The variable has no mean" },
+        { id: "d", text: "No information is observed" }
+      ],
+      answer: "a"
+    }
+  ];
+}
+
+function covariancePracticeProblems() {
+  return [
+    {
+      label: "Concept Problem 1: Product expectation from a table",
+      concept: "E[XY]",
+      technique: "Average products using joint cells",
+      difficulty: "intro",
+      prompt: "Suppose p(0,0)=0.2, p(0,1)=0.3, p(1,0)=0.1, and p(1,1)=0.4. Find E[X], E[Y], and E[XY].",
+      solution: "E[X]=P(X=1)=0.1+0.4=0.5. E[Y]=P(Y=1)=0.3+0.4=0.7. Since XY=1 only at (1,1), E[XY]=0.4."
+    },
+    {
+      label: "Concept Problem 2: Covariance from a table",
+      concept: "Covariance",
+      technique: "Use E[XY]-E[X]E[Y]",
+      difficulty: "intro",
+      prompt: "Using the table from Problem 1, find Cov(X,Y).",
+      solution: "Cov(X,Y)=E[XY]-E[X]E[Y]=0.4-(0.5)(0.7)=0.05. The covariance is positive."
+    },
+    {
+      label: "Concept Problem 3: Correlation",
+      concept: "Correlation",
+      technique: "Scale covariance by standard deviations",
+      difficulty: "intro",
+      prompt: "If Cov(X,Y)=6, SD(X)=2, and SD(Y)=5, find Corr(X,Y).",
+      solution: "Corr(X,Y)=Cov(X,Y)/(SD(X)SD(Y))=6/(2 x 5)=0.6."
+    },
+    {
+      label: "Problem 4: Sign of covariance",
+      concept: "Covariance meaning",
+      technique: "Interpret paired deviations",
+      difficulty: "warmup",
+      prompt: "If high values of X tend to appear with low values of Y, what sign should covariance have?",
+      solution: "The covariance should be negative. When X is above its mean, Y tends to be below its mean, so the product of deviations is negative."
+    },
+    {
+      label: "Problem 5: Independent dice",
+      concept: "Independence",
+      technique: "Use product expectation factorization",
+      difficulty: "warmup",
+      prompt: "Let X and Y be the two results from two independent fair dice. What is Cov(X,Y)?",
+      solution: "The dice are independent, so E[XY]=E[X]E[Y]. Therefore Cov(X,Y)=E[XY]-E[X]E[Y]=0."
+    },
+    {
+      label: "Problem 6: Variance of a sum",
+      concept: "Variance of sums",
+      technique: "Include covariance term",
+      difficulty: "warmup",
+      prompt: "If Var(X)=4, Var(Y)=9, and Cov(X,Y)=2, find Var(X+Y).",
+      solution: "Var(X+Y)=Var(X)+Var(Y)+2Cov(X,Y)=4+9+2(2)=17."
+    },
+    {
+      label: "Problem 7: Negative covariance in a sum",
+      concept: "Variance of sums",
+      technique: "Use covariance sign",
+      difficulty: "standard",
+      prompt: "If Var(X)=10, Var(Y)=6, and Cov(X,Y)=-3, find Var(X+Y).",
+      solution: "Var(X+Y)=10+6+2(-3)=10. Negative covariance reduces the spread of the sum."
+    },
+    {
+      label: "Problem 8: Correlation from covariance",
+      concept: "Correlation",
+      technique: "Compute standard deviations first",
+      difficulty: "standard",
+      prompt: "If Var(X)=16, Var(Y)=25, and Cov(X,Y)=-12, find Corr(X,Y).",
+      solution: "SD(X)=4 and SD(Y)=5. Corr(X,Y)=-12/(4 x 5)=-3/5."
+    },
+    {
+      label: "Problem 9: Zero covariance but not independent",
+      concept: "Zero covariance",
+      technique: "Use nonlinear dependence example",
+      difficulty: "standard",
+      prompt: "Let X be equally likely to be -1, 0, or 1, and let Y=X^2. Explain why X and Y are not independent but have zero covariance.",
+      solution: "Y is determined by X, so they are not independent. But E[X]=0, E[XY]=E[X^3]=0, and E[X]E[Y]=0, so Cov(X,Y)=0."
+    },
+    {
+      label: "Problem 10: Indicator covariance",
+      concept: "Indicator-pair covariance",
+      technique: "Use P(both)-product",
+      difficulty: "standard",
+      prompt: "Events A and B have P(A)=0.4, P(B)=0.5, and P(A and B)=0.3. Let I and J be their indicators. Find Cov(I,J).",
+      solution: "Cov(I,J)=P(A and B)-P(A)P(B)=0.3-(0.4)(0.5)=0.1."
+    },
+    {
+      label: "Problem 11: Cards without replacement",
+      concept: "Indicator covariance",
+      technique: "Compare joint chance with product",
+      difficulty: "standard",
+      prompt: "Two cards are drawn without replacement. Let I be 1 if the first is an ace and J be 1 if the second is an ace. Find Cov(I,J).",
+      solution: "P(I=1)=P(J=1)=4/52. P(I=1,J=1)=(4/52)(3/51). Cov(I,J)=(4/52)(3/51)-(4/52)^2, which is negative."
+    },
+    {
+      label: "Problem 12: Continuous E[XY]",
+      concept: "E[XY]",
+      technique: "Integrate over support",
+      difficulty: "challenging",
+      prompt: "Let X and Y be independent Uniform(0,1). Find E[XY] and Cov(X,Y).",
+      solution: "By independence, E[XY]=E[X]E[Y]=(1/2)(1/2)=1/4. Therefore Cov(X,Y)=0."
+    },
+    {
+      label: "Problem 13: Perfect positive correlation",
+      concept: "Correlation",
+      technique: "Recognise linear relationship",
+      difficulty: "challenging",
+      prompt: "If Y=3X+2 and Var(X)>0, what is Corr(X,Y)?",
+      solution: "Y is an increasing linear function of X, so Corr(X,Y)=1. The +2 shift does not affect correlation, and positive scaling preserves direction."
+    },
+    {
+      label: "Problem 14: Perfect negative correlation",
+      concept: "Correlation",
+      technique: "Recognise decreasing linear relationship",
+      difficulty: "challenging",
+      prompt: "If Y=-4X+7 and Var(X)>0, what is Corr(X,Y)?",
+      solution: "Y is a decreasing linear function of X, so Corr(X,Y)=-1."
+    },
+    {
+      label: "Problem 15: Dependent total",
+      concept: "Variance of sums",
+      technique: "Use all pair terms",
+      difficulty: "stretch",
+      prompt: "Let X=I1+I2+I3 where each indicator has variance v and every pair has covariance c. Find Var(X).",
+      solution: "Var(X)=Var(I1)+Var(I2)+Var(I3)+2[Cov(I1,I2)+Cov(I1,I3)+Cov(I2,I3)] = 3v+6c."
+    }
+  ];
+}
+
+function covarianceReviewQuestions() {
+  return [
+    {
+      id: "cov-review-1",
+      kind: "single concept",
+      tags: ["product-expectation"],
+      prompt: "Which quantity must usually be computed before covariance?",
+      options: [
+        { id: "a", text: "E[XY]" },
+        { id: "b", text: "Only E[X]" },
+        { id: "c", text: "Only Var(X)" },
+        { id: "d", text: "The maximum of X" }
+      ],
+      answer: "a"
+    },
+    {
+      id: "cov-review-2",
+      kind: "single concept",
+      tags: ["covariance"],
+      prompt: "Which formula is the covariance shortcut?",
+      options: [
+        { id: "a", text: "Cov(X,Y)=E[XY]-E[X]E[Y]" },
+        { id: "b", text: "Cov(X,Y)=E[X]+E[Y]" },
+        { id: "c", text: "Cov(X,Y)=Var(X)+Var(Y)" },
+        { id: "d", text: "Cov(X,Y)=E[X]/E[Y]" }
+      ],
+      answer: "a"
+    },
+    {
+      id: "cov-review-3",
+      kind: "single concept",
+      tags: ["correlation"],
+      prompt: "Why is correlation easier to compare than covariance?",
+      options: [
+        { id: "a", text: "It is unit-free and lies between -1 and 1" },
+        { id: "b", text: "It is always positive" },
+        { id: "c", text: "It proves independence" },
+        { id: "d", text: "It ignores standard deviations" }
+      ],
+      answer: "a"
+    },
+    {
+      id: "cov-review-4",
+      kind: "single concept",
+      tags: ["variance-of-sums"],
+      prompt: "What is Var(X+Y) in general?",
+      options: [
+        { id: "a", text: "Var(X)+Var(Y)" },
+        { id: "b", text: "Var(X)+Var(Y)+2Cov(X,Y)" },
+        { id: "c", text: "E[X]+E[Y]" },
+        { id: "d", text: "Cov(X,Y)" }
+      ],
+      answer: "b"
+    },
+    {
+      id: "cov-review-5",
+      kind: "mixed: two concepts",
+      tags: ["independence", "covariance"],
+      prompt: "If X and Y are independent and the needed moments exist, what is Cov(X,Y)?",
+      options: [
+        { id: "a", text: "0" },
+        { id: "b", text: "1" },
+        { id: "c", text: "E[X]+E[Y]" },
+        { id: "d", text: "Always positive" }
+      ],
+      answer: "a"
+    },
+    {
+      id: "cov-review-6",
+      kind: "mixed: two concepts",
+      tags: ["zero-covariance", "independence"],
+      prompt: "What is true in general if Cov(X,Y)=0?",
+      options: [
+        { id: "a", text: "X and Y must be independent" },
+        { id: "b", text: "There is no linear association measured by covariance" },
+        { id: "c", text: "Y must equal X" },
+        { id: "d", text: "X and Y cannot be related in any way" }
+      ],
+      answer: "b"
+    },
+    {
+      id: "cov-review-7",
+      kind: "mixed: two concepts",
+      tags: ["indicator-covariance"],
+      prompt: "For indicators I and J, what is E[IJ]?",
+      options: [
+        { id: "a", text: "P(I=1 and J=1)" },
+        { id: "b", text: "P(I=1)+P(J=1)" },
+        { id: "c", text: "Var(I)+Var(J)" },
+        { id: "d", text: "Always 0" }
+      ],
+      answer: "a"
+    },
+    {
+      id: "cov-review-8",
+      kind: "mixed: three concepts",
+      tags: ["correlation", "linear-relationship"],
+      prompt: "If Y=aX+b with a<0 and Var(X)>0, what is Corr(X,Y)?",
+      options: [
+        { id: "a", text: "1" },
+        { id: "b", text: "-1" },
+        { id: "c", text: "0" },
+        { id: "d", text: "b" }
+      ],
+      answer: "b"
+    },
+    {
+      id: "cov-review-9",
+      kind: "mixed: two concepts",
+      tags: ["covariance", "interpretation"],
+      prompt: "What does negative covariance usually indicate?",
+      options: [
+        { id: "a", text: "High X tends to appear with low Y" },
+        { id: "b", text: "High X tends to appear with high Y" },
+        { id: "c", text: "X and Y are impossible" },
+        { id: "d", text: "X and Y have no variance" }
+      ],
+      answer: "a"
+    },
+    {
+      id: "cov-review-10",
+      kind: "mixed: two concepts",
+      tags: ["indicator-covariance", "dependence"],
+      prompt: "For two draws without replacement, why are ace indicators negatively correlated?",
+      options: [
+        { id: "a", text: "An ace on the first draw leaves fewer aces for the second draw" },
+        { id: "b", text: "The two draws are independent" },
+        { id: "c", text: "Aces cannot appear in a deck" },
+        { id: "d", text: "The indicators are continuous variables" }
+      ],
+      answer: "a"
+    }
+  ];
+}
+
+function variancePracticeProblems() {
+  return [
+    {
+      label: "Concept Problem 1: Same mean, different spread",
+      concept: "Variance meaning",
+      technique: "Compare squared deviations",
+      difficulty: "intro",
+      prompt: "Let X=5 always. Let Y be 0 with probability 1/2 and 10 with probability 1/2. Find E[X], E[Y], Var(X), and Var(Y).",
+      solution: "E[X]=5 and Var(X)=0 because X never moves from its mean. E[Y]=0(1/2)+10(1/2)=5. Var(Y)=E[(Y-5)^2]=25(1/2)+25(1/2)=25. The same mean can hide very different spread."
+    },
+    {
+      label: "Concept Problem 2: Use the shortcut",
+      concept: "Computational formula",
+      technique: "Use E[X^2] - (E[X])^2",
+      difficulty: "intro",
+      prompt: "A random variable has E[X]=3 and E[X^2]=13. Find Var(X) and SD(X).",
+      solution: "Var(X)=E[X^2]-(E[X])^2=13-9=4. SD(X)=sqrt(4)=2."
+    },
+    {
+      label: "Concept Problem 3: Bernoulli variance",
+      concept: "Bernoulli",
+      technique: "Use X^2 = X",
+      difficulty: "intro",
+      prompt: "If X is Bernoulli(0.2), find E[X], E[X^2], and Var(X).",
+      solution: "For Bernoulli, X is 0 or 1, so X^2=X. E[X]=0.2 and E[X^2]=0.2. Var(X)=0.2-(0.2)^2=0.16."
+    },
+    {
+      label: "Problem 4: Standard deviation units",
+      concept: "Standard deviation",
+      technique: "Take square root of variance",
+      difficulty: "warmup",
+      prompt: "A score variable has variance 9 marks squared. What is its standard deviation, and what unit does it use?",
+      solution: "SD=sqrt(9)=3 marks. Variance uses squared marks, but standard deviation returns to the original unit."
+    },
+    {
+      label: "Problem 5: Shift and scale",
+      concept: "Transformation",
+      technique: "Use Var(aX+b)",
+      difficulty: "warmup",
+      prompt: "If Var(X)=6, find Var(3X+10) and SD(3X+10).",
+      solution: "Var(3X+10)=3^2 Var(X)=9 x 6=54. SD(3X+10)=|3|SD(X)=3sqrt(6). The +10 shift does not change spread."
+    },
+    {
+      label: "Problem 6: Binomial variance",
+      concept: "Binomial",
+      technique: "Independent Bernoulli switches",
+      difficulty: "warmup",
+      prompt: "A fair coin is tossed 12 times. Let X be the number of heads. Find E[X], Var(X), and SD(X).",
+      solution: "X is Binomial(12,1/2). E[X]=np=6. Var(X)=np(1-p)=12(1/2)(1/2)=3. SD(X)=sqrt(3)."
+    },
+    {
+      label: "Problem 7: Binomial with guessing",
+      concept: "Binomial",
+      technique: "Recognise independent trials",
+      difficulty: "standard",
+      prompt: "A student guesses on 20 four-option questions. Let X be the number correct. Find the variance of X.",
+      solution: "Each question has success probability p=1/4, independently. X is Binomial(20,1/4). Var(X)=20(1/4)(3/4)=15/4."
+    },
+    {
+      label: "Problem 8: Geometric waiting time",
+      concept: "Geometric",
+      technique: "Use first-success variance",
+      difficulty: "standard",
+      prompt: "A request succeeds independently with probability 0.25 on each attempt. Let X be the attempt number of the first success. Find E[X] and Var(X).",
+      solution: "For the first-success convention, E[X]=1/p=4. Var(X)=(1-p)/p^2=0.75/(0.25)^2=12."
+    },
+    {
+      label: "Problem 9: Hypergeometric variance",
+      concept: "Hypergeometric",
+      technique: "Use finite population correction",
+      difficulty: "standard",
+      prompt: "A batch has N=50 items, K=10 defective. You inspect n=5 without replacement. Let X be the number of defectives. Find Var(X).",
+      solution: "Here p=K/N=10/50=1/5. Var(X)=n p(1-p)(N-n)/(N-1)=5(1/5)(4/5)(45/49)=36/49."
+    },
+    {
+      label: "Problem 10: Uniform variance",
+      concept: "Uniform",
+      technique: "Use interval length",
+      difficulty: "standard",
+      prompt: "If X is Uniform(2,8), find E[X], Var(X), and SD(X).",
+      solution: "E[X]=(2+8)/2=5. Var(X)=(8-2)^2/12=36/12=3. SD(X)=sqrt(3)."
+    },
+    {
+      label: "Problem 11: Compute from a small PMF",
+      concept: "Second moment",
+      technique: "Build E[X] and E[X^2]",
+      difficulty: "standard",
+      prompt: "X takes values 0, 1, 2 with probabilities 1/4, 1/2, 1/4. Find Var(X).",
+      solution: "E[X]=0(1/4)+1(1/2)+2(1/4)=1. E[X^2]=0+1(1/2)+4(1/4)=3/2. Var(X)=3/2-1^2=1/2."
+    },
+    {
+      label: "Problem 12: Chebyshev with standard deviations",
+      concept: "Chebyshev",
+      technique: "Convert to k standard deviations",
+      difficulty: "standard",
+      prompt: "A random variable has mean 100 and standard deviation 15. Use Chebyshev to bound P(|X-100| >= 45).",
+      solution: "The distance 45 is 3 standard deviations because 45=3 x 15. Chebyshev gives P(|X-100| >= 45) <= 1/3^2 = 1/9."
+    },
+    {
+      label: "Problem 13: Chebyshev inside interval",
+      concept: "Tail bound",
+      technique: "Use inside form",
+      difficulty: "standard",
+      prompt: "A random variable has mean 50 and variance 16. What can Chebyshev guarantee about P(42 < X < 58)?",
+      solution: "SD=4. The interval from 42 to 58 is within 8 of the mean, i.e. within 2 standard deviations. Chebyshev says P(|X-50| < 8) >= 1 - 1/2^2 = 3/4."
+    },
+    {
+      label: "Problem 14: Why dependence matters",
+      concept: "Variance of dependent counts",
+      technique: "Compare binomial and hypergeometric",
+      difficulty: "challenging",
+      prompt: "Compare the variance of drawing 10 items from a population with success fraction p=0.3 with replacement versus without replacement from N=100.",
+      solution: "With replacement, the binomial variance is n p(1-p)=10(0.3)(0.7)=2.1. Without replacement, multiply by (N-n)/(N-1)=90/99, giving 2.1 x 90/99 = 21/11. The without-replacement variance is smaller."
+    },
+    {
+      label: "Problem 15: Bound from limited information",
+      concept: "Information level",
+      technique: "Explain exact versus bounded probability",
+      difficulty: "challenging",
+      prompt: "Suppose you know only E[X]=20 and Var(X)=25. Can you find the exact value of P(|X-20| >= 10)? What can you say using Chebyshev?",
+      solution: "The exact probability cannot be found from only mean and variance; different distributions can share those values. Since SD=5 and distance 10 is 2 SDs, Chebyshev gives P(|X-20| >= 10) <= 1/4."
+    },
+    {
+      label: "Problem 16: Markov mean-only bound",
+      concept: "Markov",
+      technique: "Use nonnegative mean information",
+      difficulty: "challenging",
+      prompt: "A nonnegative random variable X has E[X]=12. Use Markov to bound P(X >= 60).",
+      solution: "Markov applies because X is nonnegative. P(X >= 60) <= E[X]/60 = 12/60 = 1/5."
+    },
+    {
+      label: "Problem 17: Chernoff for independent trials",
+      concept: "Chernoff",
+      technique: "Use multiplicative upper tail",
+      difficulty: "stretch",
+      prompt: "Let X be Binomial(200,0.1). Use the simple Chernoff upper-tail bound to bound P(X >= 30).",
+      solution: "The mean is mu=np=20. The cutoff 30 equals (1+delta)mu, so delta=1/2. Chernoff gives P(X >= 30) <= exp(-mu delta^2/3)=exp(-20(1/2)^2/3)=exp(-5/3)."
+    }
+  ];
+}
+
+function varianceReviewQuestions() {
+  return [
+    {
+      id: "var-review-1",
+      kind: "single concept",
+      tags: ["variance"],
+      prompt: "What does variance measure?",
+      options: [
+        { id: "a", text: "The largest possible value of X" },
+        { id: "b", text: "Average squared distance from the mean" },
+        { id: "c", text: "The probability that X equals its mean" },
+        { id: "d", text: "The median of X" }
+      ],
+      answer: "b"
+    },
+    {
+      id: "var-review-2",
+      kind: "single concept",
+      tags: ["standard-deviation"],
+      prompt: "Why is standard deviation often easier to interpret than variance?",
+      options: [
+        { id: "a", text: "It is always smaller than the mean" },
+        { id: "b", text: "It uses the original unit of X" },
+        { id: "c", text: "It gives the exact tail probability" },
+        { id: "d", text: "It ignores spread" }
+      ],
+      answer: "b"
+    },
+    {
+      id: "var-review-3",
+      kind: "single concept",
+      tags: ["second-moment"],
+      prompt: "Which formula is the computational shortcut for variance?",
+      options: [
+        { id: "a", text: "Var(X)=E[X^2]-(E[X])^2" },
+        { id: "b", text: "Var(X)=E[X^2]+(E[X])^2" },
+        { id: "c", text: "Var(X)=E[X]-E[X^2]" },
+        { id: "d", text: "Var(X)=sqrt(E[X])" }
+      ],
+      answer: "a"
+    },
+    {
+      id: "var-review-4",
+      kind: "single concept",
+      tags: ["transformation"],
+      prompt: "If Var(X)=4, what is Var(5X+7)?",
+      options: [
+        { id: "a", text: "20" },
+        { id: "b", text: "27" },
+        { id: "c", text: "100" },
+        { id: "d", text: "107" }
+      ],
+      answer: "c"
+    },
+    {
+      id: "var-review-5",
+      kind: "single concept",
+      tags: ["bernoulli"],
+      prompt: "Why is E[X^2]=E[X] for a Bernoulli random variable?",
+      options: [
+        { id: "a", text: "Because X only takes values 0 and 1" },
+        { id: "b", text: "Because all variables have this property" },
+        { id: "c", text: "Because variance is zero" },
+        { id: "d", text: "Because Bernoulli variables are continuous" }
+      ],
+      answer: "a"
+    },
+    {
+      id: "var-review-6",
+      kind: "mixed: two concepts",
+      tags: ["binomial", "independence"],
+      prompt: "What is the variance of a Binomial(n,p) random variable?",
+      options: [
+        { id: "a", text: "np" },
+        { id: "b", text: "p(1-p)" },
+        { id: "c", text: "np(1-p)" },
+        { id: "d", text: "n/p" }
+      ],
+      answer: "c"
+    },
+    {
+      id: "var-review-7",
+      kind: "mixed: two concepts",
+      tags: ["geometric", "convention"],
+      prompt: "For the first-success convention X=1,2,3,..., what is Var(X) for Geometric(p)?",
+      options: [
+        { id: "a", text: "p(1-p)" },
+        { id: "b", text: "(1-p)/p^2" },
+        { id: "c", text: "1/p" },
+        { id: "d", text: "p^2/(1-p)" }
+      ],
+      answer: "b"
+    },
+    {
+      id: "var-review-8",
+      kind: "mixed: two concepts",
+      tags: ["hypergeometric", "dependence"],
+      prompt: "Why is hypergeometric variance smaller than the corresponding binomial variance?",
+      options: [
+        { id: "a", text: "Sampling without replacement creates negative dependence" },
+        { id: "b", text: "The mean is always zero" },
+        { id: "c", text: "Hypergeometric variables are continuous" },
+        { id: "d", text: "Variance never depends on dependence" }
+      ],
+      answer: "a"
+    },
+    {
+      id: "var-review-9",
+      kind: "mixed: two concepts",
+      tags: ["uniform", "second-moment"],
+      prompt: "What is Var(X) for X Uniform(a,b)?",
+      options: [
+        { id: "a", text: "(a+b)/2" },
+        { id: "b", text: "(b-a)^2/12" },
+        { id: "c", text: "1/(b-a)" },
+        { id: "d", text: "(a^2+b^2)/2" }
+      ],
+      answer: "b"
+    },
+    {
+      id: "var-review-10",
+      kind: "mixed: three concepts",
+      tags: ["chebyshev", "tail-bound", "standard-deviation"],
+      prompt: "If a distance is 4 standard deviations from the mean, what does Chebyshev guarantee for the probability of being at least that far away?",
+      options: [
+        { id: "a", text: "At most 1/4" },
+        { id: "b", text: "At most 1/8" },
+        { id: "c", text: "At most 1/16" },
+        { id: "d", text: "Exactly 1/16" }
+      ],
+      answer: "c"
+    },
+    {
+      id: "var-review-11",
+      kind: "mixed: two concepts",
+      tags: ["markov", "tail-bound"],
+      prompt: "When can Markov's inequality be applied directly?",
+      options: [
+        { id: "a", text: "When X is nonnegative and E[X] is known" },
+        { id: "b", text: "Only when X is normal" },
+        { id: "c", text: "Only when Var(X)=0" },
+        { id: "d", text: "When X can be negative with unknown mean" }
+      ],
+      answer: "a"
+    },
+    {
+      id: "var-review-12",
+      kind: "mixed: three concepts",
+      tags: ["chernoff", "tail-bound", "independence"],
+      prompt: "What extra structure does a basic Chernoff bound use compared with Chebyshev?",
+      options: [
+        { id: "a", text: "Only the median" },
+        { id: "b", text: "Independent bounded summands such as Bernoulli indicators" },
+        { id: "c", text: "Only the maximum value of X" },
+        { id: "d", text: "No information beyond the mean" }
+      ],
+      answer: "b"
     }
   ];
 }
@@ -2815,7 +5731,49 @@ function conceptLabel(tag) {
     "multiplication-rule": "multiplication rule",
     "total-probability": "total probability",
     "bayes-theorem": "Bayes' theorem",
-    "mutual-exclusivity": "mutual exclusivity"
+    "mutual-exclusivity": "mutual exclusivity",
+    variance: "variance",
+    "standard-deviation": "standard deviation",
+    "second-moment": "second moments",
+    transformation: "transformations",
+    bernoulli: "Bernoulli variance",
+    binomial: "binomial variance",
+    independence: "independence",
+    geometric: "geometric variance",
+    convention: "distribution conventions",
+    hypergeometric: "hypergeometric variance",
+    dependence: "dependence",
+    uniform: "uniform variance",
+    chebyshev: "Chebyshev bounds",
+    markov: "Markov bounds",
+    chernoff: "Chernoff bounds",
+    "tail-bound": "tail bounds",
+    "joint-distribution": "joint distributions",
+    "joint-pmf": "joint PMFs",
+    "joint-pdf": "joint PDFs",
+    marginal: "marginal distributions",
+    "conditional-distribution": "conditional distributions",
+    "support-region": "support regions",
+    cdf: "CDF methods",
+    "joint-versus-marginal": "joint versus marginal information",
+    "product-expectation": "product expectations",
+    covariance: "covariance",
+    correlation: "correlation",
+    "variance-of-sums": "variance of sums",
+    "zero-covariance": "zero covariance",
+    "indicator-covariance": "indicator covariance",
+    "linear-relationship": "linear relationships",
+    interpretation: "interpretation",
+    "dependent-counts": "dependent counts",
+    "conditional-expectation-value": "conditional expectation at a value",
+    "conditional-expectation-random-variable": "conditional expectation as a random variable",
+    "tower-property": "tower property",
+    "total-expectation": "total expectation",
+    "conditional-variance": "conditional variance",
+    "total-variance": "total variance",
+    prediction: "prediction",
+    "fair-game": "fair-game intuition",
+    recognition: "concept recognition"
   };
   return labels[tag] || tag;
 }
@@ -3332,7 +6290,7 @@ function formulaRowsTemplate(rows) {
       ${rows.map((row) => `
         <div class="formula-row">
           <span>${escapeHtml(row.label)}</span>
-          <code>${mathHtml(row.formula)}</code>
+          <span class="math-expr">${mathHtml(row.formula)}</span>
           ${row.note ? `<em>${escapeHtml(row.note)}</em>` : ""}
         </div>
       `).join("")}
@@ -3346,7 +6304,7 @@ function workedStepsTemplate(steps) {
       ${steps.map((step) => `
         <li>
           ${step.label ? `<span>${escapeHtml(step.label)}</span>` : ""}
-          <code>${mathHtml(step.math)}</code>
+          <div class="math-expr">${mathHtml(step.math)}</div>
           ${step.note ? `<p>${escapeHtml(step.note)}</p>` : ""}
         </li>
       `).join("")}
@@ -3416,27 +6374,11 @@ function areaDiagramTemplate(visual) {
 
 function flowDiagramTemplate(visual) {
   const steps = visual.steps || [];
-  const width = 460;
-  const height = 70 + Math.ceil(steps.length / 3) * 64;
   return `
     <div class="mini-diagram">
-      <svg class="diagram-svg" viewBox="0 0 ${width} ${height}" role="img" aria-label="${escapeHtml(visual.caption || "Flow diagram")}">
-        ${steps.map((step, index) => {
-          const col = index % 3;
-          const row = Math.floor(index / 3);
-          const x = 20 + col * 148;
-          const y = 24 + row * 64;
-          const nextCol = (index + 1) % 3;
-          const nextRow = Math.floor((index + 1) / 3);
-          const nextX = 20 + nextCol * 148;
-          const nextY = 24 + nextRow * 64;
-          return `
-            <rect x="${x}" y="${y}" width="122" height="38" rx="19" class="diagram-pill"></rect>
-            <text x="${x + 61}" y="${y + 24}" text-anchor="middle" class="diagram-label">${escapeHtml(step)}</text>
-            ${index < steps.length - 1 ? `<line x1="${x + 126}" y1="${y + 19}" x2="${nextX - 6}" y2="${nextY + 19}" class="diagram-arrow"></line>` : ""}
-          `;
-        }).join("")}
-      </svg>
+      <div class="flow-diagram" role="img" aria-label="${escapeHtml(visual.caption || "Flow diagram")}">
+        ${steps.map((step) => `<span>${escapeHtml(step)}</span>`).join("")}
+      </div>
       ${visual.caption ? `<small>${escapeHtml(visual.caption)}</small>` : ""}
     </div>
   `;
@@ -3472,10 +6414,10 @@ function practiceProblemTemplate(problem) {
         </div>
         <span class="tag">${escapeHtml(problem.concept)}</span>
       </div>
-      <p>${escapeHtml(problem.prompt)}</p>
+      <p>${mathHtml(problem.prompt)}</p>
       <details>
         <summary>Show solution</summary>
-        <p>${escapeHtml(problem.solution)}</p>
+        <p>${mathHtml(problem.solution)}</p>
       </details>
     </article>
   `;
@@ -4050,12 +6992,26 @@ function escapeHtml(value) {
 }
 
 function mathHtml(value) {
-  return escapeHtml(value)
+  let html = escapeHtml(value)
     .replaceAll("&lt;=", "&le;")
     .replaceAll("&gt;=", "&ge;")
     .replaceAll("!=", "&ne;")
     .replaceAll("...", "&hellip;")
     .replaceAll(" x ", " &times; ")
+    .replaceAll(" + ... + ", " + &ctdot; + ")
+    .replaceAll("->", "&rarr;")
+    .replaceAll("sqrt", "&radic;")
+    .replaceAll("mu", "&mu;")
+    .replaceAll("sigma", "&sigma;")
+    .replaceAll("lambda", "&lambda;")
+    .replaceAll("infinity", "&infin;")
+    .replaceAll("not equal", "&ne;")
+    .replaceAll("less than or equal", "&le;")
+    .replaceAll("greater than or equal", "&ge;")
     .replaceAll("sum", "&Sigma;")
     .replaceAll("integral", "&int;");
+
+  html = html.replace(/\^(\([^)]+\)|[A-Za-z0-9+-]+)/g, (_, exponent) => `<sup>${exponent.replace(/^\((.*)\)$/, "$1")}</sup>`);
+  html = html.replace(/_([A-Za-z0-9]+)/g, "<sub>$1</sub>");
+  return html;
 }
