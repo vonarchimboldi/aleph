@@ -6898,12 +6898,12 @@ function renderGateDaWorkspace() {
         <div class="item-top">
           <div>
             <h4>GATE DA Basic Demo Workspace</h4>
-            <p>Basic account preview for the GATE DA material currently under development. Use this account to inspect Subjects -> Probability -> Chapter 1.</p>
+            <p>Basic account preview for the GATE DA material currently under development. Use this account to inspect Subjects -> Probability -> Chapters 1-8.</p>
           </div>
           <span class="tag">Basic</span>
         </div>
         <div class="workspace-counts">
-          <span>${state.gateDaSections.length} chapter</span>
+          <span>${state.gateDaSections.length} chapters</span>
           <span>${state.gateDaSections[0]?.practiceProblems.length || 0} practice problems</span>
           <span>conceptual review</span>
           <span>worked solutions</span>
