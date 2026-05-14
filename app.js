@@ -1,6 +1,6 @@
 const STORAGE_KEY = "learning-studio-data-v1";
 const SESSION_KEY = "aleph-session";
-const COURSE_PLAN_VERSION = "gate-da-basic-probability-chapter-10-hypothesis-testing-v21";
+const COURSE_PLAN_VERSION = "gate-da-signup-basic-trial-v23";
 
 const state = loadState();
 let deferredInstallPrompt = null;
@@ -66,9 +66,12 @@ document.querySelector("#export-btn").addEventListener("click", exportData);
 document.querySelector("#import-input").addEventListener("change", importData);
 document.querySelector("#week-select").addEventListener("change", renderTaskList);
 document.querySelector("#login-form").addEventListener("submit", login);
+document.querySelector("#signup-form").addEventListener("submit", signup);
 document.querySelector("#password-change-form").addEventListener("submit", changePassword);
+document.querySelector("#show-signup-btn").addEventListener("click", showSignup);
 document.querySelector("#show-password-change-btn").addEventListener("click", showPasswordChange);
 document.querySelector("#back-to-login-btn").addEventListener("click", showLogin);
+document.querySelector("#back-to-login-from-signup-btn").addEventListener("click", showLogin);
 document.querySelector("#user-email-form").addEventListener("submit", saveUserEmail);
 document.querySelector("#send-credentials-btn").addEventListener("click", sendCredentialEmail);
 
@@ -92,7 +95,14 @@ window.addEventListener("beforeinstallprompt", (event) => {
   updateInstallState();
 });
 
-if ("serviceWorker" in navigator) {
+if ("serviceWorker" in navigator && isLocalHost()) {
+  navigator.serviceWorker.getRegistrations().then((registrations) => {
+    registrations.forEach((registration) => registration.unregister());
+  });
+  if ("caches" in window) {
+    caches.keys().then((keys) => keys.forEach((key) => caches.delete(key)));
+  }
+} else if ("serviceWorker" in navigator) {
   navigator.serviceWorker.register("service-worker.js");
 }
 
@@ -132,27 +142,423 @@ function loadState() {
 }
 
 function initialState() {
+  const user = defaultUser();
   return {
-    user: defaultUser(),
-    ...buildCoursePlan()
+    user,
+    ...buildCoursePlan(user)
   };
 }
 
 function ensureCoursePlan() {
   if (state.coursePlanVersion === COURSE_PLAN_VERSION) return;
-  Object.assign(state, buildCoursePlan(), {
-    user: state.user || defaultUser()
+  const user = state.user || defaultUser();
+  Object.assign(state, buildCoursePlan(user), {
+    user
   });
 }
 
-function buildCoursePlan() {
+function buildCoursePlan(user = defaultUser()) {
   const now = new Date().toISOString();
   const accountTypes = accountTypeCatalog(now);
   const sections = gateDaProbabilitySections(now);
-  return buildGateDaBasicPlan(now, accountTypes, sections);
+  if (isBasicPrototypeUser(user)) {
+    return buildGateDaBasicPlan(now, accountTypes, sections, user);
+  }
+  return buildPriyankaPlatinumPlan(now, accountTypes, sections);
 }
 
-function buildGateDaBasicPlan(now, accountTypes, sections) {
+function isBasicPrototypeUser(user) {
+  return user?.accountTypeId === "gate-da-basic" || user?.id === "user-basic-demo" || user?.name === "basic" || user?.name === "gate-basic";
+}
+
+function isLocalHost() {
+  return ["localhost", "127.0.0.1", "0.0.0.0", "::1"].includes(window.location.hostname);
+}
+
+function slugify(value) {
+  return String(value)
+    .trim()
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-|-$/g, "") || "learner";
+}
+
+function buildPriyankaPlatinumPlan(now, accountTypes, sections) {
+  const startDate = "2026-06-01";
+  const endDate = "2026-08-30";
+  const subjects = [
+    {
+      id: "subject-discrete-mathematics",
+      title: "Discrete Mathematics",
+      date: endDate,
+      status: "Not started",
+      details: "Learning plan: integrate CMU 21-228, MIT 6.1200J, and MIT 18.200 over 13 weeks. Each week has coursework milestones, one combined Sunday review quiz, and every other Sunday a cumulative spaced-review quiz.",
+      updatedAt: now
+    },
+    {
+      id: "subject-data-structures-algorithms",
+      title: "Data Structures and Algorithms",
+      date: endDate,
+      status: "Not started",
+      details: "Learning plan: complexity analysis, arrays, linked lists, stacks, queues, hashing, trees, heaps, graphs, sorting, searching, dynamic programming basics, and implementation practice.",
+      updatedAt: now
+    },
+    {
+      id: "subject-probability-statistics",
+      title: "Probability and Statistics",
+      date: endDate,
+      status: "Not started",
+      details: "GATE DA Probability and Statistics with Priyanka's Platinum pacing: daily PSB-style problem sets, Sunday tests, correction notes, and custom feedback. The current Basic Probability chapter reader is attached as supporting content.",
+      sectionIds: sections.map((section) => section.id),
+      updatedAt: now
+    }
+  ];
+
+  const plans = [
+    {
+      key: "DM",
+      label: "Discrete Math",
+      resources: "CMU 21-228, MIT 6.1200J Math for CS, and MIT 18.200",
+      milestones: discreteMathMilestones()
+    },
+    {
+      key: "DSA",
+      label: "Data Structures and Algorithms",
+      resources: "Aho/Ullman Foundations of Computer Science and Cartesian",
+      milestones: dsaMilestones()
+    },
+    {
+      key: "PS",
+      label: "Probability and Statistics",
+      resources: "GATE DA Basic Probability sections and themed practice sets",
+      milestones: probabilityStatsMilestones(),
+      dailyProblemSets: true
+    }
+  ];
+
+  const schedule = [];
+  const tests = [];
+  const tasks = [];
+  const feedback = [];
+
+  plans.forEach((plan) => {
+    plan.milestones.forEach((milestone, index) => {
+      const week = index + 1;
+      const monday = addDays(startDate, index * 7);
+      const sunday = addDays(monday, 6);
+      const spaced = spacedReviewDetails(week, plan.milestones, plan.label);
+      const weekWindow = `${formatShortDate(monday)}-${formatShortDate(sunday)}`;
+
+      if (plan.dailyProblemSets) {
+        schedule.push({
+          id: `schedule-${plan.key.toLowerCase()}-week-${week}-cycle`,
+          title: `Week ${week}: ${plan.label} pattern cycle`,
+          week,
+          subject: plan.label,
+          kind: "Milestone",
+          date: monday,
+          details: milestoneDetails(milestone),
+          updatedAt: now
+        });
+
+        milestone.problemDays.forEach((dayPlan, dayIndex) => {
+          const date = addDays(monday, dayIndex);
+          const details = probabilityProblemSetDetails(dayPlan, week);
+          const dayId = dayPlan.day.toLowerCase();
+          schedule.push({
+            id: `schedule-${plan.key.toLowerCase()}-week-${week}-${dayId}`,
+            title: `Week ${week} ${dayPlan.day}: ${dayPlan.topic} problem set`,
+            week,
+            subject: plan.label,
+            kind: "Problem set",
+            date,
+            details,
+            updatedAt: now
+          });
+          tasks.push({
+            id: `task-${plan.key.toLowerCase()}-week-${week}-${dayId}`,
+            week,
+            title: `${plan.key} W${week} ${dayPlan.day}: 5-problem ${dayPlan.topic} set`,
+            type: "Problem set",
+            date,
+            status: "todo",
+            done: false,
+            details,
+            updatedAt: now
+          });
+        });
+
+        if (week === 1) {
+          tasks.push({
+            id: "task-ps-week-1-probability-foundations-section",
+            week,
+            title: "PS W1: Study Probability Foundations pilot section",
+            type: "Section",
+            date: monday,
+            status: "todo",
+            done: false,
+            details: "Read the GATE DA Probability Foundations section, solve the labelled practice problems with solutions, and attempt the conceptual review prompts without solutions.",
+            updatedAt: now
+          });
+        }
+
+        schedule.push({
+          id: `schedule-${plan.key.toLowerCase()}-week-${week}-sunday-test`,
+          title: `Week ${week}: ${plan.label} Sunday PSB test`,
+          week,
+          subject: plan.label,
+          kind: "Test",
+          date: sunday,
+          details: probabilitySundayTestDetails(milestone),
+          updatedAt: now
+        });
+        tasks.push({
+          id: `task-${plan.key.toLowerCase()}-week-${week}-sunday-test`,
+          week,
+          title: `${plan.key} W${week}: Take Sunday PSB pattern test`,
+          type: "Test",
+          date: sunday,
+          status: "todo",
+          done: false,
+          details: probabilitySundayTestDetails(milestone),
+          updatedAt: now
+        });
+        tests.push({
+          id: `test-${plan.key.toLowerCase()}-week-${week}-sunday-test`,
+          title: `Week ${week}: ${plan.label} Sunday PSB pattern test`,
+          date: sunday,
+          details: probabilitySundayTestDetails(milestone),
+          updatedAt: now
+        });
+        feedback.push({
+          id: `feedback-${plan.key.toLowerCase()}-week-${week}`,
+          title: `Week ${week}: ${plan.label} default solution feedback`,
+          date: sunday,
+          details: probabilityDefaultFeedback(milestone),
+          updatedAt: now
+        });
+        return;
+      }
+
+      schedule.push(
+        {
+          id: `schedule-${plan.key.toLowerCase()}-week-${week}-milestone`,
+          title: `Week ${week}: ${plan.label} milestone`,
+          week,
+          subject: plan.label,
+          kind: "Milestone",
+          date: monday,
+          details: milestoneDetails(milestone),
+          updatedAt: now
+        },
+        {
+          id: `schedule-${plan.key.toLowerCase()}-week-${week}-review`,
+          title: `Week ${week}: ${plan.label} Sunday combined review`,
+          week,
+          subject: plan.label,
+          kind: "Review",
+          date: sunday,
+          details: `One quiz covering the week's ${plan.label} material across ${plan.resources}. Focus: ${milestone.focus}.`,
+          updatedAt: now
+        }
+      );
+
+      if (week % 2 === 0) {
+        schedule.push({
+          id: `schedule-${plan.key.toLowerCase()}-week-${week}-spaced-review`,
+          title: `Week ${week}: ${plan.label} Sunday cumulative spaced review`,
+          week,
+          subject: plan.label,
+          kind: "Spaced review",
+          date: sunday,
+          details: spaced,
+          updatedAt: now
+        });
+      }
+
+      tasks.push(
+        {
+          id: `task-${plan.key.toLowerCase()}-week-${week}-lectures`,
+          week,
+          title: `${plan.key} W${week}: Watch lectures`,
+          type: "Lecture",
+          date: monday,
+          status: "todo",
+          done: false,
+          details: milestoneDetails(milestone),
+          updatedAt: now
+        },
+        {
+          id: `task-${plan.key.toLowerCase()}-week-${week}-assignment`,
+          week,
+          title: `${plan.key} W${week}: Complete associated assignment`,
+          type: "Assignment",
+          date: addDays(monday, 4),
+          status: "todo",
+          done: false,
+          details: `Do the related problem set/homework work for ${plan.label}, ${weekWindow}. Convert missed problems into correction notes before Sunday's quiz.`,
+          updatedAt: now
+        },
+        {
+          id: `task-${plan.key.toLowerCase()}-week-${week}-review`,
+          week,
+          title: `${plan.key} W${week}: Take Sunday combined review quiz`,
+          type: "Review quiz",
+          date: sunday,
+          status: "todo",
+          done: false,
+          details: `One combined ${plan.label} quiz across ${plan.resources}. Focus: ${milestone.focus}.`,
+          updatedAt: now
+        }
+      );
+
+      if (week % 2 === 0) {
+        tasks.push({
+          id: `task-${plan.key.toLowerCase()}-week-${week}-spaced-review`,
+          week,
+          title: `${plan.key} W${week}: Take Sunday cumulative spaced review quiz`,
+          type: "Spaced review",
+          date: sunday,
+          status: "todo",
+          done: false,
+          details: spaced,
+          updatedAt: now
+        });
+      }
+
+      tests.push({
+        id: `test-${plan.key.toLowerCase()}-week-${week}-review`,
+        title: `Week ${week}: ${plan.label} Sunday combined review quiz`,
+        date: sunday,
+        details: `Single integrated quiz for ${plan.label}. Include implementation, proof/analysis, and application questions for: ${milestone.focus}.`,
+        updatedAt: now
+      });
+
+      if (week % 2 === 0) {
+        tests.push({
+          id: `test-${plan.key.toLowerCase()}-week-${week}-spaced-review`,
+          title: `Week ${week}: ${plan.label} Sunday cumulative spaced review quiz`,
+          date: sunday,
+          details: spaced,
+          updatedAt: now
+        });
+      }
+    });
+  });
+
+  return {
+    subjects,
+    schedule,
+    tests,
+    quizAttempts: [],
+    tasks,
+    accountTypes,
+    enrollments: [
+      {
+        id: "enrollment-priyanka-custom",
+        userId: "user-priyanka",
+        accountTypeId: "gate-da-platinum",
+        planVariant: "Platinum",
+        paymentStatus: "active",
+        lessonPlanId: "lesson-priyanka-custom",
+        status: "active",
+        updatedAt: now
+      }
+    ],
+    lessonPlans: [
+      {
+        id: "lesson-priyanka-custom",
+        userId: "user-priyanka",
+        title: "Priyanka GATE DA Platinum plan",
+        type: "personalized",
+        subjects: ["Discrete Mathematics", "Data Structures and Algorithms", "Probability and Statistics"],
+        startDate,
+        endDate,
+        status: "active",
+        details: "Personalized June-August Platinum plan for the GATE DA exam. Priyanka's workspace, subjects, tasks, schedules, tests, feedback, and resources live inside this GATE DA plan.",
+        updatedAt: now
+      }
+    ],
+    gateDaSections: sections,
+    feedback: [
+      {
+        id: "feedback-three-subject-plan-created",
+        title: "Three-subject 13-week plan created",
+        date: startDate,
+        details: "13-week plans map Discrete Math, Data Structures and Algorithms, and Probability and Statistics into weekly work. Discrete Math and DSA use weekly coursework with Sunday reviews; Probability and Statistics uses Monday-Saturday 5-problem sets with Sunday PSB-style tests and default solution feedback.",
+        updatedAt: now
+      }
+    ].concat(feedback),
+    resources: [
+      {
+        id: "resource-gate-da-probability-foundations",
+        title: "GATE DA Probability Foundations Pilot Section",
+        date: startDate,
+        details: "Section 1 pilot with concept teaching, labelled practice problems with solutions, and conceptual review prompts without solutions.",
+        updatedAt: now
+      },
+      {
+        id: "resource-cmu-discrete-mathematics",
+        title: "CMU 21-228 Discrete Mathematics - Po-Shen Loh",
+        date: startDate,
+        details: "Use the official CMU course page for Loh's Discrete Mathematics syllabus, homework rhythm, exams, and week-by-week topic sequence.",
+        link: "https://www.math.cmu.edu/~ploh/2025-228.shtml",
+        updatedAt: now
+      },
+      {
+        id: "resource-mit-math-for-cs",
+        title: "MIT 6.1200J Mathematics for Computer Science - Spring 2024",
+        date: startDate,
+        details: "Use the OCW page for lecture videos, lecture notes, warm-up problems, readings, and problem sets.",
+        link: "https://ocw.mit.edu/courses/6-1200j-mathematics-for-computer-science-spring-2024/",
+        updatedAt: now
+      },
+      {
+        id: "resource-mit-discrete-applied",
+        title: "MIT 18.200 Principles of Discrete Applied Mathematics - Spring 2024",
+        date: startDate,
+        details: "Use the OCW page for calendar, lecture videos, lecture notes, assignments, and writing resources.",
+        link: "https://ocw.mit.edu/courses/18-200-principles-of-discrete-applied-mathematics-spring-2024/",
+        updatedAt: now
+      },
+      {
+        id: "resource-aho-ullman-focs",
+        title: "Aho/Ullman Foundations of Computer Science",
+        date: startDate,
+        details: "Use chapters 1-9, 12, and 14. Skip chapters 10, 11, and 13 as requested.",
+        link: "http://infolab.stanford.edu/~ullman/focs.html",
+        updatedAt: now
+      },
+      {
+        id: "resource-cartesian-dsa",
+        title: "Cartesian - Interactive Handbook on Data Structures and Algorithms",
+        date: startDate,
+        details: "Use Cartesian for interactive visualizations, code playback, Python practice, and end-of-topic challenges.",
+        link: "https://cartesian.app/",
+        updatedAt: now
+      },
+      {
+        id: "resource-isi-pattern-notes",
+        title: "ISI MStat PSB Probability and Statistics Pattern Notes",
+        date: startDate,
+        details: "Use the local ISI pattern notes to drive daily 5-problem sets across NP/MP tests, MLE and estimation, conditional expectation with indicators, distributions and order statistics, and regression/OLS.",
+        link: "",
+        updatedAt: now
+      },
+      {
+        id: "resource-probability-themed-practice",
+        title: "Probability and Statistics Themed HTML Practice Sets",
+        date: startDate,
+        details: "Use the organized local practice folders as the problem bank: 01-np-mp-tests, 02-mle-estimation, 03-conditional-expectation-indicators, 04-distributions-order-statistics, 05-regression-ols, and 99-mixed-review.",
+        link: "",
+        updatedAt: now
+      }
+    ],
+    coursePlanVersion: COURSE_PLAN_VERSION
+  };
+}
+
+function buildGateDaBasicPlan(now, accountTypes, sections, user = basicGateDaUser()) {
   const probabilitySection = sections[0];
   const conditionalSection = sections[1];
   const monday = "2026-06-01";
@@ -175,6 +581,12 @@ function buildGateDaBasicPlan(now, accountTypes, sections) {
   const weekNineSunday = addDays(weekNineMonday, 6);
   const weekTenMonday = addDays(monday, 63);
   const weekTenSunday = addDays(weekTenMonday, 6);
+  const userId = user.id || "user-basic-demo";
+  const userSlug = slugify(user.name || userId);
+  const enrollmentId = `enrollment-${userSlug}-gate-da-basic`;
+  const lessonPlanId = `lesson-${userSlug}-gate-da-basic`;
+  const isTrial = user.accountTypeId === "gate-da-basic" && user.trialEndsAt;
+  const trialNote = isTrial ? ` One-week free trial active through ${formatDate(user.trialEndsAt)}.` : "";
   return {
     subjects: [
       {
@@ -866,27 +1278,28 @@ function buildGateDaBasicPlan(now, accountTypes, sections) {
     accountTypes,
     enrollments: [
       {
-        id: "enrollment-gate-da-basic-demo",
-        userId: "user-basic-demo",
+        id: enrollmentId,
+        userId,
         accountTypeId: "gate-da-basic",
         planVariant: "Basic",
-        paymentStatus: "active",
-        lessonPlanId: "lesson-gate-da-basic-demo",
+        paymentStatus: isTrial ? "trial" : "active",
+        lessonPlanId,
         status: "active",
+        trialEndsAt: user.trialEndsAt || "",
         updatedAt: now
       }
     ],
     lessonPlans: [
       {
-        id: "lesson-gate-da-basic-demo",
-        userId: "user-basic-demo",
+        id: lessonPlanId,
+        userId,
         title: "GATE DA Basic plan",
         type: "exam",
         subjects: ["Probability"],
         startDate: monday,
         endDate: "2026-08-30",
         status: "active",
-        details: "GATE DA Basic plan surfaces: Subjects, Tasks, Schedule, Tests, Feedback, Resources, and Share. Current material build: Probability Chapters 1-10.",
+        details: `GATE DA Basic plan surfaces: Subjects, Tasks, Schedule, Tests, Feedback, Resources, and Share. Current material build: Probability Chapters 1-10.${trialNote}`,
         updatedAt: now
       }
     ],
@@ -7576,19 +7989,25 @@ function formatShortDate(value) {
 }
 
 function defaultUser() {
-  return basicGateDaUser();
+  return {
+    id: "user-priyanka",
+    name: "priyanka",
+    email: "priyankakatoch95@gmail.com",
+    tempPassword: "l!pschitz",
+    password: "l!pschitz",
+    mustChangePassword: false,
+    passwordStatus: "Prototype login enabled",
+    registeredAt: new Date().toISOString()
+  };
 }
 
 function platinumDemoUser() {
   return {
-    id: "user-platinum-demo",
+    ...defaultUser(),
     name: "platinum-demo",
     email: "platinum.demo@aleph.local",
     tempPassword: "platinum!demo",
-    password: "platinum!demo",
-    mustChangePassword: false,
-    passwordStatus: "Prototype login enabled",
-    registeredAt: new Date().toISOString()
+    password: "platinum!demo"
   };
 }
 
@@ -7597,6 +8016,8 @@ function basicGateDaUser() {
     id: "user-basic-demo",
     name: "basic",
     email: "basic.demo@aleph.local",
+    accountTypeId: "gate-da-basic",
+    planVariant: "Basic",
     tempPassword: "basic",
     password: "basic",
     mustChangePassword: false,
@@ -7607,7 +8028,8 @@ function basicGateDaUser() {
 
 function prototypeUsers() {
   const basic = basicGateDaUser();
-  return [
+  const users = [
+    defaultUser(),
     basic,
     platinumDemoUser(),
     {
@@ -7617,6 +8039,10 @@ function prototypeUsers() {
       password: "basic!gate"
     }
   ];
+  if (state?.user?.name && state.user.password && !users.some((user) => user.name === state.user.name)) {
+    users.push(state.user);
+  }
+  return users;
 }
 
 function persist() {
@@ -7644,7 +8070,9 @@ function login(event) {
   const matchedUser = prototypeUsers().find((user) => user.name === name && password === (user.password || user.tempPassword));
 
   if (matchedUser) {
-    state.user = { ...matchedUser };
+    Object.assign(state, buildCoursePlan(matchedUser), {
+      user: { ...matchedUser }
+    });
     persist();
     sessionStorage.setItem(SESSION_KEY, matchedUser.name);
     error.textContent = "";
@@ -7655,6 +8083,50 @@ function login(event) {
   }
 
   error.textContent = "Username or password is incorrect.";
+}
+
+function signup(event) {
+  event.preventDefault();
+  const nameInput = document.querySelector("#signup-name");
+  const emailInput = document.querySelector("#signup-email");
+  const passwordInput = document.querySelector("#signup-password");
+  const error = document.querySelector("#signup-error");
+  const displayName = nameInput.value.trim();
+  const email = emailInput.value.trim().toLowerCase();
+  const password = passwordInput.value;
+  const username = slugify(email.split("@")[0] || displayName);
+
+  if (prototypeUsers().some((user) => user.name === username)) {
+    error.textContent = "An account with this email prefix already exists. Use sign in or choose a different email.";
+    return;
+  }
+
+  const trialUser = {
+    id: `user-${username}-${Date.now()}`,
+    name: username,
+    displayName,
+    email,
+    accountTypeId: "gate-da-basic",
+    planVariant: "Basic",
+    tempPassword: password,
+    password,
+    mustChangePassword: false,
+    passwordStatus: "GATE DA Basic one-week trial",
+    registeredAt: new Date().toISOString(),
+    trialStartedAt: new Date().toISOString().slice(0, 10),
+    trialEndsAt: addDays(new Date().toISOString().slice(0, 10), 7)
+  };
+
+  Object.assign(state, buildCoursePlan(trialUser), {
+    user: trialUser
+  });
+  persist();
+  sessionStorage.setItem(SESSION_KEY, trialUser.name);
+  error.textContent = "";
+  document.querySelector("#signup-form").reset();
+  render();
+  applyAuthState();
+  showView("plans");
 }
 
 function changePassword(event) {
@@ -7698,14 +8170,24 @@ function changePassword(event) {
 
 function showPasswordChange() {
   document.querySelector("#login-form").classList.add("hidden");
+  document.querySelector("#signup-form").classList.remove("active");
   document.querySelector("#password-change-form").classList.add("active");
   document.querySelector("#change-name").value = document.querySelector("#login-name").value.trim() || state.user.name;
 }
 
+function showSignup() {
+  document.querySelector("#login-form").classList.add("hidden");
+  document.querySelector("#password-change-form").classList.remove("active");
+  document.querySelector("#signup-form").classList.add("active");
+  document.querySelector("#signup-error").textContent = "";
+}
+
 function showLogin() {
   document.querySelector("#password-change-form").classList.remove("active");
+  document.querySelector("#signup-form").classList.remove("active");
   document.querySelector("#login-form").classList.remove("hidden");
   document.querySelector("#password-error").textContent = "";
+  document.querySelector("#signup-error").textContent = "";
 }
 
 function logout() {
@@ -7720,6 +8202,7 @@ function applyAuthState() {
   document.body.classList.toggle("is-authenticated", signedIn && !mustChangePassword);
   document.querySelector("#landing-view").classList.toggle("active", !signedIn || mustChangePassword);
   document.querySelector("#login-form").classList.toggle("hidden", signedIn);
+  document.querySelector("#signup-form").classList.toggle("active", false);
   document.querySelector("#password-change-form").classList.toggle("active", mustChangePassword);
   if (mustChangePassword) {
     document.querySelector("#change-name").value = state.user.name;
@@ -8260,16 +8743,21 @@ function renderGateDaSummary() {
 function renderGateDaWorkspace() {
   const container = document.querySelector("#gate-da-workspace-list");
   if (!container) return;
+  const gateDaEnrollment = state.enrollments.find((enrollment) => {
+    const accountTypeId = enrollment.accountTypeId || enrollment.productId;
+    return accountTypeId?.startsWith("gate-da-") && enrollment.userId === state.user.id;
+  });
+  const activeAccountTypeId = gateDaEnrollment?.accountTypeId || gateDaEnrollment?.productId;
 
-  if (state.user.name === "basic" || state.user.name === "gate-basic") {
+  if (activeAccountTypeId === "gate-da-basic") {
     container.innerHTML = `
       <article class="item workspace-summary">
         <div class="item-top">
           <div>
-            <h4>GATE DA Basic Demo Workspace</h4>
-            <p>Basic account preview for the GATE DA material currently under development. Use this account to inspect Subjects -> Probability -> Chapters 1-10.</p>
+            <h4>GATE DA Basic Workspace</h4>
+            <p>Basic account workspace for the current GATE DA material. Use this plan to inspect Subjects -> Probability -> Chapters 1-10, practice, and objective reviews.</p>
           </div>
-          <span class="tag">Basic</span>
+          <span class="tag">${escapeHtml(gateDaEnrollment.paymentStatus || "active")}</span>
         </div>
         <div class="workspace-counts">
           <span>${state.gateDaSections.length} chapters</span>
@@ -8282,11 +8770,7 @@ function renderGateDaWorkspace() {
     return;
   }
 
-  const platinumEnrollment = state.enrollments.find((enrollment) => {
-    const accountTypeId = enrollment.accountTypeId || enrollment.productId;
-    return accountTypeId === "gate-da-platinum";
-  });
-  const lessonPlan = state.lessonPlans.find((entry) => entry.id === platinumEnrollment?.lessonPlanId);
+  const lessonPlan = state.lessonPlans.find((entry) => entry.id === gateDaEnrollment?.lessonPlanId);
 
   container.innerHTML = `
     <article class="item workspace-summary">
@@ -8295,7 +8779,7 @@ function renderGateDaWorkspace() {
           <h4>GATE DA Platinum Learner Workspace</h4>
           <p>${escapeHtml(lessonPlan?.details || "Personalized GATE DA Platinum learner workspace.")}</p>
         </div>
-        <span class="tag">${escapeHtml(platinumEnrollment?.paymentStatus || "active")}</span>
+        <span class="tag">${escapeHtml(gateDaEnrollment?.paymentStatus || "active")}</span>
       </div>
       <div class="workspace-counts">
         <span>${state.subjects.length} subjects</span>
@@ -8604,12 +9088,13 @@ function practiceProblemTemplate(problem) {
 
 function renderEnrollments() {
   const container = document.querySelector("#enrollment-list");
-  if (!state.enrollments.length) {
+  const userEnrollments = state.enrollments.filter((enrollment) => enrollment.userId === state.user.id);
+  if (!userEnrollments.length) {
     container.innerHTML = '<div class="empty">No active enrollments yet.</div>';
     return;
   }
 
-  container.innerHTML = state.enrollments.map((enrollment) => {
+  container.innerHTML = userEnrollments.map((enrollment) => {
     const accountTypeId = enrollment.accountTypeId || enrollment.productId;
     const accountType = state.accountTypes.find((entry) => entry.id === accountTypeId);
     const lessonPlan = state.lessonPlans.find((entry) => entry.id === enrollment.lessonPlanId);
@@ -9088,15 +9573,16 @@ function renderActivity() {
 
 function loadSampleData() {
   const user = state.user || defaultUser();
-  Object.assign(state, buildCoursePlan());
+  Object.assign(state, buildCoursePlan(user));
   state.user = user;
   persist();
   render();
 }
 
 function resetPlanData() {
-  Object.assign(state, buildCoursePlan(), {
-    user: state.user || defaultUser()
+  const user = state.user || defaultUser();
+  Object.assign(state, buildCoursePlan(user), {
+    user
   });
   persist();
   render();

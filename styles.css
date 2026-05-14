@@ -53,11 +53,13 @@ body:not(.is-authenticated) .shell {
 }
 
 .hidden,
-.password-card {
+.password-card,
+.signup-card {
   display: none;
 }
 
-.password-card.active {
+.password-card.active,
+.signup-card.active {
   display: block;
 }
 
@@ -122,6 +124,44 @@ body:not(.is-authenticated) .shell {
   justify-content: space-between;
   gap: 12px;
   margin-top: 12px;
+}
+
+.signup-plans {
+  display: grid;
+  gap: 10px;
+  margin: 18px 0 12px;
+}
+
+.trial-plan {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 10px;
+  align-items: flex-start;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 12px;
+  background: #f8fbfb;
+}
+
+.trial-plan input {
+  margin-top: 3px;
+}
+
+.trial-plan strong,
+.trial-plan small {
+  display: block;
+}
+
+.trial-plan small {
+  color: var(--muted);
+  line-height: 1.45;
+  margin-top: 3px;
+}
+
+.trial-plan.unavailable {
+  grid-template-columns: 1fr;
+  color: var(--muted);
+  background: #f2f5f5;
 }
 
 .error-text {

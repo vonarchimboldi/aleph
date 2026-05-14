@@ -36,10 +36,61 @@
           <p class="error-text" id="login-error" aria-live="polite"></p>
           <button class="primary-btn" type="submit">Sign in</button>
           <div class="login-links">
+            <button class="text-btn" id="show-signup-btn" type="button">Create account</button>
             <button class="text-btn" id="show-password-change-btn" type="button">Forgot or change password?</button>
           </div>
           <p class="fine-print">Use the demo credentials provided by the project owner.</p>
           <p class="fine-print">This prototype uses local demo authentication. Use a real backend before sharing private learner data.</p>
+        </form>
+
+        <form class="login-card signup-card" id="signup-form">
+          <div>
+            <h2>Start a plan</h2>
+            <p class="muted">Create a local prototype account and begin the GATE DA Basic one-week trial.</p>
+          </div>
+          <label>
+            <span>Name</span>
+            <input id="signup-name" autocomplete="name" required>
+          </label>
+          <label>
+            <span>Email</span>
+            <input id="signup-email" type="email" autocomplete="email" required>
+          </label>
+          <label>
+            <span>Password</span>
+            <input id="signup-password" type="password" autocomplete="new-password" minlength="8" required>
+          </label>
+          <div class="signup-plans" aria-label="Available exam plans">
+            <label class="trial-plan">
+              <input type="radio" name="signup-plan" value="gate-da-basic" checked>
+              <span>
+                <strong>GATE DA Basic</strong>
+                <small>One-week free trial. Probability chapters, practice, objective reviews, and plan workspace.</small>
+              </span>
+            </label>
+            <div class="trial-plan unavailable" aria-disabled="true">
+              <span>
+                <strong>GATE CS</strong>
+                <small>Coming soon</small>
+              </span>
+            </div>
+            <div class="trial-plan unavailable" aria-disabled="true">
+              <span>
+                <strong>ISI MStat</strong>
+                <small>Coming soon</small>
+              </span>
+            </div>
+            <div class="trial-plan unavailable" aria-disabled="true">
+              <span>
+                <strong>IIT JAM Statistics</strong>
+                <small>Coming soon</small>
+              </span>
+            </div>
+          </div>
+          <p class="error-text" id="signup-error" aria-live="polite"></p>
+          <button class="primary-btn" type="submit">Start free trial</button>
+          <button class="text-btn" id="back-to-login-from-signup-btn" type="button">Back to sign in</button>
+          <p class="fine-print">Trial data is stored in this browser for the prototype.</p>
         </form>
 
         <form class="login-card password-card" id="password-change-form">
@@ -361,6 +412,6 @@
       </form>
     </dialog>
 
-    <script src="app.js"></script>
+    <script src="app.js?v=gate-da-signup-basic-trial-v23"></script>
   </body>
 </html>

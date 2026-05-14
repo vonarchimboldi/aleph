@@ -1,9 +1,10 @@
-const CACHE_NAME = "learning-studio-v51";
+const CACHE_NAME = "learning-studio-v56";
+const IS_LOCAL = ["localhost", "127.0.0.1", "0.0.0.0", "::1"].includes(self.location.hostname);
 const ASSETS = [
   "./",
   "./index.html",
   "./styles.css",
-  "./app.js",
+  "./app.js?v=gate-da-signup-basic-trial-v23",
   "./manifest.webmanifest",
   "./icons/icon-192.svg",
   "./icons/icon-512.svg"
@@ -11,10 +12,21 @@ const ASSETS = [
 
 self.addEventListener("install", (event) => {
   self.skipWaiting();
+  if (IS_LOCAL) return;
   event.waitUntil(caches.open(CACHE_NAME).then((cache) => cache.addAll(ASSETS)));
 });
 
 self.addEventListener("activate", (event) => {
+  if (IS_LOCAL) {
+    event.waitUntil(
+      caches.keys()
+        .then((keys) => Promise.all(keys.map((key) => caches.delete(key))))
+        .then(() => self.registration.unregister())
+        .then(() => self.clients.claim())
+    );
+    return;
+  }
+
   event.waitUntil(
     caches.keys().then((keys) =>
       Promise.all(keys.filter((key) => key !== CACHE_NAME).map((key) => caches.delete(key)))
@@ -23,6 +35,8 @@ self.addEventListener("activate", (event) => {
 });
 
 self.addEventListener("fetch", (event) => {
+  if (IS_LOCAL) return;
+
   if (event.request.mode === "navigate") {
     event.respondWith(
       fetch(event.request)
