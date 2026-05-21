@@ -1,6 +1,6 @@
 const STORAGE_KEY = "learning-studio-data-v1";
 const SESSION_KEY = "aleph-session";
-const COURSE_PLAN_VERSION = "auth-forgot-password-split-v24";
+const COURSE_PLAN_VERSION = "priyanka-competition-math-single-subject-v27";
 
 const state = loadState();
 let deferredInstallPrompt = null;
@@ -214,6 +214,14 @@ function buildPriyankaPlatinumPlan(now, accountTypes, sections) {
       details: "GATE DA Probability and Statistics with Priyanka's Platinum pacing: daily PSB-style problem sets, Sunday tests, correction notes, and custom feedback. The current Basic Probability chapter reader is attached as supporting content.",
       sectionIds: sections.map((section) => section.id),
       updatedAt: now
+    },
+    {
+      id: "subject-competition-math",
+      title: "Competition Math",
+      date: endDate,
+      status: "Not started",
+      details: "June-August slice of the 9-10 month mathematical maturity track: one hour per day, technique journal, weekly written review, algebra foundations in weeks 1-8, then number theory foundations beginning in weeks 9-13. Combinatorics and analysis continue after the current app horizon.",
+      updatedAt: now
     }
   ];
 
@@ -236,6 +244,12 @@ function buildPriyankaPlatinumPlan(now, accountTypes, sections) {
       resources: "GATE DA Basic Probability sections and themed practice sets",
       milestones: probabilityStatsMilestones(),
       dailyProblemSets: true
+    },
+    {
+      key: "CM",
+      label: "Competition Math",
+      resources: "Engel Problem-Solving Strategies, AoPS, Putnam and Beyond, and the Competition Math plan",
+      milestones: competitionMathMilestones()
     }
   ];
 
@@ -474,11 +488,16 @@ function buildPriyankaPlatinumPlan(now, accountTypes, sections) {
         userId: "user-priyanka",
         title: "Priyanka GATE DA Platinum plan",
         type: "personalized",
-        subjects: ["Discrete Mathematics", "Data Structures and Algorithms", "Probability and Statistics"],
+        subjects: [
+          "Discrete Mathematics",
+          "Data Structures and Algorithms",
+          "Probability and Statistics",
+          "Competition Math"
+        ],
         startDate,
         endDate,
         status: "active",
-        details: "Personalized June-August Platinum plan for the GATE DA exam. Priyanka's workspace, subjects, tasks, schedules, tests, feedback, and resources live inside this GATE DA plan.",
+        details: "Personalized June-August Platinum plan for the GATE DA exam plus a Competition Math maturity track. Priyanka's workspace, subjects, tasks, schedules, tests, feedback, and resources live inside this GATE DA plan.",
         updatedAt: now
       }
     ],
@@ -486,9 +505,9 @@ function buildPriyankaPlatinumPlan(now, accountTypes, sections) {
     feedback: [
       {
         id: "feedback-three-subject-plan-created",
-        title: "Three-subject 13-week plan created",
+        title: "Four-subject Platinum plan created",
         date: startDate,
-        details: "13-week plans map Discrete Math, Data Structures and Algorithms, and Probability and Statistics into weekly work. Discrete Math and DSA use weekly coursework with Sunday reviews; Probability and Statistics uses Monday-Saturday 5-problem sets with Sunday PSB-style tests and default solution feedback.",
+        details: "June-August plans map Discrete Math, Data Structures and Algorithms, Probability and Statistics, and Competition Math into weekly work. Competition Math follows the long roadmap without force-fitting the whole track: algebra in weeks 1-8, then the start of number theory in weeks 9-13.",
         updatedAt: now
       }
     ].concat(feedback),
@@ -553,6 +572,14 @@ function buildPriyankaPlatinumPlan(now, accountTypes, sections) {
         title: "Probability and Statistics Themed HTML Practice Sets",
         date: startDate,
         details: "Use the organized local practice folders as the problem bank: 01-np-mp-tests, 02-mle-estimation, 03-conditional-expectation-indicators, 04-distributions-order-statistics, 05-regression-ols, and 99-mixed-review.",
+        link: "",
+        updatedAt: now
+      },
+      {
+        id: "resource-competition-math-plan",
+        title: "Competition Math 9-10 Month Plan",
+        date: startDate,
+        details: "Local planning note for Priyanka's high-school competition math maturity track. June-August uses the algebra and early number theory slice; the local markdown roadmap continues into combinatorics, analysis, olympiad rotation, timed mocks, technique journal, spaced review, and proof-writing practice.",
         link: "",
         updatedAt: now
       }
@@ -7949,6 +7976,89 @@ function probabilityStatsMilestones() {
   }));
 }
 
+function competitionMathMilestones() {
+  return [
+    {
+      focus: "Algebra: Vieta's formulas and polynomial fundamentals",
+      competition: "Symmetric functions of roots, Newton's identities lightly, factor theorem, and rational root theorem used aggressively.",
+      practice: "12-15 AIME polynomial/Vieta problems, difficulty 4-8.",
+      journal: "Record root-symmetry transformations, common Vieta substitutions, and polynomial factor cues."
+    },
+    {
+      focus: "Algebra: identities and factoring tricks",
+      competition: "Sophie Germain, sum/difference of cubes and powers, Simon's Favorite Factoring Trick, and telescoping.",
+      practice: "12-15 AIME algebra problems across multiple years.",
+      journal: "Log each factoring pattern by trigger phrase and transformation."
+    },
+    {
+      focus: "Algebra: sequences and recurrences",
+      competition: "Linear recurrences, characteristic polynomials, telescoping sums, and Fibonacci-like manipulation.",
+      practice: "10-12 AIME recurrence problems plus a few Putnam A1 sequence problems.",
+      journal: "Connect recurrence roots to eigenvalue intuition and note when telescoping is available."
+    },
+    {
+      focus: "Algebra: inequalities, part 1",
+      competition: "AM-GM, weighted AM-GM, Cauchy-Schwarz, Engel form, and Titu's lemma as a practical workhorse.",
+      practice: "12-15 AIME inequality problems plus easy USAMO inequalities.",
+      journal: "Track which inequality was chosen and why the expression suggested it."
+    },
+    {
+      focus: "Algebra: inequalities, part 2",
+      competition: "Power mean, rearrangement, Jensen preview, tangent-line method, and sum-of-squares decompositions.",
+      practice: "12-15 inequality problems with at least two full written solutions.",
+      journal: "Record tangent-line and SOS transformations as reusable moves."
+    },
+    {
+      focus: "Algebra: functional equations",
+      competition: "Standard substitutions, x=0, x=y, x=1/y, injectivity/surjectivity, and Cauchy variants.",
+      practice: "10-12 Engel/AIME/USAMO functional equation problems.",
+      journal: "List substitution attempts and the structural reason each worked or failed."
+    },
+    {
+      focus: "Algebra: complex numbers as a tool",
+      competition: "Roots of unity, roots-of-unity filters, e^(i theta) for trigonometric identities and sums.",
+      practice: "10-12 problems connecting algebra, trig, and coefficient extraction.",
+      journal: "Flag overlap with future combinatorics and record roots-of-unity filters."
+    },
+    {
+      focus: "Algebra synthesis and review",
+      competition: "Mixed algebra across Vieta, identities, recurrences, inequalities, functional equations, and complex numbers.",
+      practice: "20-25 mixed algebra problems pulled randomly from the prior seven weeks.",
+      journal: "Review the algebra technique journal end to end and mark unstable patterns."
+    },
+    {
+      focus: "Number theory: divisibility, Euclidean algorithm, Bezout, and linear Diophantine equations",
+      competition: "GCD/LCM relationships, Bezout as a proof tool, and integer-solution parametrization.",
+      practice: "12-15 AIME number theory problems, difficulty 4-8.",
+      journal: "Track standard gcd transformations and Diophantine solvability conditions."
+    },
+    {
+      focus: "Number theory: modular arithmetic, Fermat, and Euler",
+      competition: "Working mod n fluently, choosing useful moduli, standard mod 3/4/8/9 checks, Fermat's little theorem, and Euler's theorem.",
+      practice: "12-15 modular arithmetic problems.",
+      journal: "Record first-try moduli and why each modulus kills the problem."
+    },
+    {
+      focus: "Number theory: CRT and Wilson's theorem",
+      competition: "CRT computationally and structurally, systems of congruences, and Wilson's theorem.",
+      practice: "10-12 congruence-system problems, including CRT decoupling.",
+      journal: "Record when a problem decomposes naturally into prime-power cases."
+    },
+    {
+      focus: "Number theory: v_p, Legendre, and LTE",
+      competition: "Exponent of a prime in n!, Legendre's formula, and lifting the exponent for a^n +/- b^n.",
+      practice: "10-12 factorial-related, valuation, and Putnam-style number theory problems.",
+      journal: "Memorize LTE conditions and write one complete valuation proof."
+    },
+    {
+      focus: "Number theory: quadratic residues",
+      competition: "Squares modulo small numbers, Legendre symbol, Euler's criterion, and a brief quadratic reciprocity preview.",
+      practice: "10-12 residue problems; keep algebra review alive with 1-2 algebra problems.",
+      journal: "End August by reviewing algebra plus the first number theory entries and building the September continuation queue."
+    }
+  ];
+}
+
 function milestoneDetails(milestone) {
   if (milestone.problemDays) {
     const topics = milestone.problemDays.map((day) => `${day.day}: ${day.topic}`).join(" | ");
@@ -7956,6 +8066,9 @@ function milestoneDetails(milestone) {
   }
   if (milestone.focs) {
     return `FOCS: ${milestone.focs} Cartesian: ${milestone.cartesian}`;
+  }
+  if (milestone.competition) {
+    return `One hour per day. Focus: ${milestone.focus}. Toolkit: ${milestone.competition} Practice: ${milestone.practice} Technique journal: ${milestone.journal}`;
   }
   return `CMU 21-228: ${milestone.cmu} MIT 6.1200J: ${milestone.mitMcs} MIT 18.200: ${milestone.mitApplied}`;
 }
