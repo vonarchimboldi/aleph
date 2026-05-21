@@ -1,6 +1,6 @@
 const STORAGE_KEY = "learning-studio-data-v1";
 const SESSION_KEY = "aleph-session";
-const COURSE_PLAN_VERSION = "gate-da-signup-basic-trial-v23";
+const COURSE_PLAN_VERSION = "auth-forgot-password-split-v24";
 
 const state = loadState();
 let deferredInstallPrompt = null;
@@ -68,10 +68,13 @@ document.querySelector("#week-select").addEventListener("change", renderTaskList
 document.querySelector("#login-form").addEventListener("submit", login);
 document.querySelector("#signup-form").addEventListener("submit", signup);
 document.querySelector("#password-change-form").addEventListener("submit", changePassword);
+document.querySelector("#forgot-password-form").addEventListener("submit", resetForgottenPassword);
 document.querySelector("#show-signup-btn").addEventListener("click", showSignup);
 document.querySelector("#show-password-change-btn").addEventListener("click", showPasswordChange);
+document.querySelector("#show-forgot-password-btn").addEventListener("click", showForgotPassword);
 document.querySelector("#back-to-login-btn").addEventListener("click", showLogin);
 document.querySelector("#back-to-login-from-signup-btn").addEventListener("click", showLogin);
+document.querySelector("#back-to-login-from-forgot-btn").addEventListener("click", showLogin);
 document.querySelector("#user-email-form").addEventListener("submit", saveUserEmail);
 document.querySelector("#send-credentials-btn").addEventListener("click", sendCredentialEmail);
 
@@ -8028,7 +8031,7 @@ function basicGateDaUser() {
 
 function prototypeUsers() {
   const basic = basicGateDaUser();
-  const users = [
+  const seededUsers = [
     defaultUser(),
     basic,
     platinumDemoUser(),
@@ -8039,10 +8042,14 @@ function prototypeUsers() {
       password: "basic!gate"
     }
   ];
-  if (state?.user?.name && state.user.password && !users.some((user) => user.name === state.user.name)) {
-    users.push(state.user);
+  if (!state?.user?.name || !state.user.password) {
+    return seededUsers;
   }
-  return users;
+  const matchingIndex = seededUsers.findIndex((user) => user.name === state.user.name);
+  if (matchingIndex === -1) {
+    return [...seededUsers, state.user];
+  }
+  return seededUsers.map((user, index) => index === matchingIndex ? state.user : user);
 }
 
 function persist() {
@@ -8136,41 +8143,94 @@ function changePassword(event) {
   const password = document.querySelector("#new-password").value;
   const confirmation = document.querySelector("#confirm-password").value;
   const error = document.querySelector("#password-error");
-  const storedPassword = state.user.password || state.user.tempPassword;
+  const matchedUser = prototypeUsers().find((user) => user.name === name);
+  const storedPassword = matchedUser?.password || matchedUser?.tempPassword;
+  const validationError = validateNewPassword(password, confirmation, matchedUser?.tempPassword);
 
-  if (name !== state.user.name || currentPassword !== storedPassword) {
+  if (!matchedUser || currentPassword !== storedPassword) {
     error.textContent = "Username or current password is incorrect.";
     return;
   }
 
-  if (password.length < 8) {
-    error.textContent = "Password must be at least 8 characters.";
+  if (validationError) {
+    error.textContent = validationError;
     return;
+  }
+
+  const updatedUser = {
+    ...matchedUser,
+    password,
+    mustChangePassword: false,
+    passwordStatus: "Password changed"
+  };
+  Object.assign(state, buildCoursePlan(updatedUser), {
+    user: updatedUser
+  });
+  persist();
+  sessionStorage.setItem(SESSION_KEY, updatedUser.name);
+  error.textContent = "";
+  document.querySelector("#password-change-form").reset();
+  render();
+  applyAuthState();
+}
+
+function resetForgottenPassword(event) {
+  event.preventDefault();
+  const name = document.querySelector("#forgot-name").value.trim().toLowerCase();
+  const email = document.querySelector("#forgot-email").value.trim().toLowerCase();
+  const password = document.querySelector("#forgot-new-password").value;
+  const confirmation = document.querySelector("#forgot-confirm-password").value;
+  const error = document.querySelector("#forgot-password-error");
+  const matchedUser = prototypeUsers().find((user) => user.name === name && (user.email || "").toLowerCase() === email);
+  const validationError = validateNewPassword(password, confirmation, matchedUser?.tempPassword);
+
+  if (!matchedUser) {
+    error.textContent = "Username and email do not match an account.";
+    return;
+  }
+
+  if (validationError) {
+    error.textContent = validationError;
+    return;
+  }
+
+  const updatedUser = {
+    ...matchedUser,
+    password,
+    mustChangePassword: false,
+    passwordStatus: "Password reset"
+  };
+  Object.assign(state, buildCoursePlan(updatedUser), {
+    user: updatedUser
+  });
+  persist();
+  sessionStorage.setItem(SESSION_KEY, updatedUser.name);
+  error.textContent = "";
+  document.querySelector("#forgot-password-form").reset();
+  render();
+  applyAuthState();
+}
+
+function validateNewPassword(password, confirmation, temporaryPassword = "") {
+  if (password.length < 8) {
+    return "Password must be at least 8 characters.";
   }
 
   if (password !== confirmation) {
-    error.textContent = "Passwords do not match.";
-    return;
+    return "Passwords do not match.";
   }
 
-  if (password === state.user.tempPassword) {
-    error.textContent = "Choose a password different from the temporary password.";
-    return;
+  if (temporaryPassword && password === temporaryPassword) {
+    return "Choose a password different from the temporary password.";
   }
 
-  state.user.password = password;
-  state.user.mustChangePassword = false;
-  state.user.passwordStatus = "Password changed";
-  persist();
-  sessionStorage.setItem(SESSION_KEY, state.user.name);
-  error.textContent = "";
-  document.querySelector("#password-change-form").reset();
-  applyAuthState();
+  return "";
 }
 
 function showPasswordChange() {
   document.querySelector("#login-form").classList.add("hidden");
   document.querySelector("#signup-form").classList.remove("active");
+  document.querySelector("#forgot-password-form").classList.remove("active");
   document.querySelector("#password-change-form").classList.add("active");
   document.querySelector("#change-name").value = document.querySelector("#login-name").value.trim() || state.user.name;
 }
@@ -8178,16 +8238,28 @@ function showPasswordChange() {
 function showSignup() {
   document.querySelector("#login-form").classList.add("hidden");
   document.querySelector("#password-change-form").classList.remove("active");
+  document.querySelector("#forgot-password-form").classList.remove("active");
   document.querySelector("#signup-form").classList.add("active");
   document.querySelector("#signup-error").textContent = "";
+}
+
+function showForgotPassword() {
+  document.querySelector("#login-form").classList.add("hidden");
+  document.querySelector("#signup-form").classList.remove("active");
+  document.querySelector("#password-change-form").classList.remove("active");
+  document.querySelector("#forgot-password-form").classList.add("active");
+  document.querySelector("#forgot-name").value = document.querySelector("#login-name").value.trim();
+  document.querySelector("#forgot-password-error").textContent = "";
 }
 
 function showLogin() {
   document.querySelector("#password-change-form").classList.remove("active");
   document.querySelector("#signup-form").classList.remove("active");
+  document.querySelector("#forgot-password-form").classList.remove("active");
   document.querySelector("#login-form").classList.remove("hidden");
   document.querySelector("#password-error").textContent = "";
   document.querySelector("#signup-error").textContent = "";
+  document.querySelector("#forgot-password-error").textContent = "";
 }
 
 function logout() {
@@ -8203,6 +8275,7 @@ function applyAuthState() {
   document.querySelector("#landing-view").classList.toggle("active", !signedIn || mustChangePassword);
   document.querySelector("#login-form").classList.toggle("hidden", signedIn);
   document.querySelector("#signup-form").classList.toggle("active", false);
+  document.querySelector("#forgot-password-form").classList.toggle("active", false);
   document.querySelector("#password-change-form").classList.toggle("active", mustChangePassword);
   if (mustChangePassword) {
     document.querySelector("#change-name").value = state.user.name;

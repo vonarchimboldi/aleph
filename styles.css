@@ -54,12 +54,14 @@ body:not(.is-authenticated) .shell {
 
 .hidden,
 .password-card,
-.signup-card {
+.signup-card,
+.forgot-card {
   display: none;
 }
 
 .password-card.active,
-.signup-card.active {
+.signup-card.active,
+.forgot-card.active {
   display: block;
 }
 

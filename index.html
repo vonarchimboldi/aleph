@@ -37,7 +37,8 @@
           <button class="primary-btn" type="submit">Sign in</button>
           <div class="login-links">
             <button class="text-btn" id="show-signup-btn" type="button">Create account</button>
-            <button class="text-btn" id="show-password-change-btn" type="button">Forgot or change password?</button>
+            <button class="text-btn" id="show-forgot-password-btn" type="button">Forgot password?</button>
+            <button class="text-btn" id="show-password-change-btn" type="button">Change password</button>
           </div>
           <p class="fine-print">Use the demo credentials provided by the project owner.</p>
           <p class="fine-print">This prototype uses local demo authentication. Use a real backend before sharing private learner data.</p>
@@ -96,7 +97,7 @@
         <form class="login-card password-card" id="password-change-form">
           <div>
             <h2>Change password</h2>
-            <p class="muted">Enter your current or temporary password, then choose a new one.</p>
+            <p class="muted">Enter your current password, then choose a new one.</p>
           </div>
           <label>
             <span>Username</span>
@@ -117,6 +118,32 @@
           <p class="error-text" id="password-error" aria-live="polite"></p>
           <button class="primary-btn" type="submit">Update password</button>
           <button class="text-btn" id="back-to-login-btn" type="button">Back to sign in</button>
+        </form>
+
+        <form class="login-card forgot-card" id="forgot-password-form">
+          <div>
+            <h2>Reset password</h2>
+            <p class="muted">Use the account username and email to reset your prototype password.</p>
+          </div>
+          <label>
+            <span>Username</span>
+            <input id="forgot-name" autocomplete="username" required>
+          </label>
+          <label>
+            <span>Email</span>
+            <input id="forgot-email" type="email" autocomplete="email" required>
+          </label>
+          <label>
+            <span>New password</span>
+            <input id="forgot-new-password" type="password" autocomplete="new-password" minlength="8" required>
+          </label>
+          <label>
+            <span>Confirm password</span>
+            <input id="forgot-confirm-password" type="password" autocomplete="new-password" minlength="8" required>
+          </label>
+          <p class="error-text" id="forgot-password-error" aria-live="polite"></p>
+          <button class="primary-btn" type="submit">Reset password</button>
+          <button class="text-btn" id="back-to-login-from-forgot-btn" type="button">Back to sign in</button>
         </form>
       </div>
     </section>
@@ -412,6 +439,6 @@
       </form>
     </dialog>
 
-    <script src="app.js?v=gate-da-signup-basic-trial-v23"></script>
+    <script src="app.js?v=auth-forgot-password-split-v24"></script>
   </body>
 </html>
