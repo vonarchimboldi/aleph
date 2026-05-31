@@ -1,6 +1,6 @@
 const STORAGE_KEY = "learning-studio-data-v1";
 const SESSION_KEY = "aleph-session";
-const COURSE_PLAN_VERSION = "priyanka-competition-math-single-subject-v27";
+const COURSE_PLAN_VERSION = "forgot-password-identifier-v28";
 
 const state = loadState();
 let deferredInstallPrompt = null;
@@ -8289,16 +8289,17 @@ function changePassword(event) {
 
 function resetForgottenPassword(event) {
   event.preventDefault();
-  const name = document.querySelector("#forgot-name").value.trim().toLowerCase();
-  const email = document.querySelector("#forgot-email").value.trim().toLowerCase();
+  const identifier = document.querySelector("#forgot-identifier").value.trim().toLowerCase();
   const password = document.querySelector("#forgot-new-password").value;
   const confirmation = document.querySelector("#forgot-confirm-password").value;
   const error = document.querySelector("#forgot-password-error");
-  const matchedUser = prototypeUsers().find((user) => user.name === name && (user.email || "").toLowerCase() === email);
+  const matchedUser = prototypeUsers().find((user) =>
+    user.name === identifier || (user.email || "").toLowerCase() === identifier
+  );
   const validationError = validateNewPassword(password, confirmation, matchedUser?.tempPassword);
 
   if (!matchedUser) {
-    error.textContent = "Username and email do not match an account.";
+    error.textContent = "No account matches that username or email.";
     return;
   }
 
@@ -8361,7 +8362,7 @@ function showForgotPassword() {
   document.querySelector("#signup-form").classList.remove("active");
   document.querySelector("#password-change-form").classList.remove("active");
   document.querySelector("#forgot-password-form").classList.add("active");
-  document.querySelector("#forgot-name").value = document.querySelector("#login-name").value.trim();
+  document.querySelector("#forgot-identifier").value = document.querySelector("#login-name").value.trim();
   document.querySelector("#forgot-password-error").textContent = "";
 }
 
