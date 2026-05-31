@@ -10,3 +10,4 @@ probability books/
 logs/
 skills/
 scripts/harness.js
+.env*.local
