@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>June 1 Pset — Method of Indicators</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" />
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+  <style>
+    :root {
+      --bg: #f7f8fc;
+      --paper: #ffffff;
+      --ink: #1f2430;
+      --muted: #5f687a;
+      --line: #dbe1ee;
+      --soft: #edf3ff;
+      --accent: #2457c5;
+      --accent-2: #16735f;
+      --warn: #9f681c;
+      --hard: #8f3248;
+      --code: #f3f5fa;
+    }
+
+    * { box-sizing: border-box; }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      background: var(--bg);
+      color: var(--ink);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      line-height: 1.62;
+    }
+
+    .wrap {
+      max-width: 980px;
+      margin: 0 auto;
+      padding: 32px 20px 64px;
+    }
+
+    .hero {
+      background: linear-gradient(135deg, #ffffff 0%, #edf3ff 100%);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 28px;
+      box-shadow: 0 8px 28px rgba(31, 36, 48, 0.06);
+    }
+
+    h1 {
+      margin: 0 0 10px;
+      font-size: clamp(2rem, 4vw, 3rem);
+      line-height: 1.05;
+      letter-spacing: 0;
+    }
+
+    h2 {
+      margin: 34px 0 14px;
+      font-size: 1.35rem;
+      line-height: 1.2;
+    }
+
+    h3 {
+      margin: 0 0 8px;
+      font-size: 1.05rem;
+    }
+
+    p { margin: 10px 0; }
+
+    ul, ol { padding-left: 22px; }
+    li { margin: 4px 0; }
+
+    .sub {
+      max-width: 760px;
+      color: var(--muted);
+      margin: 0;
+    }
+
+    .meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 18px;
+    }
+
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      border: 1px solid var(--line);
+      background: rgba(255, 255, 255, 0.72);
+      color: #334056;
+      border-radius: 999px;
+      padding: 6px 10px;
+      font-size: 0.9rem;
+      white-space: nowrap;
+    }
+
+    .panel {
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 18px 20px;
+      margin: 22px 0;
+    }
+
+    .panel.accent {
+      border-left: 4px solid var(--accent);
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .formula {
+      background: var(--code);
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 12px 14px;
+      overflow-x: auto;
+    }
+
+    .section-label {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin: 34px 0 16px;
+      color: var(--muted);
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .section-label::before,
+    .section-label::after {
+      content: "";
+      height: 1px;
+      background: var(--line);
+      flex: 1;
+    }
+
+    .problem {
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 18px 20px;
+      margin: 16px 0;
+      box-shadow: 0 3px 14px rgba(31, 36, 48, 0.04);
+    }
+
+    .problem-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      align-items: flex-start;
+      margin-bottom: 10px;
+    }
+
+    .problem-title {
+      font-weight: 750;
+      font-size: 1.05rem;
+    }
+
+    .tags {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      gap: 6px;
+      min-width: 220px;
+    }
+
+    .tag {
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 3px 8px;
+      color: var(--muted);
+      background: #fbfcff;
+      font-size: 0.78rem;
+      white-space: nowrap;
+    }
+
+    .tag.concept { color: var(--accent-2); border-color: #b8ddd3; background: #effaf7; }
+    .tag.integration { color: var(--warn); border-color: #ead2a8; background: #fff7e8; }
+    .tag.isi { color: var(--hard); border-color: #e5bac6; background: #fff0f4; }
+
+    details {
+      margin-top: 12px;
+      border-top: 1px dashed var(--line);
+      padding-top: 10px;
+    }
+
+    summary {
+      cursor: pointer;
+      color: var(--accent);
+      font-weight: 700;
+    }
+
+    .answer-list {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px 18px;
+      margin-top: 8px;
+    }
+
+    .answer-list div {
+      border-bottom: 1px solid var(--line);
+      padding: 5px 0;
+    }
+
+    .source {
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+
+    @media (max-width: 760px) {
+      .wrap { padding: 20px 14px 44px; }
+      .hero { padding: 22px 18px; }
+      .grid, .answer-list { grid-template-columns: 1fr; }
+      .problem { padding: 16px; }
+      .problem-head { display: block; }
+      .tags { justify-content: flex-start; min-width: 0; margin-top: 8px; }
+    }
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <section class="hero">
+      <h1>June 1 Pset: Method of Indicators</h1>
+      <p class="sub">
+        Ten problems for building the core ISI pattern: define atomic yes/no events, write the count as a sum of indicators, and use linearity before trying to find a full distribution.
+      </p>
+      <div class="meta">
+        <span class="chip">Probability and Statistics</span>
+        <span class="chip">Monday</span>
+        <span class="chip">5 concept builders</span>
+        <span class="chip">3 integration problems</span>
+        <span class="chip">2 ISI past-year problems</span>
+        <span class="chip">Solutions included</span>
+      </div>
+    </section>
+
+    <section class="panel accent">
+      <h2>Core Pattern</h2>
+      <p>If \(X\) counts objects with some property, look for indicators \(I_i=\mathbf{1}_{A_i}\) such that</p>
+      <div class="formula">
+        \[
+          X=\sum_i I_i,\qquad E[X]=\sum_i E[I_i]=\sum_i P(A_i).
+        \]
+      </div>
+      <p>For variances, use pairwise products:</p>
+      <div class="formula">
+        \[
+          E[X^2]=\sum_i E[I_i]+2\sum_{i<j}E[I_iI_j],
+          \qquad
+          E[X(X-1)]=\sum_{i\ne j}E[I_iI_j].
+        \]
+      </div>
+    </section>
+
+    <section class="panel">
+      <h2>Pattern Checklist</h2>
+      <div class="grid">
+        <ul>
+          <li>What object is being counted?</li>
+          <li>What is the right index set?</li>
+          <li>What event makes one indicator equal to \(1\)?</li>
+          <li>Are all indicators symmetric?</li>
+        </ul>
+        <ul>
+          <li>Do I need expectation only, or also variance?</li>
+          <li>For variance, which pairs overlap?</li>
+          <li>Can I condition first and then use indicators?</li>
+          <li>Is the full distribution unnecessary?</li>
+        </ul>
+      </div>
+    </section>
+
+    <div class="section-label">Problems 1-5 · Concept Builders</div>
+
+    <article class="problem">
+      <div class="problem-head">
+        <div class="problem-title">1. Marked Rolls</div>
+        <div class="tags">
+          <span class="tag concept">Concept</span>
+          <span class="tag">Linearity</span>
+          <span class="tag">5 min</span>
+        </div>
+      </div>
+      <p>A fair die is rolled \(n\) times. Let \(X\) be the number of rolls whose value is either \(1\) or \(6\). Find \(E[X]\) using indicators.</p>
+      <details>
+        <summary>Solution</summary>
+        <p>Let \(I_i=\mathbf{1}\{\text{roll }i\text{ is }1\text{ or }6\}\). Then \(X=\sum_{i=1}^n I_i\), and</p>
+        \[
+          E[I_i]=P(I_i=1)=\frac{2}{6}=\frac13.
+        \]
+        <p>Therefore</p>
+        \[
+          E[X]=\sum_{i=1}^n E[I_i]=\frac{n}{3}.
+        \]
+      </details>
+    </article>
+
+    <article class="problem">
+      <div class="problem-head">
+        <div class="problem-title">2. Fixed Points in a Random Permutation</div>
+        <div class="tags">
+          <span class="tag concept">Concept</span>
+          <span class="tag">Permutation</span>
+          <span class="tag">6 min</span>
+        </div>
+      </div>
+      <p>A permutation \(\sigma\) of \(\{1,2,\ldots,n\}\) is chosen uniformly at random. Let \(F\) be the number of fixed points, meaning positions \(i\) such that \(\sigma(i)=i\). Find \(E[F]\).</p>
+      <details>
+        <summary>Solution</summary>
+        <p>Let \(I_i=\mathbf{1}\{\sigma(i)=i\}\). Then \(F=\sum_{i=1}^n I_i\). For each fixed \(i\), symmetry gives</p>
+        \[
+          P(\sigma(i)=i)=\frac1n.
+        \]
+        <p>Hence</p>
+        \[
+          E[F]=\sum_{i=1}^n \frac1n=1.
+        \]
+        <p>The indicators are dependent, but independence is not needed for linearity of expectation.</p>
+      </details>
+    </article>
+
+    <article class="problem">
+      <div class="problem-head">
+        <div class="problem-title">3. Occupied Boxes</div>
+        <div class="tags">
+          <span class="tag concept">Concept</span>
+          <span class="tag">Occupancy</span>
+          <span class="tag">8 min</span>
+        </div>
+      </div>
+      <p>Throw \(m\) balls independently and uniformly into \(n\) boxes. Let \(B\) be the number of boxes that receive at least one ball. Find \(E[B]\).</p>
+      <details>
+        <summary>Solution</summary>
+        <p>Let \(I_j=\mathbf{1}\{\text{box }j\text{ is nonempty}\}\). Then \(B=\sum_{j=1}^n I_j\). A fixed box is empty with probability \((1-1/n)^m\), so</p>
+        \[
+          E[I_j]=P(I_j=1)=1-\left(1-\frac1n\right)^m.
+        \]
+        <p>Therefore</p>
+        \[
+          E[B]=n\left[1-\left(1-\frac1n\right)^m\right].
+        \]
+      </details>
+    </article>
+
+    <article class="problem">
+      <div class="problem-head">
+        <div class="problem-title">4. Adjacent Equal Letters</div>
+        <div class="tags">
+          <span class="tag concept">Concept</span>
+          <span class="tag">Dependence</span>
+          <span class="tag">8 min</span>
+        </div>
+      </div>
+      <p>A random word \(W_1W_2\cdots W_n\) is formed by choosing each letter independently and uniformly from \(\{A,B,C,D\}\). Let \(A_n\) be the number of adjacent pairs \(i,i+1\) with \(W_i=W_{i+1}\). Find \(E[A_n]\).</p>
+      <details>
+        <summary>Solution</summary>
+        <p>Let \(I_i=\mathbf{1}\{W_i=W_{i+1}\}\) for \(1\le i\le n-1\). Then \(A_n=\sum_{i=1}^{n-1}I_i\). For a fixed adjacent pair, once \(W_i\) is chosen, \(W_{i+1}\) matches it with probability \(1/4\). Thus</p>
+        \[
+          E[A_n]=(n-1)\frac14=\frac{n-1}{4}.
+        \]
+        <p>The adjacent-pair indicators overlap, but expectation still adds linearly.</p>
+      </details>
+    </article>
+
+    <article class="problem">
+      <div class="problem-head">
+        <div class="problem-title">5. Variance of Fixed Points</div>
+        <div class="tags">
+          <span class="tag concept">Concept</span>
+          <span class="tag">Variance</span>
+          <span class="tag">12 min</span>
+        </div>
+      </div>
+      <p>Continue Problem 2. For a uniformly random permutation of \(\{1,\ldots,n\}\), with \(n\ge 2\), let \(F\) be the number of fixed points. Find \(\operatorname{Var}(F)\).</p>
+      <details>
+        <summary>Solution</summary>
+        <p>Use \(F=\sum_{i=1}^n I_i\), where \(I_i=\mathbf{1}\{\sigma(i)=i\}\). We already know \(E[F]=1\). Now compute \(E[F^2]\):</p>
+        \[
+          F^2=\sum_i I_i + 2\sum_{i<j}I_iI_j.
+        \]
+        <p>For each \(i\), \(E[I_i]=1/n\). For \(i\ne j\),</p>
+        \[
+          E[I_iI_j]=P(\sigma(i)=i,\sigma(j)=j)=\frac{(n-2)!}{n!}=\frac{1}{n(n-1)}.
+        \]
+        <p>Therefore</p>
+        \[
+          E[F^2]
+          =n\cdot\frac1n+2\binom{n}{2}\frac{1}{n(n-1)}
+          =1+1=2.
+        \]
+        <p>Thus</p>
+        \[
+          \operatorname{Var}(F)=E[F^2]-(E[F])^2=2-1=1.
+        \]
+      </details>
+    </article>
+
+    <div class="section-label">Problems 6-8 · Pattern Integration</div>
+
+    <article class="problem">
+      <div class="problem-head">
+        <div class="problem-title">6. Empty Boxes: Second Moment</div>
+        <div class="tags">
+          <span class="tag integration">Integration</span>
+          <span class="tag">Overlap pairs</span>
+          <span class="tag">15 min</span>
+        </div>
+      </div>
+      <p>Throw \(m\) balls independently and uniformly into \(n\) boxes, where \(n\ge 2\). Let \(E_m\) be the number of empty boxes. Find \(E[E_m]\) and \(\operatorname{Var}(E_m)\).</p>
+      <details>
+        <summary>Solution</summary>
+        <p>Let \(I_j=\mathbf{1}\{\text{box }j\text{ is empty}\}\). Then \(E_m=\sum_{j=1}^n I_j\). For a fixed box,</p>
+        \[
+          p_1=P(I_j=1)=\left(1-\frac1n\right)^m.
+        \]
+        <p>So</p>
+        \[
+          E[E_m]=np_1.
+        \]
+        <p>For two distinct boxes \(j\ne k\), both are empty iff every ball avoids both boxes:</p>
+        \[
+          p_2=P(I_jI_k=1)=\left(1-\frac2n\right)^m.
+        \]
+        <p>Using \(E[E_m^2]=\sum_j E[I_j]+2\sum_{j<k}E[I_jI_k]\),</p>
+        \[
+          E[E_m^2]=np_1+n(n-1)p_2.
+        \]
+        <p>Therefore</p>
+        \[
+          \operatorname{Var}(E_m)=np_1+n(n-1)p_2-n^2p_1^2.
+        \]
+      </details>
+    </article>
+
+    <article class="problem">
+      <div class="problem-head">
+        <div class="problem-title">7. Red Draws in Polya's Urn</div>
+        <div class="tags">
+          <span class="tag integration">Integration</span>
+          <span class="tag">Exchangeability</span>
+          <span class="tag">15 min</span>
+        </div>
+      </div>
+      <p>An urn initially contains \(r\) red balls and \(b\) black balls. A ball is drawn, its color is recorded, and then it is returned together with \(c\) additional balls of the same color. This is repeated for \(n\) draws. Let \(R_n\) be the number of red draws. Find \(E[R_n]\).</p>
+      <details>
+        <summary>Solution</summary>
+        <p>Let \(I_k=\mathbf{1}\{\text{draw }k\text{ is red}\}\). Then</p>
+        \[
+          R_n=\sum_{k=1}^n I_k.
+        \]
+        <p>In Polya's urn, the draw colors are exchangeable. In particular, every draw has the same marginal probability of being red as the first draw:</p>
+        \[
+          P(I_k=1)=P(I_1=1)=\frac{r}{r+b}.
+        \]
+        <p>Therefore</p>
+        \[
+          E[R_n]=\sum_{k=1}^n E[I_k]=\frac{nr}{r+b}.
+        \]
+        <p>The reinforcement creates dependence between draws, but linearity of expectation and exchangeability still give the expectation immediately.</p>
+      </details>
+    </article>
+
+    <article class="problem">
+      <div class="problem-head">
+        <div class="problem-title">8. Defectives After a Random Batch Size</div>
+        <div class="tags">
+          <span class="tag integration">Integration</span>
+          <span class="tag">Conditioning</span>
+          <span class="tag">18 min</span>
+        </div>
+      </div>
+      <p>A factory produces \(N\) items in a day, where \(N\) is a nonnegative integer-valued random variable with \(E[N]<\infty\). Conditional on \(N=n\), each of the \(n\) items is defective independently with probability \(p\). Let \(D\) be the number of defective items. Use indicators conditional on \(N\) to find \(E[D]\) and \(\operatorname{Var}(D)\) in terms of \(E[N]\), \(\operatorname{Var}(N)\), and \(p\).</p>
+      <details>
+        <summary>Solution</summary>
+        <p>Conditional on \(N=n\), write \(D=\sum_{i=1}^n I_i\), where \(I_i\) indicates that item \(i\) is defective. Then</p>
+        \[
+          E[D\mid N=n]=np,\qquad \operatorname{Var}(D\mid N=n)=np(1-p).
+        \]
+        <p>By the tower property,</p>
+        \[
+          E[D]=E[E[D\mid N]]=E[Np]=pE[N].
+        \]
+        <p>By total variance,</p>
+        \[
+          \operatorname{Var}(D)=E[\operatorname{Var}(D\mid N)]+\operatorname{Var}(E[D\mid N]).
+        \]
+        <p>Thus</p>
+        \[
+          \operatorname{Var}(D)=E[Np(1-p)]+\operatorname{Var}(Np)
+          =p(1-p)E[N]+p^2\operatorname{Var}(N).
+        \]
+      </details>
+    </article>
+
+    <div class="section-label">Problems 9-10 · ISI Past-Year / ISI-Style</div>
+
+    <article class="problem">
+      <div class="problem-head">
+        <div>
+          <div class="problem-title">9. ISI PSB 2026: Expected Number of Inversions</div>
+          <p class="source">Source: ISI MStat PSB 2026, inversion-count problem, reconstructed from the PSB prep guide.</p>
+        </div>
+        <div class="tags">
+          <span class="tag isi">ISI</span>
+          <span class="tag">Past year</span>
+          <span class="tag">20 min</span>
+        </div>
+      </div>
+      <p>Let \(\sigma\) be a uniformly random permutation of \(\{1,2,\ldots,n\}\). Let</p>
+      \[
+        V=\#\{(i,j):1\le i<j\le n,\ \sigma(i)>\sigma(j)\}.
+      \]
+      <p>Find \(E[V]\). Then explain why this computation does not require independence of the inversion indicators.</p>
+      <details>
+        <summary>Solution</summary>
+        <p>For each pair \(i<j\), define</p>
+        \[
+          I_{ij}=\mathbf{1}\{\sigma(i)>\sigma(j)\}.
+        \]
+        <p>Then \(V=\sum_{i<j}I_{ij}\). For a fixed pair \(i<j\), the two relative orders \(\sigma(i)>\sigma(j)\) and \(\sigma(i)<\sigma(j)\) are equally likely. Hence</p>
+        \[
+          E[I_{ij}]=P(I_{ij}=1)=\frac12.
+        \]
+        <p>Therefore</p>
+        \[
+          E[V]=\sum_{i<j}E[I_{ij}]
+          =\binom n2\frac12
+          =\frac{n(n-1)}4.
+        \]
+        <p>The indicators \(I_{ij}\) are not mutually independent. For example, events involving overlapping indices can affect each other. But linearity of expectation never requires independence, only that each expectation exists.</p>
+      </details>
+    </article>
+
+    <article class="problem">
+      <div class="problem-head">
+        <div>
+          <div class="problem-title">10. ISI PSB 2022: Children Receiving No Books</div>
+          <p class="source">Source: ISI MStat PSB 2022, occupancy/covariance problem, reconstructed from the PSB prep guide.</p>
+        </div>
+        <div class="tags">
+          <span class="tag isi">ISI</span>
+          <span class="tag">Past year</span>
+          <span class="tag">25 min</span>
+        </div>
+      </div>
+      <p>There are \(n\ge 2\) distinct books and \(n\) children. Each book is independently given to one of the \(n\) children, uniformly at random. Let \(X\) be the number of children who receive no books.</p>
+      <ol>
+        <li>Find \(E[X]\).</li>
+        <li>Find \(\operatorname{Var}(X)\).</li>
+        <li>Find the limiting value of \(E[X]/n\) as \(n\to\infty\).</li>
+      </ol>
+      <details>
+        <summary>Solution</summary>
+        <p>Let \(I_i=\mathbf{1}\{\text{child }i\text{ receives no books}\}\). Then</p>
+        \[
+          X=\sum_{i=1}^n I_i.
+        \]
+        <p>A fixed child receives no books if every book goes to one of the other \(n-1\) children, so</p>
+        \[
+          p_1=P(I_i=1)=\left(\frac{n-1}{n}\right)^n.
+        \]
+        <p>Thus</p>
+        \[
+          E[X]=np_1=n\left(1-\frac1n\right)^n.
+        \]
+        <p>For the variance, use the second moment. If \(i\ne j\), both children \(i\) and \(j\) receive no books iff every book goes to one of the remaining \(n-2\) children:</p>
+        \[
+          p_2=P(I_iI_j=1)=\left(\frac{n-2}{n}\right)^n.
+        \]
+        <p>Now</p>
+        \[
+          E[X^2]=\sum_iE[I_i]+2\sum_{i<j}E[I_iI_j]
+          =np_1+n(n-1)p_2.
+        \]
+        <p>Therefore</p>
+        \[
+          \operatorname{Var}(X)
+          =np_1+n(n-1)p_2-n^2p_1^2.
+        \]
+        <p>Finally,</p>
+        \[
+          \frac{E[X]}{n}=\left(1-\frac1n\right)^n\longrightarrow e^{-1}.
+        \]
+      </details>
+    </article>
+
+    <section class="panel">
+      <h2>Answer Summary</h2>
+      <div class="answer-list">
+        <div><strong>1.</strong> \(n/3\)</div>
+        <div><strong>2.</strong> \(1\)</div>
+        <div><strong>3.</strong> \(n\left[1-(1-1/n)^m\right]\)</div>
+        <div><strong>4.</strong> \((n-1)/4\)</div>
+        <div><strong>5.</strong> \(1\)</div>
+        <div><strong>6.</strong> \(np_1+n(n-1)p_2-n^2p_1^2\), with \(p_1=(1-1/n)^m\), \(p_2=(1-2/n)^m\)</div>
+        <div><strong>7.</strong> \(nr/(r+b)\)</div>
+        <div><strong>8.</strong> \(pE[N]\), \(p(1-p)E[N]+p^2\operatorname{Var}(N)\)</div>
+        <div><strong>9.</strong> \(n(n-1)/4\)</div>
+        <div><strong>10.</strong> \(n(1-1/n)^n\), variance as above, limit \(e^{-1}\)</div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      renderMathInElement(document.body, {
+        delimiters: [
+          { left: "$$", right: "$$", display: true },
+          { left: "\\[", right: "\\]", display: true },
+          { left: "\\(", right: "\\)", display: false },
+          { left: "$", right: "$", display: false }
+        ],
+        throwOnError: false
+      });
+    });
+  </script>
+</body>
+</html>

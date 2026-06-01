@@ -1,6 +1,6 @@
 const STORAGE_KEY = "learning-studio-data-v1";
 const SESSION_KEY = "aleph-session";
-const COURSE_PLAN_VERSION = "forgot-password-identifier-v28";
+const COURSE_PLAN_VERSION = "ps-indicators-published-v30";
 
 const state = loadState();
 let deferredInstallPrompt = null;
@@ -211,7 +211,7 @@ function buildPriyankaPlatinumPlan(now, accountTypes, sections) {
       title: "Probability and Statistics",
       date: endDate,
       status: "Not started",
-      details: "GATE DA Probability and Statistics with Priyanka's Platinum pacing: daily PSB-style problem sets, Sunday tests, correction notes, and custom feedback. The current Basic Probability chapter reader is attached as supporting content.",
+      details: "GATE DA Probability and Statistics with Priyanka's Platinum pacing: daily 10-problem PSB-style sets, Sunday mixed review, correction notes, and custom feedback. The current Basic Probability chapter reader is attached as supporting content.",
       sectionIds: sections.map((section) => section.id),
       updatedAt: now
     },
@@ -295,7 +295,7 @@ function buildPriyankaPlatinumPlan(now, accountTypes, sections) {
           tasks.push({
             id: `task-${plan.key.toLowerCase()}-week-${week}-${dayId}`,
             week,
-            title: `${plan.key} W${week} ${dayPlan.day}: 5-problem ${dayPlan.topic} set`,
+            title: `${plan.key} W${week} ${dayPlan.day}: 10-problem ${dayPlan.topic} set`,
             type: "Problem set",
             date,
             status: "todo",
@@ -563,7 +563,7 @@ function buildPriyankaPlatinumPlan(now, accountTypes, sections) {
         id: "resource-isi-pattern-notes",
         title: "ISI MStat PSB Probability and Statistics Pattern Notes",
         date: startDate,
-        details: "Use the local ISI pattern notes to drive daily 5-problem sets across NP/MP tests, MLE and estimation, conditional expectation with indicators, distributions and order statistics, and regression/OLS.",
+        details: "Use the local ISI pattern notes to drive daily 10-problem sets across indicators, conditional expectation, order statistics, MLE, UMP/NP tests, and regression/OLS.",
         link: "",
         updatedAt: now
       },
@@ -573,6 +573,14 @@ function buildPriyankaPlatinumPlan(now, accountTypes, sections) {
         date: startDate,
         details: "Use the organized local practice folders as the problem bank: 01-np-mp-tests, 02-mle-estimation, 03-conditional-expectation-indicators, 04-distributions-order-statistics, 05-regression-ols, and 99-mixed-review.",
         link: "",
+        updatedAt: now
+      },
+      {
+        id: "resource-ps-week-1-monday-indicators",
+        title: "PS Week 1 Monday: Method of Indicators Pset",
+        date: startDate,
+        details: "June 1 HTML pset for Priyanka: 10 problems with KaTeX, collapsed solutions, 5 concept builders, 3 integration problems, and 2 ISI past-year/reconstructed problems. Published as learner-facing material; generation notes remain local.",
+        link: "psets/week-01/june-01-indicators.html",
         updatedAt: now
       },
       {
@@ -7920,9 +7928,19 @@ function dsaMilestones() {
 function probabilityStatsMilestones() {
   const cycle = [
     {
-      topic: "NP/MP tests",
-      pattern: "likelihood-ratio construction with size calibration",
-      variations: "simple vs simple; one-sided UMP; two-sided non-UMP; transformed samples; mixed sufficient statistics"
+      topic: "method of indicators",
+      pattern: "count decomposition into indicator variables with linearity, symmetry, and pairwise products",
+      variations: "fixed points; occupancy; dependent indicators; variance by pairs; exchangeability; conditioning bridge"
+    },
+    {
+      topic: "conditional expectation and tower property",
+      pattern: "conditioning choice, tower property, total variance, and stopping-time counts",
+      variations: "condition on the simplifying variable; law of total expectation; law of total variance; geometric stopping; conditional distributions"
+    },
+    {
+      topic: "order statistics",
+      pattern: "exact distribution from CDF/PDF transformations and order-statistic identities",
+      variations: "uniform/beta order statistics; exponential spacings; min/max scaling; joint order statistics; conditional laws"
     },
     {
       topic: "MLE and estimation",
@@ -7930,14 +7948,9 @@ function probabilityStatsMilestones() {
       variations: "regular families; support-dependent likelihoods; boundary MLEs; constrained MLEs; bias, MSE, sufficiency, UMVUE"
     },
     {
-      topic: "conditional expectation and indicators",
-      pattern: "conditioning choice, tower property, and decomposition into indicators",
-      variations: "law of total expectation; law of total variance; stopping-time counts; exchangeability; non-overlap indicators"
-    },
-    {
-      topic: "distributions and order statistics",
-      pattern: "exact distribution from CDF/PDF transformations and order-statistic identities",
-      variations: "uniform/beta order statistics; exponential spacings; min/max scaling; joint order statistics; Bayes and geometric/Poisson drills"
+      topic: "UMP/NP tests",
+      pattern: "likelihood-ratio construction with size calibration",
+      variations: "simple vs simple; one-sided UMP; transformed samples; monotone likelihood ratios; power under the alternative"
     },
     {
       topic: "regression and OLS",
@@ -7947,7 +7960,7 @@ function probabilityStatsMilestones() {
   ];
 
   const weeklyFocus = [
-    "baseline diagnostic cycle across all five patterns",
+    "baseline diagnostic cycle across all six patterns",
     "conditioning and LR-statistic selection under time pressure",
     "support-dependent likelihoods plus exact distribution calculations",
     "indicator decompositions and OLS algebra fluency",
@@ -7959,14 +7972,14 @@ function probabilityStatsMilestones() {
     "full PSB reconstruction: identify the pattern before calculating",
     "weak-area rotation using errors from the first ten weeks",
     "timed mixed PSB sets with written-solution discipline",
-    "final cumulative synthesis across all five recurring patterns"
+    "final cumulative synthesis across all six recurring patterns"
   ];
 
   return weeklyFocus.map((focus, weekIndex) => ({
     focus,
     problemDays: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"].map((day, dayIndex) => {
-      const theme = cycle[(weekIndex + dayIndex) % cycle.length];
-      const intensity = dayIndex < 2 ? "core drill" : dayIndex < 4 ? "variation drill" : "mixed PSB-style drill";
+      const theme = cycle[dayIndex % cycle.length];
+      const intensity = dayIndex < 3 ? "core drill" : dayIndex < 5 ? "variation drill" : "mixed PSB-style drill";
       return {
         day,
         intensity,
@@ -8062,7 +8075,7 @@ function competitionMathMilestones() {
 function milestoneDetails(milestone) {
   if (milestone.problemDays) {
     const topics = milestone.problemDays.map((day) => `${day.day}: ${day.topic}`).join(" | ");
-    return `Daily 5-problem PSB practice sets. Weekly focus: ${milestone.focus}. Pattern rotation: ${topics}`;
+    return `Daily 10-problem PSB practice sets. Weekly focus: ${milestone.focus}. Pattern rotation: ${topics}. Sunday is mixed review.`;
   }
   if (milestone.focs) {
     return `FOCS: ${milestone.focs} Cartesian: ${milestone.cartesian}`;
@@ -8074,7 +8087,9 @@ function milestoneDetails(milestone) {
 }
 
 function probabilityProblemSetDetails(dayPlan, week) {
-  return `Complete 5 problems for Week ${week} ${dayPlan.day}. Theme: ${dayPlan.topic}. Pattern: ${dayPlan.pattern}. Variations to include: ${dayPlan.variations}. Mode: ${dayPlan.intensity}. After solving, write a short correction note for every missed setup, wrong statistic, algebra slip, or unsupported conclusion.`;
+  const weekOneMonday = week === 1 && dayPlan.day === "Monday" && dayPlan.topic === "method of indicators";
+  const resource = weekOneMonday ? " Resource: psets/week-01/june-01-indicators.html." : "";
+  return `Complete a 10-problem PSB practice set for Week ${week} ${dayPlan.day}. Theme: ${dayPlan.topic}. Structure: 5 concept builders, 3 pattern-integration problems, 2 ISI past-year or ISI-style problems. Pattern: ${dayPlan.pattern}. Variations to include: ${dayPlan.variations}. Mode: ${dayPlan.intensity}.${resource} After solving, write a short correction note for every missed setup, wrong statistic, algebra slip, or unsupported conclusion.`;
 }
 
 function probabilitySundayTestDetails(milestone) {
