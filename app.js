@@ -1,6 +1,6 @@
 const STORAGE_KEY = "learning-studio-data-v1";
 const SESSION_KEY = "aleph-session";
-const COURSE_PLAN_VERSION = "reviewer-direct-access-v36";
+const COURSE_PLAN_VERSION = "competition-math-material-v37";
 
 const state = loadState();
 let deferredInstallPrompt = null;
@@ -226,6 +226,7 @@ function buildPriyankaPlatinumPlan(now, accountTypes, sections, user = defaultUs
       date: endDate,
       status: "Not started",
       details: "June-August slice of the 9-10 month mathematical maturity track: one hour per day, technique journal, weekly written review, algebra foundations in weeks 1-8, then number theory foundations beginning in weeks 9-13. Combinatorics and analysis continue after the current app horizon.",
+      materialWorkspaces: competitionMathMaterialWorkspaces(),
       updatedAt: now
     }
   ];
@@ -8072,6 +8073,28 @@ function probabilityStatsPatternWorkspaces() {
   ];
 }
 
+function competitionMathMaterialWorkspaces() {
+  return [
+    {
+      id: "competition-algebra-foundations",
+      title: "Algebra Foundations",
+      day: "Week 1",
+      focus: "Vieta's formulas, polynomial manipulation, factor theorem, rational roots, and root transformations.",
+      weeks: [
+        {
+          id: "cm-w1-vietas-polynomials",
+          week: 1,
+          date: "2026-06-01",
+          materialTitle: "June 1: Vieta and Polynomial Fundamentals",
+          materialUrl: "psets/week-01/june-01-competition-math-vietas-polynomials.html",
+          expectedWork: "One-hour session: review the core Vieta pattern, solve 10 scaffolded problems, then write technique-journal notes for missed triggers.",
+          status: "Published"
+        }
+      ]
+    }
+  ];
+}
+
 function competitionMathMilestones() {
   return [
     {
@@ -8953,6 +8976,12 @@ function quizQuestionTemplate(question, index) {
 function subjectMenuCardTemplate(subject) {
   const chapterCount = (subject.sectionIds || []).length;
   const patternCount = (subject.patternWorkspaces || []).length;
+  const materialCount = (subject.materialWorkspaces || []).reduce((count, workspace) => count + (workspace.weeks || []).length, 0);
+  const countLabel = patternCount
+    ? `${patternCount} patterns`
+    : materialCount
+      ? `${materialCount} material${materialCount === 1 ? "" : "s"}`
+      : `${chapterCount} chapter${chapterCount === 1 ? "" : "s"}`;
   return `
     <article class="subject-menu-card">
       <div>
@@ -8960,7 +8989,7 @@ function subjectMenuCardTemplate(subject) {
         <p>${escapeHtml(subject.details || "No subject details added.")}</p>
       </div>
       <div class="subject-menu-footer">
-        <span class="tag">${patternCount ? `${patternCount} patterns` : `${chapterCount} chapter${chapterCount === 1 ? "" : "s"}`}</span>
+        <span class="tag">${countLabel}</span>
         <button class="primary-btn" data-open-subject="${subject.id}" type="button">Open subject</button>
       </div>
     </article>
@@ -8970,6 +8999,9 @@ function subjectMenuCardTemplate(subject) {
 function subjectReaderTemplate(subject) {
   if (subject.patternWorkspaces?.length) {
     return subjectPatternWorkspaceTemplate(subject);
+  }
+  if (subject.materialWorkspaces?.length) {
+    return subjectMaterialWorkspaceTemplate(subject);
   }
 
   const sections = (subject.sectionIds || [])
@@ -9008,6 +9040,26 @@ function subjectPatternWorkspaceTemplate(subject) {
   `;
 }
 
+function subjectMaterialWorkspaceTemplate(subject) {
+  return `
+    <article class="subject-reader pattern-workspace">
+      <div class="subject-reader-header">
+        <button class="text-btn" data-subject-back type="button">Back to subjects</button>
+      </div>
+      <section class="chapter-menu">
+        <div class="chapter-menu-header">
+          <p class="eyebrow">${escapeHtml(subject.title)} material workspace</p>
+          <h4>Weekly Materials</h4>
+          <p>${escapeHtml(subject.details || "Choose a week to work through material, submit solutions, and record feedback.")}</p>
+        </div>
+        <div class="pattern-grid">
+          ${subject.materialWorkspaces.map(materialWorkspaceTemplate).join("")}
+        </div>
+      </section>
+    </article>
+  `;
+}
+
 function patternWorkspaceTemplate(pattern) {
   return `
     <article class="pattern-card">
@@ -9021,6 +9073,24 @@ function patternWorkspaceTemplate(pattern) {
       </div>
       <div class="pattern-week-list">
         ${pattern.weeks.map((week) => patternWeekTemplate(pattern, week)).join("")}
+      </div>
+    </article>
+  `;
+}
+
+function materialWorkspaceTemplate(workspace) {
+  return `
+    <article class="pattern-card">
+      <div class="pattern-card-header">
+        <div>
+          <p class="eyebrow">${escapeHtml(workspace.day || "Material")}</p>
+          <h5>${escapeHtml(workspace.title)}</h5>
+          <p>${escapeHtml(workspace.focus)}</p>
+        </div>
+        <span class="tag">${workspace.weeks.length} material${workspace.weeks.length === 1 ? "" : "s"}</span>
+      </div>
+      <div class="pattern-week-list">
+        ${workspace.weeks.map((week) => patternWeekTemplate(workspace, week)).join("")}
       </div>
     </article>
   `;

@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>June 1 Competition Math — Vieta and Polynomial Fundamentals</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" />
+  <link rel="stylesheet" href="../material-page.css" />
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+  <script defer src="../material-page.js"></script>
+</head>
+<body>
+  <main class="wrap">
+    <section class="hero">
+      <h1>June 1: Vieta and Polynomial Fundamentals</h1>
+      <p class="sub">
+        A one-hour Competition Math session for building the first algebra pattern: translate root information into coefficient information, then use factoring and evaluation moves before expanding.
+      </p>
+      <div class="meta">
+        <span class="chip">Competition Math</span>
+        <span class="chip">Week 1</span>
+        <span class="chip">Algebra foundations</span>
+        <span class="chip">10 problems</span>
+        <span class="chip">Solutions included</span>
+      </div>
+      <p class="math-fallback">Math rendering did not load from the CDN. Refresh once, or use a network that allows KaTeX CDN files.</p>
+    </section>
+
+    <section class="panel accent">
+      <h2>Core Pattern</h2>
+      <p>For a monic polynomial with roots \(r_1,\ldots,r_n\),</p>
+      <div class="formula">
+        \[
+          \prod_{i=1}^n (x-r_i)
+          =x^n-e_1x^{n-1}+e_2x^{n-2}-\cdots+(-1)^ne_n,
+        \]
+      </div>
+      <p>where \(e_k\) is the sum of all products of \(k\) distinct roots. In contest problems, the useful move is usually not to expand. First ask which symmetric expression is needed.</p>
+    </section>
+
+    <section class="panel">
+      <h2>One-Hour Workflow</h2>
+      <div class="grid">
+        <ul>
+          <li>Spend 8 minutes reviewing the pattern and examples.</li>
+          <li>Spend 30 minutes on Problems 1-6.</li>
+          <li>Spend 15 minutes on Problems 7-10.</li>
+        </ul>
+        <ul>
+          <li>Write the root sums before substituting numbers.</li>
+          <li>Use \(P(a)\), \(P(-a)\), or \(P(0)\) when roots are shifted or reciprocated.</li>
+          <li>Add one technique-journal entry for every missed trigger.</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="panel">
+      <h2>Fast Examples</h2>
+      <p>If \(a,b\) are roots of \(x^2-5x+6=0\), then \(a+b=5\), \(ab=6\), and</p>
+      <div class="formula">
+        \[
+          a^2+b^2=(a+b)^2-2ab=25-12=13.
+        \]
+      </div>
+      <p>If \(r_1,r_2,r_3\) are roots of \(x^3-2x^2-5x+7=0\), then</p>
+      <div class="formula">
+        \[
+          r_1+r_2+r_3=2,\qquad
+          r_1r_2+r_1r_3+r_2r_3=-5,\qquad
+          r_1r_2r_3=-7.
+        \]
+      </div>
+    </section>
+
+    <div class="section-label">Problems 1-5 · Concept Builders</div>
+
+    <article class="problem">
+      <div class="problem-head">
+        <div class="problem-title">1. Sum of Squares of Roots</div>
+        <div class="tags">
+          <span class="tag concept">Concept</span>
+          <span class="tag">Vieta</span>
+          <span class="tag">5 min</span>
+        </div>
+      </div>
+      <p>Let \(a,b\) be the roots of \(x^2-7x+10=0\). Find \(a^2+b^2\).</p>
+      <details>
+        <summary>Solution</summary>
+        <p>By Vieta, \(a+b=7\) and \(ab=10\). Therefore</p>
+        \[
+          a^2+b^2=(a+b)^2-2ab=49-20=29.
+        \]
+      </details>
+    </article>
+
+    <article class="problem">
+      <div class="problem-head">
+        <div class="problem-title">2. Reciprocals of Roots</div>
+        <div class="tags">
+          <span class="tag concept">Concept</span>
+          <span class="tag">Reciprocal roots</span>
+          <span class="tag">6 min</span>
+        </div>
+      </div>
+      <p>Let \(a,b,c\) be the roots of \(2x^3-3x^2-5x+6=0\). Find \(\frac1a+\frac1b+\frac1c\).</p>
+      <details>
+        <summary>Solution</summary>
+        <p>For \(Ax^3+Bx^2+Cx+D\), the pairwise sum is \(C/A\) and the product is \(-D/A\). Here</p>
+        \[
+          ab+bc+ca=\frac{-5}{2},\qquad abc=-\frac{6}{2}=-3.
+        \]
+        <p>Thus</p>
+        \[
+          \frac1a+\frac1b+\frac1c=\frac{ab+bc+ca}{abc}
+          =\frac{-5/2}{-3}=\frac56.
+        \]
+      </details>
+    </article>
+
+    <article class="problem">
+      <div class="problem-head">
+        <div class="problem-title">3. Build the Polynomial</div>
+        <div class="tags">
+          <span class="tag concept">Concept</span>
+          <span class="tag">Symmetric sums</span>
+          <span class="tag">7 min</span>
+        </div>
+      </div>
+      <p>A monic cubic has roots \(p,q,r\) satisfying \(p+q+r=4\), \(pq+pr+qr=-1\), and \(pqr=-6\). Write the polynomial.</p>
+      <details>
+        <summary>Solution</summary>
+        <p>The monic cubic with roots \(p,q,r\) is</p>
+        \[
+          x^3-(p+q+r)x^2+(pq+pr+qr)x-pqr.
+        \]
+        <p>Substitute the given values:</p>
+        \[
+          x^3-4x^2-x+6.
+        \]
+      </details>
+    </article>
+
+    <article class="problem">
+      <div class="problem-head">
+        <div class="problem-title">4. Shifted Roots</div>
+        <div class="tags">
+          <span class="tag concept">Concept</span>
+          <span class="tag">Transform roots</span>
+          <span class="tag">8 min</span>
+        </div>
+      </div>
+      <p>The roots of \(x^2-6x+5=0\) are \(a,b\). Find the monic polynomial whose roots are \(a+2\) and \(b+2\).</p>
+      <details>
+        <summary>Solution</summary>
+        <p>The original roots satisfy \(a+b=6\), \(ab=5\). The new roots have sum</p>
+        \[
+          (a+2)+(b+2)=10
+        \]
+        <p>and product</p>
+        \[
+          (a+2)(b+2)=ab+2(a+b)+4=5+12+4=21.
+        \]
+        <p>So the polynomial is</p>
+        \[
+          x^2-10x+21.
+        \]
+      </details>
+    </article>
+
+    <article class="problem">
+      <div class="problem-head">
+        <div class="problem-title">5. Evaluate Before Factoring</div>
+        <div class="tags">
+          <span class="tag concept">Concept</span>
+          <span class="tag">Factor theorem</span>
+          <span class="tag">8 min</span>
+        </div>
+      </div>
+      <p>For \(P(x)=x^3-4x^2+x+6\), show that \(x-2\) is a factor and factor \(P(x)\) completely.</p>
+      <details>
+        <summary>Solution</summary>
+        <p>By the factor theorem, \(x-2\) is a factor exactly when \(P(2)=0\). Compute</p>
+        \[
+          P(2)=8-16+2+6=0.
+        \]
+        <p>Divide by \(x-2\):</p>
+        \[
+          x^3-4x^2+x+6=(x-2)(x^2-2x-3)=(x-2)(x-3)(x+1).
+        \]
+      </details>
+    </article>
+
+    <div class="section-label">Problems 6-8 · Pattern Integration</div>
+
+    <article class="problem">
+      <div class="problem-head">
+        <div class="problem-title">6. Cubic Power Sum</div>
+        <div class="tags">
+          <span class="tag integration">Integration</span>
+          <span class="tag">Power sums</span>
+          <span class="tag">12 min</span>
+        </div>
+      </div>
+      <p>Let \(a,b,c\) be the roots of \(x^3-3x^2+2x-5=0\). Find \(a^2+b^2+c^2\).</p>
+      <details>
+        <summary>Solution</summary>
+        <p>By Vieta,</p>
+        \[
+          a+b+c=3,\qquad ab+bc+ca=2.
+        \]
+        <p>Then</p>
+        \[
+          a^2+b^2+c^2=(a+b+c)^2-2(ab+bc+ca)=9-4=5.
+        \]
+      </details>
+    </article>
+
+    <article class="problem">
+      <div class="problem-head">
+        <div class="problem-title">7. Polynomial from Reciprocal Roots</div>
+        <div class="tags">
+          <span class="tag integration">Integration</span>
+          <span class="tag">Root transform</span>
+          <span class="tag">14 min</span>
+        </div>
+      </div>
+      <p>The roots of \(2x^3-x^2-5x+2=0\) are \(a,b,c\). Find a polynomial whose roots are \(\frac1a,\frac1b,\frac1c\).</p>
+      <details>
+        <summary>Solution</summary>
+        <p>Use the transformation \(x=1/y\). If \(a\) is a root of \(P(x)=2x^3-x^2-5x+2\), then \(y=1/a\) satisfies</p>
+        \[
+          P(1/y)=\frac{2}{y^3}-\frac{1}{y^2}-\frac5y+2=0.
+        \]
+        <p>Multiply by \(y^3\):</p>
+        \[
+          2-y-5y^2+2y^3=0.
+        \]
+        <p>So one polynomial is</p>
+        \[
+          2y^3-5y^2-y+2.
+        \]
+      </details>
+    </article>
+
+    <article class="problem">
+      <div class="problem-head">
+        <div class="problem-title">8. Hidden Integer Root</div>
+        <div class="tags">
+          <span class="tag integration">Integration</span>
+          <span class="tag">Rational root theorem</span>
+          <span class="tag">15 min</span>
+        </div>
+      </div>
+      <p>Factor \(x^3+x^2-14x-24\) over the integers.</p>
+      <details>
+        <summary>Solution</summary>
+        <p>The rational root theorem says integer roots must divide \(24\). Try small divisors. Since</p>
+        \[
+          P(4)=64+16-56-24=0,
+        \]
+        <p>\(x-4\) is a factor. Divide:</p>
+        \[
+          x^3+x^2-14x-24=(x-4)(x^2+5x+6)=(x-4)(x+2)(x+3).
+        \]
+      </details>
+    </article>
+
+    <div class="section-label">Problems 9-10 · Challenge</div>
+
+    <article class="problem">
+      <div class="problem-head">
+        <div class="problem-title">9. AIME-Style Symmetric Expression</div>
+        <div class="tags">
+          <span class="tag challenge">Challenge</span>
+          <span class="tag">Vieta synthesis</span>
+          <span class="tag">18 min</span>
+        </div>
+      </div>
+      <p>Let \(a,b\) be the roots of \(x^2-9x+4=0\). Find \(a^3+b^3\).</p>
+      <details>
+        <summary>Solution</summary>
+        <p>By Vieta, \(a+b=9\), \(ab=4\). Use</p>
+        \[
+          a^3+b^3=(a+b)^3-3ab(a+b).
+        \]
+        <p>Therefore</p>
+        \[
+          a^3+b^3=9^3-3\cdot4\cdot9=729-108=621.
+        \]
+      </details>
+    </article>
+
+    <article class="problem">
+      <div class="problem-head">
+        <div class="problem-title">10. Roots Shifted and Multiplied</div>
+        <div class="tags">
+          <span class="tag challenge">Challenge</span>
+          <span class="tag">Transform roots</span>
+          <span class="tag">20 min</span>
+        </div>
+      </div>
+      <p>The roots of \(x^2-5x+2=0\) are \(a,b\). Find the monic polynomial whose roots are \(2a-1\) and \(2b-1\).</p>
+      <details>
+        <summary>Solution</summary>
+        <p>The original roots satisfy \(a+b=5\), \(ab=2\). The transformed roots have sum</p>
+        \[
+          (2a-1)+(2b-1)=2(a+b)-2=8.
+        \]
+        <p>The product is</p>
+        \[
+          (2a-1)(2b-1)=4ab-2(a+b)+1=8-10+1=-1.
+        \]
+        <p>So the required monic polynomial is</p>
+        \[
+          x^2-8x-1.
+        \]
+      </details>
+    </article>
+
+    <section class="panel">
+      <h2>Technique Journal Prompts</h2>
+      <ul>
+        <li>When did Vieta give the expression directly?</li>
+        <li>When did the expression need rewriting first, such as \(a^2+b^2=(a+b)^2-2ab\)?</li>
+        <li>Which trigger made you use \(P(k)=0\), reciprocal roots, or shifted roots?</li>
+        <li>Which problems tempted you to expand too early?</li>
+      </ul>
+    </section>
+
+    <section class="panel">
+      <h2>Answer Summary</h2>
+      <div class="answer-list">
+        <div><strong>1.</strong> \(29\)</div>
+        <div><strong>2.</strong> \(\frac56\)</div>
+        <div><strong>3.</strong> \(x^3-4x^2-x+6\)</div>
+        <div><strong>4.</strong> \(x^2-10x+21\)</div>
+        <div><strong>5.</strong> \((x-2)(x-3)(x+1)\)</div>
+        <div><strong>6.</strong> \(5\)</div>
+        <div><strong>7.</strong> \(2y^3-5y^2-y+2\)</div>
+        <div><strong>8.</strong> \((x-4)(x+2)(x+3)\)</div>
+        <div><strong>9.</strong> \(621\)</div>
+        <div><strong>10.</strong> \(x^2-8x-1\)</div>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
