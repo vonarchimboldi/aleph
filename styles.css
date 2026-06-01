@@ -479,6 +479,8 @@ textarea {
 
 .pattern-grid {
   display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 360px), 1fr));
+  align-items: start;
   gap: 16px;
 }
 
@@ -499,6 +501,11 @@ textarea {
   align-items: flex-start;
   justify-content: space-between;
   gap: 14px;
+}
+
+.pattern-card-header,
+.pattern-week-top {
+  flex-wrap: wrap;
 }
 
 .pattern-card h5,
@@ -541,12 +548,40 @@ textarea {
 .inline-link {
   display: inline-flex;
   width: auto;
+  flex: 0 0 auto;
 }
 
 .solution-upload,
 .feedback-note {
   display: grid;
   gap: 6px;
+  min-width: min(100%, 260px);
+}
+
+.solution-upload input,
+.feedback-note textarea {
+  width: 100%;
+  max-width: 100%;
+}
+
+@media (max-width: 640px) {
+  .pattern-card,
+  .pattern-week {
+    padding: 12px;
+  }
+
+  .pattern-card-header,
+  .pattern-week-top,
+  .pattern-material-row {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+
+  .pattern-material-row .primary-btn,
+  .pattern-week .small-btn {
+    width: 100%;
+    justify-content: center;
+  }
 }
 
 .solution-upload span,

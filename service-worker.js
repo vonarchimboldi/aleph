@@ -1,4 +1,4 @@
-const CACHE_NAME = "learning-studio-v69";
+const CACHE_NAME = "learning-studio-v70";
 const IS_LOCAL = ["localhost", "127.0.0.1", "0.0.0.0", "::1"].includes(self.location.hostname);
 const ASSETS = [
   "./",
