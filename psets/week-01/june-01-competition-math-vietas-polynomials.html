@@ -15,7 +15,7 @@
     <section class="hero">
       <h1>June 1: Vieta and Polynomial Fundamentals</h1>
       <p class="sub">
-        A one-hour Competition Math session for building the first algebra pattern: translate root information into coefficient information, then use factoring and evaluation moves before expanding.
+        A one-hour Competition Math session for the first algebra habit. When a problem talks about roots, do not expand first. Translate the root information into sums and products of roots.
       </p>
       <div class="meta">
         <span class="chip">Competition Math</span>
@@ -29,41 +29,49 @@
 
     <section class="panel accent">
       <h2>Core Pattern</h2>
-      <p>For a monic polynomial with roots \(r_1,\ldots,r_n\),</p>
+      <p>A polynomial has roots. Vieta's formulas connect those roots to the coefficients of the polynomial.</p>
+      <p>For a monic polynomial with roots \(r_1,\ldots,r_n\), we have</p>
       <div class="formula">
         \[
           \prod_{i=1}^n (x-r_i)
           =x^n-e_1x^{n-1}+e_2x^{n-2}-\cdots+(-1)^ne_n,
         \]
       </div>
-      <p>where \(e_k\) is the sum of all products of \(k\) distinct roots. In contest problems, the useful move is usually not to expand. First ask which symmetric expression is needed.</p>
+      <p>Here \(e_k\) means: add all products made from \(k\) different roots. This notation looks compact, but the idea is simple. Coefficients tell us the sum of the roots, the sum of pairwise products, and so on.</p>
+      <p>In contest problems, the useful move is usually not to expand. First ask: which sum or product of roots do I need?</p>
     </section>
 
     <section class="panel">
       <h2>One-Hour Workflow</h2>
       <div class="grid">
         <ul>
-          <li>Spend 8 minutes reviewing the pattern and examples.</li>
+          <li>Spend 8 minutes reading the pattern and examples slowly.</li>
           <li>Spend 30 minutes on Problems 1-6.</li>
           <li>Spend 15 minutes on Problems 7-10.</li>
         </ul>
         <ul>
-          <li>Write the root sums before substituting numbers.</li>
-          <li>Use \(P(a)\), \(P(-a)\), or \(P(0)\) when roots are shifted or reciprocated.</li>
-          <li>Add one technique-journal entry for every missed trigger.</li>
+          <li>Before calculating, write what Vieta gives you.</li>
+          <li>If roots are changed, find the new sum and new product.</li>
+          <li>After solving, write one journal note for every missed idea.</li>
         </ul>
       </div>
     </section>
 
     <section class="panel">
       <h2>Fast Examples</h2>
-      <p>If \(a,b\) are roots of \(x^2-5x+6=0\), then \(a+b=5\), \(ab=6\), and</p>
+      <p>Start with the easiest case. If \(a,b\) are roots of \(x^2-5x+6=0\), then Vieta gives two facts:</p>
+      <div class="formula">
+        \[
+          a+b=5,\qquad ab=6.
+        \]
+      </div>
+      <p>Now use those facts to find \(a^2+b^2\):</p>
       <div class="formula">
         \[
           a^2+b^2=(a+b)^2-2ab=25-12=13.
         \]
       </div>
-      <p>If \(r_1,r_2,r_3\) are roots of \(x^3-2x^2-5x+7=0\), then</p>
+      <p>For a cubic, Vieta gives three facts. If \(r_1,r_2,r_3\) are roots of \(x^3-2x^2-5x+7=0\), then</p>
       <div class="formula">
         \[
           r_1+r_2+r_3=2,\qquad
@@ -87,10 +95,16 @@
       <p>Let \(a,b\) be the roots of \(x^2-7x+10=0\). Find \(a^2+b^2\).</p>
       <details>
         <summary>Solution</summary>
-        <p>By Vieta, \(a+b=7\) and \(ab=10\). Therefore</p>
+        <p>Use Vieta because the question asks about the roots, but it does not ask us to find the roots separately.</p>
+        <p>For \(x^2-7x+10=0\), Vieta gives</p>
+        \[
+          a+b=7,\qquad ab=10.
+        \]
+        <p>Now rewrite \(a^2+b^2\) using the sum and product:</p>
         \[
           a^2+b^2=(a+b)^2-2ab=49-20=29.
         \]
+        <p>So the answer is \(29\).</p>
       </details>
     </article>
 
@@ -106,11 +120,16 @@
       <p>Let \(a,b,c\) be the roots of \(2x^3-3x^2-5x+6=0\). Find \(\frac1a+\frac1b+\frac1c\).</p>
       <details>
         <summary>Solution</summary>
-        <p>For \(Ax^3+Bx^2+Cx+D\), the pairwise sum is \(C/A\) and the product is \(-D/A\). Here</p>
+        <p>The expression \(\frac1a+\frac1b+\frac1c\) has a common denominator:</p>
+        \[
+          \frac1a+\frac1b+\frac1c=\frac{ab+bc+ca}{abc}.
+        \]
+        <p>So we need two Vieta quantities: \(ab+bc+ca\) and \(abc\).</p>
+        <p>For \(2x^3-3x^2-5x+6=0\), Vieta gives</p>
         \[
           ab+bc+ca=\frac{-5}{2},\qquad abc=-\frac{6}{2}=-3.
         \]
-        <p>Thus</p>
+        <p>Substitute these values:</p>
         \[
           \frac1a+\frac1b+\frac1c=\frac{ab+bc+ca}{abc}
           =\frac{-5/2}{-3}=\frac56.
@@ -130,11 +149,11 @@
       <p>A monic cubic has roots \(p,q,r\) satisfying \(p+q+r=4\), \(pq+pr+qr=-1\), and \(pqr=-6\). Write the polynomial.</p>
       <details>
         <summary>Solution</summary>
-        <p>The monic cubic with roots \(p,q,r\) is</p>
+        <p>Use the standard cubic form. A monic cubic with roots \(p,q,r\) is</p>
         \[
           x^3-(p+q+r)x^2+(pq+pr+qr)x-pqr.
         \]
-        <p>Substitute the given values:</p>
+        <p>Now substitute the three given values:</p>
         \[
           x^3-4x^2-x+6.
         \]
@@ -153,15 +172,19 @@
       <p>The roots of \(x^2-6x+5=0\) are \(a,b\). Find the monic polynomial whose roots are \(a+2\) and \(b+2\).</p>
       <details>
         <summary>Solution</summary>
-        <p>The original roots satisfy \(a+b=6\), \(ab=5\). The new roots have sum</p>
+        <p>First write what Vieta gives for the old roots:</p>
+        \[
+          a+b=6,\qquad ab=5.
+        \]
+        <p>The new roots are \(a+2\) and \(b+2\). Their sum is</p>
         \[
           (a+2)+(b+2)=10
         \]
-        <p>and product</p>
+        <p>Their product is</p>
         \[
           (a+2)(b+2)=ab+2(a+b)+4=5+12+4=21.
         \]
-        <p>So the polynomial is</p>
+        <p>A monic quadratic with root sum \(10\) and root product \(21\) is</p>
         \[
           x^2-10x+21.
         \]
@@ -180,11 +203,12 @@
       <p>For \(P(x)=x^3-4x^2+x+6\), show that \(x-2\) is a factor and factor \(P(x)\) completely.</p>
       <details>
         <summary>Solution</summary>
-        <p>By the factor theorem, \(x-2\) is a factor exactly when \(P(2)=0\). Compute</p>
+        <p>The factor theorem says: \(x-2\) is a factor exactly when \(P(2)=0\).</p>
+        <p>So we check \(P(2)\):</p>
         \[
           P(2)=8-16+2+6=0.
         \]
-        <p>Divide by \(x-2\):</p>
+        <p>Since this is \(0\), \(x-2\) is a factor. Now divide by \(x-2\):</p>
         \[
           x^3-4x^2+x+6=(x-2)(x^2-2x-3)=(x-2)(x-3)(x+1).
         \]
@@ -205,11 +229,11 @@
       <p>Let \(a,b,c\) be the roots of \(x^3-3x^2+2x-5=0\). Find \(a^2+b^2+c^2\).</p>
       <details>
         <summary>Solution</summary>
-        <p>By Vieta,</p>
+        <p>Again, we do not need the roots separately. We only need their sum and pairwise product sum. Vieta gives</p>
         \[
           a+b+c=3,\qquad ab+bc+ca=2.
         \]
-        <p>Then</p>
+        <p>Now rewrite the expression using those two quantities:</p>
         \[
           a^2+b^2+c^2=(a+b+c)^2-2(ab+bc+ca)=9-4=5.
         \]
@@ -228,15 +252,16 @@
       <p>The roots of \(2x^3-x^2-5x+2=0\) are \(a,b,c\). Find a polynomial whose roots are \(\frac1a,\frac1b,\frac1c\).</p>
       <details>
         <summary>Solution</summary>
-        <p>Use the transformation \(x=1/y\). If \(a\) is a root of \(P(x)=2x^3-x^2-5x+2\), then \(y=1/a\) satisfies</p>
+        <p>We want the reciprocal roots. Let \(y=1/a\). Then \(a=1/y\).</p>
+        <p>So we substitute \(x=1/y\) into the original polynomial:</p>
         \[
           P(1/y)=\frac{2}{y^3}-\frac{1}{y^2}-\frac5y+2=0.
         \]
-        <p>Multiply by \(y^3\):</p>
+        <p>Now multiply by \(y^3\) to remove denominators:</p>
         \[
           2-y-5y^2+2y^3=0.
         \]
-        <p>So one polynomial is</p>
+        <p>So one polynomial with the reciprocal roots is</p>
         \[
           2y^3-5y^2-y+2.
         \]
@@ -255,11 +280,12 @@
       <p>Factor \(x^3+x^2-14x-24\) over the integers.</p>
       <details>
         <summary>Solution</summary>
-        <p>The rational root theorem says integer roots must divide \(24\). Try small divisors. Since</p>
+        <p>The rational root theorem gives a short list of possible integer roots. Any integer root must divide \(24\).</p>
+        <p>Try small divisors first. We find</p>
         \[
           P(4)=64+16-56-24=0,
         \]
-        <p>\(x-4\) is a factor. Divide:</p>
+        <p>So \(x-4\) is a factor. Divide by \(x-4\):</p>
         \[
           x^3+x^2-14x-24=(x-4)(x^2+5x+6)=(x-4)(x+2)(x+3).
         \]
@@ -280,11 +306,15 @@
       <p>Let \(a,b\) be the roots of \(x^2-9x+4=0\). Find \(a^3+b^3\).</p>
       <details>
         <summary>Solution</summary>
-        <p>By Vieta, \(a+b=9\), \(ab=4\). Use</p>
+        <p>Vieta gives</p>
+        \[
+          a+b=9,\qquad ab=4.
+        \]
+        <p>The expression \(a^3+b^3\) can be rewritten using \(a+b\) and \(ab\):</p>
         \[
           a^3+b^3=(a+b)^3-3ab(a+b).
         \]
-        <p>Therefore</p>
+        <p>Now substitute:</p>
         \[
           a^3+b^3=9^3-3\cdot4\cdot9=729-108=621.
         \]
@@ -303,15 +333,19 @@
       <p>The roots of \(x^2-5x+2=0\) are \(a,b\). Find the monic polynomial whose roots are \(2a-1\) and \(2b-1\).</p>
       <details>
         <summary>Solution</summary>
-        <p>The original roots satisfy \(a+b=5\), \(ab=2\). The transformed roots have sum</p>
+        <p>First write the old root information:</p>
+        \[
+          a+b=5,\qquad ab=2.
+        \]
+        <p>The new roots are \(2a-1\) and \(2b-1\). Their sum is</p>
         \[
           (2a-1)+(2b-1)=2(a+b)-2=8.
         \]
-        <p>The product is</p>
+        <p>Their product is</p>
         \[
           (2a-1)(2b-1)=4ab-2(a+b)+1=8-10+1=-1.
         \]
-        <p>So the required monic polynomial is</p>
+        <p>A monic quadratic with root sum \(8\) and root product \(-1\) is</p>
         \[
           x^2-8x-1.
         \]
@@ -321,10 +355,10 @@
     <section class="panel">
       <h2>Technique Journal Prompts</h2>
       <ul>
-        <li>When did Vieta give the expression directly?</li>
-        <li>When did the expression need rewriting first, such as \(a^2+b^2=(a+b)^2-2ab\)?</li>
-        <li>Which trigger made you use \(P(k)=0\), reciprocal roots, or shifted roots?</li>
-        <li>Which problems tempted you to expand too early?</li>
+        <li>Which problem only needed the sum and product of roots?</li>
+        <li>Which expression had to be rewritten first, such as \(a^2+b^2=(a+b)^2-2ab\)?</li>
+        <li>Which words told you to use reciprocal roots or shifted roots?</li>
+        <li>Where did you almost expand too early?</li>
       </ul>
     </section>
 

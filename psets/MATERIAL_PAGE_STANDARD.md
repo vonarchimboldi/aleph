@@ -29,6 +29,20 @@ Use this standard for every standalone Aleph material page.
 - Long display equations must live inside `.formula`, `.math-block`, or normal KaTeX display blocks so horizontal scrolling is handled consistently.
 - Use `\mathbf{1}` for indicators and `\operatorname{...}` for named operators.
 
+## Explanation Rules
+
+- Write for students who may not be native English speakers.
+- Prefer short, direct sentences.
+- Define every new symbol before using it heavily.
+- Explain why a method is being used, not only what calculation is being done.
+- Avoid terse textbook phrases such as "clearly", "trivially", "it follows", and "by inspection" unless the next sentence explains the step.
+- In solutions, use a simple rhythm:
+  - identify the useful pattern
+  - write the known quantities
+  - do the calculation
+  - state the final answer
+- Keep problem statements concise, but make solutions friendly and complete.
+
 ## Quality Checks
 
 - Page must load at desktop and mobile widths without horizontal body overflow.
