@@ -1,6 +1,6 @@
 const STORAGE_KEY = "learning-studio-data-v1";
 const SESSION_KEY = "aleph-session";
-const COURSE_PLAN_VERSION = "reviewer-platinum-login-v31";
+const COURSE_PLAN_VERSION = "ps-pattern-workspace-v32";
 
 const state = loadState();
 let deferredInstallPrompt = null;
@@ -130,6 +130,7 @@ function loadState() {
       schedule: parsed.schedule?.length ? parsed.schedule : starter.schedule,
       tests: parsed.tests || [],
       quizAttempts: parsed.quizAttempts || [],
+      patternSubmissions: parsed.patternSubmissions || [],
       feedback: parsed.feedback || [],
       resources: parsed.resources || [],
       tasks: parsed.tasks || [],
@@ -148,6 +149,7 @@ function initialState() {
   const user = defaultUser();
   return {
     user,
+    patternSubmissions: [],
     ...buildCoursePlan(user)
   };
 }
@@ -213,6 +215,7 @@ function buildPriyankaPlatinumPlan(now, accountTypes, sections) {
       status: "Not started",
       details: "GATE DA Probability and Statistics with Priyanka's Platinum pacing: daily 10-problem PSB-style sets, Sunday mixed review, correction notes, and custom feedback. The current Basic Probability chapter reader is attached as supporting content.",
       sectionIds: sections.map((section) => section.id),
+      patternWorkspaces: probabilityStatsPatternWorkspaces(),
       updatedAt: now
     },
     {
@@ -573,14 +576,6 @@ function buildPriyankaPlatinumPlan(now, accountTypes, sections) {
         date: startDate,
         details: "Use the organized local practice folders as the problem bank: 01-np-mp-tests, 02-mle-estimation, 03-conditional-expectation-indicators, 04-distributions-order-statistics, 05-regression-ols, and 99-mixed-review.",
         link: "",
-        updatedAt: now
-      },
-      {
-        id: "resource-ps-week-1-monday-indicators",
-        title: "PS Week 1 Monday: Method of Indicators Pset",
-        date: startDate,
-        details: "June 1 HTML pset for Priyanka: 10 problems with KaTeX, collapsed solutions, 5 concept builders, 3 integration problems, and 2 ISI past-year/reconstructed problems. Published as learner-facing material; generation notes remain local.",
-        link: "psets/week-01/june-01-indicators.html",
         updatedAt: now
       },
       {
@@ -7989,6 +7984,113 @@ function probabilityStatsMilestones() {
   }));
 }
 
+function probabilityStatsPatternWorkspaces() {
+  return [
+    {
+      id: "pattern-indicators",
+      title: "Method of Indicators",
+      day: "Monday",
+      focus: "Convert random counts into sums of yes/no variables, then use linearity, symmetry, and pairwise products.",
+      weeks: [
+        {
+          id: "ps-w1-indicators",
+          week: 1,
+          date: "2026-06-01",
+          materialTitle: "June 1: Method of Indicators Pset",
+          materialUrl: "psets/week-01/june-01-indicators.html",
+          status: "Published",
+          expectedWork: "10 problems: 5 concept builders, 3 integration problems, 2 ISI past-year/reconstructed problems."
+        }
+      ]
+    },
+    {
+      id: "pattern-conditional-expectation",
+      title: "Conditional Expectation and Tower Property",
+      day: "Tuesday",
+      focus: "Choose the simplifying variable, compute the inner expectation, and average back out.",
+      weeks: [
+        {
+          id: "ps-w1-conditional-expectation",
+          week: 1,
+          date: "2026-06-02",
+          materialTitle: "June 2: Conditional Expectation and Tower Property Pset",
+          materialUrl: "",
+          status: "Pending",
+          expectedWork: "Planned 10-problem set: tower property, total variance, stopping-time counts, and conditional distributions."
+        }
+      ]
+    },
+    {
+      id: "pattern-order-statistics",
+      title: "Order Statistics",
+      day: "Wednesday",
+      focus: "Derive exact min/max/kth-order laws, joint laws, spacings, and scaling limits.",
+      weeks: [
+        {
+          id: "ps-w1-order-statistics",
+          week: 1,
+          date: "2026-06-03",
+          materialTitle: "June 3: Order Statistics Pset",
+          materialUrl: "",
+          status: "Pending",
+          expectedWork: "Planned 10-problem set: CDF/PDF method, uniform-beta links, min/max, spacings, and ISI-style applications."
+        }
+      ]
+    },
+    {
+      id: "pattern-mle",
+      title: "MLE and Estimation",
+      day: "Thursday",
+      focus: "Set up likelihoods, identify optimizer location, and evaluate estimator quality.",
+      weeks: [
+        {
+          id: "ps-w1-mle",
+          week: 1,
+          date: "2026-06-04",
+          materialTitle: "June 4: MLE and Estimation Pset",
+          materialUrl: "",
+          status: "Pending",
+          expectedWork: "Planned 10-problem set: regular MLE, support-dependent MLE, constraints, bias, MSE, sufficiency, and UMVUE cues."
+        }
+      ]
+    },
+    {
+      id: "pattern-ump-np",
+      title: "UMP/NP Tests",
+      day: "Friday",
+      focus: "Construct likelihood-ratio tests, calibrate size, and compute power under alternatives.",
+      weeks: [
+        {
+          id: "ps-w1-ump-np",
+          week: 1,
+          date: "2026-06-05",
+          materialTitle: "June 5: UMP/NP Tests Pset",
+          materialUrl: "",
+          status: "Pending",
+          expectedWork: "Planned 10-problem set: simple-vs-simple NP, one-sided UMP, transformed samples, monotone likelihood ratios, and power."
+        }
+      ]
+    },
+    {
+      id: "pattern-regression-ols",
+      title: "Regression and OLS",
+      day: "Saturday",
+      focus: "Use normal equations, projection geometry, and estimator interpretation in regression problems.",
+      weeks: [
+        {
+          id: "ps-w1-regression-ols",
+          week: 1,
+          date: "2026-06-06",
+          materialTitle: "June 6: Regression and OLS Pset",
+          materialUrl: "",
+          status: "Pending",
+          expectedWork: "Planned 10-problem set: simple OLS, matrix OLS, constrained OLS, slope invariance, residual identities, and L1 contrast."
+        }
+      ]
+    }
+  ];
+}
+
 function competitionMathMilestones() {
   return [
     {
@@ -8088,7 +8190,7 @@ function milestoneDetails(milestone) {
 
 function probabilityProblemSetDetails(dayPlan, week) {
   const weekOneMonday = week === 1 && dayPlan.day === "Monday" && dayPlan.topic === "method of indicators";
-  const resource = weekOneMonday ? " Resource: psets/week-01/june-01-indicators.html." : "";
+  const resource = weekOneMonday ? " Material: psets/week-01/june-01-indicators.html." : "";
   return `Complete a 10-problem PSB practice set for Week ${week} ${dayPlan.day}. Theme: ${dayPlan.topic}. Structure: 5 concept builders, 3 pattern-integration problems, 2 ISI past-year or ISI-style problems. Pattern: ${dayPlan.pattern}. Variations to include: ${dayPlan.variations}. Mode: ${dayPlan.intensity}.${resource} After solving, write a short correction note for every missed setup, wrong statistic, algebra slip, or unsupported conclusion.`;
 }
 
@@ -8720,6 +8822,12 @@ function renderSubjects() {
       showView("tests");
       renderTests();
     });
+    container.querySelectorAll("[data-solution-upload]").forEach((input) => {
+      input.addEventListener("change", () => savePatternSolutionUpload(input));
+    });
+    container.querySelectorAll("[data-save-pattern-feedback]").forEach((button) => {
+      button.addEventListener("click", () => savePatternFeedback(button));
+    });
     return;
   }
 
@@ -8851,6 +8959,7 @@ function quizQuestionTemplate(question, index) {
 
 function subjectMenuCardTemplate(subject) {
   const chapterCount = (subject.sectionIds || []).length;
+  const patternCount = (subject.patternWorkspaces || []).length;
   return `
     <article class="subject-menu-card">
       <div>
@@ -8858,7 +8967,7 @@ function subjectMenuCardTemplate(subject) {
         <p>${escapeHtml(subject.details || "No subject details added.")}</p>
       </div>
       <div class="subject-menu-footer">
-        <span class="tag">${chapterCount} chapter${chapterCount === 1 ? "" : "s"}</span>
+        <span class="tag">${patternCount ? `${patternCount} patterns` : `${chapterCount} chapter${chapterCount === 1 ? "" : "s"}`}</span>
         <button class="primary-btn" data-open-subject="${subject.id}" type="button">Open subject</button>
       </div>
     </article>
@@ -8866,6 +8975,10 @@ function subjectMenuCardTemplate(subject) {
 }
 
 function subjectReaderTemplate(subject) {
+  if (subject.patternWorkspaces?.length) {
+    return subjectPatternWorkspaceTemplate(subject);
+  }
+
   const sections = (subject.sectionIds || [])
     .map((sectionId) => state.gateDaSections.find((section) => section.id === sectionId))
     .filter(Boolean);
@@ -8880,6 +8993,122 @@ function subjectReaderTemplate(subject) {
       ${selectedSection ? sectionTemplate(selectedSection) : chapterMenuTemplate(subject, sections)}
     </article>
   `;
+}
+
+function subjectPatternWorkspaceTemplate(subject) {
+  return `
+    <article class="subject-reader pattern-workspace">
+      <div class="subject-reader-header">
+        <button class="text-btn" data-subject-back type="button">Back to subjects</button>
+      </div>
+      <section class="chapter-menu">
+        <div class="chapter-menu-header">
+          <p class="eyebrow">${escapeHtml(subject.title)} pattern workspace</p>
+          <h4>Recurring PSB Patterns</h4>
+          <p>${escapeHtml(subject.details || "Choose a pattern to work through weekly material, submit solutions, and record feedback.")}</p>
+        </div>
+        <div class="pattern-grid">
+          ${subject.patternWorkspaces.map(patternWorkspaceTemplate).join("")}
+        </div>
+      </section>
+    </article>
+  `;
+}
+
+function patternWorkspaceTemplate(pattern) {
+  return `
+    <article class="pattern-card">
+      <div class="pattern-card-header">
+        <div>
+          <p class="eyebrow">${escapeHtml(pattern.day)}</p>
+          <h5>${escapeHtml(pattern.title)}</h5>
+          <p>${escapeHtml(pattern.focus)}</p>
+        </div>
+        <span class="tag">${pattern.weeks.length} week${pattern.weeks.length === 1 ? "" : "s"}</span>
+      </div>
+      <div class="pattern-week-list">
+        ${pattern.weeks.map((week) => patternWeekTemplate(pattern, week)).join("")}
+      </div>
+    </article>
+  `;
+}
+
+function patternWeekTemplate(pattern, week) {
+  const submission = patternSubmission(week.id);
+  const uploadLabel = submission?.fileName
+    ? `Uploaded: ${submission.fileName}`
+    : "No solution uploaded";
+  return `
+    <section class="pattern-week" data-material-card="${escapeHtml(week.id)}">
+      <div class="pattern-week-top">
+        <div>
+          <strong>Week ${week.week}: ${escapeHtml(week.materialTitle)}</strong>
+          <p>${formatDate(week.date)} - ${escapeHtml(week.expectedWork)}</p>
+        </div>
+        <span class="tag">${escapeHtml(week.status)}</span>
+      </div>
+      <div class="pattern-material-row">
+        ${week.materialUrl
+          ? `<a class="primary-btn inline-link" href="${escapeHtml(week.materialUrl)}" target="_blank" rel="noreferrer">Open material</a>`
+          : '<span class="tag">Material pending</span>'}
+        <label class="solution-upload">
+          <span>Upload solution</span>
+          <input type="file" data-solution-upload="${escapeHtml(week.id)}" accept=".pdf,.txt,.md,.png,.jpg,.jpeg">
+        </label>
+      </div>
+      <p class="fine-print">${escapeHtml(uploadLabel)}</p>
+      <label class="feedback-note">
+        <span>Feedback</span>
+        <textarea data-pattern-feedback rows="3" placeholder="Record review notes, score, or correction feedback.">${escapeHtml(submission?.feedback || "")}</textarea>
+      </label>
+      <button class="small-btn" data-save-pattern-feedback type="button">Save feedback</button>
+    </section>
+  `;
+}
+
+function patternSubmission(materialId) {
+  return (state.patternSubmissions || []).find((entry) => entry.materialId === materialId);
+}
+
+function upsertPatternSubmission(materialId, updates) {
+  if (!state.patternSubmissions) state.patternSubmissions = [];
+  const existing = state.patternSubmissions.find((entry) => entry.materialId === materialId);
+  if (existing) {
+    Object.assign(existing, updates, { updatedAt: new Date().toISOString() });
+    return existing;
+  }
+  const entry = {
+    materialId,
+    ...updates,
+    updatedAt: new Date().toISOString()
+  };
+  state.patternSubmissions.push(entry);
+  return entry;
+}
+
+function savePatternSolutionUpload(input) {
+  const file = input.files?.[0];
+  if (!file) return;
+  upsertPatternSubmission(input.dataset.solutionUpload, {
+    fileName: file.name,
+    fileType: file.type || "unknown",
+    uploadedAt: new Date().toISOString()
+  });
+  persist();
+  renderSubjects();
+}
+
+function savePatternFeedback(button) {
+  const card = button.closest("[data-material-card]");
+  if (!card) return;
+  const materialId = card.dataset.materialCard;
+  const feedback = card.querySelector("[data-pattern-feedback]")?.value.trim() || "";
+  upsertPatternSubmission(materialId, {
+    feedback,
+    feedbackUpdatedAt: new Date().toISOString()
+  });
+  persist();
+  renderSubjects();
 }
 
 function chapterMenuTemplate(subject, sections) {
@@ -9825,6 +10054,7 @@ function importData(event) {
       state.schedule = imported.schedule || [];
       state.tests = imported.tests || [];
       state.quizAttempts = imported.quizAttempts || [];
+      state.patternSubmissions = imported.patternSubmissions || [];
       state.feedback = imported.feedback || [];
       state.resources = imported.resources || [];
       state.tasks = imported.tasks || [];

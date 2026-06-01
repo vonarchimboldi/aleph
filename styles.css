@@ -477,6 +477,100 @@ textarea {
   line-height: 1.2;
 }
 
+.pattern-grid {
+  display: grid;
+  gap: 16px;
+}
+
+.pattern-card {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  box-shadow: var(--shadow);
+  display: grid;
+  gap: 14px;
+  padding: 16px;
+}
+
+.pattern-card-header,
+.pattern-week-top,
+.pattern-material-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 14px;
+}
+
+.pattern-card h5,
+.pattern-card p,
+.pattern-week p {
+  margin: 0;
+}
+
+.pattern-card h5 {
+  font-size: 22px;
+  line-height: 1.2;
+}
+
+.pattern-card p,
+.pattern-week p {
+  color: var(--muted);
+  line-height: 1.5;
+}
+
+.pattern-week-list {
+  display: grid;
+  gap: 12px;
+}
+
+.pattern-week {
+  background: #f7f9f8;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  display: grid;
+  gap: 12px;
+  padding: 14px;
+}
+
+.pattern-material-row {
+  align-items: center;
+  justify-content: flex-start;
+  flex-wrap: wrap;
+}
+
+.inline-link {
+  display: inline-flex;
+  width: auto;
+}
+
+.solution-upload,
+.feedback-note {
+  display: grid;
+  gap: 6px;
+}
+
+.solution-upload span,
+.feedback-note span {
+  color: var(--ink);
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.solution-upload input,
+.feedback-note textarea {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  color: var(--ink);
+  font: inherit;
+  padding: 9px 10px;
+}
+
+.feedback-note textarea {
+  min-height: 86px;
+  resize: vertical;
+  width: 100%;
+}
+
 .chapter-card-meta,
 .book-action-row {
   display: flex;
