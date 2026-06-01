@@ -1,6 +1,6 @@
 const STORAGE_KEY = "learning-studio-data-v1";
 const SESSION_KEY = "aleph-session";
-const COURSE_PLAN_VERSION = "conditional-expectation-material-v38";
+const COURSE_PLAN_VERSION = "reviewer-passwordless-v39";
 
 const state = loadState();
 let deferredInstallPrompt = null;
@@ -8321,7 +8321,11 @@ function login(event) {
   const name = document.querySelector("#login-name").value.trim().toLowerCase();
   const password = document.querySelector("#login-password").value.trim();
   const error = document.querySelector("#login-error");
-  const matchedUser = prototypeUsers().find((user) => user.name === name && password === (user.password || user.tempPassword));
+  const matchedUser = prototypeUsers().find((user) => {
+    if (user.name !== name) return false;
+    if (user.name === "reviewer") return true;
+    return password === (user.password || user.tempPassword);
+  });
 
   if (matchedUser) {
     Object.assign(state, buildCoursePlan(matchedUser), {
