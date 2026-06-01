@@ -1,6 +1,6 @@
 const STORAGE_KEY = "learning-studio-data-v1";
 const SESSION_KEY = "aleph-session";
-const COURSE_PLAN_VERSION = "ps-indicators-published-v30";
+const COURSE_PLAN_VERSION = "reviewer-platinum-login-v31";
 
 const state = loadState();
 let deferredInstallPrompt = null;
@@ -8142,6 +8142,18 @@ function platinumDemoUser() {
   };
 }
 
+function reviewerUser() {
+  return {
+    ...defaultUser(),
+    id: "user-reviewer",
+    name: "reviewer",
+    email: "reviewer@aleph.local",
+    tempPassword: "reviewer!aleph",
+    password: "reviewer!aleph",
+    passwordStatus: "Platinum reviewer prototype login"
+  };
+}
+
 function basicGateDaUser() {
   return {
     id: "user-basic-demo",
@@ -8163,6 +8175,7 @@ function prototypeUsers() {
     defaultUser(),
     basic,
     platinumDemoUser(),
+    reviewerUser(),
     {
       ...basic,
       name: "gate-basic",
