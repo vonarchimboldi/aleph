@@ -1,6 +1,6 @@
 const STORAGE_KEY = "learning-studio-data-v1";
 const SESSION_KEY = "aleph-session";
-const COURSE_PLAN_VERSION = "strict-platinum-plan-v41";
+const COURSE_PLAN_VERSION = "seeded-platinum-accounts-v42";
 
 const state = loadState();
 let deferredInstallPrompt = null;
@@ -8366,6 +8366,7 @@ function login(event) {
 function applyDemoLogin() {
   const demoName = new URLSearchParams(window.location.search).get("demo")?.trim().toLowerCase();
   if (!demoName) return;
+  if (demoName !== "reviewer") return;
   const matchedUser = prototypeUsers().find((user) => user.name === demoName);
   if (!matchedUser) return;
   Object.assign(state, buildCoursePlan(matchedUser), {
