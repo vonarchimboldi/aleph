@@ -1,6 +1,6 @@
 const STORAGE_KEY = "learning-studio-data-v1";
 const SESSION_KEY = "aleph-session";
-const COURSE_PLAN_VERSION = "simple-reviewer-login-v34";
+const COURSE_PLAN_VERSION = "seeded-demo-auth-v35";
 
 const state = loadState();
 let deferredInstallPrompt = null;
@@ -8272,7 +8272,7 @@ function prototypeUsers() {
   if (matchingIndex === -1) {
     return [...seededUsers, state.user];
   }
-  return seededUsers.map((user, index) => index === matchingIndex ? state.user : user);
+  return seededUsers;
 }
 
 function persist() {
