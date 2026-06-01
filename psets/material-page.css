@@ -128,7 +128,8 @@ li {
   background: #fff7e8;
 }
 
-.tag.challenge {
+.tag.challenge,
+.tag.isi {
   color: var(--hard);
   border-color: #e5bac6;
   background: #fff0f4;

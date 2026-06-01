@@ -48,4 +48,5 @@ Use this standard for every standalone Aleph material page.
 - Page must load at desktop and mobile widths without horizontal body overflow.
 - Every problem must have a complete solution.
 - Answer summary must agree with the detailed solutions.
+- Run `node scripts/verify-material-pages.mjs` before commit or deploy.
 - Run a local HTTP smoke test before deploy.
