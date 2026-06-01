@@ -1,6 +1,6 @@
 const STORAGE_KEY = "learning-studio-data-v1";
 const SESSION_KEY = "aleph-session";
-const COURSE_PLAN_VERSION = "seeded-platinum-accounts-v42";
+const COURSE_PLAN_VERSION = "canonical-seeded-accounts-v43";
 
 const state = loadState();
 let deferredInstallPrompt = null;
@@ -121,8 +121,11 @@ function loadState() {
   }
   try {
     const parsed = JSON.parse(saved);
-    const starter = initialState();
-    const user = { ...defaultUser(), ...(parsed.user || {}) };
+    const user = normalizeSeededUser({ ...defaultUser(), ...(parsed.user || {}) });
+    const starter = {
+      patternSubmissions: [],
+      ...buildCoursePlan(user)
+    };
     user.password = user.password || user.tempPassword;
     user.mustChangePassword = false;
     return {
@@ -157,13 +160,14 @@ function initialState() {
 
 function ensureCoursePlan() {
   if (state.coursePlanVersion === COURSE_PLAN_VERSION) return;
-  const user = state.user || defaultUser();
+  const user = normalizeSeededUser(state.user || defaultUser());
   Object.assign(state, buildCoursePlan(user), {
     user
   });
 }
 
 function buildCoursePlan(user = defaultUser()) {
+  user = normalizeSeededUser(user);
   const now = new Date().toISOString();
   const accountTypes = accountTypeCatalog(now);
   const sections = gateDaProbabilitySections(now);
@@ -8294,9 +8298,9 @@ function basicGateDaUser() {
   };
 }
 
-function prototypeUsers() {
+function seededPrototypeUsers() {
   const basic = basicGateDaUser();
-  const seededUsers = [
+  return [
     defaultUser(),
     basic,
     platinumAccountUser(),
@@ -8308,6 +8312,18 @@ function prototypeUsers() {
       tempPassword: "basic!gate",
       password: "basic!gate"
     }
+  ];
+}
+
+function normalizeSeededUser(user) {
+  if (!user?.name) return defaultUser();
+  const seededUser = seededPrototypeUsers().find((entry) => entry.name === user.name);
+  return seededUser ? { ...seededUser } : user;
+}
+
+function prototypeUsers() {
+  const seededUsers = [
+    ...seededPrototypeUsers()
   ];
   if (!state?.user?.name || !state.user.password) {
     return seededUsers;
