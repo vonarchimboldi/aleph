@@ -1,6 +1,6 @@
 const STORAGE_KEY = "learning-studio-data-v1";
 const SESSION_KEY = "aleph-session";
-const COURSE_PLAN_VERSION = "competition-math-material-v37";
+const COURSE_PLAN_VERSION = "conditional-expectation-material-v38";
 
 const state = loadState();
 let deferredInstallPrompt = null;
@@ -7996,9 +7996,9 @@ function probabilityStatsPatternWorkspaces() {
           week: 1,
           date: "2026-06-02",
           materialTitle: "June 2: Conditional Expectation and Tower Property Pset",
-          materialUrl: "",
-          status: "Pending",
-          expectedWork: "Planned 10-problem set: tower property, total variance, stopping-time counts, and conditional distributions."
+          materialUrl: "psets/week-01/june-02-conditional-expectation-tower.html",
+          status: "Published",
+          expectedWork: "10 problems: 5 mechanics drills, 3 application problems, and 2 hard hidden-pattern problems."
         }
       ]
     },

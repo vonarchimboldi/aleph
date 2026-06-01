@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>June 2 Pset — Conditional Expectation and Tower Property</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" />
+  <link rel="stylesheet" href="../material-page.css" />
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+  <script defer src="../material-page.js"></script>
+</head>
+<body>
+  <main class="wrap">
+    <section class="hero">
+      <h1>June 2: Conditional Expectation and Tower Property</h1>
+      <p class="sub">
+        Ten problems for learning a simple habit: when a random problem looks messy, freeze one useful variable first. Solve the easier inner problem, then average over the frozen variable.
+      </p>
+      <div class="meta">
+        <span class="chip">Probability and Statistics</span>
+        <span class="chip">Tuesday</span>
+        <span class="chip">5 mechanics problems</span>
+        <span class="chip">3 application problems</span>
+        <span class="chip">2 hidden-pattern problems</span>
+        <span class="chip">Solutions included</span>
+      </div>
+      <p class="math-fallback">Math rendering did not load from the CDN. Refresh once, or use a network that allows KaTeX CDN files.</p>
+    </section>
+
+    <section class="panel accent">
+      <h2>Core Pattern</h2>
+      <p>Conditional expectation means: compute the expected value after some information is known.</p>
+      <p>The tower property says that if we first condition on a useful variable \(Y\), and then average over \(Y\), we get the original expectation:</p>
+      <div class="formula">
+        \[
+          E[X]=E[E[X\mid Y]].
+        \]
+      </div>
+      <p>The main skill is choosing \(Y\). A good \(Y\) makes the inside problem easy.</p>
+    </section>
+
+    <section class="panel">
+      <h2>How To Use It</h2>
+      <div class="grid">
+        <ul>
+          <li>Ask: what random thing, if known, makes the problem easy?</li>
+          <li>Call that random thing \(Y\).</li>
+          <li>Compute \(E[X\mid Y]\).</li>
+        </ul>
+        <ul>
+          <li>Then take expectation again: \(E[E[X\mid Y]]\).</li>
+          <li>For variance, use total variance.</li>
+          <li>Write the conditioning variable before doing arithmetic.</li>
+        </ul>
+      </div>
+      <div class="formula">
+        \[
+          \operatorname{Var}(X)
+          =E[\operatorname{Var}(X\mid Y)]
+          +\operatorname{Var}(E[X\mid Y]).
+        \]
+      </div>
+    </section>
+
+    <div class="section-label">Problems 1-5 · Mechanics</div>
+
+    <article class="problem">
+      <div class="problem-head">
+        <div class="problem-title">1. Read a Conditional Table</div>
+        <div class="tags">
+          <span class="tag concept">Mechanics</span>
+          <span class="tag">Tower property</span>
+          <span class="tag">5 min</span>
+        </div>
+      </div>
+      <p>A random variable \(Y\) takes values \(1,2,3\) with probabilities \(1/2,1/3,1/6\). Also \(E[X\mid Y=y]=2y+1\). Find \(E[X]\).</p>
+      <details>
+        <summary>Solution</summary>
+        <p>The useful information is already given: condition on \(Y\).</p>
+        <p>Use the tower property:</p>
+        \[
+          E[X]=E[E[X\mid Y]].
+        \]
+        <p>Here \(E[X\mid Y]=2Y+1\), so</p>
+        \[
+          E[X]=E[2Y+1]=2E[Y]+1.
+        \]
+        <p>Now compute \(E[Y]\):</p>
+        \[
+          E[Y]=1\cdot\frac12+2\cdot\frac13+3\cdot\frac16=\frac12+\frac23+\frac12=\frac53.
+        \]
+        <p>Therefore</p>
+        \[
+          E[X]=2\cdot\frac53+1=\frac{13}{3}.
+        \]
+      </details>
+    </article>
+
+    <article class="problem">
+      <div class="problem-head">
+        <div class="problem-title">2. Random Number of Coin Tosses</div>
+        <div class="tags">
+          <span class="tag concept">Mechanics</span>
+          <span class="tag">Random sum</span>
+          <span class="tag">7 min</span>
+        </div>
+      </div>
+      <p>A fair coin is tossed \(N\) times, where \(N\) is a nonnegative integer-valued random variable with \(E[N]=10\). Given \(N\), let \(H\) be the number of heads. Find \(E[H]\).</p>
+      <details>
+        <summary>Solution</summary>
+        <p>If we know \(N=n\), the problem becomes easy. We are counting heads in \(n\) fair tosses.</p>
+        \[
+          E[H\mid N=n]=\frac n2.
+        \]
+        <p>So \(E[H\mid N]=N/2\). Now use the tower property:</p>
+        \[
+          E[H]=E[E[H\mid N]]=E\left[\frac N2\right]=\frac{E[N]}2=5.
+        \]
+      </details>
+    </article>
+
+    <article class="problem">
+      <div class="problem-head">
+        <div class="problem-title">3. Roll First, Then Toss</div>
+        <div class="tags">
+          <span class="tag concept">Mechanics</span>
+          <span class="tag">Condition on count</span>
+          <span class="tag">8 min</span>
+        </div>
+      </div>
+      <p>A fair die is rolled. If the die shows \(K\), then a fair coin is tossed \(K\) times. Let \(H\) be the number of heads. Find \(E[H]\).</p>
+      <details>
+        <summary>Solution</summary>
+        <p>Condition on the die result \(K\). If \(K=k\), then the expected number of heads is \(k/2\).</p>
+        \[
+          E[H\mid K=k]=\frac k2.
+        \]
+        <p>So \(E[H\mid K]=K/2\). Use the tower property:</p>
+        \[
+          E[H]=E\left[\frac K2\right]=\frac{E[K]}2.
+        \]
+        <p>For a fair die, \(E[K]=7/2\). Therefore</p>
+        \[
+          E[H]=\frac{7}{4}.
+        \]
+      </details>
+    </article>
+
+    <article class="problem">
+      <div class="problem-head">
+        <div class="problem-title">4. Total Variance With a Random Count</div>
+        <div class="tags">
+          <span class="tag concept">Mechanics</span>
+          <span class="tag">Total variance</span>
+          <span class="tag">10 min</span>
+        </div>
+      </div>
+      <p>In Problem 2, assume also \(\operatorname{Var}(N)=4\). Find \(\operatorname{Var}(H)\).</p>
+      <details>
+        <summary>Solution</summary>
+        <p>Again condition on \(N\). If \(N=n\), then \(H\mid N=n\) is binomial with \(n\) tosses and success probability \(1/2\).</p>
+        \[
+          E[H\mid N]=\frac N2,\qquad
+          \operatorname{Var}(H\mid N)=\frac N4.
+        \]
+        <p>Use total variance:</p>
+        \[
+          \operatorname{Var}(H)
+          =E[\operatorname{Var}(H\mid N)]
+          +\operatorname{Var}(E[H\mid N]).
+        \]
+        <p>Substitute the two conditional quantities:</p>
+        \[
+          \operatorname{Var}(H)=E\left[\frac N4\right]+\operatorname{Var}\left(\frac N2\right)
+          =\frac{E[N]}4+\frac{\operatorname{Var}(N)}4.
+        \]
+        <p>With \(E[N]=10\) and \(\operatorname{Var}(N)=4\),</p>
+        \[
+          \operatorname{Var}(H)=\frac{10}{4}+\frac44=\frac72.
+        \]
+      </details>
+    </article>
+
+    <article class="problem">
+      <div class="problem-head">
+        <div class="problem-title">5. Conditional Distribution</div>
+        <div class="tags">
+          <span class="tag concept">Mechanics</span>
+          <span class="tag">Discrete conditioning</span>
+          <span class="tag">10 min</span>
+        </div>
+      </div>
+      <p>A random variable \(Y\) takes values \(0\) and \(1\) with \(P(Y=1)=p\). Given \(Y\), the random variable \(X\) has \(E[X\mid Y=0]=3\) and \(E[X\mid Y=1]=8\). Find \(E[X]\).</p>
+      <details>
+        <summary>Solution</summary>
+        <p>We average the conditional expectations using the probabilities of the conditioning cases.</p>
+        \[
+          E[X]=E[E[X\mid Y]].
+        \]
+        <p>There are two cases:</p>
+        \[
+          E[X]=(1-p)\cdot3+p\cdot8.
+        \]
+        <p>So</p>
+        \[
+          E[X]=3+5p.
+        \]
+      </details>
+    </article>
+
+    <div class="section-label">Problems 6-8 · Applications</div>
+
+    <article class="problem">
+      <div class="problem-head">
+        <div class="problem-title">6. Random Box Choice</div>
+        <div class="tags">
+          <span class="tag integration">Application</span>
+          <span class="tag">Mixture</span>
+          <span class="tag">14 min</span>
+        </div>
+      </div>
+      <p>There are two boxes. Box A has 2 red and 3 blue balls. Box B has 5 red and 5 blue balls. A box is chosen at random, each with probability \(1/2\). Then 4 balls are drawn with replacement from that box. Let \(R\) be the number of red balls drawn. Find \(E[R]\).</p>
+      <details>
+        <summary>Solution</summary>
+        <p>The box choice changes the red probability. So condition on the chosen box.</p>
+        <p>If Box A is chosen, the red probability is \(2/5\), so</p>
+        \[
+          E[R\mid A]=4\cdot\frac25=\frac85.
+        \]
+        <p>If Box B is chosen, the red probability is \(1/2\), so</p>
+        \[
+          E[R\mid B]=4\cdot\frac12=2.
+        \]
+        <p>Now average over the box choice:</p>
+        \[
+          E[R]=\frac12\cdot\frac85+\frac12\cdot2=\frac45+1=\frac95.
+        \]
+      </details>
+    </article>
+
+    <article class="problem">
+      <div class="problem-head">
+        <div class="problem-title">7. Random Defect Rate</div>
+        <div class="tags">
+          <span class="tag integration">Application</span>
+          <span class="tag">Random parameter</span>
+          <span class="tag">15 min</span>
+        </div>
+      </div>
+      <p>A machine first chooses a defect probability \(P\). The random value \(P\) is uniformly distributed on \([0,1]\). Given \(P=p\), the machine makes 12 items independently, each defective with probability \(p\). Let \(D\) be the number of defective items. Find \(E[D]\) and \(\operatorname{Var}(D)\).</p>
+      <details>
+        <summary>Solution</summary>
+        <p>Condition on \(P\). Once \(P=p\) is known, \(D\mid P=p\) is binomial with 12 trials and success probability \(p\).</p>
+        \[
+          E[D\mid P]=12P,\qquad
+          \operatorname{Var}(D\mid P)=12P(1-P).
+        \]
+        <p>First find the expectation:</p>
+        \[
+          E[D]=E[12P]=12E[P]=12\cdot\frac12=6.
+        \]
+        <p>For variance, use total variance:</p>
+        \[
+          \operatorname{Var}(D)=E[12P(1-P)]+\operatorname{Var}(12P).
+        \]
+        <p>For \(P\sim \operatorname{Unif}(0,1)\), \(E[P]=1/2\), \(E[P^2]=1/3\), and \(\operatorname{Var}(P)=1/12\). Therefore</p>
+        \[
+          E[12P(1-P)]=12\left(E[P]-E[P^2]\right)=12\left(\frac12-\frac13\right)=2.
+        \]
+        <p>Also</p>
+        \[
+          \operatorname{Var}(12P)=144\cdot\frac1{12}=12.
+        \]
+        <p>So</p>
+        \[
+          \operatorname{Var}(D)=2+12=14.
+        \]
+      </details>
+    </article>
+
+    <article class="problem">
+      <div class="problem-head">
+        <div class="problem-title">8. Waiting for a Random Target</div>
+        <div class="tags">
+          <span class="tag integration">Application</span>
+          <span class="tag">Geometric</span>
+          <span class="tag">16 min</span>
+        </div>
+      </div>
+      <p>A fair die is rolled once. Suppose the result is \(K\). Then the die is rolled repeatedly until \(K\) appears again. Let \(T\) be the number of repeated rolls needed. Find \(E[T]\).</p>
+      <details>
+        <summary>Solution</summary>
+        <p>Condition on the first roll \(K\). Once \(K\) is known, each later roll has probability \(1/6\) of matching \(K\).</p>
+        <p>So \(T\mid K\) is geometric with success probability \(1/6\). Its mean is</p>
+        \[
+          E[T\mid K]=6.
+        \]
+        <p>This does not depend on the value of \(K\). Now average:</p>
+        \[
+          E[T]=E[E[T\mid K]]=E[6]=6.
+        \]
+      </details>
+    </article>
+
+    <div class="section-label">Problems 9-10 · Hidden Tower Property</div>
+
+    <article class="problem">
+      <div class="problem-head">
+        <div class="problem-title">9. Product of a Random Sum</div>
+        <div class="tags">
+          <span class="tag challenge">Hidden pattern</span>
+          <span class="tag">Conditioning choice</span>
+          <span class="tag">22 min</span>
+        </div>
+      </div>
+      <p>Let \(N\) be a nonnegative integer-valued random variable with \(E[N]=\mu\) and \(E[N^2]<\infty\). Let \(X_1,X_2,\ldots\) be independent random variables, independent of \(N\), with \(E[X_i]=m\). Define \(S=X_1+\cdots+X_N\), with \(S=0\) when \(N=0\). Find \(E[NS]\).</p>
+      <details>
+        <summary>Solution</summary>
+        <p>The expression \(NS\) looks like a product, so the tower property is not obvious at first. The useful variable to freeze is \(N\).</p>
+        <p>If \(N=n\), then</p>
+        \[
+          S=X_1+\cdots+X_n.
+        \]
+        <p>So</p>
+        \[
+          E[S\mid N=n]=nm.
+        \]
+        <p>Now compute the conditional expectation of \(NS\):</p>
+        \[
+          E[NS\mid N=n]=nE[S\mid N=n]=n^2m.
+        \]
+        <p>Therefore \(E[NS\mid N]=mN^2\). Average over \(N\):</p>
+        \[
+          E[NS]=E[mN^2]=mE[N^2].
+        \]
+      </details>
+    </article>
+
+    <article class="problem">
+      <div class="problem-head">
+        <div class="problem-title">10. Random Cut in a Stick</div>
+        <div class="tags">
+          <span class="tag challenge">Hidden pattern</span>
+          <span class="tag">Condition on geometry</span>
+          <span class="tag">25 min</span>
+        </div>
+      </div>
+      <p>A point \(U\) is chosen uniformly on \([0,1]\). Then, conditional on \(U=u\), a point \(V\) is chosen uniformly on \([0,u]\). Find \(E[V]\) and \(\operatorname{Var}(V)\).</p>
+      <details>
+        <summary>Solution</summary>
+        <p>The variable \(V\) is hard to understand directly because its range depends on \(U\). So condition on \(U\).</p>
+        <p>If \(U=u\), then \(V\) is uniform on \([0,u]\). Therefore</p>
+        \[
+          E[V\mid U=u]=\frac u2,\qquad
+          \operatorname{Var}(V\mid U=u)=\frac{u^2}{12}.
+        \]
+        <p>So</p>
+        \[
+          E[V\mid U]=\frac U2,\qquad
+          \operatorname{Var}(V\mid U)=\frac{U^2}{12}.
+        \]
+        <p>First find the mean:</p>
+        \[
+          E[V]=E\left[\frac U2\right]=\frac12E[U]=\frac14.
+        \]
+        <p>Now use total variance:</p>
+        \[
+          \operatorname{Var}(V)=E\left[\frac{U^2}{12}\right]+\operatorname{Var}\left(\frac U2\right).
+        \]
+        <p>For \(U\sim \operatorname{Unif}(0,1)\), \(E[U^2]=1/3\) and \(\operatorname{Var}(U)=1/12\). Thus</p>
+        \[
+          \operatorname{Var}(V)=\frac1{12}\cdot\frac13+\frac14\cdot\frac1{12}
+          =\frac1{36}+\frac1{48}
+          =\frac7{144}.
+        \]
+      </details>
+    </article>
+
+    <section class="panel">
+      <h2>Technique Journal Prompts</h2>
+      <ul>
+        <li>Which variable made the inside problem easy?</li>
+        <li>Which problems used expectation only?</li>
+        <li>Which problems needed total variance?</li>
+        <li>Which hard problem did not look like a tower-property problem at first?</li>
+      </ul>
+    </section>
+
+    <section class="panel">
+      <h2>Answer Summary</h2>
+      <div class="answer-list">
+        <div><strong>1.</strong> \(\frac{13}{3}\)</div>
+        <div><strong>2.</strong> \(5\)</div>
+        <div><strong>3.</strong> \(\frac74\)</div>
+        <div><strong>4.</strong> \(\frac72\)</div>
+        <div><strong>5.</strong> \(3+5p\)</div>
+        <div><strong>6.</strong> \(\frac95\)</div>
+        <div><strong>7.</strong> \(E[D]=6\), \(\operatorname{Var}(D)=14\)</div>
+        <div><strong>8.</strong> \(6\)</div>
+        <div><strong>9.</strong> \(mE[N^2]\)</div>
+        <div><strong>10.</strong> \(E[V]=\frac14\), \(\operatorname{Var}(V)=\frac7{144}\)</div>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
