@@ -1,6 +1,6 @@
 const STORAGE_KEY = "learning-studio-data-v1";
 const SESSION_KEY = "aleph-session";
-const COURSE_PLAN_VERSION = "platinum-pattern-workspace-v33";
+const COURSE_PLAN_VERSION = "simple-reviewer-login-v34";
 
 const state = loadState();
 let deferredInstallPrompt = null;
@@ -8230,8 +8230,8 @@ function reviewerUser() {
     id: "user-reviewer",
     name: "reviewer",
     email: "reviewer@aleph.local",
-    tempPassword: "reviewer!aleph",
-    password: "reviewer!aleph",
+    tempPassword: "reviewer",
+    password: "reviewer",
     passwordStatus: "Platinum reviewer prototype login"
   };
 }
