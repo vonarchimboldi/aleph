@@ -1,6 +1,6 @@
 const STORAGE_KEY = "learning-studio-data-v1";
 const SESSION_KEY = "aleph-session";
-const COURSE_PLAN_VERSION = "seeded-demo-auth-v35";
+const COURSE_PLAN_VERSION = "reviewer-direct-access-v36";
 
 const state = loadState();
 let deferredInstallPrompt = null;
@@ -109,6 +109,7 @@ if ("serviceWorker" in navigator && isLocalHost()) {
   navigator.serviceWorker.register("service-worker.js");
 }
 
+applyDemoLogin();
 persist();
 render();
 applyAuthState();
@@ -8313,6 +8314,18 @@ function login(event) {
   }
 
   error.textContent = "Username or password is incorrect.";
+}
+
+function applyDemoLogin() {
+  const demoName = new URLSearchParams(window.location.search).get("demo")?.trim().toLowerCase();
+  if (!demoName) return;
+  const matchedUser = prototypeUsers().find((user) => user.name === demoName);
+  if (!matchedUser) return;
+  Object.assign(state, buildCoursePlan(matchedUser), {
+    user: { ...matchedUser }
+  });
+  sessionStorage.setItem(SESSION_KEY, matchedUser.name);
+  window.history.replaceState({}, document.title, window.location.pathname);
 }
 
 function signup(event) {
