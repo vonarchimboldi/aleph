@@ -1,6 +1,6 @@
 const STORAGE_KEY = "learning-studio-data-v1";
 const SESSION_KEY = "aleph-session";
-const COURSE_PLAN_VERSION = "ps-pattern-workspace-v32";
+const COURSE_PLAN_VERSION = "platinum-pattern-workspace-v33";
 
 const state = loadState();
 let deferredInstallPrompt = null;
@@ -169,7 +169,7 @@ function buildCoursePlan(user = defaultUser()) {
   if (isBasicPrototypeUser(user)) {
     return buildGateDaBasicPlan(now, accountTypes, sections, user);
   }
-  return buildPriyankaPlatinumPlan(now, accountTypes, sections);
+  return buildPriyankaPlatinumPlan(now, accountTypes, sections, user);
 }
 
 function isBasicPrototypeUser(user) {
@@ -188,9 +188,11 @@ function slugify(value) {
     .replace(/^-|-$/g, "") || "learner";
 }
 
-function buildPriyankaPlatinumPlan(now, accountTypes, sections) {
+function buildPriyankaPlatinumPlan(now, accountTypes, sections, user = defaultUser()) {
   const startDate = "2026-06-01";
   const endDate = "2026-08-30";
+  const userSlug = slugify(user.name || user.id || "learner");
+  const lessonPlanId = `lesson-${userSlug}-platinum`;
   const subjects = [
     {
       id: "subject-discrete-mathematics",
@@ -213,8 +215,7 @@ function buildPriyankaPlatinumPlan(now, accountTypes, sections) {
       title: "Probability and Statistics",
       date: endDate,
       status: "Not started",
-      details: "GATE DA Probability and Statistics with Priyanka's Platinum pacing: daily 10-problem PSB-style sets, Sunday mixed review, correction notes, and custom feedback. The current Basic Probability chapter reader is attached as supporting content.",
-      sectionIds: sections.map((section) => section.id),
+      details: "GATE DA Probability and Statistics with Priyanka's Platinum pacing: six recurring PSB patterns, daily 10-problem sets, Sunday mixed review, solution upload, correction notes, and feedback.",
       patternWorkspaces: probabilityStatsPatternWorkspaces(),
       updatedAt: now
     },
@@ -244,7 +245,7 @@ function buildPriyankaPlatinumPlan(now, accountTypes, sections) {
     {
       key: "PS",
       label: "Probability and Statistics",
-      resources: "GATE DA Basic Probability sections and themed practice sets",
+      resources: "ISI PSB pattern notes and published pattern practice material",
       milestones: probabilityStatsMilestones(),
       dailyProblemSets: true
     },
@@ -307,20 +308,6 @@ function buildPriyankaPlatinumPlan(now, accountTypes, sections) {
             updatedAt: now
           });
         });
-
-        if (week === 1) {
-          tasks.push({
-            id: "task-ps-week-1-probability-foundations-section",
-            week,
-            title: "PS W1: Study Probability Foundations pilot section",
-            type: "Section",
-            date: monday,
-            status: "todo",
-            done: false,
-            details: "Read the GATE DA Probability Foundations section, solve the labelled practice problems with solutions, and attempt the conceptual review prompts without solutions.",
-            updatedAt: now
-          });
-        }
 
         schedule.push({
           id: `schedule-${plan.key.toLowerCase()}-week-${week}-sunday-test`,
@@ -475,21 +462,21 @@ function buildPriyankaPlatinumPlan(now, accountTypes, sections) {
     accountTypes,
     enrollments: [
       {
-        id: "enrollment-priyanka-custom",
-        userId: "user-priyanka",
+        id: `enrollment-${userSlug}-platinum`,
+        userId: user.id,
         accountTypeId: "gate-da-platinum",
         planVariant: "Platinum",
         paymentStatus: "active",
-        lessonPlanId: "lesson-priyanka-custom",
+        lessonPlanId,
         status: "active",
         updatedAt: now
       }
     ],
     lessonPlans: [
       {
-        id: "lesson-priyanka-custom",
-        userId: "user-priyanka",
-        title: "Priyanka GATE DA Platinum plan",
+        id: lessonPlanId,
+        userId: user.id,
+        title: `${user.displayName || user.name} GATE DA Platinum plan`,
         type: "personalized",
         subjects: [
           "Discrete Mathematics",
@@ -500,11 +487,11 @@ function buildPriyankaPlatinumPlan(now, accountTypes, sections) {
         startDate,
         endDate,
         status: "active",
-        details: "Personalized June-August Platinum plan for the GATE DA exam plus a Competition Math maturity track. Priyanka's workspace, subjects, tasks, schedules, tests, feedback, and resources live inside this GATE DA plan.",
+        details: "Personalized June-August Platinum plan for the GATE DA exam plus a Competition Math maturity track. The Probability and Statistics subject is organized as recurring PSB patterns with weekly material, solution upload, and feedback.",
         updatedAt: now
       }
     ],
-    gateDaSections: sections,
+    gateDaSections: [],
     feedback: [
       {
         id: "feedback-three-subject-plan-created",
@@ -515,13 +502,6 @@ function buildPriyankaPlatinumPlan(now, accountTypes, sections) {
       }
     ].concat(feedback),
     resources: [
-      {
-        id: "resource-gate-da-probability-foundations",
-        title: "GATE DA Probability Foundations Pilot Section",
-        date: startDate,
-        details: "Section 1 pilot with concept teaching, labelled practice problems with solutions, and conceptual review prompts without solutions.",
-        updatedAt: now
-      },
       {
         id: "resource-cmu-discrete-mathematics",
         title: "CMU 21-228 Discrete Mathematics - Po-Shen Loh",
@@ -9167,7 +9147,23 @@ function renderPlanCatalog() {
 function renderGateDaSummary() {
   const container = document.querySelector("#gate-da-summary-list");
   if (!state.gateDaSections?.length) {
-    container.innerHTML = '<div class="empty">No GATE DA material seeded yet.</div>';
+    const probabilitySubject = state.subjects.find((subject) => subject.id === "subject-probability-statistics");
+    const patterns = probabilitySubject?.patternWorkspaces || [];
+    if (patterns.length) {
+      container.innerHTML = patterns.slice(0, 3).map((pattern) => `
+        <article class="item">
+          <div class="item-top">
+            <div>
+              <h4>${escapeHtml(pattern.title)}</h4>
+              <p>${escapeHtml(pattern.focus)}</p>
+            </div>
+            <span class="tag">${escapeHtml(pattern.day)}</span>
+          </div>
+        </article>
+      `).join("");
+      return;
+    }
+    container.innerHTML = '<div class="empty">No subject material seeded yet.</div>';
     return;
   }
 
@@ -9240,6 +9236,22 @@ function renderGateDaWorkspace() {
 function renderGateDaSections() {
   const container = document.querySelector("#gate-da-section-list");
   if (!state.gateDaSections?.length) {
+    const probabilitySubject = state.subjects.find((subject) => subject.id === "subject-probability-statistics");
+    const patterns = probabilitySubject?.patternWorkspaces || [];
+    if (patterns.length) {
+      container.innerHTML = `
+        <article class="item">
+          <div class="item-top">
+            <div>
+              <h4>Probability and Statistics Pattern Workspace</h4>
+              <p>Open Subjects -> Probability and Statistics to work through pattern -> week -> material -> solution upload -> feedback.</p>
+            </div>
+            <span class="tag">${patterns.length} patterns</span>
+          </div>
+        </article>
+      `;
+      return;
+    }
     container.innerHTML = '<div class="empty">No GATE DA sections are available yet.</div>';
     return;
   }
