@@ -1,6 +1,6 @@
 const STORAGE_KEY = "learning-studio-data-v1";
 const SESSION_KEY = "aleph-session";
-const COURSE_PLAN_VERSION = "reviewer-passwordless-v39";
+const COURSE_PLAN_VERSION = "strict-platinum-plan-v41";
 
 const state = loadState();
 let deferredInstallPrompt = null;
@@ -8230,6 +8230,8 @@ function defaultUser() {
     id: "user-priyanka",
     name: "priyanka",
     email: "priyankakatoch95@gmail.com",
+    accountTypeId: "gate-da-platinum",
+    planVariant: "Platinum",
     tempPassword: "l!pschitz",
     password: "l!pschitz",
     mustChangePassword: false,
@@ -8243,8 +8245,25 @@ function platinumDemoUser() {
     ...defaultUser(),
     name: "platinum-demo",
     email: "platinum.demo@aleph.local",
+    accountTypeId: "gate-da-platinum",
+    planVariant: "Platinum",
     tempPassword: "platinum!demo",
     password: "platinum!demo"
+  };
+}
+
+function platinumAccountUser() {
+  return {
+    ...defaultUser(),
+    id: "user-platinum-demo",
+    name: "platinum",
+    displayName: "Priyanka Platinum",
+    email: "platinum@aleph.local",
+    accountTypeId: "gate-da-platinum",
+    planVariant: "Platinum",
+    tempPassword: "platinum",
+    password: "platinum",
+    passwordStatus: "GATE DA Platinum seeded prototype login"
   };
 }
 
@@ -8280,6 +8299,7 @@ function prototypeUsers() {
   const seededUsers = [
     defaultUser(),
     basic,
+    platinumAccountUser(),
     platinumDemoUser(),
     reviewerUser(),
     {
