@@ -1,7 +1,7 @@
 const STORAGE_KEY = "learning-studio-data-v2";
 const LEGACY_STORAGE_KEYS = ["learning-studio-data-v1"];
 const SESSION_KEY = "aleph-session";
-const COURSE_PLAN_VERSION = "seeded-user-canonical-workspace-v52";
+const COURSE_PLAN_VERSION = "seeded-user-canonical-workspace-v53";
 
 const state = loadState();
 let selectedSubjectId = null;
@@ -209,6 +209,29 @@ function activeSubjects() {
 
 function activeGateDaSections() {
   return activeAccountTypeId() === "gate-da-basic" ? state.gateDaSections : [];
+}
+
+function sectionUnlockState(section, sections = activeGateDaSections()) {
+  if (activeAccountTypeId() !== "gate-da-basic") return { locked: false, previousSection: null, previousTest: null, previousAttempt: null };
+  const index = sections.findIndex((entry) => entry.id === section.id);
+  if (index <= 0) return { locked: false, previousSection: null, previousTest: null, previousAttempt: null };
+  const previousSection = sections[index - 1];
+  const previousTest = state.tests.find((entry) => entry.sectionId === previousSection.id);
+  const previousAttempt = latestQuizAttemptForTest(previousTest?.id);
+  return {
+    locked: !previousSection.reviewQuiz || !previousAttempt,
+    previousSection,
+    previousTest,
+    previousAttempt
+  };
+}
+
+function latestQuizAttemptForTest(testId) {
+  if (!testId) return null;
+  return state.quizAttempts
+    .filter((attempt) => attempt.testId === testId)
+    .sort((a, b) => a.date.localeCompare(b.date))
+    .at(-1) || null;
 }
 
 function isLocalHost() {
@@ -9283,6 +9306,7 @@ function renderSubjects() {
     });
     container.querySelectorAll("[data-open-section]").forEach((button) => {
       button.addEventListener("click", () => {
+        if (button.disabled) return;
         selectedSectionId = button.dataset.openSection;
         renderSubjects();
       });
@@ -9462,14 +9486,19 @@ function subjectReaderTemplate(subject) {
     .map((sectionId) => activeGateDaSections().find((section) => section.id === sectionId))
     .filter(Boolean);
   const selectedSection = sections.find((section) => section.id === selectedSectionId);
+  const selectedUnlockState = selectedSection ? sectionUnlockState(selectedSection, sections) : null;
+  const canOpenSelectedSection = Boolean(selectedSection && !selectedUnlockState?.locked);
+  if (selectedSection && selectedUnlockState?.locked) {
+    selectedSectionId = null;
+  }
 
   return `
     <article class="subject-reader">
       <div class="subject-reader-header">
         <button class="text-btn" data-subject-back type="button">Back to subjects</button>
-        ${selectedSection ? '<button class="text-btn" data-chapter-back type="button">Back to chapters</button>' : ""}
+        ${canOpenSelectedSection ? '<button class="text-btn" data-chapter-back type="button">Back to chapters</button>' : ""}
       </div>
-      ${selectedSection ? sectionTemplate(selectedSection) : chapterMenuTemplate(subject, sections)}
+      ${canOpenSelectedSection ? sectionTemplate(selectedSection) : chapterMenuTemplate(subject, sections)}
     </article>
   `;
 }
@@ -9841,31 +9870,42 @@ function chapterMenuTemplate(subject, sections) {
         <p class="eyebrow">${escapeHtml(subject.title)} textbook</p>
         <h4>Chapters</h4>
         <p>${escapeHtml(subject.details || "Choose a chapter to begin.")}</p>
+        <p class="unlock-policy">Workflow: read the chapter, finish practice, submit the objective review quiz, then the next chapter unlocks. This keeps weak prerequisites visible before moving ahead.</p>
       </div>
       <div class="chapter-card-list">
-        ${sections.map(chapterCardTemplate).join("")}
+        ${sections.map((section) => chapterCardTemplate(section, sections)).join("")}
       </div>
     </section>
   `;
 }
 
-function chapterCardTemplate(section) {
+function chapterCardTemplate(section, sections = activeGateDaSections()) {
   const test = state.tests.find((entry) => entry.sectionId === section.id);
-  const attempts = state.quizAttempts.filter((attempt) => attempt.testId === test?.id);
-  const latestAttempt = attempts[attempts.length - 1];
+  const latestAttempt = latestQuizAttemptForTest(test?.id);
+  const unlockState = sectionUnlockState(section, sections);
+  const lockMessage = unlockState.locked
+    ? unlockState.previousSection.reviewQuiz
+      ? `Locked until you submit ${unlockState.previousSection.chapter}: ${unlockState.previousSection.title} review quiz.`
+      : `Locked until ${unlockState.previousSection.chapter}: ${unlockState.previousSection.title} review quiz is added and submitted.`
+    : latestAttempt
+      ? `Review quiz submitted: ${latestAttempt.percent}%.`
+      : section.reviewQuiz
+        ? "Submit this review quiz to unlock the next chapter."
+        : "Chapter is open; review quiz is pending.";
   return `
-    <article class="chapter-card">
+    <article class="chapter-card${unlockState.locked ? " locked" : ""}">
       <div>
         <p class="eyebrow">${escapeHtml(section.chapter)}</p>
         <h5>${escapeHtml(section.title)}</h5>
         <p>${escapeHtml(section.summary)}</p>
+        <p class="chapter-unlock-note">${escapeHtml(lockMessage)}</p>
       </div>
       <div class="chapter-card-meta">
         <span>${section.practiceProblems.length ? `${section.practiceProblems.length} practice` : "Practice pending"}</span>
         <span>${section.reviewQuiz ? `${section.reviewQuiz.questions.length} quiz questions` : "Quiz pending"}</span>
-        <span>${latestAttempt ? `Latest quiz ${latestAttempt.percent}%` : section.reviewQuiz ? "No quiz attempt" : "In progress"}</span>
+        <span>${unlockState.locked ? "Locked" : latestAttempt ? `Latest quiz ${latestAttempt.percent}%` : section.reviewQuiz ? "Quiz required" : "In progress"}</span>
       </div>
-      <button class="primary-btn" data-open-section="${section.id}" type="button">Open chapter</button>
+      <button class="${unlockState.locked ? "ghost-btn" : "primary-btn"}" data-open-section="${section.id}" type="button"${unlockState.locked ? " disabled" : ""}>${unlockState.locked ? "Locked" : "Open chapter"}</button>
     </article>
   `;
 }
@@ -10213,6 +10253,7 @@ function sectionTemplate(section) {
               <li>Single-concept questions check each key concept in this chapter.</li>
               <li>Mixed questions combine two or three concepts so feedback can identify where reasoning breaks.</li>
               <li>Attempts are logged in Tests with concept-level feedback in the learner record.</li>
+              <li>Submitting this review quiz unlocks the next Probability chapter in the Basic plan.</li>
             </ul>
             <div class="book-action-row">
               <button class="primary-btn" data-open-section-quiz="${escapeHtml(sectionTestId(section.id))}" type="button">Open review quiz</button>
