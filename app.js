@@ -1,7 +1,7 @@
 const STORAGE_KEY = "learning-studio-data-v2";
 const LEGACY_STORAGE_KEYS = ["learning-studio-data-v1"];
 const SESSION_KEY = "aleph-session";
-const COURSE_PLAN_VERSION = "platinum-runtime-guard-v47";
+const COURSE_PLAN_VERSION = "plan-scoped-material-v48";
 
 const state = loadState();
 let deferredInstallPrompt = null;
@@ -191,6 +191,33 @@ function isPlatinumPrototypeUser(user) {
     || user?.accountTypeId === "gate-da-platinum";
 }
 
+function activeAccountTypeId() {
+  const enrollment = state.enrollments.find((entry) => entry.userId === state.user.id);
+  return enrollment?.accountTypeId || enrollment?.productId || state.user.accountTypeId || "";
+}
+
+function subjectAccountType(subject) {
+  if (subject.accountTypeId) return subject.accountTypeId;
+  if (subject.id === "subject-gate-da-probability" || subject.sectionIds?.length) return "gate-da-basic";
+  return "gate-da-platinum";
+}
+
+function activeSubjects() {
+  const accountTypeId = activeAccountTypeId();
+  return state.subjects.filter((subject) => {
+    const subjectType = subjectAccountType(subject);
+    if (accountTypeId === "gate-da-basic") return subjectType === "gate-da-basic";
+    if (accountTypeId === "gate-da-platinum") {
+      return subjectType === "gate-da-platinum" && !subject.sectionIds?.length;
+    }
+    return subjectType === accountTypeId;
+  });
+}
+
+function activeGateDaSections() {
+  return activeAccountTypeId() === "gate-da-basic" ? state.gateDaSections : [];
+}
+
 function isLocalHost() {
   return ["localhost", "127.0.0.1", "0.0.0.0", "::1"].includes(window.location.hostname);
 }
@@ -211,6 +238,8 @@ function buildPriyankaPlatinumPlan(now, accountTypes, sections, user = defaultUs
   const subjects = [
     {
       id: "subject-discrete-mathematics",
+      accountTypeId: "gate-da-platinum",
+      lessonPlanId,
       title: "Discrete Mathematics",
       date: endDate,
       status: "Not started",
@@ -219,6 +248,8 @@ function buildPriyankaPlatinumPlan(now, accountTypes, sections, user = defaultUs
     },
     {
       id: "subject-data-structures-algorithms",
+      accountTypeId: "gate-da-platinum",
+      lessonPlanId,
       title: "Data Structures and Algorithms",
       date: endDate,
       status: "Not started",
@@ -227,6 +258,8 @@ function buildPriyankaPlatinumPlan(now, accountTypes, sections, user = defaultUs
     },
     {
       id: "subject-probability-statistics",
+      accountTypeId: "gate-da-platinum",
+      lessonPlanId,
       title: "Probability and Statistics",
       date: endDate,
       status: "Not started",
@@ -236,6 +269,8 @@ function buildPriyankaPlatinumPlan(now, accountTypes, sections, user = defaultUs
     },
     {
       id: "subject-competition-math",
+      accountTypeId: "gate-da-platinum",
+      lessonPlanId,
       title: "Competition Math",
       date: endDate,
       status: "Not started",
@@ -620,6 +655,8 @@ function buildGateDaBasicPlan(now, accountTypes, sections, user = basicGateDaUse
     subjects: [
       {
         id: "subject-gate-da-probability",
+        accountTypeId: "gate-da-basic",
+        lessonPlanId,
         title: "Probability",
         date: "2026-08-30",
         status: "In progress",
@@ -8669,7 +8706,7 @@ function submitQuizAttempt(event) {
   event.preventDefault();
   const form = event.currentTarget;
   const test = state.tests.find((entry) => entry.id === form.dataset.testId);
-  const section = state.gateDaSections.find((entry) => entry.id === test?.sectionId);
+  const section = activeGateDaSections().find((entry) => entry.id === test?.sectionId);
   const quiz = section?.reviewQuiz;
   if (!test || !quiz) return;
 
@@ -8854,12 +8891,13 @@ function conceptLabel(tag) {
 }
 
 function collectionFor(type) {
-  if (type === "subject") return state.subjects;
+  if (type === "subject") return activeSubjects();
   return type === "test" ? state.tests : state[`${type}s`] || state[type];
 }
 
 function render() {
   enforceActivePlanIntegrity();
+  const subjects = activeSubjects();
   const isBasicPlan = isBasicPrototypeUser(state.user);
   const planLabel = isBasicPlan ? "Basic" : "Platinum";
   document.querySelector("#seed-btn").textContent = `Load ${planLabel} plan`;
@@ -8870,7 +8908,7 @@ function render() {
     : "Open a subject to work through Priyanka's pattern workspaces and weekly material.";
   document.querySelector("#build-stamp").textContent = `Build ${COURSE_PLAN_VERSION}`;
   document.querySelector("#learner-subtitle").textContent = `Learner: ${state.user.name}`;
-  document.querySelector("#subject-count").textContent = state.subjects.length;
+  document.querySelector("#subject-count").textContent = subjects.length;
   document.querySelector("#task-count").textContent = state.tasks.length;
   document.querySelector("#schedule-count").textContent = state.schedule.length;
   document.querySelector("#test-count").textContent = state.tests.length;
@@ -8900,12 +8938,13 @@ function render() {
 
 function renderSubjects() {
   const container = document.querySelector("#subjects-list");
-  if (!state.subjects.length) {
+  const subjects = activeSubjects();
+  if (!subjects.length) {
     container.innerHTML = '<div class="empty">No subjects are available for this plan yet.</div>';
     return;
   }
 
-  const selectedSubject = state.subjects.find((subject) => subject.id === selectedSubjectId);
+  const selectedSubject = subjects.find((subject) => subject.id === selectedSubjectId);
   if (selectedSubject) {
     container.innerHTML = subjectReaderTemplate(selectedSubject);
     container.querySelector("[data-subject-back]")?.addEventListener("click", () => {
@@ -8939,7 +8978,7 @@ function renderSubjects() {
 
   container.innerHTML = `
     <div class="subject-menu">
-      ${state.subjects.map(subjectMenuCardTemplate).join("")}
+      ${subjects.map(subjectMenuCardTemplate).join("")}
     </div>
   `;
 
@@ -9021,7 +9060,7 @@ function testTemplate(test) {
 
 function activeQuizTemplate(testId) {
   const test = state.tests.find((entry) => entry.id === testId);
-  const section = state.gateDaSections.find((entry) => entry.id === test?.sectionId);
+  const section = activeGateDaSections().find((entry) => entry.id === test?.sectionId);
   const quiz = section?.reviewQuiz;
   if (!test || !quiz) return "";
 
@@ -9095,7 +9134,7 @@ function subjectReaderTemplate(subject) {
   }
 
   const sections = (subject.sectionIds || [])
-    .map((sectionId) => state.gateDaSections.find((section) => section.id === sectionId))
+    .map((sectionId) => activeGateDaSections().find((section) => section.id === sectionId))
     .filter(Boolean);
   const selectedSection = sections.find((section) => section.id === selectedSectionId);
 
@@ -9319,8 +9358,9 @@ function renderPlanCatalog() {
 
 function renderGateDaSummary() {
   const container = document.querySelector("#gate-da-summary-list");
-  if (!state.gateDaSections?.length) {
-    const probabilitySubject = state.subjects.find((subject) => subject.id === "subject-probability-statistics");
+  const sections = activeGateDaSections();
+  if (!sections.length) {
+    const probabilitySubject = activeSubjects().find((subject) => subject.id === "subject-probability-statistics");
     const patterns = probabilitySubject?.patternWorkspaces || [];
     if (patterns.length) {
       container.innerHTML = patterns.slice(0, 3).map((pattern) => `
@@ -9340,7 +9380,7 @@ function renderGateDaSummary() {
     return;
   }
 
-  container.innerHTML = state.gateDaSections.slice(0, 3).map((section) => `
+  container.innerHTML = sections.slice(0, 3).map((section) => `
     <article class="item">
       <div class="item-top">
         <div>
@@ -9356,6 +9396,8 @@ function renderGateDaSummary() {
 function renderGateDaWorkspace() {
   const container = document.querySelector("#gate-da-workspace-list");
   if (!container) return;
+  const subjects = activeSubjects();
+  const sections = activeGateDaSections();
   const gateDaEnrollment = state.enrollments.find((enrollment) => {
     const accountTypeId = enrollment.accountTypeId || enrollment.productId;
     return accountTypeId?.startsWith("gate-da-") && enrollment.userId === state.user.id;
@@ -9373,8 +9415,8 @@ function renderGateDaWorkspace() {
           <span class="tag">${escapeHtml(gateDaEnrollment.paymentStatus || "active")}</span>
         </div>
         <div class="workspace-counts">
-          <span>${state.gateDaSections.length} chapters</span>
-          <span>${state.gateDaSections[0]?.practiceProblems.length || 0} practice problems</span>
+          <span>${sections.length} chapters</span>
+          <span>${sections[0]?.practiceProblems.length || 0} practice problems</span>
           <span>conceptual review</span>
           <span>worked solutions</span>
         </div>
@@ -9395,7 +9437,7 @@ function renderGateDaWorkspace() {
         <span class="tag">${escapeHtml(gateDaEnrollment?.paymentStatus || "active")}</span>
       </div>
       <div class="workspace-counts">
-        <span>${state.subjects.length} subjects</span>
+        <span>${subjects.length} subjects</span>
         <span>${state.tasks.length} tasks</span>
         <span>${state.schedule.length} schedule items</span>
         <span>${state.tests.length} tests</span>
@@ -9408,8 +9450,9 @@ function renderGateDaWorkspace() {
 
 function renderGateDaSections() {
   const container = document.querySelector("#gate-da-section-list");
-  if (!state.gateDaSections?.length) {
-    const probabilitySubject = state.subjects.find((subject) => subject.id === "subject-probability-statistics");
+  const sections = activeGateDaSections();
+  if (!sections.length) {
+    const probabilitySubject = activeSubjects().find((subject) => subject.id === "subject-probability-statistics");
     const patterns = probabilitySubject?.patternWorkspaces || [];
     if (patterns.length) {
       container.innerHTML = `
@@ -9429,7 +9472,7 @@ function renderGateDaSections() {
     return;
   }
 
-  container.innerHTML = state.gateDaSections.map(sectionTemplate).join("");
+  container.innerHTML = sections.map(sectionTemplate).join("");
 }
 
 function sectionTemplate(section) {
@@ -9951,11 +9994,12 @@ function draftCredentialEmail(email) {
 
 function renderPlans() {
   const container = document.querySelector("#plan-list");
-  if (!state.subjects.length) {
+  const subjects = activeSubjects();
+  if (!subjects.length) {
     container.innerHTML = '<div class="empty">No subjects have learning plans yet.</div>';
     return;
   }
-  container.innerHTML = state.subjects
+  container.innerHTML = subjects
     .slice(0, 4)
     .map((subject) => `
       <article class="item">
