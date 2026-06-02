@@ -1,7 +1,7 @@
 const STORAGE_KEY = "learning-studio-data-v2";
 const LEGACY_STORAGE_KEYS = ["learning-studio-data-v1"];
 const SESSION_KEY = "aleph-session";
-const COURSE_PLAN_VERSION = "user-plan-source-of-truth-v49";
+const COURSE_PLAN_VERSION = "seeded-user-canonical-workspace-v50";
 
 const state = loadState();
 let deferredInstallPrompt = null;
@@ -9,6 +9,7 @@ let selectedSubjectId = null;
 let selectedSectionId = null;
 let activeTestId = null;
 ensureCoursePlan();
+enforceSeededUserWorkspace();
 
 const views = {
   dashboard: document.querySelector("#dashboard-view"),
@@ -8421,6 +8422,17 @@ function enforceActivePlanIntegrity() {
   persist();
 }
 
+function enforceSeededUserWorkspace() {
+  const canonicalUser = normalizeSeededUser(state.user);
+  if (!isSeededPrototypeUser(canonicalUser)) return;
+
+  Object.assign(state, buildCoursePlan(canonicalUser), {
+    user: canonicalUser,
+    quizAttempts: state.quizAttempts || [],
+    patternSubmissions: state.patternSubmissions || []
+  });
+}
+
 function showView(name) {
   Object.values(views).forEach((view) => view.classList.remove("active"));
   views[name].classList.add("active");
@@ -8446,11 +8458,14 @@ function login(event) {
   });
 
   if (matchedUser) {
-    Object.assign(state, buildCoursePlan(matchedUser), {
-      user: { ...matchedUser }
+    const canonicalUser = normalizeSeededUser(matchedUser);
+    Object.assign(state, buildCoursePlan(canonicalUser), {
+      user: canonicalUser,
+      quizAttempts: [],
+      patternSubmissions: []
     });
     persist();
-    sessionStorage.setItem(SESSION_KEY, matchedUser.name);
+    sessionStorage.setItem(SESSION_KEY, canonicalUser.name);
     error.textContent = "";
     document.querySelector("#login-form").reset();
     render();
@@ -8467,10 +8482,13 @@ function applyDemoLogin() {
   if (demoName !== "reviewer") return;
   const matchedUser = prototypeUsers().find((user) => user.name === demoName);
   if (!matchedUser) return;
-  Object.assign(state, buildCoursePlan(matchedUser), {
-    user: { ...matchedUser }
+  const canonicalUser = normalizeSeededUser(matchedUser);
+  Object.assign(state, buildCoursePlan(canonicalUser), {
+    user: canonicalUser,
+    quizAttempts: [],
+    patternSubmissions: []
   });
-  sessionStorage.setItem(SESSION_KEY, matchedUser.name);
+  sessionStorage.setItem(SESSION_KEY, canonicalUser.name);
   window.history.replaceState({}, document.title, window.location.pathname);
 }
 
