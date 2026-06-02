@@ -1,6 +1,7 @@
-const STORAGE_KEY = "learning-studio-data-v1";
+const STORAGE_KEY = "learning-studio-data-v2";
+const LEGACY_STORAGE_KEYS = ["learning-studio-data-v1"];
 const SESSION_KEY = "aleph-session";
-const COURSE_PLAN_VERSION = "canonical-platinum-state-v44";
+const COURSE_PLAN_VERSION = "disable-sw-fresh-state-v45";
 
 const state = loadState();
 let deferredInstallPrompt = null;
@@ -98,15 +99,18 @@ window.addEventListener("beforeinstallprompt", (event) => {
   updateInstallState();
 });
 
-if ("serviceWorker" in navigator && isLocalHost()) {
+LEGACY_STORAGE_KEYS.forEach((key) => {
+  localStorage.removeItem(key);
+});
+
+if ("serviceWorker" in navigator) {
   navigator.serviceWorker.getRegistrations().then((registrations) => {
     registrations.forEach((registration) => registration.unregister());
   });
-  if ("caches" in window) {
-    caches.keys().then((keys) => keys.forEach((key) => caches.delete(key)));
-  }
-} else if ("serviceWorker" in navigator) {
-  navigator.serviceWorker.register("service-worker.js");
+}
+
+if ("caches" in window) {
+  caches.keys().then((keys) => keys.forEach((key) => caches.delete(key)));
 }
 
 applyDemoLogin();
