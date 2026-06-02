@@ -1,7 +1,7 @@
 const STORAGE_KEY = "learning-studio-data-v2";
 const LEGACY_STORAGE_KEYS = ["learning-studio-data-v1"];
 const SESSION_KEY = "aleph-session";
-const COURSE_PLAN_VERSION = "disable-sw-fresh-state-v45";
+const COURSE_PLAN_VERSION = "fresh-start-diagnostic-v46";
 
 const state = loadState();
 let deferredInstallPrompt = null;
@@ -8837,6 +8837,7 @@ function render() {
   document.querySelector("#subjects-panel-copy").textContent = isBasicPlan
     ? "Open a subject to read its textbook chapters and practice sets."
     : "Open a subject to work through Priyanka's pattern workspaces and weekly material.";
+  document.querySelector("#build-stamp").textContent = `Build ${COURSE_PLAN_VERSION}`;
   document.querySelector("#learner-subtitle").textContent = `Learner: ${state.user.name}`;
   document.querySelector("#subject-count").textContent = state.subjects.length;
   document.querySelector("#task-count").textContent = state.tasks.length;
