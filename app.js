@@ -1,6 +1,6 @@
 const STORAGE_KEY = "learning-studio-data-v1";
 const SESSION_KEY = "aleph-session";
-const COURSE_PLAN_VERSION = "canonical-seeded-accounts-v43";
+const COURSE_PLAN_VERSION = "canonical-platinum-state-v44";
 
 const state = loadState();
 let deferredInstallPrompt = null;
@@ -126,22 +126,23 @@ function loadState() {
       patternSubmissions: [],
       ...buildCoursePlan(user)
     };
+    const shouldUseCanonicalPlan = isSeededPrototypeUser(user) || parsed.coursePlanVersion !== COURSE_PLAN_VERSION;
     user.password = user.password || user.tempPassword;
     user.mustChangePassword = false;
     return {
       user,
-      subjects: parsed.subjects?.length ? parsed.subjects : starter.subjects,
-      schedule: parsed.schedule?.length ? parsed.schedule : starter.schedule,
-      tests: parsed.tests || [],
+      subjects: shouldUseCanonicalPlan ? starter.subjects : parsed.subjects?.length ? parsed.subjects : starter.subjects,
+      schedule: shouldUseCanonicalPlan ? starter.schedule : parsed.schedule?.length ? parsed.schedule : starter.schedule,
+      tests: shouldUseCanonicalPlan ? starter.tests : parsed.tests || [],
       quizAttempts: parsed.quizAttempts || [],
       patternSubmissions: parsed.patternSubmissions || [],
-      feedback: parsed.feedback || [],
-      resources: parsed.resources || [],
-      tasks: parsed.tasks || [],
-      accountTypes: parsed.accountTypes?.length ? parsed.accountTypes : parsed.products?.length ? parsed.products : starter.accountTypes,
-      enrollments: parsed.enrollments?.length ? parsed.enrollments : starter.enrollments,
-      lessonPlans: parsed.lessonPlans?.length ? parsed.lessonPlans : starter.lessonPlans,
-      gateDaSections: parsed.gateDaSections?.length ? parsed.gateDaSections : starter.gateDaSections,
+      feedback: shouldUseCanonicalPlan ? starter.feedback : parsed.feedback || [],
+      resources: shouldUseCanonicalPlan ? starter.resources : parsed.resources || [],
+      tasks: shouldUseCanonicalPlan ? starter.tasks : parsed.tasks || [],
+      accountTypes: shouldUseCanonicalPlan ? starter.accountTypes : parsed.accountTypes?.length ? parsed.accountTypes : parsed.products?.length ? parsed.products : starter.accountTypes,
+      enrollments: shouldUseCanonicalPlan ? starter.enrollments : parsed.enrollments?.length ? parsed.enrollments : starter.enrollments,
+      lessonPlans: shouldUseCanonicalPlan ? starter.lessonPlans : parsed.lessonPlans?.length ? parsed.lessonPlans : starter.lessonPlans,
+      gateDaSections: shouldUseCanonicalPlan ? starter.gateDaSections : parsed.gateDaSections?.length ? parsed.gateDaSections : starter.gateDaSections,
       coursePlanVersion: parsed.coursePlanVersion || ""
     };
   } catch {
@@ -8321,6 +8322,10 @@ function normalizeSeededUser(user) {
   return seededUser ? { ...seededUser } : user;
 }
 
+function isSeededPrototypeUser(user) {
+  return Boolean(user?.name && seededPrototypeUsers().some((entry) => entry.name === user.name));
+}
+
 function prototypeUsers() {
   const seededUsers = [
     ...seededPrototypeUsers()
@@ -8820,6 +8825,14 @@ function collectionFor(type) {
 }
 
 function render() {
+  const isBasicPlan = isBasicPrototypeUser(state.user);
+  const planLabel = isBasicPlan ? "Basic" : "Platinum";
+  document.querySelector("#seed-btn").textContent = `Load ${planLabel} plan`;
+  document.querySelector("#reset-plan-btn").textContent = `Reset ${planLabel} data`;
+  document.querySelector("#subjects-panel-title").textContent = `GATE DA ${planLabel} Subjects`;
+  document.querySelector("#subjects-panel-copy").textContent = isBasicPlan
+    ? "Open a subject to read its textbook chapters and practice sets."
+    : "Open a subject to work through Priyanka's pattern workspaces and weekly material.";
   document.querySelector("#learner-subtitle").textContent = `Learner: ${state.user.name}`;
   document.querySelector("#subject-count").textContent = state.subjects.length;
   document.querySelector("#task-count").textContent = state.tasks.length;
