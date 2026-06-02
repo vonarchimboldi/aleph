@@ -1,7 +1,7 @@
 const STORAGE_KEY = "learning-studio-data-v2";
 const LEGACY_STORAGE_KEYS = ["learning-studio-data-v1"];
 const SESSION_KEY = "aleph-session";
-const COURSE_PLAN_VERSION = "plan-scoped-material-v48";
+const COURSE_PLAN_VERSION = "user-plan-source-of-truth-v49";
 
 const state = loadState();
 let deferredInstallPrompt = null;
@@ -187,13 +187,19 @@ function isBasicPrototypeUser(user) {
 }
 
 function isPlatinumPrototypeUser(user) {
-  return ["priyanka", "platinum", "platinum-demo", "reviewer"].includes(user?.name)
-    || user?.accountTypeId === "gate-da-platinum";
+  return user?.accountTypeId === "gate-da-platinum";
 }
 
 function activeAccountTypeId() {
-  const enrollment = state.enrollments.find((entry) => entry.userId === state.user.id);
-  return enrollment?.accountTypeId || enrollment?.productId || state.user.accountTypeId || "";
+  return normalizeSeededUser(state.user).accountTypeId || "";
+}
+
+function activeEnrollment() {
+  const accountTypeId = activeAccountTypeId();
+  return state.enrollments.find((entry) => {
+    const enrollmentAccountTypeId = entry.accountTypeId || entry.productId;
+    return entry.userId === state.user.id && enrollmentAccountTypeId === accountTypeId;
+  });
 }
 
 function subjectAccountType(subject) {
@@ -9398,13 +9404,10 @@ function renderGateDaWorkspace() {
   if (!container) return;
   const subjects = activeSubjects();
   const sections = activeGateDaSections();
-  const gateDaEnrollment = state.enrollments.find((enrollment) => {
-    const accountTypeId = enrollment.accountTypeId || enrollment.productId;
-    return accountTypeId?.startsWith("gate-da-") && enrollment.userId === state.user.id;
-  });
-  const activeAccountTypeId = gateDaEnrollment?.accountTypeId || gateDaEnrollment?.productId;
+  const gateDaEnrollment = activeEnrollment();
+  const accountTypeId = activeAccountTypeId();
 
-  if (activeAccountTypeId === "gate-da-basic") {
+  if (accountTypeId === "gate-da-basic") {
     container.innerHTML = `
       <article class="item workspace-summary">
         <div class="item-top">
@@ -9760,17 +9763,16 @@ function practiceProblemTemplate(problem) {
 
 function renderEnrollments() {
   const container = document.querySelector("#enrollment-list");
-  const userEnrollments = state.enrollments.filter((enrollment) => enrollment.userId === state.user.id);
-  if (!userEnrollments.length) {
+  const enrollment = activeEnrollment();
+  if (!enrollment) {
     container.innerHTML = '<div class="empty">No active enrollments yet.</div>';
     return;
   }
 
-  container.innerHTML = userEnrollments.map((enrollment) => {
-    const accountTypeId = enrollment.accountTypeId || enrollment.productId;
-    const accountType = state.accountTypes.find((entry) => entry.id === accountTypeId);
-    const lessonPlan = state.lessonPlans.find((entry) => entry.id === enrollment.lessonPlanId);
-    return `
+  const accountTypeId = activeAccountTypeId();
+  const accountType = state.accountTypes.find((entry) => entry.id === accountTypeId);
+  const lessonPlan = state.lessonPlans.find((entry) => entry.id === enrollment.lessonPlanId);
+  container.innerHTML = `
       <article class="item">
         <div class="item-top">
           <div>
@@ -9781,7 +9783,6 @@ function renderEnrollments() {
         </div>
       </article>
     `;
-  }).join("");
 }
 
 function renderList(containerId, items, type) {
