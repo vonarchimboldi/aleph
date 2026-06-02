@@ -643,6 +643,103 @@ textarea {
   width: 100%;
 }
 
+.structured-feedback {
+  background: #ffffff;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  display: grid;
+  gap: 12px;
+  padding: 12px;
+}
+
+.structured-feedback-header {
+  align-items: flex-start;
+  display: flex;
+  gap: 12px;
+  justify-content: space-between;
+}
+
+.structured-feedback h6,
+.structured-feedback p,
+.feedback-spec ul {
+  margin: 0;
+}
+
+.structured-feedback h6 {
+  font-size: 18px;
+  line-height: 1.25;
+}
+
+.feedback-spec {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 10px;
+}
+
+.feedback-spec summary {
+  cursor: pointer;
+  font-weight: 800;
+}
+
+.feedback-spec-grid,
+.feedback-form-grid,
+.mastery-grid {
+  display: grid;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.feedback-spec-grid {
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr));
+}
+
+.feedback-form-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.mastery-grid {
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 180px), 1fr));
+}
+
+.feedback-form-grid label,
+.mastery-grid label {
+  display: grid;
+  gap: 6px;
+}
+
+.feedback-form-grid span,
+.mastery-grid span {
+  color: var(--ink);
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.feedback-form-grid input,
+.feedback-form-grid select,
+.feedback-form-grid textarea,
+.mastery-grid select {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  color: var(--ink);
+  font: inherit;
+  padding: 9px 10px;
+  width: 100%;
+}
+
+.feedback-form-grid textarea {
+  resize: vertical;
+}
+
+.wide-field {
+  grid-column: 1 / -1;
+}
+
+.skill-chip-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
 .chapter-card-meta,
 .book-action-row {
   display: flex;

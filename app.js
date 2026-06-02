@@ -8025,7 +8025,8 @@ function probabilityStatsPatternWorkspaces() {
           materialTitle: "June 1: Method of Indicators Pset",
           materialUrl: "psets/week-01/june-01-indicators.html",
           status: "Published",
-          expectedWork: "10 problems: 5 concept builders, 3 integration problems, 2 ISI past-year/reconstructed problems."
+          expectedWork: "10 problems: 5 concept builders, 3 integration problems, 2 ISI past-year/reconstructed problems.",
+          feedbackWorkflow: indicatorFeedbackWorkflow()
         }
       ]
     },
@@ -8042,7 +8043,8 @@ function probabilityStatsPatternWorkspaces() {
           materialTitle: "June 2: Conditional Expectation and Tower Property Pset",
           materialUrl: "psets/week-01/june-02-conditional-expectation-tower.html",
           status: "Published",
-          expectedWork: "10 problems: 5 mechanics drills, 3 application problems, and 2 hard hidden-pattern problems."
+          expectedWork: "10 problems: 5 mechanics drills, 3 application problems, and 2 hard hidden-pattern problems.",
+          feedbackWorkflow: conditionalExpectationFeedbackWorkflow()
         }
       ]
     },
@@ -8137,6 +8139,103 @@ function competitionMathMaterialWorkspaces() {
       ]
     }
   ];
+}
+
+function baseFeedbackWorkflow(overrides = {}) {
+  return {
+    verdicts: [
+      { id: "green", label: "Green", description: "Correct or nearly correct; only small presentation fixes remain." },
+      { id: "yellow", label: "Yellow", description: "Right main idea, but an execution or justification gap remains." },
+      { id: "red", label: "Red", description: "Wrong setup or the core pattern was not recognized." }
+    ],
+    jsonShape: [
+      "verdict",
+      "score",
+      "studentSummary",
+      "strengths",
+      "firstIssue",
+      "conceptGap",
+      "correctApproach",
+      "minimalCorrection",
+      "nextDrill",
+      "masteryUpdates"
+    ],
+    ...overrides
+  };
+}
+
+function indicatorFeedbackWorkflow() {
+  return baseFeedbackWorkflow({
+    id: "feedback-workflow-indicators-v1",
+    title: "Structured Feedback: Method of Indicators",
+    promptUse: "Use this after reading the submitted solution. Diagnose the first place where the indicator setup, expectation step, pair term, or final interpretation breaks.",
+    studentSummaryHint: "Summarize whether the learner counted the right object and chose the right indicator index set.",
+    skills: [
+      { id: "pattern-recognition", label: "Recognizes expected-count cue" },
+      { id: "indicator-definition", label: "Defines clean indicators" },
+      { id: "index-set-choice", label: "Chooses the right index set" },
+      { id: "linearity-of-expectation", label: "Uses linearity without independence" },
+      { id: "pair-products", label: "Handles pair products/variance" },
+      { id: "conditioning-bridge", label: "Conditions first when useful" },
+      { id: "final-interpretation", label: "States final answer clearly" }
+    ],
+    rubric: [
+      { criterion: "Pattern recognition", points: 1, cue: "Saw that the problem asks for an expected count." },
+      { criterion: "Indicator setup", points: 3, cue: "Defined one yes/no variable for the correct atomic object." },
+      { criterion: "Probability computation", points: 2, cue: "Computed each indicator probability or pair probability correctly." },
+      { criterion: "Linearity / pair expansion", points: 2, cue: "Used linearity, or used E[X^2] / E[X(X-1)] correctly." },
+      { criterion: "Final answer and justification", points: 2, cue: "Gave a clean final expression and justified dependence/independence correctly." }
+    ],
+    commonIssues: [
+      "Used one indicator for the whole count instead of one per object.",
+      "Chose the wrong index set.",
+      "Assumed independence when only linearity was needed.",
+      "Forgot overlapping-pair cases in a variance/second-moment problem.",
+      "Computed the full distribution even though the expected count was enough."
+    ],
+    defaultNextDrills: [
+      { skill: "indicator-definition", difficulty: "mechanics", instruction: "Rewrite the solution using one indicator per counted object before doing arithmetic." },
+      { skill: "pair-products", difficulty: "application", instruction: "Do one second-moment problem and explicitly separate overlapping and non-overlapping pairs." },
+      { skill: "conditioning-bridge", difficulty: "application", instruction: "Solve one problem where the count is easy only after conditioning on a random batch size." }
+    ]
+  });
+}
+
+function conditionalExpectationFeedbackWorkflow() {
+  return baseFeedbackWorkflow({
+    id: "feedback-workflow-conditional-expectation-v1",
+    title: "Structured Feedback: Conditional Expectation and Tower Property",
+    promptUse: "Use this after reading the submitted solution. Diagnose whether the learner chose the simplifying variable, computed the inner expectation correctly, and averaged back out.",
+    studentSummaryHint: "Summarize whether the learner identified what to condition on and whether the inside problem became simpler.",
+    skills: [
+      { id: "conditioning-choice", label: "Chooses useful conditioning variable" },
+      { id: "inner-expectation", label: "Computes E[X | Y] correctly" },
+      { id: "tower-property", label: "Averages conditional averages" },
+      { id: "conditional-distribution", label: "Uses conditional PMF/PDF/support" },
+      { id: "total-variance", label: "Uses total variance when needed" },
+      { id: "hidden-pattern-recognition", label: "Recognizes tower property when hidden" },
+      { id: "final-interpretation", label: "States final answer clearly" }
+    ],
+    rubric: [
+      { criterion: "Conditioning choice", points: 2, cue: "Picked the variable/information that makes the inside problem easy." },
+      { criterion: "Inner calculation", points: 3, cue: "Computed E[X | Y] or E[X | Y=y] correctly." },
+      { criterion: "Tower step", points: 2, cue: "Applied E[X] = E[E[X | Y]] without dropping randomness too early." },
+      { criterion: "Variance/distribution handling", points: 1, cue: "Used total variance or conditional support correctly when relevant." },
+      { criterion: "Final answer and explanation", points: 2, cue: "Gave a clean final value/expression and explained the conditioning move." }
+    ],
+    commonIssues: [
+      "Conditioned on a variable that does not simplify the problem.",
+      "Computed E[X | Y=y] but forgot to average over Y.",
+      "Treated E[X | Y] as a constant before it was averaged.",
+      "Used the unconditional distribution inside a conditional calculation.",
+      "Missed that a hidden random-sum/stopping problem needs tower property."
+    ],
+    defaultNextDrills: [
+      { skill: "conditioning-choice", difficulty: "mechanics", instruction: "For three problems, write only the conditioning variable and why it helps before solving." },
+      { skill: "tower-property", difficulty: "mechanics", instruction: "Rewrite the solution in two lines: inner expectation first, outer expectation second." },
+      { skill: "hidden-pattern-recognition", difficulty: "hard", instruction: "Try one random-sum problem where the word 'conditional' never appears." }
+    ]
+  });
 }
 
 function competitionMathMilestones() {
@@ -9252,6 +9351,8 @@ function patternWeekTemplate(pattern, week) {
   const uploadLabel = submission?.fileName
     ? `Uploaded: ${submission.fileName}`
     : "No solution uploaded";
+  const workflow = week.feedbackWorkflow || defaultFeedbackWorkflow(pattern, week);
+  const feedbackRecord = submission?.feedbackRecord || {};
   return `
     <section class="pattern-week" data-material-card="${escapeHtml(week.id)}">
       <div class="pattern-week-top">
@@ -9271,11 +9372,160 @@ function patternWeekTemplate(pattern, week) {
         </label>
       </div>
       <p class="fine-print">${escapeHtml(uploadLabel)}</p>
-      <label class="feedback-note">
-        <span>Feedback</span>
-        <textarea data-pattern-feedback rows="3" placeholder="Record review notes, score, or correction feedback.">${escapeHtml(submission?.feedback || "")}</textarea>
-      </label>
+      ${feedbackWorkflowTemplate(workflow, feedbackRecord)}
       <button class="small-btn" data-save-pattern-feedback type="button">Save feedback</button>
+    </section>
+  `;
+}
+
+function defaultFeedbackWorkflow(pattern, week) {
+  return baseFeedbackWorkflow({
+    id: `feedback-workflow-${week.id}`,
+    title: `Structured Feedback: ${week.materialTitle}`,
+    promptUse: "Use this after reading the submitted solution. Diagnose the first reasoning break, the missing skill, and the next correction task.",
+    studentSummaryHint: "Summarize the learner's solution attempt in one sentence.",
+    skills: [
+      { id: "pattern-recognition", label: "Recognizes target pattern" },
+      { id: "setup", label: "Sets up the right object/equation" },
+      { id: "calculation", label: "Calculates accurately" },
+      { id: "justification", label: "Justifies each step" },
+      { id: "final-interpretation", label: "States final answer clearly" }
+    ],
+    rubric: [
+      { criterion: "Pattern recognition", points: 2, cue: "Identified the recurring pattern." },
+      { criterion: "Setup", points: 3, cue: "Chose the right objects, variables, or equations." },
+      { criterion: "Calculation", points: 2, cue: "Carried out the arithmetic/algebra correctly." },
+      { criterion: "Justification", points: 2, cue: "Explained why the method applies." },
+      { criterion: "Final answer", points: 1, cue: "Stated the result clearly." }
+    ],
+    commonIssues: [
+      "The target pattern was not recognized.",
+      "The setup uses the wrong object or variable.",
+      "A calculation step is unsupported.",
+      "The final answer is not connected back to the question."
+    ],
+    defaultNextDrills: [
+      { skill: "pattern-recognition", difficulty: "mechanics", instruction: "Redo one easier problem and write the trigger phrase before solving." }
+    ]
+  });
+}
+
+function feedbackWorkflowTemplate(workflow, feedbackRecord) {
+  const selectedVerdict = feedbackRecord.verdict || "yellow";
+  const selectedGapTag = feedbackRecord.conceptGap?.tag || workflow.skills?.[0]?.id || "";
+  const selectedNextSkill = feedbackRecord.nextDrill?.skillTag || selectedGapTag;
+  const masteryUpdates = feedbackRecord.masteryUpdates || [];
+  return `
+    <section class="structured-feedback" data-feedback-workflow="${escapeHtml(workflow.id)}">
+      <div class="structured-feedback-header">
+        <div>
+          <p class="eyebrow">Feedback workflow</p>
+          <h6>${escapeHtml(workflow.title)}</h6>
+          <p>${escapeHtml(workflow.promptUse)}</p>
+        </div>
+        <span class="tag">JSON schema</span>
+      </div>
+      <details class="feedback-spec">
+        <summary>Rubric and skill tags</summary>
+        <div class="feedback-spec-grid">
+          <div>
+            <strong>Rubric</strong>
+            <ul>
+              ${(workflow.rubric || []).map((item) => `<li>${escapeHtml(item.criterion)} (${escapeHtml(item.points)}): ${escapeHtml(item.cue)}</li>`).join("")}
+            </ul>
+          </div>
+          <div>
+            <strong>Skills</strong>
+            <div class="skill-chip-list">
+              ${(workflow.skills || []).map((skill) => `<span class="tag">${escapeHtml(skill.id)}</span>`).join("")}
+            </div>
+          </div>
+          <div>
+            <strong>Common first issues</strong>
+            <ul>
+              ${(workflow.commonIssues || []).map((issue) => `<li>${escapeHtml(issue)}</li>`).join("")}
+            </ul>
+          </div>
+        </div>
+      </details>
+      <div class="feedback-form-grid">
+        <label>
+          <span>Verdict</span>
+          <select data-feedback-field="verdict">
+            ${(workflow.verdicts || []).map((verdict) => `<option value="${escapeHtml(verdict.id)}"${selectedVerdict === verdict.id ? " selected" : ""}>${escapeHtml(verdict.label)}</option>`).join("")}
+          </select>
+        </label>
+        <label>
+          <span>Score / 10</span>
+          <input data-feedback-field="score" type="number" min="0" max="10" step="0.5" value="${escapeHtml(feedbackRecord.score ?? "")}" placeholder="6">
+        </label>
+        <label class="wide-field">
+          <span>Student answer summary</span>
+          <textarea data-feedback-field="studentSummary" rows="2" placeholder="${escapeHtml(workflow.studentSummaryHint)}">${escapeHtml(feedbackRecord.studentSummary || "")}</textarea>
+        </label>
+        <label class="wide-field">
+          <span>What worked</span>
+          <textarea data-feedback-field="strengths" rows="2" placeholder="One strength per line.">${escapeHtml(linesToText(feedbackRecord.strengths))}</textarea>
+        </label>
+        <label>
+          <span>First issue location</span>
+          <input data-feedback-field="firstIssueLocation" value="${escapeHtml(feedbackRecord.firstIssue?.location || "")}" placeholder="indicator definition">
+        </label>
+        <label>
+          <span>Concept gap</span>
+          <select data-feedback-field="conceptGapTag">
+            ${(workflow.skills || []).map((skill) => `<option value="${escapeHtml(skill.id)}"${selectedGapTag === skill.id ? " selected" : ""}>${escapeHtml(skill.label)}</option>`).join("")}
+          </select>
+        </label>
+        <label class="wide-field">
+          <span>Where it breaks</span>
+          <textarea data-feedback-field="firstIssueExplanation" rows="2" placeholder="Point to the first weak or wrong step.">${escapeHtml(feedbackRecord.firstIssue?.explanation || "")}</textarea>
+        </label>
+        <label class="wide-field">
+          <span>Missing idea</span>
+          <textarea data-feedback-field="conceptGapDescription" rows="2" placeholder="Explain the missing pattern in simple language.">${escapeHtml(feedbackRecord.conceptGap?.description || "")}</textarea>
+        </label>
+        <label class="wide-field">
+          <span>Correct approach</span>
+          <textarea data-feedback-field="correctApproach" rows="3" placeholder="One step per line.">${escapeHtml(linesToText(feedbackRecord.correctApproach))}</textarea>
+        </label>
+        <label class="wide-field">
+          <span>Minimal correction</span>
+          <textarea data-feedback-field="minimalCorrection" rows="2" placeholder="The smallest rewrite that would fix the solution.">${escapeHtml(feedbackRecord.minimalCorrection || "")}</textarea>
+        </label>
+        <label>
+          <span>Next drill skill</span>
+          <select data-feedback-field="nextDrillSkill">
+            ${(workflow.skills || []).map((skill) => `<option value="${escapeHtml(skill.id)}"${selectedNextSkill === skill.id ? " selected" : ""}>${escapeHtml(skill.label)}</option>`).join("")}
+          </select>
+        </label>
+        <label>
+          <span>Next drill difficulty</span>
+          <select data-feedback-field="nextDrillDifficulty">
+            ${["mechanics", "application", "hard"].map((level) => `<option value="${level}"${feedbackRecord.nextDrill?.difficulty === level ? " selected" : ""}>${level}</option>`).join("")}
+          </select>
+        </label>
+        <label class="wide-field">
+          <span>Next drill instruction</span>
+          <textarea data-feedback-field="nextDrillInstruction" rows="2" placeholder="${escapeHtml(workflow.defaultNextDrills?.[0]?.instruction || "Assign one concrete correction drill.")}">${escapeHtml(feedbackRecord.nextDrill?.instruction || "")}</textarea>
+        </label>
+      </div>
+      <div class="mastery-grid">
+        ${(workflow.skills || []).map((skill) => {
+          const update = masteryUpdates.find((entry) => entry.skill === skill.id);
+          const delta = update?.delta ?? 0;
+          return `
+            <label>
+              <span>${escapeHtml(skill.label)}</span>
+              <select data-mastery-skill="${escapeHtml(skill.id)}">
+                <option value="1"${delta === 1 ? " selected" : ""}>improved</option>
+                <option value="0"${delta === 0 ? " selected" : ""}>unchanged</option>
+                <option value="-1"${delta === -1 ? " selected" : ""}>needs review</option>
+              </select>
+            </label>
+          `;
+        }).join("")}
+      </div>
     </section>
   `;
 }
@@ -9316,13 +9566,67 @@ function savePatternFeedback(button) {
   const card = button.closest("[data-material-card]");
   if (!card) return;
   const materialId = card.dataset.materialCard;
-  const feedback = card.querySelector("[data-pattern-feedback]")?.value.trim() || "";
+  const feedbackRecord = collectStructuredFeedback(card);
+  const feedback = summarizeFeedbackRecord(feedbackRecord);
   upsertPatternSubmission(materialId, {
+    feedbackRecord,
     feedback,
     feedbackUpdatedAt: new Date().toISOString()
   });
   persist();
   renderSubjects();
+}
+
+function collectStructuredFeedback(card) {
+  const value = (field) => card.querySelector(`[data-feedback-field="${field}"]`)?.value.trim() || "";
+  const scoreValue = value("score");
+  const masteryUpdates = Array.from(card.querySelectorAll("[data-mastery-skill]")).map((select) => ({
+    skill: select.dataset.masterySkill,
+    delta: Number(select.value)
+  }));
+  return {
+    verdict: value("verdict") || "yellow",
+    score: scoreValue === "" ? null : Number(scoreValue),
+    maxScore: 10,
+    studentSummary: value("studentSummary"),
+    strengths: textToLines(value("strengths")),
+    firstIssue: {
+      location: value("firstIssueLocation"),
+      explanation: value("firstIssueExplanation")
+    },
+    conceptGap: {
+      tag: value("conceptGapTag"),
+      description: value("conceptGapDescription")
+    },
+    correctApproach: textToLines(value("correctApproach")),
+    minimalCorrection: value("minimalCorrection"),
+    nextDrill: {
+      skillTag: value("nextDrillSkill"),
+      difficulty: value("nextDrillDifficulty") || "mechanics",
+      instruction: value("nextDrillInstruction")
+    },
+    masteryUpdates
+  };
+}
+
+function summarizeFeedbackRecord(record) {
+  const verdict = record.verdict || "yellow";
+  const score = record.score === null || Number.isNaN(record.score) ? "unscored" : `${record.score}/${record.maxScore || 10}`;
+  const gap = record.conceptGap?.tag || "no skill tag";
+  const issue = record.firstIssue?.location || "first issue not marked";
+  return `${verdict.toUpperCase()} - ${score}. Gap: ${gap}. First issue: ${issue}. ${record.minimalCorrection || "Correction task not recorded."}`;
+}
+
+function textToLines(value) {
+  return String(value || "")
+    .split("\n")
+    .map((line) => line.trim())
+    .filter(Boolean);
+}
+
+function linesToText(value) {
+  if (Array.isArray(value)) return value.join("\n");
+  return value || "";
 }
 
 function chapterMenuTemplate(subject, sections) {
