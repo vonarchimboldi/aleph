@@ -740,6 +740,60 @@ textarea {
   gap: 6px;
 }
 
+.assessment-card {
+  display: grid;
+  gap: 14px;
+}
+
+.assessment-grid {
+  display: grid;
+  gap: 14px;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr));
+}
+
+.assessment-grid section {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  display: grid;
+  gap: 8px;
+  padding: 12px;
+}
+
+.assessment-grid ul {
+  margin: 0;
+  padding-left: 18px;
+}
+
+.mastery-list {
+  display: grid;
+  gap: 8px;
+}
+
+.mastery-row {
+  align-items: center;
+  display: grid;
+  gap: 8px;
+  grid-template-columns: minmax(100px, 1fr) minmax(90px, 1fr) auto;
+}
+
+.mastery-row span {
+  color: var(--ink);
+  font-weight: 700;
+}
+
+.mastery-bar {
+  background: #e8eeeb;
+  border-radius: 999px;
+  height: 10px;
+  overflow: hidden;
+}
+
+.mastery-bar span {
+  background: var(--accent);
+  display: block;
+  height: 100%;
+}
+
 .chapter-card-meta,
 .book-action-row {
   display: flex;

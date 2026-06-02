@@ -1,7 +1,7 @@
 const STORAGE_KEY = "learning-studio-data-v2";
 const LEGACY_STORAGE_KEYS = ["learning-studio-data-v1"];
 const SESSION_KEY = "aleph-session";
-const COURSE_PLAN_VERSION = "seeded-user-canonical-workspace-v51";
+const COURSE_PLAN_VERSION = "seeded-user-canonical-workspace-v52";
 
 const state = loadState();
 let selectedSubjectId = null;
@@ -7658,8 +7658,66 @@ function conditionalProbabilityReviewQuestions() {
   ];
 }
 
+function probabilityFoundationConceptGraph() {
+  return {
+    chapterId: "gate-da-probability-foundations",
+    chapterTitle: "Probability Foundations",
+    gateWeight: "medium",
+    nodes: {
+      "sample-space": {
+        label: "Sample space",
+        prereqs: [],
+        repairMaterial: "Review Chapter 1.1 and write the outcome list before counting.",
+        gateWeight: "high"
+      },
+      "event-translation": {
+        label: "Event translation",
+        prereqs: ["sample-space"],
+        repairMaterial: "Redo the card/event examples and translate words like 'or', 'and', 'at least', and 'neither' into set operations.",
+        gateWeight: "high"
+      },
+      "equally-likely": {
+        label: "Equally likely outcomes",
+        prereqs: ["sample-space"],
+        repairMaterial: "Review Chapter 1.2 and test whether listed outcomes have equal probability before dividing.",
+        gateWeight: "high"
+      },
+      counting: {
+        label: "Counting setup",
+        prereqs: ["sample-space", "equally-likely"],
+        repairMaterial: "Review Chapter 1.3 and separate ordered sequences from unordered selections.",
+        gateWeight: "high"
+      },
+      complement: {
+        label: "Complement method",
+        prereqs: ["event-translation", "counting"],
+        repairMaterial: "Review Chapter 1.4 and solve three 'at least one' problems by first writing the opposite event.",
+        gateWeight: "medium"
+      },
+      "inclusion-exclusion": {
+        label: "Inclusion-exclusion",
+        prereqs: ["event-translation", "counting"],
+        repairMaterial: "Review Chapter 1.5 and mark the overlap before adding two counts.",
+        gateWeight: "medium"
+      }
+    }
+  };
+}
+
 function probabilityFoundationReviewQuestions() {
-  return [
+  const metadata = {
+    "pf-review-1": { targetConcept: "sample-space", prereqsUsed: [], difficulty: 1, gateWeight: "high" },
+    "pf-review-2": { targetConcept: "inclusion-exclusion", prereqsUsed: ["event-translation", "counting"], difficulty: 2, gateWeight: "medium" },
+    "pf-review-3": { targetConcept: "equally-likely", prereqsUsed: ["sample-space"], difficulty: 1, gateWeight: "high" },
+    "pf-review-4": { targetConcept: "complement", prereqsUsed: ["event-translation"], difficulty: 1, gateWeight: "medium" },
+    "pf-review-5": { targetConcept: "counting", prereqsUsed: ["sample-space", "equally-likely"], difficulty: 2, gateWeight: "high" },
+    "pf-review-6": { targetConcept: "complement", prereqsUsed: ["counting", "event-translation"], difficulty: 2, gateWeight: "medium" },
+    "pf-review-7": { targetConcept: "inclusion-exclusion", prereqsUsed: ["event-translation", "counting"], difficulty: 2, gateWeight: "medium" },
+    "pf-review-8": { targetConcept: "equally-likely", prereqsUsed: ["sample-space", "counting"], difficulty: 3, gateWeight: "high" },
+    "pf-review-9": { targetConcept: "complement", prereqsUsed: ["counting", "equally-likely"], difficulty: 3, gateWeight: "medium" },
+    "pf-review-10": { targetConcept: "sample-space", prereqsUsed: ["event-translation"], difficulty: 2, gateWeight: "high" }
+  };
+  const questions = [
     {
       id: "pf-review-1",
       kind: "single concept",
@@ -7791,6 +7849,10 @@ function probabilityFoundationReviewQuestions() {
       answer: "c"
     }
   ];
+  return questions.map((question) => ({
+    ...question,
+    ...(metadata[question.id] || { targetConcept: question.tags[0], prereqsUsed: question.tags.slice(1), difficulty: question.tags.length, gateWeight: "medium" })
+  }));
 }
 
 function discreteMathMilestones() {
@@ -8828,12 +8890,16 @@ function submitQuizAttempt(event) {
       correctAnswer: question.answer,
       isCorrect: selected === question.answer,
       tags: question.tags,
-      kind: question.kind
+      kind: question.kind,
+      targetConcept: question.targetConcept || question.tags[0],
+      prereqsUsed: question.prereqsUsed || question.tags.slice(1),
+      difficulty: question.difficulty || question.tags.length,
+      gateWeight: question.gateWeight || "medium"
     };
   });
   const score = answers.filter((answer) => answer.isCorrect).length;
   const total = quiz.questions.length;
-  const feedback = buildQuizFeedback(answers);
+  const feedback = buildQuizFeedback(answers, quiz, section);
   const attempt = {
     id: `attempt-${quiz.id}-${Date.now()}`,
     userId: state.user.id,
@@ -8855,7 +8921,7 @@ function submitQuizAttempt(event) {
     id: `feedback-${attempt.id}`,
     title: `${quiz.title}: Attempt ${state.quizAttempts.filter((entry) => entry.quizId === quiz.id).length}`,
     date: new Date().toISOString().slice(0, 10),
-    details: `${score}/${total} (${attempt.percent}%). ${feedback.summary} Strong: ${feedback.strong.join(", ") || "none yet"}. Review: ${feedback.weak.join(", ") || "none flagged"}.`,
+    details: `${score}/${total} (${attempt.percent}%). ${feedback.summary} Strong: ${feedback.strong.join(", ") || "none yet"}. Review: ${feedback.weak.join(", ") || "none flagged"}. ${feedback.report?.nextAction || ""}`,
     attemptId: attempt.id,
     updatedAt: attempt.date
   });
@@ -8865,7 +8931,7 @@ function submitQuizAttempt(event) {
   render();
 }
 
-function buildQuizFeedback(answers) {
+function buildQuizFeedback(answers, quiz = null, section = null) {
   const conceptScores = {};
   answers.forEach((answer) => {
     answer.tags.forEach((tag) => {
@@ -8890,7 +8956,144 @@ function buildQuizFeedback(answers) {
     ? "Mixed-concept misses suggest practising event translation before choosing a counting method."
     : "Misses are mostly isolated concept checks; review the flagged concepts and retake.";
 
-  return { summary, strong, developing, weak, conceptScores };
+  const report = buildQuizFeedbackReport({ answers, quiz, section, conceptScores, strong, developing, weak });
+  return { summary: report?.summary || summary, strong, developing, weak, conceptScores, report };
+}
+
+function buildQuizFeedbackReport({ answers, quiz, section, conceptScores, strong, developing, weak }) {
+  const graph = conceptGraphForSection(section);
+  if (!graph) return null;
+
+  const conceptMastery = Object.fromEntries(
+    Object.entries(conceptScores).map(([concept, score]) => {
+      const percent = score.total ? Math.round((score.correct / score.total) * 100) : 0;
+      return [concept, {
+        concept,
+        label: conceptGraphLabel(graph, concept),
+        correct: score.correct,
+        total: score.total,
+        percent,
+        status: percent >= 80 ? "strong" : percent >= 60 ? "developing" : "weak"
+      }];
+    })
+  );
+
+  const missed = answers.filter((answer) => !answer.isCorrect);
+  const prerequisiteBreaks = missed.map((answer) => {
+    const candidateConcepts = [answer.targetConcept, ...(answer.prereqsUsed || [])].filter(Boolean);
+    const likelyGap = candidateConcepts.find((concept) => (conceptMastery[concept]?.percent ?? 0) < 70) || answer.targetConcept;
+    const prereqLabels = (answer.prereqsUsed || []).map((concept) => conceptGraphLabel(graph, concept));
+    return {
+      questionId: answer.questionId,
+      targetConcept: answer.targetConcept,
+      targetLabel: conceptGraphLabel(graph, answer.targetConcept),
+      prereqsUsed: answer.prereqsUsed || [],
+      prereqLabels,
+      difficulty: answer.difficulty || 1,
+      likelyGap,
+      likelyGapLabel: conceptGraphLabel(graph, likelyGap),
+      evidence: `Missed ${answer.questionId}, a difficulty ${answer.difficulty || 1} question mixing ${[conceptGraphLabel(graph, answer.targetConcept), ...prereqLabels].join(" + ")}.`
+    };
+  });
+
+  const recommendedWork = buildRecommendedWork(graph, conceptMastery, prerequisiteBreaks);
+  const readiness = estimateGateReadiness({ answers, conceptMastery, graph });
+  const weakLabels = weak.length ? weak : recommendedWork.map((item) => item.label).slice(0, 3);
+  const summary = recommendedWork.length
+    ? `Main repair area: ${recommendedWork[0].label}. ${readiness.label}`
+    : `Chapter 1 foundations look stable. ${readiness.label}`;
+
+  return {
+    chapterId: graph.chapterId,
+    chapterTitle: graph.chapterTitle,
+    quizId: quiz?.id || "",
+    verdict: readiness.verdict,
+    score: answers.filter((answer) => answer.isCorrect).length,
+    maxScore: answers.length,
+    readiness,
+    summary,
+    strengths: strong,
+    developing,
+    weaknesses: weakLabels,
+    conceptMastery,
+    prerequisiteBreaks,
+    recommendedWork,
+    nextQuizPlan: buildNextQuizPlan(recommendedWork),
+    nextAction: recommendedWork[0]
+      ? `Next: ${recommendedWork[0].action}`
+      : "Next: try a mixed Chapter 1 review set at difficulty 3."
+  };
+}
+
+function conceptGraphForSection(section) {
+  if (section?.id === "gate-da-probability-foundations") return probabilityFoundationConceptGraph();
+  return null;
+}
+
+function conceptGraphLabel(graph, concept) {
+  return graph?.nodes?.[concept]?.label || conceptLabel(concept);
+}
+
+function buildRecommendedWork(graph, conceptMastery, prerequisiteBreaks) {
+  const priority = {};
+  prerequisiteBreaks.forEach((entry) => {
+    const concept = entry.likelyGap || entry.targetConcept;
+    priority[concept] = (priority[concept] || 0) + 2 + Math.max(0, (entry.difficulty || 1) - 1);
+    (entry.prereqsUsed || []).forEach((prereq) => {
+      if ((conceptMastery[prereq]?.percent ?? 100) < 70) priority[prereq] = (priority[prereq] || 0) + 1;
+    });
+  });
+
+  Object.values(conceptMastery).forEach((entry) => {
+    if (entry.percent < 60) priority[entry.concept] = (priority[entry.concept] || 0) + 2;
+    else if (entry.percent < 80) priority[entry.concept] = (priority[entry.concept] || 0) + 1;
+  });
+
+  return Object.entries(priority)
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, 4)
+    .map(([concept, weight], index) => ({
+      concept,
+      label: conceptGraphLabel(graph, concept),
+      priority: index === 0 ? "high" : weight >= 3 ? "medium" : "low",
+      material: graph.nodes[concept]?.repairMaterial || `Review ${conceptGraphLabel(graph, concept)}.`,
+      action: `Redo ${conceptGraphLabel(graph, concept)} material, then attempt two questions that also use ${graph.nodes[concept]?.prereqs?.map((prereq) => conceptGraphLabel(graph, prereq)).join(" and ") || "the same setup"}.`
+    }));
+}
+
+function estimateGateReadiness({ answers, conceptMastery }) {
+  const totalWeight = answers.reduce((sum, answer) => sum + gateQuestionWeight(answer), 0);
+  const earnedWeight = answers.reduce((sum, answer) => sum + (answer.isCorrect ? gateQuestionWeight(answer) : 0), 0);
+  const weightedPercent = totalWeight ? Math.round((earnedWeight / totalWeight) * 100) : 0;
+  const weakCount = Object.values(conceptMastery).filter((entry) => entry.percent < 60).length;
+  const adjusted = Math.max(0, weightedPercent - weakCount * 4);
+  const verdict = adjusted >= 80 ? "green" : adjusted >= 60 ? "yellow" : "red";
+  const label = verdict === "green"
+    ? `Early GATE DA readiness signal: ${adjusted}% for Chapter 1 foundations.`
+    : verdict === "yellow"
+      ? `Early GATE DA readiness signal: ${adjusted}%; repair weak prerequisites before moving difficulty up.`
+      : `Early GATE DA readiness signal: ${adjusted}%; return to core prerequisites before mixed review.`;
+  return { percent: adjusted, verdict, label };
+}
+
+function gateQuestionWeight(answer) {
+  const difficultyWeight = Math.max(1, Number(answer.difficulty) || 1);
+  const gateWeight = answer.gateWeight === "high" ? 1.25 : answer.gateWeight === "low" ? 0.85 : 1;
+  return difficultyWeight * gateWeight;
+}
+
+function buildNextQuizPlan(recommendedWork) {
+  const concepts = recommendedWork.length
+    ? recommendedWork.map((item) => item.concept)
+    : ["sample-space", "event-translation", "counting"];
+  return {
+    dueInDays: recommendedWork.length ? 2 : 4,
+    concepts,
+    difficultyMix: recommendedWork.length ? [1, 1, 2, 2, 3] : [2, 2, 3, 3],
+    instruction: recommendedWork.length
+      ? "Retest the highest-priority weak prerequisites first, then add one mixed question."
+      : "Move to a harder mixed Chapter 1 review set."
+  };
 }
 
 function conceptLabel(tag) {
@@ -9027,6 +9230,7 @@ function render() {
   renderProfile();
   renderPlanCatalog();
   renderGateDaSummary();
+  renderAssessmentDashboard();
   renderGateDaWorkspace();
   renderGateDaSections();
   renderEnrollments();
@@ -9717,6 +9921,121 @@ function renderGateDaSummary() {
       </div>
     </article>
   `).join("");
+}
+
+function renderAssessmentDashboard() {
+  const container = document.querySelector("#assessment-dashboard-list");
+  if (!container) return;
+  const basicChapterOne = activeGateDaSections().find((section) => section.id === "gate-da-probability-foundations");
+  if (!basicChapterOne) {
+    container.innerHTML = `
+      <article class="item">
+        <div>
+          <h4>Assessment model pending for this plan</h4>
+          <p>Prerequisite-graph reporting is currently wired for the Basic Probability Chapter 1 review quiz.</p>
+        </div>
+      </article>
+    `;
+    return;
+  }
+
+  const attempts = state.quizAttempts
+    .filter((attempt) => attempt.sectionId === basicChapterOne.id)
+    .sort((a, b) => b.date.localeCompare(a.date));
+
+  if (!attempts.length) {
+    container.innerHTML = `
+      <article class="item assessment-card">
+        <div class="item-top">
+          <div>
+            <h4>Probability Chapter 1 readiness not measured yet</h4>
+            <p>Take the Chapter 1 Objective Review to generate concept mastery, prerequisite breaks, repair work, and an early GATE DA readiness signal.</p>
+          </div>
+          <span class="tag">No attempts</span>
+        </div>
+      </article>
+    `;
+    return;
+  }
+
+  const latest = attempts[0];
+  const report = latest.feedback?.report || buildQuizFeedbackReport({
+    answers: latest.answers || [],
+    quiz: { id: latest.quizId, title: latest.title },
+    section: basicChapterOne,
+    conceptScores: latest.feedback?.conceptScores || {},
+    strong: latest.feedback?.strong || [],
+    developing: latest.feedback?.developing || [],
+    weak: latest.feedback?.weak || []
+  });
+
+  container.innerHTML = assessmentDashboardTemplate(latest, report);
+}
+
+function assessmentDashboardTemplate(attempt, report) {
+  if (!report) {
+    return `
+      <article class="item assessment-card">
+        <div class="item-top">
+          <div>
+            <h4>${escapeHtml(attempt.title)}</h4>
+            <p>${attempt.score}/${attempt.total} (${attempt.percent}%). Detailed prerequisite report is unavailable for this quiz.</p>
+          </div>
+          <span class="tag">${formatDate(attempt.date.slice(0, 10))}</span>
+        </div>
+      </article>
+    `;
+  }
+
+  const mastery = Object.values(report.conceptMastery || {});
+  const topBreaks = (report.prerequisiteBreaks || []).slice(0, 3);
+  const recommended = (report.recommendedWork || []).slice(0, 3);
+
+  return `
+    <article class="item assessment-card">
+      <div class="item-top">
+        <div>
+          <h4>${escapeHtml(report.chapterTitle)} Performance Report</h4>
+          <p>${escapeHtml(report.summary)}</p>
+        </div>
+        <span class="tag">${escapeHtml(report.readiness?.verdict || "yellow")} · ${escapeHtml(report.readiness?.percent ?? attempt.percent)}%</span>
+      </div>
+      <div class="assessment-grid">
+        <section>
+          <strong>Concept Mastery</strong>
+          <div class="mastery-list">
+            ${mastery.map((entry) => `
+              <div class="mastery-row">
+                <span>${escapeHtml(entry.label)}</span>
+                <div class="mastery-bar" aria-label="${escapeHtml(entry.label)} ${entry.percent}%">
+                  <span style="width: ${Math.min(100, Math.max(0, entry.percent))}%"></span>
+                </div>
+                <code>${entry.percent}%</code>
+              </div>
+            `).join("")}
+          </div>
+        </section>
+        <section>
+          <strong>Prerequisite Attribution</strong>
+          ${topBreaks.length
+            ? `<ul>${topBreaks.map((entry) => `<li>${escapeHtml(entry.likelyGapLabel)} likely broke ${escapeHtml(entry.targetLabel)}. ${escapeHtml(entry.evidence)}</li>`).join("")}</ul>`
+            : "<p>No prerequisite breaks detected in the latest attempt.</p>"}
+        </section>
+        <section>
+          <strong>Generated Work</strong>
+          ${recommended.length
+            ? `<ul>${recommended.map((item) => `<li><b>${escapeHtml(item.label)}</b>: ${escapeHtml(item.material)}</li>`).join("")}</ul>`
+            : "<p>Move to a harder mixed Chapter 1 review set.</p>"}
+        </section>
+        <section>
+          <strong>Next Quiz Plan</strong>
+          <p>${escapeHtml(report.nextQuizPlan?.instruction || "Retake a mixed review quiz.")}</p>
+          <p class="fine-print">Concepts: ${escapeHtml((report.nextQuizPlan?.concepts || []).map((concept) => conceptLabel(concept)).join(", "))}</p>
+          <p class="fine-print">Difficulty mix: ${escapeHtml((report.nextQuizPlan?.difficultyMix || []).join(", "))}</p>
+        </section>
+      </div>
+    </article>
+  `;
 }
 
 function renderGateDaWorkspace() {
