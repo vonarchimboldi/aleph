@@ -1,7 +1,7 @@
 const STORAGE_KEY = "learning-studio-data-v2";
 const LEGACY_STORAGE_KEYS = ["learning-studio-data-v1"];
 const SESSION_KEY = "aleph-session";
-const COURSE_PLAN_VERSION = "fresh-start-diagnostic-v46";
+const COURSE_PLAN_VERSION = "platinum-runtime-guard-v47";
 
 const state = loadState();
 let deferredInstallPrompt = null;
@@ -184,6 +184,11 @@ function buildCoursePlan(user = defaultUser()) {
 
 function isBasicPrototypeUser(user) {
   return user?.accountTypeId === "gate-da-basic" || user?.id === "user-basic-demo" || user?.name === "basic" || user?.name === "gate-basic";
+}
+
+function isPlatinumPrototypeUser(user) {
+  return ["priyanka", "platinum", "platinum-demo", "reviewer"].includes(user?.name)
+    || user?.accountTypeId === "gate-da-platinum";
 }
 
 function isLocalHost() {
@@ -8348,6 +8353,31 @@ function persist() {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
 }
 
+function enforceActivePlanIntegrity() {
+  if (!isPlatinumPrototypeUser(state.user)) return;
+  const probabilitySubject = state.subjects.find((subject) => subject.id === "subject-probability-statistics");
+  const hasBasicProbabilitySubject = state.subjects.some((subject) =>
+    subject.id === "subject-gate-da-probability" || subject.sectionIds?.length
+  );
+  const hasBasicSections = Boolean(state.gateDaSections?.length);
+  const missingPatternWorkspace = !probabilitySubject?.patternWorkspaces?.length;
+
+  if (!hasBasicProbabilitySubject && !hasBasicSections && !missingPatternWorkspace) return;
+
+  const canonicalUser = normalizeSeededUser(state.user);
+  Object.assign(state, buildPriyankaPlatinumPlan(
+    new Date().toISOString(),
+    accountTypeCatalog(new Date().toISOString()),
+    [],
+    canonicalUser
+  ), {
+    user: canonicalUser,
+    quizAttempts: state.quizAttempts || [],
+    patternSubmissions: state.patternSubmissions || []
+  });
+  persist();
+}
+
 function showView(name) {
   Object.values(views).forEach((view) => view.classList.remove("active"));
   views[name].classList.add("active");
@@ -8829,6 +8859,7 @@ function collectionFor(type) {
 }
 
 function render() {
+  enforceActivePlanIntegrity();
   const isBasicPlan = isBasicPrototypeUser(state.user);
   const planLabel = isBasicPlan ? "Basic" : "Platinum";
   document.querySelector("#seed-btn").textContent = `Load ${planLabel} plan`;

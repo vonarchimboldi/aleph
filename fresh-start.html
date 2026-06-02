@@ -50,8 +50,8 @@
     <main>
       <h1>Aleph fresh start</h1>
       <p id="status">Clearing old Aleph browser state, service workers, and caches...</p>
-      <p>Expected build after redirect: <code>fresh-start-diagnostic-v46</code>.</p>
-      <p><a id="home-link" href="/?fresh=fresh-start-diagnostic-v46">Open Aleph</a></p>
+      <p>Expected build after redirect: <code>platinum-runtime-guard-v47</code>.</p>
+      <p><a id="home-link" href="/?fresh=platinum-runtime-guard-v47">Open Aleph</a></p>
     </main>
     <script>
       async function clearAlephState() {
@@ -70,7 +70,7 @@
         }
 
         document.querySelector("#status").textContent = "Cleared. Redirecting to the fresh Aleph build...";
-        window.location.replace("/?fresh=fresh-start-diagnostic-v46");
+        window.location.replace("/?fresh=platinum-runtime-guard-v47");
       }
 
       clearAlephState().catch((error) => {
