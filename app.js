@@ -1,10 +1,9 @@
 const STORAGE_KEY = "learning-studio-data-v2";
 const LEGACY_STORAGE_KEYS = ["learning-studio-data-v1"];
 const SESSION_KEY = "aleph-session";
-const COURSE_PLAN_VERSION = "seeded-user-canonical-workspace-v50";
+const COURSE_PLAN_VERSION = "seeded-user-canonical-workspace-v51";
 
 const state = loadState();
-let deferredInstallPrompt = null;
 let selectedSubjectId = null;
 let selectedSectionId = null;
 let activeTestId = null;
@@ -32,7 +31,7 @@ const titles = {
   tests: "Tests",
   feedback: "Feedback",
   resources: "Resources",
-  settings: "Share and Install"
+  settings: "Share and Updates"
 };
 
 const typeLabels = {
@@ -86,20 +85,6 @@ document.querySelector("#item-form").addEventListener("submit", (event) => {
   saveItem();
 });
 
-document.querySelector("#install-btn").addEventListener("click", async () => {
-  if (!deferredInstallPrompt) return;
-  deferredInstallPrompt.prompt();
-  await deferredInstallPrompt.userChoice;
-  deferredInstallPrompt = null;
-  updateInstallState();
-});
-
-window.addEventListener("beforeinstallprompt", (event) => {
-  event.preventDefault();
-  deferredInstallPrompt = event;
-  updateInstallState();
-});
-
 LEGACY_STORAGE_KEYS.forEach((key) => {
   localStorage.removeItem(key);
 });
@@ -115,6 +100,7 @@ if ("caches" in window) {
 }
 
 applyDemoLogin();
+renderBuildState();
 persist();
 render();
 applyAuthState();
@@ -8930,7 +8916,7 @@ function render() {
   document.querySelector("#subjects-panel-copy").textContent = isBasicPlan
     ? "Open a subject to read its textbook chapters and practice sets."
     : "Open a subject to work through Priyanka's pattern workspaces and weekly material.";
-  document.querySelector("#build-stamp").textContent = `Build ${COURSE_PLAN_VERSION}`;
+  renderBuildState();
   document.querySelector("#learner-subtitle").textContent = `Learner: ${state.user.name}`;
   document.querySelector("#subject-count").textContent = subjects.length;
   document.querySelector("#task-count").textContent = state.tasks.length;
@@ -8958,6 +8944,18 @@ function render() {
   normalizeTaskStatuses();
   renderTaskList();
   renderCurrentTasks();
+}
+
+function renderBuildState() {
+  document.querySelector("#build-stamp").textContent = `Build ${COURSE_PLAN_VERSION}`;
+  const loginBuildStamp = document.querySelector("#login-build-stamp");
+  if (loginBuildStamp) {
+    loginBuildStamp.textContent = `Current build: ${COURSE_PLAN_VERSION}`;
+  }
+  const updateStatus = document.querySelector("#update-status");
+  if (updateStatus) {
+    updateStatus.textContent = "Offline app-shell caching is disabled for this prototype. If this build label looks old, open the fresh-start page or clear site data.";
+  }
 }
 
 function renderSubjects() {
@@ -10322,12 +10320,7 @@ function importData(event) {
 }
 
 function updateInstallState() {
-  const button = document.querySelector("#install-btn");
-  const status = document.querySelector("#install-status");
-  button.disabled = !deferredInstallPrompt;
-  status.textContent = deferredInstallPrompt
-    ? "This browser is ready to install the app."
-    : "Installation appears when the browser supports it.";
+  renderBuildState();
 }
 
 function formatDate(value) {

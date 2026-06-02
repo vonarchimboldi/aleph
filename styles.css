@@ -318,11 +318,15 @@ textarea {
 .ghost-btn,
 .text-btn,
 .file-control {
+  align-items: center;
   border-radius: 8px;
   border: 1px solid transparent;
-  padding: 10px 14px;
   cursor: pointer;
+  display: inline-flex;
+  justify-content: center;
   min-height: 42px;
+  padding: 10px 14px;
+  text-decoration: none;
 }
 
 .primary-btn {

@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="theme-color" content="#1f5f70">
     <title>Learning Studio</title>
-    <link rel="manifest" href="manifest.webmanifest">
     <link rel="stylesheet" href="styles.css">
   </head>
   <body>
@@ -45,6 +44,8 @@
             <div><span>Platinum demo</span><code>platinum</code><code>platinum</code></div>
             <div><span>Reviewer</span><code>reviewer</code><a href="?demo=reviewer">Direct link</a></div>
           </div>
+          <p class="fine-print build-note" id="login-build-stamp">Current build: loading</p>
+          <p class="fine-print"><a href="/fresh-start.html">Clear old browser state</a></p>
           <p class="fine-print">This prototype uses local demo authentication. Use a real backend before sharing private learner data.</p>
         </form>
 
@@ -390,11 +391,11 @@
             </div>
           </section>
           <section class="panel">
-            <h3>Web App Cache</h3>
-            <p class="muted">The web app shell is cached by the browser after first load.</p>
+            <h3>Update Status</h3>
+            <p class="muted">This prototype should load from the network on each visit while the learner plans are changing.</p>
             <div class="stack">
-              <button class="primary-btn" id="install-btn" type="button" disabled>Install app</button>
-              <p class="fine-print" id="install-status">Installation appears when the browser supports it.</p>
+              <a class="primary-btn" href="/fresh-start.html">Clear old browser state</a>
+              <p class="fine-print" id="update-status">Checking build status...</p>
             </div>
           </section>
         </div>
@@ -440,6 +441,6 @@
       </form>
     </dialog>
 
-    <script src="app.js?v=seeded-user-canonical-workspace-v50"></script>
+    <script src="app.js?v=seeded-user-canonical-workspace-v51"></script>
   </body>
 </html>
