@@ -66,9 +66,9 @@ body:not(.is-authenticated) .shell {
 }
 
 .landing-panel {
-  width: min(1060px, 100%);
+  width: min(1180px, 100%);
   display: grid;
-  grid-template-columns: minmax(0, 1.15fr) 420px;
+  grid-template-columns: minmax(0, 1fr) minmax(460px, 520px);
   gap: 28px;
   align-items: center;
 }
@@ -100,7 +100,8 @@ body:not(.is-authenticated) .shell {
   border: 1px solid var(--line);
   border-radius: 8px;
   box-shadow: var(--shadow);
-  padding: 22px;
+  padding: 28px;
+  min-width: 0;
 }
 
 .login-card h2,
@@ -122,10 +123,42 @@ body:not(.is-authenticated) .shell {
 }
 
 .login-links {
-  display: flex;
-  justify-content: space-between;
-  gap: 12px;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
   margin-top: 12px;
+}
+
+.login-links .text-btn {
+  min-height: 0;
+  padding: 8px 6px;
+  text-align: center;
+  white-space: normal;
+}
+
+.credential-hints {
+  display: grid;
+  gap: 8px;
+  margin-top: 16px;
+  font-size: 13px;
+}
+
+.credential-hints div {
+  display: grid;
+  grid-template-columns: minmax(110px, 1fr) minmax(0, auto) minmax(0, auto);
+  gap: 8px;
+  align-items: center;
+  color: var(--muted);
+}
+
+.credential-hints span {
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.credential-hints code,
+.credential-hints a {
+  justify-self: start;
 }
 
 .signup-plans {
@@ -1766,10 +1799,11 @@ a {
 
   .landing-panel {
     grid-template-columns: 1fr;
+    width: min(560px, 100%);
   }
 
-  .landing-copy h1 {
-    font-size: 42px;
+  .landing-copy {
+    display: none;
   }
 }
 
@@ -1789,6 +1823,23 @@ a {
   .schedule-row {
     align-items: flex-start;
     flex-direction: column;
+  }
+
+  .landing {
+    padding: 18px;
+  }
+
+  .login-card {
+    padding: 22px;
+  }
+
+  .login-links,
+  .credential-hints div {
+    grid-template-columns: 1fr;
+  }
+
+  .login-links .text-btn {
+    text-align: left;
   }
 
   .week-picker {
