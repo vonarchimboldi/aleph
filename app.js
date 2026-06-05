@@ -1,7 +1,7 @@
 const STORAGE_KEY = "learning-studio-data-v2";
 const LEGACY_STORAGE_KEYS = ["learning-studio-data-v1"];
 const SESSION_KEY = "aleph-session";
-const COURSE_PLAN_VERSION = "seeded-user-canonical-workspace-v53";
+const COURSE_PLAN_VERSION = "seeded-user-canonical-workspace-v61";
 
 const state = loadState();
 let selectedSubjectId = null;
@@ -353,8 +353,9 @@ function buildPriyankaPlatinumPlan(now, accountTypes, sections, user = defaultUs
           const date = addDays(monday, dayIndex);
           const details = probabilityProblemSetDetails(dayPlan, week);
           const dayId = dayPlan.day.toLowerCase();
+          const scheduleId = `schedule-${plan.key.toLowerCase()}-week-${week}-${dayId}`;
           schedule.push({
-            id: `schedule-${plan.key.toLowerCase()}-week-${week}-${dayId}`,
+            id: scheduleId,
             title: `Week ${week} ${dayPlan.day}: ${dayPlan.topic} problem set`,
             week,
             subject: plan.label,
@@ -369,6 +370,7 @@ function buildPriyankaPlatinumPlan(now, accountTypes, sections, user = defaultUs
             title: `${plan.key} W${week} ${dayPlan.day}: 10-problem ${dayPlan.topic} set`,
             type: "Problem set",
             date,
+            scheduleId,
             status: "todo",
             done: false,
             details,
@@ -376,8 +378,9 @@ function buildPriyankaPlatinumPlan(now, accountTypes, sections, user = defaultUs
           });
         });
 
+        const sundayTestScheduleId = `schedule-${plan.key.toLowerCase()}-week-${week}-sunday-test`;
         schedule.push({
-          id: `schedule-${plan.key.toLowerCase()}-week-${week}-sunday-test`,
+          id: sundayTestScheduleId,
           title: `Week ${week}: ${plan.label} Sunday PSB test`,
           week,
           subject: plan.label,
@@ -392,6 +395,7 @@ function buildPriyankaPlatinumPlan(now, accountTypes, sections, user = defaultUs
           title: `${plan.key} W${week}: Take Sunday PSB pattern test`,
           type: "Test",
           date: sunday,
+          scheduleId: sundayTestScheduleId,
           status: "todo",
           done: false,
           details: probabilitySundayTestDetails(milestone),
@@ -414,9 +418,15 @@ function buildPriyankaPlatinumPlan(now, accountTypes, sections, user = defaultUs
         return;
       }
 
+      const milestoneScheduleId = `schedule-${plan.key.toLowerCase()}-week-${week}-milestone`;
+      const assignmentScheduleId = `schedule-${plan.key.toLowerCase()}-week-${week}-assignment`;
+      const reviewScheduleId = `schedule-${plan.key.toLowerCase()}-week-${week}-review`;
+      const spacedReviewScheduleId = `schedule-${plan.key.toLowerCase()}-week-${week}-spaced-review`;
+      const assignmentDetails = `Do the related problem set/homework work for ${plan.label}, ${weekWindow}. Convert missed problems into correction notes before Sunday's quiz.`;
+
       schedule.push(
         {
-          id: `schedule-${plan.key.toLowerCase()}-week-${week}-milestone`,
+          id: milestoneScheduleId,
           title: `Week ${week}: ${plan.label} milestone`,
           week,
           subject: plan.label,
@@ -426,7 +436,17 @@ function buildPriyankaPlatinumPlan(now, accountTypes, sections, user = defaultUs
           updatedAt: now
         },
         {
-          id: `schedule-${plan.key.toLowerCase()}-week-${week}-review`,
+          id: assignmentScheduleId,
+          title: `Week ${week}: ${plan.label} assignment`,
+          week,
+          subject: plan.label,
+          kind: "Assignment",
+          date: addDays(monday, 4),
+          details: assignmentDetails,
+          updatedAt: now
+        },
+        {
+          id: reviewScheduleId,
           title: `Week ${week}: ${plan.label} Sunday combined review`,
           week,
           subject: plan.label,
@@ -439,7 +459,7 @@ function buildPriyankaPlatinumPlan(now, accountTypes, sections, user = defaultUs
 
       if (week % 2 === 0) {
         schedule.push({
-          id: `schedule-${plan.key.toLowerCase()}-week-${week}-spaced-review`,
+          id: spacedReviewScheduleId,
           title: `Week ${week}: ${plan.label} Sunday cumulative spaced review`,
           week,
           subject: plan.label,
@@ -457,6 +477,7 @@ function buildPriyankaPlatinumPlan(now, accountTypes, sections, user = defaultUs
           title: `${plan.key} W${week}: Watch lectures`,
           type: "Lecture",
           date: monday,
+          scheduleId: milestoneScheduleId,
           status: "todo",
           done: false,
           details: milestoneDetails(milestone),
@@ -468,9 +489,10 @@ function buildPriyankaPlatinumPlan(now, accountTypes, sections, user = defaultUs
           title: `${plan.key} W${week}: Complete associated assignment`,
           type: "Assignment",
           date: addDays(monday, 4),
+          scheduleId: assignmentScheduleId,
           status: "todo",
           done: false,
-          details: `Do the related problem set/homework work for ${plan.label}, ${weekWindow}. Convert missed problems into correction notes before Sunday's quiz.`,
+          details: assignmentDetails,
           updatedAt: now
         },
         {
@@ -479,6 +501,7 @@ function buildPriyankaPlatinumPlan(now, accountTypes, sections, user = defaultUs
           title: `${plan.key} W${week}: Take Sunday combined review quiz`,
           type: "Review quiz",
           date: sunday,
+          scheduleId: reviewScheduleId,
           status: "todo",
           done: false,
           details: `One combined ${plan.label} quiz across ${plan.resources}. Focus: ${milestone.focus}.`,
@@ -493,6 +516,7 @@ function buildPriyankaPlatinumPlan(now, accountTypes, sections, user = defaultUs
           title: `${plan.key} W${week}: Take Sunday cumulative spaced review quiz`,
           type: "Spaced review",
           date: sunday,
+          scheduleId: spacedReviewScheduleId,
           status: "todo",
           done: false,
           details: spaced,
@@ -753,6 +777,16 @@ function buildGateDaBasicPlan(now, accountTypes, sections, user = basicGateDaUse
         updatedAt: now
       },
       {
+        id: "schedule-probability-chapter-3-review",
+        title: "Probability Chapter 3: Objective Review",
+        week: 3,
+        subject: "Probability",
+        kind: "Review",
+        date: weekThreeSunday,
+        details: "Take the random variables and expectation objective quiz and use the logged feedback to review weak concepts.",
+        updatedAt: now
+      },
+      {
         id: "schedule-probability-chapter-4-study",
         title: "Probability Chapter 4: Variance, Standard Deviation, and Tail Bounds",
         week: 4,
@@ -983,6 +1017,15 @@ function buildGateDaBasicPlan(now, accountTypes, sections, user = basicGateDaUse
         updatedAt: now
       },
       {
+        id: "test-probability-chapter-3-objective-review",
+        title: "Probability Chapter 3 Objective Review",
+        date: weekThreeSunday,
+        details: "Objective end-of-chapter quiz for random variables, PMF/CDF/PDF, distribution recognition, expectation, linearity, indicators, tail sums, and transformations. Attempts are logged in the learner record.",
+        sectionId: sections[2]?.id,
+        quizId: "quiz-probability-chapter-3-objective-review",
+        updatedAt: now
+      },
+      {
         id: "test-probability-chapter-4-objective-review",
         title: "Probability Chapter 4 Objective Review",
         date: weekFourSunday,
@@ -1122,7 +1165,18 @@ function buildGateDaBasicPlan(now, accountTypes, sections, user = basicGateDaUse
         date: weekThreeMonday,
         status: "todo",
         done: false,
-        details: "Open Subjects -> Probability -> Chapter 3 and study random variables, expectation, linearity, indicators, tail sums, and transformations. Review problems and quiz will be added separately.",
+        details: "Open Subjects -> Probability -> Chapter 3 and study random variables, expectation, linearity, indicators, tail sums, and transformations.",
+        updatedAt: now
+      },
+      {
+        id: "task-probability-chapter-3-review",
+        week: 3,
+        title: "Probability Ch 3: Take objective review",
+        type: "Review",
+        date: weekThreeSunday,
+        status: "todo",
+        done: false,
+        details: "Submit the Chapter 3 objective quiz so the learner record logs random-variable and expectation strengths and weaknesses.",
         updatedAt: now
       },
       {
@@ -1424,7 +1478,7 @@ function buildGateDaBasicPlan(now, accountTypes, sections, user = basicGateDaUse
         id: "resource-probability-random-variables",
         title: "Probability Chapter 3: Random Variables and Expectation",
         date: weekThreeMonday,
-        details: "Open Subjects -> Probability to study Chapter 3 parts 1-8. Review problems and quiz are pending.",
+        details: "Open Subjects -> Probability to study Chapter 3 parts 1-8 and then take the objective review in Tests.",
         link: "",
         updatedAt: now
       },
@@ -2690,7 +2744,12 @@ function gateDaProbabilitySections(updatedAt = new Date().toISOString()) {
       ],
       practiceProblems: [],
       reviewPrompts: [],
-      reviewQuiz: null,
+      reviewQuiz: {
+        id: "quiz-probability-chapter-3-objective-review",
+        title: "Probability Chapter 3 Objective Review",
+        instructions: "Complete this after finishing Chapter 3 exposition. The quiz logs objective answers and diagnoses random variables, PMF/CDF/PDF use, distribution recognition, expectation, linearity, indicators, tail sums, and transformations.",
+        questions: randomVariablesExpectationReviewQuestions()
+      },
       readingQuestions: [],
       chapterSummary: [
         "A random variable is a numerical function of the outcome.",
@@ -2705,7 +2764,7 @@ function gateDaProbabilitySections(updatedAt = new Date().toISOString()) {
         "Tail sums compute expectations from survival probabilities.",
         "Functions of random variables can be handled by LOTUS for expectation and by the CDF method for distributions."
       ],
-      buildStatus: "Parts 1-8 complete. Review problems, practice set, and objective quiz pending.",
+      buildStatus: "Parts 1-8 complete. Objective quiz added with graph-backed feedback. Labelled practice set pending.",
       updatedAt
     },
     {
@@ -5747,6 +5806,14 @@ function jointDistributionPracticeProblems() {
 }
 
 function jointDistributionReviewQuestions() {
+  const metadata = {
+    "joint-review-1": { targetConcept: "joint-distribution", prereqsUsed: ["random-variable"], difficulty: 1, gateWeight: "high" },
+    "joint-review-2": { targetConcept: "marginal", prereqsUsed: ["joint-pmf"], difficulty: 1, gateWeight: "high" },
+    "joint-review-3": { targetConcept: "conditional-distribution", prereqsUsed: ["joint-pmf", "marginal"], difficulty: 2, gateWeight: "high" },
+    "joint-review-4": { targetConcept: "support-region", prereqsUsed: ["joint-pdf", "marginal"], difficulty: 2, gateWeight: "high" },
+    "joint-review-5": { targetConcept: "independence", prereqsUsed: ["joint-distribution", "marginal", "support-region"], difficulty: 3, gateWeight: "high" },
+    "joint-review-6": { targetConcept: "transformation", prereqsUsed: ["cdf", "independence", "joint-distribution"], difficulty: 3, gateWeight: "medium" }
+  };
   return [
     {
       id: "joint-review-1",
@@ -5764,33 +5831,20 @@ function jointDistributionReviewQuestions() {
     {
       id: "joint-review-2",
       kind: "single concept",
-      tags: ["joint-pmf"],
-      prompt: "For discrete X and Y, what is p(x,y)?",
+      tags: ["joint-pmf", "marginal"],
+      prompt: "For a joint PMF p(x,y), how do you find the marginal p_X(x)?",
       options: [
-        { id: "a", text: "P(X=x and Y=y)" },
-        { id: "b", text: "P(X=x) + P(Y=y)" },
-        { id: "c", text: "E[X+Y]" },
-        { id: "d", text: "Var(XY)" }
+        { id: "a", text: "Sum p(x,y) over all possible y" },
+        { id: "b", text: "Multiply p(x,y) over all possible y" },
+        { id: "c", text: "Divide p(x,y) by p_Y(y)" },
+        { id: "d", text: "Take only the largest joint cell" }
       ],
       answer: "a"
     },
     {
       id: "joint-review-3",
-      kind: "single concept",
-      tags: ["marginal"],
-      prompt: "How do you find p_X(x) from a joint PMF p(x,y)?",
-      options: [
-        { id: "a", text: "Multiply over all y" },
-        { id: "b", text: "Sum p(x,y) over all y" },
-        { id: "c", text: "Divide by p_Y(y)" },
-        { id: "d", text: "Take a square root" }
-      ],
-      answer: "b"
-    },
-    {
-      id: "joint-review-4",
-      kind: "single concept",
-      tags: ["conditional-distribution"],
+      kind: "mixed: two concepts",
+      tags: ["conditional-distribution", "joint-pmf", "marginal"],
       prompt: "For discrete variables, which formula gives P(X=x | Y=y)?",
       options: [
         { id: "a", text: "p(x,y)p_Y(y)" },
@@ -5801,20 +5855,7 @@ function jointDistributionReviewQuestions() {
       answer: "b"
     },
     {
-      id: "joint-review-5",
-      kind: "single concept",
-      tags: ["independence"],
-      prompt: "Which condition expresses independence of discrete X and Y?",
-      options: [
-        { id: "a", text: "p(x,y)=p_X(x)p_Y(y) for all x,y" },
-        { id: "b", text: "p(x,y)=p_X(x)+p_Y(y) for all x,y" },
-        { id: "c", text: "E[X]=E[Y]" },
-        { id: "d", text: "X and Y have the same support" }
-      ],
-      answer: "a"
-    },
-    {
-      id: "joint-review-6",
+      id: "joint-review-4",
       kind: "mixed: two concepts",
       tags: ["joint-pdf", "support-region"],
       prompt: "For continuous random variables, how is P((X,Y) in A) computed?",
@@ -5827,23 +5868,23 @@ function jointDistributionReviewQuestions() {
       answer: "b"
     },
     {
-      id: "joint-review-7",
-      kind: "mixed: two concepts",
-      tags: ["support-region", "marginal"],
-      prompt: "For f(x,y)=2 on 0<y<x<1, what are the y-bounds when finding f_X(x)?",
+      id: "joint-review-5",
+      kind: "mixed: three concepts",
+      tags: ["independence", "joint-distribution", "marginal", "support-region"],
+      prompt: "Why does triangular support such as 0<y<x<1 show X and Y are not independent?",
       options: [
-        { id: "a", text: "0<y<1" },
-        { id: "b", text: "0<y<x" },
-        { id: "c", text: "x<y<1" },
-        { id: "d", text: "-infinity<y<infinity" }
+        { id: "a", text: "The possible values of Y depend on X, so the joint support does not factor cleanly" },
+        { id: "b", text: "Every triangular support has total probability greater than 1" },
+        { id: "c", text: "Independence only exists for discrete random variables" },
+        { id: "d", text: "The marginals are always zero on triangular support" }
       ],
-      answer: "b"
+      answer: "a"
     },
     {
-      id: "joint-review-8",
+      id: "joint-review-6",
       kind: "mixed: three concepts",
       tags: ["transformation", "independence", "cdf"],
-      prompt: "If M=max(X,Y), what event is equivalent to M<=m?",
+      prompt: "If M=max(X,Y) for independent Uniform(0,1) variables, what event is equivalent to M<=m?",
       options: [
         { id: "a", text: "X<=m or Y<=m" },
         { id: "b", text: "X<=m and Y<=m" },
@@ -5851,34 +5892,11 @@ function jointDistributionReviewQuestions() {
         { id: "d", text: "X=Y=m" }
       ],
       answer: "b"
-    },
-    {
-      id: "joint-review-9",
-      kind: "mixed: two concepts",
-      tags: ["joint-versus-marginal", "independence"],
-      prompt: "Why do marginals alone usually not determine the joint distribution?",
-      options: [
-        { id: "a", text: "They do not record how the variables are paired together" },
-        { id: "b", text: "They always imply independence" },
-        { id: "c", text: "They are never valid probabilities" },
-        { id: "d", text: "They only work for continuous variables" }
-      ],
-      answer: "a"
-    },
-    {
-      id: "joint-review-10",
-      kind: "mixed: two concepts",
-      tags: ["conditional-distribution", "support-region"],
-      prompt: "Given a condition such as S=10 for two dice, what happens to the possible values of another variable?",
-      options: [
-        { id: "a", text: "They may be restricted to values compatible with the condition" },
-        { id: "b", text: "They must stay uniformly distributed over all original values" },
-        { id: "c", text: "They become impossible" },
-        { id: "d", text: "They no longer have probabilities" }
-      ],
-      answer: "a"
     }
-  ];
+  ].map((question) => ({
+    ...question,
+    ...(metadata[question.id] || { targetConcept: question.tags[0], prereqsUsed: question.tags.slice(1), difficulty: question.tags.length, gateWeight: "medium" })
+  }));
 }
 
 function continuousDistributionPracticeProblems() {
@@ -7110,24 +7128,19 @@ function covariancePracticeProblems() {
 }
 
 function covarianceReviewQuestions() {
+  const metadata = {
+    "cov-review-1": { targetConcept: "covariance", prereqsUsed: ["product-expectation"], difficulty: 1, gateWeight: "high" },
+    "cov-review-2": { targetConcept: "correlation", prereqsUsed: ["covariance", "standard-deviation"], difficulty: 1, gateWeight: "high" },
+    "cov-review-3": { targetConcept: "variance-of-sums", prereqsUsed: ["covariance", "variance"], difficulty: 2, gateWeight: "high" },
+    "cov-review-4": { targetConcept: "zero-covariance", prereqsUsed: ["covariance", "independence"], difficulty: 2, gateWeight: "high" },
+    "cov-review-5": { targetConcept: "linear-relationship", prereqsUsed: ["correlation", "covariance", "standard-deviation"], difficulty: 3, gateWeight: "medium" },
+    "cov-review-6": { targetConcept: "indicator-covariance", prereqsUsed: ["indicator-variable", "dependence", "variance-of-sums"], difficulty: 3, gateWeight: "high" }
+  };
   return [
     {
       id: "cov-review-1",
       kind: "single concept",
-      tags: ["product-expectation"],
-      prompt: "Which quantity must usually be computed before covariance?",
-      options: [
-        { id: "a", text: "E[XY]" },
-        { id: "b", text: "Only E[X]" },
-        { id: "c", text: "Only Var(X)" },
-        { id: "d", text: "The maximum of X" }
-      ],
-      answer: "a"
-    },
-    {
-      id: "cov-review-2",
-      kind: "single concept",
-      tags: ["covariance"],
+      tags: ["covariance", "product-expectation"],
       prompt: "Which formula is the covariance shortcut?",
       options: [
         { id: "a", text: "Cov(X,Y)=E[XY]-E[X]E[Y]" },
@@ -7138,7 +7151,7 @@ function covarianceReviewQuestions() {
       answer: "a"
     },
     {
-      id: "cov-review-3",
+      id: "cov-review-2",
       kind: "single concept",
       tags: ["correlation"],
       prompt: "Why is correlation easier to compare than covariance?",
@@ -7151,9 +7164,9 @@ function covarianceReviewQuestions() {
       answer: "a"
     },
     {
-      id: "cov-review-4",
-      kind: "single concept",
-      tags: ["variance-of-sums"],
+      id: "cov-review-3",
+      kind: "mixed: two concepts",
+      tags: ["variance-of-sums", "covariance"],
       prompt: "What is Var(X+Y) in general?",
       options: [
         { id: "a", text: "Var(X)+Var(Y)" },
@@ -7164,20 +7177,7 @@ function covarianceReviewQuestions() {
       answer: "b"
     },
     {
-      id: "cov-review-5",
-      kind: "mixed: two concepts",
-      tags: ["independence", "covariance"],
-      prompt: "If X and Y are independent and the needed moments exist, what is Cov(X,Y)?",
-      options: [
-        { id: "a", text: "0" },
-        { id: "b", text: "1" },
-        { id: "c", text: "E[X]+E[Y]" },
-        { id: "d", text: "Always positive" }
-      ],
-      answer: "a"
-    },
-    {
-      id: "cov-review-6",
+      id: "cov-review-4",
       kind: "mixed: two concepts",
       tags: ["zero-covariance", "independence"],
       prompt: "What is true in general if Cov(X,Y)=0?",
@@ -7190,22 +7190,9 @@ function covarianceReviewQuestions() {
       answer: "b"
     },
     {
-      id: "cov-review-7",
-      kind: "mixed: two concepts",
-      tags: ["indicator-covariance"],
-      prompt: "For indicators I and J, what is E[IJ]?",
-      options: [
-        { id: "a", text: "P(I=1 and J=1)" },
-        { id: "b", text: "P(I=1)+P(J=1)" },
-        { id: "c", text: "Var(I)+Var(J)" },
-        { id: "d", text: "Always 0" }
-      ],
-      answer: "a"
-    },
-    {
-      id: "cov-review-8",
+      id: "cov-review-5",
       kind: "mixed: three concepts",
-      tags: ["correlation", "linear-relationship"],
+      tags: ["correlation", "linear-relationship", "standard-deviation"],
       prompt: "If Y=aX+b with a<0 and Var(X)>0, what is Corr(X,Y)?",
       options: [
         { id: "a", text: "1" },
@@ -7216,22 +7203,9 @@ function covarianceReviewQuestions() {
       answer: "b"
     },
     {
-      id: "cov-review-9",
-      kind: "mixed: two concepts",
-      tags: ["covariance", "interpretation"],
-      prompt: "What does negative covariance usually indicate?",
-      options: [
-        { id: "a", text: "High X tends to appear with low Y" },
-        { id: "b", text: "High X tends to appear with high Y" },
-        { id: "c", text: "X and Y are impossible" },
-        { id: "d", text: "X and Y have no variance" }
-      ],
-      answer: "a"
-    },
-    {
-      id: "cov-review-10",
-      kind: "mixed: two concepts",
-      tags: ["indicator-covariance", "dependence"],
+      id: "cov-review-6",
+      kind: "mixed: three concepts",
+      tags: ["indicator-covariance", "dependence", "variance-of-sums"],
       prompt: "For two draws without replacement, why are ace indicators negatively correlated?",
       options: [
         { id: "a", text: "An ace on the first draw leaves fewer aces for the second draw" },
@@ -7241,7 +7215,10 @@ function covarianceReviewQuestions() {
       ],
       answer: "a"
     }
-  ];
+  ].map((question) => ({
+    ...question,
+    ...(metadata[question.id] || { targetConcept: question.tags[0], prereqsUsed: question.tags.slice(1), difficulty: question.tags.length, gateWeight: "medium" })
+  }));
 }
 
 function variancePracticeProblems() {
@@ -7386,6 +7363,20 @@ function variancePracticeProblems() {
 }
 
 function varianceReviewQuestions() {
+  const metadata = {
+    "var-review-1": { targetConcept: "variance", prereqsUsed: ["expectation"], difficulty: 1, gateWeight: "high" },
+    "var-review-2": { targetConcept: "standard-deviation", prereqsUsed: ["variance"], difficulty: 1, gateWeight: "medium" },
+    "var-review-3": { targetConcept: "second-moment", prereqsUsed: ["variance", "expectation"], difficulty: 1, gateWeight: "high" },
+    "var-review-4": { targetConcept: "variance-transformation", prereqsUsed: ["variance", "transformation"], difficulty: 2, gateWeight: "high" },
+    "var-review-5": { targetConcept: "bernoulli-variance", prereqsUsed: ["bernoulli", "second-moment"], difficulty: 1, gateWeight: "medium" },
+    "var-review-6": { targetConcept: "binomial-variance", prereqsUsed: ["binomial", "independence", "bernoulli-variance"], difficulty: 2, gateWeight: "high" },
+    "var-review-7": { targetConcept: "geometric-variance", prereqsUsed: ["geometric", "convention"], difficulty: 2, gateWeight: "medium" },
+    "var-review-8": { targetConcept: "hypergeometric-variance", prereqsUsed: ["hypergeometric", "dependence"], difficulty: 2, gateWeight: "high" },
+    "var-review-9": { targetConcept: "uniform-variance", prereqsUsed: ["uniform", "second-moment"], difficulty: 2, gateWeight: "medium" },
+    "var-review-10": { targetConcept: "chebyshev", prereqsUsed: ["tail-bound", "standard-deviation"], difficulty: 3, gateWeight: "high" },
+    "var-review-11": { targetConcept: "markov", prereqsUsed: ["tail-bound", "expectation"], difficulty: 2, gateWeight: "medium" },
+    "var-review-12": { targetConcept: "chernoff", prereqsUsed: ["tail-bound", "independence"], difficulty: 3, gateWeight: "medium" }
+  };
   return [
     {
       id: "var-review-1",
@@ -7543,10 +7534,25 @@ function varianceReviewQuestions() {
       ],
       answer: "b"
     }
-  ];
+  ].map((question) => ({
+    ...question,
+    ...(metadata[question.id] || { targetConcept: question.tags[0], prereqsUsed: question.tags.slice(1), difficulty: question.tags.length, gateWeight: "medium" })
+  }));
 }
 
 function conditionalProbabilityReviewQuestions() {
+  const metadata = {
+    "cp-review-1": { targetConcept: "conditional-denominator", prereqsUsed: ["conditional-probability"], difficulty: 1, gateWeight: "high" },
+    "cp-review-2": { targetConcept: "multiplication-rule", prereqsUsed: ["conditional-probability"], difficulty: 1, gateWeight: "high" },
+    "cp-review-3": { targetConcept: "total-probability", prereqsUsed: ["case-partition"], difficulty: 1, gateWeight: "high" },
+    "cp-review-4": { targetConcept: "bayes-theorem", prereqsUsed: ["conditional-probability", "total-probability"], difficulty: 1, gateWeight: "high" },
+    "cp-review-5": { targetConcept: "independence", prereqsUsed: ["multiplication-rule"], difficulty: 1, gateWeight: "high" },
+    "cp-review-6": { targetConcept: "conditional-denominator", prereqsUsed: ["sample-space", "conditional-probability"], difficulty: 2, gateWeight: "high" },
+    "cp-review-7": { targetConcept: "bayes-denominator", prereqsUsed: ["bayes-theorem", "total-probability"], difficulty: 2, gateWeight: "high" },
+    "cp-review-8": { targetConcept: "independence", prereqsUsed: ["conditional-probability"], difficulty: 2, gateWeight: "medium" },
+    "cp-review-9": { targetConcept: "bayes-numerator", prereqsUsed: ["bayes-theorem", "multiplication-rule", "total-probability"], difficulty: 3, gateWeight: "high" },
+    "cp-review-10": { targetConcept: "exclusive-vs-independent", prereqsUsed: ["independence", "mutual-exclusivity"], difficulty: 2, gateWeight: "medium" }
+  };
   return [
     {
       id: "cp-review-1",
@@ -7678,7 +7684,160 @@ function conditionalProbabilityReviewQuestions() {
       ],
       answer: "b"
     }
-  ];
+  ].map((question) => ({
+    ...question,
+    ...(metadata[question.id] || { targetConcept: question.tags[0], prereqsUsed: question.tags.slice(1), difficulty: question.tags.length, gateWeight: "medium" })
+  }));
+}
+
+function randomVariablesExpectationReviewQuestions() {
+  const metadata = {
+    "rv-review-1": { targetConcept: "random-variable", prereqsUsed: ["sample-space"], difficulty: 1, gateWeight: "high" },
+    "rv-review-2": { targetConcept: "pmf", prereqsUsed: ["discrete-variable"], difficulty: 1, gateWeight: "high" },
+    "rv-review-3": { targetConcept: "cdf", prereqsUsed: ["pmf"], difficulty: 1, gateWeight: "high" },
+    "rv-review-4": { targetConcept: "pdf", prereqsUsed: ["continuous-variable"], difficulty: 1, gateWeight: "medium" },
+    "rv-review-5": { targetConcept: "distribution-recognition", prereqsUsed: ["bernoulli", "binomial", "geometric", "hypergeometric"], difficulty: 2, gateWeight: "high" },
+    "rv-review-6": { targetConcept: "expectation", prereqsUsed: ["pmf"], difficulty: 2, gateWeight: "high" },
+    "rv-review-7": { targetConcept: "linearity", prereqsUsed: ["indicator-variable", "expectation"], difficulty: 2, gateWeight: "high" },
+    "rv-review-8": { targetConcept: "indicator-variable", prereqsUsed: ["linearity", "expectation"], difficulty: 3, gateWeight: "high" },
+    "rv-review-9": { targetConcept: "tail-sum", prereqsUsed: ["geometric", "expectation"], difficulty: 3, gateWeight: "medium" },
+    "rv-review-10": { targetConcept: "transformation", prereqsUsed: ["cdf", "continuous-variable"], difficulty: 3, gateWeight: "medium" }
+  };
+  return [
+    {
+      id: "rv-review-1",
+      kind: "single concept",
+      tags: ["random-variable", "sample-space"],
+      prompt: "Three coins are tossed and X is the number of heads. What is X?",
+      options: [
+        { id: "a", text: "The full outcome, such as HTH" },
+        { id: "b", text: "A numerical function of the outcome" },
+        { id: "c", text: "Only the event X = 2" },
+        { id: "d", text: "The probability of getting heads" }
+      ],
+      answer: "b"
+    },
+    {
+      id: "rv-review-2",
+      kind: "single concept",
+      tags: ["pmf", "discrete-variable"],
+      prompt: "For a discrete random variable, what does the PMF give?",
+      options: [
+        { id: "a", text: "P(X = x) for each possible value x" },
+        { id: "b", text: "Only P(X <= x)" },
+        { id: "c", text: "A density height, not a probability" },
+        { id: "d", text: "The variance only" }
+      ],
+      answer: "a"
+    },
+    {
+      id: "rv-review-3",
+      kind: "single concept",
+      tags: ["cdf", "pmf"],
+      prompt: "If X is discrete, what is F(3)?",
+      options: [
+        { id: "a", text: "P(X = 3)" },
+        { id: "b", text: "P(X < 3) only" },
+        { id: "c", text: "P(X <= 3)" },
+        { id: "d", text: "P(X > 3)" }
+      ],
+      answer: "c"
+    },
+    {
+      id: "rv-review-4",
+      kind: "single concept",
+      tags: ["pdf", "continuous-variable"],
+      prompt: "For a continuous random variable with density f, how do you find P(a <= X <= b)?",
+      options: [
+        { id: "a", text: "Use f(a) + f(b)" },
+        { id: "b", text: "Integrate f(x) from a to b" },
+        { id: "c", text: "Use P(X = a)" },
+        { id: "d", text: "Count favourable outcomes" }
+      ],
+      answer: "b"
+    },
+    {
+      id: "rv-review-5",
+      kind: "mixed: two concepts",
+      tags: ["distribution-recognition", "hypergeometric"],
+      prompt: "A batch has 20 items, 5 defective. You inspect 4 items without replacement and X counts defectives. Which model fits X?",
+      options: [
+        { id: "a", text: "Binomial, because there are 4 draws" },
+        { id: "b", text: "Geometric, because X waits for first success" },
+        { id: "c", text: "Hypergeometric, because sampling is without replacement" },
+        { id: "d", text: "Uniform, because every count is equally likely" }
+      ],
+      answer: "c"
+    },
+    {
+      id: "rv-review-6",
+      kind: "mixed: two concepts",
+      tags: ["expectation", "pmf"],
+      prompt: "X takes values 0, 1, 2 with probabilities 1/2, 1/4, 1/4. What is E[X]?",
+      options: [
+        { id: "a", text: "1/2" },
+        { id: "b", text: "3/4" },
+        { id: "c", text: "1" },
+        { id: "d", text: "2" }
+      ],
+      answer: "b"
+    },
+    {
+      id: "rv-review-7",
+      kind: "mixed: two concepts",
+      tags: ["linearity", "indicator-variable"],
+      prompt: "Which statement about linearity of expectation is correct?",
+      options: [
+        { id: "a", text: "It works only for independent random variables" },
+        { id: "b", text: "It says E[X + Y] = E[X] + E[Y], even without independence" },
+        { id: "c", text: "It says E[XY] = E[X]E[Y] always" },
+        { id: "d", text: "It only works for continuous variables" }
+      ],
+      answer: "b"
+    },
+    {
+      id: "rv-review-8",
+      kind: "mixed: three concepts",
+      tags: ["indicator-variable", "linearity", "expectation"],
+      prompt: "Five balls are thrown independently into 5 boxes. For expected number of nonempty boxes, what is the right first move?",
+      options: [
+        { id: "a", text: "Find the full distribution of the number of nonempty boxes first" },
+        { id: "b", text: "Define Ii = 1 if box i is nonempty, then add E[Ii]" },
+        { id: "c", text: "Assume each box is nonempty with probability 1/5" },
+        { id: "d", text: "Use a geometric waiting-time formula" }
+      ],
+      answer: "b"
+    },
+    {
+      id: "rv-review-9",
+      kind: "mixed: three concepts",
+      tags: ["tail-sum", "geometric", "expectation"],
+      prompt: "If X is the trial number of the first success with success probability p, what tail probability appears in the tail-sum derivation?",
+      options: [
+        { id: "a", text: "P(X >= k) = (1-p)^(k-1)" },
+        { id: "b", text: "P(X >= k) = p^(k-1)" },
+        { id: "c", text: "P(X >= k) = (1-p)^(k-1)p" },
+        { id: "d", text: "P(X >= k) = kp" }
+      ],
+      answer: "a"
+    },
+    {
+      id: "rv-review-10",
+      kind: "mixed: three concepts",
+      tags: ["transformation", "cdf", "continuous-variable"],
+      prompt: "If X is Uniform(0,1) and Y = X^2, what is F_Y(y) for 0 <= y <= 1?",
+      options: [
+        { id: "a", text: "y^2" },
+        { id: "b", text: "sqrt(y)" },
+        { id: "c", text: "1 - y" },
+        { id: "d", text: "2y" }
+      ],
+      answer: "b"
+    }
+  ].map((question) => ({
+    ...question,
+    ...(metadata[question.id] || { targetConcept: question.tags[0], prereqsUsed: question.tags.slice(1), difficulty: question.tags.length, gateWeight: "medium" })
+  }));
 }
 
 function probabilityFoundationConceptGraph() {
@@ -7686,6 +7845,10 @@ function probabilityFoundationConceptGraph() {
     chapterId: "gate-da-probability-foundations",
     chapterTitle: "Probability Foundations",
     gateWeight: "medium",
+    fallbackConcepts: ["sample-space", "event-translation", "counting"],
+    fallbackDifficultyMix: [2, 2, 3, 3],
+    fallbackInstruction: "Move to a harder mixed Chapter 1 review set.",
+    stableNextAction: "Next: try a mixed Chapter 1 review set at difficulty 3.",
     nodes: {
       "sample-space": {
         label: "Sample space",
@@ -7722,6 +7885,532 @@ function probabilityFoundationConceptGraph() {
         prereqs: ["event-translation", "counting"],
         repairMaterial: "Review Chapter 1.5 and mark the overlap before adding two counts.",
         gateWeight: "medium"
+      }
+    }
+  };
+}
+
+function conditionalProbabilityConceptGraph() {
+  return {
+    chapterId: "gate-da-conditional-probability",
+    chapterTitle: "Conditional Probability",
+    gateWeight: "high",
+    fallbackConcepts: ["conditional-probability", "multiplication-rule", "total-probability"],
+    fallbackDifficultyMix: [2, 2, 3, 3],
+    fallbackInstruction: "Move to a harder mixed Chapter 2 review set.",
+    stableNextAction: "Next: try a mixed Chapter 2 review set at difficulty 3.",
+    nodes: {
+      "sample-space": {
+        label: "Sample space restriction",
+        prereqs: [],
+        repairMaterial: "Review Chapter 2.1 and rewrite three conditional questions by listing the reduced sample space first.",
+        gateWeight: "high"
+      },
+      "conditional-probability": {
+        label: "Conditional probability",
+        prereqs: ["sample-space"],
+        repairMaterial: "Review Chapter 2.1 and explain why P(A|B) divides by P(B), not P(A).",
+        gateWeight: "high"
+      },
+      "conditional-denominator": {
+        label: "Conditional denominator",
+        prereqs: ["conditional-probability", "sample-space"],
+        repairMaterial: "Redo the die and card conditioning examples, marking the event after 'given' as the denominator every time.",
+        gateWeight: "high"
+      },
+      "multiplication-rule": {
+        label: "Multiplication rule",
+        prereqs: ["conditional-probability"],
+        repairMaterial: "Review Chapter 2.2 and draw two probability trees, multiplying along each path.",
+        gateWeight: "high"
+      },
+      "case-partition": {
+        label: "Case partition",
+        prereqs: [],
+        repairMaterial: "Review Chapter 2.3 and identify complete, non-overlapping cases before applying total probability.",
+        gateWeight: "medium"
+      },
+      "total-probability": {
+        label: "Total probability",
+        prereqs: ["case-partition", "multiplication-rule"],
+        repairMaterial: "Review Chapter 2.3 and solve two source/factory problems by multiplying within each case and adding across cases.",
+        gateWeight: "high"
+      },
+      "bayes-theorem": {
+        label: "Bayes inversion",
+        prereqs: ["conditional-probability", "total-probability"],
+        repairMaterial: "Review Chapter 2.4 and label cause, evidence, prior, likelihood, and evidence total before substituting.",
+        gateWeight: "high"
+      },
+      "bayes-denominator": {
+        label: "Bayes denominator",
+        prereqs: ["bayes-theorem", "total-probability"],
+        repairMaterial: "Redo the medical-test example and compute the total probability of the observed evidence before the posterior.",
+        gateWeight: "high"
+      },
+      "bayes-numerator": {
+        label: "Bayes numerator",
+        prereqs: ["bayes-theorem", "multiplication-rule"],
+        repairMaterial: "Practice writing prior times likelihood for the requested source before computing the denominator.",
+        gateWeight: "high"
+      },
+      independence: {
+        label: "Independence test",
+        prereqs: ["multiplication-rule"],
+        repairMaterial: "Review Chapter 2.5 and test independence using both P(A and B)=P(A)P(B) and P(A|B)=P(A).",
+        gateWeight: "high"
+      },
+      "mutual-exclusivity": {
+        label: "Mutual exclusivity",
+        prereqs: [],
+        repairMaterial: "Compare examples of disjoint events and independent events, then write why positive-probability disjoint events are not independent.",
+        gateWeight: "medium"
+      },
+      "exclusive-vs-independent": {
+        label: "Exclusive versus independent",
+        prereqs: ["independence", "mutual-exclusivity"],
+        repairMaterial: "Redo Chapter 2.5's trap examples and explain why no overlap changes conditional probabilities.",
+        gateWeight: "medium"
+      }
+    }
+  };
+}
+
+function randomVariablesExpectationConceptGraph() {
+  return {
+    chapterId: "gate-da-random-variables-expectation",
+    chapterTitle: "Random Variables and Expectation",
+    gateWeight: "high",
+    fallbackConcepts: ["random-variable", "pmf", "expectation"],
+    fallbackDifficultyMix: [2, 2, 3, 3],
+    fallbackInstruction: "Move to a harder mixed Chapter 3 review set.",
+    stableNextAction: "Next: try a mixed Chapter 3 review set at difficulty 3.",
+    nodes: {
+      "sample-space": {
+        label: "Sample space to number",
+        prereqs: [],
+        repairMaterial: "Review Chapter 3.1 and write three examples where an outcome is converted into a numerical value X.",
+        gateWeight: "high"
+      },
+      "random-variable": {
+        label: "Random variable",
+        prereqs: ["sample-space"],
+        repairMaterial: "Review Chapter 3.1 and separate outcome, event, and random variable for coin, dice, and batch-inspection examples.",
+        gateWeight: "high"
+      },
+      "discrete-variable": {
+        label: "Discrete variable",
+        prereqs: ["random-variable"],
+        repairMaterial: "Review Chapter 3.2 and list the possible values before writing a PMF.",
+        gateWeight: "high"
+      },
+      pmf: {
+        label: "PMF",
+        prereqs: ["discrete-variable"],
+        repairMaterial: "Review Chapter 3.2 and build a value-by-value probability table that sums to 1.",
+        gateWeight: "high"
+      },
+      cdf: {
+        label: "CDF",
+        prereqs: ["pmf"],
+        repairMaterial: "Review the Binomial(4, 1/2) CDF example and compute running totals from the PMF.",
+        gateWeight: "high"
+      },
+      "continuous-variable": {
+        label: "Continuous variable",
+        prereqs: ["random-variable"],
+        repairMaterial: "Review Chapter 3.3 and explain why exact point probability is 0 for continuous measurements.",
+        gateWeight: "medium"
+      },
+      pdf: {
+        label: "PDF",
+        prereqs: ["continuous-variable"],
+        repairMaterial: "Review Chapter 3.3 and compute two interval probabilities as areas under a density.",
+        gateWeight: "medium"
+      },
+      bernoulli: {
+        label: "Bernoulli model",
+        prereqs: ["discrete-variable"],
+        repairMaterial: "Review the one-switch examples and write the PMF and mean for a Bernoulli(p) variable.",
+        gateWeight: "medium"
+      },
+      binomial: {
+        label: "Binomial model",
+        prereqs: ["bernoulli"],
+        repairMaterial: "Review Chapter 3.2 and identify n independent identical success/failure trials before using Binomial(n,p).",
+        gateWeight: "high"
+      },
+      geometric: {
+        label: "Geometric model",
+        prereqs: ["bernoulli"],
+        repairMaterial: "Review first-success waiting-time examples and distinguish exact success time from reaching a tail level.",
+        gateWeight: "high"
+      },
+      hypergeometric: {
+        label: "Hypergeometric model",
+        prereqs: ["discrete-variable"],
+        repairMaterial: "Review the without-replacement batch example and mark N, K, n, and k before writing probabilities.",
+        gateWeight: "high"
+      },
+      "distribution-recognition": {
+        label: "Distribution recognition",
+        prereqs: ["bernoulli", "binomial", "geometric", "hypergeometric"],
+        repairMaterial: "Make a four-row table: one switch, repeated independent switches, first success wait, and sampling without replacement.",
+        gateWeight: "high"
+      },
+      expectation: {
+        label: "Expectation",
+        prereqs: ["pmf"],
+        repairMaterial: "Review Chapter 3.4 and compute E[X] by multiplying each value by its probability and adding.",
+        gateWeight: "high"
+      },
+      linearity: {
+        label: "Linearity of expectation",
+        prereqs: ["expectation"],
+        repairMaterial: "Review Chapter 3.5 and solve two examples by splitting a total into smaller random variables.",
+        gateWeight: "high"
+      },
+      "indicator-variable": {
+        label: "Indicator variable",
+        prereqs: ["linearity", "expectation"],
+        repairMaterial: "Review Chapter 3.6 and define one 0-1 switch per object before adding expected values.",
+        gateWeight: "high"
+      },
+      "tail-sum": {
+        label: "Tail-sum formula",
+        prereqs: ["geometric", "expectation"],
+        repairMaterial: "Review Chapter 3.7 and write P(X >= k) for two waiting-time problems before summing.",
+        gateWeight: "medium"
+      },
+      transformation: {
+        label: "Function of a random variable",
+        prereqs: ["cdf", "continuous-variable"],
+        repairMaterial: "Review Chapter 3.8 and translate each event about Y = g(X) back into an event about X.",
+        gateWeight: "medium"
+      }
+    }
+  };
+}
+
+function varianceTailBoundsConceptGraph() {
+  return {
+    chapterId: "gate-da-variance-standard-deviation-tail-bounds",
+    chapterTitle: "Variance, Standard Deviation, and Tail Bounds",
+    gateWeight: "high",
+    fallbackConcepts: ["variance", "second-moment", "tail-bound"],
+    fallbackDifficultyMix: [2, 2, 3, 3],
+    fallbackInstruction: "Move to a harder mixed Chapter 4 review set.",
+    stableNextAction: "Next: try a mixed Chapter 4 review set at difficulty 3.",
+    nodes: {
+      expectation: {
+        label: "Expectation prerequisite",
+        prereqs: [],
+        repairMaterial: "Review Chapter 3 expectation and compute two small weighted averages before returning to variance.",
+        gateWeight: "high"
+      },
+      variance: {
+        label: "Variance",
+        prereqs: ["expectation"],
+        repairMaterial: "Review Chapter 4.1 and explain variance as average squared distance from the mean.",
+        gateWeight: "high"
+      },
+      "standard-deviation": {
+        label: "Standard deviation",
+        prereqs: ["variance"],
+        repairMaterial: "Review Chapter 4.1 and convert variance to standard deviation for three examples, keeping units clear.",
+        gateWeight: "medium"
+      },
+      "second-moment": {
+        label: "Second-moment shortcut",
+        prereqs: ["variance", "expectation"],
+        repairMaterial: "Review Chapter 4.2 and compute E[X], E[X^2], then Var(X)=E[X^2]-(E[X])^2 from a small PMF.",
+        gateWeight: "high"
+      },
+      transformation: {
+        label: "Transformation prerequisite",
+        prereqs: [],
+        repairMaterial: "Review how shifting and scaling random variables affects their values before applying variance rules.",
+        gateWeight: "medium"
+      },
+      "variance-transformation": {
+        label: "Variance under scaling",
+        prereqs: ["variance", "transformation"],
+        repairMaterial: "Review Var(aX+b)=a^2 Var(X), then test three examples where the shift b does not change spread.",
+        gateWeight: "high"
+      },
+      bernoulli: {
+        label: "Bernoulli prerequisite",
+        prereqs: [],
+        repairMaterial: "Review Bernoulli variables as 0-1 switches before deriving their variance.",
+        gateWeight: "medium"
+      },
+      "bernoulli-variance": {
+        label: "Bernoulli variance",
+        prereqs: ["bernoulli", "second-moment"],
+        repairMaterial: "Redo the derivation X^2=X for a 0-1 variable and show Var(X)=p(1-p).",
+        gateWeight: "medium"
+      },
+      binomial: {
+        label: "Binomial prerequisite",
+        prereqs: ["bernoulli"],
+        repairMaterial: "Review Binomial(n,p) as a sum of n independent Bernoulli switches.",
+        gateWeight: "high"
+      },
+      independence: {
+        label: "Independence prerequisite",
+        prereqs: [],
+        repairMaterial: "Review why variances add cleanly only when covariance terms vanish.",
+        gateWeight: "high"
+      },
+      "binomial-variance": {
+        label: "Binomial variance",
+        prereqs: ["binomial", "independence", "bernoulli-variance"],
+        repairMaterial: "Derive Var(Binomial(n,p)) by adding n independent Bernoulli variances.",
+        gateWeight: "high"
+      },
+      geometric: {
+        label: "Geometric prerequisite",
+        prereqs: [],
+        repairMaterial: "Review the first-success convention and the support 1,2,3,... before using geometric formulas.",
+        gateWeight: "medium"
+      },
+      convention: {
+        label: "Distribution convention",
+        prereqs: ["geometric"],
+        repairMaterial: "Write which geometric convention is being used before choosing E[X] or Var(X).",
+        gateWeight: "medium"
+      },
+      "geometric-variance": {
+        label: "Geometric variance",
+        prereqs: ["geometric", "convention"],
+        repairMaterial: "Review the first-success convention formula Var(X)=(1-p)/p^2 and compare it with the mean 1/p.",
+        gateWeight: "medium"
+      },
+      hypergeometric: {
+        label: "Hypergeometric prerequisite",
+        prereqs: [],
+        repairMaterial: "Review sampling without replacement and identify N, K, n, and p=K/N.",
+        gateWeight: "high"
+      },
+      dependence: {
+        label: "Dependence from no replacement",
+        prereqs: ["hypergeometric"],
+        repairMaterial: "Explain why drawing without replacement creates negative dependence between draw indicators.",
+        gateWeight: "high"
+      },
+      "hypergeometric-variance": {
+        label: "Hypergeometric variance",
+        prereqs: ["hypergeometric", "dependence"],
+        repairMaterial: "Practice applying the finite population correction (N-n)/(N-1) and explaining why it shrinks variance.",
+        gateWeight: "high"
+      },
+      uniform: {
+        label: "Uniform prerequisite",
+        prereqs: [],
+        repairMaterial: "Review Uniform(a,b) as a flat interval model and mark the interval length b-a.",
+        gateWeight: "medium"
+      },
+      "uniform-variance": {
+        label: "Uniform variance",
+        prereqs: ["uniform", "second-moment"],
+        repairMaterial: "Review Var(Uniform(a,b))=(b-a)^2/12 and compute it from interval length in three examples.",
+        gateWeight: "medium"
+      },
+      "tail-bound": {
+        label: "Tail-bound recognition",
+        prereqs: ["variance", "expectation"],
+        repairMaterial: "Make a table of what information each bound needs: Markov uses nonnegative mean, Chebyshev uses variance, Chernoff uses independent bounded summands.",
+        gateWeight: "high"
+      },
+      chebyshev: {
+        label: "Chebyshev bound",
+        prereqs: ["tail-bound", "standard-deviation"],
+        repairMaterial: "Review Chapter 4 tail bounds and convert distances into k standard deviations before applying 1/k^2.",
+        gateWeight: "high"
+      },
+      markov: {
+        label: "Markov bound",
+        prereqs: ["tail-bound", "expectation"],
+        repairMaterial: "Review Markov's nonnegative condition and practice three mean-only upper bounds.",
+        gateWeight: "medium"
+      },
+      chernoff: {
+        label: "Chernoff bound",
+        prereqs: ["tail-bound", "independence"],
+        repairMaterial: "Review why Chernoff needs independent bounded summands and compare it with Chebyshev information.",
+        gateWeight: "medium"
+      }
+    }
+  };
+}
+
+function jointDistributionsConceptGraph() {
+  return {
+    chapterId: "gate-da-joint-distributions",
+    chapterTitle: "Joint Distributions",
+    gateWeight: "high",
+    fallbackConcepts: ["joint-distribution", "marginal", "conditional-distribution"],
+    fallbackDifficultyMix: [1, 2, 2, 3],
+    fallbackInstruction: "Move to a short mixed Chapter 5 review set that combines table reading, conditioning, and independence.",
+    stableNextAction: "Next: try a mixed Chapter 5 review set at difficulty 3.",
+    nodes: {
+      "random-variable": {
+        label: "Random-variable prerequisite",
+        prereqs: [],
+        repairMaterial: "Review Chapter 3 and state what each variable measures before building a joint distribution.",
+        gateWeight: "high"
+      },
+      "joint-distribution": {
+        label: "Joint distribution",
+        prereqs: ["random-variable"],
+        repairMaterial: "Review Chapter 5.1 and describe how a joint distribution records paired behaviour, not only separate behaviour.",
+        gateWeight: "high"
+      },
+      "joint-pmf": {
+        label: "Joint PMF",
+        prereqs: ["joint-distribution"],
+        repairMaterial: "Review the joint PMF table examples and identify cells as P(X=x and Y=y).",
+        gateWeight: "high"
+      },
+      marginal: {
+        label: "Marginal distribution",
+        prereqs: ["joint-pmf"],
+        repairMaterial: "Practice summing joint table rows or columns to recover p_X(x) and p_Y(y).",
+        gateWeight: "high"
+      },
+      "conditional-distribution": {
+        label: "Conditional distribution",
+        prereqs: ["joint-pmf", "marginal"],
+        repairMaterial: "Review Chapter 5.3 and compute conditional probabilities by dividing a joint cell by the relevant marginal.",
+        gateWeight: "high"
+      },
+      "joint-pdf": {
+        label: "Joint PDF",
+        prereqs: ["joint-distribution"],
+        repairMaterial: "Review Chapter 5.4 and compute probabilities by integrating density over a region.",
+        gateWeight: "high"
+      },
+      "support-region": {
+        label: "Support region",
+        prereqs: ["joint-pdf", "joint-distribution"],
+        repairMaterial: "Draw the support region first, then write integration bounds from the drawing before integrating.",
+        gateWeight: "high"
+      },
+      independence: {
+        label: "Independence",
+        prereqs: ["joint-distribution", "marginal", "support-region"],
+        repairMaterial: "Check both the factorisation condition and whether the support shape allows independent variation.",
+        gateWeight: "high"
+      },
+      cdf: {
+        label: "CDF prerequisite",
+        prereqs: [],
+        repairMaterial: "Review CDF events as 'less than or equal to' events before using them for transformations.",
+        gateWeight: "medium"
+      },
+      transformation: {
+        label: "Transformation of joint variables",
+        prereqs: ["cdf", "independence", "joint-distribution"],
+        repairMaterial: "Translate max, min, or sum events into conditions on X and Y before using independence or integration.",
+        gateWeight: "medium"
+      }
+    }
+  };
+}
+
+function covarianceCorrelationConceptGraph() {
+  return {
+    chapterId: "gate-da-covariance-correlation",
+    chapterTitle: "Covariance and Correlation",
+    gateWeight: "high",
+    fallbackConcepts: ["covariance", "correlation", "variance-of-sums"],
+    fallbackDifficultyMix: [1, 2, 2, 3],
+    fallbackInstruction: "Move to a short mixed Chapter 6 review set that combines covariance, correlation, and variance-of-sums reasoning.",
+    stableNextAction: "Next: try a mixed Chapter 6 review set at difficulty 3.",
+    nodes: {
+      "product-expectation": {
+        label: "Product expectation",
+        prereqs: ["joint-distribution"],
+        repairMaterial: "Review Chapter 6.1 and compute E[XY] from a small joint table before using covariance.",
+        gateWeight: "high"
+      },
+      "joint-distribution": {
+        label: "Joint-distribution prerequisite",
+        prereqs: [],
+        repairMaterial: "Review Chapter 5 and identify which paired outcomes contribute to E[XY].",
+        gateWeight: "high"
+      },
+      covariance: {
+        label: "Covariance",
+        prereqs: ["product-expectation", "expectation"],
+        repairMaterial: "Review Chapter 6.2 and compute Cov(X,Y)=E[XY]-E[X]E[Y] from one table.",
+        gateWeight: "high"
+      },
+      expectation: {
+        label: "Expectation prerequisite",
+        prereqs: [],
+        repairMaterial: "Review weighted averages for E[X] and E[Y] before computing covariance.",
+        gateWeight: "high"
+      },
+      "standard-deviation": {
+        label: "Standard-deviation prerequisite",
+        prereqs: ["variance"],
+        repairMaterial: "Review standard deviation as the scale used to normalize covariance.",
+        gateWeight: "medium"
+      },
+      variance: {
+        label: "Variance prerequisite",
+        prereqs: [],
+        repairMaterial: "Review Chapter 4 variance before applying variance-of-sums formulas.",
+        gateWeight: "high"
+      },
+      correlation: {
+        label: "Correlation",
+        prereqs: ["covariance", "standard-deviation"],
+        repairMaterial: "Review Chapter 6.3 and compute correlation by dividing covariance by the two standard deviations.",
+        gateWeight: "high"
+      },
+      "variance-of-sums": {
+        label: "Variance of sums",
+        prereqs: ["covariance", "variance"],
+        repairMaterial: "Review Var(X+Y)=Var(X)+Var(Y)+2Cov(X,Y), then extend to three indicator terms.",
+        gateWeight: "high"
+      },
+      independence: {
+        label: "Independence",
+        prereqs: ["joint-distribution"],
+        repairMaterial: "Review why independence implies zero covariance when moments exist, but zero covariance need not imply independence.",
+        gateWeight: "high"
+      },
+      "zero-covariance": {
+        label: "Zero covariance",
+        prereqs: ["covariance", "independence"],
+        repairMaterial: "Review the curved-relationship example and explain why covariance only detects linear association.",
+        gateWeight: "high"
+      },
+      "linear-relationship": {
+        label: "Linear relationship",
+        prereqs: ["correlation", "covariance", "standard-deviation"],
+        repairMaterial: "Review Chapter 6.3 and decide whether Y=aX+b is increasing or decreasing before assigning correlation 1 or -1.",
+        gateWeight: "medium"
+      },
+      "indicator-variable": {
+        label: "Indicator prerequisite",
+        prereqs: [],
+        repairMaterial: "Review indicators as 0-1 switches before computing indicator-pair covariance.",
+        gateWeight: "high"
+      },
+      dependence: {
+        label: "Dependence",
+        prereqs: ["joint-distribution"],
+        repairMaterial: "Review how sampling without replacement changes the second draw after the first draw is known.",
+        gateWeight: "high"
+      },
+      "indicator-covariance": {
+        label: "Indicator-pair covariance",
+        prereqs: ["indicator-variable", "dependence", "variance-of-sums"],
+        repairMaterial: "Review Chapter 6.6 and compute Cov(I,J)=P(I=1,J=1)-P(I=1)P(J=1) for two dependent indicators.",
+        gateWeight: "high"
       }
     }
   };
@@ -8144,9 +8833,10 @@ function probabilityStatsPatternWorkspaces() {
           week: 1,
           date: "2026-06-03",
           materialTitle: "June 3: Order Statistics Pset",
-          materialUrl: "",
-          status: "Pending",
-          expectedWork: "Planned 10-problem set: CDF/PDF method, uniform-beta links, min/max, spacings, and ISI-style applications."
+          materialUrl: "psets/week-01/june-03-order-statistics.html",
+          status: "Published",
+          expectedWork: "10 problems: 5 concept builders, 3 application problems, and 2 challenge/ISI-style problems.",
+          feedbackWorkflow: orderStatisticsFeedbackWorkflow()
         }
       ]
     },
@@ -8161,9 +8851,10 @@ function probabilityStatsPatternWorkspaces() {
           week: 1,
           date: "2026-06-04",
           materialTitle: "June 4: MLE and Estimation Pset",
-          materialUrl: "",
-          status: "Pending",
-          expectedWork: "Planned 10-problem set: regular MLE, support-dependent MLE, constraints, bias, MSE, sufficiency, and UMVUE cues."
+          materialUrl: "psets/week-01/june-04-mle-estimation.html",
+          status: "Published",
+          expectedWork: "10 problems: 5 likelihood mechanics, 3 application problems, and 2 ISI-style sufficiency/UMVUE problems.",
+          feedbackWorkflow: mleEstimationFeedbackWorkflow()
         }
       ]
     },
@@ -8219,7 +8910,8 @@ function competitionMathMaterialWorkspaces() {
           materialTitle: "June 1: Vieta and Polynomial Fundamentals",
           materialUrl: "psets/week-01/june-01-competition-math-vietas-polynomials.html",
           expectedWork: "One-hour session: review the core Vieta pattern, solve 10 scaffolded problems, then write technique-journal notes for missed triggers.",
-          status: "Published"
+          status: "Published",
+          feedbackWorkflow: competitionMathVietaFeedbackWorkflow()
         }
       ]
     }
@@ -8319,6 +9011,117 @@ function conditionalExpectationFeedbackWorkflow() {
       { skill: "conditioning-choice", difficulty: "mechanics", instruction: "For three problems, write only the conditioning variable and why it helps before solving." },
       { skill: "tower-property", difficulty: "mechanics", instruction: "Rewrite the solution in two lines: inner expectation first, outer expectation second." },
       { skill: "hidden-pattern-recognition", difficulty: "hard", instruction: "Try one random-sum problem where the word 'conditional' never appears." }
+    ]
+  });
+}
+
+function orderStatisticsFeedbackWorkflow() {
+  return baseFeedbackWorkflow({
+    id: "feedback-workflow-order-statistics-v1",
+    title: "Structured Feedback: Order Statistics",
+    promptUse: "Use this after reading the submitted solution. Diagnose whether the learner translated min, max, kth value, spacing, or range statements into the correct CDF, density, support, or counting event.",
+    studentSummaryHint: "Summarize whether the learner recognized the order-statistic event and chose the right CDF/PDF or support method.",
+    skills: [
+      { id: "event-translation", label: "Translates sorted-value event" },
+      { id: "cdf-method", label: "Uses CDF/survival method" },
+      { id: "uniform-beta", label: "Recognizes uniform-beta order law" },
+      { id: "density-setup", label: "Sets correct density/support" },
+      { id: "spacings", label: "Handles spacings/ranges" },
+      { id: "integration-control", label: "Controls bounds and integration" },
+      { id: "final-interpretation", label: "States final probability or expectation clearly" }
+    ],
+    rubric: [
+      { criterion: "Pattern recognition", points: 2, cue: "Identified min, max, kth order statistic, joint law, spacing, or range before calculating." },
+      { criterion: "Event translation", points: 2, cue: "Converted the sorted-value statement into an event about the original sample or a support region." },
+      { criterion: "Setup", points: 2, cue: "Selected the correct CDF, survival function, beta density, joint density, or integration bounds." },
+      { criterion: "Calculation", points: 2, cue: "Completed differentiation, integration, or binomial counting without losing constants." },
+      { criterion: "Final answer", points: 2, cue: "Stated the answer on the correct range and included a short interpretation when useful." }
+    ],
+    commonIssues: [
+      "Used the PDF formula before translating the event.",
+      "Confused maximum CDF with minimum CDF.",
+      "Dropped the combinatorial constant in the kth-order density.",
+      "Used incorrect bounds for joint order statistics or range problems.",
+      "Treated an order statistic as if it had the original sample distribution."
+    ],
+    defaultNextDrills: [
+      { skill: "event-translation", difficulty: "mechanics", instruction: "Do three short drills translating max, min, and kth-value events into original-sample events before solving." },
+      { skill: "density-setup", difficulty: "application", instruction: "Write the density/support for two order-statistic problems without integrating yet." },
+      { skill: "spacings", difficulty: "hard", instruction: "Redo one range or spacing problem and mark the support region before setting bounds." }
+    ]
+  });
+}
+
+function mleEstimationFeedbackWorkflow() {
+  return baseFeedbackWorkflow({
+    id: "feedback-workflow-mle-estimation-v1",
+    title: "Structured Feedback: MLE and Estimation",
+    promptUse: "Use this after reading the submitted solution. Diagnose whether the learner set up the likelihood, handled parameter support, found the optimizer, and evaluated estimator quality correctly.",
+    studentSummaryHint: "Summarize whether the learner wrote the likelihood correctly and identified the right optimizer or estimator-quality argument.",
+    skills: [
+      { id: "likelihood-setup", label: "Writes likelihood correctly" },
+      { id: "log-likelihood", label: "Uses log-likelihood cleanly" },
+      { id: "optimizer", label: "Finds optimizer/critical point" },
+      { id: "support-constraint", label: "Handles support and boundaries" },
+      { id: "estimator-quality", label: "Computes bias/MSE/variance" },
+      { id: "sufficiency", label: "Recognizes sufficient statistic" },
+      { id: "rao-blackwell", label: "Uses Rao-Blackwell/UMVUE cue" }
+    ],
+    rubric: [
+      { criterion: "Likelihood setup", points: 2, cue: "Wrote the correct joint likelihood and kept only parameter-relevant factors when simplifying." },
+      { criterion: "Parameter space and support", points: 2, cue: "Checked allowed parameter values, especially support-dependent or constrained cases." },
+      { criterion: "Optimization", points: 2, cue: "Used differentiation, monotonicity, or boundary comparison to find the maximizer." },
+      { criterion: "Estimator quality", points: 2, cue: "Computed or explained bias, MSE, sufficiency, or Rao-Blackwell improvement when requested." },
+      { criterion: "Final answer and justification", points: 2, cue: "Stated the estimator clearly and justified why it is the MLE or improved estimator." }
+    ],
+    commonIssues: [
+      "Dropped support restrictions and treated a boundary problem like a regular derivative problem.",
+      "Maximized the likelihood before removing parameter-free constants.",
+      "Solved for a critical point but forgot to check whether it lies in the parameter space.",
+      "Confused MLE with unbiasedness; an MLE need not be unbiased.",
+      "Identified a sufficient statistic but did not explain why the data enter through it."
+    ],
+    defaultNextDrills: [
+      { skill: "likelihood-setup", difficulty: "mechanics", instruction: "Write only the likelihood and log-likelihood for three models before optimizing." },
+      { skill: "support-constraint", difficulty: "application", instruction: "Do two support-dependent MLE problems and mark the allowed parameter interval first." },
+      { skill: "rao-blackwell", difficulty: "hard", instruction: "Redo one Rao-Blackwell problem by first conditioning on the sufficient statistic and using symmetry." }
+    ]
+  });
+}
+
+function competitionMathVietaFeedbackWorkflow() {
+  return baseFeedbackWorkflow({
+    id: "feedback-workflow-competition-vieta-v1",
+    title: "Structured Feedback: Competition Math Vieta and Polynomials",
+    promptUse: "Use this after reading the submitted solution. Diagnose whether the learner recognized the polynomial/root structure, chose the right Vieta relation or factor move, and kept the algebra justified.",
+    studentSummaryHint: "Summarize whether the learner saw the root-coefficient pattern and used it efficiently.",
+    skills: [
+      { id: "vieta-recognition", label: "Recognizes root-coefficient cue" },
+      { id: "symmetric-expression", label: "Converts symmetric root expressions" },
+      { id: "factor-theorem", label: "Uses factor/remainder theorem" },
+      { id: "root-transformation", label: "Tracks transformed roots" },
+      { id: "algebra-control", label: "Controls expansion and simplification" },
+      { id: "proof-justification", label: "Justifies each identity or factor step" },
+      { id: "technique-journal", label: "Records reusable trigger pattern" }
+    ],
+    rubric: [
+      { criterion: "Pattern recognition", points: 2, cue: "Identified when roots, coefficients, factors, or transformed roots should drive the solution." },
+      { criterion: "Setup", points: 2, cue: "Named the roots/coefficients cleanly and selected the right Vieta, factor theorem, or substitution move." },
+      { criterion: "Algebra execution", points: 2, cue: "Expanded, factored, or simplified without losing signs, powers, or domains." },
+      { criterion: "Justification", points: 2, cue: "Explained why the identity, transformation, or factor conclusion is valid." },
+      { criterion: "Final answer and journal note", points: 2, cue: "Stated the result clearly and wrote a reusable technique note for the trigger." }
+    ],
+    commonIssues: [
+      "Used Vieta mechanically but chose the wrong coefficient relation.",
+      "Did not convert a symmetric expression before substituting root sums/products.",
+      "Lost a sign while transforming roots or forming a new polynomial.",
+      "Applied the factor theorem without checking the polynomial value or multiplicity.",
+      "Did not write the technique-journal trigger after a missed pattern."
+    ],
+    defaultNextDrills: [
+      { skill: "vieta-recognition", difficulty: "mechanics", instruction: "Do three short problems where the only task is to identify the needed Vieta relation before solving." },
+      { skill: "symmetric-expression", difficulty: "application", instruction: "Rewrite two root expressions into sums/products before substituting coefficients." },
+      { skill: "root-transformation", difficulty: "hard", instruction: "Build the polynomial whose roots are transformed from the original roots, and explain each transformation step." }
     ]
   });
 }
@@ -8447,6 +9250,14 @@ function addDays(dateValue, days) {
   const date = new Date(`${dateValue}T00:00:00`);
   date.setDate(date.getDate() + days);
   return date.toISOString().slice(0, 10);
+}
+
+function weekFromDate(dateValue) {
+  if (!dateValue) return 1;
+  const start = new Date("2026-06-01T00:00:00");
+  const date = new Date(`${dateValue}T00:00:00`);
+  if (Number.isNaN(date.getTime())) return 1;
+  return Math.max(1, Math.floor((date - start) / 604800000) + 1);
 }
 
 function formatShortDate(value) {
@@ -8957,10 +9768,15 @@ function submitQuizAttempt(event) {
 function buildQuizFeedback(answers, quiz = null, section = null) {
   const conceptScores = {};
   answers.forEach((answer) => {
-    answer.tags.forEach((tag) => {
-      if (!conceptScores[tag]) conceptScores[tag] = { correct: 0, total: 0 };
-      conceptScores[tag].total += 1;
-      if (answer.isCorrect) conceptScores[tag].correct += 1;
+    const scoredConcepts = new Set([
+      answer.targetConcept,
+      ...(answer.prereqsUsed || []),
+      ...(answer.tags || [])
+    ].filter(Boolean));
+    scoredConcepts.forEach((concept) => {
+      if (!conceptScores[concept]) conceptScores[concept] = { correct: 0, total: 0 };
+      conceptScores[concept].total += 1;
+      if (answer.isCorrect) conceptScores[concept].correct += 1;
     });
   });
 
@@ -9024,7 +9840,7 @@ function buildQuizFeedbackReport({ answers, quiz, section, conceptScores, strong
   const weakLabels = weak.length ? weak : recommendedWork.map((item) => item.label).slice(0, 3);
   const summary = recommendedWork.length
     ? `Main repair area: ${recommendedWork[0].label}. ${readiness.label}`
-    : `Chapter 1 foundations look stable. ${readiness.label}`;
+    : `${graph.chapterTitle} looks stable. ${readiness.label}`;
 
   return {
     chapterId: graph.chapterId,
@@ -9041,15 +9857,20 @@ function buildQuizFeedbackReport({ answers, quiz, section, conceptScores, strong
     conceptMastery,
     prerequisiteBreaks,
     recommendedWork,
-    nextQuizPlan: buildNextQuizPlan(recommendedWork),
+    nextQuizPlan: buildNextQuizPlan(recommendedWork, graph),
     nextAction: recommendedWork[0]
       ? `Next: ${recommendedWork[0].action}`
-      : "Next: try a mixed Chapter 1 review set at difficulty 3."
+      : graph.stableNextAction || `Next: try a mixed ${graph.chapterTitle} review set at difficulty 3.`
   };
 }
 
 function conceptGraphForSection(section) {
   if (section?.id === "gate-da-probability-foundations") return probabilityFoundationConceptGraph();
+  if (section?.id === "gate-da-conditional-probability") return conditionalProbabilityConceptGraph();
+  if (section?.id === "gate-da-random-variables-expectation") return randomVariablesExpectationConceptGraph();
+  if (section?.id === "gate-da-variance-standard-deviation-tail-bounds") return varianceTailBoundsConceptGraph();
+  if (section?.id === "gate-da-joint-distributions") return jointDistributionsConceptGraph();
+  if (section?.id === "gate-da-covariance-correlation") return covarianceCorrelationConceptGraph();
   return null;
 }
 
@@ -9084,15 +9905,16 @@ function buildRecommendedWork(graph, conceptMastery, prerequisiteBreaks) {
     }));
 }
 
-function estimateGateReadiness({ answers, conceptMastery }) {
+function estimateGateReadiness({ answers, conceptMastery, graph }) {
   const totalWeight = answers.reduce((sum, answer) => sum + gateQuestionWeight(answer), 0);
   const earnedWeight = answers.reduce((sum, answer) => sum + (answer.isCorrect ? gateQuestionWeight(answer) : 0), 0);
   const weightedPercent = totalWeight ? Math.round((earnedWeight / totalWeight) * 100) : 0;
   const weakCount = Object.values(conceptMastery).filter((entry) => entry.percent < 60).length;
   const adjusted = Math.max(0, weightedPercent - weakCount * 4);
   const verdict = adjusted >= 80 ? "green" : adjusted >= 60 ? "yellow" : "red";
+  const chapterLabel = graph?.chapterTitle || "this chapter";
   const label = verdict === "green"
-    ? `Early GATE DA readiness signal: ${adjusted}% for Chapter 1 foundations.`
+    ? `Early GATE DA readiness signal: ${adjusted}% for ${chapterLabel}.`
     : verdict === "yellow"
       ? `Early GATE DA readiness signal: ${adjusted}%; repair weak prerequisites before moving difficulty up.`
       : `Early GATE DA readiness signal: ${adjusted}%; return to core prerequisites before mixed review.`;
@@ -9105,17 +9927,17 @@ function gateQuestionWeight(answer) {
   return difficultyWeight * gateWeight;
 }
 
-function buildNextQuizPlan(recommendedWork) {
+function buildNextQuizPlan(recommendedWork, graph = null) {
   const concepts = recommendedWork.length
     ? recommendedWork.map((item) => item.concept)
-    : ["sample-space", "event-translation", "counting"];
+    : graph?.fallbackConcepts || ["sample-space", "event-translation", "counting"];
   return {
     dueInDays: recommendedWork.length ? 2 : 4,
     concepts,
-    difficultyMix: recommendedWork.length ? [1, 1, 2, 2, 3] : [2, 2, 3, 3],
+    difficultyMix: recommendedWork.length ? [1, 1, 2, 2, 3] : graph?.fallbackDifficultyMix || [2, 2, 3, 3],
     instruction: recommendedWork.length
       ? "Retest the highest-priority weak prerequisites first, then add one mixed question."
-      : "Move to a harder mixed Chapter 1 review set."
+      : graph?.fallbackInstruction || "Move to a harder mixed Chapter 1 review set."
   };
 }
 
@@ -9128,10 +9950,31 @@ function conceptLabel(tag) {
     complement: "complements",
     "inclusion-exclusion": "inclusion-exclusion",
     "conditional-probability": "conditional probability",
+    "conditional-denominator": "conditional denominator",
     "multiplication-rule": "multiplication rule",
+    "case-partition": "case partitions",
     "total-probability": "total probability",
     "bayes-theorem": "Bayes' theorem",
+    "bayes-denominator": "Bayes denominator",
+    "bayes-numerator": "Bayes numerator",
     "mutual-exclusivity": "mutual exclusivity",
+    "exclusive-vs-independent": "exclusive versus independent",
+    "random-variable": "random variables",
+    "discrete-variable": "discrete variables",
+    pmf: "PMFs",
+    pdf: "PDFs",
+    "continuous-variable": "continuous variables",
+    "distribution-recognition": "distribution recognition",
+    expectation: "expectation",
+    linearity: "linearity of expectation",
+    "indicator-variable": "indicator variables",
+    "tail-sum": "tail-sum formula",
+    "variance-transformation": "variance under scaling",
+    "bernoulli-variance": "Bernoulli variance",
+    "binomial-variance": "binomial variance",
+    "geometric-variance": "geometric variance",
+    "hypergeometric-variance": "hypergeometric variance",
+    "uniform-variance": "uniform variance",
     variance: "variance",
     "standard-deviation": "standard deviation",
     "second-moment": "second moments",
@@ -9315,6 +10158,7 @@ function renderSubjects() {
       activeTestId = event.currentTarget.dataset.openSectionQuiz;
       showView("tests");
       renderTests();
+      document.querySelector("#active-quiz-card")?.scrollIntoView({ behavior: "smooth", block: "start" });
     });
     container.querySelectorAll("[data-solution-upload]").forEach((input) => {
       input.addEventListener("change", () => savePatternSolutionUpload(input));
@@ -9414,7 +10258,7 @@ function activeQuizTemplate(testId) {
   if (!test || !quiz) return "";
 
   return `
-    <form class="quiz-form" data-quiz-form data-test-id="${test.id}">
+    <form class="quiz-form" id="active-quiz-card" data-quiz-form data-test-id="${test.id}">
       <div class="quiz-header">
         <div>
           <p class="eyebrow">Objective review</p>
@@ -9966,13 +10810,13 @@ function renderGateDaSummary() {
 function renderAssessmentDashboard() {
   const container = document.querySelector("#assessment-dashboard-list");
   if (!container) return;
-  const basicChapterOne = activeGateDaSections().find((section) => section.id === "gate-da-probability-foundations");
-  if (!basicChapterOne) {
+  const assessmentSections = activeGateDaSections().filter((section) => conceptGraphForSection(section));
+  if (!assessmentSections.length) {
     container.innerHTML = `
       <article class="item">
         <div>
           <h4>Assessment model pending for this plan</h4>
-          <p>Prerequisite-graph reporting is currently wired for the Basic Probability Chapter 1 review quiz.</p>
+          <p>Prerequisite-graph reporting is not wired for this plan yet.</p>
         </div>
       </article>
     `;
@@ -9980,7 +10824,7 @@ function renderAssessmentDashboard() {
   }
 
   const attempts = state.quizAttempts
-    .filter((attempt) => attempt.sectionId === basicChapterOne.id)
+    .filter((attempt) => assessmentSections.some((section) => section.id === attempt.sectionId))
     .sort((a, b) => b.date.localeCompare(a.date));
 
   if (!attempts.length) {
@@ -9988,21 +10832,35 @@ function renderAssessmentDashboard() {
       <article class="item assessment-card">
         <div class="item-top">
           <div>
-            <h4>Probability Chapter 1 readiness not measured yet</h4>
-            <p>Take the Chapter 1 Objective Review to generate concept mastery, prerequisite breaks, repair work, and an early GATE DA readiness signal.</p>
+            <h4>Basic Probability readiness not measured yet</h4>
+            <p>Take the Chapter 1 or Chapter 2 Objective Review to generate concept mastery, prerequisite breaks, repair work, and an early GATE DA readiness signal.</p>
           </div>
           <span class="tag">No attempts</span>
         </div>
+        <div class="assessment-next-list">
+          ${assessmentSections.map((section) => {
+            const test = state.tests.find((entry) => entry.sectionId === section.id);
+            return `<button class="small-btn" data-start-assessment-test="${escapeHtml(test?.id || "")}" type="button"${test ? "" : " disabled"}>${escapeHtml(section.chapter)} review quiz</button>`;
+          }).join("")}
+        </div>
       </article>
     `;
+    container.querySelectorAll("[data-start-assessment-test]").forEach((button) => {
+      button.addEventListener("click", () => {
+        activeTestId = button.dataset.startAssessmentTest;
+        showView("tests");
+        renderTests();
+      });
+    });
     return;
   }
 
   const latest = attempts[0];
+  const section = assessmentSections.find((entry) => entry.id === latest.sectionId);
   const report = latest.feedback?.report || buildQuizFeedbackReport({
     answers: latest.answers || [],
     quiz: { id: latest.quizId, title: latest.title },
-    section: basicChapterOne,
+    section,
     conceptScores: latest.feedback?.conceptScores || {},
     strong: latest.feedback?.strong || [],
     developing: latest.feedback?.developing || [],
@@ -10087,19 +10945,21 @@ function renderGateDaWorkspace() {
   const accountTypeId = activeAccountTypeId();
 
   if (accountTypeId === "gate-da-basic") {
+    const practiceCount = sections.reduce((total, section) => total + (section.practiceProblems?.length || 0), 0);
+    const quizCount = sections.filter((section) => section.reviewQuiz).length;
     container.innerHTML = `
       <article class="item workspace-summary">
         <div class="item-top">
           <div>
             <h4>GATE DA Basic Workspace</h4>
-            <p>Basic account workspace for the current GATE DA material. Use this plan to inspect Subjects -> Probability -> Chapters 1-10, practice, and objective reviews.</p>
+            <p>Basic account workspace for the current GATE DA material. Use this plan to inspect Subjects -> Probability -> Chapters 1-10, labelled practice, and objective review quizzes including Chapter 2 Conditional Probability.</p>
           </div>
           <span class="tag">${escapeHtml(gateDaEnrollment.paymentStatus || "active")}</span>
         </div>
         <div class="workspace-counts">
           <span>${sections.length} chapters</span>
-          <span>${sections[0]?.practiceProblems.length || 0} practice problems</span>
-          <span>conceptual review</span>
+          <span>${practiceCount} practice problems</span>
+          <span>${quizCount} objective review quizzes</span>
           <span>worked solutions</span>
         </div>
       </article>
@@ -10731,6 +11591,7 @@ function renderWeekOptions() {
 
 function renderTaskList() {
   const board = document.querySelector("#task-list-board");
+  renderTaskAlerts();
   const selectedWeek = Number(document.querySelector("#week-select").value || 1);
   const groups = [
     ["todo", "To do"],
@@ -10797,6 +11658,8 @@ function renderCurrentTasks() {
   const week = currentWeekNumber();
   const tasks = state.tasks
     .filter((task) => task.week === week)
+    .filter((task) => task.status !== "completed")
+    .sort((a, b) => taskDueSortValue(a) - taskDueSortValue(b))
     .slice(0, 6);
 
   if (!tasks.length) {
@@ -10809,6 +11672,12 @@ function renderCurrentTasks() {
 
 function taskRowTemplate(task) {
   const checked = task.done ? "checked" : "";
+  const dueState = taskDueState(task);
+  const scheduleItem = linkedScheduleForTask(task);
+  const dueDate = taskDueDate(task);
+  const scheduleMeta = scheduleItem
+    ? `<small>Schedule: ${escapeHtml(scheduleItem.kind || kindFromTitle(scheduleItem.title))} - ${formatDate(scheduleItem.date)}</small>`
+    : "";
   const completeButton = task.status === "completed"
     ? ""
     : `<button class="small-btn" data-task-complete="${task.id}" type="button">Move to completed</button>`;
@@ -10821,12 +11690,14 @@ function taskRowTemplate(task) {
         <input type="checkbox" data-task-done="${task.id}" ${checked}>
         <span>
           <strong>${escapeHtml(task.title)}</strong>
-          <small>${escapeHtml(task.type)} - ${formatDate(task.date)}</small>
+          <small>${escapeHtml(task.type)} - ${dueDate ? formatDate(dueDate) : "No due date"}</small>
+          ${scheduleMeta}
         </span>
       </label>
       <p>${escapeHtml(task.details)}</p>
       <div class="task-row-actions">
         <span class="tag">${escapeHtml(statusLabel(task.status))}</span>
+        <span class="tag due-tag ${escapeHtml(dueState.className)}">${escapeHtml(dueState.label)}</span>
         ${completeButton}
         ${incompleteButton}
       </div>
@@ -10835,14 +11706,16 @@ function taskRowTemplate(task) {
 }
 
 function taskSummaryTemplate(task) {
+  const dueState = taskDueState(task);
+  const dueDate = taskDueDate(task);
   return `
     <article class="item">
       <div class="item-top">
         <div>
           <h4>${escapeHtml(task.title)}</h4>
-          <p>${escapeHtml(task.type)} - ${escapeHtml(statusLabel(task.status))}</p>
+          <p>${escapeHtml(task.type)} - ${escapeHtml(statusLabel(task.status))} - ${escapeHtml(dueState.label)}</p>
         </div>
-        <span class="tag">${formatDate(task.date)}</span>
+        <span class="tag">${dueDate ? formatDate(dueDate) : "No due date"}</span>
       </div>
     </article>
   `;
@@ -10851,11 +11724,9 @@ function taskSummaryTemplate(task) {
 function setTaskStatus(id, status) {
   const task = state.tasks.find((entry) => entry.id === id);
   if (!task) return;
-  if (status === "completed" && !task.done) {
-    alert("Check Done before moving this task to Completed.");
-    return;
-  }
   task.status = status;
+  if (status === "completed") task.done = true;
+  if (status !== "completed") task.done = false;
   task.updatedAt = new Date().toISOString();
   persist();
   render();
@@ -10877,6 +11748,10 @@ function normalizeTaskStatuses() {
     if (task.status === "doing") task.status = "todo";
     if (!["todo", "completed", "not-completed"].includes(task.status)) task.status = "todo";
     if (typeof task.done !== "boolean") task.done = task.status === "completed";
+    if (!task.scheduleId) {
+      const linkedSchedule = linkedScheduleForTask(task);
+      if (linkedSchedule) task.scheduleId = linkedSchedule.id;
+    }
   });
 }
 
@@ -10899,6 +11774,180 @@ function renderUpcoming() {
     .sort((a, b) => a.date.localeCompare(b.date))
     .slice(0, 5);
   renderList("upcoming-list", upcoming, "schedule");
+}
+
+function renderTaskAlerts() {
+  const panel = document.querySelector("#task-alert-panel");
+  if (!panel) return;
+  const alerts = taskScheduleAlerts();
+  const hasDueWork = alerts.overdue.length || alerts.dueToday.length;
+  const emailStatus = state.user.lastOverdueEmailAt
+    ? `Last reminder sent ${formatDate(state.user.lastOverdueEmailAt.slice(0, 10))}.`
+    : "No overdue reminder sent yet.";
+
+  panel.innerHTML = `
+    <div class="task-alert-copy">
+      <strong>${hasDueWork ? "Due-work monitor" : "Due-work monitor is clear"}</strong>
+      <p>${alerts.overdue.length} overdue, ${alerts.dueToday.length} due today, ${alerts.upcoming.length} upcoming in the next two days. These counts are computed from linked schedule dates.</p>
+      <p class="fine-print">${escapeHtml(emailStatus)}</p>
+    </div>
+    <div class="task-alert-actions">
+      <span class="tag due-overdue">${alerts.overdue.length} overdue</span>
+      <span class="tag due-today">${alerts.dueToday.length} due today</span>
+      <button class="small-btn" data-send-overdue-email type="button" ${alerts.overdue.length ? "" : "disabled"}>Send overdue email</button>
+    </div>
+    ${alerts.overdue.length ? `<div class="task-alert-list">${alerts.overdue.slice(0, 4).map(taskAlertTemplate).join("")}</div>` : ""}
+  `;
+
+  const sendButton = panel.querySelector("[data-send-overdue-email]");
+  if (sendButton) sendButton.addEventListener("click", sendOverdueEmail);
+}
+
+function taskAlertTemplate(task) {
+  const scheduleItem = linkedScheduleForTask(task);
+  const date = taskDueDate(task);
+  return `
+    <article>
+      <strong>${escapeHtml(task.title)}</strong>
+      <span>${date ? formatDate(date) : "No due date"}${scheduleItem ? ` - ${escapeHtml(scheduleItem.kind || "Schedule")}` : ""}</span>
+    </article>
+  `;
+}
+
+function taskScheduleAlerts() {
+  const activeTasks = state.tasks
+    .filter((task) => task.status !== "completed")
+    .filter((task) => task.date || linkedScheduleForTask(task)?.date);
+  return {
+    overdue: activeTasks.filter((task) => taskDueState(task).status === "overdue"),
+    dueToday: activeTasks.filter((task) => taskDueState(task).status === "due-today"),
+    upcoming: activeTasks.filter((task) => taskDueState(task).status === "upcoming")
+  };
+}
+
+function linkedScheduleForTask(task) {
+  if (!task) return null;
+  if (task.scheduleId) {
+    const direct = state.schedule.find((item) => item.id === task.scheduleId);
+    if (direct) return direct;
+  }
+
+  const taskDate = task.date || "";
+  const taskWeek = task.week || weekFromDate(taskDate);
+  return state.schedule.find((item) => {
+    if ((item.week || weekFromDate(item.date)) !== taskWeek) return false;
+    if (taskDate && item.date !== taskDate) return false;
+    const taskType = (task.type || "").toLowerCase();
+    const itemKind = (item.kind || kindFromTitle(item.title)).toLowerCase();
+    if (taskType && itemKind && (taskType.includes(itemKind) || itemKind.includes(taskType))) return true;
+    const taskTitle = (task.title || "").toLowerCase();
+    return taskTitle.includes((item.subject || "").toLowerCase().slice(0, 8));
+  }) || null;
+}
+
+function taskDueState(task) {
+  if (task.status === "completed") return { status: "completed", label: "Completed", className: "due-completed" };
+  const date = taskDueDate(task);
+  if (!date) return { status: "unscheduled", label: "No due date", className: "due-unscheduled" };
+
+  const today = todayDateString();
+  if (date < today) return { status: "overdue", label: "Overdue", className: "due-overdue" };
+  if (date === today) return { status: "due-today", label: "Due today", className: "due-today" };
+  if (date <= addDays(today, 2)) return { status: "upcoming", label: "Upcoming", className: "due-upcoming" };
+  return { status: "scheduled", label: "Scheduled", className: "due-scheduled" };
+}
+
+function taskDueSortValue(task) {
+  const rank = { overdue: 0, "due-today": 1, upcoming: 2, scheduled: 3, unscheduled: 4, completed: 5 };
+  const dueState = taskDueState(task);
+  return (rank[dueState.status] || 9) * 100000000 + Number((taskDueDate(task) || "9999-12-31").replaceAll("-", ""));
+}
+
+function taskDueDate(task) {
+  const scheduleItem = linkedScheduleForTask(task);
+  return scheduleItem?.date || task.date || "";
+}
+
+function todayDateString() {
+  const today = new Date();
+  const year = today.getFullYear();
+  const month = String(today.getMonth() + 1).padStart(2, "0");
+  const day = String(today.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
+}
+
+async function sendOverdueEmail() {
+  const alerts = taskScheduleAlerts();
+  const overdue = alerts.overdue.slice(0, 12);
+  if (!overdue.length) return;
+  const email = state.user.email || "";
+  if (!email) {
+    alert("Add the learner email in Share and Updates before sending overdue reminders.");
+    return;
+  }
+
+  const panel = document.querySelector("#task-alert-panel");
+  const button = panel?.querySelector("[data-send-overdue-email]");
+  if (button) {
+    button.disabled = true;
+    button.textContent = "Sending...";
+  }
+
+  const overdueItems = overdue.map((task) => {
+    const scheduleItem = linkedScheduleForTask(task);
+    return {
+      title: task.title,
+      dueDate: taskDueDate(task),
+      type: task.type || scheduleItem?.kind || "Task",
+      scheduleTitle: scheduleItem?.title || ""
+    };
+  });
+
+  try {
+    const result = await fetch("/api/send-overdue", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        email,
+        name: state.user.displayName || state.user.name,
+        overdueItems,
+        appUrl: window.location.origin
+      })
+    });
+
+    if (result.ok) {
+      state.user.lastOverdueEmailAt = new Date().toISOString();
+      persist();
+      renderTaskAlerts();
+      return;
+    }
+  } catch {
+    // Fall through to a local mail draft in dev or when Vercel email is not configured.
+  }
+
+  draftOverdueEmail(email, overdueItems);
+  if (button) {
+    button.disabled = false;
+    button.textContent = "Send overdue email";
+  }
+}
+
+function draftOverdueEmail(email, overdueItems) {
+  const subject = "Aleph overdue task reminder";
+  const body = [
+    `Hi ${state.user.displayName || state.user.name},`,
+    "",
+    "These Aleph tasks are overdue:",
+    "",
+    ...overdueItems.map((item) => `- ${item.title} (${item.type}, due ${item.dueDate || "date not set"})`),
+    "",
+    `Open your workspace: ${window.location.origin}`,
+    "",
+    "Aleph"
+  ].join("\n");
+  window.location.href = `mailto:${encodeURIComponent(email)}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
 }
 
 function renderActivity() {

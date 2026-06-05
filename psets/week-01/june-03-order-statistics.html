@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>June 3 Pset — Order Statistics</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" />
+  <link rel="stylesheet" href="/psets/material-page.css" />
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+  <script defer src="/psets/material-page.js"></script>
+</head>
+<body>
+  <main class="wrap">
+    <section class="hero">
+      <h1>June 3: Order Statistics</h1>
+      <p class="sub">
+        Ten problems for learning how sorted samples behave. The main habit is to turn a statement about the minimum, maximum, or kth value into a counting or CDF statement about the original sample.
+      </p>
+      <div class="meta">
+        <span class="chip">Probability and Statistics</span>
+        <span class="chip">Wednesday</span>
+        <span class="chip">5 concept builders</span>
+        <span class="chip">3 applications</span>
+        <span class="chip">2 challenge problems</span>
+        <span class="chip">Solutions included</span>
+      </div>
+      <p class="math-fallback">Math rendering did not load from the CDN. Refresh once, or use a network that allows KaTeX CDN files.</p>
+    </section>
+
+    <section class="panel accent">
+      <h2>Core Pattern</h2>
+      <p>Start with independent samples \(X_1,\ldots,X_n\). Sort them:</p>
+      <div class="formula">
+        \[
+          X_{(1)} \le X_{(2)} \le \cdots \le X_{(n)}.
+        \]
+      </div>
+      <p>The smallest value is \(X_{(1)}\). The largest value is \(X_{(n)}\). The kth order statistic is \(X_{(k)}\).</p>
+      <p>For many problems, do not try to write the density first. Translate the event into a statement about how many original observations fall below a cutoff.</p>
+    </section>
+
+    <section class="panel">
+      <h2>Recognition Guide</h2>
+      <div class="grid">
+        <ul>
+          <li>For the maximum, use \(P(X_{(n)}\le x)=P(X_1\le x,\ldots,X_n\le x)\).</li>
+          <li>For the minimum, use \(P(X_{(1)}>x)=P(X_1>x,\ldots,X_n>x)\).</li>
+          <li>For the kth value, count how many observations are at most \(x\).</li>
+        </ul>
+        <ul>
+          <li>For Uniform\((0,1)\), \(X_{(k)}\) has a beta shape.</li>
+          <li>For exponential samples, spacings between sorted values have useful exponential laws.</li>
+          <li>For joint order statistics, first draw the region \(0<u<v<1\).</li>
+        </ul>
+      </div>
+    </section>
+
+    <div class="section-label">Problems 1-5 · Concept Builders</div>
+
+    <article class="problem">
+      <div class="problem-head">
+        <div class="problem-title">1. Maximum by the CDF Method</div>
+        <div class="tags">
+          <span class="tag concept">Concept</span>
+          <span class="tag">Maximum</span>
+          <span class="tag">6 min</span>
+        </div>
+      </div>
+      <p>Let \(X_1,\ldots,X_5\) be independent Uniform\((0,1)\). Let \(M=X_{(5)}\). Find \(P(M\le m)\) for \(0\le m\le1\), and then find the density of \(M\).</p>
+      <details>
+        <summary>Solution</summary>
+        <p>The event \(M\le m\) means every sample value is at most \(m\).</p>
+        \[
+          P(M\le m)=P(X_1\le m,\ldots,X_5\le m).
+        \]
+        <p>The variables are independent, and each has probability \(m\) of being at most \(m\). So</p>
+        \[
+          P(M\le m)=m^5,\qquad 0\le m\le 1.
+        \]
+        <p>Differentiate the CDF to get the density:</p>
+        \[
+          f_M(m)=5m^4,\qquad 0<m<1.
+        \]
+      </details>
+    </article>
+
+    <article class="problem">
+      <div class="problem-head">
+        <div class="problem-title">2. Minimum by the Survival Method</div>
+        <div class="tags">
+          <span class="tag concept">Concept</span>
+          <span class="tag">Minimum</span>
+          <span class="tag">6 min</span>
+        </div>
+      </div>
+      <p>Let \(X_1,\ldots,X_4\) be independent Uniform\((0,1)\). Let \(L=X_{(1)}\). Find \(P(L>t)\) and \(P(L\le t)\) for \(0\le t\le1\).</p>
+      <details>
+        <summary>Solution</summary>
+        <p>The event \(L>t\) means the smallest sample value is above \(t\). That can happen only if all four observations are above \(t\).</p>
+        \[
+          P(L>t)=P(X_1>t,\ldots,X_4>t).
+        \]
+        <p>Each observation is above \(t\) with probability \(1-t\). By independence,</p>
+        \[
+          P(L>t)=(1-t)^4.
+        \]
+        <p>Therefore the CDF is</p>
+        \[
+          P(L\le t)=1-(1-t)^4.
+        \]
+      </details>
+    </article>
+
+    <article class="problem">
+      <div class="problem-head">
+        <div class="problem-title">3. Median of Three Uniforms</div>
+        <div class="tags">
+          <span class="tag concept">Concept</span>
+          <span class="tag">kth order statistic</span>
+          <span class="tag">8 min</span>
+        </div>
+      </div>
+      <p>Let \(X_1,X_2,X_3\) be independent Uniform\((0,1)\). Let \(Y=X_{(2)}\), the middle value. Find \(P(Y\le y)\) for \(0\le y\le1\).</p>
+      <details>
+        <summary>Solution</summary>
+        <p>The middle value is at most \(y\) when at least two observations are at most \(y\).</p>
+        <p>The count of observations at most \(y\) is Binomial\((3,y)\). So</p>
+        \[
+          P(Y\le y)=P(\operatorname{Binomial}(3,y)\ge2).
+        \]
+        <p>There are two cases: exactly two are at most \(y\), or all three are at most \(y\).</p>
+        \[
+          P(Y\le y)=\binom32y^2(1-y)+y^3=3y^2(1-y)+y^3.
+        \]
+        <p>Simplify:</p>
+        \[
+          P(Y\le y)=3y^2-2y^3.
+        \]
+      </details>
+    </article>
+
+    <article class="problem">
+      <div class="problem-head">
+        <div class="problem-title">4. Density of the kth Uniform Order Statistic</div>
+        <div class="tags">
+          <span class="tag concept">Concept</span>
+          <span class="tag">Beta link</span>
+          <span class="tag">9 min</span>
+        </div>
+      </div>
+      <p>Let \(U_{(k)}\) be the kth order statistic from \(n\) independent Uniform\((0,1)\) samples. Write the density of \(U_{(k)}\).</p>
+      <details>
+        <summary>Solution</summary>
+        <p>For \(U_{(k)}\) to be near \(u\), we need \(k-1\) observations below \(u\), one observation near \(u\), and \(n-k\) observations above \(u\).</p>
+        <p>The density is</p>
+        \[
+          f_{U_{(k)}}(u)
+          =
+          \frac{n!}{(k-1)!(n-k)!}
+          u^{k-1}(1-u)^{n-k},
+          \qquad 0<u<1.
+        \]
+        <p>This is the Beta\((k,n-k+1)\) density.</p>
+      </details>
+    </article>
+
+    <article class="problem">
+      <div class="problem-head">
+        <div class="problem-title">5. Expected Maximum of Uniform Samples</div>
+        <div class="tags">
+          <span class="tag concept">Concept</span>
+          <span class="tag">Expectation</span>
+          <span class="tag">8 min</span>
+        </div>
+      </div>
+      <p>Let \(M=X_{(n)}\) be the maximum of \(n\) independent Uniform\((0,1)\) observations. Find \(E[M]\).</p>
+      <details>
+        <summary>Solution</summary>
+        <p>From the maximum CDF method, \(F_M(m)=m^n\) on \(0\le m\le1\). The density is</p>
+        \[
+          f_M(m)=nm^{n-1}.
+        \]
+        <p>Now compute the expectation:</p>
+        \[
+          E[M]=\int_0^1 m\cdot nm^{n-1}\,dm
+          =n\int_0^1m^n\,dm
+          =\frac{n}{n+1}.
+        \]
+      </details>
+    </article>
+
+    <div class="section-label">Problems 6-8 · Applications</div>
+
+    <article class="problem">
+      <div class="problem-head">
+        <div class="problem-title">6. Third Smallest Arrival Time</div>
+        <div class="tags">
+          <span class="tag integration">Application</span>
+          <span class="tag">Uniform beta</span>
+          <span class="tag">12 min</span>
+        </div>
+      </div>
+      <p>Five students arrive independently at random times between 0 and 1 hour. Let \(T\) be the third arrival time. Find the density of \(T\) and \(E[T]\).</p>
+      <details>
+        <summary>Solution</summary>
+        <p>The third arrival time is the third order statistic from \(n=5\) uniform samples. So \(k=3\).</p>
+        \[
+          f_T(t)=\frac{5!}{2!2!}t^2(1-t)^2=30t^2(1-t)^2,
+          \qquad 0<t<1.
+        \]
+        <p>A Uniform\((0,1)\) kth order statistic has mean</p>
+        \[
+          E[U_{(k)}]=\frac{k}{n+1}.
+        \]
+        <p>Here \(k=3\) and \(n=5\), so</p>
+        \[
+          E[T]=\frac{3}{6}=\frac12.
+        \]
+      </details>
+    </article>
+
+    <article class="problem">
+      <div class="problem-head">
+        <div class="problem-title">7. Exponential Minimum</div>
+        <div class="tags">
+          <span class="tag integration">Application</span>
+          <span class="tag">Exponential race</span>
+          <span class="tag">12 min</span>
+        </div>
+      </div>
+      <p>Let \(X_1,\ldots,X_n\) be independent Exponential\((\lambda)\) random variables. Let \(L=X_{(1)}\). Find \(P(L>t)\), identify the distribution of \(L\), and find \(E[L]\).</p>
+      <details>
+        <summary>Solution</summary>
+        <p>The minimum is greater than \(t\) only if every observation is greater than \(t\).</p>
+        \[
+          P(L>t)=P(X_1>t,\ldots,X_n>t).
+        \]
+        <p>For one exponential variable, \(P(X_i>t)=e^{-\lambda t}\). By independence,</p>
+        \[
+          P(L>t)=e^{-n\lambda t}.
+        \]
+        <p>This is the survival function of an Exponential\((n\lambda)\) random variable. Therefore</p>
+        \[
+          L\sim \operatorname{Exponential}(n\lambda),
+          \qquad
+          E[L]=\frac{1}{n\lambda}.
+        \]
+      </details>
+    </article>
+
+    <article class="problem">
+      <div class="problem-head">
+        <div class="problem-title">8. Joint Density of Two Uniform Order Statistics</div>
+        <div class="tags">
+          <span class="tag integration">Application</span>
+          <span class="tag">Joint law</span>
+          <span class="tag">15 min</span>
+        </div>
+      </div>
+      <p>Let \(U_{(i)}\) and \(U_{(j)}\) be order statistics from \(n\) independent Uniform\((0,1)\) observations, with \(i<j\). Write their joint density for \(0<u<v<1\).</p>
+      <details>
+        <summary>Solution</summary>
+        <p>We split the sample into five pieces:</p>
+        <ul>
+          <li>\(i-1\) observations below \(u\),</li>
+          <li>one observation near \(u\),</li>
+          <li>\(j-i-1\) observations between \(u\) and \(v\),</li>
+          <li>one observation near \(v\),</li>
+          <li>\(n-j\) observations above \(v\).</li>
+        </ul>
+        <p>The joint density is</p>
+        <div class="formula">
+          \[
+            f_{U_{(i)},U_{(j)}}(u,v)
+            =
+            \frac{n!}{(i-1)!(j-i-1)!(n-j)!}
+            u^{i-1}(v-u)^{j-i-1}(1-v)^{n-j}
+          \]
+        </div>
+        <p>for \(0<u<v<1\).</p>
+      </details>
+    </article>
+
+    <div class="section-label">Problems 9-10 · Challenge</div>
+
+    <article class="problem">
+      <div class="problem-head">
+        <div class="problem-title">9. Hidden Minimum in a Coverage Problem</div>
+        <div class="tags">
+          <span class="tag challenge">Challenge</span>
+          <span class="tag">Hidden order statistic</span>
+          <span class="tag">18 min</span>
+        </div>
+      </div>
+      <p>Choose \(n\) points independently and uniformly from \([0,1]\). Let \(L\) be the smallest chosen point. Find the expected length of the interval from 0 to the first chosen point.</p>
+      <details>
+        <summary>Solution</summary>
+        <p>The interval from 0 to the first chosen point has length \(L=X_{(1)}\), the minimum order statistic.</p>
+        <p>For the minimum, use the survival function:</p>
+        \[
+          P(L>t)=(1-t)^n,\qquad 0\le t\le1.
+        \]
+        <p>For a nonnegative variable on \([0,1]\),</p>
+        \[
+          E[L]=\int_0^1 P(L>t)\,dt.
+        \]
+        <p>So</p>
+        \[
+          E[L]=\int_0^1(1-t)^n\,dt=\frac{1}{n+1}.
+        \]
+        <p>The expected first gap is \(1/(n+1)\).</p>
+      </details>
+    </article>
+
+    <article class="problem">
+      <div class="problem-head">
+        <div class="problem-title">10. ISI-Style Range of Uniform Points</div>
+        <div class="tags">
+          <span class="tag isi">ISI-style</span>
+          <span class="tag">Range</span>
+          <span class="tag">22 min</span>
+        </div>
+      </div>
+      <p>Let \(X_1,\ldots,X_n\) be independent Uniform\((0,1)\). Let \(R=X_{(n)}-X_{(1)}\) be the sample range. Find \(P(R\le r)\) for \(0\le r\le1\).</p>
+      <details>
+        <summary>Solution</summary>
+        <p>Use the joint density of the minimum \(U=X_{(1)}\) and maximum \(V=X_{(n)}\):</p>
+        \[
+          f_{U,V}(u,v)=n(n-1)(v-u)^{n-2},
+          \qquad 0<u<v<1.
+        \]
+        <p>The event \(R\le r\) means \(v-u\le r\).</p>
+        <p>It is easier to integrate over the range length \(s=v-u\). For a fixed \(s\), the left endpoint \(u\) can run from \(0\) to \(1-s\). Therefore</p>
+        \[
+          P(R\le r)=
+          \int_0^r\int_0^{1-s} n(n-1)s^{n-2}\,du\,ds.
+        \]
+        <p>The inner integral contributes \(1-s\):</p>
+        \[
+          P(R\le r)=n(n-1)\int_0^r s^{n-2}(1-s)\,ds.
+        \]
+        <p>Compute the integral:</p>
+        \[
+          P(R\le r)
+          =
+          n(n-1)\left(\frac{r^{n-1}}{n-1}-\frac{r^n}{n}\right)
+          =
+          nr^{n-1}-(n-1)r^n.
+        \]
+      </details>
+    </article>
+
+    <div class="section-label">Answer Summary</div>
+    <section class="panel">
+      <ol>
+        <li>\(F_M(m)=m^5\), \(f_M(m)=5m^4\).</li>
+        <li>\(P(L>t)=(1-t)^4\), \(P(L\le t)=1-(1-t)^4\).</li>
+        <li>\(P(Y\le y)=3y^2-2y^3\).</li>
+        <li>\(f_{U_{(k)}}(u)=\frac{n!}{(k-1)!(n-k)!}u^{k-1}(1-u)^{n-k}\).</li>
+        <li>\(E[X_{(n)}]=n/(n+1)\).</li>
+        <li>\(f_T(t)=30t^2(1-t)^2\), \(E[T]=1/2\).</li>
+        <li>\(X_{(1)}\sim\operatorname{Exponential}(n\lambda)\), \(E[X_{(1)}]=1/(n\lambda)\).</li>
+        <li>Use the joint density with powers \(u^{i-1}\), \((v-u)^{j-i-1}\), and \((1-v)^{n-j}\).</li>
+        <li>\(E[L]=1/(n+1)\).</li>
+        <li>\(P(R\le r)=nr^{n-1}-(n-1)r^n\).</li>
+      </ol>
+    </section>
+  </main>
+</body>
+</html>

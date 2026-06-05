@@ -94,4 +94,6 @@ For JavaScript changes:
 ```bash
 node --check app.js
 node --check service-worker.js
+node scripts/verify-review-quizzes.mjs
+node scripts/judge-material-quality.mjs
 ```

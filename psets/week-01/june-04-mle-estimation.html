@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>June 4 Pset — MLE and Estimation</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" />
+  <link rel="stylesheet" href="/psets/material-page.css" />
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+  <script defer src="/psets/material-page.js"></script>
+</head>
+<body>
+  <main class="wrap">
+    <section class="hero">
+      <h1>June 4: MLE and Estimation</h1>
+      <p class="sub">
+        Ten problems for learning the MLE habit: write the likelihood, remove constants, find where the likelihood is largest, then check what the estimator is good or weak at estimating.
+      </p>
+      <div class="meta">
+        <span class="chip">Probability and Statistics</span>
+        <span class="chip">Thursday</span>
+        <span class="chip">5 mechanics problems</span>
+        <span class="chip">3 applications</span>
+        <span class="chip">2 ISI-style problems</span>
+        <span class="chip">Solutions included</span>
+      </div>
+      <p class="math-fallback">Math rendering did not load from the CDN. Refresh once, or use a network that allows KaTeX CDN files.</p>
+    </section>
+
+    <section class="panel accent">
+      <h2>Core Pattern</h2>
+      <p>The maximum likelihood estimator is the parameter value that makes the observed data most likely.</p>
+      <div class="formula">
+        \[
+          L(\theta)=\prod_{i=1}^n f_\theta(x_i),
+          \qquad
+          \hat\theta=\operatorname*{arg\,max}_\theta L(\theta).
+        \]
+      </div>
+      <p>For regular problems, maximize the log-likelihood by differentiation. For support-dependent problems, first find which parameter values make the sample possible.</p>
+    </section>
+
+    <section class="panel">
+      <h2>Checklist</h2>
+      <div class="grid">
+        <ul>
+          <li>Write the sample likelihood.</li>
+          <li>Drop factors that do not depend on the parameter.</li>
+          <li>Use the log-likelihood when products are messy.</li>
+        </ul>
+        <ul>
+          <li>Check the parameter space and support restrictions.</li>
+          <li>For boundaries, compare endpoints and critical points.</li>
+          <li>After estimating, compute bias, variance, or MSE if asked.</li>
+        </ul>
+      </div>
+    </section>
+
+    <div class="section-label">Problems 1-5 · Mechanics</div>
+
+    <article class="problem">
+      <div class="problem-head">
+        <div class="problem-title">1. Bernoulli Likelihood</div>
+        <div class="tags">
+          <span class="tag concept">Mechanics</span>
+          <span class="tag">Bernoulli MLE</span>
+          <span class="tag">6 min</span>
+        </div>
+      </div>
+      <p>Let \(X_1,\ldots,X_n\) be independent Bernoulli\((p)\). If \(\sum_{i=1}^n X_i=s\), find the MLE of \(p\).</p>
+      <details>
+        <summary>Solution</summary>
+        <p>The likelihood is</p>
+        \[
+          L(p)=p^s(1-p)^{n-s},\qquad 0<p<1.
+        \]
+        <p>The log-likelihood is</p>
+        \[
+          \ell(p)=s\log p+(n-s)\log(1-p).
+        \]
+        <p>Differentiate and set equal to zero:</p>
+        \[
+          \ell'(p)=\frac{s}{p}-\frac{n-s}{1-p}=0.
+        \]
+        <p>This gives \(s(1-p)=(n-s)p\), so \(s=np\). Therefore</p>
+        \[
+          \hat p=\frac{s}{n}=\bar X.
+        \]
+      </details>
+    </article>
+
+    <article class="problem">
+      <div class="problem-head">
+        <div class="problem-title">2. Exponential Rate</div>
+        <div class="tags">
+          <span class="tag concept">Mechanics</span>
+          <span class="tag">Log-likelihood</span>
+          <span class="tag">7 min</span>
+        </div>
+      </div>
+      <p>Let \(X_1,\ldots,X_n\) be independent Exponential\((\lambda)\), with density \(f(x)=\lambda e^{-\lambda x}\) for \(x>0\). Find the MLE of \(\lambda\).</p>
+      <details>
+        <summary>Solution</summary>
+        <p>The likelihood is</p>
+        \[
+          L(\lambda)=\lambda^n e^{-\lambda\sum x_i},\qquad \lambda>0.
+        \]
+        <p>The log-likelihood is</p>
+        \[
+          \ell(\lambda)=n\log\lambda-\lambda\sum x_i.
+        \]
+        <p>Differentiate:</p>
+        \[
+          \ell'(\lambda)=\frac{n}{\lambda}-\sum x_i.
+        \]
+        <p>Set this equal to zero:</p>
+        \[
+          \hat\lambda=\frac{n}{\sum x_i}=\frac{1}{\bar X}.
+        \]
+      </details>
+    </article>
+
+    <article class="problem">
+      <div class="problem-head">
+        <div class="problem-title">3. Normal Mean With Known Variance</div>
+        <div class="tags">
+          <span class="tag concept">Mechanics</span>
+          <span class="tag">Normal MLE</span>
+          <span class="tag">8 min</span>
+        </div>
+      </div>
+      <p>Let \(X_1,\ldots,X_n\) be independent Normal\((\mu,\sigma^2)\), where \(\sigma^2\) is known. Find the MLE of \(\mu\).</p>
+      <details>
+        <summary>Solution</summary>
+        <p>Only the squared-error part of the likelihood depends on \(\mu\). The log-likelihood equals a constant minus</p>
+        \[
+          \frac{1}{2\sigma^2}\sum_{i=1}^n (x_i-\mu)^2.
+        \]
+        <p>So maximizing the likelihood is the same as minimizing</p>
+        \[
+          \sum_{i=1}^n (x_i-\mu)^2.
+        \]
+        <p>Differentiate the sum of squares:</p>
+        \[
+          \frac{d}{d\mu}\sum_{i=1}^n(x_i-\mu)^2
+          =
+          -2\sum_{i=1}^n(x_i-\mu).
+        \]
+        <p>Set it equal to zero. Then \(\sum x_i=n\mu\), so</p>
+        \[
+          \hat\mu=\bar X.
+        \]
+      </details>
+    </article>
+
+    <article class="problem">
+      <div class="problem-head">
+        <div class="problem-title">4. Uniform Upper Endpoint</div>
+        <div class="tags">
+          <span class="tag concept">Mechanics</span>
+          <span class="tag">Support-dependent</span>
+          <span class="tag">8 min</span>
+        </div>
+      </div>
+      <p>Let \(X_1,\ldots,X_n\) be independent Uniform\((0,\theta)\). Find the MLE of \(\theta\).</p>
+      <details>
+        <summary>Solution</summary>
+        <p>The density of one observation is \(1/\theta\) if \(0<x_i<\theta\). The sample is possible only if \(\theta\ge x_{(n)}\), where \(x_{(n)}=\max_i x_i\).</p>
+        <p>The likelihood is</p>
+        \[
+          L(\theta)=\theta^{-n}\mathbf{1}\{\theta\ge x_{(n)}\}.
+        \]
+        <p>For allowed \(\theta\), the value \(\theta^{-n}\) decreases as \(\theta\) increases. Therefore the largest likelihood occurs at the smallest allowed \(\theta\):</p>
+        \[
+          \hat\theta=X_{(n)}.
+        \]
+      </details>
+    </article>
+
+    <article class="problem">
+      <div class="problem-head">
+        <div class="problem-title">5. Bias and MSE of the Sample Mean</div>
+        <div class="tags">
+          <span class="tag concept">Mechanics</span>
+          <span class="tag">Estimator quality</span>
+          <span class="tag">8 min</span>
+        </div>
+      </div>
+      <p>Let \(X_1,\ldots,X_n\) be independent with mean \(\mu\) and variance \(\sigma^2\). For \(T=\bar X\), find the bias and MSE of \(T\) as an estimator of \(\mu\).</p>
+      <details>
+        <summary>Solution</summary>
+        <p>The bias is \(E[T]-\mu\). Since \(E[\bar X]=\mu\),</p>
+        \[
+          \operatorname{Bias}(\bar X)=0.
+        \]
+        <p>The MSE is</p>
+        \[
+          E[(\bar X-\mu)^2].
+        \]
+        <p>Because the estimator is unbiased, MSE equals variance:</p>
+        \[
+          \operatorname{MSE}(\bar X)=\operatorname{Var}(\bar X)=\frac{\sigma^2}{n}.
+        \]
+      </details>
+    </article>
+
+    <div class="section-label">Problems 6-8 · Applications</div>
+
+    <article class="problem">
+      <div class="problem-head">
+        <div class="problem-title">6. Poisson Mean</div>
+        <div class="tags">
+          <span class="tag integration">Application</span>
+          <span class="tag">Count model</span>
+          <span class="tag">10 min</span>
+        </div>
+      </div>
+      <p>Let \(X_1,\ldots,X_n\) be independent Poisson\((\lambda)\). Find the MLE of \(\lambda\).</p>
+      <details>
+        <summary>Solution</summary>
+        <p>The likelihood is</p>
+        \[
+          L(\lambda)=\prod_{i=1}^n e^{-\lambda}\frac{\lambda^{x_i}}{x_i!}.
+        \]
+        <p>Drop the factorials because they do not depend on \(\lambda\):</p>
+        \[
+          L(\lambda)\propto e^{-n\lambda}\lambda^{\sum x_i}.
+        \]
+        <p>The log-likelihood, up to constants, is</p>
+        \[
+          \ell(\lambda)=-n\lambda+\left(\sum x_i\right)\log\lambda.
+        \]
+        <p>Differentiate and set equal to zero:</p>
+        \[
+          -n+\frac{\sum x_i}{\lambda}=0.
+        \]
+        <p>So</p>
+        \[
+          \hat\lambda=\frac{1}{n}\sum_{i=1}^n X_i=\bar X.
+        \]
+      </details>
+    </article>
+
+    <article class="problem">
+      <div class="problem-head">
+        <div class="problem-title">7. Constrained Bernoulli Parameter</div>
+        <div class="tags">
+          <span class="tag integration">Application</span>
+          <span class="tag">Constraint</span>
+          <span class="tag">12 min</span>
+        </div>
+      </div>
+      <p>In a Bernoulli sample of size \(n=20\), the number of successes is \(s=14\). The parameter is known to satisfy \(0<p\le 0.6\). Find the constrained MLE of \(p\).</p>
+      <details>
+        <summary>Solution</summary>
+        <p>Without the constraint, the Bernoulli MLE is</p>
+        \[
+          \hat p_{\text{free}}=\frac{s}{n}=\frac{14}{20}=0.7.
+        \]
+        <p>But the parameter space only allows \(p\le0.6\). For the Bernoulli likelihood, the maximum over the allowed interval is the allowed value closest to the free optimizer when the free optimizer is outside the interval.</p>
+        <p>Therefore the constrained MLE is the boundary point</p>
+        \[
+          \hat p=0.6.
+        \]
+      </details>
+    </article>
+
+    <article class="problem">
+      <div class="problem-head">
+        <div class="problem-title">8. Support-Dependent Lower Endpoint</div>
+        <div class="tags">
+          <span class="tag integration">Application</span>
+          <span class="tag">Boundary MLE</span>
+          <span class="tag">13 min</span>
+        </div>
+      </div>
+      <p>Let \(X_1,\ldots,X_n\) be independent Uniform\((\theta,\theta+1)\). Find the set of MLEs for \(\theta\).</p>
+      <details>
+        <summary>Solution</summary>
+        <p>The density is 1 on the interval \((\theta,\theta+1)\). So the likelihood is either 1 or 0.</p>
+        <p>The sample is possible exactly when every observation lies between \(\theta\) and \(\theta+1\):</p>
+        \[
+          \theta\le x_i\le \theta+1
+          \quad\text{for all }i.
+        \]
+        <p>This gives two restrictions:</p>
+        \[
+          \theta\le x_{(1)}
+          \quad\text{and}\quad
+          \theta\ge x_{(n)}-1.
+        \]
+        <p>Therefore every value in the interval</p>
+        \[
+          x_{(n)}-1\le \theta\le x_{(1)}
+        \]
+        <p>is an MLE. If the sample range is larger than 1, the model assigns likelihood 0 for all \(\theta\), so the data are impossible under the model.</p>
+      </details>
+    </article>
+
+    <div class="section-label">Problems 9-10 · ISI-Style</div>
+
+    <article class="problem">
+      <div class="problem-head">
+        <div class="problem-title">9. Sufficiency Cue From Factorization</div>
+        <div class="tags">
+          <span class="tag isi">ISI-style</span>
+          <span class="tag">Sufficiency</span>
+          <span class="tag">16 min</span>
+        </div>
+      </div>
+      <p>Let \(X_1,\ldots,X_n\) be independent Bernoulli\((p)\). Use the factorization idea to identify a sufficient statistic for \(p\).</p>
+      <details>
+        <summary>Solution</summary>
+        <p>The joint likelihood is</p>
+        \[
+          L(p)=p^{\sum x_i}(1-p)^{n-\sum x_i}.
+        \]
+        <p>The data enter the parameter-dependent part only through</p>
+        \[
+          T=\sum_{i=1}^n X_i.
+        \]
+        <p>So, by the factorization idea, \(T=\sum X_i\) is sufficient for \(p\).</p>
+        <p>The meaning is simple: once we know the total number of successes, the order of successes and failures gives no additional information about \(p\).</p>
+      </details>
+    </article>
+
+    <article class="problem">
+      <div class="problem-head">
+        <div class="problem-title">10. Rao-Blackwell Recognition</div>
+        <div class="tags">
+          <span class="tag isi">ISI-style</span>
+          <span class="tag">UMVUE cue</span>
+          <span class="tag">18 min</span>
+        </div>
+      </div>
+      <p>In a Bernoulli\((p)\) sample, \(X_1\) is an unbiased estimator of \(p\). Let \(T=\sum_{i=1}^n X_i\). Compute \(E[X_1\mid T]\), and explain why this improves the estimator.</p>
+      <details>
+        <summary>Solution</summary>
+        <p>Given \(T=t\), exactly \(t\) of the \(n\) positions are successes. By symmetry, each position is equally likely to be one of those successes.</p>
+        \[
+          P(X_1=1\mid T=t)=\frac{t}{n}.
+        \]
+        <p>Since \(X_1\) is a 0-1 variable, its conditional expectation is this probability:</p>
+        \[
+          E[X_1\mid T=t]=\frac{t}{n}.
+        \]
+        <p>Therefore</p>
+        \[
+          E[X_1\mid T]=\frac{T}{n}=\bar X.
+        \]
+        <p>This estimator is still unbiased for \(p\), and Rao-Blackwellization cannot increase variance. The improved estimator is \(\bar X\). In the Bernoulli family, this is the standard UMVUE cue.</p>
+      </details>
+    </article>
+
+    <div class="section-label">Answer Summary</div>
+    <section class="panel">
+      <ol>
+        <li>\(\hat p=\bar X=s/n\).</li>
+        <li>\(\hat\lambda=n/\sum X_i=1/\bar X\).</li>
+        <li>\(\hat\mu=\bar X\).</li>
+        <li>\(\hat\theta=X_{(n)}\).</li>
+        <li>Bias \(0\), MSE \(\sigma^2/n\).</li>
+        <li>\(\hat\lambda=\bar X\) for Poisson\((\lambda)\).</li>
+        <li>The constrained MLE is \(0.6\).</li>
+        <li>Every \(\theta\in[X_{(n)}-1,X_{(1)}]\) is an MLE.</li>
+        <li>\(\sum X_i\) is sufficient for \(p\).</li>
+        <li>\(E[X_1\mid T]=T/n=\bar X\), the Rao-Blackwell improvement.</li>
+      </ol>
+    </section>
+  </main>
+</body>
+</html>

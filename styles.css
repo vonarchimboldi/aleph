@@ -785,6 +785,12 @@ textarea {
   padding-left: 18px;
 }
 
+.assessment-next-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
 .mastery-list {
   display: grid;
   gap: 8px;
@@ -1495,6 +1501,62 @@ textarea {
   gap: 16px;
 }
 
+.task-alert-panel {
+  align-items: start;
+  background: #f7f9f8;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  display: grid;
+  gap: 12px;
+  grid-template-columns: minmax(0, 1fr) auto;
+  margin-bottom: 16px;
+  padding: 14px;
+}
+
+.task-alert-copy {
+  display: grid;
+  gap: 4px;
+}
+
+.task-alert-copy strong,
+.task-alert-copy p {
+  margin: 0;
+}
+
+.task-alert-copy p {
+  color: var(--muted);
+  line-height: 1.45;
+}
+
+.task-alert-actions {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: flex-end;
+}
+
+.task-alert-list {
+  border-top: 1px solid var(--line);
+  display: grid;
+  gap: 8px;
+  grid-column: 1 / -1;
+  padding-top: 12px;
+}
+
+.task-alert-list article {
+  align-items: center;
+  display: flex;
+  gap: 12px;
+  justify-content: space-between;
+}
+
+.task-alert-list span {
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 700;
+}
+
 .task-tile-board {
   grid-template-columns: repeat(3, minmax(0, 1fr));
   align-items: start;
@@ -1601,6 +1663,32 @@ textarea {
 
 .task-row-actions .tag {
   margin-right: auto;
+}
+
+.task-row-actions .due-tag {
+  margin-right: 0;
+}
+
+.due-overdue {
+  background: #f7d8d2;
+  color: #8e2d1c;
+}
+
+.due-today {
+  background: #fff0c2;
+  color: #7a4d00;
+}
+
+.due-upcoming {
+  background: #dcebf1;
+  color: #245b70;
+}
+
+.due-scheduled,
+.due-unscheduled,
+.due-completed {
+  background: #edf3ef;
+  color: #4e6f60;
 }
 
 .small-empty {
@@ -1959,9 +2047,14 @@ a {
 
   .metrics,
   .two-column,
+  .task-alert-panel,
   .task-tile-board,
   .subject-schedule-grid {
     grid-template-columns: 1fr;
+  }
+
+  .task-alert-actions {
+    justify-content: flex-start;
   }
 
   .book-page {
@@ -1996,6 +2089,7 @@ a {
   .problem-heading,
   .board-header,
   .week-schedule-header,
+  .task-alert-list article,
   .schedule-row {
     align-items: flex-start;
     flex-direction: column;
