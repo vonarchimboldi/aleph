@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>June 7 Review Quiz — Probability and Statistics PSB Cycle</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" />
+  <link rel="stylesheet" href="/psets/material-page.css" />
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+  <script defer src="/psets/material-page.js"></script>
+</head>
+<body>
+  <main class="wrap">
+    <section class="hero">
+      <h1>June 7: Week 1 PSB Review Quiz</h1>
+      <p class="sub">
+        Six ISI-style questions, one for each recurring Probability and Statistics pattern from the week. Each question has subparts so the feedback can identify whether the break is in recognition, setup, calculation, or explanation.
+      </p>
+      <div class="meta">
+        <span class="chip">Probability and Statistics</span>
+        <span class="chip">Sunday</span>
+        <span class="chip">6 ISI-style questions</span>
+        <span class="chip">3-4 subparts each</span>
+        <span class="chip">Written solutions required</span>
+        <span class="chip">Solutions included</span>
+      </div>
+      <p class="math-fallback">Math rendering did not load from the CDN. Refresh once, or use a network that allows KaTeX CDN files.</p>
+    </section>
+
+    <section class="panel accent">
+      <h2>Core Pattern</h2>
+      <p>For each question, identify the pattern before calculating. The same weekly topics return in mixed form: indicators, conditional expectation, order statistics, MLE, UMP/NP tests, and regression/OLS.</p>
+      <div class="formula">
+        \[
+          \text{recognize pattern}\rightarrow\text{choose statistic/event}\rightarrow\text{compute}\rightarrow\text{justify}
+        \]
+      </div>
+    </section>
+
+    <section class="panel">
+      <h2>Checklist</h2>
+      <div class="grid">
+        <ul>
+          <li>Write the topic label before starting each solution.</li>
+          <li>Answer every subpart, even if a later calculation depends on an earlier setup.</li>
+          <li>Mark the first step where you are unsure.</li>
+        </ul>
+        <ul>
+          <li>Use exact expressions unless a numerical approximation is requested.</li>
+          <li>Explain why the chosen method applies.</li>
+          <li>End each question with one correction note or reusable trigger.</li>
+        </ul>
+      </div>
+    </section>
+
+    <div class="section-label">Questions 1-6 · Weekly ISI-Style Review</div>
+
+    <article class="problem">
+      <div class="problem-head">
+        <div class="problem-title">1. Indicators: Empty Boxes and Pair Terms</div>
+        <div class="tags">
+          <span class="tag concept">ISI-style</span>
+          <span class="tag">Indicators</span>
+          <span class="tag">Subparts</span>
+        </div>
+      </div>
+      <p>Ten balls are independently placed uniformly into five labelled boxes. Let \(X\) be the number of empty boxes. Answer: (a) write \(X\) as a sum of indicators, (b) compute \(E[X]\), (c) compute \(E[X^2]\), and (d) state \(\operatorname{Var}(X)\).</p>
+      <details>
+        <summary>Solution</summary>
+        <p>Let \(I_j=1\) if box \(j\) is empty. Then \(X=\sum_{j=1}^5 I_j\). For one box, \(P(I_j=1)=(4/5)^{10}\), so \(E[X]=5(4/5)^{10}\).</p>
+        <p>For \(j\ne k\), both boxes \(j,k\) are empty when all balls choose one of the other three boxes, so \(P(I_jI_k=1)=(3/5)^{10}\). Therefore</p>
+        \[
+          E[X^2]=\sum_jE[I_j]+2\sum_{j<k}E[I_jI_k]
+          =
+          5(4/5)^{10}+20(3/5)^{10}.
+        \]
+        <p>Finally, \(\operatorname{Var}(X)=E[X^2]-(E[X])^2\). The key feedback point is whether the pair term uses two boxes empty, not two boxes independently empty.</p>
+      </details>
+    </article>
+
+    <article class="problem">
+      <div class="problem-head">
+        <div class="problem-title">2. Conditional Expectation: Choose the First Variable</div>
+        <div class="tags">
+          <span class="tag concept">ISI-style</span>
+          <span class="tag">Tower property</span>
+          <span class="tag">Subparts</span>
+        </div>
+      </div>
+      <p>A box is chosen first: box A with probability \(2/3\), box B with probability \(1/3\). Box A has mean reward 8 and variance 4; box B has mean reward 2 and variance 1. Let \(X\) be the reward. Answer: (a) define the conditioning variable, (b) compute \(E[X]\), (c) compute \(\operatorname{Var}(E[X\mid Y])\), and (d) compute \(\operatorname{Var}(X)\).</p>
+      <details>
+        <summary>Solution</summary>
+        <p>Let \(Y\) be the chosen box. Then \(E[X\mid Y=A]=8\), \(E[X\mid Y=B]=2\). By total expectation,</p>
+        \[
+          E[X]=(2/3)8+(1/3)2=6.
+        \]
+        <p>The conditional mean is 8 with probability \(2/3\) and 2 with probability \(1/3\), so</p>
+        \[
+          \operatorname{Var}(E[X\mid Y])=(2/3)(8-6)^2+(1/3)(2-6)^2=8.
+        \]
+        <p>Also \(E[\operatorname{Var}(X\mid Y)]=(2/3)4+(1/3)1=3\). Hence \(\operatorname{Var}(X)=3+8=11\).</p>
+      </details>
+    </article>
+
+    <article class="problem">
+      <div class="problem-head">
+        <div class="problem-title">3. Order Statistics: Median of Uniforms</div>
+        <div class="tags">
+          <span class="tag concept">ISI-style</span>
+          <span class="tag">Order statistics</span>
+          <span class="tag">Subparts</span>
+        </div>
+      </div>
+      <p>Let \(U_1,\ldots,U_5\) be iid Uniform\((0,1)\), and let \(M=U_{(3)}\). Answer: (a) express \(P(M\le m)\) as a binomial count, (b) identify the beta distribution of \(M\), (c) compute \(E[M]\), and (d) compute \(P(M\le 1/2)\).</p>
+      <details>
+        <summary>Solution</summary>
+        <p>The event \(M\le m\) means at least three of the five uniforms are at most \(m\). Therefore</p>
+        \[
+          P(M\le m)=\sum_{j=3}^5\binom5j m^j(1-m)^{5-j}.
+        \]
+        <p>For uniform order statistics, \(U_{(k)}\sim\operatorname{Beta}(k,n+1-k)\). Here \(M\sim\operatorname{Beta}(3,3)\), so \(E[M]=3/(3+3)=1/2\).</p>
+        <p>By symmetry of the median from five uniforms, \(P(M\le1/2)=1/2\). The binomial expression gives the same result: \(P(\operatorname{Binomial}(5,1/2)\ge3)=1/2\).</p>
+      </details>
+    </article>
+
+    <article class="problem">
+      <div class="problem-head">
+        <div class="problem-title">4. MLE: Support-Dependent Endpoint</div>
+        <div class="tags">
+          <span class="tag concept">ISI-style</span>
+          <span class="tag">MLE</span>
+          <span class="tag">Subparts</span>
+        </div>
+      </div>
+      <p>Let \(X_1,\ldots,X_n\) be iid Uniform\((\theta,\theta+1)\). Answer: (a) write the likelihood support condition, (b) identify all \(\theta\) values that make the sample possible, (c) describe the MLE set, and (d) give one convention for reporting an MLE.</p>
+      <details>
+        <summary>Solution</summary>
+        <p>The density is 1 when \(\theta\le x_i\le\theta+1\), and 0 otherwise. All observations are possible exactly when</p>
+        \[
+          \theta\le x_{(1)}
+          \quad\text{and}\quad
+          x_{(n)}\le\theta+1.
+        \]
+        <p>Thus \(\theta\le x_{(1)}\) and \(\theta\ge x_{(n)}-1\). The likelihood is constant, equal to 1, over the interval</p>
+        \[
+          x_{(n)}-1\le\theta\le x_{(1)}.
+        \]
+        <p>Every point in that interval is an MLE. One reporting convention is \(\hat\theta=x_{(n)}-1\), the left endpoint. Another is the midpoint, but the important answer is the full MLE set.</p>
+      </details>
+    </article>
+
+    <article class="problem">
+      <div class="problem-head">
+        <div class="problem-title">5. UMP/NP: One-Sided Poisson Test</div>
+        <div class="tags">
+          <span class="tag concept">ISI-style</span>
+          <span class="tag">UMP/NP</span>
+          <span class="tag">Subparts</span>
+        </div>
+      </div>
+      <p>Let \(X_1,\ldots,X_n\) be iid Poisson\((\lambda)\). Test \(H_0:\lambda\le\lambda_0\) against \(H_1:\lambda>\lambda_0\). Answer: (a) find the likelihood ratio for \(\lambda_1>\lambda_0\), (b) identify the statistic, (c) state the UMP rejection form, and (d) explain how to calibrate size \(\alpha\).</p>
+      <details>
+        <summary>Solution</summary>
+        <p>Ignoring factors depending only on the data,</p>
+        \[
+          L(\lambda)\propto e^{-n\lambda}\lambda^{\sum x_i}.
+        \]
+        <p>For \(\lambda_1>\lambda_0\),</p>
+        \[
+          \frac{L(\lambda_1)}{L(\lambda_0)}
+          =
+          e^{-n(\lambda_1-\lambda_0)}
+          \left(\frac{\lambda_1}{\lambda_0}\right)^{\sum x_i}.
+        \]
+        <p>This increases in \(T=\sum X_i\), so reject for large \(T\). Under the boundary null, \(T\sim\operatorname{Poisson}(n\lambda_0)\). Choose \(c\), and randomization at \(c\) if necessary, so the rejection probability under \(\lambda_0\) equals \(\alpha\).</p>
+      </details>
+    </article>
+
+    <article class="problem">
+      <div class="problem-head">
+        <div class="problem-title">6. Regression/OLS: Projection and Residuals</div>
+        <div class="tags">
+          <span class="tag concept">ISI-style</span>
+          <span class="tag">Regression OLS</span>
+          <span class="tag">Subparts</span>
+        </div>
+      </div>
+      <p>In the linear model \(y=X\beta+\varepsilon\), assume \(X\) has full column rank. Answer: (a) write the OLS estimator, (b) define the hat matrix, (c) prove the residual is orthogonal to each column of \(X\), and (d) state one consequence for fitted values and residuals.</p>
+      <details>
+        <summary>Solution</summary>
+        <p>The OLS estimator is</p>
+        \[
+          \hat\beta=(X^\top X)^{-1}X^\top y.
+        \]
+        <p>The fitted vector is \(\hat y=X\hat\beta=Hy\), where \(H=X(X^\top X)^{-1}X^\top\). The residual is \(e=y-\hat y=(I-H)y\).</p>
+        <p>The normal equations give \(X^\top(y-X\hat\beta)=0\), so \(X^\top e=0\). This means the residual vector is orthogonal to every column of \(X\).</p>
+        <p>One consequence is that fitted values and residuals are orthogonal: \(\hat y^\top e=0\), because \(\hat y\) lies in the column space of \(X\).</p>
+      </details>
+    </article>
+
+    <section class="panel">
+      <h2>Answer Summary</h2>
+      <ol>
+        <li>\(E[X]=5(4/5)^{10}\), \(E[X^2]=5(4/5)^{10}+20(3/5)^{10}\), then subtract \(E[X]^2\).</li>
+        <li>\(E[X]=6\), \(\operatorname{Var}(E[X\mid Y])=8\), \(\operatorname{Var}(X)=11\).</li>
+        <li>\(M\sim\operatorname{Beta}(3,3)\), \(E[M]=1/2\), \(P(M\le1/2)=1/2\).</li>
+        <li>The MLE set is \(x_{(n)}-1\le\theta\le x_{(1)}\).</li>
+        <li>Use \(T=\sum X_i\), reject for large \(T\), calibrate at \(T\sim\operatorname{Poisson}(n\lambda_0)\).</li>
+        <li>\(\hat\beta=(X^\top X)^{-1}X^\top y\), \(H=X(X^\top X)^{-1}X^\top\), and \(X^\top e=0\).</li>
+      </ol>
+    </section>
+  </main>
+</body>
+</html>

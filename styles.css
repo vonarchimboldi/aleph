@@ -597,6 +597,226 @@ textarea {
   padding: 14px;
 }
 
+.weekly-plan-workspace .chapter-menu {
+  max-width: 1120px;
+}
+
+.week-plan-list {
+  display: grid;
+  gap: 18px;
+}
+
+.week-plan-card {
+  background: #ffffff;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  box-shadow: var(--shadow);
+  display: grid;
+  gap: 14px;
+  padding: 16px;
+}
+
+.week-plan-header,
+.day-material-main,
+.day-material-title-row,
+.day-material-actions {
+  align-items: flex-start;
+  display: flex;
+  gap: 14px;
+}
+
+.week-plan-header,
+.day-material-title-row {
+  justify-content: space-between;
+}
+
+.week-plan-header h5,
+.day-material-card h6,
+.day-material-card p {
+  margin: 0;
+}
+
+.week-plan-header h5 {
+  font-size: 22px;
+  line-height: 1.25;
+}
+
+.day-material-list {
+  display: grid;
+  gap: 10px;
+}
+
+.day-material-card {
+  background: #f8faf9;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  display: grid;
+  gap: 12px;
+  padding: 12px;
+}
+
+.day-material-card.has-feedback {
+  background: #f4f8f6;
+  border-color: #b8d2c4;
+}
+
+.day-date {
+  background: #173f49;
+  border-radius: 8px;
+  color: #ffffff;
+  display: grid;
+  flex: 0 0 86px;
+  gap: 4px;
+  min-height: 76px;
+  padding: 10px;
+}
+
+.day-date span {
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.day-date strong {
+  font-size: 18px;
+  line-height: 1.1;
+}
+
+.day-material-copy {
+  display: grid;
+  flex: 1;
+  gap: 9px;
+  min-width: 0;
+}
+
+.day-material-card h6 {
+  font-size: 18px;
+  line-height: 1.25;
+}
+
+.day-material-card p {
+  color: var(--muted);
+  line-height: 1.45;
+}
+
+.day-material-actions {
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.day-status-row {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: space-between;
+}
+
+.compact-upload {
+  min-width: min(100%, 220px);
+}
+
+.feedback-placeholder {
+  background: #eef3f0;
+  border: 1px dashed #b8c8bf;
+  border-radius: 8px;
+  color: var(--ink) !important;
+  font-weight: 700;
+  padding: 10px 12px;
+}
+
+.day-feedback-panel {
+  background: #ffffff;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 10px;
+}
+
+.day-feedback-panel summary {
+  cursor: pointer;
+  font-weight: 800;
+}
+
+.day-feedback-panel .structured-feedback {
+  border: 0;
+  padding: 12px 0 0;
+}
+
+.feedback-page {
+  display: grid;
+  gap: 16px;
+  max-width: 1120px;
+}
+
+.feedback-page-hero {
+  align-items: flex-start;
+  background: #ffffff;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  box-shadow: var(--shadow);
+  display: flex;
+  gap: 16px;
+  justify-content: space-between;
+  padding: 18px;
+}
+
+.feedback-page-hero h4,
+.feedback-page-hero p,
+.feedback-context-card h5,
+.feedback-context-card p {
+  margin: 0;
+}
+
+.feedback-page-hero h4 {
+  font-size: 28px;
+  line-height: 1.15;
+}
+
+.feedback-page-hero p,
+.feedback-context-card p {
+  color: var(--muted);
+  line-height: 1.5;
+}
+
+.feedback-page-grid {
+  display: grid;
+  gap: 12px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.feedback-context-card,
+.feedback-editor,
+.feedback-page-empty {
+  background: #ffffff;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  display: grid;
+  gap: 12px;
+  padding: 14px;
+}
+
+.feedback-context-card h5 {
+  font-size: 17px;
+  line-height: 1.25;
+}
+
+.feedback-editor .structured-feedback {
+  border: 0;
+  padding: 0;
+}
+
+.feedback-page-actions {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.feedback-page-empty {
+  border-style: dashed;
+  color: var(--ink);
+  font-weight: 800;
+}
+
 .pattern-material-row {
   align-items: center;
   justify-content: flex-start;
@@ -635,7 +855,28 @@ textarea {
     grid-template-columns: 1fr;
   }
 
+  .week-plan-header,
+  .day-material-main,
+  .day-material-title-row,
+  .day-material-actions,
+  .day-status-row,
+  .feedback-page-hero {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+
+  .day-date {
+    min-height: auto;
+  }
+
+  .feedback-page-grid,
+  .feedback-form-grid {
+    grid-template-columns: 1fr;
+  }
+
   .pattern-material-row .primary-btn,
+  .day-material-actions .primary-btn,
+  .day-status-row .small-btn,
   .pattern-week .small-btn {
     width: 100%;
     justify-content: center;
@@ -697,9 +938,9 @@ textarea {
   padding: 10px;
 }
 
-.feedback-spec summary {
-  cursor: pointer;
+.feedback-spec-title {
   font-weight: 800;
+  margin-bottom: 8px;
 }
 
 .feedback-spec-grid,

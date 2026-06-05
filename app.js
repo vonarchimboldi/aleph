@@ -1,11 +1,12 @@
 const STORAGE_KEY = "learning-studio-data-v2";
 const LEGACY_STORAGE_KEYS = ["learning-studio-data-v1"];
 const SESSION_KEY = "aleph-session";
-const COURSE_PLAN_VERSION = "seeded-user-canonical-workspace-v64";
+const COURSE_PLAN_VERSION = "seeded-user-canonical-workspace-v65";
 
 const state = loadState();
 let selectedSubjectId = null;
 let selectedSectionId = null;
+let selectedPatternMaterialId = null;
 let activeTestId = null;
 ensureCoursePlan();
 enforceSeededUserWorkspace();
@@ -9390,6 +9391,43 @@ function umpNpFeedbackWorkflow() {
   });
 }
 
+function weeklyPsbReviewFeedbackWorkflow() {
+  return baseFeedbackWorkflow({
+    id: "feedback-workflow-weekly-psb-review-v1",
+    title: "Structured Feedback: Weekly PSB Review Quiz",
+    promptUse: "Use this after reading the weekly review submission. Diagnose each topic separately, then identify the first recurring pattern weakness across the six ISI-style questions.",
+    studentSummaryHint: "Summarize which topics were solid and which topic first broke down.",
+    skills: [
+      { id: "indicators", label: "Method of indicators" },
+      { id: "conditional-expectation", label: "Conditional expectation" },
+      { id: "order-statistics", label: "Order statistics" },
+      { id: "mle-estimation", label: "MLE and estimation" },
+      { id: "ump-np", label: "UMP/NP tests" },
+      { id: "regression-ols", label: "Regression and OLS" },
+      { id: "written-justification", label: "Written justification" }
+    ],
+    rubric: [
+      { criterion: "Topic recognition", points: 2, cue: "Correctly identified the intended pattern for each of the six questions." },
+      { criterion: "Setup quality", points: 2, cue: "Defined indicators, conditioning variables, likelihoods, critical regions, or OLS matrices before calculating." },
+      { criterion: "Calculation accuracy", points: 2, cue: "Carried out probability, expectation, likelihood, testing, or linear algebra steps correctly." },
+      { criterion: "Subpart completeness", points: 2, cue: "Answered every subpart and kept later answers consistent with earlier setup." },
+      { criterion: "Correction note", points: 2, cue: "Ended with a useful note naming the reusable trigger or fix." }
+    ],
+    commonIssues: [
+      "Skipped pattern recognition and started calculating in the wrong model.",
+      "Answered only the final subpart while leaving setup subparts incomplete.",
+      "Mixed up null and alternative distributions when calibrating tests.",
+      "Lost support conditions in MLE or order-statistic questions.",
+      "Wrote formulas without explaining why the method applies."
+    ],
+    defaultNextDrills: [
+      { skill: "topic-recognition", difficulty: "mechanics", instruction: "Redo the six questions by writing only the topic label, statistic/event, and method trigger before solving." },
+      { skill: "weakest-topic", difficulty: "application", instruction: "Assign two medium drills from the first topic that scored below 7/10." },
+      { skill: "written-justification", difficulty: "hard", instruction: "Rewrite one solution with every subpart justified in full sentences." }
+    ]
+  });
+}
+
 function competitionMathVietaFeedbackWorkflow() {
   return baseFeedbackWorkflow({
     id: "feedback-workflow-competition-vieta-v1",
@@ -9725,6 +9763,7 @@ function showView(name) {
   if (name !== "subjects") {
     selectedSubjectId = null;
     selectedSectionId = null;
+    selectedPatternMaterialId = null;
   }
 }
 
@@ -9761,7 +9800,7 @@ function login(event) {
 function applyDemoLogin() {
   const demoName = new URLSearchParams(window.location.search).get("demo")?.trim().toLowerCase();
   if (!demoName) return;
-  if (demoName !== "reviewer") return;
+  if (!["reviewer", "basic", "gate-basic", "platinum"].includes(demoName)) return;
   const matchedUser = prototypeUsers().find((user) => user.name === demoName);
   if (!matchedUser) return;
   const canonicalUser = normalizeSeededUser(matchedUser);
@@ -10444,6 +10483,11 @@ function renderSubjects() {
     container.querySelector("[data-subject-back]")?.addEventListener("click", () => {
       selectedSubjectId = null;
       selectedSectionId = null;
+      selectedPatternMaterialId = null;
+      renderSubjects();
+    });
+    container.querySelector("[data-week-back]")?.addEventListener("click", () => {
+      selectedPatternMaterialId = null;
       renderSubjects();
     });
     container.querySelector("[data-chapter-back]")?.addEventListener("click", () => {
@@ -10469,6 +10513,12 @@ function renderSubjects() {
     container.querySelectorAll("[data-save-pattern-feedback]").forEach((button) => {
       button.addEventListener("click", () => savePatternFeedback(button));
     });
+    container.querySelectorAll("[data-open-day-feedback]").forEach((button) => {
+      button.addEventListener("click", () => {
+        selectedPatternMaterialId = button.dataset.openDayFeedback;
+        renderSubjects();
+      });
+    });
     return;
   }
 
@@ -10482,6 +10532,7 @@ function renderSubjects() {
     button.addEventListener("click", () => {
       selectedSubjectId = button.dataset.openSubject;
       selectedSectionId = null;
+      selectedPatternMaterialId = null;
       renderSubjects();
     });
   });
@@ -10651,19 +10702,27 @@ function subjectReaderTemplate(subject) {
 }
 
 function subjectPatternWorkspaceTemplate(subject) {
+  const weekGroups = patternWeekGroups(subject.patternWorkspaces || []);
+  const selectedMaterial = selectedPatternMaterialId ? findPatternMaterial(subject, selectedPatternMaterialId) : null;
+  if (selectedPatternMaterialId && selectedMaterial) {
+    return patternMaterialFeedbackPageTemplate(subject, selectedMaterial);
+  }
+  if (selectedPatternMaterialId && !selectedMaterial) {
+    selectedPatternMaterialId = null;
+  }
   return `
-    <article class="subject-reader pattern-workspace">
+    <article class="subject-reader pattern-workspace weekly-plan-workspace">
       <div class="subject-reader-header">
         <button class="text-btn" data-subject-back type="button">Back to subjects</button>
       </div>
       <section class="chapter-menu">
         <div class="chapter-menu-header">
-          <p class="eyebrow">${escapeHtml(subject.title)} pattern workspace</p>
-          <h4>Recurring PSB Patterns</h4>
-          <p>${escapeHtml(subject.details || "Choose a pattern to work through weekly material, submit solutions, and record feedback.")}</p>
+          <p class="eyebrow">${escapeHtml(subject.title)} weekly workspace</p>
+          <h4>Week -> Day -> Material</h4>
+          <p>${escapeHtml(subject.details || "Choose a week, open the day's material in a new page, upload the solution, then record feedback for that day.")}</p>
         </div>
-        <div class="pattern-grid">
-          ${subject.patternWorkspaces.map(patternWorkspaceTemplate).join("")}
+        <div class="week-plan-list">
+          ${weekGroups.map(weekPlanTemplate).join("")}
         </div>
       </section>
     </article>
@@ -10722,6 +10781,187 @@ function materialWorkspaceTemplate(workspace) {
       <div class="pattern-week-list">
         ${workspace.weeks.map((week) => patternWeekTemplate(workspace, week)).join("")}
       </div>
+    </article>
+  `;
+}
+
+function patternWeekGroups(patterns) {
+  const groups = new Map();
+  patterns.forEach((pattern) => {
+    (pattern.weeks || []).forEach((week) => {
+      const key = week.week || 1;
+      if (!groups.has(key)) {
+        groups.set(key, {
+          week: key,
+          date: week.date,
+          days: []
+        });
+      }
+      groups.get(key).days.push({
+        pattern,
+        week
+      });
+    });
+  });
+
+  return Array.from(groups.values())
+    .map((group) => ({
+      ...group,
+      days: [...group.days, weeklyReviewDay(group)].sort((a, b) => daySortValue(a.pattern.day) - daySortValue(b.pattern.day))
+    }))
+    .sort((a, b) => a.week - b.week);
+}
+
+function weeklyReviewDay(group) {
+  const sunday = addDays(group.date || group.days[0]?.week?.date || "2026-06-01", 6);
+  const publishedWeekOne = Number(group.week) === 1;
+  return {
+    pattern: {
+      day: "Sunday",
+      title: "Weekly Review Quiz",
+      focus: "One ISI-style multi-part question per weekly topic: indicators, conditional expectation, order statistics, MLE, UMP/NP tests, and regression/OLS."
+    },
+    week: {
+      id: `ps-w${group.week}-sunday-review`,
+      week: group.week,
+      date: sunday,
+      materialTitle: `Week ${group.week}: Sunday PSB Review Quiz`,
+      materialUrl: publishedWeekOne ? "psets/week-01/june-07-psb-review-quiz.html" : "",
+      status: publishedWeekOne ? "Published" : "Pending",
+      expectedWork: "6 ISI-style questions, one per topic, with 3-4 subparts each.",
+      feedbackWorkflow: weeklyPsbReviewFeedbackWorkflow()
+    }
+  };
+}
+
+function daySortValue(day) {
+  const order = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
+  const index = order.indexOf(day || "");
+  return index === -1 ? 99 : index;
+}
+
+function weekPlanTemplate(group) {
+  const startDate = group.days[0]?.week?.date || group.date || "";
+  const endDate = group.days.at(-1)?.week?.date || startDate;
+  const completed = group.days.filter(({ week }) => patternSubmission(week.id)?.feedbackRecord).length;
+  return `
+    <section class="week-plan-card">
+      <div class="week-plan-header">
+        <div>
+          <p class="eyebrow">Week ${escapeHtml(group.week)}</p>
+          <h5>${startDate ? `${formatDate(startDate)}${endDate && endDate !== startDate ? ` - ${formatDate(endDate)}` : ""}` : "Daily material"}</h5>
+        </div>
+        <span class="tag">${completed}/${group.days.length} feedback complete</span>
+      </div>
+      <div class="day-material-list">
+        ${group.days.map(dayMaterialTemplate).join("")}
+      </div>
+    </section>
+  `;
+}
+
+function dayMaterialTemplate({ pattern, week }) {
+  const submission = patternSubmission(week.id);
+  const hasUpload = Boolean(submission?.fileName);
+  const hasFeedback = Boolean(submission?.feedbackRecord);
+  const uploadLabel = hasUpload ? `Submitted: ${submission.fileName}` : "No solution submitted";
+  return `
+    <article class="day-material-card ${hasFeedback ? "has-feedback" : ""}" data-material-card="${escapeHtml(week.id)}">
+      <div class="day-material-main">
+        <div class="day-date">
+          <span>${escapeHtml(pattern.day || "Day")}</span>
+          <strong>${week.date ? formatShortDate(week.date) : `Week ${escapeHtml(week.week)}`}</strong>
+        </div>
+        <div class="day-material-copy">
+          <div class="day-material-title-row">
+            <h6>${escapeHtml(week.materialTitle)}</h6>
+            <span class="tag">${escapeHtml(week.status)}</span>
+          </div>
+          <p>${escapeHtml(pattern.title)} - ${escapeHtml(week.expectedWork)}</p>
+          <div class="day-material-actions">
+            ${week.materialUrl
+              ? `<a class="primary-btn inline-link" href="${escapeHtml(week.materialUrl)}" target="_blank" rel="noreferrer">Open material</a>`
+              : '<span class="tag">Material pending</span>'}
+            <label class="solution-upload compact-upload">
+              <span>Submit solution</span>
+              <input type="file" data-solution-upload="${escapeHtml(week.id)}" accept=".pdf,.txt,.md,.png,.jpg,.jpeg">
+            </label>
+          </div>
+          <p class="fine-print">${escapeHtml(uploadLabel)}</p>
+        </div>
+      </div>
+      <div class="day-status-row">
+        <span class="tag">${hasFeedback ? "Feedback saved" : hasUpload ? "Ready for feedback" : "Submit solution first"}</span>
+        ${hasUpload
+          ? `<button class="small-btn" data-open-day-feedback="${escapeHtml(week.id)}" type="button">${hasFeedback ? "Review feedback" : "Give feedback"}</button>`
+          : '<p class="feedback-placeholder">Feedback page unlocks after a solution is submitted for this day.</p>'}
+      </div>
+    </article>
+  `;
+}
+
+function findPatternMaterial(subject, materialId) {
+  for (const pattern of subject.patternWorkspaces || []) {
+    const week = (pattern.weeks || []).find((entry) => entry.id === materialId);
+    if (week) return { pattern, week };
+  }
+  return null;
+}
+
+function patternMaterialFeedbackPageTemplate(subject, material) {
+  const { pattern, week } = material;
+  const submission = patternSubmission(week.id);
+  const workflow = week.feedbackWorkflow || defaultFeedbackWorkflow(pattern, week);
+  const feedbackRecord = submission?.feedbackRecord || {};
+  const hasSubmission = Boolean(submission?.fileName);
+  return `
+    <article class="subject-reader pattern-workspace feedback-page-workspace">
+      <div class="subject-reader-header">
+        <button class="text-btn" data-week-back type="button">Back to week</button>
+        <button class="text-btn" data-subject-back type="button">Back to subjects</button>
+      </div>
+      <section class="feedback-page">
+        <div class="feedback-page-hero">
+          <div>
+            <p class="eyebrow">Week ${escapeHtml(week.week)} / ${escapeHtml(pattern.day)}</p>
+            <h4>${escapeHtml(week.materialTitle)}</h4>
+            <p>${escapeHtml(pattern.focus)}</p>
+          </div>
+          <span class="tag">${hasSubmission ? "Solution submitted" : "Awaiting solution"}</span>
+        </div>
+
+        <div class="feedback-page-grid">
+          <section class="feedback-context-card">
+            <h5>Material</h5>
+            <p>${formatDate(week.date)} - ${escapeHtml(week.expectedWork)}</p>
+            ${week.materialUrl
+              ? `<a class="primary-btn inline-link" href="${escapeHtml(week.materialUrl)}" target="_blank" rel="noreferrer">Open material page</a>`
+              : '<span class="tag">Material pending</span>'}
+          </section>
+          <section class="feedback-context-card">
+            <h5>Submission</h5>
+            <p>${hasSubmission ? `Submitted file: ${escapeHtml(submission.fileName)}` : "Submit the solution for this day before recording feedback."}</p>
+            <label class="solution-upload compact-upload">
+              <span>${hasSubmission ? "Replace solution" : "Submit solution"}</span>
+              <input type="file" data-solution-upload="${escapeHtml(week.id)}" accept=".pdf,.txt,.md,.png,.jpg,.jpeg">
+            </label>
+          </section>
+          <section class="feedback-context-card">
+            <h5>Current Feedback</h5>
+            <p>${submission?.feedback ? escapeHtml(submission.feedback) : "No feedback saved yet."}</p>
+            ${submission?.feedbackEmailSentAt ? `<p class="fine-print">Email sent ${formatDate(submission.feedbackEmailSentAt.slice(0, 10))}.</p>` : ""}
+          </section>
+        </div>
+
+        ${hasSubmission
+          ? `<section class="feedback-editor" data-material-card="${escapeHtml(week.id)}">
+              ${feedbackWorkflowTemplate(workflow, feedbackRecord)}
+              <div class="feedback-page-actions">
+                <button class="primary-btn" data-save-pattern-feedback type="button">Save feedback</button>
+              </div>
+            </section>`
+          : '<section class="feedback-placeholder feedback-page-empty">Upload a solution first. The feedback editor will appear here for this day only.</section>'}
+      </section>
     </article>
   `;
 }
@@ -10805,8 +11045,8 @@ function feedbackWorkflowTemplate(workflow, feedbackRecord) {
         </div>
         <span class="tag">JSON schema</span>
       </div>
-      <details class="feedback-spec">
-        <summary>Rubric and skill tags</summary>
+      <section class="feedback-spec">
+        <div class="feedback-spec-title">Rubric, skills, and next action guide</div>
         <div class="feedback-spec-grid">
           <div>
             <strong>Rubric</strong>
@@ -10826,8 +11066,14 @@ function feedbackWorkflowTemplate(workflow, feedbackRecord) {
               ${(workflow.commonIssues || []).map((issue) => `<li>${escapeHtml(issue)}</li>`).join("")}
             </ul>
           </div>
+          <div>
+            <strong>Default next drills</strong>
+            <ul>
+              ${(workflow.defaultNextDrills || []).map((drill) => `<li>${escapeHtml(drill.skill)} / ${escapeHtml(drill.difficulty)}: ${escapeHtml(drill.instruction)}</li>`).join("")}
+            </ul>
+          </div>
         </div>
-      </details>
+      </section>
       <div class="feedback-form-grid">
         <label>
           <span>Verdict</span>
@@ -10933,28 +11179,88 @@ function upsertPatternSubmission(materialId, updates) {
 function savePatternSolutionUpload(input) {
   const file = input.files?.[0];
   if (!file) return;
-  upsertPatternSubmission(input.dataset.solutionUpload, {
+  const materialId = input.dataset.solutionUpload;
+  upsertPatternSubmission(materialId, {
     fileName: file.name,
     fileType: file.type || "unknown",
     uploadedAt: new Date().toISOString()
   });
+  selectedPatternMaterialId = materialId;
   persist();
   renderSubjects();
 }
 
-function savePatternFeedback(button) {
+async function savePatternFeedback(button) {
   const card = button.closest("[data-material-card]");
   if (!card) return;
   const materialId = card.dataset.materialCard;
   const feedbackRecord = collectStructuredFeedback(card);
   const feedback = summarizeFeedbackRecord(feedbackRecord);
-  upsertPatternSubmission(materialId, {
+  const submission = upsertPatternSubmission(materialId, {
     feedbackRecord,
     feedback,
     feedbackUpdatedAt: new Date().toISOString()
   });
+  await sendFeedbackEmail(materialId, submission);
   persist();
   renderSubjects();
+}
+
+function findPatternMaterialAcrossState(materialId) {
+  for (const subject of state.subjects || []) {
+    const match = findPatternMaterial(subject, materialId);
+    if (match) return match;
+  }
+  return null;
+}
+
+async function sendFeedbackEmail(materialId, submission) {
+  const email = state.user.email || "";
+  if (!email) return;
+  const material = findPatternMaterialAcrossState(materialId);
+  const materialTitle = material?.week?.materialTitle || "Aleph material";
+  const payload = {
+    email,
+    name: state.user.displayName || state.user.name,
+    materialTitle,
+    feedback: submission.feedback,
+    appUrl: window.location.origin
+  };
+
+  try {
+    const result = await fetch("/api/send-feedback", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(payload)
+    });
+
+    if (result.ok) {
+      submission.feedbackEmailSentAt = new Date().toISOString();
+      return;
+    }
+  } catch {
+    // Fall through to a local mail draft in dev or when Vercel email is not configured.
+  }
+
+  draftFeedbackEmail(payload);
+}
+
+function draftFeedbackEmail({ email, name, materialTitle, feedback, appUrl }) {
+  const subject = `Aleph feedback ready: ${materialTitle}`;
+  const body = [
+    `Hi ${name || "Learner"},`,
+    "",
+    `Feedback is ready for: ${materialTitle}`,
+    "",
+    feedback,
+    "",
+    `Open your workspace: ${appUrl || window.location.origin}`,
+    "",
+    "Aleph"
+  ].join("\n");
+  window.location.href = `mailto:${encodeURIComponent(email)}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
 }
 
 function collectStructuredFeedback(card) {
