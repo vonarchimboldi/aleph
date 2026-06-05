@@ -1,7 +1,7 @@
 const STORAGE_KEY = "learning-studio-data-v2";
 const LEGACY_STORAGE_KEYS = ["learning-studio-data-v1"];
 const SESSION_KEY = "aleph-session";
-const COURSE_PLAN_VERSION = "seeded-user-canonical-workspace-v65";
+const COURSE_PLAN_VERSION = "seeded-user-canonical-workspace-v66";
 
 const state = loadState();
 let selectedSubjectId = null;
@@ -10844,19 +10844,23 @@ function weekPlanTemplate(group) {
   const startDate = group.days[0]?.week?.date || group.date || "";
   const endDate = group.days.at(-1)?.week?.date || startDate;
   const completed = group.days.filter(({ week }) => patternSubmission(week.id)?.feedbackRecord).length;
+  const isCurrentWeek = Number(group.week) === currentWeekNumber();
   return `
-    <section class="week-plan-card">
-      <div class="week-plan-header">
+    <details class="week-plan-card" ${isCurrentWeek ? "open" : ""}>
+      <summary class="week-plan-summary">
         <div>
-          <p class="eyebrow">Week ${escapeHtml(group.week)}</p>
+          <span class="week-toggle-label">Week ${escapeHtml(group.week)}</span>
           <h5>${startDate ? `${formatDate(startDate)}${endDate && endDate !== startDate ? ` - ${formatDate(endDate)}` : ""}` : "Daily material"}</h5>
         </div>
-        <span class="tag">${completed}/${group.days.length} feedback complete</span>
-      </div>
+        <div class="week-summary-meta">
+          <span class="tag">${group.days.length} days</span>
+          <span class="tag">${completed}/${group.days.length} feedback complete</span>
+        </div>
+      </summary>
       <div class="day-material-list">
         ${group.days.map(dayMaterialTemplate).join("")}
       </div>
-    </section>
+    </details>
   `;
 }
 

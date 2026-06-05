@@ -50,8 +50,8 @@
     <main>
       <h1>Aleph fresh start</h1>
       <p id="status">Clearing old Aleph browser state, service workers, and caches...</p>
-      <p>Expected build after redirect: <code>seeded-user-canonical-workspace-v65</code>.</p>
-      <p><a id="home-link" href="/?fresh=seeded-user-canonical-workspace-v65">Open Aleph</a></p>
+      <p>Expected build after redirect: <code>seeded-user-canonical-workspace-v66</code>.</p>
+      <p><a id="home-link" href="/?fresh=seeded-user-canonical-workspace-v66">Open Aleph</a></p>
     </main>
     <script>
       async function clearAlephState() {
@@ -70,7 +70,7 @@
         }
 
         document.querySelector("#status").textContent = "Cleared. Redirecting to the fresh Aleph build...";
-        window.location.replace("/?fresh=seeded-user-canonical-workspace-v65");
+        window.location.replace("/?fresh=seeded-user-canonical-workspace-v66");
       }
 
       clearAlephState().catch((error) => {
