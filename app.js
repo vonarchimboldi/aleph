@@ -1,7 +1,7 @@
 const STORAGE_KEY = "learning-studio-data-v2";
 const LEGACY_STORAGE_KEYS = ["learning-studio-data-v1"];
 const SESSION_KEY = "aleph-session";
-const COURSE_PLAN_VERSION = "seeded-user-canonical-workspace-v61";
+const COURSE_PLAN_VERSION = "seeded-user-canonical-workspace-v64";
 
 const state = loadState();
 let selectedSubjectId = null;
@@ -6025,6 +6025,19 @@ function continuousDistributionPracticeProblems() {
 }
 
 function continuousDistributionReviewQuestions() {
+  const metadata = {
+    "cd-review-1": { targetConcept: "exponential", prereqsUsed: ["distribution-recognition"], difficulty: 1, gateWeight: "high" },
+    "cd-review-2": { targetConcept: "poisson", prereqsUsed: ["distribution-recognition"], difficulty: 1, gateWeight: "high" },
+    "cd-review-3": { targetConcept: "gamma", prereqsUsed: ["exponential", "poisson-process"], difficulty: 1, gateWeight: "medium" },
+    "cd-review-4": { targetConcept: "standard-normal", prereqsUsed: ["normal", "standardisation"], difficulty: 1, gateWeight: "high" },
+    "cd-review-5": { targetConcept: "order-statistics", prereqsUsed: ["sample-sorting"], difficulty: 1, gateWeight: "high" },
+    "cd-review-6": { targetConcept: "poisson-process", prereqsUsed: ["poisson", "exponential"], difficulty: 2, gateWeight: "high" },
+    "cd-review-7": { targetConcept: "order-statistic-cdf", prereqsUsed: ["order-statistics", "cdf", "independence"], difficulty: 2, gateWeight: "high" },
+    "cd-review-8": { targetConcept: "beta", prereqsUsed: ["order-statistics", "uniform"], difficulty: 2, gateWeight: "medium" },
+    "cd-review-9": { targetConcept: "uniform-spacings", prereqsUsed: ["uniform", "multinomial"], difficulty: 3, gateWeight: "medium" },
+    "cd-review-10": { targetConcept: "exponential-family", prereqsUsed: ["distribution-recognition"], difficulty: 2, gateWeight: "medium" },
+    "cd-review-11": { targetConcept: "memorylessness", prereqsUsed: ["exponential", "conditional-probability"], difficulty: 2, gateWeight: "high" }
+  };
   return [
     {
       id: "cd-review-1",
@@ -6169,7 +6182,10 @@ function continuousDistributionReviewQuestions() {
       ],
       answer: "a"
     }
-  ];
+  ].map((question) => ({
+    ...question,
+    ...(metadata[question.id] || { targetConcept: question.tags[0], prereqsUsed: question.tags.slice(1), difficulty: question.tags.length, gateWeight: "medium" })
+  }));
 }
 
 function limitTheoremPracticeProblems() {
@@ -6868,6 +6884,18 @@ function conditionalExpectationPracticeProblems() {
 }
 
 function conditionalExpectationReviewQuestions() {
+  const metadata = {
+    "ce-review-1": { targetConcept: "conditional-expectation", prereqsUsed: ["expectation"], difficulty: 1, gateWeight: "high" },
+    "ce-review-2": { targetConcept: "conditional-expectation-value", prereqsUsed: ["conditional-expectation"], difficulty: 1, gateWeight: "high" },
+    "ce-review-3": { targetConcept: "conditional-expectation-random-variable", prereqsUsed: ["conditional-expectation-value"], difficulty: 1, gateWeight: "high" },
+    "ce-review-4": { targetConcept: "tower-property", prereqsUsed: ["conditional-expectation-random-variable", "expectation"], difficulty: 1, gateWeight: "high" },
+    "ce-review-5": { targetConcept: "total-expectation", prereqsUsed: ["case-splitting", "tower-property"], difficulty: 1, gateWeight: "high" },
+    "ce-review-6": { targetConcept: "conditional-variance", prereqsUsed: ["conditional-expectation", "variance"], difficulty: 2, gateWeight: "high" },
+    "ce-review-7": { targetConcept: "total-variance", prereqsUsed: ["conditional-variance", "total-expectation"], difficulty: 2, gateWeight: "high" },
+    "ce-review-8": { targetConcept: "prediction", prereqsUsed: ["conditional-expectation-random-variable"], difficulty: 2, gateWeight: "medium" },
+    "ce-review-9": { targetConcept: "fair-game", prereqsUsed: ["conditional-expectation-random-variable", "zero-mean-increment"], difficulty: 3, gateWeight: "medium" },
+    "ce-review-10": { targetConcept: "conditioning-choice", prereqsUsed: ["case-splitting", "total-expectation"], difficulty: 3, gateWeight: "high" }
+  };
   return [
     {
       id: "ce-review-1",
@@ -6999,7 +7027,10 @@ function conditionalExpectationReviewQuestions() {
       ],
       answer: "a"
     }
-  ];
+  ].map((question) => ({
+    ...question,
+    ...(metadata[question.id] || { targetConcept: question.tags[0], prereqsUsed: question.tags.slice(1), difficulty: question.tags.length, gateWeight: "medium" })
+  }));
 }
 
 function covariancePracticeProblems() {
@@ -8416,6 +8447,238 @@ function covarianceCorrelationConceptGraph() {
   };
 }
 
+function conditionalExpectationConceptGraph() {
+  return {
+    chapterId: "gate-da-conditional-expectation-variance",
+    chapterTitle: "Conditional Expectation and Conditional Variance",
+    gateWeight: "high",
+    fallbackConcepts: ["conditional-expectation", "tower-property", "total-expectation"],
+    fallbackDifficultyMix: [1, 2, 2, 3],
+    fallbackInstruction: "Move to a compact Chapter 7 review set that starts with conditional averages, then mixes tower property, variance decomposition, prediction, and fair-game recognition.",
+    stableNextAction: "Next: try a mixed Chapter 7 review set at difficulty 3.",
+    nodes: {
+      expectation: {
+        label: "Expectation prerequisite",
+        prereqs: [],
+        repairMaterial: "Review Chapter 3 expectation as a weighted average before conditioning on information.",
+        gateWeight: "high"
+      },
+      variance: {
+        label: "Variance prerequisite",
+        prereqs: [],
+        repairMaterial: "Review Chapter 4 variance and the shortcut Var(X)=E[X^2]-(E[X])^2 before using conditional variance.",
+        gateWeight: "high"
+      },
+      "case-splitting": {
+        label: "Case splitting",
+        prereqs: [],
+        repairMaterial: "Review total probability and split by the first-stage source, group, or observed value before averaging.",
+        gateWeight: "high"
+      },
+      "conditional-expectation": {
+        label: "Conditional expectation",
+        prereqs: ["expectation", "case-splitting"],
+        repairMaterial: "Review Chapter 7.1 and explain conditional expectation as the average after information is known.",
+        gateWeight: "high"
+      },
+      "conditional-expectation-value": {
+        label: "Conditional expectation at Y=y",
+        prereqs: ["conditional-expectation"],
+        repairMaterial: "Practice computing E[X|Y=y] from one conditional distribution after fixing the observed value y.",
+        gateWeight: "high"
+      },
+      "conditional-expectation-random-variable": {
+        label: "Conditional expectation as a random variable",
+        prereqs: ["conditional-expectation-value"],
+        repairMaterial: "Review the difference between E[X|Y=y] as a number and E[X|Y] as the rule that changes with Y.",
+        gateWeight: "high"
+      },
+      "tower-property": {
+        label: "Tower property",
+        prereqs: ["conditional-expectation-random-variable", "expectation"],
+        repairMaterial: "Redo one grouped-average example and verify that averaging E[X|Y] over Y gives E[X].",
+        gateWeight: "high"
+      },
+      "total-expectation": {
+        label: "Total expectation",
+        prereqs: ["case-splitting", "tower-property"],
+        repairMaterial: "Review Chapter 7.3 and compute an overall mean from case probabilities times case means.",
+        gateWeight: "high"
+      },
+      "conditional-variance": {
+        label: "Conditional variance",
+        prereqs: ["conditional-expectation", "variance"],
+        repairMaterial: "Compute E[X^2|Y=y]-(E[X|Y=y])^2 inside one condition before moving to total variance.",
+        gateWeight: "high"
+      },
+      "total-variance": {
+        label: "Total variance",
+        prereqs: ["conditional-variance", "total-expectation"],
+        repairMaterial: "Review Var(X)=E[Var(X|Y)]+Var(E[X|Y]) and label within-group and between-group spread.",
+        gateWeight: "high"
+      },
+      prediction: {
+        label: "Best prediction",
+        prereqs: ["conditional-expectation-random-variable"],
+        repairMaterial: "Review why E[X|Y] is the best squared-error prediction after observing Y.",
+        gateWeight: "medium"
+      },
+      "zero-mean-increment": {
+        label: "Zero-mean increment",
+        prereqs: ["conditional-expectation"],
+        repairMaterial: "Check whether the next change has conditional mean 0 after the current information is known.",
+        gateWeight: "medium"
+      },
+      "fair-game": {
+        label: "Fair-game intuition",
+        prereqs: ["conditional-expectation-random-variable", "zero-mean-increment"],
+        repairMaterial: "Review the fair-game example and state why the expected next value equals the current value.",
+        gateWeight: "medium"
+      },
+      "conditioning-choice": {
+        label: "Conditioning choice",
+        prereqs: ["case-splitting", "total-expectation"],
+        repairMaterial: "Look for first-stage language such as chosen box, source, group, or observed signal, then condition on that variable.",
+        gateWeight: "high"
+      }
+    }
+  };
+}
+
+function continuousDistributionsOrderStatisticsConceptGraph() {
+  return {
+    chapterId: "gate-da-continuous-distributions-order-statistics",
+    chapterTitle: "Continuous Distributions and Order Statistics",
+    gateWeight: "high",
+    fallbackConcepts: ["exponential", "poisson", "order-statistics"],
+    fallbackDifficultyMix: [1, 2, 2, 3],
+    fallbackInstruction: "Move to a compact Chapter 8 review set that starts with distribution stories, then mixes Poisson-process links, normal standardisation, order-statistic CDFs, beta, and interval-count reasoning.",
+    stableNextAction: "Next: try a mixed Chapter 8 review set at difficulty 3.",
+    nodes: {
+      "distribution-recognition": {
+        label: "Distribution recognition",
+        prereqs: [],
+        repairMaterial: "Review Chapter 8.1 and classify each variable as a count, wait, measurement, sorted value, gap, or proportion.",
+        gateWeight: "high"
+      },
+      "conditional-probability": {
+        label: "Conditional-probability prerequisite",
+        prereqs: [],
+        repairMaterial: "Review Chapter 2 conditional probability before deriving exponential memorylessness.",
+        gateWeight: "medium"
+      },
+      cdf: {
+        label: "CDF prerequisite",
+        prereqs: [],
+        repairMaterial: "Review CDF statements as events of the form X<=x before translating order-statistic events.",
+        gateWeight: "high"
+      },
+      independence: {
+        label: "Independence prerequisite",
+        prereqs: [],
+        repairMaterial: "Review multiplying probabilities for iid observations before deriving min, max, or kth-order CDFs.",
+        gateWeight: "high"
+      },
+      uniform: {
+        label: "Uniform prerequisite",
+        prereqs: [],
+        repairMaterial: "Review Uniform(0,1) probabilities as interval lengths before using beta and spacing facts.",
+        gateWeight: "medium"
+      },
+      "sample-sorting": {
+        label: "Sample sorting",
+        prereqs: [],
+        repairMaterial: "Sort a five-value sample by hand and label X_(1), X_(2), ..., X_(n) before using formulas.",
+        gateWeight: "high"
+      },
+      exponential: {
+        label: "Exponential waiting time",
+        prereqs: ["distribution-recognition"],
+        repairMaterial: "Review Chapter 8.2 and translate T>t into 'no event has arrived by time t'.",
+        gateWeight: "high"
+      },
+      memorylessness: {
+        label: "Memorylessness",
+        prereqs: ["exponential", "conditional-probability"],
+        repairMaterial: "Redo the Chapter 8.2 derivation of P(T>s+t | T>s)=P(T>t) using exponential survival.",
+        gateWeight: "high"
+      },
+      poisson: {
+        label: "Poisson count",
+        prereqs: ["distribution-recognition"],
+        repairMaterial: "Review Chapter 8.3 and identify the fixed interval and its expected count before using the Poisson PMF.",
+        gateWeight: "high"
+      },
+      "poisson-process": {
+        label: "Poisson-process count/wait link",
+        prereqs: ["poisson", "exponential"],
+        repairMaterial: "Review Chapter 8.4 and practice translating T_1>t to N(t)=0 and T_k<=t to N(t)>=k.",
+        gateWeight: "high"
+      },
+      gamma: {
+        label: "Gamma waiting time",
+        prereqs: ["exponential", "poisson-process"],
+        repairMaterial: "Review Chapter 8.5 and explain why the kth-event wait is a sum of k exponential gaps.",
+        gateWeight: "medium"
+      },
+      normal: {
+        label: "Normal distribution",
+        prereqs: ["distribution-recognition"],
+        repairMaterial: "Review Chapter 8.6 and identify the mean and standard deviation before standardising.",
+        gateWeight: "high"
+      },
+      standardisation: {
+        label: "Standardisation",
+        prereqs: [],
+        repairMaterial: "Practice computing z=(x-mu)/sigma and interpret it as standard-deviation units from the mean.",
+        gateWeight: "high"
+      },
+      "standard-normal": {
+        label: "Standard normal",
+        prereqs: ["normal", "standardisation"],
+        repairMaterial: "Review Chapter 8.6 and convert one Normal(mu, sigma^2) probability into a Phi statement.",
+        gateWeight: "high"
+      },
+      "order-statistics": {
+        label: "Order statistics",
+        prereqs: ["sample-sorting"],
+        repairMaterial: "Review Chapter 8.7 and translate minimum, maximum, and kth-smallest language into sorted sample notation.",
+        gateWeight: "high"
+      },
+      "order-statistic-cdf": {
+        label: "Order-statistic CDF method",
+        prereqs: ["order-statistics", "cdf", "independence"],
+        repairMaterial: "Practice deriving P(max<=m)=F(m)^n and P(X_(k)<=x) by counting observations at or below x.",
+        gateWeight: "high"
+      },
+      beta: {
+        label: "Beta from uniform order statistics",
+        prereqs: ["order-statistics", "uniform"],
+        repairMaterial: "Review Chapter 8.8 and connect U_(k) to Beta(k,n+1-k) by counting points left of u.",
+        gateWeight: "medium"
+      },
+      multinomial: {
+        label: "Multinomial interval counts",
+        prereqs: ["uniform"],
+        repairMaterial: "Review fixed interval counts and use interval lengths as cell probabilities.",
+        gateWeight: "medium"
+      },
+      "uniform-spacings": {
+        label: "Uniform spacings and fixed intervals",
+        prereqs: ["uniform", "multinomial"],
+        repairMaterial: "Review Chapter 8.9 and replace fixed-interval spacing questions with multinomial counts when possible.",
+        gateWeight: "medium"
+      },
+      "exponential-family": {
+        label: "Exponential-family recognition",
+        prereqs: ["distribution-recognition"],
+        repairMaterial: "Review Chapter 8.10 and list why Poisson, exponential, gamma, normal, and beta models reappear in inference.",
+        gateWeight: "medium"
+      }
+    }
+  };
+}
+
 function probabilityFoundationReviewQuestions() {
   const metadata = {
     "pf-review-1": { targetConcept: "sample-space", prereqsUsed: [], difficulty: 1, gateWeight: "high" },
@@ -8869,9 +9132,10 @@ function probabilityStatsPatternWorkspaces() {
           week: 1,
           date: "2026-06-05",
           materialTitle: "June 5: UMP/NP Tests Pset",
-          materialUrl: "",
-          status: "Pending",
-          expectedWork: "Planned 10-problem set: simple-vs-simple NP, one-sided UMP, transformed samples, monotone likelihood ratios, and power."
+          materialUrl: "psets/week-01/june-05-ump-np-tests.html",
+          status: "Published",
+          expectedWork: "10 problems: 5 NP mechanics drills, 3 UMP/MLR applications, and 2 ISI-style randomized/no-UMP arguments.",
+          feedbackWorkflow: umpNpFeedbackWorkflow()
         }
       ]
     },
@@ -9085,6 +9349,43 @@ function mleEstimationFeedbackWorkflow() {
       { skill: "likelihood-setup", difficulty: "mechanics", instruction: "Write only the likelihood and log-likelihood for three models before optimizing." },
       { skill: "support-constraint", difficulty: "application", instruction: "Do two support-dependent MLE problems and mark the allowed parameter interval first." },
       { skill: "rao-blackwell", difficulty: "hard", instruction: "Redo one Rao-Blackwell problem by first conditioning on the sufficient statistic and using symmetry." }
+    ]
+  });
+}
+
+function umpNpFeedbackWorkflow() {
+  return baseFeedbackWorkflow({
+    id: "feedback-workflow-ump-np-v1",
+    title: "Structured Feedback: UMP and NP Tests",
+    promptUse: "Use this after reading the submitted solution. Diagnose whether the learner formed the likelihood ratio, chose the rejection direction, calibrated size under the null, computed power under the alternative, and justified UMP claims through monotone likelihood ratio.",
+    studentSummaryHint: "Summarize whether the learner built the test from the likelihood ratio and calibrated size/power using the correct distribution.",
+    skills: [
+      { id: "likelihood-ratio", label: "Forms likelihood ratio" },
+      { id: "rejection-direction", label: "Chooses correct rejection direction" },
+      { id: "size-calibration", label: "Calibrates size under null" },
+      { id: "randomization", label: "Handles boundary randomization" },
+      { id: "power-computation", label: "Computes power under alternative" },
+      { id: "mlr-ump", label: "Justifies UMP through MLR" },
+      { id: "no-ump", label: "Recognizes no-UMP two-sided conflict" }
+    ],
+    rubric: [
+      { criterion: "Likelihood ratio setup", points: 2, cue: "Wrote L1/L0 or compared likelihoods before selecting the critical region." },
+      { criterion: "Critical region direction", points: 2, cue: "Identified whether large or small values of the statistic support the alternative." },
+      { criterion: "Size and randomization", points: 2, cue: "Computed rejection probability under H0 and randomized only at the boundary when needed." },
+      { criterion: "Power and UMP reasoning", points: 2, cue: "Computed power under H1 and used MLR/boundary-null reasoning for one-sided UMP claims." },
+      { criterion: "Final statement", points: 2, cue: "Stated the test, size, power, and limitation or UMP condition in a complete sentence." }
+    ],
+    commonIssues: [
+      "Computed size under the alternative instead of under the null.",
+      "Chose the wrong tail after simplifying the likelihood ratio.",
+      "Used randomization in the wrong boundary cell.",
+      "Claimed UMP for a two-sided alternative without checking competing NP tails.",
+      "Forgot that power must be evaluated using the alternative parameter."
+    ],
+    defaultNextDrills: [
+      { skill: "likelihood-ratio", difficulty: "mechanics", instruction: "Write L1/L0 and the rejection direction for three simple-vs-simple tests before computing any probability." },
+      { skill: "size-calibration", difficulty: "application", instruction: "Do two discrete tests where exact size requires boundary randomization." },
+      { skill: "mlr-ump", difficulty: "hard", instruction: "Redo one one-sided UMP problem and explicitly name the statistic with monotone likelihood ratio." }
     ]
   });
 }
@@ -9871,6 +10172,8 @@ function conceptGraphForSection(section) {
   if (section?.id === "gate-da-variance-standard-deviation-tail-bounds") return varianceTailBoundsConceptGraph();
   if (section?.id === "gate-da-joint-distributions") return jointDistributionsConceptGraph();
   if (section?.id === "gate-da-covariance-correlation") return covarianceCorrelationConceptGraph();
+  if (section?.id === "gate-da-conditional-expectation-variance") return conditionalExpectationConceptGraph();
+  if (section?.id === "gate-da-continuous-distributions-order-statistics") return continuousDistributionsOrderStatisticsConceptGraph();
   return null;
 }
 
