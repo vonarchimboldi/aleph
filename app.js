@@ -1,7 +1,8 @@
 const STORAGE_KEY = "learning-studio-data-v2";
 const LEGACY_STORAGE_KEYS = ["learning-studio-data-v1"];
 const SESSION_KEY = "aleph-session";
-const COURSE_PLAN_VERSION = "seeded-user-canonical-workspace-v66";
+const COURSE_PLAN_VERSION = "seeded-user-canonical-workspace-v67";
+const PRIYANKA_PLATINUM_START_DATE = "2026-06-07";
 
 const state = loadState();
 let selectedSubjectId = null;
@@ -248,8 +249,8 @@ function slugify(value) {
 }
 
 function buildPriyankaPlatinumPlan(now, accountTypes, sections, user = defaultUser()) {
-  const startDate = "2026-06-01";
-  const endDate = "2026-08-30";
+  const startDate = PRIYANKA_PLATINUM_START_DATE;
+  const endDate = "2026-09-05";
   const userSlug = slugify(user.name || user.id || "learner");
   const lessonPlanId = `lesson-${userSlug}-platinum`;
   const subjects = [
@@ -9036,7 +9037,7 @@ function probabilityStatsMilestones() {
 
   return weeklyFocus.map((focus, weekIndex) => ({
     focus,
-    problemDays: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"].map((day, dayIndex) => {
+    problemDays: ["Day 1", "Day 2", "Day 3", "Day 4", "Day 5", "Day 6"].map((day, dayIndex) => {
       const theme = cycle[dayIndex % cycle.length];
       const intensity = dayIndex < 3 ? "core drill" : dayIndex < 5 ? "variation drill" : "mixed PSB-style drill";
       return {
@@ -9053,14 +9054,14 @@ function probabilityStatsPatternWorkspaces() {
     {
       id: "pattern-indicators",
       title: "Method of Indicators",
-      day: "Monday",
+      day: "Day 1",
       focus: "Convert random counts into sums of yes/no variables, then use linearity, symmetry, and pairwise products.",
       weeks: [
         {
           id: "ps-w1-indicators",
           week: 1,
-          date: "2026-06-01",
-          materialTitle: "June 1: Method of Indicators Pset",
+          date: "2026-06-07",
+          materialTitle: "June 7: Method of Indicators Pset",
           materialUrl: "psets/week-01/june-01-indicators.html",
           status: "Published",
           expectedWork: "10 problems: 5 concept builders, 3 integration problems, 2 ISI past-year/reconstructed problems.",
@@ -9071,14 +9072,14 @@ function probabilityStatsPatternWorkspaces() {
     {
       id: "pattern-conditional-expectation",
       title: "Conditional Expectation and Tower Property",
-      day: "Tuesday",
+      day: "Day 2",
       focus: "Choose the simplifying variable, compute the inner expectation, and average back out.",
       weeks: [
         {
           id: "ps-w1-conditional-expectation",
           week: 1,
-          date: "2026-06-02",
-          materialTitle: "June 2: Conditional Expectation and Tower Property Pset",
+          date: "2026-06-08",
+          materialTitle: "June 8: Conditional Expectation and Tower Property Pset",
           materialUrl: "psets/week-01/june-02-conditional-expectation-tower.html",
           status: "Published",
           expectedWork: "10 problems: 5 mechanics drills, 3 application problems, and 2 hard hidden-pattern problems.",
@@ -9089,14 +9090,14 @@ function probabilityStatsPatternWorkspaces() {
     {
       id: "pattern-order-statistics",
       title: "Order Statistics",
-      day: "Wednesday",
+      day: "Day 3",
       focus: "Derive exact min/max/kth-order laws, joint laws, spacings, and scaling limits.",
       weeks: [
         {
           id: "ps-w1-order-statistics",
           week: 1,
-          date: "2026-06-03",
-          materialTitle: "June 3: Order Statistics Pset",
+          date: "2026-06-09",
+          materialTitle: "June 9: Order Statistics Pset",
           materialUrl: "psets/week-01/june-03-order-statistics.html",
           status: "Published",
           expectedWork: "10 problems: 5 concept builders, 3 application problems, and 2 challenge/ISI-style problems.",
@@ -9107,14 +9108,14 @@ function probabilityStatsPatternWorkspaces() {
     {
       id: "pattern-mle",
       title: "MLE and Estimation",
-      day: "Thursday",
+      day: "Day 4",
       focus: "Set up likelihoods, identify optimizer location, and evaluate estimator quality.",
       weeks: [
         {
           id: "ps-w1-mle",
           week: 1,
-          date: "2026-06-04",
-          materialTitle: "June 4: MLE and Estimation Pset",
+          date: "2026-06-10",
+          materialTitle: "June 10: MLE and Estimation Pset",
           materialUrl: "psets/week-01/june-04-mle-estimation.html",
           status: "Published",
           expectedWork: "10 problems: 5 likelihood mechanics, 3 application problems, and 2 ISI-style sufficiency/UMVUE problems.",
@@ -9125,14 +9126,14 @@ function probabilityStatsPatternWorkspaces() {
     {
       id: "pattern-ump-np",
       title: "UMP/NP Tests",
-      day: "Friday",
+      day: "Day 5",
       focus: "Construct likelihood-ratio tests, calibrate size, and compute power under alternatives.",
       weeks: [
         {
           id: "ps-w1-ump-np",
           week: 1,
-          date: "2026-06-05",
-          materialTitle: "June 5: UMP/NP Tests Pset",
+          date: "2026-06-11",
+          materialTitle: "June 11: UMP/NP Tests Pset",
           materialUrl: "psets/week-01/june-05-ump-np-tests.html",
           status: "Published",
           expectedWork: "10 problems: 5 NP mechanics drills, 3 UMP/MLR applications, and 2 ISI-style randomized/no-UMP arguments.",
@@ -9143,14 +9144,14 @@ function probabilityStatsPatternWorkspaces() {
     {
       id: "pattern-regression-ols",
       title: "Regression and OLS",
-      day: "Saturday",
+      day: "Day 6",
       focus: "Use normal equations, projection geometry, and estimator interpretation in regression problems.",
       weeks: [
         {
           id: "ps-w1-regression-ols",
           week: 1,
-          date: "2026-06-06",
-          materialTitle: "June 6: Regression and OLS Pset",
+          date: "2026-06-12",
+          materialTitle: "June 12: Regression and OLS Pset",
           materialUrl: "",
           status: "Pending",
           expectedWork: "Planned 10-problem set: simple OLS, matrix OLS, constrained OLS, slope invariance, residual identities, and L1 contrast."
@@ -9171,8 +9172,8 @@ function competitionMathMaterialWorkspaces() {
         {
           id: "cm-w1-vietas-polynomials",
           week: 1,
-          date: "2026-06-01",
-          materialTitle: "June 1: Vieta and Polynomial Fundamentals",
+          date: "2026-06-07",
+          materialTitle: "June 7: Vieta and Polynomial Fundamentals",
           materialUrl: "psets/week-01/june-01-competition-math-vietas-polynomials.html",
           expectedWork: "One-hour session: review the core Vieta pattern, solve 10 scaffolded problems, then write technique-journal notes for missed triggers.",
           status: "Published",
@@ -9563,7 +9564,7 @@ function milestoneDetails(milestone) {
 }
 
 function probabilityProblemSetDetails(dayPlan, week) {
-  const weekOneMonday = week === 1 && dayPlan.day === "Monday" && dayPlan.topic === "method of indicators";
+  const weekOneMonday = week === 1 && dayPlan.day === "Day 1" && dayPlan.topic === "method of indicators";
   const resource = weekOneMonday ? " Material: psets/week-01/june-01-indicators.html." : "";
   return `Complete a 10-problem PSB practice set for Week ${week} ${dayPlan.day}. Theme: ${dayPlan.topic}. Structure: 5 concept builders, 3 pattern-integration problems, 2 ISI past-year or ISI-style problems. Pattern: ${dayPlan.pattern}. Variations to include: ${dayPlan.variations}. Mode: ${dayPlan.intensity}.${resource} After solving, write a short correction note for every missed setup, wrong statistic, algebra slip, or unsupported conclusion.`;
 }
@@ -9593,7 +9594,7 @@ function addDays(dateValue, days) {
 
 function weekFromDate(dateValue) {
   if (!dateValue) return 1;
-  const start = new Date("2026-06-01T00:00:00");
+  const start = new Date(`${PRIYANKA_PLATINUM_START_DATE}T00:00:00`);
   const date = new Date(`${dateValue}T00:00:00`);
   if (Number.isNaN(date.getTime())) return 1;
   return Math.max(1, Math.floor((date - start) / 604800000) + 1);
@@ -10813,11 +10814,11 @@ function patternWeekGroups(patterns) {
 }
 
 function weeklyReviewDay(group) {
-  const sunday = addDays(group.date || group.days[0]?.week?.date || "2026-06-01", 6);
+  const sunday = addDays(group.date || group.days[0]?.week?.date || PRIYANKA_PLATINUM_START_DATE, 6);
   const publishedWeekOne = Number(group.week) === 1;
   return {
     pattern: {
-      day: "Sunday",
+      day: "Day 7",
       title: "Weekly Review Quiz",
       focus: "One ISI-style multi-part question per weekly topic: indicators, conditional expectation, order statistics, MLE, UMP/NP tests, and regression/OLS."
     },
@@ -10825,7 +10826,7 @@ function weeklyReviewDay(group) {
       id: `ps-w${group.week}-sunday-review`,
       week: group.week,
       date: sunday,
-      materialTitle: `Week ${group.week}: Sunday PSB Review Quiz`,
+      materialTitle: `${formatShortDate(sunday)}: Week ${group.week} PSB Review Quiz`,
       materialUrl: publishedWeekOne ? "psets/week-01/june-07-psb-review-quiz.html" : "",
       status: publishedWeekOne ? "Published" : "Pending",
       expectedWork: "6 ISI-style questions, one per topic, with 3-4 subparts each.",
@@ -10835,7 +10836,7 @@ function weeklyReviewDay(group) {
 }
 
 function daySortValue(day) {
-  const order = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
+  const order = ["Day 1", "Day 2", "Day 3", "Day 4", "Day 5", "Day 6", "Day 7", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
   const index = order.indexOf(day || "");
   return index === -1 ? 99 : index;
 }
@@ -12376,7 +12377,7 @@ function statusLabel(status) {
 
 function currentWeekNumber() {
   const today = new Date();
-  const start = new Date("2026-06-01T00:00:00");
+  const start = new Date(`${PRIYANKA_PLATINUM_START_DATE}T00:00:00`);
   const diff = Math.floor((today - start) / 604800000) + 1;
   return Math.min(Math.max(diff, 1), 13);
 }
