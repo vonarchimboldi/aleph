@@ -1,8 +1,9 @@
 const STORAGE_KEY = "learning-studio-data-v2";
 const LEGACY_STORAGE_KEYS = ["learning-studio-data-v1"];
 const SESSION_KEY = "aleph-session";
-const COURSE_PLAN_VERSION = "seeded-user-canonical-workspace-v67";
+const COURSE_PLAN_VERSION = "seeded-user-canonical-workspace-v68";
 const PRIYANKA_PLATINUM_START_DATE = "2026-06-07";
+const DEFAULT_PLAN_START_DATE = "2026-06-01";
 
 const state = loadState();
 let selectedSubjectId = null;
@@ -9594,10 +9595,14 @@ function addDays(dateValue, days) {
 
 function weekFromDate(dateValue) {
   if (!dateValue) return 1;
-  const start = new Date(`${PRIYANKA_PLATINUM_START_DATE}T00:00:00`);
+  const start = new Date(`${activePlanStartDate()}T00:00:00`);
   const date = new Date(`${dateValue}T00:00:00`);
   if (Number.isNaN(date.getTime())) return 1;
   return Math.max(1, Math.floor((date - start) / 604800000) + 1);
+}
+
+function activePlanStartDate() {
+  return activeAccountTypeId() === "gate-da-platinum" ? PRIYANKA_PLATINUM_START_DATE : DEFAULT_PLAN_START_DATE;
 }
 
 function formatShortDate(value) {
@@ -11985,7 +11990,7 @@ function renderSchedule() {
 }
 
 function weekScheduleTemplate(week, items) {
-  const monday = addDays("2026-06-01", (week - 1) * 7);
+  const monday = addDays(activePlanStartDate(), (week - 1) * 7);
   const sunday = addDays(monday, 6);
   const subjects = [...new Set(items.map((item) => item.subject || subjectFromTitle(item.title)))];
   return `
@@ -12377,7 +12382,7 @@ function statusLabel(status) {
 
 function currentWeekNumber() {
   const today = new Date();
-  const start = new Date(`${PRIYANKA_PLATINUM_START_DATE}T00:00:00`);
+  const start = new Date(`${activePlanStartDate()}T00:00:00`);
   const diff = Math.floor((today - start) / 604800000) + 1;
   return Math.min(Math.max(diff, 1), 13);
 }
