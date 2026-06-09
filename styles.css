@@ -1459,6 +1459,103 @@ textarea {
   font-weight: 800;
 }
 
+.transform-gallery {
+  overflow-x: visible;
+}
+
+.transform-gallery-grid {
+  display: grid;
+  gap: 12px;
+  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+}
+
+.transform-card {
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  display: grid;
+  gap: 10px;
+  min-width: 0;
+  padding: 12px;
+}
+
+.transform-card-header {
+  display: grid;
+  gap: 4px;
+}
+
+.transform-card strong {
+  color: var(--ink);
+  font-size: 14px;
+  font-weight: 900;
+}
+
+.transform-card code {
+  background: #f7f9f8;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  color: var(--ink);
+  font-size: 12px;
+  font-weight: 800;
+  overflow-wrap: anywhere;
+  padding: 5px 6px;
+}
+
+.transform-card p {
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1.45;
+  margin: 0;
+}
+
+.transform-svg {
+  min-width: 0;
+}
+
+.diagram-input {
+  stroke: #94a3b8;
+  stroke-dasharray: 5 5;
+  stroke-linecap: round;
+  stroke-width: 2.5;
+}
+
+.diagram-input-label {
+  fill: #64748b;
+}
+
+.diagram-output,
+.diagram-output-alt {
+  fill: none;
+  stroke-linecap: round;
+  stroke-width: 4;
+}
+
+.diagram-output {
+  stroke: #1f5f70;
+}
+
+.diagram-output-alt {
+  stroke: #b77935;
+}
+
+.diagram-marker {
+  fill: #1f5f70;
+}
+
+.diagram-zero {
+  fill: #1f5f70;
+  stroke: #ffffff;
+  stroke-width: 2;
+}
+
+.diagram-mirror {
+  stroke: rgba(183, 121, 53, 0.72);
+  stroke-dasharray: 2 6;
+  stroke-linecap: round;
+  stroke-width: 5;
+}
+
 .bar-diagram {
   align-items: end;
   display: flex;

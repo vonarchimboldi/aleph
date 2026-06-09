@@ -1,7 +1,7 @@
 const STORAGE_KEY = "learning-studio-data-v2";
 const LEGACY_STORAGE_KEYS = ["learning-studio-data-v1"];
 const SESSION_KEY = "aleph-session";
-const COURSE_PLAN_VERSION = "seeded-user-canonical-workspace-v68";
+const COURSE_PLAN_VERSION = "seeded-user-canonical-workspace-v73";
 const PRIYANKA_PLATINUM_START_DATE = "2026-06-07";
 const DEFAULT_PLAN_START_DATE = "2026-06-01";
 
@@ -165,7 +165,7 @@ function buildCoursePlan(user = defaultUser()) {
   user = normalizeSeededUser(user);
   const now = new Date().toISOString();
   const accountTypes = accountTypeCatalog(now);
-  const sections = gateDaProbabilitySections(now);
+  const sections = gateDaBasicSections(now);
   if (isBasicPrototypeUser(user)) {
     return buildGateDaBasicPlan(now, accountTypes, sections, user);
   }
@@ -221,12 +221,21 @@ function sectionUnlockState(section, sections = activeGateDaSections()) {
   const previousSection = sections[index - 1];
   const previousTest = state.tests.find((entry) => entry.sectionId === previousSection.id);
   const previousAttempt = latestQuizAttemptForTest(previousTest?.id);
+  const learnerLocked = !previousSection.reviewQuiz || !previousAttempt;
   return {
-    locked: !previousSection.reviewQuiz || !previousAttempt,
+    locked: learnerLocked && !canPreviewLockedContent(),
+    learnerLocked,
+    previewingLocked: learnerLocked && canPreviewLockedContent(),
     previousSection,
     previousTest,
     previousAttempt
   };
+}
+
+function canPreviewLockedContent(user = state.user) {
+  const canonicalUser = normalizeSeededUser(user || {});
+  const role = canonicalUser.role || "learner";
+  return Boolean(canonicalUser.canPreviewLockedContent || ["admin", "course-designer", "reviewer"].includes(role));
 }
 
 function latestQuizAttemptForTest(testId) {
@@ -666,8 +675,11 @@ function buildPriyankaPlatinumPlan(now, accountTypes, sections, user = defaultUs
 }
 
 function buildGateDaBasicPlan(now, accountTypes, sections, user = basicGateDaUser()) {
-  const probabilitySection = sections[0];
-  const conditionalSection = sections[1];
+  const probabilitySections = sections.filter((section) => section.subject === "Probability");
+  const linearAlgebraSections = sections.filter((section) => section.subject === "Linear Algebra");
+  const probabilitySection = probabilitySections[0];
+  const conditionalSection = probabilitySections[1];
+  const linearAlgebraSection = linearAlgebraSections[0];
   const monday = "2026-06-01";
   const sunday = addDays(monday, 6);
   const weekTwoMonday = addDays(monday, 7);
@@ -688,6 +700,10 @@ function buildGateDaBasicPlan(now, accountTypes, sections, user = basicGateDaUse
   const weekNineSunday = addDays(weekNineMonday, 6);
   const weekTenMonday = addDays(monday, 63);
   const weekTenSunday = addDays(weekTenMonday, 6);
+  const weekElevenMonday = addDays(monday, 70);
+  const weekElevenSunday = addDays(weekElevenMonday, 6);
+  const weekTwelveMonday = addDays(monday, 77);
+  const weekTwelveSunday = addDays(weekTwelveMonday, 6);
   const userId = user.id || "user-basic-demo";
   const userSlug = slugify(user.name || userId);
   const enrollmentId = `enrollment-${userSlug}-gate-da-basic`;
@@ -704,7 +720,18 @@ function buildGateDaBasicPlan(now, accountTypes, sections, user = basicGateDaUse
         date: "2026-08-30",
         status: "In progress",
         details: "GATE DA Basic Probability, aligned to the official GATE DA syllabus. Chapters 1-10 now cover foundations, conditioning, random variables, expectation, variance, tail bounds, joint distributions, covariance, correlation, conditional expectation, continuous distributions, order statistics, limit theorems, approximations, confidence intervals, and hypothesis tests.",
-        sectionIds: sections.map((section) => section.id),
+        sectionIds: probabilitySections.map((section) => section.id),
+        updatedAt: now
+      },
+      {
+        id: "subject-gate-da-linear-algebra",
+        accountTypeId: "gate-da-basic",
+        lessonPlanId,
+        title: "Linear Algebra",
+        date: weekElevenMonday,
+        status: "In progress",
+        details: "GATE DA Basic Linear Algebra, built around transformations, invariants, and physical intuition. Chapters 1-2 cover vectors, coordinates, span, subspaces, independence, basis, dimension, linear transformations, matrices, composition, and information loss.",
+        sectionIds: linearAlgebraSections.map((section) => section.id),
         updatedAt: now
       }
     ],
@@ -998,6 +1025,66 @@ function buildGateDaBasicPlan(now, accountTypes, sections, user = basicGateDaUse
         date: weekTenSunday,
         details: "Take the inference objective quiz and use the logged feedback to review weak concepts.",
         updatedAt: now
+      },
+      {
+        id: "schedule-linear-algebra-chapter-1-study",
+        title: "Linear Algebra Chapter 1: Vector Spaces and Coordinates",
+        week: 11,
+        subject: "Linear Algebra",
+        kind: "Study",
+        date: weekElevenMonday,
+        details: "Study vectors through map movement, recipe mixtures, and data feature vectors before moving into span, subspaces, independence, basis, and dimension.",
+        updatedAt: now
+      },
+      {
+        id: "schedule-linear-algebra-chapter-1-practice",
+        title: "Linear Algebra Chapter 1: Labelled Practice",
+        week: 11,
+        subject: "Linear Algebra",
+        kind: "Practice",
+        date: addDays(weekElevenMonday, 2),
+        details: "Solve the labelled practice problems. Focus on what can be built, what is redundant, and how many degrees of freedom remain.",
+        updatedAt: now
+      },
+      {
+        id: "schedule-linear-algebra-chapter-1-review",
+        title: "Linear Algebra Chapter 1: Objective Review",
+        week: 11,
+        subject: "Linear Algebra",
+        kind: "Review",
+        date: weekElevenSunday,
+        details: "Take the graph-backed objective quiz for vector spaces, coordinates, span, subspaces, independence, basis, and dimension.",
+        updatedAt: now
+      },
+      {
+        id: "schedule-linear-algebra-chapter-2-study",
+        title: "Linear Algebra Chapter 2: Linear Transformations and Matrices",
+        week: 12,
+        subject: "Linear Algebra",
+        kind: "Study",
+        date: weekTwelveMonday,
+        details: "Study transformations as physical machines, matrices as coordinate descriptions, column rule, composition, inverses, and preserved or killed directions.",
+        updatedAt: now
+      },
+      {
+        id: "schedule-linear-algebra-chapter-2-practice",
+        title: "Linear Algebra Chapter 2: Labelled Practice",
+        week: 12,
+        subject: "Linear Algebra",
+        kind: "Practice",
+        date: addDays(weekTwelveMonday, 2),
+        details: "Solve transformation and matrix practice problems using physical action first, then algebra.",
+        updatedAt: now
+      },
+      {
+        id: "schedule-linear-algebra-chapter-2-review",
+        title: "Linear Algebra Chapter 2: Objective Review",
+        week: 12,
+        subject: "Linear Algebra",
+        kind: "Review",
+        date: weekTwelveSunday,
+        details: "Take the graph-backed objective quiz for linearity, basis images, matrix columns, composition, invertibility, and information loss.",
+        updatedAt: now
       }
     ],
     tests: [
@@ -1089,6 +1176,24 @@ function buildGateDaBasicPlan(now, accountTypes, sections, user = basicGateDaUse
         details: "Objective end-of-chapter quiz for confidence intervals, z-tests, t-tests, chi-squared tests, p-values, rejection regions, and power. Attempts are logged in the learner record.",
         sectionId: sections[9]?.id,
         quizId: "quiz-probability-chapter-10-objective-review",
+        updatedAt: now
+      },
+      {
+        id: "test-linear-algebra-chapter-1-objective-review",
+        title: "Linear Algebra Chapter 1 Objective Review",
+        date: weekElevenSunday,
+        details: "Objective end-of-chapter quiz for vectors, coordinates, linear combinations, span, subspaces, independence, basis, and dimension. Attempts are logged with prerequisite repair feedback.",
+        sectionId: linearAlgebraSection?.id,
+        quizId: "quiz-linear-algebra-chapter-1-objective-review",
+        updatedAt: now
+      },
+      {
+        id: "test-linear-algebra-chapter-2-objective-review",
+        title: "Linear Algebra Chapter 2 Objective Review",
+        date: weekTwelveSunday,
+        details: "Objective end-of-chapter quiz for transformations, linearity, matrix columns, composition, invertibility, and fixed or killed directions. Attempts are logged with prerequisite repair feedback.",
+        sectionId: linearAlgebraSections[1]?.id,
+        quizId: "quiz-linear-algebra-chapter-2-objective-review",
         updatedAt: now
       }
     ],
@@ -1412,6 +1517,72 @@ function buildGateDaBasicPlan(now, accountTypes, sections, user = basicGateDaUse
         done: false,
         details: "Submit the Chapter 10 objective quiz so the learner record logs confidence-interval and hypothesis-testing strengths and weaknesses.",
         updatedAt: now
+      },
+      {
+        id: "task-linear-algebra-chapter-1-read",
+        week: 11,
+        title: "Linear Algebra Ch 1: Read vector spaces",
+        type: "Study",
+        date: weekElevenMonday,
+        status: "todo",
+        done: false,
+        details: "Open Subjects -> Linear Algebra -> Chapter 1 and study the running examples, definitions, and worked checks.",
+        updatedAt: now
+      },
+      {
+        id: "task-linear-algebra-chapter-1-practice",
+        week: 11,
+        title: "Linear Algebra Ch 1: Solve labelled practice",
+        type: "Practice",
+        date: addDays(weekElevenMonday, 2),
+        status: "todo",
+        done: false,
+        details: "Attempt the vector space and coordinate practice problems before opening worked solutions.",
+        updatedAt: now
+      },
+      {
+        id: "task-linear-algebra-chapter-1-review",
+        week: 11,
+        title: "Linear Algebra Ch 1: Take objective review",
+        type: "Review",
+        date: weekElevenSunday,
+        status: "todo",
+        done: false,
+        details: "Submit the Chapter 1 objective quiz so the learner record logs vector-space strengths and weaknesses.",
+        updatedAt: now
+      },
+      {
+        id: "task-linear-algebra-chapter-2-read",
+        week: 12,
+        title: "Linear Algebra Ch 2: Read transformations",
+        type: "Study",
+        date: weekTwelveMonday,
+        status: "todo",
+        done: false,
+        details: "Open Subjects -> Linear Algebra -> Chapter 2 and study transformations as physical machines before reading matrices.",
+        updatedAt: now
+      },
+      {
+        id: "task-linear-algebra-chapter-2-practice",
+        week: 12,
+        title: "Linear Algebra Ch 2: Solve transformation practice",
+        type: "Practice",
+        date: addDays(weekTwelveMonday, 2),
+        status: "todo",
+        done: false,
+        details: "Attempt the Chapter 2 labelled practice problems before opening worked solutions.",
+        updatedAt: now
+      },
+      {
+        id: "task-linear-algebra-chapter-2-review",
+        week: 12,
+        title: "Linear Algebra Ch 2: Take objective review",
+        type: "Review",
+        date: weekTwelveSunday,
+        status: "todo",
+        done: false,
+        details: "Submit the Chapter 2 objective quiz so the learner record logs transformation and matrix reasoning strengths and weaknesses.",
+        updatedAt: now
       }
     ],
     accountTypes,
@@ -1434,11 +1605,11 @@ function buildGateDaBasicPlan(now, accountTypes, sections, user = basicGateDaUse
         userId,
         title: "GATE DA Basic plan",
         type: "exam",
-        subjects: ["Probability"],
+        subjects: ["Probability", "Linear Algebra"],
         startDate: monday,
         endDate: "2026-08-30",
         status: "active",
-        details: `GATE DA Basic plan surfaces: Subjects, Tasks, Schedule, Tests, Feedback, Resources, and Share. Current material build: Probability Chapters 1-10.${trialNote}`,
+        details: `GATE DA Basic plan surfaces: Subjects, Tasks, Schedule, Tests, Feedback, Resources, and Share. Current material build: Probability Chapters 1-10 and Linear Algebra Chapters 1-2.${trialNote}`,
         updatedAt: now
       }
     ],
@@ -1450,6 +1621,20 @@ function buildGateDaBasicPlan(now, accountTypes, sections, user = basicGateDaUse
         date: sunday,
         details: "Review conceptual answers for sample-space choice, complement use, overlap in A or B, and confusion between permutations and combinations.",
         updatedAt: now
+      },
+      {
+        id: "feedback-linear-algebra-chapter-1",
+        title: "Linear Algebra Chapter 1 feedback focus",
+        date: weekElevenSunday,
+        details: "Review misses for vector-versus-coordinate confusion, subspace zero/closure failures, dependence versus span confusion, and basis/dimension misconceptions.",
+        updatedAt: now
+      },
+      {
+        id: "feedback-linear-algebra-chapter-2",
+        title: "Linear Algebra Chapter 2 feedback focus",
+        date: weekTwelveSunday,
+        details: "Review misses for nonzero shift traps, basis-image mistakes, column-rule confusion, composition order errors, and failure to detect information loss.",
+        updatedAt: now
       }
     ],
     resources: [
@@ -1457,7 +1642,7 @@ function buildGateDaBasicPlan(now, accountTypes, sections, user = basicGateDaUse
         id: "resource-gate-da-2026-syllabus",
         title: "Official GATE 2026 DA Syllabus",
         date: "2026-06-01",
-        details: "Official GATE DA syllabus. Use the Probability and Statistics portion to organize the Basic content build.",
+        details: "Official GATE DA syllabus. Use the Probability and Statistics and Linear Algebra portions to organize the Basic content build.",
         link: "https://gate2026.iitg.ac.in/doc/GATE2026_Syllabus/DA_2026_Syllabus.pdf",
         updatedAt: now
       },
@@ -1540,6 +1725,22 @@ function buildGateDaBasicPlan(now, accountTypes, sections, user = basicGateDaUse
         details: "Open Subjects -> Probability to study Chapter 10 and then take the objective review in Tests.",
         link: "",
         updatedAt: now
+      },
+      {
+        id: "resource-linear-algebra-vector-spaces",
+        title: "Linear Algebra Chapter 1: Vector Spaces and Coordinates",
+        date: weekElevenMonday,
+        details: "Open Subjects -> Linear Algebra to study vectors, coordinates, span, subspaces, independence, basis, and dimension with physical running examples.",
+        link: "",
+        updatedAt: now
+      },
+      {
+        id: "resource-linear-algebra-transformations",
+        title: "Linear Algebra Chapter 2: Linear Transformations and Matrices",
+        date: weekTwelveMonday,
+        details: "Open Subjects -> Linear Algebra to study transformations as physical machines, matrices as basis-image records, composition, invertibility, and information loss.",
+        link: "",
+        updatedAt: now
       }
     ],
     coursePlanVersion: COURSE_PLAN_VERSION
@@ -1562,6 +1763,604 @@ function accountTypeCatalog(updatedAt = new Date().toISOString()) {
     status: id === "gate-da-basic" || id === "gate-da-platinum" ? "active" : "planned",
     updatedAt
   }));
+}
+
+function gateDaBasicSections(updatedAt = new Date().toISOString()) {
+  return [
+    ...gateDaProbabilitySections(updatedAt),
+    ...gateDaLinearAlgebraSections(updatedAt)
+  ];
+}
+
+function gateDaLinearAlgebraSections(updatedAt = new Date().toISOString()) {
+  return [
+    {
+      id: "gate-da-linear-algebra-vector-spaces-coordinates",
+      exam: "GATE DA",
+      accountTier: "Basic",
+      subject: "Linear Algebra",
+      chapter: "Chapter 1",
+      section: "1",
+      title: "Vector Spaces and Coordinates",
+      summary: "Vectors as reusable objects, linear combinations, span, subspaces, independence, bases, coordinates, and dimension through physical movement, mixtures, and data features.",
+      sectionPreview: "Linear Algebra starts by asking what can be built from available directions. A vector can be a move on a map, a recipe profile, or a data feature record. The first skill is to decide which directions are genuinely new and which ones are redundant.",
+      previewActivity: "You can move east by e = [1,0] and north by n = [0,1]. Can you build [3,2]? Can you build every point in the plane? Now replace north by d = [2,0]. What changes? Try this before reading: the question is about degrees of freedom, not arithmetic speed.",
+      chapterIntro: [
+        "This chapter trains the first Linear Algebra habit needed for GATE DA: look at vectors as things you can combine. Before matrices appear, we need to understand span, subspace, independence, basis, coordinates, and dimension.",
+        "We will reuse three running examples. Movement on a map makes vectors physical. Recipe mixtures make linear combinations concrete. Data feature vectors connect the same ideas to machine learning.",
+        "The exam-facing question is always structural: what can be built, what is redundant, how many independent directions remain, and what changes when coordinates are chosen?"
+      ],
+      bookSections: [
+        {
+          number: "1.1",
+          title: "Vectors Are Objects Before They Are Columns",
+          paragraphs: [
+            "A vector is not just a column of numbers. It is an object that can be added to another vector and scaled by a number. Once we choose axes or features, we write the vector using coordinates.",
+            "On a map, [3,2] means move 3 units east and 2 units north. As a recipe profile, [3,2,1] might mean 3 cups flour, 2 cups sugar, and 1 spoon salt. As a data vector, [5,12,0.8] might mean 5 hours studied, 12 quizzes attempted, and 80 percent accuracy.",
+            "The same move can be drawn from many starting points. The vector records the displacement, not the place where the arrow happens to be drawn."
+          ],
+          blocks: [
+            {
+              type: "definition",
+              title: "Definition: vector",
+              body: "A vector is an object that can be added to other vectors and multiplied by scalars. Coordinates are the numbers used to describe that vector after a coordinate system or feature list is chosen."
+            },
+            {
+              type: "example",
+              title: "Example 1.1: one move, many drawings",
+              body: "The move [2,3] is the same displacement whether it starts at home, school, or a railway station. The start point changes the drawing, not the vector."
+            },
+            {
+              type: "checkpoint",
+              title: "Checkpoint",
+              body: "If [2,3] is drawn once from (0,0) and once from (5,5), what is the same and what is different?"
+            }
+          ]
+        },
+        {
+          number: "1.2",
+          title: "Addition and Scaling",
+          paragraphs: [
+            "Vector addition means doing two compatible actions together. On a map, [2,1] + [-1,3] = [1,4]: first move east 2 and north 1, then west 1 and north 3.",
+            "Scalar multiplication stretches, shrinks, repeats, or reverses a vector. Twice the move [2,1] is [4,2]. Negative one times [2,1] is [-2,-1], the reverse move.",
+            "A vector space is built around these two operations. If a set is meant to be a space, it must survive these operations."
+          ],
+          blocks: [
+            {
+              type: "principle",
+              title: "Principle: two legal moves",
+              body: "Linear Algebra allows you to add vectors and multiply them by scalars. Everything in this chapter comes from repeatedly asking what these two operations can build."
+            },
+            {
+              type: "example",
+              title: "Example 1.2: recipe scaling",
+              body: "If recipe A is [2,1,0], then 3A is [6,3,0]. The mathematical model also allows -A = [-2,-1,0], even if negative ingredients do not make physical sense."
+            },
+            {
+              type: "warning",
+              title: "Common trap",
+              body: "Real-world examples explain intuition, but vector-space rules allow all real scalars unless the problem says otherwise."
+            }
+          ]
+        },
+        {
+          number: "1.3",
+          title: "Linear Combinations and Span",
+          paragraphs: [
+            "A linear combination is any expression a1 v1 + a2 v2 + ... + ak vk. The coefficients a1, a2, ..., ak are controls. By changing them, you build different vectors.",
+            "The span of a list of vectors is the full set of vectors that can be built from them. One nonzero direction on a map spans a line. Two non-parallel directions span the whole plane.",
+            "This is one of the most important GATE DA skills: decide whether a target vector is exactly buildable from the available vectors."
+          ],
+          blocks: [
+            {
+              type: "definition",
+              title: "Definition: span",
+              body: "span(v1,...,vk) is the set of all linear combinations a1 v1 + ... + ak vk, where the coefficients are real numbers."
+            },
+            {
+              type: "example",
+              title: "Example 1.3: map reachability",
+              body: "With east e = [1,0] and north n = [0,1], the vector [3,2] equals 3e + 2n. Every vector [a,b] in the plane equals ae + bn."
+            },
+            {
+              type: "example",
+              title: "Example 1.4: redundant recipe",
+              body: "If recipe C = A + 2B, then adding C to the shelf does not expand the span. Everything C can build was already buildable from A and B."
+            }
+          ]
+        },
+        {
+          number: "1.4",
+          title: "Subspaces",
+          paragraphs: [
+            "A subspace is a set of vectors that behaves like a smaller vector space inside a larger one. It must contain the zero vector and be closed under addition and scalar multiplication.",
+            "A line through the origin is a subspace of the plane. A line not through the origin is not: it misses the zero vector and scaling a point on the line can leave the line.",
+            "For GATE DA, subspace questions often hide in descriptions. Test zero first, then test closure."
+          ],
+          blocks: [
+            {
+              type: "definition",
+              title: "Definition: subspace",
+              body: "A subset U is a subspace if 0 is in U, u + v is in U whenever u and v are in U, and cu is in U whenever u is in U and c is a scalar."
+            },
+            {
+              type: "example",
+              title: "Example 1.5: two recipe rules",
+              body: "The rule flour = 2 sugar can pass through zero and can form a subspace. The rule flour = 2 sugar + 1 cannot be a subspace because the zero recipe does not satisfy it."
+            },
+            {
+              type: "strategy",
+              title: "Subspace test",
+              body: "First ask whether zero is allowed. Then ask whether combining two allowed vectors and scaling one allowed vector always stays allowed."
+            }
+          ]
+        },
+        {
+          number: "1.5",
+          title: "Dependence and Independence",
+          paragraphs: [
+            "Linear dependence means redundancy. One vector is already buildable from the others. Linear independence means every vector adds a genuinely new direction.",
+            "On a map, east, north, and northeast are dependent because northeast = east + north. The third vector is useful for travel, but not a new degree of freedom.",
+            "The algebraic test asks whether a1 v1 + ... + ak vk = 0 has a nonzero choice of coefficients. If yes, the list is dependent. If only the all-zero coefficients work, it is independent."
+          ],
+          blocks: [
+            {
+              type: "principle",
+              title: "Principle: redundancy",
+              body: "A dependent list has at least one vector that does not expand the span. Adding it does not create a new direction."
+            },
+            {
+              type: "warning",
+              title: "Fast traps",
+              body: "Any list containing the zero vector is dependent. More than n vectors in R^n are dependent. Two nonzero vectors are dependent exactly when one is a scalar multiple of the other."
+            }
+          ]
+        },
+        {
+          number: "1.6",
+          title: "Basis, Coordinates, and Dimension",
+          paragraphs: [
+            "A basis is a list of vectors that is both independent and spanning. It has no redundancy, and it can build every vector in the space.",
+            "Once a basis is chosen, coordinates tell how much of each basis vector is used. Coordinates are not intrinsic: the same vector can have different coordinate lists in different bases.",
+            "Dimension is the number of vectors in a basis. It counts independent degrees of freedom. A line through the origin has dimension 1, a plane through the origin has dimension 2, and R3 has dimension 3."
+          ],
+          blocks: [
+            {
+              type: "definition",
+              title: "Definition: basis",
+              body: "A basis is an independent spanning list. Every vector in the space has a unique coordinate representation in that basis."
+            },
+            {
+              type: "example",
+              title: "Example 1.6: standard map basis",
+              body: "East e = [1,0] and north n = [0,1] form a basis for the plane. The vector [3,2] has coordinates 3 and 2 in this basis because [3,2] = 3e + 2n."
+            },
+            {
+              type: "checkpoint",
+              title: "Checkpoint",
+              body: "If a dataset has three recorded features but one feature is always twice another, how many independent feature directions can it have at most?"
+            }
+          ]
+        }
+      ],
+      concepts: [
+        {
+          name: "Vector as object",
+          description: "A vector is something that can be added and scaled; coordinates describe it after choices are made.",
+          cue: "Ask what the vector does before reading it as a column."
+        },
+        {
+          name: "Linear combination",
+          description: "A controlled recipe a1v1 + ... + akvk for building new vectors.",
+          cue: "Ask what coefficients would build the target."
+        },
+        {
+          name: "Span",
+          description: "The full set of vectors buildable from a list.",
+          cue: "Ask what locations, recipes, or feature profiles are reachable."
+        },
+        {
+          name: "Subspace",
+          description: "A set that contains zero and survives addition and scaling.",
+          cue: "Test zero, then closure."
+        },
+        {
+          name: "Independence",
+          description: "No vector in the list is redundant.",
+          cue: "Ask whether one vector can be built from the others."
+        },
+        {
+          name: "Basis and dimension",
+          description: "A basis is independent plus spanning; dimension counts independent directions.",
+          cue: "Separate number of listed vectors from number of useful directions."
+        }
+      ],
+      techniques: [
+        {
+          name: "Build the target",
+          when: "a question asks whether a vector lies in a span.",
+          move: "Set the target equal to a linear combination and solve for the coefficients."
+        },
+        {
+          name: "Subspace test",
+          when: "a question gives a subset of R^n.",
+          move: "Check zero, closure under addition, and closure under scalar multiplication."
+        },
+        {
+          name: "Redundancy test",
+          when: "a list may be dependent.",
+          move: "Look for scalar multiples, zero vectors, too many vectors, or one vector as a combination of others."
+        },
+        {
+          name: "Basis test",
+          when: "a question claims a list is a basis.",
+          move: "Verify both spanning and independence; one without the other is not enough."
+        }
+      ],
+      practiceProblems: linearAlgebraVectorSpacesProblems(),
+      reviewPrompts: [
+        "Explain why the same vector can be drawn from different starting points.",
+        "Give a physical meaning for scalar multiplication by -1 in the map example.",
+        "In your own words, what is the span of two vectors?",
+        "Why does the rule x + y = 1 fail to define a subspace of R2?",
+        "Give an example of three vectors in R2 that are dependent.",
+        "Why does a basis need both independence and spanning?",
+        "What changes when a basis changes: the vector or its coordinates?",
+        "A dataset has three features, but feature 3 equals feature 1 plus feature 2. What does that say about dimension?"
+      ],
+      reviewQuiz: {
+        id: "quiz-linear-algebra-chapter-1-objective-review",
+        title: "Linear Algebra Chapter 1 Objective Review",
+        instructions: "Complete this after studying vectors, span, subspaces, independence, basis, coordinates, and dimension. The quiz emphasizes what can be built, what is redundant, and how many degrees of freedom remain.",
+        questions: linearAlgebraVectorSpacesReviewQuestions()
+      },
+      readingQuestions: [
+        "What is the difference between a vector and its coordinates?",
+        "What does a linear combination build?",
+        "What does span mean physically in the map example?",
+        "What three checks define a subspace?",
+        "What does linear dependence mean?",
+        "Why are coordinates basis-dependent?",
+        "What does dimension count?"
+      ],
+      chapterSummary: [
+        "Vectors are objects that can be added and scaled.",
+        "Coordinates describe vectors after axes, features, or a basis are chosen.",
+        "Linear combinations describe what can be built from available vectors.",
+        "Span is the complete set of buildable vectors.",
+        "A subspace contains zero and is closed under addition and scalar multiplication.",
+        "Dependence means redundancy; independence means no vector is buildable from the others.",
+        "A basis is independent and spanning.",
+        "Dimension counts independent degrees of freedom."
+      ],
+      updatedAt
+    },
+    {
+      id: "gate-da-linear-algebra-transformations-matrices",
+      exam: "GATE DA",
+      accountTier: "Basic",
+      subject: "Linear Algebra",
+      chapter: "Chapter 2",
+      section: "2",
+      title: "Linear Transformations and Matrices",
+      summary: "Linear maps as machines that preserve addition and scaling, with matrices as coordinate descriptions of stretching, shearing, rotating, reflecting, projecting, and compressing.",
+      sectionPreview: "A matrix is not the starting point. The starting point is a transformation: a rule that moves every vector in a structured way. A matrix is what that rule looks like after a basis is chosen.",
+      previewActivity: "A machine sends east e=[1,0] to [2,0] and north n=[0,1] to [1,1]. Where must it send [3,2]? Try to answer without multiplying a matrix first. The point is that a linear map is determined by what it does to a basis.",
+      chapterIntro: [
+        "Chapter 1 asked what can be built from vectors. Chapter 2 asks what happens when a rule acts on every vector in a space.",
+        "The central exam skill is to read a transformation physically before doing algebra. Does it stretch, shear, rotate, reflect, project, or collapse? What must happen to sums and scalar multiples?",
+        "Matrices enter as coordinate records of these transformations. Once you know where the basis vectors go, you know the whole linear transformation."
+      ],
+      bookSections: [
+        {
+          number: "2.1",
+          title: "Transformations as Machines",
+          paragraphs: [
+            "A transformation is a rule that takes an input vector and returns an output vector. In physical terms, it is a machine acting on every point or direction in space.",
+            "Some machines stretch the map, some rotate it, some squash everything onto a line, and some reflect the plane across an axis. Linear Algebra cares about the machines that respect vector structure.",
+            "Before writing any matrix, ask what the machine does to simple directions."
+          ],
+          blocks: [
+            {
+              type: "example",
+              title: "Example 2.1: map machine",
+              body: "A stretch machine sends [x,y] to [2x,y]. East-west movement doubles, north-south movement stays the same. The vector [3,4] becomes [6,4]."
+            },
+            {
+              type: "example",
+              title: "Example 2.2: data machine",
+              body: "A feature transform might take [hours, quizzes] to [hours + quizzes, quizzes]. It creates a new first feature by adding two old signals while keeping the second signal."
+            },
+            {
+              type: "example",
+              title: "Transformation gallery: rotation, reflection, projection",
+              body: "Keep these three pictures in mind. A rotation turns the basis directions, a reflection keeps the mirror direction fixed and flips the perpendicular direction, and a projection keeps one direction while collapsing another to zero.",
+              items: [
+                "Rotation: length stays the same and no information is lost.",
+                "Reflection: length stays the same, but orientation flips.",
+                "Projection: one direction survives, one direction is killed, so information is lost."
+              ],
+              visual: {
+                type: "transform-gallery",
+                caption: "Grey dashed arrows show the original basis directions. Colored arrows show where the transformation sends them.",
+                transforms: [
+                  {
+                    title: "90 degree rotation",
+                    formula: "R([x,y])=[-y,x]",
+                    caption: "East becomes north; north becomes west.",
+                    arrows: [
+                      { from: [0, 0], to: [0, 1], label: "R(e1)", className: "diagram-output" },
+                      { from: [0, 0], to: [-1, 0], label: "R(e2)", className: "diagram-output-alt" }
+                    ]
+                  },
+                  {
+                    title: "Reflection in x-axis",
+                    formula: "F([x,y])=[x,-y]",
+                    caption: "The mirror line is fixed; upward becomes downward.",
+                    mirror: "x",
+                    arrows: [
+                      { from: [0, 0], to: [1, 0], label: "F(e1)=e1", className: "diagram-output" },
+                      { from: [0, 0], to: [0, -1], label: "F(e2)", className: "diagram-output-alt" }
+                    ]
+                  },
+                  {
+                    title: "Projection to x-axis",
+                    formula: "P([x,y])=[x,0]",
+                    caption: "The x direction survives; the y direction collapses to zero.",
+                    arrows: [
+                      { from: [0, 0], to: [1, 0], label: "P(e1)=e1", className: "diagram-output" }
+                    ],
+                    dots: [
+                      { at: [0, 0], label: "P(e2)=0" }
+                    ]
+                  }
+                ]
+              }
+            },
+            {
+              type: "checkpoint",
+              title: "Checkpoint",
+              body: "If a machine sends every vector [x,y] to [x,0], what physical action is it performing?"
+            }
+          ]
+        },
+        {
+          number: "2.2",
+          title: "What Makes a Transformation Linear?",
+          paragraphs: [
+            "A transformation T is linear if it preserves the two operations from Chapter 1: addition and scalar multiplication.",
+            "Preserving addition means T(u+v) = T(u) + T(v). Preserving scaling means T(cu) = cT(u). Together these say that T respects every linear combination.",
+            "This is why a linear transformation is determined by its action on a basis. If v = ae + bn, then T(v) must equal aT(e) + bT(n)."
+          ],
+          blocks: [
+            {
+              type: "definition",
+              title: "Definition: linear transformation",
+              body: "A transformation T is linear if T(u+v)=T(u)+T(v) and T(cu)=cT(u) for all vectors u,v and all scalars c."
+            },
+            {
+              type: "principle",
+              title: "Principle: basis determines the map",
+              body: "If you know where a linear transformation sends every basis vector, then you know where it sends every vector."
+            },
+            {
+              type: "warning",
+              title: "Common trap",
+              body: "A rule with a constant shift, such as T([x,y])=[x+1,y], is not linear because it does not send zero to zero."
+            }
+          ]
+        },
+        {
+          number: "2.3",
+          title: "Matrices Record Where Basis Vectors Go",
+          paragraphs: [
+            "In the standard basis of R2, the first column of a matrix is where e1=[1,0] goes, and the second column is where e2=[0,1] goes.",
+            "This column rule is the bridge between transformations and matrices. If A has columns a1 and a2, then A[x,y] = x a1 + y a2.",
+            "So matrix-vector multiplication is not a mysterious formula. It is a linear combination of the transformed basis directions."
+          ],
+          blocks: [
+            {
+              type: "principle",
+              title: "Column rule",
+              body: "For a 2 by 2 matrix A with columns a1 and a2, A[x,y] = x a1 + y a2."
+            },
+            {
+              type: "example",
+              title: "Example 2.3: build from columns",
+              body: "If A sends e1 to [2,0] and e2 to [1,1], then A has columns [2,0] and [1,1]. Therefore A[3,2] = 3[2,0] + 2[1,1] = [8,2]."
+            },
+            {
+              type: "checkpoint",
+              title: "Checkpoint",
+              body: "A matrix has columns [1,1] and [0,2]. Without expanding a formula, where does it send [4,3]?"
+            }
+          ]
+        },
+        {
+          number: "2.4",
+          title: "Physical Families of Linear Maps",
+          paragraphs: [
+            "The most useful early transformations have physical names: stretch, shear, rotation, reflection, projection, and compression.",
+            "A stretch changes length in chosen directions. A shear slides one direction by an amount depending on another. A rotation turns the whole plane around the origin. A reflection flips space across a mirror line. A projection drops information onto a lower-dimensional subspace.",
+            "Use the basis vectors as handles. If you know where east and north go, you can usually see the whole physical action. Rotation by 90 degrees sends east to north and north to west. Reflection across the x-axis keeps east fixed and flips north to south.",
+            "For GATE DA, recognizing the family often reveals what will be preserved or lost later: length, area, orientation, dimension, fixed directions, killed directions, or invertibility."
+          ],
+          blocks: [
+            {
+              type: "example",
+              title: "Stretch",
+              body: "T([x,y])=[2x,3y] stretches east-west by 2 and north-south by 3."
+            },
+            {
+              type: "example",
+              title: "Shear",
+              body: "T([x,y])=[x+y,y] keeps vertical height y but slides x by an amount depending on y."
+            },
+            {
+              type: "example",
+              title: "Rotation by 90 degrees",
+              body: "R([x,y])=[-y,x] turns the plane counterclockwise around the origin. East [1,0] goes to north [0,1], and north [0,1] goes to west [-1,0]. Length is preserved, but most coordinates change."
+            },
+            {
+              type: "example",
+              title: "Reflection across the x-axis",
+              body: "F([x,y])=[x,-y] acts like a mirror placed on the x-axis. Vectors already on the x-axis stay fixed, while upward movement becomes downward movement. Length is preserved, but orientation flips."
+            },
+            {
+              type: "example",
+              title: "Projection",
+              body: "P([x,y])=[x,0] drops every point straight down or up to the x-axis. It preserves the x direction and kills the y direction. Unlike rotation or reflection, it loses information and cannot be undone."
+            }
+          ]
+        },
+        {
+          number: "2.5",
+          title: "Composition and Inverses",
+          paragraphs: [
+            "Composition means applying one transformation after another. If S acts first and T acts second, the combined transformation is T(S(v)).",
+            "Matrices compose by multiplication. The order matters because doing a shear then a projection is usually not the same as doing a projection then a shear.",
+            "An inverse transformation undoes the original transformation. A transformation can have an inverse only if it loses no information."
+          ],
+          blocks: [
+            {
+              type: "principle",
+              title: "Principle: order matters",
+              body: "Matrix multiplication records composition. AB means B acts first, then A. Changing the order can change the result."
+            },
+            {
+              type: "example",
+              title: "Example 2.4: projection loses information",
+              body: "The map T([x,y])=[x,0] cannot be inverted. After projection, [3,1], [3,4], and [3,-8] all become [3,0]. The y information is gone."
+            },
+            {
+              type: "checkpoint",
+              title: "Checkpoint",
+              body: "Which map is more likely to be invertible: a rotation of the plane or a projection onto a line? Why?"
+            }
+          ]
+        },
+        {
+          number: "2.6",
+          title: "What Changes and What Stays Fixed",
+          paragraphs: [
+            "This chapter ends by previewing the invariant mindset. A transformation may preserve some things and change others.",
+            "A rotation preserves length but changes most coordinates. A projection preserves points already on its target line but kills perpendicular movement. A stretch preserves coordinate axes but changes lengths and area.",
+            "Later chapters will name these features as rank, determinant, eigenvectors, eigenvalues, null space, and invariant subspaces. For now, learn to ask the physical question first."
+          ],
+          blocks: [
+            {
+              type: "strategy",
+              title: "Transformation checklist",
+              body: "Ask: What happens to zero? What happens to the basis vectors? Does any direction stay fixed? Is any direction killed? Is information lost? Can the action be undone?"
+            },
+            {
+              type: "example",
+              title: "Example 2.5: projection fixed and killed directions",
+              body: "For T([x,y])=[x,0], every vector on the x-axis is fixed, while every vector on the y-axis is sent to zero."
+            }
+          ]
+        }
+      ],
+      concepts: [
+        {
+          name: "Transformation",
+          description: "A rule that sends input vectors to output vectors.",
+          cue: "Ask what the machine physically does to space."
+        },
+        {
+          name: "Linearity",
+          description: "The rule preserves addition and scalar multiplication.",
+          cue: "Test T(u+v) and T(cu), or first check whether T(0)=0."
+        },
+        {
+          name: "Matrix columns",
+          description: "Columns record where the standard basis vectors go.",
+          cue: "Read A[x,y] as x times column 1 plus y times column 2."
+        },
+        {
+          name: "Composition",
+          description: "Applying transformations in sequence.",
+          cue: "Remember that AB means B acts first, then A."
+        },
+        {
+          name: "Invertibility",
+          description: "The transformation can be undone only if it loses no information.",
+          cue: "Ask whether two different inputs can collapse to the same output."
+        },
+        {
+          name: "Preserved and killed directions",
+          description: "Some transformations fix, stretch, rotate, or erase special directions.",
+          cue: "Ask what stays fixed and what is sent to zero."
+        },
+        {
+          name: "Rotation and reflection",
+          description: "Rotations turn space around the origin; reflections mirror space across a line.",
+          cue: "Check what happens to east and north, then ask whether length and orientation are preserved."
+        }
+      ],
+      techniques: [
+        {
+          name: "Basis-image method",
+          when: "a linear map is described by where basis vectors go.",
+          move: "Write the input as a linear combination of basis vectors, then transform each basis vector."
+        },
+        {
+          name: "Column rule",
+          when: "multiplying a matrix by a vector.",
+          move: "Use the vector coordinates as coefficients on the matrix columns."
+        },
+        {
+          name: "Linearity test",
+          when: "a rule may or may not be a linear transformation.",
+          move: "Check zero first, then addition and scaling."
+        },
+        {
+          name: "Information-loss test",
+          when: "deciding whether a map is invertible.",
+          move: "Look for different inputs with the same output or a direction sent to zero."
+        }
+      ],
+      practiceProblems: linearAlgebraTransformationsProblems(),
+      reviewPrompts: [
+        "Explain why T([x,y])=[x+1,y] is not linear.",
+        "If a linear map sends e1 to [2,1] and e2 to [0,3], where does it send [4,-1]?",
+        "Why does a matrix column tell where a basis vector goes?",
+        "Give a physical difference between a stretch and a shear.",
+        "For R([x,y])=[-y,x], explain where east and north go.",
+        "For F([x,y])=[x,-y], explain what is fixed and what is flipped.",
+        "Why does projection onto the x-axis lose information?",
+        "Give an example where changing the order of two transformations changes the final output.",
+        "For T([x,y])=[x,0], which vectors are fixed and which vectors are killed?",
+        "Why should you ask what happens to zero before doing a long linearity test?"
+      ],
+      reviewQuiz: {
+        id: "quiz-linear-algebra-chapter-2-objective-review",
+        title: "Linear Algebra Chapter 2 Objective Review",
+        instructions: "Complete this after studying transformations and matrices. The quiz emphasizes physical action, linearity, basis images, matrix columns, composition order, and information loss.",
+        questions: linearAlgebraTransformationsReviewQuestions()
+      },
+      readingQuestions: [
+        "What is a transformation?",
+        "What two operations must a linear transformation preserve?",
+        "Why does T(0)=0 matter?",
+        "What does the first column of a matrix tell you?",
+        "How should you read A[x,y] from the columns of A?",
+        "Why does order matter in composition?",
+        "What does it mean for a transformation to lose information?"
+      ],
+      chapterSummary: [
+        "A transformation is a rule that sends vectors to vectors.",
+        "A linear transformation preserves addition and scalar multiplication.",
+        "A matrix is a coordinate description of a linear transformation.",
+        "Matrix columns show where basis vectors go.",
+        "Matrix-vector multiplication is a linear combination of columns.",
+        "Composition means applying transformations in sequence, and order matters.",
+        "A transformation is invertible only if it loses no information.",
+        "The core exam habit is to ask what is preserved, changed, fixed, or killed."
+      ],
+      updatedAt
+    }
+  ];
 }
 
 function gateDaProbabilitySections(updatedAt = new Date().toISOString()) {
@@ -7924,6 +8723,214 @@ function probabilityFoundationConceptGraph() {
   };
 }
 
+function linearAlgebraVectorSpacesConceptGraph() {
+  return {
+    chapterId: "gate-da-linear-algebra-vector-spaces-coordinates",
+    chapterTitle: "Linear Algebra Chapter 1: Vector Spaces and Coordinates",
+    gateWeight: "high",
+    fallbackConcepts: ["span", "subspace-zero", "linear-dependence", "basis"],
+    fallbackDifficultyMix: [1, 2, 2, 3],
+    fallbackInstruction: "Retest buildability first, then add subspace and basis checks.",
+    stableNextAction: "Next: try a mixed transformation-readiness set using span, basis, and dimension.",
+    nodes: {
+      "vector-as-object": {
+        label: "Vector as object",
+        prereqs: [],
+        repairMaterial: "Review Chapter 1.1 and explain the map move [2,3] without mentioning a starting point.",
+        gateWeight: "medium"
+      },
+      "coordinate-representation": {
+        label: "Coordinate representation",
+        prereqs: ["vector-as-object"],
+        repairMaterial: "Review Chapter 1.1 and write the same move as a map vector, recipe profile, and data feature vector.",
+        gateWeight: "medium"
+      },
+      "vector-addition": {
+        label: "Vector addition",
+        prereqs: ["vector-as-object"],
+        repairMaterial: "Review Chapter 1.2 and draw two map moves in sequence before adding coordinates.",
+        gateWeight: "medium"
+      },
+      "scalar-multiplication": {
+        label: "Scalar multiplication",
+        prereqs: ["vector-as-object"],
+        repairMaterial: "Review Chapter 1.2 and describe what multiplying a move by 2, 0, and -1 does physically.",
+        gateWeight: "medium"
+      },
+      "linear-combination": {
+        label: "Linear combinations",
+        prereqs: ["vector-addition", "scalar-multiplication"],
+        repairMaterial: "Review Chapter 1.3 and build five target vectors from east and north using coefficients.",
+        gateWeight: "high"
+      },
+      span: {
+        label: "Span",
+        prereqs: ["linear-combination"],
+        repairMaterial: "Review Chapter 1.3 and state the full set reachable from one direction, then two non-parallel directions.",
+        gateWeight: "high"
+      },
+      "subspace-zero": {
+        label: "Subspace zero test",
+        prereqs: ["linear-combination"],
+        repairMaterial: "Review Chapter 1.4 and test zero first for five described sets before checking closure.",
+        gateWeight: "high"
+      },
+      "subspace-closure": {
+        label: "Subspace closure",
+        prereqs: ["subspace-zero", "linear-combination"],
+        repairMaterial: "Review Chapter 1.4 and verify addition and scalar closure for a line through the origin.",
+        gateWeight: "high"
+      },
+      "linear-dependence": {
+        label: "Linear dependence",
+        prereqs: ["linear-combination", "span"],
+        repairMaterial: "Review Chapter 1.5 and find the redundant vector in three map or recipe examples.",
+        gateWeight: "high"
+      },
+      "linear-independence": {
+        label: "Linear independence",
+        prereqs: ["linear-dependence"],
+        repairMaterial: "Review Chapter 1.5 and explain why two nonzero non-parallel vectors in R2 are independent.",
+        gateWeight: "high"
+      },
+      basis: {
+        label: "Basis",
+        prereqs: ["span", "linear-independence"],
+        repairMaterial: "Review Chapter 1.6 and check both conditions: spanning and independence.",
+        gateWeight: "high"
+      },
+      "coordinates-in-basis": {
+        label: "Coordinates in a basis",
+        prereqs: ["basis"],
+        repairMaterial: "Review Chapter 1.6 and write [3,2] as 3e+2n, then explain why coordinates require a chosen basis.",
+        gateWeight: "medium"
+      },
+      dimension: {
+        label: "Dimension",
+        prereqs: ["basis", "linear-dependence"],
+        repairMaterial: "Review Chapter 1.6 and count independent degrees of freedom in a line, a plane, and a redundant feature dataset.",
+        gateWeight: "high"
+      }
+    }
+  };
+}
+
+function linearAlgebraTransformationsConceptGraph() {
+  return {
+    chapterId: "gate-da-linear-algebra-transformations-matrices",
+    chapterTitle: "Linear Algebra Chapter 2: Linear Transformations and Matrices",
+    gateWeight: "high",
+    fallbackConcepts: ["linearity-test", "basis-image-method", "matrix-column-rule", "information-loss"],
+    fallbackDifficultyMix: [1, 2, 2, 3],
+    fallbackInstruction: "Retest physical action first, then basis images, column rule, and information loss.",
+    stableNextAction: "Next: try a mixed rank/nullity readiness set using transformations, kernel, and image.",
+    nodes: {
+      "vector-as-object": {
+        label: "Vector as object",
+        prereqs: [],
+        repairMaterial: "Review Linear Algebra Chapter 1.1 and describe vectors as movable objects before using transformation rules.",
+        gateWeight: "medium"
+      },
+      "vector-addition": {
+        label: "Vector addition",
+        prereqs: ["vector-as-object"],
+        repairMaterial: "Review Linear Algebra Chapter 1.2 and practise adding map moves before testing linearity.",
+        gateWeight: "medium"
+      },
+      "scalar-multiplication": {
+        label: "Scalar multiplication",
+        prereqs: ["vector-as-object"],
+        repairMaterial: "Review Linear Algebra Chapter 1.2 and explain scaling by 2, 0, and -1 physically.",
+        gateWeight: "medium"
+      },
+      "linear-combination": {
+        label: "Linear combinations",
+        prereqs: ["vector-addition", "scalar-multiplication"],
+        repairMaterial: "Review Linear Algebra Chapter 1.3 and write targets as combinations of basis vectors.",
+        gateWeight: "high"
+      },
+      span: {
+        label: "Span",
+        prereqs: ["linear-combination"],
+        repairMaterial: "Review Linear Algebra Chapter 1.3 and identify the set of vectors reachable from one or two directions.",
+        gateWeight: "high"
+      },
+      "linear-dependence": {
+        label: "Linear dependence",
+        prereqs: ["linear-combination", "span"],
+        repairMaterial: "Review Linear Algebra Chapter 1.5 and find when information is redundant before studying collapse.",
+        gateWeight: "high"
+      },
+      basis: {
+        label: "Basis",
+        prereqs: ["span", "linear-dependence"],
+        repairMaterial: "Review Linear Algebra Chapter 1.6 and explain why basis images determine a linear map.",
+        gateWeight: "high"
+      },
+      transformation: {
+        label: "Transformation as machine",
+        prereqs: ["vector-as-object"],
+        repairMaterial: "Review Chapter 2.1 and describe stretch, shear, projection, and reflection as physical actions.",
+        gateWeight: "medium"
+      },
+      "linearity-test": {
+        label: "Linearity test",
+        prereqs: ["vector-addition", "scalar-multiplication"],
+        repairMaterial: "Review Chapter 2.2 and test T(0), T(u+v), and T(cu) for three candidate rules.",
+        gateWeight: "high"
+      },
+      "zero-preservation": {
+        label: "Zero preservation",
+        prereqs: ["linearity-test"],
+        repairMaterial: "Review the constant-shift trap and explain why every linear map must send zero to zero.",
+        gateWeight: "high"
+      },
+      "basis-image-method": {
+        label: "Basis-image method",
+        prereqs: ["basis", "linear-combination"],
+        repairMaterial: "Review Chapter 2.2 and compute T(ae1+be2)=aT(e1)+bT(e2) for five vectors.",
+        gateWeight: "high"
+      },
+      "matrix-column-rule": {
+        label: "Matrix column rule",
+        prereqs: ["basis-image-method", "linear-combination"],
+        repairMaterial: "Review Chapter 2.3 and read A[x,y] as x times column 1 plus y times column 2.",
+        gateWeight: "high"
+      },
+      "physical-transform-family": {
+        label: "Physical transform families",
+        prereqs: ["transformation"],
+        repairMaterial: "Review Chapter 2.4 and classify simple formulas as stretch, shear, reflection, projection, or compression.",
+        gateWeight: "medium"
+      },
+      composition: {
+        label: "Composition order",
+        prereqs: ["transformation", "matrix-column-rule"],
+        repairMaterial: "Review Chapter 2.5 and compute one example of ABv and BAv to see why order matters.",
+        gateWeight: "high"
+      },
+      invertibility: {
+        label: "Invertibility",
+        prereqs: ["information-loss"],
+        repairMaterial: "Review Chapter 2.5 and decide whether each map loses information or can be undone.",
+        gateWeight: "high"
+      },
+      "information-loss": {
+        label: "Information loss",
+        prereqs: ["transformation", "linear-dependence"],
+        repairMaterial: "Review projection examples and find two different inputs that collapse to the same output.",
+        gateWeight: "high"
+      },
+      "fixed-direction": {
+        label: "Fixed and killed directions",
+        prereqs: ["transformation", "span"],
+        repairMaterial: "Review Chapter 2.6 and identify fixed directions and killed directions for projections and stretches.",
+        gateWeight: "high"
+      }
+    }
+  };
+}
+
 function conditionalProbabilityConceptGraph() {
   return {
     chapterId: "gate-da-conditional-probability",
@@ -8833,6 +9840,410 @@ function probabilityFoundationReviewQuestions() {
   }));
 }
 
+function linearAlgebraVectorSpacesProblems() {
+  return [
+    {
+      label: "Problem 1: Same move, different start",
+      concept: "Vector as object",
+      difficulty: "Concept",
+      technique: "Separate vector from drawing",
+      prompt: "A move [2,3] is drawn once from (0,0) and once from (5,5). Are these the same vector? What changes?",
+      solution: "They are the same vector because the displacement is still 2 units east and 3 units north. The starting point and ending point of the drawing change, but the vector records the move, not the location where the arrow is drawn."
+    },
+    {
+      label: "Problem 2: Build a map vector",
+      concept: "Linear combination",
+      difficulty: "Mechanics",
+      technique: "Build the target",
+      prompt: "Let e=[1,0] and n=[0,1]. Write [4,-2] as a linear combination of e and n.",
+      solution: "Use the coordinates as the controls: [4,-2] = 4[1,0] - 2[0,1] = 4e - 2n. The negative coefficient means moving in the opposite direction from north."
+    },
+    {
+      label: "Problem 3: Span of one direction",
+      concept: "Span",
+      difficulty: "Concept",
+      technique: "Describe all buildable vectors",
+      prompt: "What is span([2,0]) inside R2?",
+      solution: "Every linear combination has the form a[2,0] = [2a,0]. As a ranges over all real numbers, this is the x-axis. The vector [0,1] is not in this span because no multiple of [2,0] creates a nonzero second coordinate."
+    },
+    {
+      label: "Problem 4: Target membership",
+      concept: "Span membership",
+      difficulty: "Mechanics",
+      technique: "Build the target",
+      prompt: "Can [5,7] be built from v1=[1,1] and v2=[1,0]? If yes, find coefficients.",
+      solution: "Set a[1,1] + b[1,0] = [5,7]. This gives [a+b,a] = [5,7]. So a=7 and a+b=5, giving b=-2. Therefore [5,7] = 7v1 - 2v2."
+    },
+    {
+      label: "Problem 5: Subspace through zero",
+      concept: "Subspace",
+      difficulty: "Concept",
+      technique: "Subspace test",
+      prompt: "Is U = {[x,y] in R2 : y = 2x} a subspace of R2?",
+      solution: "Yes. The zero vector satisfies 0 = 2(0). If [x1,2x1] and [x2,2x2] are in U, their sum is [x1+x2, 2(x1+x2)], still in U. Scaling [x,2x] by c gives [cx,2cx], also in U."
+    },
+    {
+      label: "Problem 6: Shifted line trap",
+      concept: "Subspace trap",
+      difficulty: "Application",
+      technique: "Check zero first",
+      prompt: "Is W = {[x,y] in R2 : y = 2x + 1} a subspace of R2?",
+      solution: "No. The zero vector [0,0] does not satisfy y = 2x + 1 because 0 is not 1. Since every subspace must contain zero, W fails immediately."
+    },
+    {
+      label: "Problem 7: Redundant direction",
+      concept: "Linear dependence",
+      difficulty: "Application",
+      technique: "Redundancy test",
+      prompt: "Are [1,0], [0,1], and [1,1] linearly independent in R2?",
+      solution: "No. The third vector is the sum of the first two: [1,1] = [1,0] + [0,1]. It adds no new degree of freedom, so the list is linearly dependent."
+    },
+    {
+      label: "Problem 8: Too many vectors",
+      concept: "Linear dependence",
+      difficulty: "Application",
+      technique: "Dimension shortcut",
+      prompt: "Can four vectors in R3 be linearly independent?",
+      solution: "No. R3 has only three independent degrees of freedom. Any list with more than 3 vectors in R3 must be linearly dependent."
+    },
+    {
+      label: "Problem 9: Basis check",
+      concept: "Basis",
+      difficulty: "GATE-style",
+      technique: "Basis test",
+      prompt: "Do v1=[1,1] and v2=[1,-1] form a basis of R2?",
+      solution: "Yes. They are not scalar multiples, so two nonzero vectors in R2 are independent. Two independent vectors in R2 span R2. Therefore they form a basis."
+    },
+    {
+      label: "Problem 10: Feature dimension",
+      concept: "Dimension",
+      difficulty: "GATE-style",
+      technique: "Count independent signals",
+      prompt: "A data record has features [h,q,a], but for every record a = h + q. What is the maximum possible dimension of the data cloud?",
+      solution: "The data lives inside the plane a = h + q in R3. Once h and q are chosen, a is forced. So there are at most two independent degrees of freedom, and the data cloud has dimension at most 2."
+    }
+  ];
+}
+
+function linearAlgebraVectorSpacesReviewQuestions() {
+  const metadata = {
+    "la-vs-review-1": { targetConcept: "vector-as-object", prereqsUsed: ["coordinate-representation"], difficulty: 1, gateWeight: "medium" },
+    "la-vs-review-2": { targetConcept: "subspace-zero", prereqsUsed: ["subspace-closure"], difficulty: 1, gateWeight: "high" },
+    "la-vs-review-3": { targetConcept: "span", prereqsUsed: ["linear-combination"], difficulty: 2, gateWeight: "high" },
+    "la-vs-review-4": { targetConcept: "linear-dependence", prereqsUsed: ["linear-combination", "span"], difficulty: 2, gateWeight: "high" },
+    "la-vs-review-5": { targetConcept: "basis", prereqsUsed: ["span", "linear-independence"], difficulty: 3, gateWeight: "high" },
+    "la-vs-review-6": { targetConcept: "dimension", prereqsUsed: ["basis", "linear-dependence"], difficulty: 3, gateWeight: "high" }
+  };
+  const questions = [
+    {
+      id: "la-vs-review-1",
+      kind: "single concept",
+      tags: ["vector-as-object", "coordinate-representation"],
+      prompt: "A displacement [2,3] is drawn from two different starting points. Which statement is correct?",
+      options: [
+        { id: "a", text: "They are different vectors because their tails are different." },
+        { id: "b", text: "They are the same vector because the displacement is the same." },
+        { id: "c", text: "They are the same only if they end at the same point." },
+        { id: "d", text: "They cannot be compared without a matrix." }
+      ],
+      answer: "b"
+    },
+    {
+      id: "la-vs-review-2",
+      kind: "single concept",
+      tags: ["subspace-zero", "subspace-closure"],
+      prompt: "Which set is definitely not a subspace of R2?",
+      options: [
+        { id: "a", text: "{[x,y] : y = 2x}" },
+        { id: "b", text: "{[x,y] : x + y = 0}" },
+        { id: "c", text: "{[x,y] : y = 2x + 1}" },
+        { id: "d", text: "span([1,2])" }
+      ],
+      answer: "c"
+    },
+    {
+      id: "la-vs-review-3",
+      kind: "mixed: two concepts",
+      tags: ["span", "linear-combination"],
+      prompt: "Let v1=[1,1] and v2=[1,0]. Which coefficients build [5,7] as av1 + bv2?",
+      options: [
+        { id: "a", text: "a=5, b=7" },
+        { id: "b", text: "a=7, b=-2" },
+        { id: "c", text: "a=-2, b=7" },
+        { id: "d", text: "No coefficients exist." }
+      ],
+      answer: "b"
+    },
+    {
+      id: "la-vs-review-4",
+      kind: "mixed: two concepts",
+      tags: ["linear-dependence", "linear-combination", "span"],
+      prompt: "Why are [1,0], [0,1], and [1,1] linearly dependent?",
+      options: [
+        { id: "a", text: "Because [1,1] = [1,0] + [0,1]." },
+        { id: "b", text: "Because all three vectors are nonzero." },
+        { id: "c", text: "Because they do not span R2." },
+        { id: "d", text: "Because no vector can be built from the others." }
+      ],
+      answer: "a"
+    },
+    {
+      id: "la-vs-review-5",
+      kind: "mixed: three concepts",
+      tags: ["basis", "span", "linear-independence"],
+      prompt: "Which statement best explains why [1,1] and [1,-1] form a basis of R2?",
+      options: [
+        { id: "a", text: "They are two vectors, and any two vectors form a basis of R2." },
+        { id: "b", text: "They are not scalar multiples, so they are independent and span R2." },
+        { id: "c", text: "Their coordinates contain only 1 and -1." },
+        { id: "d", text: "They form a basis because their sum is [2,0]." }
+      ],
+      answer: "b"
+    },
+    {
+      id: "la-vs-review-6",
+      kind: "mixed: three concepts",
+      tags: ["dimension", "basis", "linear-dependence"],
+      prompt: "A dataset has features [h,q,a], but a = h + q for every record. What is the best structural conclusion?",
+      options: [
+        { id: "a", text: "The data must be 3-dimensional because there are three columns." },
+        { id: "b", text: "The data has at most 2 independent degrees of freedom." },
+        { id: "c", text: "The data is automatically 1-dimensional." },
+        { id: "d", text: "The data cannot be represented by vectors." }
+      ],
+      answer: "b"
+    }
+  ];
+  return questions.map((question) => ({
+    ...question,
+    ...(metadata[question.id] || { targetConcept: question.tags[0], prereqsUsed: question.tags.slice(1), difficulty: question.tags.length, gateWeight: "medium" })
+  }));
+}
+
+function linearAlgebraTransformationsProblems() {
+  return [
+    {
+      label: "Problem 1: Stretch machine",
+      concept: "Transformation",
+      difficulty: "Concept",
+      technique: "Read the physical action",
+      prompt: "The rule T([x,y]) = [2x,y] acts on the plane. What does it do physically, and where does it send [3,4]?",
+      solution: "It doubles the east-west coordinate and leaves the north-south coordinate unchanged. Physically, it stretches the plane horizontally by factor 2. Therefore T([3,4]) = [6,4]."
+    },
+    {
+      label: "Problem 2: Zero test",
+      concept: "Linearity",
+      difficulty: "Concept",
+      technique: "Check zero first",
+      prompt: "Can T([x,y]) = [x+1,y] be linear?",
+      solution: "No. A linear transformation must send the zero vector to the zero vector. Here T([0,0]) = [1,0], not [0,0]. This constant shift breaks linearity before any longer test is needed."
+    },
+    {
+      label: "Problem 3: Basis images",
+      concept: "Basis-image method",
+      difficulty: "Mechanics",
+      technique: "Transform the basis first",
+      prompt: "A linear map sends e1=[1,0] to [2,1] and e2=[0,1] to [0,3]. Where does it send [4,-1]?",
+      solution: "Write [4,-1] = 4e1 - e2. Since T is linear, T([4,-1]) = 4T(e1) - T(e2) = 4[2,1] - [0,3] = [8,4] - [0,3] = [8,1]."
+    },
+    {
+      label: "Problem 4: Column rule",
+      concept: "Matrix columns",
+      difficulty: "Mechanics",
+      technique: "Use columns as transformed basis vectors",
+      prompt: "A matrix has columns c1=[2,0] and c2=[1,1]. Compute A[3,2] using the column rule.",
+      solution: "A[3,2] = 3c1 + 2c2 = 3[2,0] + 2[1,1] = [6,0] + [2,2] = [8,2]. The vector coordinates are coefficients on the columns."
+    },
+    {
+      label: "Problem 5: Identify projection",
+      concept: "Physical transform family",
+      difficulty: "Application",
+      technique: "Classify the map",
+      prompt: "What kind of transformation is T([x,y]) = [x,0]? What information is lost?",
+      solution: "This is projection onto the x-axis. It preserves the x-coordinate and discards the y-coordinate. All vectors with the same x-coordinate collapse to the same output, so vertical information is lost."
+    },
+    {
+      label: "Problem 6: Rotation by 90 degrees",
+      concept: "Rotation",
+      difficulty: "Application",
+      technique: "Track basis directions",
+      prompt: "The rule R([x,y])=[-y,x] rotates the plane. Where does it send east e1=[1,0], north e2=[0,1], and the vector [2,3]?",
+      solution: "East goes to R([1,0])=[0,1], which is north. North goes to R([0,1])=[-1,0], which is west. The vector [2,3] goes to [-3,2]. This is a 90 degree counterclockwise rotation: lengths are preserved, but coordinates usually change."
+    },
+    {
+      label: "Problem 7: Reflection across the x-axis",
+      concept: "Reflection",
+      difficulty: "Application",
+      technique: "Find fixed and flipped directions",
+      prompt: "The rule F([x,y])=[x,-y] reflects across the x-axis. Which vectors are fixed, and where does [2,3] go?",
+      solution: "Vectors on the x-axis have the form [x,0], and F([x,0])=[x,0], so the x-axis is fixed. The vector [2,3] goes to [2,-3], so upward movement is mirrored downward. Length is preserved, but the plane is flipped."
+    },
+    {
+      label: "Problem 8: Composition order",
+      concept: "Composition",
+      difficulty: "Application",
+      technique: "Apply the right map first",
+      prompt: "Let S([x,y])=[x+y,y] and P([x,y])=[x,0]. Compute P(S([1,2])) and S(P([1,2])).",
+      solution: "First S([1,2]) = [3,2], so P(S([1,2])) = P([3,2]) = [3,0]. Next P([1,2]) = [1,0], so S(P([1,2])) = S([1,0]) = [1,0]. The results differ, so order matters."
+    },
+    {
+      label: "Problem 9: Invertible or not",
+      concept: "Invertibility",
+      difficulty: "Application",
+      technique: "Information-loss test",
+      prompt: "Is T([x,y])=[x,0] invertible as a transformation from R2 to R2?",
+      solution: "No. Different inputs such as [3,1] and [3,5] both map to [3,0]. Since the output does not remember the original y-coordinate, the transformation cannot be undone."
+    },
+    {
+      label: "Problem 10: Fixed and killed directions",
+      concept: "Fixed and killed directions",
+      difficulty: "Application",
+      technique: "Find what stays and what disappears",
+      prompt: "For T([x,y])=[x,0], which vectors are fixed and which vectors are sent to zero?",
+      solution: "Vectors on the x-axis have the form [x,0], and T([x,0])=[x,0], so they are fixed. Vectors on the y-axis have the form [0,y], and T([0,y])=[0,0], so the y-axis is killed."
+    },
+    {
+      label: "Problem 11: Matrix from action",
+      concept: "Matrix representation",
+      difficulty: "GATE-style",
+      technique: "Put transformed basis vectors in columns",
+      prompt: "A linear transformation sends e1 to [1,2] and e2 to [-1,3]. What is its standard matrix?",
+      solution: "The standard matrix uses transformed basis vectors as columns. Therefore A has first column [1,2] and second column [-1,3], so A = [[1,-1],[2,3]] in row display."
+    },
+    {
+      label: "Problem 12: Linear or nonlinear",
+      concept: "Linearity",
+      difficulty: "GATE-style",
+      technique: "Check preservation of scaling",
+      prompt: "Is T([x,y])=[x^2,y] linear?",
+      solution: "No. Scaling fails. For example, T(2[1,0]) = T([2,0]) = [4,0], but 2T([1,0]) = 2[1,0] = [2,0]. Since these are different, T is not linear."
+    }
+  ];
+}
+
+function linearAlgebraTransformationsReviewQuestions() {
+  const metadata = {
+    "la-tm-review-1": { targetConcept: "linearity-test", prereqsUsed: ["zero-preservation"], difficulty: 1, gateWeight: "high" },
+    "la-tm-review-2": { targetConcept: "basis-image-method", prereqsUsed: ["basis", "linear-combination"], difficulty: 2, gateWeight: "high" },
+    "la-tm-review-3": { targetConcept: "matrix-column-rule", prereqsUsed: ["basis-image-method"], difficulty: 2, gateWeight: "high" },
+    "la-tm-review-4": { targetConcept: "physical-transform-family", prereqsUsed: ["transformation", "information-loss"], difficulty: 2, gateWeight: "medium" },
+    "la-tm-review-5": { targetConcept: "composition", prereqsUsed: ["transformation", "matrix-column-rule"], difficulty: 3, gateWeight: "high" },
+    "la-tm-review-6": { targetConcept: "fixed-direction", prereqsUsed: ["information-loss", "span"], difficulty: 3, gateWeight: "high" },
+    "la-tm-review-7": { targetConcept: "physical-transform-family", prereqsUsed: ["transformation", "matrix-column-rule"], difficulty: 2, gateWeight: "high" },
+    "la-tm-review-8": { targetConcept: "fixed-direction", prereqsUsed: ["physical-transform-family", "transformation"], difficulty: 2, gateWeight: "high" }
+  };
+  const questions = [
+    {
+      id: "la-tm-review-1",
+      kind: "single concept",
+      tags: ["linearity-test", "zero-preservation"],
+      prompt: "Which rule is definitely not linear because it fails the zero test?",
+      options: [
+        { id: "a", text: "T([x,y]) = [2x,y]" },
+        { id: "b", text: "T([x,y]) = [x+y,y]" },
+        { id: "c", text: "T([x,y]) = [x+1,y]" },
+        { id: "d", text: "T([x,y]) = [x,0]" }
+      ],
+      answer: "c"
+    },
+    {
+      id: "la-tm-review-2",
+      kind: "mixed: two concepts",
+      tags: ["basis-image-method", "basis", "linear-combination"],
+      prompt: "A linear map sends e1 to [2,1] and e2 to [0,3]. Where does it send [4,-1]?",
+      options: [
+        { id: "a", text: "[8,1]" },
+        { id: "b", text: "[8,7]" },
+        { id: "c", text: "[4,-1]" },
+        { id: "d", text: "[2,-3]" }
+      ],
+      answer: "a"
+    },
+    {
+      id: "la-tm-review-3",
+      kind: "mixed: two concepts",
+      tags: ["matrix-column-rule", "basis-image-method"],
+      prompt: "A matrix has columns c1=[2,0] and c2=[1,1]. What is A[3,2]?",
+      options: [
+        { id: "a", text: "[7,1]" },
+        { id: "b", text: "[8,2]" },
+        { id: "c", text: "[5,3]" },
+        { id: "d", text: "[6,2]" }
+      ],
+      answer: "b"
+    },
+    {
+      id: "la-tm-review-4",
+      kind: "mixed: two concepts",
+      tags: ["physical-transform-family", "transformation", "information-loss"],
+      prompt: "What does T([x,y])=[x,0] do?",
+      options: [
+        { id: "a", text: "Rotates the plane by 90 degrees." },
+        { id: "b", text: "Projects onto the x-axis and loses y-information." },
+        { id: "c", text: "Reflects across the line y=x." },
+        { id: "d", text: "Stretches both axes by the same factor." }
+      ],
+      answer: "b"
+    },
+    {
+      id: "la-tm-review-5",
+      kind: "mixed: three concepts",
+      tags: ["composition", "transformation", "matrix-column-rule"],
+      prompt: "For transformations A and B, what does ABv mean?",
+      options: [
+        { id: "a", text: "Apply A first, then B." },
+        { id: "b", text: "Apply B first, then A." },
+        { id: "c", text: "Add the outputs of A and B." },
+        { id: "d", text: "The order never matters." }
+      ],
+      answer: "b"
+    },
+    {
+      id: "la-tm-review-6",
+      kind: "mixed: three concepts",
+      tags: ["fixed-direction", "information-loss", "span"],
+      prompt: "For T([x,y])=[x,0], which statement is correct?",
+      options: [
+        { id: "a", text: "Every vector is fixed." },
+        { id: "b", text: "The x-axis is fixed and the y-axis is sent to zero." },
+        { id: "c", text: "The y-axis is fixed and the x-axis is sent to zero." },
+        { id: "d", text: "No nonzero vector is fixed." }
+      ],
+      answer: "b"
+    },
+    {
+      id: "la-tm-review-7",
+      kind: "mixed: two concepts",
+      tags: ["physical-transform-family", "transformation", "matrix-column-rule"],
+      prompt: "The rule R([x,y])=[-y,x] sends e1=[1,0] to [0,1] and e2=[0,1] to [-1,0]. What physical transformation is this?",
+      options: [
+        { id: "a", text: "Projection onto the x-axis." },
+        { id: "b", text: "Reflection across the x-axis." },
+        { id: "c", text: "Rotation by 90 degrees counterclockwise." },
+        { id: "d", text: "Horizontal stretch by 2." }
+      ],
+      answer: "c"
+    },
+    {
+      id: "la-tm-review-8",
+      kind: "mixed: two concepts",
+      tags: ["fixed-direction", "physical-transform-family", "transformation"],
+      prompt: "For F([x,y])=[x,-y], which statement is correct?",
+      options: [
+        { id: "a", text: "The x-axis is fixed and upward movement is flipped downward." },
+        { id: "b", text: "The y-axis is fixed and rightward movement is flipped leftward." },
+        { id: "c", text: "Every vector is sent to the x-axis." },
+        { id: "d", text: "Every vector is rotated 90 degrees." }
+      ],
+      answer: "a"
+    }
+  ];
+  return questions.map((question) => ({
+    ...question,
+    ...(metadata[question.id] || { targetConcept: question.tags[0], prereqsUsed: question.tags.slice(1), difficulty: question.tags.length, gateWeight: "medium" })
+  }));
+}
+
 function discreteMathMilestones() {
   return [
     {
@@ -9619,6 +11030,8 @@ function defaultUser() {
     tempPassword: "l!pschitz",
     password: "l!pschitz",
     mustChangePassword: false,
+    role: "learner",
+    canPreviewLockedContent: false,
     passwordStatus: "Prototype login enabled",
     registeredAt: new Date().toISOString()
   };
@@ -9659,6 +11072,8 @@ function reviewerUser() {
     email: "reviewer@aleph.local",
     tempPassword: "reviewer",
     password: "reviewer",
+    role: "reviewer",
+    canPreviewLockedContent: true,
     passwordStatus: "Platinum reviewer prototype login"
   };
 }
@@ -9673,8 +11088,25 @@ function basicGateDaUser() {
     tempPassword: "basic",
     password: "basic",
     mustChangePassword: false,
+    role: "learner",
+    canPreviewLockedContent: false,
     passwordStatus: "GATE DA Basic prototype login",
     registeredAt: new Date().toISOString()
+  };
+}
+
+function courseDesignerUser() {
+  return {
+    ...basicGateDaUser(),
+    id: "user-course-designer",
+    name: "designer",
+    displayName: "Course Designer",
+    email: "designer@aleph.local",
+    tempPassword: "designer",
+    password: "designer",
+    role: "course-designer",
+    canPreviewLockedContent: true,
+    passwordStatus: "GATE DA Basic course designer preview login"
   };
 }
 
@@ -9683,6 +11115,7 @@ function seededPrototypeUsers() {
   return [
     defaultUser(),
     basic,
+    courseDesignerUser(),
     platinumAccountUser(),
     platinumDemoUser(),
     reviewerUser(),
@@ -9806,7 +11239,7 @@ function login(event) {
 function applyDemoLogin() {
   const demoName = new URLSearchParams(window.location.search).get("demo")?.trim().toLowerCase();
   if (!demoName) return;
-  if (!["reviewer", "basic", "gate-basic", "platinum"].includes(demoName)) return;
+  if (!["reviewer", "designer", "basic", "gate-basic", "platinum"].includes(demoName)) return;
   const matchedUser = prototypeUsers().find((user) => user.name === demoName);
   if (!matchedUser) return;
   const canonicalUser = normalizeSeededUser(matchedUser);
@@ -10211,6 +11644,8 @@ function buildQuizFeedbackReport({ answers, quiz, section, conceptScores, strong
 }
 
 function conceptGraphForSection(section) {
+  if (section?.id === "gate-da-linear-algebra-vector-spaces-coordinates") return linearAlgebraVectorSpacesConceptGraph();
+  if (section?.id === "gate-da-linear-algebra-transformations-matrices") return linearAlgebraTransformationsConceptGraph();
   if (section?.id === "gate-da-probability-foundations") return probabilityFoundationConceptGraph();
   if (section?.id === "gate-da-conditional-probability") return conditionalProbabilityConceptGraph();
   if (section?.id === "gate-da-random-variables-expectation") return randomVariablesExpectationConceptGraph();
@@ -10411,7 +11846,30 @@ function conceptLabel(tag) {
     "expected-counts": "expected counts",
     "confidence-interval": "confidence intervals",
     "hypothesis-test": "hypothesis tests",
-    "sample-size": "sample size"
+    "sample-size": "sample size",
+    "vector-as-object": "vectors as objects",
+    "coordinate-representation": "coordinate representations",
+    "vector-addition": "vector addition",
+    "scalar-multiplication": "scalar multiplication",
+    "linear-combination": "linear combinations",
+    span: "span",
+    "subspace-zero": "subspace zero test",
+    "subspace-closure": "subspace closure",
+    "linear-dependence": "linear dependence",
+    "linear-independence": "linear independence",
+    basis: "basis",
+    "coordinates-in-basis": "coordinates in a basis",
+    dimension: "dimension",
+    transformation: "transformations",
+    "linearity-test": "linearity tests",
+    "zero-preservation": "zero preservation",
+    "basis-image-method": "basis-image method",
+    "matrix-column-rule": "matrix column rule",
+    "physical-transform-family": "physical transform families",
+    composition: "composition order",
+    invertibility: "invertibility",
+    "information-loss": "information loss",
+    "fixed-direction": "fixed and killed directions"
   };
   return labels[tag] || tag;
 }
@@ -11346,7 +12804,11 @@ function chapterCardTemplate(section, sections = activeGateDaSections()) {
   const test = state.tests.find((entry) => entry.sectionId === section.id);
   const latestAttempt = latestQuizAttemptForTest(test?.id);
   const unlockState = sectionUnlockState(section, sections);
-  const lockMessage = unlockState.locked
+  const lockMessage = unlockState.previewingLocked
+    ? unlockState.previousSection.reviewQuiz
+      ? `Designer preview: learners are locked until they submit ${unlockState.previousSection.chapter}: ${unlockState.previousSection.title} review quiz.`
+      : `Designer preview: learners are locked until ${unlockState.previousSection.chapter}: ${unlockState.previousSection.title} review quiz is added and submitted.`
+    : unlockState.locked
     ? unlockState.previousSection.reviewQuiz
       ? `Locked until you submit ${unlockState.previousSection.chapter}: ${unlockState.previousSection.title} review quiz.`
       : `Locked until ${unlockState.previousSection.chapter}: ${unlockState.previousSection.title} review quiz is added and submitted.`
@@ -11366,9 +12828,9 @@ function chapterCardTemplate(section, sections = activeGateDaSections()) {
       <div class="chapter-card-meta">
         <span>${section.practiceProblems.length ? `${section.practiceProblems.length} practice` : "Practice pending"}</span>
         <span>${section.reviewQuiz ? `${section.reviewQuiz.questions.length} quiz questions` : "Quiz pending"}</span>
-        <span>${unlockState.locked ? "Locked" : latestAttempt ? `Latest quiz ${latestAttempt.percent}%` : section.reviewQuiz ? "Quiz required" : "In progress"}</span>
+        <span>${unlockState.previewingLocked ? "Designer preview" : unlockState.locked ? "Locked" : latestAttempt ? `Latest quiz ${latestAttempt.percent}%` : section.reviewQuiz ? "Quiz required" : "In progress"}</span>
       </div>
-      <button class="${unlockState.locked ? "ghost-btn" : "primary-btn"}" data-open-section="${section.id}" type="button"${unlockState.locked ? " disabled" : ""}>${unlockState.locked ? "Locked" : "Open chapter"}</button>
+      <button class="${unlockState.locked ? "ghost-btn" : "primary-btn"}" data-open-section="${section.id}" type="button"${unlockState.locked ? " disabled" : ""}>${unlockState.locked ? "Locked" : unlockState.previewingLocked ? "Preview chapter" : "Open chapter"}</button>
     </article>
   `;
 }
@@ -11451,8 +12913,8 @@ function renderAssessmentDashboard() {
       <article class="item assessment-card">
         <div class="item-top">
           <div>
-            <h4>Basic Probability readiness not measured yet</h4>
-            <p>Take the Chapter 1 or Chapter 2 Objective Review to generate concept mastery, prerequisite breaks, repair work, and an early GATE DA readiness signal.</p>
+            <h4>Basic GATE DA readiness not measured yet</h4>
+            <p>Take a graph-backed Objective Review to generate concept mastery, prerequisite breaks, repair work, and an early GATE DA readiness signal.</p>
           </div>
           <span class="tag">No attempts</span>
         </div>
@@ -11571,7 +13033,7 @@ function renderGateDaWorkspace() {
         <div class="item-top">
           <div>
             <h4>GATE DA Basic Workspace</h4>
-            <p>Basic account workspace for the current GATE DA material. Use this plan to inspect Subjects -> Probability -> Chapters 1-10, labelled practice, and objective review quizzes including Chapter 2 Conditional Probability.</p>
+            <p>Basic account workspace for the current GATE DA material. Use this plan to inspect Subjects -> Probability and Subjects -> Linear Algebra, labelled practice, and objective review quizzes with prerequisite feedback.</p>
           </div>
           <span class="tag">${escapeHtml(gateDaEnrollment.paymentStatus || "active")}</span>
         </div>
@@ -11732,7 +13194,7 @@ function sectionTemplate(section) {
               <li>Single-concept questions check each key concept in this chapter.</li>
               <li>Mixed questions combine two or three concepts so feedback can identify where reasoning breaks.</li>
               <li>Attempts are logged in Tests with concept-level feedback in the learner record.</li>
-              <li>Submitting this review quiz unlocks the next Probability chapter in the Basic plan.</li>
+              <li>Submitting this review quiz unlocks the next chapter in this subject.</li>
             </ul>
             <div class="book-action-row">
               <button class="primary-btn" data-open-section-quiz="${escapeHtml(sectionTestId(section.id))}" type="button">Open review quiz</button>
@@ -11814,7 +13276,72 @@ function visualTemplate(visual) {
   if (visual.type === "area") return areaDiagramTemplate(visual);
   if (visual.type === "flow") return flowDiagramTemplate(visual);
   if (visual.type === "tail") return tailDiagramTemplate(visual);
+  if (visual.type === "transform-gallery") return transformGalleryTemplate(visual);
   return "";
+}
+
+function transformGalleryTemplate(visual) {
+  const transforms = visual.transforms || [];
+  const center = { x: 110, y: 88 };
+  const scale = 44;
+  const point = (coords = [0, 0]) => ({
+    x: center.x + (Number(coords[0]) || 0) * scale,
+    y: center.y - (Number(coords[1]) || 0) * scale
+  });
+  const arrowMarkup = (arrow, index, markerId) => {
+    const from = point(arrow.from);
+    const to = point(arrow.to);
+    const labelAnchor = to.x >= center.x ? "start" : "end";
+    const labelX = to.x + (to.x >= center.x ? 8 : -8);
+    const labelY = to.y + (to.y <= center.y ? -8 : 14);
+    return `
+      <line x1="${from.x}" y1="${from.y}" x2="${to.x}" y2="${to.y}" class="${escapeHtml(arrow.className || "diagram-output")}" marker-end="url(#${markerId})"></line>
+      <text x="${labelX}" y="${labelY}" text-anchor="${labelAnchor}" class="diagram-label">${escapeHtml(arrow.label || "")}</text>
+    `;
+  };
+  const dotMarkup = (dot) => {
+    const at = point(dot.at);
+    return `
+      <circle cx="${at.x}" cy="${at.y}" r="5" class="diagram-zero"></circle>
+      <text x="${at.x + 10}" y="${at.y - 9}" class="diagram-label">${escapeHtml(dot.label || "")}</text>
+    `;
+  };
+
+  return `
+    <div class="mini-diagram transform-gallery" role="group" aria-label="${escapeHtml(visual.caption || "Transformation gallery")}">
+      <div class="transform-gallery-grid">
+        ${transforms.map((item, index) => {
+          const markerId = `transform-arrow-${index}`;
+          return `
+            <article class="transform-card">
+              <div class="transform-card-header">
+                <strong>${escapeHtml(item.title)}</strong>
+                <code>${escapeHtml(item.formula || "")}</code>
+              </div>
+              <svg class="diagram-svg transform-svg" viewBox="0 0 220 178" role="img" aria-label="${escapeHtml(`${item.title}: ${item.caption || ""}`)}">
+                <defs>
+                  <marker id="${markerId}" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
+                    <path d="M 0 0 L 10 5 L 0 10 z" class="diagram-marker"></path>
+                  </marker>
+                </defs>
+                <line x1="24" y1="${center.y}" x2="196" y2="${center.y}" class="diagram-axis"></line>
+                <line x1="${center.x}" y1="20" x2="${center.x}" y2="156" class="diagram-axis"></line>
+                ${item.mirror === "x" ? `<line x1="24" y1="${center.y}" x2="196" y2="${center.y}" class="diagram-mirror"></line>` : ""}
+                <line x1="${center.x}" y1="${center.y}" x2="${point([1, 0]).x}" y2="${point([1, 0]).y}" class="diagram-input"></line>
+                <line x1="${center.x}" y1="${center.y}" x2="${point([0, 1]).x}" y2="${point([0, 1]).y}" class="diagram-input"></line>
+                <text x="${point([1, 0]).x + 7}" y="${point([1, 0]).y + 4}" class="diagram-label diagram-input-label">e1</text>
+                <text x="${point([0, 1]).x + 7}" y="${point([0, 1]).y - 7}" class="diagram-label diagram-input-label">e2</text>
+                ${(item.arrows || []).map((arrow, arrowIndex) => arrowMarkup(arrow, arrowIndex, markerId)).join("")}
+                ${(item.dots || []).map(dotMarkup).join("")}
+              </svg>
+              <p>${escapeHtml(item.caption || "")}</p>
+            </article>
+          `;
+        }).join("")}
+      </div>
+      ${visual.caption ? `<small>${escapeHtml(visual.caption)}</small>` : ""}
+    </div>
+  `;
 }
 
 function barDiagramTemplate(visual) {
