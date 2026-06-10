@@ -1,7 +1,7 @@
 const STORAGE_KEY = "learning-studio-data-v2";
 const LEGACY_STORAGE_KEYS = ["learning-studio-data-v1"];
 const SESSION_KEY = "aleph-session";
-const COURSE_PLAN_VERSION = "seeded-user-canonical-workspace-v73";
+const COURSE_PLAN_VERSION = "seeded-user-canonical-workspace-v74";
 const PRIYANKA_PLATINUM_START_DATE = "2026-06-07";
 const DEFAULT_PLAN_START_DATE = "2026-06-01";
 
@@ -700,10 +700,12 @@ function buildGateDaBasicPlan(now, accountTypes, sections, user = basicGateDaUse
   const weekNineSunday = addDays(weekNineMonday, 6);
   const weekTenMonday = addDays(monday, 63);
   const weekTenSunday = addDays(weekTenMonday, 6);
-  const weekElevenMonday = addDays(monday, 70);
-  const weekElevenSunday = addDays(weekElevenMonday, 6);
-  const weekTwelveMonday = addDays(monday, 77);
-  const weekTwelveSunday = addDays(weekTwelveMonday, 6);
+  const linearAlgebraWeekOneMonday = monday;
+  const linearAlgebraWeekOneSunday = sunday;
+  const linearAlgebraWeekTwoMonday = weekTwoMonday;
+  const linearAlgebraWeekTwoSunday = weekTwoSunday;
+  const linearAlgebraWeekThreeMonday = weekThreeMonday;
+  const linearAlgebraWeekThreeSunday = weekThreeSunday;
   const userId = user.id || "user-basic-demo";
   const userSlug = slugify(user.name || userId);
   const enrollmentId = `enrollment-${userSlug}-gate-da-basic`;
@@ -728,9 +730,9 @@ function buildGateDaBasicPlan(now, accountTypes, sections, user = basicGateDaUse
         accountTypeId: "gate-da-basic",
         lessonPlanId,
         title: "Linear Algebra",
-        date: weekElevenMonday,
+        date: linearAlgebraWeekOneMonday,
         status: "In progress",
-        details: "GATE DA Basic Linear Algebra, built around transformations, invariants, and physical intuition. Chapters 1-2 cover vectors, coordinates, span, subspaces, independence, basis, dimension, linear transformations, matrices, composition, and information loss.",
+        details: "GATE DA Basic Linear Algebra, built around transformations, invariants, and physical intuition. Chapters 1-3 cover vectors, coordinates, span, subspaces, independence, basis, dimension, linear transformations, matrices, rank, nullity, range/kernel, systems, and information loss.",
         sectionIds: linearAlgebraSections.map((section) => section.id),
         updatedAt: now
       }
@@ -1029,61 +1031,91 @@ function buildGateDaBasicPlan(now, accountTypes, sections, user = basicGateDaUse
       {
         id: "schedule-linear-algebra-chapter-1-study",
         title: "Linear Algebra Chapter 1: Vector Spaces and Coordinates",
-        week: 11,
+        week: 1,
         subject: "Linear Algebra",
         kind: "Study",
-        date: weekElevenMonday,
+        date: linearAlgebraWeekOneMonday,
         details: "Study vectors through map movement, recipe mixtures, and data feature vectors before moving into span, subspaces, independence, basis, and dimension.",
         updatedAt: now
       },
       {
         id: "schedule-linear-algebra-chapter-1-practice",
         title: "Linear Algebra Chapter 1: Labelled Practice",
-        week: 11,
+        week: 1,
         subject: "Linear Algebra",
         kind: "Practice",
-        date: addDays(weekElevenMonday, 2),
+        date: addDays(linearAlgebraWeekOneMonday, 2),
         details: "Solve the labelled practice problems. Focus on what can be built, what is redundant, and how many degrees of freedom remain.",
         updatedAt: now
       },
       {
         id: "schedule-linear-algebra-chapter-1-review",
         title: "Linear Algebra Chapter 1: Objective Review",
-        week: 11,
+        week: 1,
         subject: "Linear Algebra",
         kind: "Review",
-        date: weekElevenSunday,
+        date: linearAlgebraWeekOneSunday,
         details: "Take the graph-backed objective quiz for vector spaces, coordinates, span, subspaces, independence, basis, and dimension.",
         updatedAt: now
       },
       {
         id: "schedule-linear-algebra-chapter-2-study",
         title: "Linear Algebra Chapter 2: Linear Transformations and Matrices",
-        week: 12,
+        week: 2,
         subject: "Linear Algebra",
         kind: "Study",
-        date: weekTwelveMonday,
+        date: linearAlgebraWeekTwoMonday,
         details: "Study transformations as physical machines, matrices as coordinate descriptions, column rule, composition, inverses, and preserved or killed directions.",
         updatedAt: now
       },
       {
         id: "schedule-linear-algebra-chapter-2-practice",
         title: "Linear Algebra Chapter 2: Labelled Practice",
-        week: 12,
+        week: 2,
         subject: "Linear Algebra",
         kind: "Practice",
-        date: addDays(weekTwelveMonday, 2),
+        date: addDays(linearAlgebraWeekTwoMonday, 2),
         details: "Solve transformation and matrix practice problems using physical action first, then algebra.",
         updatedAt: now
       },
       {
         id: "schedule-linear-algebra-chapter-2-review",
         title: "Linear Algebra Chapter 2: Objective Review",
-        week: 12,
+        week: 2,
         subject: "Linear Algebra",
         kind: "Review",
-        date: weekTwelveSunday,
+        date: linearAlgebraWeekTwoSunday,
         details: "Take the graph-backed objective quiz for linearity, basis images, matrix columns, composition, invertibility, and information loss.",
+        updatedAt: now
+      },
+      {
+        id: "schedule-linear-algebra-chapter-3-study",
+        title: "Linear Algebra Chapter 3: Rank, Nullity, Range, Kernel, and Systems",
+        week: 3,
+        subject: "Linear Algebra",
+        kind: "Study",
+        date: linearAlgebraWeekThreeMonday,
+        details: "Study rank as surviving output dimension, nullity as killed input dimension, range/kernel, rank-nullity, consistency, and system solution shapes.",
+        updatedAt: now
+      },
+      {
+        id: "schedule-linear-algebra-chapter-3-practice",
+        title: "Linear Algebra Chapter 3: Labelled Practice",
+        week: 3,
+        subject: "Linear Algebra",
+        kind: "Practice",
+        date: addDays(linearAlgebraWeekThreeMonday, 2),
+        details: "Solve rank, nullity, kernel, image, and linear-system practice using pivots and physical information-flow reasoning.",
+        updatedAt: now
+      },
+      {
+        id: "schedule-linear-algebra-chapter-3-review",
+        title: "Linear Algebra Chapter 3: Objective Review",
+        week: 3,
+        subject: "Linear Algebra",
+        kind: "Review",
+        date: linearAlgebraWeekThreeSunday,
+        details: "Take the graph-backed objective quiz for rank, nullity, range/kernel, rank-nullity, consistency, and solution-count reasoning.",
         updatedAt: now
       }
     ],
@@ -1181,7 +1213,7 @@ function buildGateDaBasicPlan(now, accountTypes, sections, user = basicGateDaUse
       {
         id: "test-linear-algebra-chapter-1-objective-review",
         title: "Linear Algebra Chapter 1 Objective Review",
-        date: weekElevenSunday,
+        date: linearAlgebraWeekOneSunday,
         details: "Objective end-of-chapter quiz for vectors, coordinates, linear combinations, span, subspaces, independence, basis, and dimension. Attempts are logged with prerequisite repair feedback.",
         sectionId: linearAlgebraSection?.id,
         quizId: "quiz-linear-algebra-chapter-1-objective-review",
@@ -1190,10 +1222,19 @@ function buildGateDaBasicPlan(now, accountTypes, sections, user = basicGateDaUse
       {
         id: "test-linear-algebra-chapter-2-objective-review",
         title: "Linear Algebra Chapter 2 Objective Review",
-        date: weekTwelveSunday,
+        date: linearAlgebraWeekTwoSunday,
         details: "Objective end-of-chapter quiz for transformations, linearity, matrix columns, composition, invertibility, and fixed or killed directions. Attempts are logged with prerequisite repair feedback.",
         sectionId: linearAlgebraSections[1]?.id,
         quizId: "quiz-linear-algebra-chapter-2-objective-review",
+        updatedAt: now
+      },
+      {
+        id: "test-linear-algebra-chapter-3-objective-review",
+        title: "Linear Algebra Chapter 3 Objective Review",
+        date: linearAlgebraWeekThreeSunday,
+        details: "Objective end-of-chapter quiz for rank, nullity, range/kernel, pivot columns, free variables, consistency, and solution-count reasoning. Attempts are logged with prerequisite repair feedback.",
+        sectionId: linearAlgebraSections[2]?.id,
+        quizId: "quiz-linear-algebra-chapter-3-objective-review",
         updatedAt: now
       }
     ],
@@ -1520,10 +1561,10 @@ function buildGateDaBasicPlan(now, accountTypes, sections, user = basicGateDaUse
       },
       {
         id: "task-linear-algebra-chapter-1-read",
-        week: 11,
+        week: 1,
         title: "Linear Algebra Ch 1: Read vector spaces",
         type: "Study",
-        date: weekElevenMonday,
+        date: linearAlgebraWeekOneMonday,
         status: "todo",
         done: false,
         details: "Open Subjects -> Linear Algebra -> Chapter 1 and study the running examples, definitions, and worked checks.",
@@ -1531,10 +1572,10 @@ function buildGateDaBasicPlan(now, accountTypes, sections, user = basicGateDaUse
       },
       {
         id: "task-linear-algebra-chapter-1-practice",
-        week: 11,
+        week: 1,
         title: "Linear Algebra Ch 1: Solve labelled practice",
         type: "Practice",
-        date: addDays(weekElevenMonday, 2),
+        date: addDays(linearAlgebraWeekOneMonday, 2),
         status: "todo",
         done: false,
         details: "Attempt the vector space and coordinate practice problems before opening worked solutions.",
@@ -1542,10 +1583,10 @@ function buildGateDaBasicPlan(now, accountTypes, sections, user = basicGateDaUse
       },
       {
         id: "task-linear-algebra-chapter-1-review",
-        week: 11,
+        week: 1,
         title: "Linear Algebra Ch 1: Take objective review",
         type: "Review",
-        date: weekElevenSunday,
+        date: linearAlgebraWeekOneSunday,
         status: "todo",
         done: false,
         details: "Submit the Chapter 1 objective quiz so the learner record logs vector-space strengths and weaknesses.",
@@ -1553,10 +1594,10 @@ function buildGateDaBasicPlan(now, accountTypes, sections, user = basicGateDaUse
       },
       {
         id: "task-linear-algebra-chapter-2-read",
-        week: 12,
+        week: 2,
         title: "Linear Algebra Ch 2: Read transformations",
         type: "Study",
-        date: weekTwelveMonday,
+        date: linearAlgebraWeekTwoMonday,
         status: "todo",
         done: false,
         details: "Open Subjects -> Linear Algebra -> Chapter 2 and study transformations as physical machines before reading matrices.",
@@ -1564,10 +1605,10 @@ function buildGateDaBasicPlan(now, accountTypes, sections, user = basicGateDaUse
       },
       {
         id: "task-linear-algebra-chapter-2-practice",
-        week: 12,
+        week: 2,
         title: "Linear Algebra Ch 2: Solve transformation practice",
         type: "Practice",
-        date: addDays(weekTwelveMonday, 2),
+        date: addDays(linearAlgebraWeekTwoMonday, 2),
         status: "todo",
         done: false,
         details: "Attempt the Chapter 2 labelled practice problems before opening worked solutions.",
@@ -1575,13 +1616,46 @@ function buildGateDaBasicPlan(now, accountTypes, sections, user = basicGateDaUse
       },
       {
         id: "task-linear-algebra-chapter-2-review",
-        week: 12,
+        week: 2,
         title: "Linear Algebra Ch 2: Take objective review",
         type: "Review",
-        date: weekTwelveSunday,
+        date: linearAlgebraWeekTwoSunday,
         status: "todo",
         done: false,
         details: "Submit the Chapter 2 objective quiz so the learner record logs transformation and matrix reasoning strengths and weaknesses.",
+        updatedAt: now
+      },
+      {
+        id: "task-linear-algebra-chapter-3-read",
+        week: 3,
+        title: "Linear Algebra Ch 3: Read rank and nullity",
+        type: "Study",
+        date: linearAlgebraWeekThreeMonday,
+        status: "todo",
+        done: false,
+        details: "Open Subjects -> Linear Algebra -> Chapter 3 and study rank, nullity, range/kernel, pivots, free variables, and system shapes.",
+        updatedAt: now
+      },
+      {
+        id: "task-linear-algebra-chapter-3-practice",
+        week: 3,
+        title: "Linear Algebra Ch 3: Solve rank/nullity practice",
+        type: "Practice",
+        date: addDays(linearAlgebraWeekThreeMonday, 2),
+        status: "todo",
+        done: false,
+        details: "Attempt the Chapter 3 labelled practice problems before opening worked solutions.",
+        updatedAt: now
+      },
+      {
+        id: "task-linear-algebra-chapter-3-review",
+        week: 3,
+        title: "Linear Algebra Ch 3: Take objective review",
+        type: "Review",
+        date: linearAlgebraWeekThreeSunday,
+        status: "todo",
+        done: false,
+        details: "Submit the Chapter 3 objective quiz so the learner record logs rank, nullity, kernel, range, and system reasoning strengths and weaknesses.",
         updatedAt: now
       }
     ],
@@ -1609,7 +1683,7 @@ function buildGateDaBasicPlan(now, accountTypes, sections, user = basicGateDaUse
         startDate: monday,
         endDate: "2026-08-30",
         status: "active",
-        details: `GATE DA Basic plan surfaces: Subjects, Tasks, Schedule, Tests, Feedback, Resources, and Share. Current material build: Probability Chapters 1-10 and Linear Algebra Chapters 1-2.${trialNote}`,
+        details: `GATE DA Basic plan surfaces: Subjects, Tasks, Schedule, Tests, Feedback, Resources, and Share. Recommended pace: study three subjects in parallel. Every 15 days, Aleph should generate an adaptive cumulative review quiz from prior performance, repeating missed concepts more often, reducing mastered concepts, and keeping high-weight exam topics in rotation. Current material build: Probability Chapters 1-10 and Linear Algebra Chapters 1-3.${trialNote}`,
         updatedAt: now
       }
     ],
@@ -1625,15 +1699,22 @@ function buildGateDaBasicPlan(now, accountTypes, sections, user = basicGateDaUse
       {
         id: "feedback-linear-algebra-chapter-1",
         title: "Linear Algebra Chapter 1 feedback focus",
-        date: weekElevenSunday,
+        date: linearAlgebraWeekOneSunday,
         details: "Review misses for vector-versus-coordinate confusion, subspace zero/closure failures, dependence versus span confusion, and basis/dimension misconceptions.",
         updatedAt: now
       },
       {
         id: "feedback-linear-algebra-chapter-2",
         title: "Linear Algebra Chapter 2 feedback focus",
-        date: weekTwelveSunday,
+        date: linearAlgebraWeekTwoSunday,
         details: "Review misses for nonzero shift traps, basis-image mistakes, column-rule confusion, composition order errors, and failure to detect information loss.",
+        updatedAt: now
+      },
+      {
+        id: "feedback-linear-algebra-chapter-3",
+        title: "Linear Algebra Chapter 3 feedback focus",
+        date: linearAlgebraWeekThreeSunday,
+        details: "Review misses for rank-versus-nullity confusion, kernel/image mixups, pivot/free-variable mistakes, inconsistent systems, and failure to connect lost directions with non-invertibility.",
         updatedAt: now
       }
     ],
@@ -1729,7 +1810,7 @@ function buildGateDaBasicPlan(now, accountTypes, sections, user = basicGateDaUse
       {
         id: "resource-linear-algebra-vector-spaces",
         title: "Linear Algebra Chapter 1: Vector Spaces and Coordinates",
-        date: weekElevenMonday,
+        date: linearAlgebraWeekOneMonday,
         details: "Open Subjects -> Linear Algebra to study vectors, coordinates, span, subspaces, independence, basis, and dimension with physical running examples.",
         link: "",
         updatedAt: now
@@ -1737,8 +1818,16 @@ function buildGateDaBasicPlan(now, accountTypes, sections, user = basicGateDaUse
       {
         id: "resource-linear-algebra-transformations",
         title: "Linear Algebra Chapter 2: Linear Transformations and Matrices",
-        date: weekTwelveMonday,
+        date: linearAlgebraWeekTwoMonday,
         details: "Open Subjects -> Linear Algebra to study transformations as physical machines, matrices as basis-image records, composition, invertibility, and information loss.",
+        link: "",
+        updatedAt: now
+      },
+      {
+        id: "resource-linear-algebra-rank-nullity-systems",
+        title: "Linear Algebra Chapter 3: Rank, Nullity, Range, Kernel, and Systems",
+        date: linearAlgebraWeekThreeMonday,
+        details: "Open Subjects -> Linear Algebra to study rank as surviving output dimension, nullity as killed input dimension, range/kernel, pivot/free-variable structure, and linear-system solution shapes.",
         link: "",
         updatedAt: now
       }
@@ -2357,6 +2446,283 @@ function gateDaLinearAlgebraSections(updatedAt = new Date().toISOString()) {
         "Composition means applying transformations in sequence, and order matters.",
         "A transformation is invertible only if it loses no information.",
         "The core exam habit is to ask what is preserved, changed, fixed, or killed."
+      ],
+      updatedAt
+    },
+    {
+      id: "gate-da-linear-algebra-rank-nullity-systems",
+      exam: "GATE DA",
+      accountTier: "Basic",
+      subject: "Linear Algebra",
+      chapter: "Chapter 3",
+      section: "3",
+      title: "Rank, Nullity, Range, Kernel, and Systems",
+      summary: "Rank as surviving output dimension, nullity as killed input dimension, range and kernel as image and lost directions, with linear systems read through pivots, free variables, consistency, and solution shape.",
+      sectionPreview: "Chapter 2 taught you to ask what a transformation does. Chapter 3 names the two most important counts: how many independent output directions survive, and how many input directions are killed.",
+      previewActivity: "The projection P([x,y,z])=[x,y,0] keeps the xy-plane and kills vertical movement. How many independent output directions remain? How many input directions disappear? Now imagine solving P(v)=[2,3,0]. How many solutions should there be?",
+      chapterIntro: [
+        "Rank and nullity are not just row-reduction vocabulary. Rank counts surviving independent output directions. Nullity counts independent input directions sent to zero.",
+        "The range, also called the image or column space, is what the transformation can actually produce. The kernel, also called the null space, is what the transformation erases.",
+        "GATE DA often tests this structurally: solution counts, pivot columns, free variables, consistency, projection matrices, and whether information was lost."
+      ],
+      bookSections: [
+        {
+          number: "3.1",
+          title: "Rank Counts What Survives",
+          paragraphs: [
+            "A linear transformation may start with many input directions but produce fewer independent output directions. Rank counts how many independent directions appear in the output.",
+            "For a matrix, the rank is the dimension of its column space. Physically, it is the dimension of the range: the set of all outputs Av.",
+            "A projection from R3 onto the xy-plane has rank 2 because every output lies in a two-dimensional plane, and both x and y directions survive."
+          ],
+          blocks: [
+            {
+              type: "definition",
+              title: "Definition: rank",
+              body: "rank(A) is the dimension of the column space of A. It counts the number of independent output directions produced by the map v -> Av."
+            },
+            {
+              type: "example",
+              title: "Example 3.1: projection to a floor",
+              body: "P([x,y,z])=[x,y,0] drops every point onto the xy-plane. The outputs can move in the x and y directions, so rank(P)=2."
+            },
+            {
+              type: "checkpoint",
+              title: "Checkpoint",
+              body: "If every output of a transformation lies on one line through the origin, what is the rank?"
+            }
+          ]
+        },
+        {
+          number: "3.2",
+          title: "Kernel and Nullity Count What Is Killed",
+          paragraphs: [
+            "The kernel of A is the set of inputs that become zero: all v such that Av=0.",
+            "Nullity is the dimension of the kernel. It counts independent directions that the transformation erases.",
+            "For P([x,y,z])=[x,y,0], all vertical inputs [0,0,z] are killed. That killed direction is one-dimensional, so nullity(P)=1."
+          ],
+          blocks: [
+            {
+              type: "definition",
+              title: "Definition: kernel and nullity",
+              body: "ker(A) = {v : Av=0}. nullity(A) is dim ker(A), the number of independent input directions erased by A."
+            },
+            {
+              type: "example",
+              title: "Example 3.2: vertical direction is invisible",
+              body: "For P([x,y,z])=[x,y,0], P([0,0,5])=[0,0,0] and P([0,0,-2])=[0,0,0]. The whole vertical axis is invisible to P."
+            },
+            {
+              type: "warning",
+              title: "Common trap",
+              body: "The kernel lives in the input space. The range lives in the output space. They can have different ambient dimensions."
+            }
+          ]
+        },
+        {
+          number: "3.3",
+          title: "Rank-Nullity Is Conservation of Input Dimension",
+          paragraphs: [
+            "For a linear map from Rn, every input direction either contributes to independent output or is absorbed into the kernel after the correct basis is chosen.",
+            "The rank-nullity theorem says rank(A) + nullity(A) = number of columns of A. The number of columns is the input dimension.",
+            "This is the cleanest way to remember the theorem: input directions = surviving directions + killed directions."
+          ],
+          blocks: [
+            {
+              type: "principle",
+              title: "Rank-nullity theorem",
+              body: "If A has n columns, then rank(A) + nullity(A) = n."
+            },
+            {
+              type: "example",
+              title: "Example 3.3: R3 to a plane",
+              body: "The projection P([x,y,z])=[x,y,0] has input dimension 3, rank 2, and nullity 1. So rank(P)+nullity(P)=2+1=3."
+            },
+            {
+              type: "checkpoint",
+              title: "Checkpoint",
+              body: "A 5-column matrix has rank 3. What is its nullity?"
+            }
+          ]
+        },
+        {
+          number: "3.4",
+          title: "Pivots, Free Variables, and Row Reduction",
+          paragraphs: [
+            "Row reduction is the mechanical way to reveal rank and nullity. Pivot columns give independent directions. Free variables give kernel directions.",
+            "For a matrix with n columns, the number of pivot columns is rank. The number of free variables is nullity.",
+            "Do not treat row reduction as only computation. Each pivot says one input coordinate is controlled; each free variable says one degree of freedom remains."
+          ],
+          blocks: [
+            {
+              type: "strategy",
+              title: "Pivot/free-variable rule",
+              body: "rank = number of pivots. nullity = number of free variables = number of columns - number of pivots."
+            },
+            {
+              type: "example",
+              title: "Example 3.4: two pivots in four columns",
+              body: "If row reduction of a 4-column matrix shows pivots in columns 1 and 3, then rank=2. There are 2 free variables, so nullity=2."
+            },
+            {
+              type: "warning",
+              title: "Exam trap",
+              body: "Rank counts pivot columns, not rows written on the page. Nullity uses the number of columns because the unknown vector lives in the input space."
+            }
+          ]
+        },
+        {
+          number: "3.5",
+          title: "Linear Systems: Consistency and Solution Shape",
+          paragraphs: [
+            "A system Ax=b asks whether b lies in the range of A. If b is not in the range, the system is inconsistent and has no solution.",
+            "If the system is consistent, the solution shape is one particular solution plus the kernel: x = xp + h, where Ah=0.",
+            "Therefore nullity controls the number of degrees of freedom in the solution set. Nullity 0 gives a unique solution when consistent. Positive nullity gives infinitely many solutions when consistent."
+          ],
+          blocks: [
+            {
+              type: "principle",
+              title: "System shape",
+              body: "Ax=b has a solution exactly when b is in the column space of A. If xp is one solution, then all solutions are xp + ker(A)."
+            },
+            {
+              type: "example",
+              title: "Example 3.5: projection equation",
+              body: "For P([x,y,z])=[x,y,0], the equation P(v)=[2,3,0] has infinitely many solutions: [2,3,z] for any z. The free z direction is the kernel."
+            },
+            {
+              type: "example",
+              title: "Example 3.6: impossible output",
+              body: "The same P cannot solve P(v)=[2,3,1], because every output of P has third coordinate 0. The target is outside the range."
+            }
+          ]
+        },
+        {
+          number: "3.6",
+          title: "Invertibility Through Rank and Kernel",
+          paragraphs: [
+            "A square matrix is invertible exactly when no nonzero direction is killed and the output fills the whole space.",
+            "In rank language, an n by n matrix is invertible when rank n and nullity 0. In kernel language, ker(A) contains only zero.",
+            "This connects back to Chapter 2: information loss is the same as a nontrivial kernel."
+          ],
+          blocks: [
+            {
+              type: "strategy",
+              title: "Invertibility checklist",
+              body: "For an n by n matrix, these say the same thing: invertible, rank n, nullity 0, no free variables, trivial kernel, pivot in every column, unique solution for every b."
+            },
+            {
+              type: "example",
+              title: "Example 3.7: projection is not invertible",
+              body: "P([x,y,z])=[x,y,0] has nonzero kernel vectors [0,0,z]. Since a nonzero direction is killed, P loses information and cannot be inverted."
+            }
+          ]
+        }
+      ],
+      concepts: [
+        {
+          name: "Rank",
+          description: "The dimension of the range or column space; the number of independent output directions.",
+          cue: "Ask how many directions survive in the output."
+        },
+        {
+          name: "Kernel",
+          description: "The set of inputs sent to zero.",
+          cue: "Ask what the map cannot see."
+        },
+        {
+          name: "Nullity",
+          description: "The dimension of the kernel; the number of independent killed input directions.",
+          cue: "Count free variables or killed directions."
+        },
+        {
+          name: "Rank-nullity",
+          description: "Input dimension equals surviving directions plus killed directions.",
+          cue: "Use rank + nullity = number of columns."
+        },
+        {
+          name: "Pivots and free variables",
+          description: "Pivots count rank; free variables count nullity.",
+          cue: "Row reduction reveals structure, not just numbers."
+        },
+        {
+          name: "Linear systems",
+          description: "Ax=b is solvable exactly when b lies in the range of A.",
+          cue: "Ask whether the target output is reachable."
+        },
+        {
+          name: "Solution shape",
+          description: "A consistent system has solutions xp + ker(A).",
+          cue: "One solution plus every invisible direction."
+        },
+        {
+          name: "Invertibility",
+          description: "A square map is invertible when rank is full and nullity is zero.",
+          cue: "No killed direction means no information loss."
+        }
+      ],
+      techniques: [
+        {
+          name: "Range membership test",
+          when: "a system Ax=b may or may not be consistent.",
+          move: "Ask whether b is a buildable output, i.e. whether b lies in the column space."
+        },
+        {
+          name: "Rank-nullity count",
+          when: "rank or nullity is known for an m by n matrix.",
+          move: "Use rank + nullity = n, where n is the number of columns."
+        },
+        {
+          name: "Pivot/free-variable read",
+          when: "row-reduced form is given.",
+          move: "Count pivot columns for rank and free variables for nullity."
+        },
+        {
+          name: "Solution-shape read",
+          when: "a consistent system has free variables.",
+          move: "Write all solutions as one particular solution plus kernel directions."
+        },
+        {
+          name: "Invertibility test",
+          when: "a square matrix may be invertible.",
+          move: "Check full rank, trivial kernel, no free variables, or no information loss."
+        }
+      ],
+      practiceProblems: linearAlgebraRankNullityProblems(),
+      reviewPrompts: [
+        "Explain rank using the phrase 'surviving output directions.'",
+        "Explain nullity using the phrase 'killed input directions.'",
+        "For P([x,y,z])=[x,y,0], identify the range and kernel.",
+        "Why does rank-nullity use the number of columns?",
+        "A row-reduced 5-column matrix has 3 pivots. What are rank and nullity?",
+        "Why does Ax=b have no solution when b is outside the column space?",
+        "If Ax=b is consistent and nullity(A)=2, what is the shape of the solution set?",
+        "Why does a nonzero kernel prove a square matrix is not invertible?"
+      ],
+      reviewQuiz: {
+        id: "quiz-linear-algebra-chapter-3-objective-review",
+        title: "Linear Algebra Chapter 3 Objective Review",
+        instructions: "Complete this after studying rank, nullity, range/kernel, pivots, free variables, consistency, and solution shape. The quiz emphasizes structural reasoning over long elimination.",
+        questions: linearAlgebraRankNullityReviewQuestions()
+      },
+      readingQuestions: [
+        "What does rank count physically?",
+        "What is the kernel of a matrix?",
+        "What does nullity count?",
+        "Why is rank plus nullity equal to the number of columns?",
+        "How do pivots and free variables reveal rank and nullity?",
+        "When is Ax=b consistent?",
+        "How does the kernel describe all solutions of a consistent system?",
+        "How do rank and nullity detect invertibility?"
+      ],
+      chapterSummary: [
+        "Rank is the dimension of the range or column space.",
+        "The kernel is the set of inputs sent to zero.",
+        "Nullity is the dimension of the kernel.",
+        "Rank-nullity says rank(A)+nullity(A)=number of columns of A.",
+        "Pivot columns count rank; free variables count nullity.",
+        "Ax=b is consistent exactly when b lies in the column space.",
+        "All solutions of a consistent system are one particular solution plus the kernel.",
+        "A square matrix is invertible exactly when it has full rank and nullity zero."
       ],
       updatedAt
     }
@@ -8931,6 +9297,116 @@ function linearAlgebraTransformationsConceptGraph() {
   };
 }
 
+function linearAlgebraRankNullityConceptGraph() {
+  return {
+    chapterId: "gate-da-linear-algebra-rank-nullity-systems",
+    chapterTitle: "Linear Algebra Chapter 3: Rank, Nullity, Range, Kernel, and Systems",
+    gateWeight: "high",
+    fallbackConcepts: ["rank", "kernel", "rank-nullity", "system-consistency"],
+    fallbackDifficultyMix: [1, 2, 2, 3],
+    fallbackInstruction: "Retest surviving and killed directions first, then add pivots, free variables, and system consistency.",
+    stableNextAction: "Next: try a mixed projection and invertibility set using rank, nullity, and kernel.",
+    nodes: {
+      "linear-combination": {
+        label: "Linear combinations",
+        prereqs: [],
+        repairMaterial: "Review Linear Algebra Chapter 1.3 and describe column space as all linear combinations of columns.",
+        gateWeight: "high"
+      },
+      span: {
+        label: "Span",
+        prereqs: ["linear-combination"],
+        repairMaterial: "Review Linear Algebra Chapter 1.3 and identify the set of outputs buildable from matrix columns.",
+        gateWeight: "high"
+      },
+      basis: {
+        label: "Basis",
+        prereqs: ["span"],
+        repairMaterial: "Review Linear Algebra Chapter 1.6 and connect independent spanning columns with dimension.",
+        gateWeight: "high"
+      },
+      transformation: {
+        label: "Transformation as machine",
+        prereqs: [],
+        repairMaterial: "Review Linear Algebra Chapter 2.1 and describe the map before counting rank or nullity.",
+        gateWeight: "medium"
+      },
+      "matrix-column-rule": {
+        label: "Matrix column rule",
+        prereqs: ["linear-combination"],
+        repairMaterial: "Review Linear Algebra Chapter 2.3 and read Av as a linear combination of columns.",
+        gateWeight: "high"
+      },
+      "information-loss": {
+        label: "Information loss",
+        prereqs: ["transformation"],
+        repairMaterial: "Review Chapter 2.5 and find two different inputs that collapse to the same output.",
+        gateWeight: "high"
+      },
+      range: {
+        label: "Range / image",
+        prereqs: ["span", "matrix-column-rule"],
+        repairMaterial: "Review Chapter 3.1 and state the set of outputs the transformation can actually produce.",
+        gateWeight: "high"
+      },
+      rank: {
+        label: "Rank",
+        prereqs: ["range", "basis"],
+        repairMaterial: "Review Chapter 3.1 and count independent surviving output directions in projection examples.",
+        gateWeight: "high"
+      },
+      kernel: {
+        label: "Kernel / null space",
+        prereqs: ["transformation", "information-loss"],
+        repairMaterial: "Review Chapter 3.2 and find all inputs sent to zero for simple projection maps.",
+        gateWeight: "high"
+      },
+      nullity: {
+        label: "Nullity",
+        prereqs: ["kernel", "basis"],
+        repairMaterial: "Review Chapter 3.2 and count independent directions in the kernel.",
+        gateWeight: "high"
+      },
+      "rank-nullity": {
+        label: "Rank-nullity theorem",
+        prereqs: ["rank", "nullity"],
+        repairMaterial: "Review Chapter 3.3 and use surviving directions plus killed directions equals input dimension.",
+        gateWeight: "high"
+      },
+      "pivot-column": {
+        label: "Pivot columns",
+        prereqs: ["rank", "matrix-column-rule"],
+        repairMaterial: "Review Chapter 3.4 and count pivot columns as independent column directions.",
+        gateWeight: "high"
+      },
+      "free-variable": {
+        label: "Free variables",
+        prereqs: ["nullity", "pivot-column"],
+        repairMaterial: "Review Chapter 3.4 and compute free variables as columns minus pivots.",
+        gateWeight: "high"
+      },
+      "system-consistency": {
+        label: "System consistency",
+        prereqs: ["range", "matrix-column-rule"],
+        repairMaterial: "Review Chapter 3.5 and decide whether b is a reachable output in the column space.",
+        gateWeight: "high"
+      },
+      "solution-shape": {
+        label: "Solution shape",
+        prereqs: ["system-consistency", "kernel", "free-variable"],
+        repairMaterial: "Review Chapter 3.5 and express all solutions as one particular solution plus the kernel.",
+        gateWeight: "high"
+      },
+      invertibility: {
+        label: "Invertibility",
+        prereqs: ["rank", "nullity", "information-loss"],
+        repairMaterial: "Review Chapter 3.6 and connect full rank, nullity zero, and no killed directions.",
+        gateWeight: "high"
+      }
+    }
+  };
+}
+
 function conditionalProbabilityConceptGraph() {
   return {
     chapterId: "gate-da-conditional-probability",
@@ -10234,6 +10710,200 @@ function linearAlgebraTransformationsReviewQuestions() {
         { id: "b", text: "The y-axis is fixed and rightward movement is flipped leftward." },
         { id: "c", text: "Every vector is sent to the x-axis." },
         { id: "d", text: "Every vector is rotated 90 degrees." }
+      ],
+      answer: "a"
+    }
+  ];
+  return questions.map((question) => ({
+    ...question,
+    ...(metadata[question.id] || { targetConcept: question.tags[0], prereqsUsed: question.tags.slice(1), difficulty: question.tags.length, gateWeight: "medium" })
+  }));
+}
+
+function linearAlgebraRankNullityProblems() {
+  return [
+    {
+      label: "Problem 1: Rank of a projection",
+      concept: "Rank",
+      difficulty: "Concept",
+      technique: "Count surviving output directions",
+      prompt: "Let P([x,y,z]) = [x,y,0]. What is rank(P), and what physical action explains it?",
+      solution: "The map drops every vector onto the xy-plane. The output can still move independently in the x and y directions, but not in the z direction. So the range is the xy-plane and rank(P)=2."
+    },
+    {
+      label: "Problem 2: Kernel of a projection",
+      concept: "Kernel",
+      difficulty: "Concept",
+      technique: "Find what is sent to zero",
+      prompt: "For P([x,y,z]) = [x,y,0], find ker(P) and nullity(P).",
+      solution: "We need P([x,y,z])=[0,0,0]. This gives x=0 and y=0, while z is free. So ker(P) = {[0,0,z] : z is real}, the vertical axis. Its dimension is 1, so nullity(P)=1."
+    },
+    {
+      label: "Problem 3: Rank-nullity count",
+      concept: "Rank-nullity",
+      difficulty: "Mechanics",
+      technique: "Use columns as input dimension",
+      prompt: "A matrix A has 5 columns and rank(A)=3. What is nullity(A)?",
+      solution: "Rank-nullity says rank(A)+nullity(A)=number of columns. The input dimension is 5, so 3+nullity(A)=5. Therefore nullity(A)=2."
+    },
+    {
+      label: "Problem 4: Pivots and free variables",
+      concept: "Pivots and free variables",
+      difficulty: "Mechanics",
+      technique: "Read row-reduced structure",
+      prompt: "A row-reduced 4-column matrix has pivots in columns 1 and 3. What are rank and nullity?",
+      solution: "There are two pivot columns, so rank=2. The matrix has 4 columns total, so there are 2 free variables. Equivalently, nullity=4-2=2."
+    },
+    {
+      label: "Problem 5: Column space consistency",
+      concept: "System consistency",
+      difficulty: "Application",
+      technique: "Ask whether b is reachable",
+      prompt: "For P([x,y,z])=[x,y,0], does P(v)=[2,3,1] have a solution?",
+      solution: "No. Every output of P has third coordinate 0. The vector [2,3,1] is outside the range, so it is not reachable. Therefore the system is inconsistent."
+    },
+    {
+      label: "Problem 6: Infinitely many solutions",
+      concept: "Solution shape",
+      difficulty: "Application",
+      technique: "One solution plus kernel",
+      prompt: "For P([x,y,z])=[x,y,0], describe all solutions of P(v)=[2,3,0].",
+      solution: "The first two coordinates must be x=2 and y=3. The z-coordinate is free because vertical movement is killed by P. All solutions are [2,3,z] for real z, or [2,3,0] + [0,0,z]."
+    },
+    {
+      label: "Problem 7: Invertibility from kernel",
+      concept: "Invertibility",
+      difficulty: "Application",
+      technique: "Look for a nonzero killed direction",
+      prompt: "Can P([x,y,z])=[x,y,0] be invertible as a map from R3 to R3?",
+      solution: "No. The nonzero vector [0,0,1] is sent to zero. Since a nonzero direction is killed, information is lost. Equivalently, nullity(P)=1, so P is not invertible."
+    },
+    {
+      label: "Problem 8: Rank from dependent columns",
+      concept: "Rank",
+      difficulty: "GATE-style",
+      technique: "Count independent columns",
+      prompt: "A 3 by 3 matrix has columns c1=[1,0,0], c2=[0,1,0], and c3=c1+c2. What is its rank?",
+      solution: "The third column is dependent on the first two, so it adds no new output direction. The first two columns are independent. Therefore the column space is 2-dimensional and rank=2."
+    },
+    {
+      label: "Problem 9: Nullity from rank in a wide matrix",
+      concept: "Rank-nullity",
+      difficulty: "GATE-style",
+      technique: "Use the number of columns, not rows",
+      prompt: "A 3 by 5 matrix has rank 3. What is nullity? What does that say about Ax=0?",
+      solution: "The input dimension is the number of columns, 5. Rank-nullity gives nullity=5-3=2. So Ax=0 has a two-dimensional solution space, meaning there are nonzero solutions."
+    },
+    {
+      label: "Problem 10: Unique, none, or infinitely many",
+      concept: "System solution count",
+      difficulty: "GATE-style",
+      technique: "Combine consistency with nullity",
+      prompt: "Suppose Ax=b is consistent and A has nullity 2. How many solutions does the system have?",
+      solution: "If Ax=b is consistent, all solutions are one particular solution plus the kernel. Nullity 2 means the kernel has two independent free directions. Therefore the system has infinitely many solutions."
+    }
+  ];
+}
+
+function linearAlgebraRankNullityReviewQuestions() {
+  const metadata = {
+    "la-rn-review-1": { targetConcept: "rank", prereqsUsed: ["range"], difficulty: 1, gateWeight: "high" },
+    "la-rn-review-2": { targetConcept: "kernel", prereqsUsed: ["information-loss"], difficulty: 2, gateWeight: "high" },
+    "la-rn-review-3": { targetConcept: "rank-nullity", prereqsUsed: ["rank", "nullity"], difficulty: 2, gateWeight: "high" },
+    "la-rn-review-4": { targetConcept: "free-variable", prereqsUsed: ["pivot-column", "rank-nullity"], difficulty: 2, gateWeight: "high" },
+    "la-rn-review-5": { targetConcept: "system-consistency", prereqsUsed: ["range", "matrix-column-rule"], difficulty: 2, gateWeight: "high" },
+    "la-rn-review-6": { targetConcept: "solution-shape", prereqsUsed: ["system-consistency", "kernel", "free-variable"], difficulty: 3, gateWeight: "high" },
+    "la-rn-review-7": { targetConcept: "invertibility", prereqsUsed: ["rank", "nullity", "information-loss"], difficulty: 3, gateWeight: "high" }
+  };
+  const questions = [
+    {
+      id: "la-rn-review-1",
+      kind: "single concept",
+      tags: ["rank", "range"],
+      prompt: "For P([x,y,z])=[x,y,0], what is rank(P)?",
+      options: [
+        { id: "a", text: "1" },
+        { id: "b", text: "2" },
+        { id: "c", text: "3" },
+        { id: "d", text: "0" }
+      ],
+      answer: "b"
+    },
+    {
+      id: "la-rn-review-2",
+      kind: "mixed: two concepts",
+      tags: ["kernel", "information-loss"],
+      prompt: "For P([x,y,z])=[x,y,0], which set is ker(P)?",
+      options: [
+        { id: "a", text: "{[x,y,0] : x,y are real}" },
+        { id: "b", text: "{[0,0,z] : z is real}" },
+        { id: "c", text: "All of R3" },
+        { id: "d", text: "{[0,0,0]} only" }
+      ],
+      answer: "b"
+    },
+    {
+      id: "la-rn-review-3",
+      kind: "mixed: two concepts",
+      tags: ["rank-nullity", "rank", "nullity"],
+      prompt: "A matrix has 5 columns and rank 3. What is its nullity?",
+      options: [
+        { id: "a", text: "2" },
+        { id: "b", text: "3" },
+        { id: "c", text: "5" },
+        { id: "d", text: "8" }
+      ],
+      answer: "a"
+    },
+    {
+      id: "la-rn-review-4",
+      kind: "mixed: two concepts",
+      tags: ["free-variable", "pivot-column", "rank-nullity"],
+      prompt: "A 4-column matrix has pivots in columns 1 and 3. Which statement is correct?",
+      options: [
+        { id: "a", text: "rank=4 and nullity=0" },
+        { id: "b", text: "rank=2 and nullity=2" },
+        { id: "c", text: "rank=2 and nullity=4" },
+        { id: "d", text: "rank=3 and nullity=1" }
+      ],
+      answer: "b"
+    },
+    {
+      id: "la-rn-review-5",
+      kind: "mixed: two concepts",
+      tags: ["system-consistency", "range", "matrix-column-rule"],
+      prompt: "For P([x,y,z])=[x,y,0], why does P(v)=[2,3,1] have no solution?",
+      options: [
+        { id: "a", text: "Because [2,3,1] is outside the range of P." },
+        { id: "b", text: "Because P has rank 3." },
+        { id: "c", text: "Because every system with a projection has no solution." },
+        { id: "d", text: "Because the kernel is zero." }
+      ],
+      answer: "a"
+    },
+    {
+      id: "la-rn-review-6",
+      kind: "mixed: three concepts",
+      tags: ["solution-shape", "system-consistency", "kernel", "free-variable"],
+      prompt: "If Ax=b is consistent and nullity(A)=2, what is the solution set like?",
+      options: [
+        { id: "a", text: "No solutions." },
+        { id: "b", text: "Exactly one solution." },
+        { id: "c", text: "One particular solution plus a 2-dimensional kernel." },
+        { id: "d", text: "Exactly two solutions." }
+      ],
+      answer: "c"
+    },
+    {
+      id: "la-rn-review-7",
+      kind: "mixed: three concepts",
+      tags: ["invertibility", "rank", "nullity", "information-loss"],
+      prompt: "Which condition proves that a square matrix is not invertible?",
+      options: [
+        { id: "a", text: "Its kernel contains a nonzero vector." },
+        { id: "b", text: "Its rank equals the number of columns." },
+        { id: "c", text: "Its nullity is zero." },
+        { id: "d", text: "It has a pivot in every column." }
       ],
       answer: "a"
     }
@@ -11646,6 +12316,7 @@ function buildQuizFeedbackReport({ answers, quiz, section, conceptScores, strong
 function conceptGraphForSection(section) {
   if (section?.id === "gate-da-linear-algebra-vector-spaces-coordinates") return linearAlgebraVectorSpacesConceptGraph();
   if (section?.id === "gate-da-linear-algebra-transformations-matrices") return linearAlgebraTransformationsConceptGraph();
+  if (section?.id === "gate-da-linear-algebra-rank-nullity-systems") return linearAlgebraRankNullityConceptGraph();
   if (section?.id === "gate-da-probability-foundations") return probabilityFoundationConceptGraph();
   if (section?.id === "gate-da-conditional-probability") return conditionalProbabilityConceptGraph();
   if (section?.id === "gate-da-random-variables-expectation") return randomVariablesExpectationConceptGraph();
