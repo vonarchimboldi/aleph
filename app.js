@@ -1,7 +1,7 @@
 const STORAGE_KEY = "learning-studio-data-v2";
 const LEGACY_STORAGE_KEYS = ["learning-studio-data-v1"];
 const SESSION_KEY = "aleph-session";
-const COURSE_PLAN_VERSION = "seeded-user-canonical-workspace-v74";
+const COURSE_PLAN_VERSION = "seeded-user-canonical-workspace-v75";
 const PRIYANKA_PLATINUM_START_DATE = "2026-06-07";
 const DEFAULT_PLAN_START_DATE = "2026-06-01";
 
@@ -706,6 +706,8 @@ function buildGateDaBasicPlan(now, accountTypes, sections, user = basicGateDaUse
   const linearAlgebraWeekTwoSunday = weekTwoSunday;
   const linearAlgebraWeekThreeMonday = weekThreeMonday;
   const linearAlgebraWeekThreeSunday = weekThreeSunday;
+  const linearAlgebraWeekFourMonday = weekFourMonday;
+  const linearAlgebraWeekFourSunday = weekFourSunday;
   const userId = user.id || "user-basic-demo";
   const userSlug = slugify(user.name || userId);
   const enrollmentId = `enrollment-${userSlug}-gate-da-basic`;
@@ -732,7 +734,7 @@ function buildGateDaBasicPlan(now, accountTypes, sections, user = basicGateDaUse
         title: "Linear Algebra",
         date: linearAlgebraWeekOneMonday,
         status: "In progress",
-        details: "GATE DA Basic Linear Algebra, built around transformations, invariants, and physical intuition. Chapters 1-3 cover vectors, coordinates, span, subspaces, independence, basis, dimension, linear transformations, matrices, rank, nullity, range/kernel, systems, and information loss.",
+        details: "GATE DA Basic Linear Algebra, built around transformations, invariants, and physical intuition. Chapters 1-4 cover vectors, coordinates, span, subspaces, independence, basis, dimension, linear transformations, matrices, rank, nullity, range/kernel, systems, orthogonality, projection matrices, and idempotence.",
         sectionIds: linearAlgebraSections.map((section) => section.id),
         updatedAt: now
       }
@@ -1117,6 +1119,36 @@ function buildGateDaBasicPlan(now, accountTypes, sections, user = basicGateDaUse
         date: linearAlgebraWeekThreeSunday,
         details: "Take the graph-backed objective quiz for rank, nullity, range/kernel, rank-nullity, consistency, and solution-count reasoning.",
         updatedAt: now
+      },
+      {
+        id: "schedule-linear-algebra-chapter-4-study",
+        title: "Linear Algebra Chapter 4: Orthogonality, Projections, and Idempotent Matrices",
+        week: 4,
+        subject: "Linear Algebra",
+        kind: "Study",
+        date: linearAlgebraWeekFourMonday,
+        details: "Study dot products, orthogonality, orthogonal projection, projection matrices, symmetry, idempotence, range/kernel decomposition, and fixed/killed directions.",
+        updatedAt: now
+      },
+      {
+        id: "schedule-linear-algebra-chapter-4-practice",
+        title: "Linear Algebra Chapter 4: Labelled Practice",
+        week: 4,
+        subject: "Linear Algebra",
+        kind: "Practice",
+        date: addDays(linearAlgebraWeekFourMonday, 2),
+        details: "Solve orthogonality, projection, projection-matrix, idempotence, trace/rank, and centering-matrix practice problems.",
+        updatedAt: now
+      },
+      {
+        id: "schedule-linear-algebra-chapter-4-review",
+        title: "Linear Algebra Chapter 4: Objective Review",
+        week: 4,
+        subject: "Linear Algebra",
+        kind: "Review",
+        date: linearAlgebraWeekFourSunday,
+        details: "Take the graph-backed objective quiz for orthogonality, projections, projection matrices, idempotence, symmetry, and range/kernel reasoning.",
+        updatedAt: now
       }
     ],
     tests: [
@@ -1235,6 +1267,15 @@ function buildGateDaBasicPlan(now, accountTypes, sections, user = basicGateDaUse
         details: "Objective end-of-chapter quiz for rank, nullity, range/kernel, pivot columns, free variables, consistency, and solution-count reasoning. Attempts are logged with prerequisite repair feedback.",
         sectionId: linearAlgebraSections[2]?.id,
         quizId: "quiz-linear-algebra-chapter-3-objective-review",
+        updatedAt: now
+      },
+      {
+        id: "test-linear-algebra-chapter-4-objective-review",
+        title: "Linear Algebra Chapter 4 Objective Review",
+        date: linearAlgebraWeekFourSunday,
+        details: "Objective end-of-chapter quiz for orthogonality, projection formulas, projection matrices, idempotence, symmetry, fixed/killed directions, trace, and rank. Attempts are logged with prerequisite repair feedback.",
+        sectionId: linearAlgebraSections[3]?.id,
+        quizId: "quiz-linear-algebra-chapter-4-objective-review",
         updatedAt: now
       }
     ],
@@ -1657,6 +1698,39 @@ function buildGateDaBasicPlan(now, accountTypes, sections, user = basicGateDaUse
         done: false,
         details: "Submit the Chapter 3 objective quiz so the learner record logs rank, nullity, kernel, range, and system reasoning strengths and weaknesses.",
         updatedAt: now
+      },
+      {
+        id: "task-linear-algebra-chapter-4-read",
+        week: 4,
+        title: "Linear Algebra Ch 4: Read orthogonal projections",
+        type: "Study",
+        date: linearAlgebraWeekFourMonday,
+        status: "todo",
+        done: false,
+        details: "Open Subjects -> Linear Algebra -> Chapter 4 and study orthogonality, projections, projection matrices, idempotence, and fixed/killed directions.",
+        updatedAt: now
+      },
+      {
+        id: "task-linear-algebra-chapter-4-practice",
+        week: 4,
+        title: "Linear Algebra Ch 4: Solve projection practice",
+        type: "Practice",
+        date: addDays(linearAlgebraWeekFourMonday, 2),
+        status: "todo",
+        done: false,
+        details: "Attempt the Chapter 4 labelled practice problems before opening worked solutions.",
+        updatedAt: now
+      },
+      {
+        id: "task-linear-algebra-chapter-4-review",
+        week: 4,
+        title: "Linear Algebra Ch 4: Take objective review",
+        type: "Review",
+        date: linearAlgebraWeekFourSunday,
+        status: "todo",
+        done: false,
+        details: "Submit the Chapter 4 objective quiz so the learner record logs projection and idempotent-matrix reasoning strengths and weaknesses.",
+        updatedAt: now
       }
     ],
     accountTypes,
@@ -1683,7 +1757,7 @@ function buildGateDaBasicPlan(now, accountTypes, sections, user = basicGateDaUse
         startDate: monday,
         endDate: "2026-08-30",
         status: "active",
-        details: `GATE DA Basic plan surfaces: Subjects, Tasks, Schedule, Tests, Feedback, Resources, and Share. Recommended pace: study three subjects in parallel. Every 15 days, Aleph should generate an adaptive cumulative review quiz from prior performance, repeating missed concepts more often, reducing mastered concepts, and keeping high-weight exam topics in rotation. Current material build: Probability Chapters 1-10 and Linear Algebra Chapters 1-3.${trialNote}`,
+        details: `GATE DA Basic plan surfaces: Subjects, Tasks, Schedule, Tests, Feedback, Resources, and Share. Recommended pace: study three subjects in parallel. Every 15 days, Aleph should generate an adaptive cumulative review quiz from prior performance, repeating missed concepts more often, reducing mastered concepts, and keeping high-weight exam topics in rotation. Current material build: Probability Chapters 1-10 and Linear Algebra Chapters 1-4.${trialNote}`,
         updatedAt: now
       }
     ],
@@ -1715,6 +1789,13 @@ function buildGateDaBasicPlan(now, accountTypes, sections, user = basicGateDaUse
         title: "Linear Algebra Chapter 3 feedback focus",
         date: linearAlgebraWeekThreeSunday,
         details: "Review misses for rank-versus-nullity confusion, kernel/image mixups, pivot/free-variable mistakes, inconsistent systems, and failure to connect lost directions with non-invertibility.",
+        updatedAt: now
+      },
+      {
+        id: "feedback-linear-algebra-chapter-4",
+        title: "Linear Algebra Chapter 4 feedback focus",
+        date: linearAlgebraWeekFourSunday,
+        details: "Review misses for dot-product orthogonality, projection coefficient mistakes, projection-matrix formula errors, confusing idempotence with identity, and missing fixed/killed subspaces.",
         updatedAt: now
       }
     ],
@@ -1828,6 +1909,14 @@ function buildGateDaBasicPlan(now, accountTypes, sections, user = basicGateDaUse
         title: "Linear Algebra Chapter 3: Rank, Nullity, Range, Kernel, and Systems",
         date: linearAlgebraWeekThreeMonday,
         details: "Open Subjects -> Linear Algebra to study rank as surviving output dimension, nullity as killed input dimension, range/kernel, pivot/free-variable structure, and linear-system solution shapes.",
+        link: "",
+        updatedAt: now
+      },
+      {
+        id: "resource-linear-algebra-orthogonal-projections",
+        title: "Linear Algebra Chapter 4: Orthogonality, Projections, and Idempotent Matrices",
+        date: linearAlgebraWeekFourMonday,
+        details: "Open Subjects -> Linear Algebra to study dot products, orthogonal projection, projection matrices, symmetry, idempotence, centering matrices, and fixed/killed subspaces.",
         link: "",
         updatedAt: now
       }
@@ -2723,6 +2812,273 @@ function gateDaLinearAlgebraSections(updatedAt = new Date().toISOString()) {
         "Ax=b is consistent exactly when b lies in the column space.",
         "All solutions of a consistent system are one particular solution plus the kernel.",
         "A square matrix is invertible exactly when it has full rank and nullity zero."
+      ],
+      updatedAt
+    },
+    {
+      id: "gate-da-linear-algebra-orthogonal-projections",
+      exam: "GATE DA",
+      accountTier: "Basic",
+      subject: "Linear Algebra",
+      chapter: "Chapter 4",
+      section: "4",
+      title: "Orthogonality, Projections, and Idempotent Matrices",
+      summary: "Dot products and orthogonality as right-angle geometry, orthogonal projections as closest shadows, projection matrices as symmetric idempotent maps, and GATE DA properties such as fixed/killed subspaces, trace, rank, and centering.",
+      sectionPreview: "Projection questions appear repeatedly in GATE DA. The exam usually wants structure: a projection keeps one subspace, kills the perpendicular subspace, and applying it twice changes nothing after the first shadow is formed.",
+      previewActivity: "A light shines straight down and drops every point in space onto a floor. Points already on the floor do not move. Pure vertical movement disappears. If you apply the same shadow operation twice, what changes the second time?",
+      chapterIntro: [
+        "Chapter 3 introduced range and kernel. Chapter 4 studies the cleanest family where those two spaces are visible: orthogonal projections.",
+        "Orthogonality means zero dot product. Projection means keeping the component in a target direction or subspace and discarding the perpendicular error.",
+        "For GATE DA, learn the matrix signatures: projection matrices satisfy P^2=P, orthogonal projection matrices are symmetric and idempotent, trace equals rank, and the range is fixed while the kernel is killed."
+      ],
+      bookSections: [
+        {
+          number: "4.1",
+          title: "Dot Product and Orthogonality",
+          paragraphs: [
+            "The dot product measures alignment. If u dot v is positive, the vectors point partly in the same direction. If it is negative, they point partly against each other. If it is zero, they are perpendicular.",
+            "Orthogonality is the algebraic version of a right angle. It lets us split a vector into one part along a subspace and one perpendicular error part.",
+            "This split is the heart of projection, least squares, PCA geometry, and many projection-matrix questions."
+          ],
+          blocks: [
+            {
+              type: "definition",
+              title: "Definition: orthogonal",
+              body: "Vectors u and v are orthogonal if u dot v = 0."
+            },
+            {
+              type: "example",
+              title: "Example 4.1: right-angle check",
+              body: "The vectors [1,2] and [2,-1] are orthogonal because [1,2] dot [2,-1] = 1*2 + 2*(-1) = 0."
+            },
+            {
+              type: "checkpoint",
+              title: "Checkpoint",
+              body: "Are [3,1] and [1,-3] orthogonal?"
+            }
+          ]
+        },
+        {
+          number: "4.2",
+          title: "Projection Onto a Direction",
+          paragraphs: [
+            "Projecting v onto a nonzero direction u means finding the shadow of v along u. The formula is proj_u(v) = ((v dot u)/(u dot u))u.",
+            "The coefficient (v dot u)/(u dot u) tells how much of u is present in v. The remaining error v - proj_u(v) is perpendicular to u.",
+            "Physically, projection keeps the along-direction component and kills the perpendicular component."
+          ],
+          blocks: [
+            {
+              type: "definition",
+              title: "Projection formula",
+              body: "For nonzero u, proj_u(v) = ((v dot u)/(u dot u))u."
+            },
+            {
+              type: "example",
+              title: "Example 4.2: shadow on a line",
+              body: "Let u=[1,1] and v=[3,1]. Then v dot u=4 and u dot u=2, so proj_u(v)=2[1,1]=[2,2]. The error [3,1]-[2,2]=[1,-1] is perpendicular to [1,1]."
+            },
+            {
+              type: "warning",
+              title: "Common trap",
+              body: "Do not forget the denominator u dot u unless u is a unit vector."
+            }
+          ]
+        },
+        {
+          number: "4.3",
+          title: "Projection Matrices",
+          paragraphs: [
+            "A projection matrix performs projection by multiplication. For projection onto the span of a nonzero vector u, the matrix is P = uu^T/(u^T u).",
+            "If the target subspace has orthonormal columns in Q, the projection matrix is P = QQ^T. If the columns of A are independent but not orthonormal, the projection onto col(A) is A(A^T A)^(-1)A^T.",
+            "The formulas matter, but the physical action matters more: vectors in the target subspace are fixed, and perpendicular directions are killed."
+          ],
+          blocks: [
+            {
+              type: "principle",
+              title: "Projection matrix signatures",
+              body: "For an orthogonal projection matrix P, P^2=P and P^T=P. The range is fixed, and the kernel is the orthogonal complement of the range."
+            },
+            {
+              type: "example",
+              title: "Example 4.3: projection onto the x-axis",
+              body: "P = [[1,0],[0,0]] sends [x,y] to [x,0]. It fixes the x-axis, kills the y-axis, satisfies P^2=P, and is symmetric."
+            }
+          ]
+        },
+        {
+          number: "4.4",
+          title: "Idempotence Means Project Once",
+          paragraphs: [
+            "A matrix is idempotent if P^2=P. For a projection, this says applying the map twice is the same as applying it once.",
+            "After a point has already been dropped onto the target subspace, another projection does not move it. That is why projection matrices are idempotent.",
+            "Idempotent does not mean identity. The identity matrix keeps every direction. A nontrivial projection keeps some directions and kills others."
+          ],
+          blocks: [
+            {
+              type: "definition",
+              title: "Definition: idempotent matrix",
+              body: "A matrix P is idempotent if P^2=P."
+            },
+            {
+              type: "warning",
+              title: "Exam trap",
+              body: "Every projection matrix is idempotent, but not every idempotent matrix is the identity. Projection onto a line is idempotent and still loses information."
+            },
+            {
+              type: "checkpoint",
+              title: "Checkpoint",
+              body: "Why does P([x,y])=[x,0] satisfy P(P([x,y]))=P([x,y])?"
+            }
+          ]
+        },
+        {
+          number: "4.5",
+          title: "Range, Kernel, Trace, and Rank",
+          paragraphs: [
+            "For an orthogonal projection, the range is the subspace that stays fixed. The kernel is the perpendicular subspace that is killed.",
+            "The rank of a projection matrix is the dimension of the target subspace. For projection matrices, the trace equals the rank.",
+            "GATE DA often asks this indirectly through projection or centering matrices. Look for P^2=P and symmetry, then read rank and trace structurally."
+          ],
+          blocks: [
+            {
+              type: "principle",
+              title: "Projection rank and trace",
+              body: "For a projection matrix, rank(P)=trace(P). For an orthogonal projection, eigenvalues are only 0 or 1, so trace counts the 1-directions."
+            },
+            {
+              type: "example",
+              title: "Example 4.4: x-axis projection",
+              body: "P = [[1,0],[0,0]] has trace 1 and rank 1. It fixes one direction and kills one direction."
+            }
+          ]
+        },
+        {
+          number: "4.6",
+          title: "Centering Matrix as a Projection",
+          paragraphs: [
+            "The centering matrix H = I - (1/n)11^T subtracts the mean from a vector. It is central in statistics, PCA, regression, and GATE DA projection questions.",
+            "H kills the all-ones direction because H1=0. It keeps vectors whose entries sum to zero. It is symmetric and idempotent, so it is an orthogonal projection.",
+            "Its rank is n-1 because it kills one independent direction and keeps the n-1 dimensional zero-sum subspace."
+          ],
+          blocks: [
+            {
+              type: "example",
+              title: "Example 4.5: centering three numbers",
+              body: "For x=[2,5,8], the mean is 5, so Hx=[-3,0,3]. The centered vector has entries summing to zero."
+            },
+            {
+              type: "strategy",
+              title: "Centering matrix checklist",
+              body: "For H=I-(1/n)11^T: symmetric, idempotent, H1=0, range is the zero-sum subspace, rank n-1, trace n-1."
+            }
+          ]
+        }
+      ],
+      concepts: [
+        {
+          name: "Dot product",
+          description: "A measurement of alignment between vectors.",
+          cue: "Use it to detect right angles and projection coefficients."
+        },
+        {
+          name: "Orthogonality",
+          description: "Zero dot product; perpendicular directions.",
+          cue: "Ask whether the error is perpendicular to the target."
+        },
+        {
+          name: "Projection onto a vector",
+          description: "The shadow of v in the direction of u.",
+          cue: "Use ((v dot u)/(u dot u))u."
+        },
+        {
+          name: "Projection matrix",
+          description: "A matrix that sends every vector to its component in a target subspace.",
+          cue: "Find what is fixed and what is killed."
+        },
+        {
+          name: "Idempotence",
+          description: "P^2=P; projecting twice is the same as projecting once.",
+          cue: "After the shadow is formed, another shadow changes nothing."
+        },
+        {
+          name: "Symmetric projection",
+          description: "An orthogonal projection matrix satisfies P^T=P and P^2=P.",
+          cue: "Symmetric plus idempotent is the GATE signature."
+        },
+        {
+          name: "Projection rank and trace",
+          description: "For projection matrices, rank equals trace.",
+          cue: "Trace counts the fixed 1-directions."
+        },
+        {
+          name: "Centering matrix",
+          description: "The projection that removes the mean and kills the all-ones direction.",
+          cue: "Remember H=I-(1/n)11^T, rank n-1, trace n-1."
+        }
+      ],
+      techniques: [
+        {
+          name: "Orthogonality check",
+          when: "a question asks whether vectors or subspaces are perpendicular.",
+          move: "Compute dot products and look for zero."
+        },
+        {
+          name: "Projection coefficient",
+          when: "projecting onto a single direction.",
+          move: "Use (v dot u)/(u dot u), then multiply by u."
+        },
+        {
+          name: "Fixed/killed subspace read",
+          when: "a projection matrix is given.",
+          move: "Find vectors with Pv=v and vectors with Pv=0."
+        },
+        {
+          name: "Idempotence test",
+          when: "a matrix may be a projection.",
+          move: "Check whether P^2=P and then interpret applying the map twice."
+        },
+        {
+          name: "Projection trace shortcut",
+          when: "a projection matrix appears in a rank question.",
+          move: "Use rank(P)=trace(P), especially for centering matrices."
+        }
+      ],
+      practiceProblems: linearAlgebraOrthogonalProjectionsProblems(),
+      reviewPrompts: [
+        "Explain orthogonality using both dot product and right-angle language.",
+        "Project [3,1] onto the direction [1,1] and explain why the error is perpendicular.",
+        "For P=[[1,0],[0,0]], identify the fixed subspace and killed subspace.",
+        "Why does P^2=P mean project once?",
+        "Why is idempotent not the same as identity?",
+        "For an orthogonal projection matrix, why are symmetry and idempotence both important?",
+        "Why does trace equal rank for a projection matrix?",
+        "What does the centering matrix kill, and what does it keep?"
+      ],
+      reviewQuiz: {
+        id: "quiz-linear-algebra-chapter-4-objective-review",
+        title: "Linear Algebra Chapter 4 Objective Review",
+        instructions: "Complete this after studying orthogonality, projection formulas, projection matrices, idempotence, rank/trace, and centering. The quiz emphasizes GATE-style structural recognition.",
+        questions: linearAlgebraOrthogonalProjectionsReviewQuestions()
+      },
+      readingQuestions: [
+        "What does the dot product measure?",
+        "What does it mean for two vectors to be orthogonal?",
+        "What is the projection formula onto a nonzero vector?",
+        "What subspace does a projection matrix fix?",
+        "What subspace does a projection matrix kill?",
+        "What does P^2=P mean physically?",
+        "Why does rank equal trace for a projection matrix?",
+        "Why is the centering matrix a projection?"
+      ],
+      chapterSummary: [
+        "Orthogonal vectors have dot product zero.",
+        "Projection keeps the component in a target direction or subspace and discards the perpendicular error.",
+        "Projection onto u is ((v dot u)/(u dot u))u.",
+        "Orthogonal projection matrices are symmetric and idempotent.",
+        "Idempotence P^2=P means projecting twice is the same as projecting once.",
+        "A projection matrix fixes its range and kills its kernel.",
+        "For projection matrices, rank equals trace.",
+        "The centering matrix removes the mean, kills the all-ones direction, and has rank n-1."
       ],
       updatedAt
     }
@@ -9407,6 +9763,104 @@ function linearAlgebraRankNullityConceptGraph() {
   };
 }
 
+function linearAlgebraOrthogonalProjectionsConceptGraph() {
+  return {
+    chapterId: "gate-da-linear-algebra-orthogonal-projections",
+    chapterTitle: "Linear Algebra Chapter 4: Orthogonality, Projections, and Idempotent Matrices",
+    gateWeight: "high",
+    fallbackConcepts: ["orthogonality", "projection-formula", "idempotence", "projection-rank-trace"],
+    fallbackDifficultyMix: [1, 2, 2, 3],
+    fallbackInstruction: "Retest dot-product orthogonality first, then projection formulas, fixed/killed subspaces, and idempotence.",
+    stableNextAction: "Next: try a mixed special-matrix set using projection, orthogonal, idempotent, Gram, and centering matrices.",
+    nodes: {
+      "dot-product": {
+        label: "Dot product",
+        prereqs: [],
+        repairMaterial: "Review Chapter 4.1 and compute dot products to decide alignment and right angles.",
+        gateWeight: "high"
+      },
+      orthogonality: {
+        label: "Orthogonality",
+        prereqs: ["dot-product"],
+        repairMaterial: "Review Chapter 4.1 and verify that perpendicular vectors have dot product zero.",
+        gateWeight: "high"
+      },
+      "projection-formula": {
+        label: "Projection formula",
+        prereqs: ["dot-product", "orthogonality"],
+        repairMaterial: "Review Chapter 4.2 and practise proj_u(v)=((v dot u)/(u dot u))u.",
+        gateWeight: "high"
+      },
+      "projection-error": {
+        label: "Projection error",
+        prereqs: ["projection-formula", "orthogonality"],
+        repairMaterial: "Review Chapter 4.2 and check that v-proj_u(v) is perpendicular to u.",
+        gateWeight: "high"
+      },
+      "projection-matrix": {
+        label: "Projection matrix",
+        prereqs: ["projection-formula", "matrix-column-rule"],
+        repairMaterial: "Review Chapter 4.3 and identify the matrix that keeps target components and kills perpendicular ones.",
+        gateWeight: "high"
+      },
+      "matrix-column-rule": {
+        label: "Matrix column rule",
+        prereqs: [],
+        repairMaterial: "Review Linear Algebra Chapter 2.3 and read Av as a linear combination of columns.",
+        gateWeight: "medium"
+      },
+      range: {
+        label: "Range",
+        prereqs: ["projection-matrix"],
+        repairMaterial: "Review Chapter 3.1 and Chapter 4.5: the range of a projection is the fixed target subspace.",
+        gateWeight: "high"
+      },
+      kernel: {
+        label: "Kernel",
+        prereqs: ["projection-matrix", "orthogonality"],
+        repairMaterial: "Review Chapter 3.2 and Chapter 4.5: the kernel of an orthogonal projection is the perpendicular killed subspace.",
+        gateWeight: "high"
+      },
+      "fixed-subspace": {
+        label: "Fixed subspace",
+        prereqs: ["range", "projection-matrix"],
+        repairMaterial: "Review Chapter 4.3 and find vectors satisfying Pv=v.",
+        gateWeight: "high"
+      },
+      "killed-subspace": {
+        label: "Killed subspace",
+        prereqs: ["kernel", "projection-matrix"],
+        repairMaterial: "Review Chapter 4.3 and find vectors satisfying Pv=0.",
+        gateWeight: "high"
+      },
+      idempotence: {
+        label: "Idempotence",
+        prereqs: ["projection-matrix"],
+        repairMaterial: "Review Chapter 4.4 and explain why projecting twice equals projecting once.",
+        gateWeight: "high"
+      },
+      "symmetric-projection": {
+        label: "Symmetric projection",
+        prereqs: ["idempotence", "orthogonality"],
+        repairMaterial: "Review Chapter 4.3 and remember that orthogonal projections satisfy P^T=P and P^2=P.",
+        gateWeight: "high"
+      },
+      "projection-rank-trace": {
+        label: "Projection rank and trace",
+        prereqs: ["idempotence", "range"],
+        repairMaterial: "Review Chapter 4.5 and use rank(P)=trace(P) for projection matrices.",
+        gateWeight: "high"
+      },
+      "centering-matrix": {
+        label: "Centering matrix",
+        prereqs: ["symmetric-projection", "projection-rank-trace"],
+        repairMaterial: "Review Chapter 4.6 and memorize H=I-(1/n)11^T, H1=0, rank n-1, trace n-1.",
+        gateWeight: "high"
+      }
+    }
+  };
+}
+
 function conditionalProbabilityConceptGraph() {
   return {
     chapterId: "gate-da-conditional-probability",
@@ -10914,6 +11368,200 @@ function linearAlgebraRankNullityReviewQuestions() {
   }));
 }
 
+function linearAlgebraOrthogonalProjectionsProblems() {
+  return [
+    {
+      label: "Problem 1: Orthogonality check",
+      concept: "Orthogonality",
+      difficulty: "Concept",
+      technique: "Compute the dot product",
+      prompt: "Are u=[1,2] and v=[2,-1] orthogonal?",
+      solution: "Compute u dot v = 1*2 + 2*(-1) = 2-2 = 0. Since the dot product is zero, the vectors are orthogonal."
+    },
+    {
+      label: "Problem 2: Projection onto a line",
+      concept: "Projection formula",
+      difficulty: "Mechanics",
+      technique: "Use the projection coefficient",
+      prompt: "Project v=[3,1] onto u=[1,1].",
+      solution: "The coefficient is (v dot u)/(u dot u) = (3+1)/(1+1) = 4/2 = 2. Therefore proj_u(v)=2[1,1]=[2,2]."
+    },
+    {
+      label: "Problem 3: Perpendicular error",
+      concept: "Projection error",
+      difficulty: "Mechanics",
+      technique: "Subtract the projection",
+      prompt: "Using the previous problem, show that the error v-proj_u(v) is perpendicular to u.",
+      solution: "The error is [3,1]-[2,2]=[1,-1]. Its dot product with u=[1,1] is 1-1=0. So the projection error is perpendicular to the target direction."
+    },
+    {
+      label: "Problem 4: Projection matrix on x-axis",
+      concept: "Projection matrix",
+      difficulty: "Concept",
+      technique: "Find fixed and killed directions",
+      prompt: "For P=[[1,0],[0,0]], what does P do to [x,y]? Which subspace is fixed and which is killed?",
+      solution: "P[x,y]=[x,0]. The x-axis is fixed because P[x,0]=[x,0]. The y-axis is killed because P[0,y]=[0,0]."
+    },
+    {
+      label: "Problem 5: Idempotence",
+      concept: "Idempotence",
+      difficulty: "Application",
+      technique: "Apply the projection twice",
+      prompt: "Show that P=[[1,0],[0,0]] is idempotent.",
+      solution: "Multiplying P by itself gives [[1,0],[0,0]][[1,0],[0,0]] = [[1,0],[0,0]] = P. Physically, once a vector is on the x-axis, projecting again changes nothing."
+    },
+    {
+      label: "Problem 6: Symmetric projection",
+      concept: "Symmetric projection",
+      difficulty: "Application",
+      technique: "Check transpose and square",
+      prompt: "Why is P=[[1,0],[0,0]] an orthogonal projection matrix?",
+      solution: "It is symmetric because P^T=P, and idempotent because P^2=P. It projects onto the x-axis along the perpendicular y-axis, so it is an orthogonal projection."
+    },
+    {
+      label: "Problem 7: Rank and trace",
+      concept: "Projection rank and trace",
+      difficulty: "GATE-style",
+      technique: "Use trace shortcut",
+      prompt: "For P=[[1,0],[0,0]], compute trace(P), rank(P), and nullity(P).",
+      solution: "trace(P)=1+0=1. The range is the x-axis, so rank(P)=1. The kernel is the y-axis, so nullity(P)=1. For this projection, trace equals rank."
+    },
+    {
+      label: "Problem 8: Idempotent is not identity",
+      concept: "Idempotence",
+      difficulty: "GATE-style",
+      technique: "Separate project once from keep everything",
+      prompt: "Give an example of an idempotent matrix that is not the identity, and explain what it does.",
+      solution: "P=[[1,0],[0,0]] is idempotent because P^2=P, but it is not the identity because it sends [0,1] to [0,0]. It projects onto the x-axis and loses y-information."
+    },
+    {
+      label: "Problem 9: Centering matrix facts",
+      concept: "Centering matrix",
+      difficulty: "GATE-style",
+      technique: "Recognize killed and fixed subspaces",
+      prompt: "For H=I-(1/n)11^T, what vector direction is killed and what is rank(H)?",
+      solution: "The all-ones direction is killed because H1 = 1 - (1/n)1(1^T1) = 1 - (1/n)1*n = 0. H keeps the zero-sum subspace, which has dimension n-1, so rank(H)=n-1."
+    },
+    {
+      label: "Problem 10: Projection matrix recognition",
+      concept: "Projection matrix",
+      difficulty: "GATE-style",
+      technique: "Use matrix signatures",
+      prompt: "A matrix P satisfies P^2=P and P^T=P. What kind of map should you suspect, and what should you inspect next?",
+      solution: "These are the signatures of an orthogonal projection. Inspect the range/fixed subspace and kernel/killed subspace, then use rank(P)=trace(P) if a rank or dimension question appears."
+    }
+  ];
+}
+
+function linearAlgebraOrthogonalProjectionsReviewQuestions() {
+  const metadata = {
+    "la-op-review-1": { targetConcept: "orthogonality", prereqsUsed: ["dot-product"], difficulty: 1, gateWeight: "high" },
+    "la-op-review-2": { targetConcept: "projection-formula", prereqsUsed: ["dot-product", "orthogonality"], difficulty: 2, gateWeight: "high" },
+    "la-op-review-3": { targetConcept: "projection-error", prereqsUsed: ["projection-formula", "orthogonality"], difficulty: 2, gateWeight: "high" },
+    "la-op-review-4": { targetConcept: "idempotence", prereqsUsed: ["projection-matrix", "fixed-subspace"], difficulty: 2, gateWeight: "high" },
+    "la-op-review-5": { targetConcept: "symmetric-projection", prereqsUsed: ["idempotence", "orthogonality"], difficulty: 2, gateWeight: "high" },
+    "la-op-review-6": { targetConcept: "projection-rank-trace", prereqsUsed: ["range", "idempotence"], difficulty: 3, gateWeight: "high" },
+    "la-op-review-7": { targetConcept: "centering-matrix", prereqsUsed: ["symmetric-projection", "projection-rank-trace"], difficulty: 3, gateWeight: "high" }
+  };
+  const questions = [
+    {
+      id: "la-op-review-1",
+      kind: "single concept",
+      tags: ["orthogonality", "dot-product"],
+      prompt: "Which pair of vectors is orthogonal?",
+      options: [
+        { id: "a", text: "[1,2] and [2,-1]" },
+        { id: "b", text: "[1,2] and [2,1]" },
+        { id: "c", text: "[1,1] and [1,1]" },
+        { id: "d", text: "[2,0] and [3,0]" }
+      ],
+      answer: "a"
+    },
+    {
+      id: "la-op-review-2",
+      kind: "mixed: two concepts",
+      tags: ["projection-formula", "dot-product", "orthogonality"],
+      prompt: "What is the projection of v=[3,1] onto u=[1,1]?",
+      options: [
+        { id: "a", text: "[1,1]" },
+        { id: "b", text: "[2,2]" },
+        { id: "c", text: "[3,3]" },
+        { id: "d", text: "[1,-1]" }
+      ],
+      answer: "b"
+    },
+    {
+      id: "la-op-review-3",
+      kind: "mixed: two concepts",
+      tags: ["projection-error", "projection-formula", "orthogonality"],
+      prompt: "If proj_[1,1]([3,1])=[2,2], what is true about the error [3,1]-[2,2]?",
+      options: [
+        { id: "a", text: "It is parallel to [1,1]." },
+        { id: "b", text: "It is perpendicular to [1,1]." },
+        { id: "c", text: "It equals zero." },
+        { id: "d", text: "It is the projection matrix." }
+      ],
+      answer: "b"
+    },
+    {
+      id: "la-op-review-4",
+      kind: "mixed: two concepts",
+      tags: ["idempotence", "projection-matrix", "fixed-subspace"],
+      prompt: "What does P^2=P mean for a projection matrix?",
+      options: [
+        { id: "a", text: "Applying the projection twice is the same as applying it once." },
+        { id: "b", text: "P must be the identity matrix." },
+        { id: "c", text: "P sends every vector to zero." },
+        { id: "d", text: "P is never singular." }
+      ],
+      answer: "a"
+    },
+    {
+      id: "la-op-review-5",
+      kind: "mixed: two concepts",
+      tags: ["symmetric-projection", "idempotence", "orthogonality"],
+      prompt: "Which matrix signatures identify an orthogonal projection?",
+      options: [
+        { id: "a", text: "P^T=P and P^2=P" },
+        { id: "b", text: "P^T=-P and P^2=I" },
+        { id: "c", text: "P has only negative entries" },
+        { id: "d", text: "P has determinant 1" }
+      ],
+      answer: "a"
+    },
+    {
+      id: "la-op-review-6",
+      kind: "mixed: three concepts",
+      tags: ["projection-rank-trace", "range", "idempotence"],
+      prompt: "For a projection matrix P, what is the relationship between trace(P) and rank(P)?",
+      options: [
+        { id: "a", text: "trace(P)=rank(P)" },
+        { id: "b", text: "trace(P)=nullity(P)" },
+        { id: "c", text: "trace(P)=0 always" },
+        { id: "d", text: "trace(P)=det(P)" }
+      ],
+      answer: "a"
+    },
+    {
+      id: "la-op-review-7",
+      kind: "mixed: three concepts",
+      tags: ["centering-matrix", "symmetric-projection", "projection-rank-trace"],
+      prompt: "For H=I-(1/n)11^T, which statement is correct?",
+      options: [
+        { id: "a", text: "H kills the all-ones direction and has rank n-1." },
+        { id: "b", text: "H is the identity matrix and has rank n." },
+        { id: "c", text: "H kills every zero-sum vector." },
+        { id: "d", text: "H is not idempotent." }
+      ],
+      answer: "a"
+    }
+  ];
+  return questions.map((question) => ({
+    ...question,
+    ...(metadata[question.id] || { targetConcept: question.tags[0], prereqsUsed: question.tags.slice(1), difficulty: question.tags.length, gateWeight: "medium" })
+  }));
+}
+
 function discreteMathMilestones() {
   return [
     {
@@ -12317,6 +12965,7 @@ function conceptGraphForSection(section) {
   if (section?.id === "gate-da-linear-algebra-vector-spaces-coordinates") return linearAlgebraVectorSpacesConceptGraph();
   if (section?.id === "gate-da-linear-algebra-transformations-matrices") return linearAlgebraTransformationsConceptGraph();
   if (section?.id === "gate-da-linear-algebra-rank-nullity-systems") return linearAlgebraRankNullityConceptGraph();
+  if (section?.id === "gate-da-linear-algebra-orthogonal-projections") return linearAlgebraOrthogonalProjectionsConceptGraph();
   if (section?.id === "gate-da-probability-foundations") return probabilityFoundationConceptGraph();
   if (section?.id === "gate-da-conditional-probability") return conditionalProbabilityConceptGraph();
   if (section?.id === "gate-da-random-variables-expectation") return randomVariablesExpectationConceptGraph();
