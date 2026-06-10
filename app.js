@@ -1,7 +1,7 @@
 const STORAGE_KEY = "learning-studio-data-v2";
 const LEGACY_STORAGE_KEYS = ["learning-studio-data-v1"];
 const SESSION_KEY = "aleph-session";
-const COURSE_PLAN_VERSION = "seeded-user-canonical-workspace-v75";
+const COURSE_PLAN_VERSION = "seeded-user-canonical-workspace-v76";
 const PRIYANKA_PLATINUM_START_DATE = "2026-06-07";
 const DEFAULT_PLAN_START_DATE = "2026-06-01";
 
@@ -13223,6 +13223,7 @@ function render() {
   renderPlanCatalog();
   renderGateDaSummary();
   renderAssessmentDashboard();
+  renderPlatinumPacePanel();
   renderGateDaWorkspace();
   renderGateDaSections();
   renderEnrollments();
@@ -15291,6 +15292,94 @@ function taskScheduleAlerts() {
   };
 }
 
+function platinumPaceReport() {
+  const activeTasks = state.tasks.filter((task) => task.date || linkedScheduleForTask(task)?.date);
+  const today = todayDateString();
+  const expectedTasks = activeTasks.filter((task) => taskDueDate(task) && taskDueDate(task) <= today);
+  const completedExpected = expectedTasks.filter((task) => task.status === "completed");
+  const alerts = taskScheduleAlerts();
+  const currentWeek = currentWeekNumber();
+  const completionRate = expectedTasks.length
+    ? Math.round((completedExpected.length / expectedTasks.length) * 100)
+    : 100;
+  const status = paceStatusFromCounts(alerts.overdue.length, alerts.dueToday.length, completionRate);
+  return {
+    ...alerts,
+    status,
+    currentWeek,
+    expectedCount: expectedTasks.length,
+    completedExpectedCount: completedExpected.length,
+    completionRate
+  };
+}
+
+function paceStatusFromCounts(overdueCount, dueTodayCount, completionRate) {
+  if (overdueCount >= 3 || completionRate < 70) {
+    return {
+      label: "Behind plan",
+      className: "due-overdue",
+      message: "The learner has multiple overdue plan items. Send a pace reminder and use the task board to recover the oldest work first."
+    };
+  }
+  if (overdueCount || dueTodayCount >= 3 || completionRate < 90) {
+    return {
+      label: "At risk",
+      className: "due-today",
+      message: "The learner is close to slipping. Clear due-today work and any overdue item before adding optional practice."
+    };
+  }
+  return {
+    label: "On pace",
+    className: "due-completed",
+    message: "The learner is keeping pace with the dated Platinum plan."
+  };
+}
+
+function renderPlatinumPacePanel() {
+  const section = document.querySelector("#platinum-pace-section");
+  const panel = document.querySelector("#platinum-pace-panel");
+  if (!section || !panel) return;
+  const isPlatinum = isPlatinumPrototypeUser(state.user);
+  section.hidden = !isPlatinum;
+  if (!isPlatinum) {
+    panel.innerHTML = "";
+    return;
+  }
+
+  const report = platinumPaceReport();
+  const lastReminder = state.user.lastPaceReminderEmailAt
+    ? `Last pace email sent ${formatDate(state.user.lastPaceReminderEmailAt.slice(0, 10))}.`
+    : "No pace email sent yet.";
+  const pushStatus = "Push notifications need a registered service worker, browser permission, stored subscriptions, and a backend sender. This prototype can flag the need, but email is the active reminder channel.";
+  const canSendEmail = report.overdue.length || report.dueToday.length;
+
+  panel.innerHTML = `
+    <div class="pace-panel">
+      <div class="pace-summary">
+        <span class="tag ${escapeHtml(report.status.className)}">${escapeHtml(report.status.label)}</span>
+        <div>
+          <strong>Week ${report.currentWeek}: ${report.completedExpectedCount}/${report.expectedCount} due items complete (${report.completionRate}%).</strong>
+          <p>${escapeHtml(report.status.message)}</p>
+          <p class="fine-print">${escapeHtml(lastReminder)}</p>
+        </div>
+      </div>
+      <div class="pace-metrics">
+        <span><strong>${report.overdue.length}</strong> overdue</span>
+        <span><strong>${report.dueToday.length}</strong> due today</span>
+        <span><strong>${report.upcoming.length}</strong> upcoming</span>
+      </div>
+      <div class="pace-actions">
+        <button class="small-btn" data-send-pace-email type="button" ${canSendEmail ? "" : "disabled"}>Send pace email</button>
+        <button class="small-btn" type="button" disabled>Push alerts need backend</button>
+      </div>
+      <p class="fine-print">${escapeHtml(pushStatus)}</p>
+      ${report.overdue.length ? `<div class="task-alert-list">${report.overdue.slice(0, 4).map(taskAlertTemplate).join("")}</div>` : ""}
+    </div>
+  `;
+
+  panel.querySelector("[data-send-pace-email]")?.addEventListener("click", sendPaceReminderEmail);
+}
+
 function linkedScheduleForTask(task) {
   if (!task) return null;
   if (task.scheduleId) {
@@ -15398,6 +15487,88 @@ async function sendOverdueEmail() {
     button.disabled = false;
     button.textContent = "Send overdue email";
   }
+}
+
+async function sendPaceReminderEmail() {
+  const report = platinumPaceReport();
+  const email = state.user.email || "";
+  const reminderTasks = [...report.overdue, ...report.dueToday].slice(0, 12);
+  if (!reminderTasks.length) return;
+  if (!email) {
+    alert("Add the learner email in Share and Updates before sending pace reminders.");
+    return;
+  }
+
+  const button = document.querySelector("[data-send-pace-email]");
+  if (button) {
+    button.disabled = true;
+    button.textContent = "Sending...";
+  }
+
+  const reminderItems = reminderTasks.map((task) => {
+    const scheduleItem = linkedScheduleForTask(task);
+    return {
+      title: task.title,
+      dueDate: taskDueDate(task),
+      type: task.type || scheduleItem?.kind || "Task",
+      scheduleTitle: scheduleItem?.title || ""
+    };
+  });
+
+  try {
+    const result = await fetch("/api/send-pace-reminder", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        email,
+        name: state.user.displayName || state.user.name,
+        paceStatus: report.status.label,
+        completionRate: report.completionRate,
+        currentWeek: report.currentWeek,
+        overdueCount: report.overdue.length,
+        dueTodayCount: report.dueToday.length,
+        reminderItems,
+        appUrl: window.location.origin
+      })
+    });
+
+    if (result.ok) {
+      state.user.lastPaceReminderEmailAt = new Date().toISOString();
+      persist();
+      renderPlatinumPacePanel();
+      return;
+    }
+  } catch {
+    // Fall through to a local mail draft in dev or when Vercel email is not configured.
+  }
+
+  draftPaceReminderEmail(email, report, reminderItems);
+  if (button) {
+    button.disabled = false;
+    button.textContent = "Send pace email";
+  }
+}
+
+function draftPaceReminderEmail(email, report, reminderItems) {
+  const subject = `Aleph Platinum pace check: ${report.status.label}`;
+  const body = [
+    `Hi ${state.user.displayName || state.user.name},`,
+    "",
+    `Your Platinum plan pace status is ${report.status.label}.`,
+    `Week ${report.currentWeek}: ${report.completedExpectedCount}/${report.expectedCount} due items complete (${report.completionRate}%).`,
+    `Open items: ${report.overdue.length} overdue, ${report.dueToday.length} due today.`,
+    "",
+    "Please complete these next:",
+    "",
+    ...reminderItems.map((item) => `- ${item.title} (${item.type}, due ${item.dueDate || "date not set"})`),
+    "",
+    `Open your workspace: ${window.location.origin}`,
+    "",
+    "Aleph"
+  ].join("\n");
+  window.location.href = `mailto:${encodeURIComponent(email)}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
 }
 
 function draftOverdueEmail(email, overdueItems) {

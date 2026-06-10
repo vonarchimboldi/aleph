@@ -1958,6 +1958,50 @@ textarea {
   font-weight: 700;
 }
 
+.pace-panel {
+  background: #f7f9f8;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  display: grid;
+  gap: 12px;
+  padding: 14px;
+}
+
+.pace-summary {
+  align-items: flex-start;
+  display: grid;
+  gap: 12px;
+  grid-template-columns: auto minmax(0, 1fr);
+}
+
+.pace-summary strong,
+.pace-summary p {
+  margin: 0;
+}
+
+.pace-summary p {
+  color: var(--muted);
+  line-height: 1.45;
+}
+
+.pace-metrics,
+.pace-actions {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.pace-metrics span {
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 7px;
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 700;
+  padding: 7px 10px;
+}
+
 .task-tile-board {
   grid-template-columns: repeat(3, minmax(0, 1fr));
   align-items: start;
@@ -2490,10 +2534,15 @@ a {
   .problem-heading,
   .board-header,
   .week-schedule-header,
+  .pace-summary,
   .task-alert-list article,
   .schedule-row {
     align-items: flex-start;
     flex-direction: column;
+  }
+
+  .pace-summary {
+    grid-template-columns: 1fr;
   }
 
   .landing {
