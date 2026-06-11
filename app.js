@@ -1,7 +1,7 @@
 const STORAGE_KEY = "learning-studio-data-v2";
 const LEGACY_STORAGE_KEYS = ["learning-studio-data-v1"];
 const SESSION_KEY = "aleph-session";
-const COURSE_PLAN_VERSION = "seeded-user-canonical-workspace-v77";
+const COURSE_PLAN_VERSION = "seeded-user-canonical-workspace-v78";
 const PRIYANKA_PLATINUM_START_DATE = "2026-06-07";
 const DEFAULT_PLAN_START_DATE = "2026-06-01";
 
@@ -710,6 +710,8 @@ function buildGateDaBasicPlan(now, accountTypes, sections, user = basicGateDaUse
   const linearAlgebraWeekFourSunday = weekFourSunday;
   const linearAlgebraWeekFiveMonday = weekFiveMonday;
   const linearAlgebraWeekFiveSunday = weekFiveSunday;
+  const linearAlgebraWeekSixMonday = weekSixMonday;
+  const linearAlgebraWeekSixSunday = weekSixSunday;
   const userId = user.id || "user-basic-demo";
   const userSlug = slugify(user.name || userId);
   const enrollmentId = `enrollment-${userSlug}-gate-da-basic`;
@@ -736,7 +738,7 @@ function buildGateDaBasicPlan(now, accountTypes, sections, user = basicGateDaUse
         title: "Linear Algebra",
         date: linearAlgebraWeekOneMonday,
         status: "In progress",
-        details: "GATE DA Basic Linear Algebra, built around transformations, invariants, and physical intuition. Chapters 1-5 cover vectors, coordinates, span, subspaces, independence, basis, dimension, linear transformations, matrices, rank, nullity, range/kernel, systems, orthogonality, projection matrices, idempotence, determinants, trace, and matrix identities.",
+        details: "GATE DA Basic Linear Algebra, built around transformations, invariants, and physical intuition. Chapters 1-6 cover vectors, coordinates, span, subspaces, independence, basis, dimension, linear transformations, matrices, rank, nullity, range/kernel, systems, orthogonality, projection matrices, idempotence, determinants, trace, matrix identities, eigenvalues, eigenvectors, powers, rotations, and spectral invariants.",
         sectionIds: linearAlgebraSections.map((section) => section.id),
         updatedAt: now
       }
@@ -1181,6 +1183,36 @@ function buildGateDaBasicPlan(now, accountTypes, sections, user = basicGateDaUse
         date: linearAlgebraWeekFiveSunday,
         details: "Take the graph-backed objective quiz for determinant, trace, invertibility, rank-one updates, cyclic trace, and matrix identity reasoning.",
         updatedAt: now
+      },
+      {
+        id: "schedule-linear-algebra-chapter-6-study",
+        title: "Linear Algebra Chapter 6: Eigenvalues, Eigenvectors, and Powers",
+        week: 6,
+        subject: "Linear Algebra",
+        kind: "Study",
+        date: linearAlgebraWeekSixMonday,
+        details: "Study eigenvectors as directions that do not turn, eigenvalues as stretch factors, and use trace/determinant, powers, rotations, projections, and PCA-style variance directions.",
+        updatedAt: now
+      },
+      {
+        id: "schedule-linear-algebra-chapter-6-practice",
+        title: "Linear Algebra Chapter 6: Labelled Practice",
+        week: 6,
+        subject: "Linear Algebra",
+        kind: "Practice",
+        date: addDays(linearAlgebraWeekSixMonday, 2),
+        details: "Solve eigenvalue, eigenvector, trace/determinant, power, rotation, projection-spectrum, and PCA-readiness practice problems.",
+        updatedAt: now
+      },
+      {
+        id: "schedule-linear-algebra-chapter-6-review",
+        title: "Linear Algebra Chapter 6: Objective Review",
+        week: 6,
+        subject: "Linear Algebra",
+        kind: "Review",
+        date: linearAlgebraWeekSixSunday,
+        details: "Take the graph-backed objective quiz for eigenvalue meaning, invariant directions, trace/determinant spectral shortcuts, powers, rotations, and projection spectra.",
+        updatedAt: now
       }
     ],
     tests: [
@@ -1317,6 +1349,15 @@ function buildGateDaBasicPlan(now, accountTypes, sections, user = basicGateDaUse
         details: "Objective end-of-chapter quiz for determinants, trace, invertibility, matrix products, rank-one updates, cyclic trace, and matrix-polynomial identities. Attempts are logged with prerequisite repair feedback.",
         sectionId: linearAlgebraSections[4]?.id,
         quizId: "quiz-linear-algebra-chapter-5-objective-review",
+        updatedAt: now
+      },
+      {
+        id: "test-linear-algebra-chapter-6-objective-review",
+        title: "Linear Algebra Chapter 6 Objective Review",
+        date: linearAlgebraWeekSixSunday,
+        details: "Objective end-of-chapter quiz for eigenvalues, eigenvectors, invariant directions, powers, trace/determinant spectral meaning, rotations, projection spectra, and PCA readiness. Attempts are logged with prerequisite repair feedback.",
+        sectionId: linearAlgebraSections[5]?.id,
+        quizId: "quiz-linear-algebra-chapter-6-objective-review",
         updatedAt: now
       }
     ],
@@ -1805,6 +1846,39 @@ function buildGateDaBasicPlan(now, accountTypes, sections, user = basicGateDaUse
         done: false,
         details: "Submit the Chapter 5 objective quiz so the learner record logs determinant, trace, and matrix-identity reasoning strengths and weaknesses.",
         updatedAt: now
+      },
+      {
+        id: "task-linear-algebra-chapter-6-read",
+        week: 6,
+        title: "Linear Algebra Ch 6: Read eigenvalues and powers",
+        type: "Study",
+        date: linearAlgebraWeekSixMonday,
+        status: "todo",
+        done: false,
+        details: "Open Subjects -> Linear Algebra -> Chapter 6 and study eigenvectors, eigenvalues, invariant directions, powers, rotations, projections, and spectral shortcuts.",
+        updatedAt: now
+      },
+      {
+        id: "task-linear-algebra-chapter-6-practice",
+        week: 6,
+        title: "Linear Algebra Ch 6: Solve eigenvalue practice",
+        type: "Practice",
+        date: addDays(linearAlgebraWeekSixMonday, 2),
+        status: "todo",
+        done: false,
+        details: "Attempt the Chapter 6 labelled practice problems before opening worked solutions.",
+        updatedAt: now
+      },
+      {
+        id: "task-linear-algebra-chapter-6-review",
+        week: 6,
+        title: "Linear Algebra Ch 6: Take objective review",
+        type: "Review",
+        date: linearAlgebraWeekSixSunday,
+        status: "todo",
+        done: false,
+        details: "Submit the Chapter 6 objective quiz so the learner record logs eigenvalue, eigenvector, power, and spectral-invariant reasoning strengths and weaknesses.",
+        updatedAt: now
       }
     ],
     accountTypes,
@@ -1831,7 +1905,7 @@ function buildGateDaBasicPlan(now, accountTypes, sections, user = basicGateDaUse
         startDate: monday,
         endDate: "2026-08-30",
         status: "active",
-        details: `GATE DA Basic plan surfaces: Subjects, Tasks, Schedule, Tests, Feedback, Resources, and Share. Recommended pace: study three subjects in parallel. Every 15 days, Aleph should generate an adaptive cumulative review quiz from prior performance, repeating missed concepts more often, reducing mastered concepts, and keeping high-weight exam topics in rotation. Current material build: Probability Chapters 1-10 and Linear Algebra Chapters 1-5.${trialNote}`,
+        details: `GATE DA Basic plan surfaces: Subjects, Tasks, Schedule, Tests, Feedback, Resources, and Share. Recommended pace: study three subjects in parallel. Every 15 days, Aleph should generate an adaptive cumulative review quiz from prior performance, repeating missed concepts more often, reducing mastered concepts, and keeping high-weight exam topics in rotation. Current material build: Probability Chapters 1-10 and Linear Algebra Chapters 1-6.${trialNote}`,
         updatedAt: now
       }
     ],
@@ -1877,6 +1951,13 @@ function buildGateDaBasicPlan(now, accountTypes, sections, user = basicGateDaUse
         title: "Linear Algebra Chapter 5 feedback focus",
         date: linearAlgebraWeekFiveSunday,
         details: "Review misses for treating determinant as entrywise multiplication, forgetting determinant product rules, confusing trace with determinant, missing cyclic trace, and failing to use rank-one or matrix-polynomial shortcuts.",
+        updatedAt: now
+      },
+      {
+        id: "feedback-linear-algebra-chapter-6",
+        title: "Linear Algebra Chapter 6 feedback focus",
+        date: linearAlgebraWeekSixSunday,
+        details: "Review misses for confusing eigenvectors with arbitrary vectors, treating rotations as having real eigenvectors, forgetting trace/determinant spectral checks, mishandling powers, and missing projection eigenvalues 0 and 1.",
         updatedAt: now
       }
     ],
@@ -2006,6 +2087,14 @@ function buildGateDaBasicPlan(now, accountTypes, sections, user = basicGateDaUse
         title: "Linear Algebra Chapter 5: Determinants, Trace, and Matrix Identities",
         date: linearAlgebraWeekFiveMonday,
         details: "Open Subjects -> Linear Algebra to study determinant as volume/orientation/invertibility, trace as total diagonal action, and GATE-style matrix identities for products, rank-one updates, and polynomial expressions.",
+        link: "",
+        updatedAt: now
+      },
+      {
+        id: "resource-linear-algebra-eigenvalues-eigenvectors",
+        title: "Linear Algebra Chapter 6: Eigenvalues, Eigenvectors, and Powers",
+        date: linearAlgebraWeekSixMonday,
+        details: "Open Subjects -> Linear Algebra to study invariant directions, eigenvalue stretch factors, spectral trace/determinant checks, powers, rotations, projection spectra, and PCA-facing intuition.",
         link: "",
         updatedAt: now
       }
@@ -3440,6 +3529,273 @@ function gateDaLinearAlgebraSections(updatedAt = new Date().toISOString()) {
         "trace(AB)=trace(BA), and trace(ABC) can be cyclically rotated.",
         "det(I+uv^T)=1+v^Tu is the key rank-one update shortcut.",
         "Matrix identities should be used structurally before expanding powers."
+      ],
+      updatedAt
+    },
+    {
+      id: "gate-da-linear-algebra-eigenvalues-eigenvectors",
+      exam: "GATE DA",
+      accountTier: "Basic",
+      subject: "Linear Algebra",
+      chapter: "Chapter 6",
+      section: "6",
+      title: "Eigenvalues, Eigenvectors, and Powers",
+      summary: "Eigenvectors as invariant directions, eigenvalues as stretch factors, trace and determinant as spectral checks, powers through eigen-directions, and GATE DA cases such as rotations, projections, and PCA.",
+      sectionPreview: "Eigenvalue questions ask which directions keep their line after a transformation and how strongly they are stretched, flipped, or killed. GATE DA often hides this inside powers, rotations, projections, trace, determinant, PCA, or matrix identities.",
+      previewActivity: "A machine sends every point on the x-axis to twice itself and every point on the y-axis to three times itself. Which directions do not turn? What happens after applying the machine five times? Now compare this with a 90-degree rotation: does any real nonzero direction stay on its own line?",
+      chapterIntro: [
+        "Chapter 5 introduced determinant and trace as global summaries. Chapter 6 explains where those summaries come from when a matrix has special directions.",
+        "An eigenvector is a nonzero direction that the matrix does not turn away from its own line. The eigenvalue is the scale factor on that direction.",
+        "The exam-facing habit is structural: identify invariant directions, use trace and determinant as checks, read powers through eigenvalues, and recognize rotations and projections without long computation."
+      ],
+      bookSections: [
+        {
+          number: "6.1",
+          title: "Invariant Directions",
+          paragraphs: [
+            "A vector v is an eigenvector of A if Av lies on the same line as v. That means Av=lambda v for some scalar lambda.",
+            "The direction may be stretched, shrunk, flipped, or killed, but it is not turned into a different direction. The scalar lambda is the eigenvalue.",
+            "Eigenvectors are not arbitrary vectors. Most vectors turn into mixtures of directions. Eigenvectors are the special directions where the transformation behaves like simple scaling."
+          ],
+          blocks: [
+            {
+              type: "definition",
+              title: "Definition: eigenvector and eigenvalue",
+              body: "A nonzero vector v is an eigenvector of A with eigenvalue lambda if Av=lambda v."
+            },
+            {
+              type: "example",
+              title: "Example 6.1: axis stretches",
+              body: "For A=diag(2,3), e1=[1,0] is an eigenvector with eigenvalue 2, and e2=[0,1] is an eigenvector with eigenvalue 3."
+            },
+            {
+              type: "warning",
+              title: "Nonzero requirement",
+              body: "The zero vector is never called an eigenvector, because A0=lambda 0 for every lambda and gives no direction."
+            }
+          ]
+        },
+        {
+          number: "6.2",
+          title: "Finding Eigenvalues",
+          paragraphs: [
+            "The equation Av=lambda v can be rewritten as (A-lambda I)v=0. A nonzero solution exists exactly when A-lambda I is singular.",
+            "So eigenvalues solve det(A-lambda I)=0. This determinant is the characteristic polynomial.",
+            "For 2 by 2 matrices, use trace and determinant as a fast check: the eigenvalues add to trace(A) and multiply to det(A)."
+          ],
+          blocks: [
+            {
+              type: "strategy",
+              title: "2 by 2 spectral check",
+              body: "For a 2 by 2 matrix with eigenvalues lambda1 and lambda2: lambda1+lambda2=trace(A), and lambda1 lambda2=det(A)."
+            },
+            {
+              type: "example",
+              title: "Example 6.2: diagonal matrix",
+              body: "For diag(2,3), trace is 5 and determinant is 6. The eigenvalues 2 and 3 add to 5 and multiply to 6."
+            },
+            {
+              type: "checkpoint",
+              title: "Checkpoint",
+              body: "If a 2 by 2 matrix has trace 4 and determinant 3, what two eigenvalues are possible?"
+            }
+          ]
+        },
+        {
+          number: "6.3",
+          title: "Powers Through Eigenvalues",
+          paragraphs: [
+            "If Av=lambda v, then A^2v=lambda^2 v, and more generally A^k v=lambda^k v. Powers are simple on eigen-directions.",
+            "This is why eigenvalues are useful for repeated transformations: growth, decay, sign flips, and repeated projections become scalar questions.",
+            "If a matrix can be decomposed into eigen-directions, powers can often be read by powering the eigenvalues rather than multiplying matrices repeatedly."
+          ],
+          blocks: [
+            {
+              type: "principle",
+              title: "Power rule",
+              body: "On an eigenvector v, A^k behaves by A^k v=lambda^k v."
+            },
+            {
+              type: "example",
+              title: "Example 6.3: repeated stretch",
+              body: "If A=diag(2,3), then A^4 stretches e1 by 2^4=16 and e2 by 3^4=81."
+            }
+          ]
+        },
+        {
+          number: "6.4",
+          title: "Projections and Idempotent Matrices",
+          paragraphs: [
+            "Projection matrices give the cleanest eigenvalue picture. A vector in the fixed subspace satisfies Pv=v, so it has eigenvalue 1.",
+            "A vector in the killed subspace satisfies Pv=0, so it has eigenvalue 0. This explains why projection matrices have trace equal to rank.",
+            "More generally, if P^2=P, then any eigenvalue lambda must satisfy lambda^2=lambda, so lambda is 0 or 1."
+          ],
+          blocks: [
+            {
+              type: "example",
+              title: "Example 6.4: x-axis projection",
+              body: "P=[[1,0],[0,0]] has eigenvalue 1 on the x-axis and eigenvalue 0 on the y-axis."
+            },
+            {
+              type: "strategy",
+              title: "Idempotent spectrum",
+              body: "If P^2=P, immediately suspect eigenvalues only 0 and 1. Trace then counts the number of 1-directions."
+            }
+          ]
+        },
+        {
+          number: "6.5",
+          title: "Rotations and Complex Eigenvalues",
+          paragraphs: [
+            "A 90-degree rotation in the plane turns every nonzero real vector away from its own line. So it has no real eigenvector.",
+            "This does not mean eigenvalue reasoning has failed. Over complex numbers, rotations have complex eigenvalues. For GATE DA Basic, the key real-geometry lesson is that not every real matrix has real eigenvectors.",
+            "Powers of rotations can often be read geometrically: four 90-degree rotations return to the identity."
+          ],
+          blocks: [
+            {
+              type: "example",
+              title: "Example 6.5: 90-degree rotation",
+              body: "R=[[0,-1],[1,0]] rotates every nonzero real vector by 90 degrees, so no real nonzero direction stays on its own line."
+            },
+            {
+              type: "checkpoint",
+              title: "Checkpoint",
+              body: "For the 90-degree rotation R, what are R^2 and R^4 physically?"
+            }
+          ]
+        },
+        {
+          number: "6.6",
+          title: "Data Science Link: PCA Directions",
+          paragraphs: [
+            "In PCA, the main directions are eigenvectors of a covariance matrix. The eigenvalue measures how much variance lies along that direction.",
+            "A symmetric covariance matrix has orthogonal eigenvectors. This is why principal components are perpendicular directions of variation.",
+            "GATE DA questions can ask this conceptually: the first principal component is the direction of maximum variance, and later components are orthogonal directions with remaining variance."
+          ],
+          blocks: [
+            {
+              type: "principle",
+              title: "PCA reading",
+              body: "For a covariance matrix, eigenvectors give principal component directions; eigenvalues give variance along those directions."
+            },
+            {
+              type: "example",
+              title: "Example 6.6: diagonal covariance",
+              body: "If covariance is diag(9,1), the first principal direction is e1 because variance 9 is larger than variance 1."
+            }
+          ]
+        }
+      ],
+      concepts: [
+        {
+          name: "Eigenvector",
+          description: "A nonzero direction that stays on its own line under a matrix.",
+          cue: "Ask whether Av is a scalar multiple of v."
+        },
+        {
+          name: "Eigenvalue",
+          description: "The stretch, shrink, flip, or kill factor on an eigenvector.",
+          cue: "Find lambda in Av=lambda v."
+        },
+        {
+          name: "Characteristic equation",
+          description: "Eigenvalues solve det(A-lambda I)=0.",
+          cue: "A-lambda I must have a nonzero kernel."
+        },
+        {
+          name: "Trace determinant spectral check",
+          description: "For 2 by 2 matrices, eigenvalues add to trace and multiply to determinant.",
+          cue: "Use trace and determinant to check candidate eigenvalues."
+        },
+        {
+          name: "Powers through eigenvalues",
+          description: "A^k scales an eigenvector by lambda^k.",
+          cue: "Power the scalar, not the whole matrix."
+        },
+        {
+          name: "Projection spectrum",
+          description: "Projection and idempotent matrices have eigenvalues 0 and 1.",
+          cue: "Fixed directions give 1; killed directions give 0."
+        },
+        {
+          name: "Rotation spectrum",
+          description: "A 90-degree real rotation has no real eigenvectors and powers cycle geometrically.",
+          cue: "Ask whether any real direction is not turned."
+        },
+        {
+          name: "PCA eigen-direction",
+          description: "Covariance eigenvectors are principal directions; eigenvalues are variances.",
+          cue: "Largest eigenvalue means largest variance direction."
+        }
+      ],
+      techniques: [
+        {
+          name: "Scalar-multiple test",
+          when: "checking whether a vector is an eigenvector.",
+          move: "Compute Av and see whether it equals lambda v for one scalar lambda."
+        },
+        {
+          name: "Trace/determinant candidate check",
+          when: "candidate eigenvalues are given for a 2 by 2 matrix.",
+          move: "Check sum equals trace and product equals determinant."
+        },
+        {
+          name: "Power shortcut",
+          when: "a power A^k acts on an eigenvector.",
+          move: "Replace A^k v by lambda^k v."
+        },
+        {
+          name: "Projection eigenvalue read",
+          when: "P is a projection or idempotent matrix.",
+          move: "Use eigenvalues 1 on fixed directions and 0 on killed directions."
+        },
+        {
+          name: "Rotation power read",
+          when: "a 2D rotation matrix is powered.",
+          move: "Read the total rotation angle instead of multiplying matrices."
+        },
+        {
+          name: "PCA direction read",
+          when: "a covariance matrix has eigenvalue information.",
+          move: "Pick the eigenvector with largest eigenvalue for the first principal component."
+        }
+      ],
+      practiceProblems: linearAlgebraEigenvaluesProblems(),
+      reviewPrompts: [
+        "Explain an eigenvector as a direction that does not turn.",
+        "For A=diag(2,3), identify two eigenvectors and eigenvalues.",
+        "Why must an eigenvector be nonzero?",
+        "Use trace and determinant to check eigenvalues 1 and 3 for a 2 by 2 matrix.",
+        "If Av=2v, what is A^5v?",
+        "Why does a projection have eigenvalues 0 and 1?",
+        "Why does a 90-degree real rotation have no real eigenvectors?",
+        "In PCA, what do covariance eigenvectors and eigenvalues mean?"
+      ],
+      reviewQuiz: {
+        id: "quiz-linear-algebra-chapter-6-objective-review",
+        title: "Linear Algebra Chapter 6 Objective Review",
+        instructions: "Complete this after studying invariant directions, eigenvalues, trace/determinant spectral checks, powers, projections, rotations, and PCA intuition. The quiz emphasizes structural recognition over long characteristic-polynomial arithmetic.",
+        questions: linearAlgebraEigenvaluesReviewQuestions()
+      },
+      readingQuestions: [
+        "What is an eigenvector?",
+        "What does an eigenvalue measure?",
+        "Why do eigenvalues solve det(A-lambda I)=0?",
+        "How do trace and determinant check 2 by 2 eigenvalues?",
+        "How do powers act on eigenvectors?",
+        "What are the eigenvalues of a projection?",
+        "Why can a real rotation lack real eigenvectors?",
+        "What do PCA eigenvectors and eigenvalues represent?"
+      ],
+      chapterSummary: [
+        "An eigenvector is a nonzero direction that stays on its own line.",
+        "An eigenvalue is the scalar factor on that eigenvector.",
+        "Eigenvalues solve det(A-lambda I)=0.",
+        "For 2 by 2 matrices, eigenvalues add to trace and multiply to determinant.",
+        "If Av=lambda v, then A^k v=lambda^k v.",
+        "Projections have eigenvalues 1 on fixed directions and 0 on killed directions.",
+        "A real 90-degree rotation has no real eigenvectors, but its powers cycle geometrically.",
+        "In PCA, covariance eigenvectors give principal directions and eigenvalues give variances."
       ],
       updatedAt
     }
@@ -10338,6 +10694,122 @@ function linearAlgebraDeterminantsTraceConceptGraph() {
   };
 }
 
+function linearAlgebraEigenvaluesConceptGraph() {
+  return {
+    chapterId: "gate-da-linear-algebra-eigenvalues-eigenvectors",
+    chapterTitle: "Linear Algebra Chapter 6: Eigenvalues, Eigenvectors, and Powers",
+    gateWeight: "high",
+    fallbackConcepts: ["eigenvector", "eigenvalue", "trace-determinant-spectral-check", "powers-through-eigenvalues"],
+    fallbackDifficultyMix: [1, 2, 2, 3],
+    fallbackInstruction: "Retest invariant directions first, then trace/determinant checks, powers, projections, and rotations.",
+    stableNextAction: "Next: try a mixed symmetric-matrix and quadratic-form set using eigenvalues, orthogonality, and maximum directions.",
+    nodes: {
+      transformation: {
+        label: "Transformation as machine",
+        prereqs: [],
+        repairMaterial: "Review Linear Algebra Chapter 2.1 and describe what the matrix does to directions before calculating.",
+        gateWeight: "medium"
+      },
+      "matrix-vector-product": {
+        label: "Matrix-vector product",
+        prereqs: ["matrix-column-rule"],
+        repairMaterial: "Review Linear Algebra Chapter 2.3 and compute Av as a column combination.",
+        gateWeight: "high"
+      },
+      "matrix-column-rule": {
+        label: "Matrix column rule",
+        prereqs: [],
+        repairMaterial: "Review Linear Algebra Chapter 2.3 and read Av as a combination of columns.",
+        gateWeight: "medium"
+      },
+      eigenvector: {
+        label: "Eigenvector",
+        prereqs: ["transformation", "matrix-vector-product"],
+        repairMaterial: "Review Chapter 6.1 and test whether Av is a scalar multiple of v.",
+        gateWeight: "high"
+      },
+      eigenvalue: {
+        label: "Eigenvalue",
+        prereqs: ["eigenvector"],
+        repairMaterial: "Review Chapter 6.1 and identify the scalar lambda in Av=lambda v.",
+        gateWeight: "high"
+      },
+      "nonzero-eigenvector": {
+        label: "Nonzero eigenvector rule",
+        prereqs: ["eigenvector"],
+        repairMaterial: "Review Chapter 6.1 and explain why the zero vector is excluded.",
+        gateWeight: "medium"
+      },
+      "characteristic-equation": {
+        label: "Characteristic equation",
+        prereqs: ["eigenvalue", "determinant-invertibility"],
+        repairMaterial: "Review Chapter 6.2 and derive det(A-lambda I)=0 from (A-lambda I)v=0.",
+        gateWeight: "high"
+      },
+      "determinant-invertibility": {
+        label: "Determinant and invertibility",
+        prereqs: [],
+        repairMaterial: "Review Chapter 5.2 and connect a zero determinant with a nonzero kernel.",
+        gateWeight: "high"
+      },
+      "trace-determinant-spectral-check": {
+        label: "Trace/determinant spectral check",
+        prereqs: ["trace", "determinant", "eigenvalue"],
+        repairMaterial: "Review Chapter 6.2: for 2 by 2 matrices, eigenvalues add to trace and multiply to determinant.",
+        gateWeight: "high"
+      },
+      trace: {
+        label: "Trace",
+        prereqs: [],
+        repairMaterial: "Review Chapter 5.3 and compute trace as the sum of diagonal entries.",
+        gateWeight: "high"
+      },
+      determinant: {
+        label: "Determinant",
+        prereqs: [],
+        repairMaterial: "Review Chapter 5.1 and Chapter 5.2 for determinant meaning and product rules.",
+        gateWeight: "high"
+      },
+      "powers-through-eigenvalues": {
+        label: "Powers through eigenvalues",
+        prereqs: ["eigenvalue"],
+        repairMaterial: "Review Chapter 6.3 and use A^k v=lambda^k v on eigenvectors.",
+        gateWeight: "high"
+      },
+      "projection-spectrum": {
+        label: "Projection spectrum",
+        prereqs: ["projection-identity", "eigenvalue"],
+        repairMaterial: "Review Chapter 6.4 and connect fixed directions to eigenvalue 1 and killed directions to eigenvalue 0.",
+        gateWeight: "high"
+      },
+      "projection-identity": {
+        label: "Projection identity",
+        prereqs: [],
+        repairMaterial: "Review Chapter 4.4 and remember P^2=P for projections.",
+        gateWeight: "high"
+      },
+      "rotation-spectrum": {
+        label: "Rotation spectrum",
+        prereqs: ["transformation", "eigenvector"],
+        repairMaterial: "Review Chapter 6.5 and explain why a 90-degree real rotation turns every nonzero real direction.",
+        gateWeight: "high"
+      },
+      "pca-eigen-direction": {
+        label: "PCA eigen-direction",
+        prereqs: ["eigenvalue", "orthogonality"],
+        repairMaterial: "Review Chapter 6.6 and state that covariance eigenvectors give principal directions while eigenvalues give variance.",
+        gateWeight: "high"
+      },
+      orthogonality: {
+        label: "Orthogonality",
+        prereqs: [],
+        repairMaterial: "Review Chapter 4.1 and connect PCA principal components with orthogonal directions.",
+        gateWeight: "high"
+      }
+    }
+  };
+}
+
 function conditionalProbabilityConceptGraph() {
   return {
     chapterId: "gate-da-conditional-probability",
@@ -12233,6 +12705,200 @@ function linearAlgebraDeterminantsTraceReviewQuestions() {
   }));
 }
 
+function linearAlgebraEigenvaluesProblems() {
+  return [
+    {
+      label: "Problem 1: Eigenvector check",
+      concept: "Eigenvector",
+      difficulty: "Concept",
+      technique: "Scalar-multiple test",
+      prompt: "For A=diag(2,3), is v=[1,0] an eigenvector? If yes, what is its eigenvalue?",
+      solution: "Av=[2,0]=2[1,0], so v is an eigenvector and the eigenvalue is 2. The x-axis direction is stretched but not turned."
+    },
+    {
+      label: "Problem 2: Not every vector is an eigenvector",
+      concept: "Eigenvector",
+      difficulty: "Concept",
+      technique: "Compare component ratios",
+      prompt: "For A=diag(2,3), is v=[1,1] an eigenvector?",
+      solution: "Av=[2,3]. This is not a scalar multiple of [1,1], because the two component ratios would need to be the same. So [1,1] is not an eigenvector."
+    },
+    {
+      label: "Problem 3: Trace and determinant check",
+      concept: "Trace determinant spectral check",
+      difficulty: "Mechanics",
+      technique: "Use sum and product",
+      prompt: "A 2 by 2 matrix has eigenvalues 1 and 3. What are its trace and determinant?",
+      solution: "For a 2 by 2 matrix, eigenvalues add to trace and multiply to determinant. So trace=1+3=4 and determinant=1*3=3."
+    },
+    {
+      label: "Problem 4: Candidate eigenvalues",
+      concept: "Trace determinant spectral check",
+      difficulty: "Application",
+      technique: "Check candidates structurally",
+      prompt: "A 2 by 2 matrix has trace 5 and determinant 6. Which candidate eigenvalue pair fits: (2,3), (1,6), or (-2,-3)?",
+      solution: "(2,3) fits because the sum is 5 and the product is 6. The pair (1,6) has sum 7, and (-2,-3) has sum -5."
+    },
+    {
+      label: "Problem 5: Powers on an eigenvector",
+      concept: "Powers through eigenvalues",
+      difficulty: "Application",
+      technique: "Power the eigenvalue",
+      prompt: "If Av=2v for a nonzero vector v, what is A^5 v?",
+      solution: "Repeated application multiplies by 2 each time, so A^5 v=2^5 v=32v."
+    },
+    {
+      label: "Problem 6: Projection spectrum",
+      concept: "Projection spectrum",
+      difficulty: "GATE-style",
+      technique: "Read fixed and killed directions",
+      prompt: "For P=[[1,0],[0,0]], identify eigenvalues and their directions.",
+      solution: "The x-axis is fixed, so vectors [x,0] have eigenvalue 1. The y-axis is killed, so vectors [0,y] have eigenvalue 0."
+    },
+    {
+      label: "Problem 7: Idempotent eigenvalues",
+      concept: "Projection spectrum",
+      difficulty: "GATE-style",
+      technique: "Use lambda^2=lambda",
+      prompt: "If P^2=P and Pv=lambda v for nonzero v, what values can lambda take?",
+      solution: "Apply P^2 to v: P^2v=P(lambda v)=lambda Pv=lambda^2 v. But P^2=P gives P^2v=Pv=lambda v. Since v is nonzero, lambda^2=lambda, so lambda is 0 or 1."
+    },
+    {
+      label: "Problem 8: Rotation power",
+      concept: "Rotation spectrum",
+      difficulty: "GATE-style",
+      technique: "Read total angle",
+      prompt: "Let R be a 90-degree counterclockwise rotation in R2. What are R^2 and R^4 physically?",
+      solution: "R^2 is a 180-degree rotation, which sends v to -v. R^4 is a 360-degree rotation, so it is the identity transformation."
+    },
+    {
+      label: "Problem 9: No real eigenvector for 90-degree rotation",
+      concept: "Rotation spectrum",
+      difficulty: "GATE-style",
+      technique: "Invariant direction test",
+      prompt: "Why does a 90-degree rotation in R2 have no real nonzero eigenvector?",
+      solution: "An eigenvector would have to stay on its own line. A 90-degree rotation turns every nonzero real vector to a perpendicular direction, not to a scalar multiple of itself."
+    },
+    {
+      label: "Problem 10: PCA direction",
+      concept: "PCA eigen-direction",
+      difficulty: "GATE-style",
+      technique: "Choose largest variance",
+      prompt: "A covariance matrix has eigenpairs (e1,9) and (e2,1). Which direction is the first principal component?",
+      solution: "The first principal component is the direction of largest variance. Since 9>1, the first principal component is e1."
+    }
+  ];
+}
+
+function linearAlgebraEigenvaluesReviewQuestions() {
+  const metadata = {
+    "la-ev-review-1": { targetConcept: "eigenvector", prereqsUsed: ["matrix-vector-product"], difficulty: 1, gateWeight: "high" },
+    "la-ev-review-2": { targetConcept: "eigenvalue", prereqsUsed: ["eigenvector"], difficulty: 2, gateWeight: "high" },
+    "la-ev-review-3": { targetConcept: "trace-determinant-spectral-check", prereqsUsed: ["trace", "determinant", "eigenvalue"], difficulty: 2, gateWeight: "high" },
+    "la-ev-review-4": { targetConcept: "powers-through-eigenvalues", prereqsUsed: ["eigenvalue"], difficulty: 2, gateWeight: "high" },
+    "la-ev-review-5": { targetConcept: "projection-spectrum", prereqsUsed: ["projection-identity", "eigenvalue"], difficulty: 2, gateWeight: "high" },
+    "la-ev-review-6": { targetConcept: "rotation-spectrum", prereqsUsed: ["transformation", "eigenvector"], difficulty: 3, gateWeight: "high" },
+    "la-ev-review-7": { targetConcept: "pca-eigen-direction", prereqsUsed: ["eigenvalue", "orthogonality"], difficulty: 3, gateWeight: "high" }
+  };
+  const questions = [
+    {
+      id: "la-ev-review-1",
+      kind: "single concept",
+      tags: ["eigenvector", "matrix-vector-product"],
+      prompt: "For A=diag(2,3), which vector is an eigenvector with eigenvalue 2?",
+      options: [
+        { id: "a", text: "[1,0]" },
+        { id: "b", text: "[0,1]" },
+        { id: "c", text: "[1,1]" },
+        { id: "d", text: "[2,3]" }
+      ],
+      answer: "a"
+    },
+    {
+      id: "la-ev-review-2",
+      kind: "mixed: two concepts",
+      tags: ["eigenvalue", "eigenvector"],
+      prompt: "What does Av=lambda v mean geometrically for nonzero v?",
+      options: [
+        { id: "a", text: "A sends v to a perpendicular direction." },
+        { id: "b", text: "A keeps v on its own line and scales it by lambda." },
+        { id: "c", text: "A sends every vector to lambda." },
+        { id: "d", text: "A must be the identity matrix." }
+      ],
+      answer: "b"
+    },
+    {
+      id: "la-ev-review-3",
+      kind: "mixed: two concepts",
+      tags: ["trace-determinant-spectral-check", "trace", "determinant", "eigenvalue"],
+      prompt: "A 2 by 2 matrix has eigenvalues 1 and 3. What are trace and determinant?",
+      options: [
+        { id: "a", text: "trace=4, determinant=3" },
+        { id: "b", text: "trace=3, determinant=4" },
+        { id: "c", text: "trace=1, determinant=3" },
+        { id: "d", text: "trace=4, determinant=4" }
+      ],
+      answer: "a"
+    },
+    {
+      id: "la-ev-review-4",
+      kind: "mixed: two concepts",
+      tags: ["powers-through-eigenvalues", "eigenvalue"],
+      prompt: "If Av=2v for nonzero v, what is A^5v?",
+      options: [
+        { id: "a", text: "10v" },
+        { id: "b", text: "25v" },
+        { id: "c", text: "32v" },
+        { id: "d", text: "A^5v cannot be simplified" }
+      ],
+      answer: "c"
+    },
+    {
+      id: "la-ev-review-5",
+      kind: "mixed: two concepts",
+      tags: ["projection-spectrum", "projection-identity", "eigenvalue"],
+      prompt: "What eigenvalues can an idempotent matrix P with P^2=P have?",
+      options: [
+        { id: "a", text: "Only 0 and 1" },
+        { id: "b", text: "Only 1 and -1" },
+        { id: "c", text: "Only positive integers" },
+        { id: "d", text: "Every real number" }
+      ],
+      answer: "a"
+    },
+    {
+      id: "la-ev-review-6",
+      kind: "mixed: three concepts",
+      tags: ["rotation-spectrum", "transformation", "eigenvector"],
+      prompt: "Why does a 90-degree rotation in R2 have no real nonzero eigenvector?",
+      options: [
+        { id: "a", text: "It sends every vector to zero." },
+        { id: "b", text: "It turns every nonzero real direction away from its own line." },
+        { id: "c", text: "Its determinant is zero." },
+        { id: "d", text: "It is not a linear transformation." }
+      ],
+      answer: "b"
+    },
+    {
+      id: "la-ev-review-7",
+      kind: "mixed: three concepts",
+      tags: ["pca-eigen-direction", "eigenvalue", "orthogonality"],
+      prompt: "For a covariance matrix, what does the eigenvector with the largest eigenvalue represent?",
+      options: [
+        { id: "a", text: "The first principal component direction." },
+        { id: "b", text: "The direction with zero variance." },
+        { id: "c", text: "A direction that must be ignored." },
+        { id: "d", text: "The mean vector." }
+      ],
+      answer: "a"
+    }
+  ];
+  return questions.map((question) => ({
+    ...question,
+    ...(metadata[question.id] || { targetConcept: question.tags[0], prereqsUsed: question.tags.slice(1), difficulty: question.tags.length, gateWeight: "medium" })
+  }));
+}
+
 function discreteMathMilestones() {
   return [
     {
@@ -13638,6 +14304,7 @@ function conceptGraphForSection(section) {
   if (section?.id === "gate-da-linear-algebra-rank-nullity-systems") return linearAlgebraRankNullityConceptGraph();
   if (section?.id === "gate-da-linear-algebra-orthogonal-projections") return linearAlgebraOrthogonalProjectionsConceptGraph();
   if (section?.id === "gate-da-linear-algebra-determinants-trace-identities") return linearAlgebraDeterminantsTraceConceptGraph();
+  if (section?.id === "gate-da-linear-algebra-eigenvalues-eigenvectors") return linearAlgebraEigenvaluesConceptGraph();
   if (section?.id === "gate-da-probability-foundations") return probabilityFoundationConceptGraph();
   if (section?.id === "gate-da-conditional-probability") return conditionalProbabilityConceptGraph();
   if (section?.id === "gate-da-random-variables-expectation") return randomVariablesExpectationConceptGraph();
