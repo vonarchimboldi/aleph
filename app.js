@@ -1,7 +1,7 @@
 const STORAGE_KEY = "learning-studio-data-v2";
 const LEGACY_STORAGE_KEYS = ["learning-studio-data-v1"];
 const SESSION_KEY = "aleph-session";
-const COURSE_PLAN_VERSION = "seeded-user-canonical-workspace-v76";
+const COURSE_PLAN_VERSION = "seeded-user-canonical-workspace-v77";
 const PRIYANKA_PLATINUM_START_DATE = "2026-06-07";
 const DEFAULT_PLAN_START_DATE = "2026-06-01";
 
@@ -708,6 +708,8 @@ function buildGateDaBasicPlan(now, accountTypes, sections, user = basicGateDaUse
   const linearAlgebraWeekThreeSunday = weekThreeSunday;
   const linearAlgebraWeekFourMonday = weekFourMonday;
   const linearAlgebraWeekFourSunday = weekFourSunday;
+  const linearAlgebraWeekFiveMonday = weekFiveMonday;
+  const linearAlgebraWeekFiveSunday = weekFiveSunday;
   const userId = user.id || "user-basic-demo";
   const userSlug = slugify(user.name || userId);
   const enrollmentId = `enrollment-${userSlug}-gate-da-basic`;
@@ -734,7 +736,7 @@ function buildGateDaBasicPlan(now, accountTypes, sections, user = basicGateDaUse
         title: "Linear Algebra",
         date: linearAlgebraWeekOneMonday,
         status: "In progress",
-        details: "GATE DA Basic Linear Algebra, built around transformations, invariants, and physical intuition. Chapters 1-4 cover vectors, coordinates, span, subspaces, independence, basis, dimension, linear transformations, matrices, rank, nullity, range/kernel, systems, orthogonality, projection matrices, and idempotence.",
+        details: "GATE DA Basic Linear Algebra, built around transformations, invariants, and physical intuition. Chapters 1-5 cover vectors, coordinates, span, subspaces, independence, basis, dimension, linear transformations, matrices, rank, nullity, range/kernel, systems, orthogonality, projection matrices, idempotence, determinants, trace, and matrix identities.",
         sectionIds: linearAlgebraSections.map((section) => section.id),
         updatedAt: now
       }
@@ -1149,6 +1151,36 @@ function buildGateDaBasicPlan(now, accountTypes, sections, user = basicGateDaUse
         date: linearAlgebraWeekFourSunday,
         details: "Take the graph-backed objective quiz for orthogonality, projections, projection matrices, idempotence, symmetry, and range/kernel reasoning.",
         updatedAt: now
+      },
+      {
+        id: "schedule-linear-algebra-chapter-5-study",
+        title: "Linear Algebra Chapter 5: Determinants, Trace, and Matrix Identities",
+        week: 5,
+        subject: "Linear Algebra",
+        kind: "Study",
+        date: linearAlgebraWeekFiveMonday,
+        details: "Study determinant as volume/orientation/invertibility signal, trace as total diagonal action, and matrix identities such as det(AB), trace(AB), determinant lemma, and polynomial substitutions.",
+        updatedAt: now
+      },
+      {
+        id: "schedule-linear-algebra-chapter-5-practice",
+        title: "Linear Algebra Chapter 5: Labelled Practice",
+        week: 5,
+        subject: "Linear Algebra",
+        kind: "Practice",
+        date: addDays(linearAlgebraWeekFiveMonday, 2),
+        details: "Solve determinant, trace, rank-one update, and matrix-polynomial identity practice problems using structural shortcuts before computation.",
+        updatedAt: now
+      },
+      {
+        id: "schedule-linear-algebra-chapter-5-review",
+        title: "Linear Algebra Chapter 5: Objective Review",
+        week: 5,
+        subject: "Linear Algebra",
+        kind: "Review",
+        date: linearAlgebraWeekFiveSunday,
+        details: "Take the graph-backed objective quiz for determinant, trace, invertibility, rank-one updates, cyclic trace, and matrix identity reasoning.",
+        updatedAt: now
       }
     ],
     tests: [
@@ -1276,6 +1308,15 @@ function buildGateDaBasicPlan(now, accountTypes, sections, user = basicGateDaUse
         details: "Objective end-of-chapter quiz for orthogonality, projection formulas, projection matrices, idempotence, symmetry, fixed/killed directions, trace, and rank. Attempts are logged with prerequisite repair feedback.",
         sectionId: linearAlgebraSections[3]?.id,
         quizId: "quiz-linear-algebra-chapter-4-objective-review",
+        updatedAt: now
+      },
+      {
+        id: "test-linear-algebra-chapter-5-objective-review",
+        title: "Linear Algebra Chapter 5 Objective Review",
+        date: linearAlgebraWeekFiveSunday,
+        details: "Objective end-of-chapter quiz for determinants, trace, invertibility, matrix products, rank-one updates, cyclic trace, and matrix-polynomial identities. Attempts are logged with prerequisite repair feedback.",
+        sectionId: linearAlgebraSections[4]?.id,
+        quizId: "quiz-linear-algebra-chapter-5-objective-review",
         updatedAt: now
       }
     ],
@@ -1731,6 +1772,39 @@ function buildGateDaBasicPlan(now, accountTypes, sections, user = basicGateDaUse
         done: false,
         details: "Submit the Chapter 4 objective quiz so the learner record logs projection and idempotent-matrix reasoning strengths and weaknesses.",
         updatedAt: now
+      },
+      {
+        id: "task-linear-algebra-chapter-5-read",
+        week: 5,
+        title: "Linear Algebra Ch 5: Read determinant and trace invariants",
+        type: "Study",
+        date: linearAlgebraWeekFiveMonday,
+        status: "todo",
+        done: false,
+        details: "Open Subjects -> Linear Algebra -> Chapter 5 and study determinants, trace, volume/orientation, invertibility, rank-one updates, and matrix identities.",
+        updatedAt: now
+      },
+      {
+        id: "task-linear-algebra-chapter-5-practice",
+        week: 5,
+        title: "Linear Algebra Ch 5: Solve determinant/trace practice",
+        type: "Practice",
+        date: addDays(linearAlgebraWeekFiveMonday, 2),
+        status: "todo",
+        done: false,
+        details: "Attempt the Chapter 5 labelled practice problems before opening worked solutions.",
+        updatedAt: now
+      },
+      {
+        id: "task-linear-algebra-chapter-5-review",
+        week: 5,
+        title: "Linear Algebra Ch 5: Take objective review",
+        type: "Review",
+        date: linearAlgebraWeekFiveSunday,
+        status: "todo",
+        done: false,
+        details: "Submit the Chapter 5 objective quiz so the learner record logs determinant, trace, and matrix-identity reasoning strengths and weaknesses.",
+        updatedAt: now
       }
     ],
     accountTypes,
@@ -1757,7 +1831,7 @@ function buildGateDaBasicPlan(now, accountTypes, sections, user = basicGateDaUse
         startDate: monday,
         endDate: "2026-08-30",
         status: "active",
-        details: `GATE DA Basic plan surfaces: Subjects, Tasks, Schedule, Tests, Feedback, Resources, and Share. Recommended pace: study three subjects in parallel. Every 15 days, Aleph should generate an adaptive cumulative review quiz from prior performance, repeating missed concepts more often, reducing mastered concepts, and keeping high-weight exam topics in rotation. Current material build: Probability Chapters 1-10 and Linear Algebra Chapters 1-4.${trialNote}`,
+        details: `GATE DA Basic plan surfaces: Subjects, Tasks, Schedule, Tests, Feedback, Resources, and Share. Recommended pace: study three subjects in parallel. Every 15 days, Aleph should generate an adaptive cumulative review quiz from prior performance, repeating missed concepts more often, reducing mastered concepts, and keeping high-weight exam topics in rotation. Current material build: Probability Chapters 1-10 and Linear Algebra Chapters 1-5.${trialNote}`,
         updatedAt: now
       }
     ],
@@ -1796,6 +1870,13 @@ function buildGateDaBasicPlan(now, accountTypes, sections, user = basicGateDaUse
         title: "Linear Algebra Chapter 4 feedback focus",
         date: linearAlgebraWeekFourSunday,
         details: "Review misses for dot-product orthogonality, projection coefficient mistakes, projection-matrix formula errors, confusing idempotence with identity, and missing fixed/killed subspaces.",
+        updatedAt: now
+      },
+      {
+        id: "feedback-linear-algebra-chapter-5",
+        title: "Linear Algebra Chapter 5 feedback focus",
+        date: linearAlgebraWeekFiveSunday,
+        details: "Review misses for treating determinant as entrywise multiplication, forgetting determinant product rules, confusing trace with determinant, missing cyclic trace, and failing to use rank-one or matrix-polynomial shortcuts.",
         updatedAt: now
       }
     ],
@@ -1917,6 +1998,14 @@ function buildGateDaBasicPlan(now, accountTypes, sections, user = basicGateDaUse
         title: "Linear Algebra Chapter 4: Orthogonality, Projections, and Idempotent Matrices",
         date: linearAlgebraWeekFourMonday,
         details: "Open Subjects -> Linear Algebra to study dot products, orthogonal projection, projection matrices, symmetry, idempotence, centering matrices, and fixed/killed subspaces.",
+        link: "",
+        updatedAt: now
+      },
+      {
+        id: "resource-linear-algebra-determinants-trace-identities",
+        title: "Linear Algebra Chapter 5: Determinants, Trace, and Matrix Identities",
+        date: linearAlgebraWeekFiveMonday,
+        details: "Open Subjects -> Linear Algebra to study determinant as volume/orientation/invertibility, trace as total diagonal action, and GATE-style matrix identities for products, rank-one updates, and polynomial expressions.",
         link: "",
         updatedAt: now
       }
@@ -3079,6 +3168,278 @@ function gateDaLinearAlgebraSections(updatedAt = new Date().toISOString()) {
         "A projection matrix fixes its range and kills its kernel.",
         "For projection matrices, rank equals trace.",
         "The centering matrix removes the mean, kills the all-ones direction, and has rank n-1."
+      ],
+      updatedAt
+    },
+    {
+      id: "gate-da-linear-algebra-determinants-trace-identities",
+      exam: "GATE DA",
+      accountTier: "Basic",
+      subject: "Linear Algebra",
+      chapter: "Chapter 5",
+      section: "5",
+      title: "Determinants, Trace, and Matrix Identities",
+      summary: "Determinant as volume scale, orientation, and invertibility signal; trace as total diagonal action; and matrix identities that let GATE DA questions collapse without long arithmetic.",
+      sectionPreview: "GATE DA determinant and trace questions usually test what remains invariant under a transformation or what changes predictably under products, powers, and rank-one updates. The skill is to read structure before expanding entries.",
+      previewActivity: "A map machine doubles east-west distances and triples north-south distances. What happens to areas? What happens if it also reflects across an axis? Now imagine a data update I+xx^T: which directions change and which directions stay fixed?",
+      chapterIntro: [
+        "Chapters 2-4 taught matrices as transformations and special maps. Chapter 5 adds two numerical invariants that summarize important parts of a square transformation.",
+        "The determinant tells how a transformation scales volume and whether orientation is flipped or collapsed. The trace adds the diagonal action and later becomes the sum of eigenvalues.",
+        "For GATE DA, the payoff is speed: det(AB)=det(A)det(B), trace(AB)=trace(BA), det(I+uv^T)=1+v^Tu, and polynomial identities let you avoid brute-force expansion."
+      ],
+      bookSections: [
+        {
+          number: "5.1",
+          title: "Determinant as Area, Volume, and Orientation",
+          paragraphs: [
+            "The determinant of a square matrix measures how the matrix scales signed volume. In two dimensions this means signed area. In three dimensions it means signed volume.",
+            "If the determinant is 6, every small area or volume is scaled by a factor of 6. If it is -6, the size scale is 6 and orientation is flipped. If it is 0, some direction collapses and volume becomes zero.",
+            "This is why determinant is an invertibility signal: a transformation with determinant 0 crushes space into a lower-dimensional object and loses information."
+          ],
+          blocks: [
+            {
+              type: "principle",
+              title: "Physical meaning",
+              body: "det(A) is the signed volume scale of the transformation A. Zero determinant means collapse; nonzero determinant means no volume collapse."
+            },
+            {
+              type: "example",
+              title: "Example 5.1: stretch map",
+              body: "A=[[2,0],[0,3]] sends the unit square to a 2 by 3 rectangle, so det(A)=6. Areas are multiplied by 6."
+            },
+            {
+              type: "example",
+              title: "Example 5.2: reflection",
+              body: "F=[[1,0],[0,-1]] preserves area size but flips orientation, so det(F)=-1."
+            }
+          ]
+        },
+        {
+          number: "5.2",
+          title: "Determinant Shortcuts and Invertibility",
+          paragraphs: [
+            "For a 2 by 2 matrix [[a,b],[c,d]], det(A)=ad-bc. For a triangular matrix, the determinant is the product of diagonal entries.",
+            "A square matrix is invertible exactly when its determinant is nonzero. This matches the transformation view: no volume collapse means no direction is completely lost.",
+            "The most useful product identity is det(AB)=det(A)det(B). Repeating it gives det(A^k)=det(A)^k."
+          ],
+          blocks: [
+            {
+              type: "strategy",
+              title: "Invertibility shortcut",
+              body: "For a square matrix, det(A) not equal 0, full rank, trivial kernel, and invertibility all say the same thing."
+            },
+            {
+              type: "example",
+              title: "Example 5.3: triangular determinant",
+              body: "If U is upper triangular with diagonal 2, -1, 5, then det(U)=2*(-1)*5=-10. Since this is nonzero, U is invertible."
+            },
+            {
+              type: "checkpoint",
+              title: "Checkpoint",
+              body: "If det(A)=2 and det(B)=-3, what are det(AB) and det(A^3)?"
+            }
+          ]
+        },
+        {
+          number: "5.3",
+          title: "Trace as Total Diagonal Action",
+          paragraphs: [
+            "The trace of a square matrix is the sum of its diagonal entries. It is not a volume scale. It is a different summary of the transformation.",
+            "For diagonal matrices, trace adds the axis scaling factors. Later, after eigenvalues, trace will become the sum of eigenvalues. For now, think of it as a stable total diagonal signal.",
+            "Trace is linear: trace(A+B)=trace(A)+trace(B), and trace(cA)=c trace(A). This makes it useful for quick algebraic simplification."
+          ],
+          blocks: [
+            {
+              type: "definition",
+              title: "Definition: trace",
+              body: "trace(A) is the sum of the diagonal entries of a square matrix A."
+            },
+            {
+              type: "warning",
+              title: "Common trap",
+              body: "Trace and determinant are different. For diag(2,3), trace is 5 while determinant is 6."
+            },
+            {
+              type: "example",
+              title: "Example 5.4: projection trace",
+              body: "P=[[1,0],[0,0]] has trace 1. In Chapter 4 this counted the one fixed direction of the projection."
+            }
+          ]
+        },
+        {
+          number: "5.4",
+          title: "Cyclic Trace and Products",
+          paragraphs: [
+            "Trace has a special product identity: trace(AB)=trace(BA) whenever the products are defined and square. More generally, trace(ABC)=trace(BCA)=trace(CAB).",
+            "This does not mean AB=BA. The matrices may not commute. The trace only allows a cyclic rotation inside the trace.",
+            "This identity appears in least squares, covariance, PCA, and matrix calculus. It is also a fast way to simplify GATE-style expressions."
+          ],
+          blocks: [
+            {
+              type: "principle",
+              title: "Cyclic trace",
+              body: "Inside trace, rotate factors cyclically: trace(ABC)=trace(BCA)=trace(CAB). Do not arbitrarily swap non-adjacent factors."
+            },
+            {
+              type: "example",
+              title: "Example 5.5: dot product as trace",
+              body: "For column vectors x and y, trace(xy^T)=y^T x. This turns a rank-one matrix trace into a dot product."
+            }
+          ]
+        },
+        {
+          number: "5.5",
+          title: "Rank-One Updates and the Matrix Determinant Lemma",
+          paragraphs: [
+            "A rank-one matrix uv^T changes only one direction of space. Many GATE DA questions hide this structure inside expressions like I+xx^T.",
+            "The key identity is det(I+uv^T)=1+v^T u. In particular, det(I+xx^T)=1+x^T x.",
+            "Physically, directions perpendicular to x are unchanged by I+xx^T, while the x direction is stretched. That is why one dot product controls the determinant."
+          ],
+          blocks: [
+            {
+              type: "strategy",
+              title: "Rank-one determinant shortcut",
+              body: "For column vectors u and v, det(I+uv^T)=1+v^T u. Use this before expanding a large matrix."
+            },
+            {
+              type: "example",
+              title: "Example 5.6: GATE-style rank-one update",
+              body: "If x=[1,2,2]^T, then det(I+xx^T)=1+x^T x=1+1+4+4=10."
+            }
+          ]
+        },
+        {
+          number: "5.6",
+          title: "Matrix Polynomial Identities",
+          paragraphs: [
+            "Sometimes the exam gives an expression such as A^3=A or asks for det(A^2+I). Do not expand powers blindly. Read what the identity forces.",
+            "If a vector is an eigenvector with eigenvalue lambda, then a polynomial p(A) acts on that direction by p(lambda). Even before a full eigenvalue chapter, this explains why determinant and trace questions often reduce to scalar expressions.",
+            "For projections, P^2=P forces repeated powers to collapse. For rotations, powers cycle. For triangular matrices, polynomial expressions keep triangular structure and diagonal entries transform by the same polynomial."
+          ],
+          blocks: [
+            {
+              type: "example",
+              title: "Example 5.7: projection polynomial",
+              body: "If P^2=P, then P^3=P and I+P has determinant 2^r where r=rank(P): fixed directions get factor 2 and killed directions get factor 1."
+            },
+            {
+              type: "strategy",
+              title: "Polynomial shortcut",
+              body: "When a matrix identity is given, ask what it says about fixed, killed, cyclic, or diagonal directions before multiplying entries."
+            }
+          ]
+        }
+      ],
+      concepts: [
+        {
+          name: "Determinant",
+          description: "Signed volume scale of a square transformation.",
+          cue: "Ask whether volume is stretched, flipped, or collapsed."
+        },
+        {
+          name: "Invertibility from determinant",
+          description: "A square matrix is invertible exactly when determinant is nonzero.",
+          cue: "Zero determinant means information collapse."
+        },
+        {
+          name: "Determinant product rule",
+          description: "det(AB)=det(A)det(B), so products and powers can be read quickly.",
+          cue: "Multiply determinant values, not all matrix entries."
+        },
+        {
+          name: "Trace",
+          description: "Sum of diagonal entries; later, sum of eigenvalues.",
+          cue: "Do not confuse total diagonal action with volume scale."
+        },
+        {
+          name: "Trace linearity",
+          description: "trace(A+B)=trace(A)+trace(B) and trace(cA)=c trace(A).",
+          cue: "Split sums inside trace."
+        },
+        {
+          name: "Cyclic trace",
+          description: "trace(AB)=trace(BA) and trace(ABC)=trace(BCA)=trace(CAB).",
+          cue: "Rotate factors, do not freely commute them."
+        },
+        {
+          name: "Rank-one determinant lemma",
+          description: "det(I+uv^T)=1+v^T u.",
+          cue: "Turn the determinant into one dot product."
+        },
+        {
+          name: "Matrix polynomial identity",
+          description: "Use identities such as P^2=P or A^3=A to simplify powers structurally.",
+          cue: "Ask what directions are fixed, killed, or cycled."
+        }
+      ],
+      techniques: [
+        {
+          name: "Volume-scale read",
+          when: "a determinant question describes a geometric transformation.",
+          move: "Read stretch factors, reflection signs, and collapse before computing."
+        },
+        {
+          name: "Triangular determinant",
+          when: "a matrix is triangular or row-reduced triangular.",
+          move: "Multiply diagonal entries."
+        },
+        {
+          name: "Product determinant shortcut",
+          when: "determinants of factors or powers are known.",
+          move: "Use det(AB)=det(A)det(B) and det(A^k)=det(A)^k."
+        },
+        {
+          name: "Cyclic trace simplification",
+          when: "a trace contains products of matrices or vectors.",
+          move: "Rotate factors cyclically to make dimensions or dot products simple."
+        },
+        {
+          name: "Rank-one update shortcut",
+          when: "a matrix has the form I+uv^T or I+xx^T.",
+          move: "Use det(I+uv^T)=1+v^Tu."
+        },
+        {
+          name: "Identity before expansion",
+          when: "a matrix satisfies a polynomial identity.",
+          move: "Use the identity to collapse powers or read allowed scalar behavior."
+        }
+      ],
+      practiceProblems: linearAlgebraDeterminantsTraceProblems(),
+      reviewPrompts: [
+        "Explain determinant as signed area scale for a 2D transformation.",
+        "Why does determinant zero mean a square matrix loses information?",
+        "If det(A)=2 and det(B)=-3, what are det(AB) and det(A^3)?",
+        "Give one example where trace and determinant are different.",
+        "What does trace(AB)=trace(BA) allow, and what does it not allow?",
+        "Use det(I+xx^T)=1+x^T x for x=[1,2,2].",
+        "If P is a projection with rank r, why does I+P stretch only the fixed subspace by factor 2?",
+        "When a question gives A^3=A, why should you avoid expanding powers first?"
+      ],
+      reviewQuiz: {
+        id: "quiz-linear-algebra-chapter-5-objective-review",
+        title: "Linear Algebra Chapter 5 Objective Review",
+        instructions: "Complete this after studying determinants, trace, cyclic trace, rank-one updates, and matrix identities. The quiz emphasizes structural shortcuts and GATE-style invariant recognition.",
+        questions: linearAlgebraDeterminantsTraceReviewQuestions()
+      },
+      readingQuestions: [
+        "What physical quantity does determinant measure?",
+        "What does the sign of a determinant tell you?",
+        "Why does determinant zero imply non-invertibility?",
+        "What is trace?",
+        "How are trace and determinant different?",
+        "What is the cyclic trace identity?",
+        "What is det(I+uv^T)?",
+        "How can a matrix identity simplify a determinant or trace question?"
+      ],
+      chapterSummary: [
+        "Determinant is signed volume scale.",
+        "Nonzero determinant means a square matrix is invertible; zero determinant means collapse.",
+        "det(AB)=det(A)det(B), and det(A^k)=det(A)^k.",
+        "Trace is the sum of diagonal entries.",
+        "Trace is linear, but determinant is not linear.",
+        "trace(AB)=trace(BA), and trace(ABC) can be cyclically rotated.",
+        "det(I+uv^T)=1+v^Tu is the key rank-one update shortcut.",
+        "Matrix identities should be used structurally before expanding powers."
       ],
       updatedAt
     }
@@ -9861,6 +10222,122 @@ function linearAlgebraOrthogonalProjectionsConceptGraph() {
   };
 }
 
+function linearAlgebraDeterminantsTraceConceptGraph() {
+  return {
+    chapterId: "gate-da-linear-algebra-determinants-trace-identities",
+    chapterTitle: "Linear Algebra Chapter 5: Determinants, Trace, and Matrix Identities",
+    gateWeight: "high",
+    fallbackConcepts: ["determinant-volume", "determinant-invertibility", "trace", "rank-one-determinant"],
+    fallbackDifficultyMix: [1, 2, 2, 3],
+    fallbackInstruction: "Retest determinant meaning first, then determinant products, trace identities, and rank-one shortcuts.",
+    stableNextAction: "Next: try a mixed eigenvalue-readiness set using determinant, trace, projection identities, and powers.",
+    nodes: {
+      "determinant-volume": {
+        label: "Determinant as volume scale",
+        prereqs: ["transformation"],
+        repairMaterial: "Review Chapter 5.1 and explain determinant as signed area or volume scaling before computing entries.",
+        gateWeight: "high"
+      },
+      transformation: {
+        label: "Transformation as machine",
+        prereqs: [],
+        repairMaterial: "Review Linear Algebra Chapter 2.1 and describe what the matrix does physically.",
+        gateWeight: "medium"
+      },
+      "orientation-sign": {
+        label: "Orientation sign",
+        prereqs: ["determinant-volume"],
+        repairMaterial: "Review Chapter 5.1 and separate size scale from orientation flip.",
+        gateWeight: "medium"
+      },
+      "determinant-invertibility": {
+        label: "Determinant and invertibility",
+        prereqs: ["determinant-volume", "rank"],
+        repairMaterial: "Review Chapter 5.2 and connect det(A)=0 with collapse, nontrivial kernel, and non-invertibility.",
+        gateWeight: "high"
+      },
+      rank: {
+        label: "Rank",
+        prereqs: [],
+        repairMaterial: "Review Chapter 3.1 and count surviving output directions.",
+        gateWeight: "high"
+      },
+      "triangular-determinant": {
+        label: "Triangular determinant",
+        prereqs: ["determinant-volume"],
+        repairMaterial: "Review Chapter 5.2 and multiply diagonal entries for triangular matrices.",
+        gateWeight: "medium"
+      },
+      "determinant-product": {
+        label: "Determinant product rule",
+        prereqs: ["determinant-volume"],
+        repairMaterial: "Review Chapter 5.2 and use det(AB)=det(A)det(B) and det(A^k)=det(A)^k.",
+        gateWeight: "high"
+      },
+      trace: {
+        label: "Trace",
+        prereqs: [],
+        repairMaterial: "Review Chapter 5.3 and compute trace as the sum of diagonal entries.",
+        gateWeight: "high"
+      },
+      "trace-vs-determinant": {
+        label: "Trace versus determinant",
+        prereqs: ["trace", "determinant-volume"],
+        repairMaterial: "Review Chapter 5.3 and compare diag(2,3): trace 5 but determinant 6.",
+        gateWeight: "high"
+      },
+      "trace-linearity": {
+        label: "Trace linearity",
+        prereqs: ["trace"],
+        repairMaterial: "Review Chapter 5.3 and split trace(A+B) and trace(cA) correctly.",
+        gateWeight: "medium"
+      },
+      "cyclic-trace": {
+        label: "Cyclic trace",
+        prereqs: ["trace", "matrix-product"],
+        repairMaterial: "Review Chapter 5.4 and rotate factors inside trace without assuming matrices commute.",
+        gateWeight: "high"
+      },
+      "matrix-product": {
+        label: "Matrix products",
+        prereqs: [],
+        repairMaterial: "Review Linear Algebra Chapter 2.5 and check product order before simplifying.",
+        gateWeight: "medium"
+      },
+      "rank-one-update": {
+        label: "Rank-one update",
+        prereqs: ["matrix-column-rule"],
+        repairMaterial: "Review Chapter 5.5 and recognize I+uv^T as identity plus a one-direction update.",
+        gateWeight: "high"
+      },
+      "matrix-column-rule": {
+        label: "Matrix column rule",
+        prereqs: [],
+        repairMaterial: "Review Linear Algebra Chapter 2.3 and read Av as a combination of columns.",
+        gateWeight: "medium"
+      },
+      "rank-one-determinant": {
+        label: "Rank-one determinant lemma",
+        prereqs: ["rank-one-update", "determinant-product"],
+        repairMaterial: "Review Chapter 5.5 and use det(I+uv^T)=1+v^Tu before expanding.",
+        gateWeight: "high"
+      },
+      "matrix-polynomial": {
+        label: "Matrix polynomial identity",
+        prereqs: ["matrix-product", "projection-identity"],
+        repairMaterial: "Review Chapter 5.6 and use identities such as P^2=P to collapse powers before multiplying.",
+        gateWeight: "high"
+      },
+      "projection-identity": {
+        label: "Projection identity",
+        prereqs: [],
+        repairMaterial: "Review Chapter 4.4 and remember that P^2=P for projections.",
+        gateWeight: "high"
+      }
+    }
+  };
+}
+
 function conditionalProbabilityConceptGraph() {
   return {
     chapterId: "gate-da-conditional-probability",
@@ -11562,6 +12039,200 @@ function linearAlgebraOrthogonalProjectionsReviewQuestions() {
   }));
 }
 
+function linearAlgebraDeterminantsTraceProblems() {
+  return [
+    {
+      label: "Problem 1: Area scale",
+      concept: "Determinant as volume scale",
+      difficulty: "Concept",
+      technique: "Read stretch factors",
+      prompt: "A map transformation doubles east-west distances and triples north-south distances. What is its determinant if orientation is preserved?",
+      solution: "The transformation sends the unit square to a 2 by 3 rectangle, so areas are multiplied by 6. Since orientation is preserved, det(A)=6."
+    },
+    {
+      label: "Problem 2: Orientation flip",
+      concept: "Orientation sign",
+      difficulty: "Concept",
+      technique: "Separate size from sign",
+      prompt: "The reflection F([x,y])=[x,-y] preserves area size. What is det(F), and what does the sign mean?",
+      solution: "The matrix is [[1,0],[0,-1]], so det(F)=-1. The magnitude 1 means area size is preserved, while the negative sign means orientation is flipped."
+    },
+    {
+      label: "Problem 3: Invertibility",
+      concept: "Determinant and invertibility",
+      difficulty: "Application",
+      technique: "Use nonzero determinant",
+      prompt: "A square matrix A has det(A)=0. What does this say about invertibility, rank, and information loss?",
+      solution: "A zero determinant means volume collapses to zero, so A is not invertible. Its rank is not full, and some nonzero direction is lost in the kernel."
+    },
+    {
+      label: "Problem 4: Triangular determinant",
+      concept: "Triangular determinant",
+      difficulty: "Mechanics",
+      technique: "Multiply diagonal entries",
+      prompt: "Find the determinant of an upper triangular 3 by 3 matrix with diagonal entries 2, -1, and 5.",
+      solution: "For a triangular matrix, the determinant is the product of the diagonal entries: 2*(-1)*5=-10."
+    },
+    {
+      label: "Problem 5: Product determinant",
+      concept: "Determinant product rule",
+      difficulty: "Mechanics",
+      technique: "Use det(AB)=det(A)det(B)",
+      prompt: "If det(A)=2 and det(B)=-3, compute det(AB) and det(A^3).",
+      solution: "det(AB)=det(A)det(B)=2*(-3)=-6. Also det(A^3)=det(A)^3=2^3=8."
+    },
+    {
+      label: "Problem 6: Trace versus determinant",
+      concept: "Trace versus determinant",
+      difficulty: "Concept",
+      technique: "Compare diagonal sum and product",
+      prompt: "For D=diag(2,3), compute trace(D) and det(D).",
+      solution: "trace(D)=2+3=5. det(D)=2*3=6. Trace and determinant are different invariants."
+    },
+    {
+      label: "Problem 7: Cyclic trace",
+      concept: "Cyclic trace",
+      difficulty: "Application",
+      technique: "Rotate factors only",
+      prompt: "Which expressions are always equal to trace(ABC): trace(BCA), trace(CAB), trace(ACB)?",
+      solution: "trace(BCA) and trace(CAB) are cyclic rotations, so they are equal to trace(ABC). trace(ACB) is not a cyclic rotation and is not always equal."
+    },
+    {
+      label: "Problem 8: Rank-one determinant",
+      concept: "Rank-one determinant lemma",
+      difficulty: "GATE-style",
+      technique: "Use det(I+xx^T)=1+x^T x",
+      prompt: "Let x=[1,2,2]^T. Compute det(I+xx^T) without expanding the 3 by 3 matrix.",
+      solution: "Use det(I+xx^T)=1+x^T x. Here x^T x=1^2+2^2+2^2=9, so det(I+xx^T)=10."
+    },
+    {
+      label: "Problem 9: Projection polynomial",
+      concept: "Matrix polynomial identity",
+      difficulty: "GATE-style",
+      technique: "Collapse powers before computing",
+      prompt: "If P is a projection with P^2=P and rank(P)=r, what is det(I+P)?",
+      solution: "On the range of P, P acts like 1, so I+P acts like 2. On the killed subspace, P acts like 0, so I+P acts like 1. There are r fixed directions, so det(I+P)=2^r."
+    },
+    {
+      label: "Problem 10: Trace of a rank-one matrix",
+      concept: "Cyclic trace",
+      difficulty: "GATE-style",
+      technique: "Convert trace to dot product",
+      prompt: "For column vectors x and y, what is trace(xy^T)?",
+      solution: "By cyclic trace, trace(xy^T)=trace(y^T x). The expression y^T x is a 1 by 1 matrix, so the trace is y^T x, the dot product."
+    }
+  ];
+}
+
+function linearAlgebraDeterminantsTraceReviewQuestions() {
+  const metadata = {
+    "la-dt-review-1": { targetConcept: "determinant-volume", prereqsUsed: ["transformation"], difficulty: 1, gateWeight: "high" },
+    "la-dt-review-2": { targetConcept: "determinant-invertibility", prereqsUsed: ["determinant-volume", "rank"], difficulty: 2, gateWeight: "high" },
+    "la-dt-review-3": { targetConcept: "determinant-product", prereqsUsed: ["determinant-volume"], difficulty: 2, gateWeight: "high" },
+    "la-dt-review-4": { targetConcept: "trace-vs-determinant", prereqsUsed: ["trace", "determinant-volume"], difficulty: 2, gateWeight: "high" },
+    "la-dt-review-5": { targetConcept: "cyclic-trace", prereqsUsed: ["trace", "matrix-product"], difficulty: 2, gateWeight: "high" },
+    "la-dt-review-6": { targetConcept: "rank-one-determinant", prereqsUsed: ["rank-one-update", "determinant-product"], difficulty: 3, gateWeight: "high" },
+    "la-dt-review-7": { targetConcept: "matrix-polynomial", prereqsUsed: ["projection-identity", "determinant-product"], difficulty: 3, gateWeight: "high" }
+  };
+  const questions = [
+    {
+      id: "la-dt-review-1",
+      kind: "single concept",
+      tags: ["determinant-volume", "transformation"],
+      prompt: "A 2D transformation stretches one axis by 2 and the perpendicular axis by 3, with no reflection. What is the determinant?",
+      options: [
+        { id: "a", text: "5" },
+        { id: "b", text: "6" },
+        { id: "c", text: "-6" },
+        { id: "d", text: "1" }
+      ],
+      answer: "b"
+    },
+    {
+      id: "la-dt-review-2",
+      kind: "mixed: two concepts",
+      tags: ["determinant-invertibility", "determinant-volume", "rank"],
+      prompt: "Which statement follows from det(A)=0 for a square matrix A?",
+      options: [
+        { id: "a", text: "A is invertible." },
+        { id: "b", text: "A has full rank." },
+        { id: "c", text: "A collapses volume and is not invertible." },
+        { id: "d", text: "A must be the zero matrix." }
+      ],
+      answer: "c"
+    },
+    {
+      id: "la-dt-review-3",
+      kind: "mixed: two concepts",
+      tags: ["determinant-product", "determinant-volume"],
+      prompt: "If det(A)=2 and det(B)=-3, what is det(AB)?",
+      options: [
+        { id: "a", text: "-1" },
+        { id: "b", text: "5" },
+        { id: "c", text: "-6" },
+        { id: "d", text: "6" }
+      ],
+      answer: "c"
+    },
+    {
+      id: "la-dt-review-4",
+      kind: "mixed: two concepts",
+      tags: ["trace-vs-determinant", "trace", "determinant-volume"],
+      prompt: "For D=diag(2,3), which pair is correct?",
+      options: [
+        { id: "a", text: "trace(D)=5 and det(D)=6" },
+        { id: "b", text: "trace(D)=6 and det(D)=5" },
+        { id: "c", text: "trace(D)=det(D)=5" },
+        { id: "d", text: "trace(D)=det(D)=6" }
+      ],
+      answer: "a"
+    },
+    {
+      id: "la-dt-review-5",
+      kind: "mixed: two concepts",
+      tags: ["cyclic-trace", "trace", "matrix-product"],
+      prompt: "Which identity is always valid when the products are defined?",
+      options: [
+        { id: "a", text: "trace(ABC)=trace(ACB)" },
+        { id: "b", text: "trace(ABC)=trace(BCA)" },
+        { id: "c", text: "AB=BA" },
+        { id: "d", text: "det(A+B)=det(A)+det(B)" }
+      ],
+      answer: "b"
+    },
+    {
+      id: "la-dt-review-6",
+      kind: "mixed: three concepts",
+      tags: ["rank-one-determinant", "rank-one-update", "determinant-product"],
+      prompt: "For x=[1,2,2]^T, what is det(I+xx^T)?",
+      options: [
+        { id: "a", text: "9" },
+        { id: "b", text: "10" },
+        { id: "c", text: "1" },
+        { id: "d", text: "14" }
+      ],
+      answer: "b"
+    },
+    {
+      id: "la-dt-review-7",
+      kind: "mixed: three concepts",
+      tags: ["matrix-polynomial", "projection-identity", "determinant-product"],
+      prompt: "If P is a projection with rank r, what is det(I+P)?",
+      options: [
+        { id: "a", text: "0" },
+        { id: "b", text: "1" },
+        { id: "c", text: "2^r" },
+        { id: "d", text: "r" }
+      ],
+      answer: "c"
+    }
+  ];
+  return questions.map((question) => ({
+    ...question,
+    ...(metadata[question.id] || { targetConcept: question.tags[0], prereqsUsed: question.tags.slice(1), difficulty: question.tags.length, gateWeight: "medium" })
+  }));
+}
+
 function discreteMathMilestones() {
   return [
     {
@@ -12966,6 +13637,7 @@ function conceptGraphForSection(section) {
   if (section?.id === "gate-da-linear-algebra-transformations-matrices") return linearAlgebraTransformationsConceptGraph();
   if (section?.id === "gate-da-linear-algebra-rank-nullity-systems") return linearAlgebraRankNullityConceptGraph();
   if (section?.id === "gate-da-linear-algebra-orthogonal-projections") return linearAlgebraOrthogonalProjectionsConceptGraph();
+  if (section?.id === "gate-da-linear-algebra-determinants-trace-identities") return linearAlgebraDeterminantsTraceConceptGraph();
   if (section?.id === "gate-da-probability-foundations") return probabilityFoundationConceptGraph();
   if (section?.id === "gate-da-conditional-probability") return conditionalProbabilityConceptGraph();
   if (section?.id === "gate-da-random-variables-expectation") return randomVariablesExpectationConceptGraph();
