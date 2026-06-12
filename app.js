@@ -1,7 +1,7 @@
 const STORAGE_KEY = "learning-studio-data-v2";
 const LEGACY_STORAGE_KEYS = ["learning-studio-data-v1"];
 const SESSION_KEY = "aleph-session";
-const COURSE_PLAN_VERSION = "seeded-user-canonical-workspace-v80";
+const COURSE_PLAN_VERSION = "seeded-user-canonical-workspace-v81";
 const PRIYANKA_PLATINUM_START_DATE = "2026-06-07";
 const DEFAULT_PLAN_START_DATE = "2026-06-01";
 
@@ -716,6 +716,8 @@ function buildGateDaBasicPlan(now, accountTypes, sections, user = basicGateDaUse
   const linearAlgebraWeekSevenSunday = weekSevenSunday;
   const linearAlgebraWeekEightMonday = weekEightMonday;
   const linearAlgebraWeekEightSunday = weekEightSunday;
+  const linearAlgebraWeekNineMonday = weekNineMonday;
+  const linearAlgebraWeekNineSunday = weekNineSunday;
   const userId = user.id || "user-basic-demo";
   const userSlug = slugify(user.name || userId);
   const enrollmentId = `enrollment-${userSlug}-gate-da-basic`;
@@ -742,7 +744,7 @@ function buildGateDaBasicPlan(now, accountTypes, sections, user = basicGateDaUse
         title: "Linear Algebra",
         date: linearAlgebraWeekOneMonday,
         status: "In progress",
-        details: "GATE DA Basic Linear Algebra, built around transformations, invariants, and physical intuition. Chapters 1-8 cover vectors, coordinates, transformations, rank/nullity, projections, determinants, trace, eigenvalues, symmetric quadratic forms, and special matrices such as orthogonal, idempotent, Gram, centering, rank-one update, and stochastic matrices.",
+        details: "GATE DA Basic Linear Algebra, built around transformations, invariants, and physical intuition. Chapters 1-9 cover vectors, coordinates, transformations, rank/nullity, projections, determinants, trace, eigenvalues, symmetric quadratic forms, special matrices, SVD, and singular values.",
         sectionIds: linearAlgebraSections.map((section) => section.id),
         updatedAt: now
       }
@@ -1277,6 +1279,36 @@ function buildGateDaBasicPlan(now, accountTypes, sections, user = basicGateDaUse
         date: linearAlgebraWeekEightSunday,
         details: "Take the graph-backed objective quiz for orthogonal, idempotent, Gram, centering, rank-one update, and stochastic matrix shortcuts.",
         updatedAt: now
+      },
+      {
+        id: "schedule-linear-algebra-chapter-9-study",
+        title: "Linear Algebra Chapter 9: SVD and Singular Values",
+        week: 9,
+        subject: "Linear Algebra",
+        kind: "Study",
+        date: linearAlgebraWeekNineMonday,
+        details: "Study singular values as stretch factors, A^T A as the symmetric PSD object behind SVD, and rank-one outer products as a high-yield GATE DA shortcut.",
+        updatedAt: now
+      },
+      {
+        id: "schedule-linear-algebra-chapter-9-practice",
+        title: "Linear Algebra Chapter 9: Labelled Practice",
+        week: 9,
+        subject: "Linear Algebra",
+        kind: "Practice",
+        date: addDays(linearAlgebraWeekNineMonday, 2),
+        details: "Solve SVD, singular-value, A^T A, rank, orthogonal/projection, and rank-one outer-product practice problems.",
+        updatedAt: now
+      },
+      {
+        id: "schedule-linear-algebra-chapter-9-review",
+        title: "Linear Algebra Chapter 9: Objective Review",
+        week: 9,
+        subject: "Linear Algebra",
+        kind: "Review",
+        date: linearAlgebraWeekNineSunday,
+        details: "Take the graph-backed objective quiz for singular values, right and left singular vectors, rank from singular values, rank-one shortcuts, and PCA-facing interpretation.",
+        updatedAt: now
       }
     ],
     tests: [
@@ -1440,6 +1472,15 @@ function buildGateDaBasicPlan(now, accountTypes, sections, user = basicGateDaUse
         details: "Objective end-of-chapter quiz for special matrix recognition and structural shortcuts: orthogonal, idempotent, Gram, centering, rank-one update, and stochastic matrices.",
         sectionId: linearAlgebraSections[7]?.id,
         quizId: "quiz-linear-algebra-chapter-8-objective-review",
+        updatedAt: now
+      },
+      {
+        id: "test-linear-algebra-chapter-9-objective-review",
+        title: "Linear Algebra Chapter 9 Objective Review",
+        date: linearAlgebraWeekNineSunday,
+        details: "Objective end-of-chapter quiz for SVD and singular values: A^T A eigenvalue reads, rank from nonzero singular values, rank-one outer products, orthogonal/projection cases, and PCA-facing low-rank interpretation.",
+        sectionId: linearAlgebraSections[8]?.id,
+        quizId: "quiz-linear-algebra-chapter-9-objective-review",
         updatedAt: now
       }
     ],
@@ -2027,6 +2068,39 @@ function buildGateDaBasicPlan(now, accountTypes, sections, user = basicGateDaUse
         done: false,
         details: "Submit the Chapter 8 objective quiz so the learner record logs special-matrix recognition strengths and weaknesses.",
         updatedAt: now
+      },
+      {
+        id: "task-linear-algebra-chapter-9-read",
+        week: 9,
+        title: "Linear Algebra Ch 9: Read SVD and singular values",
+        type: "Study",
+        date: linearAlgebraWeekNineMonday,
+        status: "todo",
+        done: false,
+        details: "Open Subjects -> Linear Algebra -> Chapter 9 and study singular values as stretch factors with A^T A, SVD, rank, and rank-one shortcuts.",
+        updatedAt: now
+      },
+      {
+        id: "task-linear-algebra-chapter-9-practice",
+        week: 9,
+        title: "Linear Algebra Ch 9: Solve SVD practice",
+        type: "Practice",
+        date: addDays(linearAlgebraWeekNineMonday, 2),
+        status: "todo",
+        done: false,
+        details: "Attempt the Chapter 9 labelled practice problems before opening worked solutions.",
+        updatedAt: now
+      },
+      {
+        id: "task-linear-algebra-chapter-9-review",
+        week: 9,
+        title: "Linear Algebra Ch 9: Take objective review",
+        type: "Review",
+        date: linearAlgebraWeekNineSunday,
+        status: "todo",
+        done: false,
+        details: "Submit the Chapter 9 objective quiz so the learner record logs SVD, singular-value, and rank-one shortcut strengths and weaknesses.",
+        updatedAt: now
       }
     ],
     accountTypes,
@@ -2053,7 +2127,7 @@ function buildGateDaBasicPlan(now, accountTypes, sections, user = basicGateDaUse
         startDate: monday,
         endDate: "2026-08-30",
         status: "active",
-        details: `GATE DA Basic plan surfaces: Subjects, Tasks, Schedule, Tests, Feedback, Resources, and Share. Recommended pace: study three subjects in parallel. Every 15 days, Aleph should generate an adaptive cumulative review quiz from prior performance, repeating missed concepts more often, reducing mastered concepts, and keeping high-weight exam topics in rotation. Current material build: Probability Chapters 1-10 and Linear Algebra Chapters 1-8.${trialNote}`,
+        details: `GATE DA Basic plan surfaces: Subjects, Tasks, Schedule, Tests, Feedback, Resources, and Share. Recommended pace: study three subjects in parallel. Every 15 days, Aleph should generate an adaptive cumulative review quiz from prior performance, repeating missed concepts more often, reducing mastered concepts, and keeping high-weight exam topics in rotation. Current material build: Probability Chapters 1-10 and Linear Algebra Chapters 1-9.${trialNote}`,
         updatedAt: now
       }
     ],
@@ -2120,6 +2194,13 @@ function buildGateDaBasicPlan(now, accountTypes, sections, user = basicGateDaUse
         title: "Linear Algebra Chapter 8 feedback focus",
         date: linearAlgebraWeekEightSunday,
         details: "Review misses for confusing orthogonal with symmetric, treating every idempotent matrix as identity, missing Gram/centering PSD structure, expanding rank-one updates unnecessarily, and misreading stochastic null-space/eigenvalue facts.",
+        updatedAt: now
+      },
+      {
+        id: "feedback-linear-algebra-chapter-9",
+        title: "Linear Algebra Chapter 9 feedback focus",
+        date: linearAlgebraWeekNineSunday,
+        details: "Review misses for confusing singular values with eigenvalues, forgetting singular values are square roots of eigenvalues of A^T A, mixing left and right singular vectors, missing rank from nonzero singular values, and expanding rank-one outer products instead of using ||u||||v||.",
         updatedAt: now
       }
     ],
@@ -2273,6 +2354,14 @@ function buildGateDaBasicPlan(now, accountTypes, sections, user = basicGateDaUse
         title: "Linear Algebra Chapter 8: Special Matrices and Structural Shortcuts",
         date: linearAlgebraWeekEightMonday,
         details: "Open Subjects -> Linear Algebra to study orthogonal, idempotent, Gram, centering, rank-one update, and stochastic matrices as GATE DA pattern objects.",
+        link: "",
+        updatedAt: now
+      },
+      {
+        id: "resource-linear-algebra-svd-singular-values",
+        title: "Linear Algebra Chapter 9: SVD and Singular Values",
+        date: linearAlgebraWeekNineMonday,
+        details: "Open Subjects -> Linear Algebra to study singular values as stretch factors, A^T A as a symmetric PSD bridge, SVD as rotate-stretch-rotate, and rank-one outer products as an exam shortcut.",
         link: "",
         updatedAt: now
       }
@@ -4335,6 +4424,159 @@ function gateDaLinearAlgebraSections(updatedAt = new Date().toISOString()) {
         "Gram matrices X^T X are positive semidefinite.",
         "det(I+uv^T)=1+v^T u is the key rank-one update shortcut.",
         "A row-stochastic matrix satisfies P1=1, so P-I is singular."
+      ],
+      updatedAt
+    },
+    {
+      id: "gate-da-linear-algebra-svd-singular-values",
+      exam: "GATE DA",
+      accountTier: "Basic",
+      subject: "Linear Algebra",
+      chapter: "Chapter 9",
+      section: "9",
+      title: "SVD and Singular Values",
+      summary: "A transformation-first SVD chapter: singular values are stretch factors, A^T A exposes those stretches through a symmetric positive semidefinite matrix, and rank-one outer products give a frequent GATE DA shortcut.",
+      sectionPreview: "Eigenvalues describe what a square map does to its own invariant directions. Singular values work for every matrix: square or rectangular. They describe how much the map stretches orthogonal input directions before sending them to orthogonal output directions.",
+      previewActivity: "Imagine a rubber sheet with a circle drawn on it. A linear map turns that circle into an ellipse. The semi-axis lengths of the ellipse are the singular values. Which directions were stretched most? Which directions were killed? What would happen if the map were just a projection?",
+      chapterIntro: [
+        "SVD is the cleanest way to read a general matrix as geometry. It separates a matrix into input rotation/reflection, axis stretches, and output rotation/reflection.",
+        "The GATE DA use is usually structural, not long computation. Recognize A^T A, take square roots of its eigenvalues, count nonzero singular values for rank, and use ||u||||v|| for rank-one outer products.",
+        "This chapter keeps the physical question visible: what survives, what is stretched, what is killed, and what changes when the same transformation is seen through A^T A or AA^T?"
+      ],
+      bookSections: [
+        {
+          number: "9.1",
+          title: "Singular Values as Stretch Factors",
+          paragraphs: [
+            "A singular value of A is a nonnegative stretch factor. If A maps a unit input direction v to an output vector Av, the length ||Av|| tells us how much that direction is stretched.",
+            "The largest singular value is the maximum stretch over all unit input directions. A zero singular value means some nonzero direction is killed by A.",
+            "Unlike eigenvalues, singular values are defined for rectangular matrices too. This is why they are useful in data matrices, least squares, PCA, and compression."
+          ],
+          blocks: [
+            { type: "definition", title: "Definition: singular value", body: "The singular values of A are the nonnegative square roots of the eigenvalues of A^T A." },
+            { type: "example", title: "Example 9.1: diagonal stretch", body: "For A=diag(3,1), the unit circle becomes an ellipse with axis lengths 3 and 1, so the singular values are 3 and 1." },
+            { type: "warning", title: "Common trap", body: "Do not confuse singular values with eigenvalues. Singular values are always nonnegative and come from A^T A." }
+          ]
+        },
+        {
+          number: "9.2",
+          title: "Why A^T A Appears",
+          paragraphs: [
+            "The length after applying A is ||Av||. Squaring gives ||Av||^2=(Av)^T(Av)=v^T A^T A v.",
+            "So A^T A records squared output lengths as a quadratic form on input directions. It is symmetric and positive semidefinite.",
+            "Eigenvectors of A^T A give the right singular vectors: the input directions where stretching is cleanly along principal axes. The square roots of the corresponding eigenvalues are the singular values."
+          ],
+          blocks: [
+            { type: "principle", title: "A^T A bridge", body: "If A^T A v=lambda v with ||v||=1, then ||Av||^2=lambda, so the singular value is sqrt(lambda)." },
+            { type: "example", title: "Example 9.2: eigenvalue read", body: "If eigenvalues of A^T A are 25, 4, and 0, then singular values of A are 5, 2, and 0." }
+          ]
+        },
+        {
+          number: "9.3",
+          title: "SVD as Rotate, Stretch, Rotate",
+          paragraphs: [
+            "The singular value decomposition writes A=U Sigma V^T.",
+            "Read it from right to left. V^T rotates or reflects the input coordinates. Sigma stretches some coordinate axes and may kill others. U rotates or reflects the result into the output space.",
+            "This is the physical picture to keep: orthogonal changes of coordinates do not change lengths; Sigma is where the actual stretching and rank loss happen."
+          ],
+          blocks: [
+            { type: "strategy", title: "SVD physical read", body: "Input frame V -> diagonal stretch Sigma -> output frame U." },
+            { type: "example", title: "Example 9.3: rectangular map", body: "A 3 by 2 matrix maps a 2D input plane into 3D. Its SVD still gives two input axes, their stretch factors, and orthogonal output directions." }
+          ]
+        },
+        {
+          number: "9.4",
+          title: "Rank and Zero Singular Values",
+          paragraphs: [
+            "The rank of A is the number of nonzero singular values.",
+            "A zero singular value means there is a nonzero input direction v with Av=0, so that direction lies in the null space.",
+            "Projection matrices make this concrete. Projection onto a line in R^2 has singular values 1 and 0: one direction survives unchanged, one direction is killed."
+          ],
+          blocks: [
+            { type: "principle", title: "Rank from singular values", body: "rank(A)=number of nonzero singular values of A." },
+            { type: "example", title: "Example 9.4: projection", body: "P=[[1,0],[0,0]] fixes the x-axis and kills the y-axis. Its singular values are 1 and 0." }
+          ]
+        },
+        {
+          number: "9.5",
+          title: "Rank-One Outer Products",
+          paragraphs: [
+            "A rank-one outer product A=uv^T sends every input x to u(v^T x). First it measures x along v, then outputs a multiple of u.",
+            "If u and v are nonzero, A has rank 1. Its only nonzero singular value is ||u|| ||v||.",
+            "This is a high-yield shortcut because the matrix entries can look messy, but the structure is simple."
+          ],
+          blocks: [
+            { type: "strategy", title: "Rank-one singular value", body: "For A=uv^T, do not expand first. The nonzero singular value is ||u||||v||." },
+            { type: "example", title: "Example 9.5: outer product", body: "If u=[3,4]^T and v=[1,2,2]^T, then ||u||=5 and ||v||=3, so uv^T has one nonzero singular value 15." }
+          ]
+        },
+        {
+          number: "9.6",
+          title: "Data Science Link: PCA, Compression, and Least Squares",
+          paragraphs: [
+            "In data science, singular values measure dominant directions of variation in a data matrix. Large singular values capture directions that carry more signal or energy.",
+            "PCA can be read through eigenvectors of a covariance or Gram matrix, and those are closely tied to the SVD of a centered data matrix.",
+            "Low-rank approximation keeps the largest singular values and drops small ones. Least squares and ridge regression also depend on the geometry of X^T X, so SVD helps explain instability and regularization."
+          ],
+          blocks: [
+            { type: "principle", title: "Low-rank idea", body: "Keeping the largest singular values keeps the strongest stretch directions and discards weaker directions." },
+            { type: "warning", title: "Exam posture", body: "For Basic DA, focus on reading singular values from A^T A, rank, projections, orthogonal matrices, rank-one matrices, and PCA intuition before advanced SVD proofs." }
+          ]
+        }
+      ],
+      concepts: [
+        { name: "Singular value", description: "A nonnegative stretch factor of a matrix.", cue: "Read from square roots of eigenvalues of A^T A." },
+        { name: "Right singular vector", description: "An input direction where A stretches cleanly.", cue: "Eigenvector of A^T A." },
+        { name: "Left singular vector", description: "The corresponding output direction after applying A and normalizing.", cue: "Lives in output space." },
+        { name: "A^T A positive semidefinite", description: "v^T A^T A v=||Av||^2>=0.", cue: "Use the squared-length rewrite." },
+        { name: "SVD decomposition", description: "A=U Sigma V^T: input frame, stretch, output frame.", cue: "Read right to left." },
+        { name: "Rank from singular values", description: "Rank equals the number of nonzero singular values.", cue: "Zeros reveal killed directions." },
+        { name: "Rank-one outer product", description: "uv^T has one output direction and one measurement direction.", cue: "Nonzero singular value is ||u||||v||." },
+        { name: "PCA and low rank", description: "Large singular values describe dominant data directions.", cue: "Keep strongest stretches." }
+      ],
+      techniques: [
+        { name: "A^T A eigenvalue read", when: "A^T A or its eigenvalues are given.", move: "Take nonnegative square roots to get singular values." },
+        { name: "SVD physical read", when: "A=U Sigma V^T is shown.", move: "Read V^T as input rotation/reflection, Sigma as stretch/kill, and U as output rotation/reflection." },
+        { name: "Rank from singular values", when: "singular values include zeros.", move: "Count only the nonzero singular values." },
+        { name: "Rank-one singular value shortcut", when: "A=uv^T appears.", move: "Use ||u||||v|| for the one nonzero singular value." },
+        { name: "Orthogonal/projection singular values", when: "Q^TQ=I or P is an orthogonal projection.", move: "Use all 1s for orthogonal matrices; use 1s on fixed directions and 0s on killed directions for projections." }
+      ],
+      practiceProblems: linearAlgebraSvdSingularValuesProblems(),
+      reviewPrompts: [
+        "What is the physical meaning of a singular value?",
+        "Why does A^T A determine singular values?",
+        "How do right and left singular vectors differ?",
+        "What does A=U Sigma V^T do to a vector, read right to left?",
+        "How do singular values reveal rank?",
+        "What are the singular values of an orthogonal matrix?",
+        "What are the singular values of a projection matrix?",
+        "Why does uv^T have one nonzero singular value ||u||||v||?"
+      ],
+      reviewQuiz: {
+        id: "quiz-linear-algebra-chapter-9-objective-review",
+        title: "Linear Algebra Chapter 9 Objective Review",
+        instructions: "Complete this after studying SVD and singular values. The quiz emphasizes stretch factors, A^T A, rank, rank-one shortcuts, and PCA-facing interpretation.",
+        questions: linearAlgebraSvdSingularValuesReviewQuestions()
+      },
+      readingQuestions: [
+        "What are singular values of A?",
+        "Why is A^T A symmetric positive semidefinite?",
+        "Why are singular values square roots of eigenvalues of A^T A?",
+        "What is the difference between a right singular vector and a left singular vector?",
+        "What does Sigma do in A=U Sigma V^T?",
+        "How do zero singular values relate to null space and rank?",
+        "What is the nonzero singular value of uv^T?",
+        "How does SVD connect to PCA or low-rank approximation?"
+      ],
+      chapterSummary: [
+        "Singular values are nonnegative stretch factors.",
+        "The singular values of A are square roots of eigenvalues of A^T A.",
+        "A^T A is symmetric positive semidefinite because x^T A^T A x=||Ax||^2.",
+        "SVD writes A=U Sigma V^T: input frame, stretch/kill, output frame.",
+        "Rank equals the number of nonzero singular values.",
+        "Orthogonal matrices have singular values all equal to 1.",
+        "Projection matrices have singular values 1 on fixed directions and 0 on killed directions.",
+        "A nonzero rank-one outer product uv^T has one nonzero singular value ||u||||v||."
       ],
       updatedAt
     }
@@ -11593,6 +11835,134 @@ function linearAlgebraSpecialMatricesConceptGraph() {
   };
 }
 
+function linearAlgebraSvdSingularValuesConceptGraph() {
+  return {
+    chapterId: "gate-da-linear-algebra-svd-singular-values",
+    chapterTitle: "Linear Algebra Chapter 9: SVD and Singular Values",
+    gateWeight: "high",
+    fallbackConcepts: ["singular-value", "ata-psd", "rank-from-singular-values", "rank-one-singular-value"],
+    fallbackDifficultyMix: [1, 2, 2, 3],
+    fallbackInstruction: "Retest singular values as stretch factors, A^T A eigenvalue reads, rank from nonzero singular values, and rank-one outer-product shortcuts.",
+    stableNextAction: "Next: try a mixed SVD set using A^T A, projections, orthogonal matrices, rank-one maps, and PCA interpretation.",
+    nodes: {
+      "singular-value": {
+        label: "Singular value",
+        prereqs: ["norm", "linear-map"],
+        repairMaterial: "Review Chapter 9.1 and say singular values out loud as nonnegative stretch factors of A.",
+        gateWeight: "high"
+      },
+      norm: {
+        label: "Vector norm",
+        prereqs: [],
+        repairMaterial: "Review Chapter 1.2 and compute ||x|| as the length of a vector.",
+        gateWeight: "high"
+      },
+      "linear-map": {
+        label: "Linear map",
+        prereqs: [],
+        repairMaterial: "Review Chapter 2.1 and interpret a matrix as a transformation machine.",
+        gateWeight: "high"
+      },
+      "right-singular-vector": {
+        label: "Right singular vector",
+        prereqs: ["ata-psd", "eigenvalue"],
+        repairMaterial: "Review Chapter 9.2: right singular vectors are input directions and eigenvectors of A^T A.",
+        gateWeight: "high"
+      },
+      "left-singular-vector": {
+        label: "Left singular vector",
+        prereqs: ["singular-value", "right-singular-vector"],
+        repairMaterial: "Review Chapter 9.3: left singular vectors are output directions, usually u_i=Av_i/sigma_i for sigma_i>0.",
+        gateWeight: "high"
+      },
+      "ata-psd": {
+        label: "A^T A positive semidefinite",
+        prereqs: ["symmetric-psd", "quadratic-form"],
+        repairMaterial: "Review Chapter 9.2 and rewrite x^T A^T A x as ||Ax||^2.",
+        gateWeight: "high"
+      },
+      "symmetric-psd": {
+        label: "Symmetric positive semidefinite",
+        prereqs: ["quadratic-form"],
+        repairMaterial: "Review Chapter 7.4 and connect nonnegative quadratic forms with nonnegative eigenvalues.",
+        gateWeight: "high"
+      },
+      "quadratic-form": {
+        label: "Quadratic form",
+        prereqs: [],
+        repairMaterial: "Review Chapter 7.2 and compute x^T A x as a scalar measuring a direction.",
+        gateWeight: "high"
+      },
+      eigenvalue: {
+        label: "Eigenvalue",
+        prereqs: [],
+        repairMaterial: "Review Chapter 6.1 and use Av=lambda v only for invariant directions.",
+        gateWeight: "high"
+      },
+      "svd-decomposition": {
+        label: "SVD decomposition",
+        prereqs: ["singular-value", "orthogonal-matrix"],
+        repairMaterial: "Review Chapter 9.3 and read A=U Sigma V^T from right to left: input frame, stretch, output frame.",
+        gateWeight: "high"
+      },
+      "orthogonal-matrix": {
+        label: "Orthogonal matrix",
+        prereqs: [],
+        repairMaterial: "Review Chapter 8.1 and remember orthogonal matrices preserve lengths and dot products.",
+        gateWeight: "high"
+      },
+      "rank-from-singular-values": {
+        label: "Rank from singular values",
+        prereqs: ["singular-value", "null-space"],
+        repairMaterial: "Review Chapter 9.4 and count only nonzero singular values.",
+        gateWeight: "high"
+      },
+      "null-space": {
+        label: "Null space",
+        prereqs: [],
+        repairMaterial: "Review Chapter 3.3 and identify killed directions Av=0.",
+        gateWeight: "high"
+      },
+      "rank-one-outer-product": {
+        label: "Rank-one outer product",
+        prereqs: ["matrix-column-rule"],
+        repairMaterial: "Review Chapter 9.5 and read uv^T x as u times the scalar v^T x.",
+        gateWeight: "high"
+      },
+      "matrix-column-rule": {
+        label: "Matrix column rule",
+        prereqs: [],
+        repairMaterial: "Review Chapter 2.3 and read matrix-vector products as combinations of columns.",
+        gateWeight: "medium"
+      },
+      "rank-one-singular-value": {
+        label: "Rank-one singular value",
+        prereqs: ["rank-one-outer-product", "norm"],
+        repairMaterial: "Review Chapter 9.5 and use the one nonzero singular value ||u||||v|| for uv^T.",
+        gateWeight: "high"
+      },
+      "projection-spectrum": {
+        label: "Projection singular values",
+        prereqs: ["rank-from-singular-values"],
+        repairMaterial: "Review Chapter 9.4 and remember projections have singular values 1 on fixed directions and 0 on killed directions.",
+        gateWeight: "high"
+      },
+      "pca-svd-link": {
+        label: "PCA and SVD link",
+        prereqs: ["ata-psd", "right-singular-vector"],
+        repairMaterial: "Review Chapter 9.6 and connect large singular values with dominant data directions.",
+        gateWeight: "high"
+      },
+      "low-rank-approximation": {
+        label: "Low-rank approximation",
+        prereqs: ["pca-svd-link", "rank-from-singular-values"],
+        repairMaterial: "Review Chapter 9.6 and remember low-rank approximation keeps the largest singular values.",
+        gateWeight: "medium"
+      }
+    }
+  };
+}
+
 function conditionalProbabilityConceptGraph() {
   return {
     chapterId: "gate-da-conditional-probability",
@@ -14070,6 +14440,200 @@ function linearAlgebraSpecialMatricesReviewQuestions() {
   }));
 }
 
+function linearAlgebraSvdSingularValuesProblems() {
+  return [
+    {
+      label: "Problem 1: Diagonal stretch",
+      concept: "Singular value",
+      difficulty: "Concept",
+      technique: "Read axis stretches",
+      prompt: "For A=diag(3,1), what are the singular values and what is the physical picture?",
+      solution: "The map stretches the first coordinate by 3 and the second by 1. The singular values are 3 and 1; the unit circle becomes an ellipse with semi-axis lengths 3 and 1."
+    },
+    {
+      label: "Problem 2: A^T A eigenvalue read",
+      concept: "A^T A positive semidefinite",
+      difficulty: "Application",
+      technique: "Take square roots",
+      prompt: "If A^T A has eigenvalues 25, 4, and 0, what are the singular values of A?",
+      solution: "Singular values are the nonnegative square roots of eigenvalues of A^T A. They are 5, 2, and 0."
+    },
+    {
+      label: "Problem 3: Rank from singular values",
+      concept: "Rank from singular values",
+      difficulty: "Application",
+      technique: "Count nonzero singular values",
+      prompt: "A matrix has singular values 7, 3, 0, 0. What is its rank?",
+      solution: "Rank equals the number of nonzero singular values, so the rank is 2."
+    },
+    {
+      label: "Problem 4: Zero singular value as killed direction",
+      concept: "Rank from singular values",
+      difficulty: "Concept",
+      technique: "Interpret null space",
+      prompt: "What does a zero singular value tell you about the transformation A?",
+      solution: "A zero singular value means there is a nonzero input direction v with Av=0. The transformation kills that direction, so the null space is nontrivial."
+    },
+    {
+      label: "Problem 5: Rank-one outer product shortcut",
+      concept: "Rank-one singular value",
+      difficulty: "GATE-style",
+      technique: "Use ||u||||v||",
+      prompt: "Let A=uv^T with u=[3,4]^T and v=[1,2,2]^T. What is the nonzero singular value of A?",
+      solution: "||u||=5 and ||v||=3. For uv^T, the only nonzero singular value is ||u||||v||=15."
+    },
+    {
+      label: "Problem 6: Rank-one map interpretation",
+      concept: "Rank-one outer product",
+      difficulty: "GATE-style",
+      technique: "Measure then output",
+      prompt: "For A=uv^T, describe what Ax does before doing any coordinate expansion.",
+      solution: "Ax=u(v^T x). First the map measures x along v using the scalar v^T x. Then it outputs that scalar times u. Every output lies on the line spanned by u."
+    },
+    {
+      label: "Problem 7: Orthogonal matrix singular values",
+      concept: "Orthogonal matrix",
+      difficulty: "GATE-style",
+      technique: "Use length preservation",
+      prompt: "If Q is a 4 by 4 orthogonal matrix, what are its singular values?",
+      solution: "Q preserves every length, so every stretch factor is 1. All four singular values are 1."
+    },
+    {
+      label: "Problem 8: Projection singular values",
+      concept: "Projection singular values",
+      difficulty: "GATE-style",
+      technique: "Fixed and killed directions",
+      prompt: "For P=[[1,0],[0,0]], what are the singular values?",
+      solution: "P fixes the x-axis with stretch 1 and kills the y-axis with stretch 0. The singular values are 1 and 0."
+    },
+    {
+      label: "Problem 9: Rectangular rank read",
+      concept: "Rank from singular values",
+      difficulty: "GATE-style",
+      technique: "Count surviving directions",
+      prompt: "A 3 by 2 matrix has singular values 6 and 0. What is its rank, and what does it do geometrically?",
+      solution: "The rank is 1. One input direction is stretched by 6 and one nonzero input direction is killed, so the 2D input collapses to a line in the output space."
+    },
+    {
+      label: "Problem 10: PCA low-rank interpretation",
+      concept: "PCA and SVD link",
+      difficulty: "GATE-style",
+      technique: "Keep strongest stretches",
+      prompt: "A centered data matrix has singular values 20, 3, and 1. Which direction carries the most variation, and what does a rank-one approximation keep?",
+      solution: "The first singular direction carries the most variation because 20 is largest. A rank-one approximation keeps the direction corresponding to singular value 20 and drops the weaker directions."
+    }
+  ];
+}
+
+function linearAlgebraSvdSingularValuesReviewQuestions() {
+  const metadata = {
+    "la-svd-review-1": { targetConcept: "singular-value", prereqsUsed: ["norm", "linear-map"], difficulty: 1, gateWeight: "high" },
+    "la-svd-review-2": { targetConcept: "ata-psd", prereqsUsed: ["symmetric-psd", "quadratic-form"], difficulty: 2, gateWeight: "high" },
+    "la-svd-review-3": { targetConcept: "rank-from-singular-values", prereqsUsed: ["singular-value", "null-space"], difficulty: 2, gateWeight: "high" },
+    "la-svd-review-4": { targetConcept: "svd-decomposition", prereqsUsed: ["singular-value", "orthogonal-matrix"], difficulty: 2, gateWeight: "high" },
+    "la-svd-review-5": { targetConcept: "rank-one-singular-value", prereqsUsed: ["rank-one-outer-product", "norm"], difficulty: 2, gateWeight: "high" },
+    "la-svd-review-6": { targetConcept: "projection-spectrum", prereqsUsed: ["rank-from-singular-values", "orthogonal-matrix"], difficulty: 3, gateWeight: "high" },
+    "la-svd-review-7": { targetConcept: "pca-svd-link", prereqsUsed: ["ata-psd", "low-rank-approximation"], difficulty: 3, gateWeight: "high" }
+  };
+  const questions = [
+    {
+      id: "la-svd-review-1",
+      kind: "single concept",
+      tags: ["singular-value", "norm", "linear-map"],
+      prompt: "What is the best physical meaning of a singular value?",
+      options: [
+        { id: "a", text: "A nonnegative stretch factor of a matrix." },
+        { id: "b", text: "A diagonal entry of any matrix." },
+        { id: "c", text: "An eigenvalue that must be negative." },
+        { id: "d", text: "A vector in the null space." }
+      ],
+      answer: "a"
+    },
+    {
+      id: "la-svd-review-2",
+      kind: "mixed: two concepts",
+      tags: ["ata-psd", "symmetric-psd", "quadratic-form"],
+      prompt: "If A^T A has eigenvalues 16, 9, and 0, what are the singular values of A?",
+      options: [
+        { id: "a", text: "16, 9, 0" },
+        { id: "b", text: "4, 3, 0" },
+        { id: "c", text: "-4, -3, 0" },
+        { id: "d", text: "25, 0, 0" }
+      ],
+      answer: "b"
+    },
+    {
+      id: "la-svd-review-3",
+      kind: "mixed: two concepts",
+      tags: ["rank-from-singular-values", "singular-value", "null-space"],
+      prompt: "A matrix has singular values 5, 2, 0, 0. What is its rank?",
+      options: [
+        { id: "a", text: "1" },
+        { id: "b", text: "2" },
+        { id: "c", text: "3" },
+        { id: "d", text: "4" }
+      ],
+      answer: "b"
+    },
+    {
+      id: "la-svd-review-4",
+      kind: "mixed: two concepts",
+      tags: ["svd-decomposition", "singular-value", "orthogonal-matrix"],
+      prompt: "In A=U Sigma V^T, which part contains the actual stretch factors?",
+      options: [
+        { id: "a", text: "Sigma" },
+        { id: "b", text: "Only U" },
+        { id: "c", text: "Only V^T" },
+        { id: "d", text: "The determinant of U" }
+      ],
+      answer: "a"
+    },
+    {
+      id: "la-svd-review-5",
+      kind: "mixed: two concepts",
+      tags: ["rank-one-singular-value", "rank-one-outer-product", "norm"],
+      prompt: "Let A=uv^T with ||u||=6 and ||v||=5. What is the nonzero singular value of A?",
+      options: [
+        { id: "a", text: "1" },
+        { id: "b", text: "11" },
+        { id: "c", text: "30" },
+        { id: "d", text: "36" }
+      ],
+      answer: "c"
+    },
+    {
+      id: "la-svd-review-6",
+      kind: "mixed: three concepts",
+      tags: ["projection-spectrum", "rank-from-singular-values", "orthogonal-matrix"],
+      prompt: "A projection in R^2 fixes one line and kills its perpendicular line. What are its singular values?",
+      options: [
+        { id: "a", text: "1 and 0" },
+        { id: "b", text: "1 and 1" },
+        { id: "c", text: "0 and 0" },
+        { id: "d", text: "-1 and 1" }
+      ],
+      answer: "a"
+    },
+    {
+      id: "la-svd-review-7",
+      kind: "mixed: three concepts",
+      tags: ["pca-svd-link", "ata-psd", "low-rank-approximation"],
+      prompt: "In PCA or low-rank approximation, what does keeping the largest singular values mean?",
+      options: [
+        { id: "a", text: "Keep the strongest variation or stretch directions." },
+        { id: "b", text: "Keep only directions with zero variance." },
+        { id: "c", text: "Make A^T A indefinite." },
+        { id: "d", text: "Ignore all orthogonal directions." }
+      ],
+      answer: "a"
+    }
+  ];
+  return questions.map((question) => ({
+    ...question,
+    ...(metadata[question.id] || { targetConcept: question.tags[0], prereqsUsed: question.tags.slice(1), difficulty: question.tags.length, gateWeight: "medium" })
+  }));
+}
+
 function discreteMathMilestones() {
   return [
     {
@@ -15478,6 +16042,7 @@ function conceptGraphForSection(section) {
   if (section?.id === "gate-da-linear-algebra-eigenvalues-eigenvectors") return linearAlgebraEigenvaluesConceptGraph();
   if (section?.id === "gate-da-linear-algebra-symmetric-quadratic-forms") return linearAlgebraSymmetricQuadraticFormsConceptGraph();
   if (section?.id === "gate-da-linear-algebra-special-matrices") return linearAlgebraSpecialMatricesConceptGraph();
+  if (section?.id === "gate-da-linear-algebra-svd-singular-values") return linearAlgebraSvdSingularValuesConceptGraph();
   if (section?.id === "gate-da-probability-foundations") return probabilityFoundationConceptGraph();
   if (section?.id === "gate-da-conditional-probability") return conditionalProbabilityConceptGraph();
   if (section?.id === "gate-da-random-variables-expectation") return randomVariablesExpectationConceptGraph();
