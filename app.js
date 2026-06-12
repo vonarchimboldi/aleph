@@ -1,7 +1,7 @@
 const STORAGE_KEY = "learning-studio-data-v2";
 const LEGACY_STORAGE_KEYS = ["learning-studio-data-v1"];
 const SESSION_KEY = "aleph-session";
-const COURSE_PLAN_VERSION = "seeded-user-canonical-workspace-v78";
+const COURSE_PLAN_VERSION = "seeded-user-canonical-workspace-v79";
 const PRIYANKA_PLATINUM_START_DATE = "2026-06-07";
 const DEFAULT_PLAN_START_DATE = "2026-06-01";
 
@@ -712,6 +712,8 @@ function buildGateDaBasicPlan(now, accountTypes, sections, user = basicGateDaUse
   const linearAlgebraWeekFiveSunday = weekFiveSunday;
   const linearAlgebraWeekSixMonday = weekSixMonday;
   const linearAlgebraWeekSixSunday = weekSixSunday;
+  const linearAlgebraWeekSevenMonday = weekSevenMonday;
+  const linearAlgebraWeekSevenSunday = weekSevenSunday;
   const userId = user.id || "user-basic-demo";
   const userSlug = slugify(user.name || userId);
   const enrollmentId = `enrollment-${userSlug}-gate-da-basic`;
@@ -738,7 +740,7 @@ function buildGateDaBasicPlan(now, accountTypes, sections, user = basicGateDaUse
         title: "Linear Algebra",
         date: linearAlgebraWeekOneMonday,
         status: "In progress",
-        details: "GATE DA Basic Linear Algebra, built around transformations, invariants, and physical intuition. Chapters 1-6 cover vectors, coordinates, span, subspaces, independence, basis, dimension, linear transformations, matrices, rank, nullity, range/kernel, systems, orthogonality, projection matrices, idempotence, determinants, trace, matrix identities, eigenvalues, eigenvectors, powers, rotations, and spectral invariants.",
+        details: "GATE DA Basic Linear Algebra, built around transformations, invariants, and physical intuition. Chapters 1-7 cover vectors, coordinates, transformations, rank/nullity, projections, determinants, trace, eigenvalues, eigenvectors, powers, symmetric matrices, quadratic forms, positive definiteness, and constrained spectral optimization.",
         sectionIds: linearAlgebraSections.map((section) => section.id),
         updatedAt: now
       }
@@ -1213,6 +1215,36 @@ function buildGateDaBasicPlan(now, accountTypes, sections, user = basicGateDaUse
         date: linearAlgebraWeekSixSunday,
         details: "Take the graph-backed objective quiz for eigenvalue meaning, invariant directions, trace/determinant spectral shortcuts, powers, rotations, and projection spectra.",
         updatedAt: now
+      },
+      {
+        id: "schedule-linear-algebra-chapter-7-study",
+        title: "Linear Algebra Chapter 7: Symmetric Matrices and Quadratic Forms",
+        week: 7,
+        subject: "Linear Algebra",
+        kind: "Study",
+        date: linearAlgebraWeekSevenMonday,
+        details: "Study symmetric matrices, orthogonal eigenvectors, quadratic forms, positive definiteness, and constrained maxima using Rayleigh quotient geometry.",
+        updatedAt: now
+      },
+      {
+        id: "schedule-linear-algebra-chapter-7-practice",
+        title: "Linear Algebra Chapter 7: Labelled Practice",
+        week: 7,
+        subject: "Linear Algebra",
+        kind: "Practice",
+        date: addDays(linearAlgebraWeekSevenMonday, 2),
+        details: "Solve symmetric-matrix, quadratic-form, positive-definite, Rayleigh quotient, and centering-matrix maximum practice problems.",
+        updatedAt: now
+      },
+      {
+        id: "schedule-linear-algebra-chapter-7-review",
+        title: "Linear Algebra Chapter 7: Objective Review",
+        week: 7,
+        subject: "Linear Algebra",
+        kind: "Review",
+        date: linearAlgebraWeekSevenSunday,
+        details: "Take the graph-backed objective quiz for symmetric spectra, quadratic forms, definiteness, Rayleigh quotient, and constrained spectral optimization.",
+        updatedAt: now
       }
     ],
     tests: [
@@ -1358,6 +1390,15 @@ function buildGateDaBasicPlan(now, accountTypes, sections, user = basicGateDaUse
         details: "Objective end-of-chapter quiz for eigenvalues, eigenvectors, invariant directions, powers, trace/determinant spectral meaning, rotations, projection spectra, and PCA readiness. Attempts are logged with prerequisite repair feedback.",
         sectionId: linearAlgebraSections[5]?.id,
         quizId: "quiz-linear-algebra-chapter-6-objective-review",
+        updatedAt: now
+      },
+      {
+        id: "test-linear-algebra-chapter-7-objective-review",
+        title: "Linear Algebra Chapter 7 Objective Review",
+        date: linearAlgebraWeekSevenSunday,
+        details: "Objective end-of-chapter quiz for symmetric matrices, orthogonal eigenvectors, quadratic forms, positive definiteness, Rayleigh quotients, and constrained spectral optimization. Attempts are logged with prerequisite repair feedback.",
+        sectionId: linearAlgebraSections[6]?.id,
+        quizId: "quiz-linear-algebra-chapter-7-objective-review",
         updatedAt: now
       }
     ],
@@ -1879,6 +1920,39 @@ function buildGateDaBasicPlan(now, accountTypes, sections, user = basicGateDaUse
         done: false,
         details: "Submit the Chapter 6 objective quiz so the learner record logs eigenvalue, eigenvector, power, and spectral-invariant reasoning strengths and weaknesses.",
         updatedAt: now
+      },
+      {
+        id: "task-linear-algebra-chapter-7-read",
+        week: 7,
+        title: "Linear Algebra Ch 7: Read symmetric quadratic forms",
+        type: "Study",
+        date: linearAlgebraWeekSevenMonday,
+        status: "todo",
+        done: false,
+        details: "Open Subjects -> Linear Algebra -> Chapter 7 and study symmetric matrices, quadratic forms, positive definiteness, and Rayleigh quotient optimization.",
+        updatedAt: now
+      },
+      {
+        id: "task-linear-algebra-chapter-7-practice",
+        week: 7,
+        title: "Linear Algebra Ch 7: Solve quadratic-form practice",
+        type: "Practice",
+        date: addDays(linearAlgebraWeekSevenMonday, 2),
+        status: "todo",
+        done: false,
+        details: "Attempt the Chapter 7 labelled practice problems before opening worked solutions.",
+        updatedAt: now
+      },
+      {
+        id: "task-linear-algebra-chapter-7-review",
+        week: 7,
+        title: "Linear Algebra Ch 7: Take objective review",
+        type: "Review",
+        date: linearAlgebraWeekSevenSunday,
+        status: "todo",
+        done: false,
+        details: "Submit the Chapter 7 objective quiz so the learner record logs symmetric-matrix, quadratic-form, and spectral-optimization reasoning strengths and weaknesses.",
+        updatedAt: now
       }
     ],
     accountTypes,
@@ -1905,7 +1979,7 @@ function buildGateDaBasicPlan(now, accountTypes, sections, user = basicGateDaUse
         startDate: monday,
         endDate: "2026-08-30",
         status: "active",
-        details: `GATE DA Basic plan surfaces: Subjects, Tasks, Schedule, Tests, Feedback, Resources, and Share. Recommended pace: study three subjects in parallel. Every 15 days, Aleph should generate an adaptive cumulative review quiz from prior performance, repeating missed concepts more often, reducing mastered concepts, and keeping high-weight exam topics in rotation. Current material build: Probability Chapters 1-10 and Linear Algebra Chapters 1-6.${trialNote}`,
+        details: `GATE DA Basic plan surfaces: Subjects, Tasks, Schedule, Tests, Feedback, Resources, and Share. Recommended pace: study three subjects in parallel. Every 15 days, Aleph should generate an adaptive cumulative review quiz from prior performance, repeating missed concepts more often, reducing mastered concepts, and keeping high-weight exam topics in rotation. Current material build: Probability Chapters 1-10 and Linear Algebra Chapters 1-7.${trialNote}`,
         updatedAt: now
       }
     ],
@@ -1958,6 +2032,13 @@ function buildGateDaBasicPlan(now, accountTypes, sections, user = basicGateDaUse
         title: "Linear Algebra Chapter 6 feedback focus",
         date: linearAlgebraWeekSixSunday,
         details: "Review misses for confusing eigenvectors with arbitrary vectors, treating rotations as having real eigenvectors, forgetting trace/determinant spectral checks, mishandling powers, and missing projection eigenvalues 0 and 1.",
+        updatedAt: now
+      },
+      {
+        id: "feedback-linear-algebra-chapter-7",
+        title: "Linear Algebra Chapter 7 feedback focus",
+        date: linearAlgebraWeekSevenSunday,
+        details: "Review misses for forgetting symmetry before using orthogonal eigenvectors, confusing positive definite with entrywise positive, mishandling x^TAx, and missing maximum-eigenvalue Rayleigh quotient reasoning.",
         updatedAt: now
       }
     ],
@@ -2095,6 +2176,14 @@ function buildGateDaBasicPlan(now, accountTypes, sections, user = basicGateDaUse
         title: "Linear Algebra Chapter 6: Eigenvalues, Eigenvectors, and Powers",
         date: linearAlgebraWeekSixMonday,
         details: "Open Subjects -> Linear Algebra to study invariant directions, eigenvalue stretch factors, spectral trace/determinant checks, powers, rotations, projection spectra, and PCA-facing intuition.",
+        link: "",
+        updatedAt: now
+      },
+      {
+        id: "resource-linear-algebra-symmetric-quadratic-forms",
+        title: "Linear Algebra Chapter 7: Symmetric Matrices and Quadratic Forms",
+        date: linearAlgebraWeekSevenMonday,
+        details: "Open Subjects -> Linear Algebra to study symmetric eigen-geometry, quadratic forms, positive definiteness, Rayleigh quotients, and constrained spectral optimization.",
         link: "",
         updatedAt: now
       }
@@ -3796,6 +3885,217 @@ function gateDaLinearAlgebraSections(updatedAt = new Date().toISOString()) {
         "Projections have eigenvalues 1 on fixed directions and 0 on killed directions.",
         "A real 90-degree rotation has no real eigenvectors, but its powers cycle geometrically.",
         "In PCA, covariance eigenvectors give principal directions and eigenvalues give variances."
+      ],
+      updatedAt
+    },
+    {
+      id: "gate-da-linear-algebra-symmetric-quadratic-forms",
+      exam: "GATE DA",
+      accountTier: "Basic",
+      subject: "Linear Algebra",
+      chapter: "Chapter 7",
+      section: "7",
+      title: "Symmetric Matrices and Quadratic Forms",
+      summary: "Symmetric matrices as clean spectral machines, quadratic forms as energy/variance surfaces, positive definiteness, Rayleigh quotients, and constrained maxima through eigenvalues.",
+      sectionPreview: "GATE DA uses symmetric matrices in PCA, covariance, Gram matrices, centering matrices, and quadratic-form optimization. The key move is to diagonalize the geometry: orthogonal eigen-directions turn a complicated expression into weighted squares.",
+      previewActivity: "Imagine a bowl-shaped surface z=3x^2+y^2. Which direction rises fastest on the unit circle? What changes if one coefficient is negative? Now connect this to x^T A x: a symmetric matrix assigns a value to every direction.",
+      chapterIntro: [
+        "Chapter 6 explained eigen-directions. Chapter 7 focuses on the matrices where eigen-directions behave best: symmetric matrices.",
+        "A symmetric matrix has real eigenvalues and orthogonal eigenvectors. This makes quadratic forms x^T A x readable as weighted squares along perpendicular axes.",
+        "For GATE DA, this is the bridge to PCA, positive definiteness, Gram matrices, and constrained optimization such as maximizing x^T A x subject to ||x||=1."
+      ],
+      bookSections: [
+        {
+          number: "7.1",
+          title: "Why Symmetry Matters",
+          paragraphs: [
+            "A matrix A is symmetric if A^T=A. Symmetry means the interaction from coordinate i to coordinate j matches the interaction from coordinate j to coordinate i.",
+            "Symmetric matrices have a special spectral structure: their eigenvalues are real, and eigenvectors from different eigenvalues can be chosen orthogonal.",
+            "Physically, a symmetric matrix stretches along perpendicular principal axes. It does not include hidden rotation or shear after the correct axes are chosen."
+          ],
+          blocks: [
+            {
+              type: "definition",
+              title: "Definition: symmetric matrix",
+              body: "A square matrix A is symmetric if A^T=A."
+            },
+            {
+              type: "principle",
+              title: "Spectral theorem intuition",
+              body: "A real symmetric matrix has perpendicular eigen-directions and real eigenvalues. In those directions, the matrix acts like independent axis stretches."
+            },
+            {
+              type: "example",
+              title: "Example 7.1: diagonal symmetric matrix",
+              body: "A=diag(3,1) is symmetric. It stretches e1 by 3 and e2 by 1, along perpendicular axes."
+            }
+          ]
+        },
+        {
+          number: "7.2",
+          title: "Quadratic Forms",
+          paragraphs: [
+            "A quadratic form is an expression x^T A x. It assigns a number to a vector direction and length.",
+            "If A is symmetric and diagonal with entries 3 and 1, then x^T A x=3x1^2+x2^2. This is a weighted length squared.",
+            "In data science, quadratic forms measure variance, squared loss, regularization penalties, and energy."
+          ],
+          blocks: [
+            {
+              type: "definition",
+              title: "Definition: quadratic form",
+              body: "For a square matrix A, the expression x^T A x is a quadratic form."
+            },
+            {
+              type: "example",
+              title: "Example 7.2: weighted squared length",
+              body: "For A=diag(3,1) and x=[a,b], x^T A x=3a^2+b^2. The e1 direction is weighted more heavily."
+            },
+            {
+              type: "checkpoint",
+              title: "Checkpoint",
+              body: "For A=diag(2,-1), can x^T A x be negative?"
+            }
+          ]
+        },
+        {
+          number: "7.3",
+          title: "Positive Definite, Semidefinite, and Indefinite",
+          paragraphs: [
+            "A symmetric matrix is positive definite if x^T A x>0 for every nonzero x. It is positive semidefinite if x^T A x>=0 for every x.",
+            "For symmetric matrices, positive definiteness is equivalent to all eigenvalues being positive. Positive semidefinite means all eigenvalues are nonnegative.",
+            "Indefinite means the quadratic form can be positive in some directions and negative in others."
+          ],
+          blocks: [
+            {
+              type: "strategy",
+              title: "Definiteness by eigenvalues",
+              body: "For symmetric A: all eigenvalues >0 means positive definite; all eigenvalues >=0 means positive semidefinite; mixed signs means indefinite."
+            },
+            {
+              type: "warning",
+              title: "Common trap",
+              body: "Positive entries do not guarantee positive definiteness. Definiteness is about x^T A x for every direction, or equivalently eigenvalue signs for symmetric matrices."
+            }
+          ]
+        },
+        {
+          number: "7.4",
+          title: "Rayleigh Quotient and Unit-Sphere Maxima",
+          paragraphs: [
+            "The Rayleigh quotient is R(x)=x^T A x/(x^T x). On the unit sphere, where ||x||=1, it becomes x^T A x.",
+            "For symmetric A, the maximum value of R(x) is the largest eigenvalue, and the minimum value is the smallest eigenvalue.",
+            "This explains GATE-style constrained optimization: maximize a quadratic form over unit vectors by finding the largest eigenvalue, not by calculus in many variables."
+          ],
+          blocks: [
+            {
+              type: "principle",
+              title: "Rayleigh quotient shortcut",
+              body: "For symmetric A, max_{||x||=1} x^T A x = largest eigenvalue of A; min_{||x||=1} x^T A x = smallest eigenvalue."
+            },
+            {
+              type: "example",
+              title: "Example 7.3: diagonal maximum",
+              body: "For A=diag(3,1), the maximum of x^T A x on ||x||=1 is 3, achieved in the e1 direction."
+            }
+          ]
+        },
+        {
+          number: "7.5",
+          title: "Centering Matrix Quadratic Form",
+          paragraphs: [
+            "The centering matrix H=I-(1/n)11^T is symmetric and idempotent. Its eigenvalues are 1 on the zero-sum subspace and 0 on the all-ones direction.",
+            "Therefore x^T H x is the squared length of the centered part of x. It is always nonnegative.",
+            "On the unit sphere, the maximum of x^T H x is 1, achieved by any unit vector whose entries sum to zero."
+          ],
+          blocks: [
+            {
+              type: "example",
+              title: "Example 7.4: GATE-style centering maximum",
+              body: "Since H is an orthogonal projection, its eigenvalues are 1 and 0. Thus max_{||x||=1} x^T H x=1."
+            },
+            {
+              type: "strategy",
+              title: "Projection quadratic form",
+              body: "For an orthogonal projection P, x^T P x equals the squared length of the projected component. It lies between 0 and ||x||^2."
+            }
+          ]
+        },
+        {
+          number: "7.6",
+          title: "Gram and Covariance Matrices",
+          paragraphs: [
+            "A Gram matrix has entries of dot products. It is symmetric and positive semidefinite because x^T G x becomes a squared norm.",
+            "Covariance matrices are also symmetric positive semidefinite. Their eigenvectors give PCA directions, and their eigenvalues give variances.",
+            "This is why symmetric matrices are central in data science: they convert geometry and variance into eigenvalue questions."
+          ],
+          blocks: [
+            {
+              type: "principle",
+              title: "Gram matrix fact",
+              body: "If G=X^T X, then x^T G x=x^T X^T X x=||Xx||^2>=0, so G is positive semidefinite."
+            },
+            {
+              type: "example",
+              title: "Example 7.5: PCA link",
+              body: "For covariance diag(9,1), the quadratic form 9x1^2+x2^2 is maximized on the unit circle in the e1 direction, matching the first principal component."
+            }
+          ]
+        }
+      ],
+      concepts: [
+        { name: "Symmetric matrix", description: "A matrix satisfying A^T=A.", cue: "Check mirror equality across the diagonal." },
+        { name: "Orthogonal eigenvectors", description: "Symmetric matrices have perpendicular eigen-directions.", cue: "Use symmetry before assuming clean eigen-geometry." },
+        { name: "Quadratic form", description: "The expression x^T A x, measuring weighted squared direction.", cue: "Read it as a surface or energy." },
+        { name: "Positive definite", description: "x^T A x>0 for every nonzero x; for symmetric A, all eigenvalues are positive.", cue: "Check all directions or eigenvalue signs." },
+        { name: "Positive semidefinite", description: "x^T A x>=0 for every x; zero directions may exist.", cue: "All eigenvalues nonnegative." },
+        { name: "Rayleigh quotient", description: "x^T A x/(x^T x), maximized by the largest eigenvalue for symmetric A.", cue: "On unit vectors, maximize by largest eigenvalue." },
+        { name: "Centering quadratic form", description: "x^T H x is squared centered length for the centering projection.", cue: "H has eigenvalues 1 and 0." },
+        { name: "Gram/covariance PSD", description: "Gram and covariance matrices are symmetric positive semidefinite.", cue: "Rewrite x^T X^T X x as ||Xx||^2." }
+      ],
+      techniques: [
+        { name: "Symmetry check", when: "a matrix is claimed to have orthogonal eigenvectors.", move: "First verify A^T=A." },
+        { name: "Quadratic-form expansion", when: "x^T A x is concrete and low-dimensional.", move: "Compute Ax first, then dot with x, or expand as weighted squares when diagonal." },
+        { name: "Eigenvalue sign test", when: "a symmetric matrix may be positive definite or semidefinite.", move: "Read signs of all eigenvalues." },
+        { name: "Rayleigh maximum", when: "maximizing x^T A x subject to ||x||=1.", move: "Use the largest eigenvalue of symmetric A." },
+        { name: "Projection quadratic-form read", when: "A is a centering or projection matrix.", move: "Use eigenvalues 0/1 and interpret x^T A x as projected squared length." },
+        { name: "Gram PSD proof", when: "G=X^T X appears.", move: "Rewrite x^T G x as ||Xx||^2." }
+      ],
+      practiceProblems: linearAlgebraSymmetricQuadraticFormsProblems(),
+      reviewPrompts: [
+        "Why does symmetry matter for eigenvectors?",
+        "Compute x^T diag(3,1) x for x=[a,b].",
+        "Use eigenvalue signs to classify diag(2,5), diag(2,0), and diag(2,-1).",
+        "Why is positive entrywise not the same as positive definite?",
+        "For A=diag(3,1), maximize x^T A x subject to ||x||=1.",
+        "Why is the centering matrix positive semidefinite?",
+        "What is max_{||x||=1} x^T H x for a centering matrix H?",
+        "Why is X^T X always positive semidefinite?"
+      ],
+      reviewQuiz: {
+        id: "quiz-linear-algebra-chapter-7-objective-review",
+        title: "Linear Algebra Chapter 7 Objective Review",
+        instructions: "Complete this after studying symmetric matrices, quadratic forms, definiteness, Rayleigh quotients, centering matrices, and Gram/covariance positive semidefiniteness.",
+        questions: linearAlgebraSymmetricQuadraticFormsReviewQuestions()
+      },
+      readingQuestions: [
+        "What does it mean for a matrix to be symmetric?",
+        "What is special about eigenvectors of symmetric matrices?",
+        "What is a quadratic form?",
+        "How do eigenvalue signs classify definiteness?",
+        "What does the Rayleigh quotient maximize on the unit sphere?",
+        "What does x^T H x measure for the centering matrix?",
+        "Why is X^T X positive semidefinite?",
+        "How does this connect to PCA?"
+      ],
+      chapterSummary: [
+        "Symmetric matrices satisfy A^T=A.",
+        "Real symmetric matrices have real eigenvalues and orthogonal eigenvectors.",
+        "A quadratic form x^T A x measures a weighted squared direction.",
+        "For symmetric A, positive definite means all eigenvalues are positive.",
+        "Positive semidefinite means all eigenvalues are nonnegative.",
+        "For symmetric A, max over unit vectors of x^T A x is the largest eigenvalue.",
+        "The centering matrix is a symmetric projection with eigenvalues 1 and 0.",
+        "Gram and covariance matrices are symmetric positive semidefinite."
       ],
       updatedAt
     }
@@ -10810,6 +11110,122 @@ function linearAlgebraEigenvaluesConceptGraph() {
   };
 }
 
+function linearAlgebraSymmetricQuadraticFormsConceptGraph() {
+  return {
+    chapterId: "gate-da-linear-algebra-symmetric-quadratic-forms",
+    chapterTitle: "Linear Algebra Chapter 7: Symmetric Matrices and Quadratic Forms",
+    gateWeight: "high",
+    fallbackConcepts: ["symmetric-matrix", "quadratic-form", "positive-definite", "rayleigh-quotient"],
+    fallbackDifficultyMix: [1, 2, 2, 3],
+    fallbackInstruction: "Retest symmetry and quadratic-form meaning first, then definiteness, Rayleigh quotient, and PSD matrix families.",
+    stableNextAction: "Next: try a mixed special-matrices set using symmetric, Gram, covariance, centering, and rank-one updates.",
+    nodes: {
+      "symmetric-matrix": {
+        label: "Symmetric matrix",
+        prereqs: [],
+        repairMaterial: "Review Chapter 7.1 and verify A^T=A before using symmetric-matrix spectral shortcuts.",
+        gateWeight: "high"
+      },
+      "orthogonal-eigenvectors": {
+        label: "Orthogonal eigenvectors",
+        prereqs: ["symmetric-matrix", "eigenvector", "orthogonality"],
+        repairMaterial: "Review Chapter 7.1 and connect symmetry with perpendicular eigen-directions.",
+        gateWeight: "high"
+      },
+      eigenvector: {
+        label: "Eigenvector",
+        prereqs: [],
+        repairMaterial: "Review Chapter 6.1 and test whether Av is a scalar multiple of v.",
+        gateWeight: "high"
+      },
+      orthogonality: {
+        label: "Orthogonality",
+        prereqs: [],
+        repairMaterial: "Review Chapter 4.1 and compute dot products to check perpendicular directions.",
+        gateWeight: "high"
+      },
+      "quadratic-form": {
+        label: "Quadratic form",
+        prereqs: ["matrix-vector-product"],
+        repairMaterial: "Review Chapter 7.2 and compute x^T A x as a weighted squared direction.",
+        gateWeight: "high"
+      },
+      "matrix-vector-product": {
+        label: "Matrix-vector product",
+        prereqs: [],
+        repairMaterial: "Review Chapter 2.3 and compute Ax before forming x^T A x.",
+        gateWeight: "medium"
+      },
+      "positive-definite": {
+        label: "Positive definite",
+        prereqs: ["quadratic-form", "eigenvalue-sign"],
+        repairMaterial: "Review Chapter 7.3: x^T A x>0 for every nonzero x, equivalent to all positive eigenvalues for symmetric A.",
+        gateWeight: "high"
+      },
+      "positive-semidefinite": {
+        label: "Positive semidefinite",
+        prereqs: ["quadratic-form", "eigenvalue-sign"],
+        repairMaterial: "Review Chapter 7.3: x^T A x>=0 for all x, with zero directions allowed.",
+        gateWeight: "high"
+      },
+      "eigenvalue-sign": {
+        label: "Eigenvalue sign test",
+        prereqs: ["symmetric-matrix"],
+        repairMaterial: "Review Chapter 7.3 and classify positive definite, semidefinite, and indefinite by eigenvalue signs.",
+        gateWeight: "high"
+      },
+      indefinite: {
+        label: "Indefinite quadratic form",
+        prereqs: ["quadratic-form", "eigenvalue-sign"],
+        repairMaterial: "Review Chapter 7.3 and identify mixed-sign eigenvalues or directions with positive and negative values.",
+        gateWeight: "medium"
+      },
+      "rayleigh-quotient": {
+        label: "Rayleigh quotient",
+        prereqs: ["quadratic-form", "eigenvalue"],
+        repairMaterial: "Review Chapter 7.4 and use max over unit vectors equals largest eigenvalue for symmetric A.",
+        gateWeight: "high"
+      },
+      eigenvalue: {
+        label: "Eigenvalue",
+        prereqs: [],
+        repairMaterial: "Review Chapter 6.1 and identify the stretch factor along an eigenvector.",
+        gateWeight: "high"
+      },
+      "centering-quadratic-form": {
+        label: "Centering quadratic form",
+        prereqs: ["projection-spectrum", "rayleigh-quotient"],
+        repairMaterial: "Review Chapter 7.5 and use H eigenvalues 1 and 0 to maximize x^T H x.",
+        gateWeight: "high"
+      },
+      "projection-spectrum": {
+        label: "Projection spectrum",
+        prereqs: [],
+        repairMaterial: "Review Chapter 6.4 and remember projection eigenvalues are 1 on fixed directions and 0 on killed directions.",
+        gateWeight: "high"
+      },
+      "gram-psd": {
+        label: "Gram matrix PSD",
+        prereqs: ["positive-semidefinite", "quadratic-form"],
+        repairMaterial: "Review Chapter 7.6 and rewrite x^T X^T X x as ||Xx||^2.",
+        gateWeight: "high"
+      },
+      "covariance-psd": {
+        label: "Covariance matrix PSD",
+        prereqs: ["positive-semidefinite", "pca-eigen-direction"],
+        repairMaterial: "Review Chapter 7.6 and connect covariance eigenvalues with variances, which are nonnegative.",
+        gateWeight: "high"
+      },
+      "pca-eigen-direction": {
+        label: "PCA eigen-direction",
+        prereqs: ["eigenvalue", "orthogonality"],
+        repairMaterial: "Review Chapter 6.6 and Chapter 7.6: largest covariance eigenvalue gives the first principal direction.",
+        gateWeight: "high"
+      }
+    }
+  };
+}
+
 function conditionalProbabilityConceptGraph() {
   return {
     chapterId: "gate-da-conditional-probability",
@@ -12899,6 +13315,200 @@ function linearAlgebraEigenvaluesReviewQuestions() {
   }));
 }
 
+function linearAlgebraSymmetricQuadraticFormsProblems() {
+  return [
+    {
+      label: "Problem 1: Symmetry check",
+      concept: "Symmetric matrix",
+      difficulty: "Concept",
+      technique: "Compare across the diagonal",
+      prompt: "Is A=[[2,3],[3,5]] symmetric? What about B=[[2,3],[4,5]]?",
+      solution: "A is symmetric because the off-diagonal entries match: a12=3 and a21=3. B is not symmetric because b12=3 but b21=4."
+    },
+    {
+      label: "Problem 2: Quadratic form expansion",
+      concept: "Quadratic form",
+      difficulty: "Mechanics",
+      technique: "Compute x^T A x",
+      prompt: "For A=diag(3,1) and x=[a,b], compute x^T A x.",
+      solution: "Ax=[3a,b]. Then x^T Ax=[a,b] dot [3a,b]=3a^2+b^2. This is a weighted squared length."
+    },
+    {
+      label: "Problem 3: Positive definite",
+      concept: "Positive definite",
+      difficulty: "Concept",
+      technique: "Read eigenvalue signs",
+      prompt: "A symmetric matrix has eigenvalues 2 and 5. Classify it as positive definite, positive semidefinite, or indefinite.",
+      solution: "Both eigenvalues are positive, so the quadratic form is positive in every nonzero direction. The matrix is positive definite."
+    },
+    {
+      label: "Problem 4: Positive semidefinite",
+      concept: "Positive semidefinite",
+      difficulty: "Concept",
+      technique: "Allow zero directions",
+      prompt: "A symmetric matrix has eigenvalues 0, 1, and 4. What definiteness class fits?",
+      solution: "All eigenvalues are nonnegative, but one eigenvalue is zero. The matrix is positive semidefinite, not positive definite."
+    },
+    {
+      label: "Problem 5: Indefinite form",
+      concept: "Indefinite quadratic form",
+      difficulty: "Application",
+      technique: "Find mixed signs",
+      prompt: "Classify A=diag(2,-1) using x^T A x.",
+      solution: "For x=[1,0], x^T A x=2>0. For x=[0,1], x^T A x=-1<0. Since the form can be positive or negative, it is indefinite."
+    },
+    {
+      label: "Problem 6: Rayleigh maximum",
+      concept: "Rayleigh quotient",
+      difficulty: "GATE-style",
+      technique: "Use largest eigenvalue",
+      prompt: "For A=diag(3,1), maximize x^T A x subject to ||x||=1.",
+      solution: "For symmetric A, the maximum over unit vectors is the largest eigenvalue. The largest eigenvalue is 3, achieved at x=[1,0] or its negative."
+    },
+    {
+      label: "Problem 7: Centering maximum",
+      concept: "Centering quadratic form",
+      difficulty: "GATE-style",
+      technique: "Use projection eigenvalues",
+      prompt: "Let H=I-(1/n)11^T be the centering matrix. What is max_{||x||=1} x^T H x?",
+      solution: "H is a symmetric projection with eigenvalues 1 on the zero-sum subspace and 0 on the all-ones direction. The largest eigenvalue is 1, so the maximum is 1."
+    },
+    {
+      label: "Problem 8: Projection quadratic form",
+      concept: "Centering quadratic form",
+      difficulty: "GATE-style",
+      technique: "Interpret as squared projection length",
+      prompt: "If P is an orthogonal projection, why is x^T P x always between 0 and ||x||^2?",
+      solution: "For an orthogonal projection, x^T P x equals the squared length of the projected component. A projected component cannot have negative squared length or exceed the full squared length."
+    },
+    {
+      label: "Problem 9: Gram matrix PSD",
+      concept: "Gram matrix PSD",
+      difficulty: "GATE-style",
+      technique: "Rewrite as squared norm",
+      prompt: "Show that G=X^T X is positive semidefinite.",
+      solution: "For any vector z, z^T G z=z^T X^T X z=(Xz)^T(Xz)=||Xz||^2>=0. Therefore X^T X is positive semidefinite."
+    },
+    {
+      label: "Problem 10: PCA quadratic form",
+      concept: "Covariance matrix PSD",
+      difficulty: "GATE-style",
+      technique: "Choose largest variance direction",
+      prompt: "For covariance matrix C=diag(9,1), maximize x^T C x subject to ||x||=1 and identify the PCA direction.",
+      solution: "The largest eigenvalue is 9, so the maximum is 9. It is achieved in the e1 direction, so e1 is the first principal component direction."
+    }
+  ];
+}
+
+function linearAlgebraSymmetricQuadraticFormsReviewQuestions() {
+  const metadata = {
+    "la-sq-review-1": { targetConcept: "symmetric-matrix", prereqsUsed: [], difficulty: 1, gateWeight: "high" },
+    "la-sq-review-2": { targetConcept: "quadratic-form", prereqsUsed: ["matrix-vector-product"], difficulty: 2, gateWeight: "high" },
+    "la-sq-review-3": { targetConcept: "positive-definite", prereqsUsed: ["eigenvalue-sign", "quadratic-form"], difficulty: 2, gateWeight: "high" },
+    "la-sq-review-4": { targetConcept: "positive-semidefinite", prereqsUsed: ["eigenvalue-sign", "quadratic-form"], difficulty: 2, gateWeight: "high" },
+    "la-sq-review-5": { targetConcept: "rayleigh-quotient", prereqsUsed: ["quadratic-form", "eigenvalue"], difficulty: 2, gateWeight: "high" },
+    "la-sq-review-6": { targetConcept: "centering-quadratic-form", prereqsUsed: ["projection-spectrum", "rayleigh-quotient"], difficulty: 3, gateWeight: "high" },
+    "la-sq-review-7": { targetConcept: "gram-psd", prereqsUsed: ["positive-semidefinite", "quadratic-form"], difficulty: 3, gateWeight: "high" }
+  };
+  const questions = [
+    {
+      id: "la-sq-review-1",
+      kind: "single concept",
+      tags: ["symmetric-matrix"],
+      prompt: "Which matrix is symmetric?",
+      options: [
+        { id: "a", text: "[[2,3],[3,5]]" },
+        { id: "b", text: "[[2,3],[4,5]]" },
+        { id: "c", text: "[[0,1],[-1,0]]" },
+        { id: "d", text: "[[1,2],[0,1]]" }
+      ],
+      answer: "a"
+    },
+    {
+      id: "la-sq-review-2",
+      kind: "mixed: two concepts",
+      tags: ["quadratic-form", "matrix-vector-product"],
+      prompt: "For A=diag(3,1) and x=[a,b], what is x^T A x?",
+      options: [
+        { id: "a", text: "3a+b" },
+        { id: "b", text: "3a^2+b^2" },
+        { id: "c", text: "a^2+3b^2" },
+        { id: "d", text: "4ab" }
+      ],
+      answer: "b"
+    },
+    {
+      id: "la-sq-review-3",
+      kind: "mixed: two concepts",
+      tags: ["positive-definite", "eigenvalue-sign", "quadratic-form"],
+      prompt: "A symmetric matrix has eigenvalues 2 and 5. What is true?",
+      options: [
+        { id: "a", text: "It is positive definite." },
+        { id: "b", text: "It is indefinite." },
+        { id: "c", text: "It is singular." },
+        { id: "d", text: "It has a negative quadratic-form direction." }
+      ],
+      answer: "a"
+    },
+    {
+      id: "la-sq-review-4",
+      kind: "mixed: two concepts",
+      tags: ["positive-semidefinite", "eigenvalue-sign", "quadratic-form"],
+      prompt: "A symmetric matrix has eigenvalues 0, 1, and 4. Which classification is correct?",
+      options: [
+        { id: "a", text: "Positive definite" },
+        { id: "b", text: "Positive semidefinite but not positive definite" },
+        { id: "c", text: "Indefinite" },
+        { id: "d", text: "Negative definite" }
+      ],
+      answer: "b"
+    },
+    {
+      id: "la-sq-review-5",
+      kind: "mixed: two concepts",
+      tags: ["rayleigh-quotient", "quadratic-form", "eigenvalue"],
+      prompt: "For symmetric A=diag(3,1), what is max x^T A x subject to ||x||=1?",
+      options: [
+        { id: "a", text: "1" },
+        { id: "b", text: "2" },
+        { id: "c", text: "3" },
+        { id: "d", text: "4" }
+      ],
+      answer: "c"
+    },
+    {
+      id: "la-sq-review-6",
+      kind: "mixed: three concepts",
+      tags: ["centering-quadratic-form", "projection-spectrum", "rayleigh-quotient"],
+      prompt: "For the centering matrix H=I-(1/n)11^T, what is max_{||x||=1} x^T H x?",
+      options: [
+        { id: "a", text: "0" },
+        { id: "b", text: "1" },
+        { id: "c", text: "n" },
+        { id: "d", text: "n-1" }
+      ],
+      answer: "b"
+    },
+    {
+      id: "la-sq-review-7",
+      kind: "mixed: three concepts",
+      tags: ["gram-psd", "positive-semidefinite", "quadratic-form"],
+      prompt: "Why is G=X^T X positive semidefinite?",
+      options: [
+        { id: "a", text: "Because z^T G z=||Xz||^2>=0 for every z." },
+        { id: "b", text: "Because every entry of X must be positive." },
+        { id: "c", text: "Because X^T X is always the identity." },
+        { id: "d", text: "Because every symmetric matrix is positive definite." }
+      ],
+      answer: "a"
+    }
+  ];
+  return questions.map((question) => ({
+    ...question,
+    ...(metadata[question.id] || { targetConcept: question.tags[0], prereqsUsed: question.tags.slice(1), difficulty: question.tags.length, gateWeight: "medium" })
+  }));
+}
+
 function discreteMathMilestones() {
   return [
     {
@@ -14305,6 +14915,7 @@ function conceptGraphForSection(section) {
   if (section?.id === "gate-da-linear-algebra-orthogonal-projections") return linearAlgebraOrthogonalProjectionsConceptGraph();
   if (section?.id === "gate-da-linear-algebra-determinants-trace-identities") return linearAlgebraDeterminantsTraceConceptGraph();
   if (section?.id === "gate-da-linear-algebra-eigenvalues-eigenvectors") return linearAlgebraEigenvaluesConceptGraph();
+  if (section?.id === "gate-da-linear-algebra-symmetric-quadratic-forms") return linearAlgebraSymmetricQuadraticFormsConceptGraph();
   if (section?.id === "gate-da-probability-foundations") return probabilityFoundationConceptGraph();
   if (section?.id === "gate-da-conditional-probability") return conditionalProbabilityConceptGraph();
   if (section?.id === "gate-da-random-variables-expectation") return randomVariablesExpectationConceptGraph();
