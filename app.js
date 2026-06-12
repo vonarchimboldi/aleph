@@ -1,7 +1,7 @@
 const STORAGE_KEY = "learning-studio-data-v2";
 const LEGACY_STORAGE_KEYS = ["learning-studio-data-v1"];
 const SESSION_KEY = "aleph-session";
-const COURSE_PLAN_VERSION = "seeded-user-canonical-workspace-v79";
+const COURSE_PLAN_VERSION = "seeded-user-canonical-workspace-v80";
 const PRIYANKA_PLATINUM_START_DATE = "2026-06-07";
 const DEFAULT_PLAN_START_DATE = "2026-06-01";
 
@@ -714,6 +714,8 @@ function buildGateDaBasicPlan(now, accountTypes, sections, user = basicGateDaUse
   const linearAlgebraWeekSixSunday = weekSixSunday;
   const linearAlgebraWeekSevenMonday = weekSevenMonday;
   const linearAlgebraWeekSevenSunday = weekSevenSunday;
+  const linearAlgebraWeekEightMonday = weekEightMonday;
+  const linearAlgebraWeekEightSunday = weekEightSunday;
   const userId = user.id || "user-basic-demo";
   const userSlug = slugify(user.name || userId);
   const enrollmentId = `enrollment-${userSlug}-gate-da-basic`;
@@ -740,7 +742,7 @@ function buildGateDaBasicPlan(now, accountTypes, sections, user = basicGateDaUse
         title: "Linear Algebra",
         date: linearAlgebraWeekOneMonday,
         status: "In progress",
-        details: "GATE DA Basic Linear Algebra, built around transformations, invariants, and physical intuition. Chapters 1-7 cover vectors, coordinates, transformations, rank/nullity, projections, determinants, trace, eigenvalues, eigenvectors, powers, symmetric matrices, quadratic forms, positive definiteness, and constrained spectral optimization.",
+        details: "GATE DA Basic Linear Algebra, built around transformations, invariants, and physical intuition. Chapters 1-8 cover vectors, coordinates, transformations, rank/nullity, projections, determinants, trace, eigenvalues, symmetric quadratic forms, and special matrices such as orthogonal, idempotent, Gram, centering, rank-one update, and stochastic matrices.",
         sectionIds: linearAlgebraSections.map((section) => section.id),
         updatedAt: now
       }
@@ -1245,6 +1247,36 @@ function buildGateDaBasicPlan(now, accountTypes, sections, user = basicGateDaUse
         date: linearAlgebraWeekSevenSunday,
         details: "Take the graph-backed objective quiz for symmetric spectra, quadratic forms, definiteness, Rayleigh quotient, and constrained spectral optimization.",
         updatedAt: now
+      },
+      {
+        id: "schedule-linear-algebra-chapter-8-study",
+        title: "Linear Algebra Chapter 8: Special Matrices and Structural Shortcuts",
+        week: 8,
+        subject: "Linear Algebra",
+        kind: "Study",
+        date: linearAlgebraWeekEightMonday,
+        details: "Study orthogonal, idempotent, projection, Gram, centering, rank-one update, and stochastic matrices as reusable GATE DA pattern objects.",
+        updatedAt: now
+      },
+      {
+        id: "schedule-linear-algebra-chapter-8-practice",
+        title: "Linear Algebra Chapter 8: Labelled Practice",
+        week: 8,
+        subject: "Linear Algebra",
+        kind: "Practice",
+        date: addDays(linearAlgebraWeekEightMonday, 2),
+        details: "Solve special-matrix recognition, invariant, rank, trace, eigenvalue, determinant, PSD, and null-space practice problems.",
+        updatedAt: now
+      },
+      {
+        id: "schedule-linear-algebra-chapter-8-review",
+        title: "Linear Algebra Chapter 8: Objective Review",
+        week: 8,
+        subject: "Linear Algebra",
+        kind: "Review",
+        date: linearAlgebraWeekEightSunday,
+        details: "Take the graph-backed objective quiz for orthogonal, idempotent, Gram, centering, rank-one update, and stochastic matrix shortcuts.",
+        updatedAt: now
       }
     ],
     tests: [
@@ -1399,6 +1431,15 @@ function buildGateDaBasicPlan(now, accountTypes, sections, user = basicGateDaUse
         details: "Objective end-of-chapter quiz for symmetric matrices, orthogonal eigenvectors, quadratic forms, positive definiteness, Rayleigh quotients, and constrained spectral optimization. Attempts are logged with prerequisite repair feedback.",
         sectionId: linearAlgebraSections[6]?.id,
         quizId: "quiz-linear-algebra-chapter-7-objective-review",
+        updatedAt: now
+      },
+      {
+        id: "test-linear-algebra-chapter-8-objective-review",
+        title: "Linear Algebra Chapter 8 Objective Review",
+        date: linearAlgebraWeekEightSunday,
+        details: "Objective end-of-chapter quiz for special matrix recognition and structural shortcuts: orthogonal, idempotent, Gram, centering, rank-one update, and stochastic matrices.",
+        sectionId: linearAlgebraSections[7]?.id,
+        quizId: "quiz-linear-algebra-chapter-8-objective-review",
         updatedAt: now
       }
     ],
@@ -1953,6 +1994,39 @@ function buildGateDaBasicPlan(now, accountTypes, sections, user = basicGateDaUse
         done: false,
         details: "Submit the Chapter 7 objective quiz so the learner record logs symmetric-matrix, quadratic-form, and spectral-optimization reasoning strengths and weaknesses.",
         updatedAt: now
+      },
+      {
+        id: "task-linear-algebra-chapter-8-read",
+        week: 8,
+        title: "Linear Algebra Ch 8: Read special matrices",
+        type: "Study",
+        date: linearAlgebraWeekEightMonday,
+        status: "todo",
+        done: false,
+        details: "Open Subjects -> Linear Algebra -> Chapter 8 and study special matrix signatures and shortcuts.",
+        updatedAt: now
+      },
+      {
+        id: "task-linear-algebra-chapter-8-practice",
+        week: 8,
+        title: "Linear Algebra Ch 8: Solve special-matrix practice",
+        type: "Practice",
+        date: addDays(linearAlgebraWeekEightMonday, 2),
+        status: "todo",
+        done: false,
+        details: "Attempt the Chapter 8 labelled practice problems before opening worked solutions.",
+        updatedAt: now
+      },
+      {
+        id: "task-linear-algebra-chapter-8-review",
+        week: 8,
+        title: "Linear Algebra Ch 8: Take objective review",
+        type: "Review",
+        date: linearAlgebraWeekEightSunday,
+        status: "todo",
+        done: false,
+        details: "Submit the Chapter 8 objective quiz so the learner record logs special-matrix recognition strengths and weaknesses.",
+        updatedAt: now
       }
     ],
     accountTypes,
@@ -1979,7 +2053,7 @@ function buildGateDaBasicPlan(now, accountTypes, sections, user = basicGateDaUse
         startDate: monday,
         endDate: "2026-08-30",
         status: "active",
-        details: `GATE DA Basic plan surfaces: Subjects, Tasks, Schedule, Tests, Feedback, Resources, and Share. Recommended pace: study three subjects in parallel. Every 15 days, Aleph should generate an adaptive cumulative review quiz from prior performance, repeating missed concepts more often, reducing mastered concepts, and keeping high-weight exam topics in rotation. Current material build: Probability Chapters 1-10 and Linear Algebra Chapters 1-7.${trialNote}`,
+        details: `GATE DA Basic plan surfaces: Subjects, Tasks, Schedule, Tests, Feedback, Resources, and Share. Recommended pace: study three subjects in parallel. Every 15 days, Aleph should generate an adaptive cumulative review quiz from prior performance, repeating missed concepts more often, reducing mastered concepts, and keeping high-weight exam topics in rotation. Current material build: Probability Chapters 1-10 and Linear Algebra Chapters 1-8.${trialNote}`,
         updatedAt: now
       }
     ],
@@ -2039,6 +2113,13 @@ function buildGateDaBasicPlan(now, accountTypes, sections, user = basicGateDaUse
         title: "Linear Algebra Chapter 7 feedback focus",
         date: linearAlgebraWeekSevenSunday,
         details: "Review misses for forgetting symmetry before using orthogonal eigenvectors, confusing positive definite with entrywise positive, mishandling x^TAx, and missing maximum-eigenvalue Rayleigh quotient reasoning.",
+        updatedAt: now
+      },
+      {
+        id: "feedback-linear-algebra-chapter-8",
+        title: "Linear Algebra Chapter 8 feedback focus",
+        date: linearAlgebraWeekEightSunday,
+        details: "Review misses for confusing orthogonal with symmetric, treating every idempotent matrix as identity, missing Gram/centering PSD structure, expanding rank-one updates unnecessarily, and misreading stochastic null-space/eigenvalue facts.",
         updatedAt: now
       }
     ],
@@ -2184,6 +2265,14 @@ function buildGateDaBasicPlan(now, accountTypes, sections, user = basicGateDaUse
         title: "Linear Algebra Chapter 7: Symmetric Matrices and Quadratic Forms",
         date: linearAlgebraWeekSevenMonday,
         details: "Open Subjects -> Linear Algebra to study symmetric eigen-geometry, quadratic forms, positive definiteness, Rayleigh quotients, and constrained spectral optimization.",
+        link: "",
+        updatedAt: now
+      },
+      {
+        id: "resource-linear-algebra-special-matrices",
+        title: "Linear Algebra Chapter 8: Special Matrices and Structural Shortcuts",
+        date: linearAlgebraWeekEightMonday,
+        details: "Open Subjects -> Linear Algebra to study orthogonal, idempotent, Gram, centering, rank-one update, and stochastic matrices as GATE DA pattern objects.",
         link: "",
         updatedAt: now
       }
@@ -4096,6 +4185,156 @@ function gateDaLinearAlgebraSections(updatedAt = new Date().toISOString()) {
         "For symmetric A, max over unit vectors of x^T A x is the largest eigenvalue.",
         "The centering matrix is a symmetric projection with eigenvalues 1 and 0.",
         "Gram and covariance matrices are symmetric positive semidefinite."
+      ],
+      updatedAt
+    },
+    {
+      id: "gate-da-linear-algebra-special-matrices",
+      exam: "GATE DA",
+      accountTier: "Basic",
+      subject: "Linear Algebra",
+      chapter: "Chapter 8",
+      section: "8",
+      title: "Special Matrices and Structural Shortcuts",
+      summary: "A GATE DA recognition chapter for orthogonal, idempotent, projection, Gram, centering, rank-one update, and stochastic matrices, emphasizing what each matrix preserves, kills, or makes invariant.",
+      sectionPreview: "Several GATE DA questions become easy once the matrix family is recognized. Orthogonal matrices preserve length, projections are idempotent, Gram matrices are positive semidefinite, centering matrices kill the all-ones direction, rank-one updates change one direction, and stochastic matrices preserve totals.",
+      previewActivity: "Sort these machines by what they preserve or kill: a rotation, a shadow onto a floor, a centering operation that subtracts the mean, and a transition matrix whose row sums are 1. Which one preserves length? Which one kills one direction? Which one repeats unchanged after the first application?",
+      chapterIntro: [
+        "Chapters 4-7 introduced most of the ingredients. Chapter 8 trains recognition: when the exam presents a special matrix, read its signature before calculating.",
+        "The recurring question is structural. What stays invariant? What changes? What is fixed, killed, preserved in length, made positive semidefinite, or reduced to one dot product?",
+        "This chapter is deliberately mixed. GATE DA often combines these families with rank, nullity, trace, determinant, eigenvalues, and quadratic forms."
+      ],
+      bookSections: [
+        {
+          number: "8.1",
+          title: "Orthogonal Matrices Preserve Geometry",
+          paragraphs: [
+            "A square matrix Q is orthogonal if Q^T Q=I. Its columns form an orthonormal basis.",
+            "Orthogonal matrices preserve dot products, lengths, and angles. Rotations and reflections are the main physical examples.",
+            "They are always invertible, with Q^(-1)=Q^T. Their determinant is either 1 or -1."
+          ],
+          blocks: [
+            { type: "definition", title: "Definition: orthogonal matrix", body: "Q is orthogonal if Q^T Q=I." },
+            { type: "example", title: "Example 8.1: rotation", body: "A 90-degree rotation preserves every vector length and has determinant 1." },
+            { type: "warning", title: "Common trap", body: "Orthogonal does not mean symmetric. A rotation can be orthogonal without satisfying Q^T=Q." }
+          ]
+        },
+        {
+          number: "8.2",
+          title: "Idempotent and Projection Matrices",
+          paragraphs: [
+            "A matrix P is idempotent if P^2=P. Applying it twice changes nothing after the first application.",
+            "Projection matrices are the central idempotent examples. They fix their range and kill their kernel.",
+            "For an idempotent matrix, eigenvalues can only be 0 or 1. For a projection, trace equals rank."
+          ],
+          blocks: [
+            { type: "principle", title: "Idempotent spectrum", body: "If P^2=P, then every eigenvalue lambda satisfies lambda^2=lambda, so lambda is 0 or 1." },
+            { type: "example", title: "Example 8.2: shadow matrix", body: "P=[[1,0],[0,0]] projects onto the x-axis, fixes [x,0], kills [0,y], and satisfies P^2=P." }
+          ]
+        },
+        {
+          number: "8.3",
+          title: "Centering Matrix",
+          paragraphs: [
+            "The centering matrix H=I-(1/n)11^T subtracts the mean from a vector.",
+            "It is symmetric and idempotent, so it is an orthogonal projection. It kills the all-ones direction and keeps the zero-sum subspace.",
+            "Its rank and trace are n-1. Its eigenvalues are 1 with multiplicity n-1 and 0 with multiplicity 1."
+          ],
+          blocks: [
+            { type: "strategy", title: "Centering checklist", body: "For H=I-(1/n)11^T: H1=0, H^T=H, H^2=H, rank(H)=trace(H)=n-1." },
+            { type: "example", title: "Example 8.3: centered vector", body: "For x=[2,5,8], Hx=[-3,0,3], whose entries sum to zero." }
+          ]
+        },
+        {
+          number: "8.4",
+          title: "Gram Matrices and Positive Semidefiniteness",
+          paragraphs: [
+            "A Gram matrix records dot products. In matrix form, it often appears as G=X^T X.",
+            "Every Gram matrix is symmetric positive semidefinite because z^T G z=||Xz||^2>=0.",
+            "If the original vectors are linearly independent, the Gram matrix is positive definite and invertible."
+          ],
+          blocks: [
+            { type: "principle", title: "Gram PSD proof", body: "For G=X^T X, z^T G z=z^T X^T X z=||Xz||^2>=0." },
+            { type: "example", title: "Example 8.4: independent columns", body: "If X has independent columns, Xz=0 only when z=0, so X^T X is positive definite." }
+          ]
+        },
+        {
+          number: "8.5",
+          title: "Rank-One Updates",
+          paragraphs: [
+            "A rank-one matrix uv^T changes space through one input-output direction. It has rank at most 1.",
+            "The identity plus a rank-one update, I+uv^T, appears in determinant, invertibility, and eigenvalue questions.",
+            "Use det(I+uv^T)=1+v^T u. For I+xx^T, directions perpendicular to x are unchanged, and the x direction is stretched by 1+x^T x."
+          ],
+          blocks: [
+            { type: "strategy", title: "Rank-one shortcut", body: "Before expanding I+uv^T, compute v^T u. The determinant is 1+v^T u." },
+            { type: "example", title: "Example 8.5: I+xx^T", body: "If x=[1,2], then det(I+xx^T)=1+x^T x=1+5=6." }
+          ]
+        },
+        {
+          number: "8.6",
+          title: "Stochastic Matrices",
+          paragraphs: [
+            "A row-stochastic matrix has nonnegative entries and each row sums to 1. It models transition probabilities.",
+            "Because rows sum to 1, P1=1 for a row-stochastic matrix P. Thus 1 is an eigenvalue with eigenvector 1.",
+            "GATE DA can use this property indirectly: if row sums are 1, then (P-I)1=0, so P-I has a nontrivial null space and is singular."
+          ],
+          blocks: [
+            { type: "principle", title: "Row-stochastic signature", body: "If P is row-stochastic, then P1=1 and (P-I)1=0." },
+            { type: "example", title: "Example 8.6: null-space shortcut", body: "For row-stochastic P, the vector of all ones is a nonzero solution of (P-I)x=0, so P-I is not invertible." }
+          ]
+        }
+      ],
+      concepts: [
+        { name: "Orthogonal matrix", description: "Q^T Q=I; preserves lengths, angles, and dot products.", cue: "Look for orthonormal columns or geometry preservation." },
+        { name: "Idempotent matrix", description: "P^2=P; applying twice equals applying once.", cue: "Expect eigenvalues 0 and 1." },
+        { name: "Projection matrix", description: "Fixes a range and kills a kernel.", cue: "Find fixed and killed subspaces." },
+        { name: "Centering matrix", description: "H=I-(1/n)11^T subtracts the mean.", cue: "Kills 1, keeps zero-sum vectors, rank n-1." },
+        { name: "Gram matrix", description: "Dot-product matrix, usually X^T X.", cue: "Use z^T X^T X z=||Xz||^2." },
+        { name: "Rank-one update", description: "I+uv^T changes one direction and has determinant 1+v^T u.", cue: "Compute the dot product before expanding." },
+        { name: "Stochastic matrix", description: "Transition matrix with rows or columns summing to 1.", cue: "Use the all-ones vector to find eigenvalue or null-space facts." }
+      ],
+      techniques: [
+        { name: "Signature first", when: "a matrix has a recognizable equation such as Q^TQ=I or P^2=P.", move: "Classify the family before doing arithmetic." },
+        { name: "Fixed/killed read", when: "working with projections or centering.", move: "Find vectors with Pv=v and Pv=0." },
+        { name: "PSD rewrite", when: "G=X^T X appears.", move: "Rewrite z^T G z as ||Xz||^2." },
+        { name: "Rank-one determinant", when: "I+uv^T appears.", move: "Use det(I+uv^T)=1+v^T u." },
+        { name: "Stochastic null-space read", when: "rows sum to 1.", move: "Use P1=1 and therefore (P-I)1=0." }
+      ],
+      practiceProblems: linearAlgebraSpecialMatricesProblems(),
+      reviewPrompts: [
+        "What does an orthogonal matrix preserve?",
+        "Why does P^2=P force eigenvalues 0 or 1?",
+        "For H=I-(1/n)11^T, what does H kill and what does it keep?",
+        "Why is X^T X positive semidefinite?",
+        "When is X^T X positive definite?",
+        "Use det(I+uv^T)=1+v^T u on a small example.",
+        "If P is row-stochastic, why is P-I singular?",
+        "How do you distinguish symmetric, orthogonal, and idempotent signatures?"
+      ],
+      reviewQuiz: {
+        id: "quiz-linear-algebra-chapter-8-objective-review",
+        title: "Linear Algebra Chapter 8 Objective Review",
+        instructions: "Complete this after studying special matrix signatures and shortcuts. The quiz emphasizes recognition, invariants, and GATE-style structural consequences.",
+        questions: linearAlgebraSpecialMatricesReviewQuestions()
+      },
+      readingQuestions: [
+        "What equation defines an orthogonal matrix?",
+        "What equation defines an idempotent matrix?",
+        "What are the key facts about the centering matrix?",
+        "Why is a Gram matrix positive semidefinite?",
+        "What shortcut applies to det(I+uv^T)?",
+        "What does a row-stochastic matrix do to the all-ones vector?",
+        "Which special matrices are symmetric, which are projections, and which preserve length?"
+      ],
+      chapterSummary: [
+        "Orthogonal matrices preserve lengths, angles, and dot products.",
+        "Idempotent matrices satisfy P^2=P and have eigenvalues only 0 or 1.",
+        "Projection matrices fix their range and kill their kernel.",
+        "The centering matrix kills the all-ones direction and has rank n-1.",
+        "Gram matrices X^T X are positive semidefinite.",
+        "det(I+uv^T)=1+v^T u is the key rank-one update shortcut.",
+        "A row-stochastic matrix satisfies P1=1, so P-I is singular."
       ],
       updatedAt
     }
@@ -11226,6 +11465,134 @@ function linearAlgebraSymmetricQuadraticFormsConceptGraph() {
   };
 }
 
+function linearAlgebraSpecialMatricesConceptGraph() {
+  return {
+    chapterId: "gate-da-linear-algebra-special-matrices",
+    chapterTitle: "Linear Algebra Chapter 8: Special Matrices and Structural Shortcuts",
+    gateWeight: "high",
+    fallbackConcepts: ["orthogonal-matrix", "idempotent-matrix", "centering-matrix", "gram-psd"],
+    fallbackDifficultyMix: [1, 2, 2, 3],
+    fallbackInstruction: "Retest matrix-family signatures first, then fixed/killed spaces, PSD rewrites, rank-one updates, and stochastic null-space facts.",
+    stableNextAction: "Next: try a mixed SVD readiness set using orthogonal matrices, Gram matrices, eigenvalues, and singular values.",
+    nodes: {
+      "orthogonal-matrix": {
+        label: "Orthogonal matrix",
+        prereqs: ["orthonormal-columns"],
+        repairMaterial: "Review Chapter 8.1 and verify Q^TQ=I before using length and angle preservation.",
+        gateWeight: "high"
+      },
+      "orthonormal-columns": {
+        label: "Orthonormal columns",
+        prereqs: ["orthogonality"],
+        repairMaterial: "Review Chapter 4.1 and check unit length plus zero dot products between columns.",
+        gateWeight: "high"
+      },
+      orthogonality: {
+        label: "Orthogonality",
+        prereqs: [],
+        repairMaterial: "Review Chapter 4.1 and compute dot products to check perpendicular vectors.",
+        gateWeight: "high"
+      },
+      "length-preservation": {
+        label: "Length preservation",
+        prereqs: ["orthogonal-matrix"],
+        repairMaterial: "Review Chapter 8.1 and use ||Qx||=||x|| for orthogonal Q.",
+        gateWeight: "high"
+      },
+      "idempotent-matrix": {
+        label: "Idempotent matrix",
+        prereqs: ["matrix-product"],
+        repairMaterial: "Review Chapter 8.2 and test P^2=P before assuming projection behavior.",
+        gateWeight: "high"
+      },
+      "matrix-product": {
+        label: "Matrix products",
+        prereqs: [],
+        repairMaterial: "Review Chapter 2.5 and check product order carefully.",
+        gateWeight: "medium"
+      },
+      "projection-matrix": {
+        label: "Projection matrix",
+        prereqs: ["idempotent-matrix", "fixed-killed-subspaces"],
+        repairMaterial: "Review Chapter 8.2 and identify fixed range and killed kernel.",
+        gateWeight: "high"
+      },
+      "fixed-killed-subspaces": {
+        label: "Fixed and killed subspaces",
+        prereqs: [],
+        repairMaterial: "Review Chapter 4.3 and find vectors with Pv=v and Pv=0.",
+        gateWeight: "high"
+      },
+      "projection-spectrum": {
+        label: "Projection spectrum",
+        prereqs: ["idempotent-matrix"],
+        repairMaterial: "Review Chapter 8.2 and use eigenvalues only 0 or 1 for idempotent matrices.",
+        gateWeight: "high"
+      },
+      "centering-matrix": {
+        label: "Centering matrix",
+        prereqs: ["projection-matrix", "projection-spectrum"],
+        repairMaterial: "Review Chapter 8.3 and memorize H1=0, H^2=H, H^T=H, rank n-1, trace n-1.",
+        gateWeight: "high"
+      },
+      "gram-psd": {
+        label: "Gram matrix PSD",
+        prereqs: ["quadratic-form"],
+        repairMaterial: "Review Chapter 8.4 and rewrite z^T X^T X z as ||Xz||^2.",
+        gateWeight: "high"
+      },
+      "quadratic-form": {
+        label: "Quadratic form",
+        prereqs: [],
+        repairMaterial: "Review Chapter 7.2 and compute x^T A x as a weighted squared direction.",
+        gateWeight: "high"
+      },
+      "gram-positive-definite": {
+        label: "Gram positive definite",
+        prereqs: ["gram-psd", "linear-independence"],
+        repairMaterial: "Review Chapter 8.4 and connect independent columns of X with X^T X being positive definite.",
+        gateWeight: "high"
+      },
+      "linear-independence": {
+        label: "Linear independence",
+        prereqs: [],
+        repairMaterial: "Review Chapter 1.5 and identify whether a vector list has redundancy.",
+        gateWeight: "high"
+      },
+      "rank-one-update": {
+        label: "Rank-one update",
+        prereqs: ["matrix-column-rule"],
+        repairMaterial: "Review Chapter 8.5 and recognize I+uv^T before expanding.",
+        gateWeight: "high"
+      },
+      "matrix-column-rule": {
+        label: "Matrix column rule",
+        prereqs: [],
+        repairMaterial: "Review Chapter 2.3 and read matrix-vector products as column combinations.",
+        gateWeight: "medium"
+      },
+      "rank-one-determinant": {
+        label: "Rank-one determinant",
+        prereqs: ["rank-one-update"],
+        repairMaterial: "Review Chapter 8.5 and use det(I+uv^T)=1+v^Tu.",
+        gateWeight: "high"
+      },
+      "stochastic-matrix": {
+        label: "Stochastic matrix",
+        prereqs: ["matrix-vector-product"],
+        repairMaterial: "Review Chapter 8.6 and use row sums equal 1 to get P1=1.",
+        gateWeight: "high"
+      },
+      "stochastic-nullspace": {
+        label: "Stochastic null-space shortcut",
+        prereqs: ["stochastic-matrix"],
+        repairMaterial: "Review Chapter 8.6 and use (P-I)1=0 to prove P-I is singular.",
+        gateWeight: "high"
+      }
+    }
+  };
+}
+
 function conditionalProbabilityConceptGraph() {
   return {
     chapterId: "gate-da-conditional-probability",
@@ -13509,6 +13876,200 @@ function linearAlgebraSymmetricQuadraticFormsReviewQuestions() {
   }));
 }
 
+function linearAlgebraSpecialMatricesProblems() {
+  return [
+    {
+      label: "Problem 1: Orthogonal matrix signature",
+      concept: "Orthogonal matrix",
+      difficulty: "Concept",
+      technique: "Check Q^TQ",
+      prompt: "If Q^TQ=I, what does Q preserve and what is Q^(-1)?",
+      solution: "Q preserves dot products, lengths, and angles. Since Q^TQ=I, the inverse is Q^T."
+    },
+    {
+      label: "Problem 2: Orthogonal versus symmetric",
+      concept: "Orthogonal matrix",
+      difficulty: "Concept",
+      technique: "Separate signatures",
+      prompt: "A 90-degree rotation matrix is orthogonal. Must it be symmetric?",
+      solution: "No. Orthogonal means Q^TQ=I. Symmetric means Q^T=Q. A 90-degree rotation preserves length but is not symmetric."
+    },
+    {
+      label: "Problem 3: Idempotent eigenvalues",
+      concept: "Idempotent matrix",
+      difficulty: "Application",
+      technique: "Use lambda^2=lambda",
+      prompt: "If P^2=P, what eigenvalues can P have?",
+      solution: "If Pv=lambda v, then P^2v=lambda^2 v. Since P^2=P, lambda^2 v=lambda v. For nonzero v, lambda^2=lambda, so lambda is 0 or 1."
+    },
+    {
+      label: "Problem 4: Projection fixed and killed spaces",
+      concept: "Projection matrix",
+      difficulty: "Application",
+      technique: "Find fixed and killed directions",
+      prompt: "For P=[[1,0],[0,0]], what is fixed and what is killed?",
+      solution: "P fixes the x-axis because P[x,0]=[x,0]. It kills the y-axis because P[0,y]=[0,0]."
+    },
+    {
+      label: "Problem 5: Centering matrix checklist",
+      concept: "Centering matrix",
+      difficulty: "GATE-style",
+      technique: "Use H1=0 and rank n-1",
+      prompt: "For H=I-(1/n)11^T, what vector is killed and what are rank(H) and trace(H)?",
+      solution: "H kills the all-ones vector. It keeps the zero-sum subspace, which has dimension n-1, so rank(H)=trace(H)=n-1."
+    },
+    {
+      label: "Problem 6: Gram PSD",
+      concept: "Gram matrix PSD",
+      difficulty: "GATE-style",
+      technique: "Rewrite as squared norm",
+      prompt: "Why is G=X^T X positive semidefinite?",
+      solution: "For any z, z^T G z=z^T X^T Xz=||Xz||^2>=0. So G is positive semidefinite."
+    },
+    {
+      label: "Problem 7: Gram positive definite",
+      concept: "Gram positive definite",
+      difficulty: "GATE-style",
+      technique: "Use independent columns",
+      prompt: "When is X^T X positive definite?",
+      solution: "X^T X is positive definite when X has linearly independent columns. Then Xz=0 only for z=0, so z^T X^T Xz=||Xz||^2>0 for every nonzero z."
+    },
+    {
+      label: "Problem 8: Rank-one determinant",
+      concept: "Rank-one determinant",
+      difficulty: "GATE-style",
+      technique: "Use determinant lemma",
+      prompt: "Let u=[1,2]^T and v=[3,4]^T. Compute det(I+uv^T) without expanding.",
+      solution: "Use det(I+uv^T)=1+v^T u. Here v^T u=3*1+4*2=11, so det(I+uv^T)=12."
+    },
+    {
+      label: "Problem 9: Row-stochastic eigenvector",
+      concept: "Stochastic matrix",
+      difficulty: "GATE-style",
+      technique: "Use row sums",
+      prompt: "If P is row-stochastic, what is P1?",
+      solution: "Each row sum is 1, so multiplying P by the all-ones vector gives the all-ones vector. Thus P1=1."
+    },
+    {
+      label: "Problem 10: Stochastic null-space shortcut",
+      concept: "Stochastic null-space shortcut",
+      difficulty: "GATE-style",
+      technique: "Use (P-I)1=0",
+      prompt: "If P is row-stochastic, why is P-I singular?",
+      solution: "Since P1=1, we get (P-I)1=P1-1=0. The all-ones vector is nonzero, so P-I has a nontrivial null space and is singular."
+    }
+  ];
+}
+
+function linearAlgebraSpecialMatricesReviewQuestions() {
+  const metadata = {
+    "la-sm-review-1": { targetConcept: "orthogonal-matrix", prereqsUsed: ["orthonormal-columns"], difficulty: 1, gateWeight: "high" },
+    "la-sm-review-2": { targetConcept: "idempotent-matrix", prereqsUsed: ["matrix-product"], difficulty: 2, gateWeight: "high" },
+    "la-sm-review-3": { targetConcept: "centering-matrix", prereqsUsed: ["projection-matrix", "projection-spectrum"], difficulty: 2, gateWeight: "high" },
+    "la-sm-review-4": { targetConcept: "gram-psd", prereqsUsed: ["quadratic-form"], difficulty: 2, gateWeight: "high" },
+    "la-sm-review-5": { targetConcept: "rank-one-determinant", prereqsUsed: ["rank-one-update"], difficulty: 2, gateWeight: "high" },
+    "la-sm-review-6": { targetConcept: "stochastic-nullspace", prereqsUsed: ["stochastic-matrix"], difficulty: 3, gateWeight: "high" },
+    "la-sm-review-7": { targetConcept: "gram-positive-definite", prereqsUsed: ["gram-psd", "linear-independence"], difficulty: 3, gateWeight: "high" }
+  };
+  const questions = [
+    {
+      id: "la-sm-review-1",
+      kind: "single concept",
+      tags: ["orthogonal-matrix", "orthonormal-columns"],
+      prompt: "If Q is orthogonal, which statement is always true?",
+      options: [
+        { id: "a", text: "Q^TQ=I and Q preserves lengths." },
+        { id: "b", text: "Q^2=Q." },
+        { id: "c", text: "Q has only positive entries." },
+        { id: "d", text: "Q is always symmetric." }
+      ],
+      answer: "a"
+    },
+    {
+      id: "la-sm-review-2",
+      kind: "mixed: two concepts",
+      tags: ["idempotent-matrix", "matrix-product"],
+      prompt: "What does P^2=P mean?",
+      options: [
+        { id: "a", text: "Applying P twice is the same as applying P once." },
+        { id: "b", text: "P must preserve all lengths." },
+        { id: "c", text: "P must be invertible." },
+        { id: "d", text: "P has determinant 1." }
+      ],
+      answer: "a"
+    },
+    {
+      id: "la-sm-review-3",
+      kind: "mixed: two concepts",
+      tags: ["centering-matrix", "projection-matrix", "projection-spectrum"],
+      prompt: "For H=I-(1/n)11^T, which fact is correct?",
+      options: [
+        { id: "a", text: "H kills the all-ones direction and has rank n-1." },
+        { id: "b", text: "H is always the zero matrix." },
+        { id: "c", text: "H has rank n." },
+        { id: "d", text: "H is not idempotent." }
+      ],
+      answer: "a"
+    },
+    {
+      id: "la-sm-review-4",
+      kind: "mixed: two concepts",
+      tags: ["gram-psd", "quadratic-form"],
+      prompt: "Why is X^T X positive semidefinite?",
+      options: [
+        { id: "a", text: "z^T X^T X z=||Xz||^2>=0 for every z." },
+        { id: "b", text: "Every entry of X is positive." },
+        { id: "c", text: "X^T X is always diagonal." },
+        { id: "d", text: "X^T X always has determinant 1." }
+      ],
+      answer: "a"
+    },
+    {
+      id: "la-sm-review-5",
+      kind: "mixed: two concepts",
+      tags: ["rank-one-determinant", "rank-one-update"],
+      prompt: "For u=[1,2]^T and v=[3,4]^T, what is det(I+uv^T)?",
+      options: [
+        { id: "a", text: "11" },
+        { id: "b", text: "12" },
+        { id: "c", text: "24" },
+        { id: "d", text: "1" }
+      ],
+      answer: "b"
+    },
+    {
+      id: "la-sm-review-6",
+      kind: "mixed: three concepts",
+      tags: ["stochastic-nullspace", "stochastic-matrix"],
+      prompt: "If P is row-stochastic, why is P-I singular?",
+      options: [
+        { id: "a", text: "(P-I)1=0, so there is a nonzero null vector." },
+        { id: "b", text: "P-I has only positive entries." },
+        { id: "c", text: "P-I is orthogonal." },
+        { id: "d", text: "P-I is always diagonal." }
+      ],
+      answer: "a"
+    },
+    {
+      id: "la-sm-review-7",
+      kind: "mixed: three concepts",
+      tags: ["gram-positive-definite", "gram-psd", "linear-independence"],
+      prompt: "When is X^T X positive definite?",
+      options: [
+        { id: "a", text: "When the columns of X are linearly independent." },
+        { id: "b", text: "Whenever X has more rows than columns, regardless of dependence." },
+        { id: "c", text: "Only when X is square and orthogonal." },
+        { id: "d", text: "Never; Gram matrices are always indefinite." }
+      ],
+      answer: "a"
+    }
+  ];
+  return questions.map((question) => ({
+    ...question,
+    ...(metadata[question.id] || { targetConcept: question.tags[0], prereqsUsed: question.tags.slice(1), difficulty: question.tags.length, gateWeight: "medium" })
+  }));
+}
+
 function discreteMathMilestones() {
   return [
     {
@@ -14916,6 +15477,7 @@ function conceptGraphForSection(section) {
   if (section?.id === "gate-da-linear-algebra-determinants-trace-identities") return linearAlgebraDeterminantsTraceConceptGraph();
   if (section?.id === "gate-da-linear-algebra-eigenvalues-eigenvectors") return linearAlgebraEigenvaluesConceptGraph();
   if (section?.id === "gate-da-linear-algebra-symmetric-quadratic-forms") return linearAlgebraSymmetricQuadraticFormsConceptGraph();
+  if (section?.id === "gate-da-linear-algebra-special-matrices") return linearAlgebraSpecialMatricesConceptGraph();
   if (section?.id === "gate-da-probability-foundations") return probabilityFoundationConceptGraph();
   if (section?.id === "gate-da-conditional-probability") return conditionalProbabilityConceptGraph();
   if (section?.id === "gate-da-random-variables-expectation") return randomVariablesExpectationConceptGraph();
