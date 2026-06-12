@@ -1,7 +1,7 @@
 const STORAGE_KEY = "learning-studio-data-v2";
 const LEGACY_STORAGE_KEYS = ["learning-studio-data-v1"];
 const SESSION_KEY = "aleph-session";
-const COURSE_PLAN_VERSION = "seeded-user-canonical-workspace-v81";
+const COURSE_PLAN_VERSION = "seeded-user-canonical-workspace-v82";
 const PRIYANKA_PLATINUM_START_DATE = "2026-06-07";
 const DEFAULT_PLAN_START_DATE = "2026-06-01";
 
@@ -718,6 +718,8 @@ function buildGateDaBasicPlan(now, accountTypes, sections, user = basicGateDaUse
   const linearAlgebraWeekEightSunday = weekEightSunday;
   const linearAlgebraWeekNineMonday = weekNineMonday;
   const linearAlgebraWeekNineSunday = weekNineSunday;
+  const linearAlgebraWeekTenMonday = weekTenMonday;
+  const linearAlgebraWeekTenSunday = weekTenSunday;
   const userId = user.id || "user-basic-demo";
   const userSlug = slugify(user.name || userId);
   const enrollmentId = `enrollment-${userSlug}-gate-da-basic`;
@@ -744,7 +746,7 @@ function buildGateDaBasicPlan(now, accountTypes, sections, user = basicGateDaUse
         title: "Linear Algebra",
         date: linearAlgebraWeekOneMonday,
         status: "In progress",
-        details: "GATE DA Basic Linear Algebra, built around transformations, invariants, and physical intuition. Chapters 1-9 cover vectors, coordinates, transformations, rank/nullity, projections, determinants, trace, eigenvalues, symmetric quadratic forms, special matrices, SVD, and singular values.",
+        details: "GATE DA Basic Linear Algebra, built around transformations, invariants, and physical intuition. Chapters 1-10 cover vectors, coordinates, transformations, rank/nullity, projections, determinants, trace, eigenvalues, symmetric quadratic forms, special matrices, SVD, singular values, least squares, normal equations, and ridge regression.",
         sectionIds: linearAlgebraSections.map((section) => section.id),
         updatedAt: now
       }
@@ -1309,6 +1311,36 @@ function buildGateDaBasicPlan(now, accountTypes, sections, user = basicGateDaUse
         date: linearAlgebraWeekNineSunday,
         details: "Take the graph-backed objective quiz for singular values, right and left singular vectors, rank from singular values, rank-one shortcuts, and PCA-facing interpretation.",
         updatedAt: now
+      },
+      {
+        id: "schedule-linear-algebra-chapter-10-study",
+        title: "Linear Algebra Chapter 10: Least Squares and Ridge Regression",
+        week: 10,
+        subject: "Linear Algebra",
+        kind: "Study",
+        date: linearAlgebraWeekTenMonday,
+        details: "Study least squares as projection onto a column space, normal equations as residual orthogonality, and ridge regression as stabilized shrinkage through X^T X+lambda I.",
+        updatedAt: now
+      },
+      {
+        id: "schedule-linear-algebra-chapter-10-practice",
+        title: "Linear Algebra Chapter 10: Labelled Practice",
+        week: 10,
+        subject: "Linear Algebra",
+        kind: "Practice",
+        date: addDays(linearAlgebraWeekTenMonday, 2),
+        details: "Solve least-squares projection, normal-equation, residual-orthogonality, rank, ridge, and data-fit practice problems.",
+        updatedAt: now
+      },
+      {
+        id: "schedule-linear-algebra-chapter-10-review",
+        title: "Linear Algebra Chapter 10: Objective Review",
+        week: 10,
+        subject: "Linear Algebra",
+        kind: "Review",
+        date: linearAlgebraWeekTenSunday,
+        details: "Take the graph-backed objective quiz for column-space projection, normal equations, residual orthogonality, full-rank uniqueness, ridge stabilization, and shrinkage.",
+        updatedAt: now
       }
     ],
     tests: [
@@ -1481,6 +1513,15 @@ function buildGateDaBasicPlan(now, accountTypes, sections, user = basicGateDaUse
         details: "Objective end-of-chapter quiz for SVD and singular values: A^T A eigenvalue reads, rank from nonzero singular values, rank-one outer products, orthogonal/projection cases, and PCA-facing low-rank interpretation.",
         sectionId: linearAlgebraSections[8]?.id,
         quizId: "quiz-linear-algebra-chapter-9-objective-review",
+        updatedAt: now
+      },
+      {
+        id: "test-linear-algebra-chapter-10-objective-review",
+        title: "Linear Algebra Chapter 10 Objective Review",
+        date: linearAlgebraWeekTenSunday,
+        details: "Objective end-of-chapter quiz for least squares and ridge regression: projection geometry, normal equations, residual orthogonality, rank conditions, and regularized shrinkage.",
+        sectionId: linearAlgebraSections[9]?.id,
+        quizId: "quiz-linear-algebra-chapter-10-objective-review",
         updatedAt: now
       }
     ],
@@ -2101,6 +2142,39 @@ function buildGateDaBasicPlan(now, accountTypes, sections, user = basicGateDaUse
         done: false,
         details: "Submit the Chapter 9 objective quiz so the learner record logs SVD, singular-value, and rank-one shortcut strengths and weaknesses.",
         updatedAt: now
+      },
+      {
+        id: "task-linear-algebra-chapter-10-read",
+        week: 10,
+        title: "Linear Algebra Ch 10: Read least squares and ridge",
+        type: "Study",
+        date: linearAlgebraWeekTenMonday,
+        status: "todo",
+        done: false,
+        details: "Open Subjects -> Linear Algebra -> Chapter 10 and study least squares as projection, normal equations as residual orthogonality, and ridge as stabilization.",
+        updatedAt: now
+      },
+      {
+        id: "task-linear-algebra-chapter-10-practice",
+        week: 10,
+        title: "Linear Algebra Ch 10: Solve least-squares practice",
+        type: "Practice",
+        date: addDays(linearAlgebraWeekTenMonday, 2),
+        status: "todo",
+        done: false,
+        details: "Attempt the Chapter 10 labelled practice problems before opening worked solutions.",
+        updatedAt: now
+      },
+      {
+        id: "task-linear-algebra-chapter-10-review",
+        week: 10,
+        title: "Linear Algebra Ch 10: Take objective review",
+        type: "Review",
+        date: linearAlgebraWeekTenSunday,
+        status: "todo",
+        done: false,
+        details: "Submit the Chapter 10 objective quiz so the learner record logs least-squares, normal-equation, and ridge-regression strengths and weaknesses.",
+        updatedAt: now
       }
     ],
     accountTypes,
@@ -2127,7 +2201,7 @@ function buildGateDaBasicPlan(now, accountTypes, sections, user = basicGateDaUse
         startDate: monday,
         endDate: "2026-08-30",
         status: "active",
-        details: `GATE DA Basic plan surfaces: Subjects, Tasks, Schedule, Tests, Feedback, Resources, and Share. Recommended pace: study three subjects in parallel. Every 15 days, Aleph should generate an adaptive cumulative review quiz from prior performance, repeating missed concepts more often, reducing mastered concepts, and keeping high-weight exam topics in rotation. Current material build: Probability Chapters 1-10 and Linear Algebra Chapters 1-9.${trialNote}`,
+        details: `GATE DA Basic plan surfaces: Subjects, Tasks, Schedule, Tests, Feedback, Resources, and Share. Recommended pace: study three subjects in parallel. Every 15 days, Aleph should generate an adaptive cumulative review quiz from prior performance, repeating missed concepts more often, reducing mastered concepts, and keeping high-weight exam topics in rotation. Current material build: Probability Chapters 1-10 and Linear Algebra Chapters 1-10.${trialNote}`,
         updatedAt: now
       }
     ],
@@ -2201,6 +2275,13 @@ function buildGateDaBasicPlan(now, accountTypes, sections, user = basicGateDaUse
         title: "Linear Algebra Chapter 9 feedback focus",
         date: linearAlgebraWeekNineSunday,
         details: "Review misses for confusing singular values with eigenvalues, forgetting singular values are square roots of eigenvalues of A^T A, mixing left and right singular vectors, missing rank from nonzero singular values, and expanding rank-one outer products instead of using ||u||||v||.",
+        updatedAt: now
+      },
+      {
+        id: "feedback-linear-algebra-chapter-10",
+        title: "Linear Algebra Chapter 10 feedback focus",
+        date: linearAlgebraWeekTenSunday,
+        details: "Review misses for treating inconsistent systems as impossible instead of approximable, forgetting residual orthogonality X^T(y-Xb)=0, using normal equations without checking rank, confusing X^T X with X, and missing how ridge adds lambda I to stabilize and shrink coefficients.",
         updatedAt: now
       }
     ],
@@ -2362,6 +2443,14 @@ function buildGateDaBasicPlan(now, accountTypes, sections, user = basicGateDaUse
         title: "Linear Algebra Chapter 9: SVD and Singular Values",
         date: linearAlgebraWeekNineMonday,
         details: "Open Subjects -> Linear Algebra to study singular values as stretch factors, A^T A as a symmetric PSD bridge, SVD as rotate-stretch-rotate, and rank-one outer products as an exam shortcut.",
+        link: "",
+        updatedAt: now
+      },
+      {
+        id: "resource-linear-algebra-least-squares-ridge",
+        title: "Linear Algebra Chapter 10: Least Squares and Ridge Regression",
+        date: linearAlgebraWeekTenMonday,
+        details: "Open Subjects -> Linear Algebra to study least squares as column-space projection, normal equations as residual orthogonality, rank conditions for uniqueness, and ridge regression as regularized stabilization.",
         link: "",
         updatedAt: now
       }
@@ -4577,6 +4666,158 @@ function gateDaLinearAlgebraSections(updatedAt = new Date().toISOString()) {
         "Orthogonal matrices have singular values all equal to 1.",
         "Projection matrices have singular values 1 on fixed directions and 0 on killed directions.",
         "A nonzero rank-one outer product uv^T has one nonzero singular value ||u||||v||."
+      ],
+      updatedAt
+    },
+    {
+      id: "gate-da-linear-algebra-least-squares-ridge",
+      exam: "GATE DA",
+      accountTier: "Basic",
+      subject: "Linear Algebra",
+      chapter: "Chapter 10",
+      section: "10",
+      title: "Least Squares and Ridge Regression",
+      summary: "A data-facing linear algebra chapter on approximating inconsistent systems: least squares projects y onto the column space of X, normal equations encode residual orthogonality, and ridge regression stabilizes X^T X by adding lambda I.",
+      sectionPreview: "When Xb=y has no exact solution, the best linear prediction is the closest point to y inside the column space of X. The error vector should be perpendicular to every column of X. That one geometric fact produces the normal equations.",
+      previewActivity: "Think of trying to drop a point onto a floor. The closest point on the floor is found by a perpendicular shadow. Least squares does the same thing, except the floor is the column space of X and the shadow is the fitted vector Xb.",
+      chapterIntro: [
+        "Least squares is not a new type of algebra. It is projection geometry applied to data.",
+        "The recurring invariant is residual orthogonality: after the best fit, the leftover error has no component in any column direction of X.",
+        "Ridge regression modifies the same system by adding lambda I to X^T X. This makes unstable or nearly dependent directions less dangerous and shrinks coefficients."
+      ],
+      bookSections: [
+        {
+          number: "10.1",
+          title: "Inconsistent Systems and Best Approximation",
+          paragraphs: [
+            "A linear system Xb=y may have no exact solution when y is outside the column space of X.",
+            "Least squares chooses b so that Xb is as close as possible to y. It minimizes ||y-Xb||^2.",
+            "Geometrically, Xb is the projection of y onto the column space of X."
+          ],
+          blocks: [
+            { type: "definition", title: "Definition: least-squares problem", body: "Find b that minimizes ||y-Xb||^2." },
+            { type: "example", title: "Example 10.1: closest shadow", body: "If the columns of X span a line, least squares drops y onto that line and uses the closest point as the prediction." }
+          ]
+        },
+        {
+          number: "10.2",
+          title: "Residual Orthogonality",
+          paragraphs: [
+            "Let r=y-Xb be the residual. At the best fit, r is perpendicular to every column of X.",
+            "This means X^T r=0. Substituting r=y-Xb gives X^T(y-Xb)=0.",
+            "That is the structural heart of least squares. The residual is what remains after every column-space direction has been used."
+          ],
+          blocks: [
+            { type: "principle", title: "Residual orthogonality", body: "At the least-squares solution, X^T(y-Xb)=0." },
+            { type: "warning", title: "Common trap", body: "Do not require the residual to be zero. It is zero only when y actually lies in the column space of X." }
+          ]
+        },
+        {
+          number: "10.3",
+          title: "Normal Equations",
+          paragraphs: [
+            "From X^T(y-Xb)=0, we get X^T X b=X^T y.",
+            "These are the normal equations. They replace an impossible exact system with a square system for the best-fit coefficients.",
+            "If the columns of X are linearly independent, then X^T X is invertible and the least-squares solution is unique."
+          ],
+          blocks: [
+            { type: "strategy", title: "Normal-equation checklist", body: "Compute X^T X and X^T y, then solve X^T X b=X^T y. Check full column rank before using an inverse." },
+            { type: "example", title: "Example 10.2: rank condition", body: "If X has independent columns, X^T X is positive definite. Then b=(X^T X)^(-1)X^T y is the unique least-squares solution." }
+          ]
+        },
+        {
+          number: "10.4",
+          title: "Projection Matrix for Fitted Values",
+          paragraphs: [
+            "When X has full column rank, the fitted vector is y_hat=Xb=X(X^T X)^(-1)X^T y.",
+            "The matrix H=X(X^T X)^(-1)X^T is the projection matrix onto the column space of X.",
+            "It is symmetric and idempotent. It fixes vectors already in the column space and removes the residual component."
+          ],
+          blocks: [
+            { type: "principle", title: "Hat matrix", body: "H=X(X^T X)^(-1)X^T projects y onto Col(X)." },
+            { type: "example", title: "Example 10.3: fixed space", body: "If y is already in Col(X), then Hy=y and the residual is zero." }
+          ]
+        },
+        {
+          number: "10.5",
+          title: "Ridge Regression",
+          paragraphs: [
+            "Ridge regression solves a regularized problem: minimize ||y-Xb||^2+lambda||b||^2 with lambda>0.",
+            "The ridge normal equation is (X^T X+lambda I)b=X^T y.",
+            "Adding lambda I makes the system more stable and shrinks coefficients, especially in weak or nearly dependent directions."
+          ],
+          blocks: [
+            { type: "definition", title: "Definition: ridge solution", body: "b_ridge=(X^T X+lambda I)^(-1)X^T y for lambda>0." },
+            { type: "warning", title: "Common trap", body: "Ridge changes the fitted coefficients. It is not the same as ordinary least squares unless lambda=0." }
+          ]
+        },
+        {
+          number: "10.6",
+          title: "SVD View of Ridge Shrinkage",
+          paragraphs: [
+            "SVD explains why ridge is stable. Directions with tiny singular values make ordinary least squares sensitive.",
+            "Ridge replaces division by sigma_i^2 with division by sigma_i^2+lambda. Small directions are damped instead of amplified.",
+            "For GATE DA, this is mainly an interpretation skill: ridge trades exact fitting for stability."
+          ],
+          blocks: [
+            { type: "principle", title: "Ridge shrinkage direction", body: "Large singular-value directions are kept more strongly; small singular-value directions are shrunk more." },
+            { type: "example", title: "Example 10.4: weak direction", body: "If a feature direction has very small singular value, ordinary least squares can produce a large coefficient. Ridge reduces that coefficient." }
+          ]
+        }
+      ],
+      concepts: [
+        { name: "Least squares objective", description: "Minimize squared residual length ||y-Xb||^2.", cue: "Exact solution may not exist." },
+        { name: "Column-space projection", description: "The fitted vector Xb is the closest vector to y in Col(X).", cue: "Think closest shadow." },
+        { name: "Residual orthogonality", description: "At the best fit, y-Xb is perpendicular to every column of X.", cue: "Use X^T(y-Xb)=0." },
+        { name: "Normal equations", description: "X^T X b=X^T y.", cue: "Derive from residual orthogonality." },
+        { name: "Full column rank", description: "Independent columns make X^T X invertible and the solution unique.", cue: "Check rank before inverse." },
+        { name: "Hat matrix", description: "H=X(X^T X)^(-1)X^T projects onto Col(X).", cue: "Symmetric and idempotent." },
+        { name: "Ridge regression", description: "Minimize ||y-Xb||^2+lambda||b||^2.", cue: "Add lambda I to X^T X." },
+        { name: "Shrinkage", description: "Ridge reduces unstable coefficient directions.", cue: "Small singular values are damped more." }
+      ],
+      techniques: [
+        { name: "Projection read", when: "Xb=y is inconsistent.", move: "Replace exact solving with closest vector in Col(X)." },
+        { name: "Residual orthogonality", when: "asked to characterize the best fit.", move: "Set X^T(y-Xb)=0." },
+        { name: "Normal equation solve", when: "X has full column rank.", move: "Solve X^T X b=X^T y; use inverse only when X^T X is invertible." },
+        { name: "Hat-matrix recognition", when: "X(X^T X)^(-1)X^T appears.", move: "Recognize projection onto Col(X), symmetric and idempotent." },
+        { name: "Ridge stabilization", when: "lambda||b||^2 or X^T X+lambda I appears.", move: "Read lambda I as stabilizing and shrinking coefficients." }
+      ],
+      practiceProblems: linearAlgebraLeastSquaresRidgeProblems(),
+      reviewPrompts: [
+        "Why can Xb=y be impossible while least squares still has a solution?",
+        "What space is y projected onto in least squares?",
+        "Why is the residual perpendicular to every column of X?",
+        "How do normal equations follow from residual orthogonality?",
+        "When is the least-squares solution unique?",
+        "What does the hat matrix project onto?",
+        "How does ridge modify the normal equations?",
+        "Why does ridge help when columns are nearly dependent?"
+      ],
+      reviewQuiz: {
+        id: "quiz-linear-algebra-chapter-10-objective-review",
+        title: "Linear Algebra Chapter 10 Objective Review",
+        instructions: "Complete this after studying least squares and ridge regression. The quiz emphasizes projection geometry, normal equations, rank conditions, hat matrices, and regularized shrinkage.",
+        questions: linearAlgebraLeastSquaresRidgeReviewQuestions()
+      },
+      readingQuestions: [
+        "What objective does least squares minimize?",
+        "What is the geometric meaning of the fitted vector Xb?",
+        "What does residual orthogonality say?",
+        "What are the normal equations?",
+        "Why does full column rank matter?",
+        "What is the hat matrix and what properties does it have?",
+        "How does ridge regression change ordinary least squares?",
+        "How does SVD explain ridge shrinkage?"
+      ],
+      chapterSummary: [
+        "Least squares minimizes ||y-Xb||^2 when Xb=y may be inconsistent.",
+        "The fitted vector is the projection of y onto the column space of X.",
+        "The residual y-Xb is orthogonal to every column of X.",
+        "Residual orthogonality gives the normal equations X^T X b=X^T y.",
+        "If X has full column rank, X^T X is invertible and the least-squares solution is unique.",
+        "The hat matrix H=X(X^T X)^(-1)X^T is a projection matrix.",
+        "Ridge regression solves (X^T X+lambda I)b=X^T y.",
+        "Ridge stabilizes weak directions and shrinks coefficients."
       ],
       updatedAt
     }
@@ -11963,6 +12204,134 @@ function linearAlgebraSvdSingularValuesConceptGraph() {
   };
 }
 
+function linearAlgebraLeastSquaresRidgeConceptGraph() {
+  return {
+    chapterId: "gate-da-linear-algebra-least-squares-ridge",
+    chapterTitle: "Linear Algebra Chapter 10: Least Squares and Ridge Regression",
+    gateWeight: "high",
+    fallbackConcepts: ["least-squares-objective", "residual-orthogonality", "normal-equations", "ridge-regression"],
+    fallbackDifficultyMix: [1, 2, 2, 3],
+    fallbackInstruction: "Retest least squares as projection, residual orthogonality, normal equations, rank conditions, and ridge stabilization.",
+    stableNextAction: "Next: try a mixed data-linear-algebra set using projections, X^T X, SVD, ridge, and covariance/PCA ideas.",
+    nodes: {
+      "least-squares-objective": {
+        label: "Least-squares objective",
+        prereqs: ["norm", "linear-map"],
+        repairMaterial: "Review Chapter 10.1 and write least squares as minimizing ||y-Xb||^2 when Xb=y may be inconsistent.",
+        gateWeight: "high"
+      },
+      norm: {
+        label: "Vector norm",
+        prereqs: [],
+        repairMaterial: "Review Chapter 1.2 and compute residual length as a squared error.",
+        gateWeight: "high"
+      },
+      "linear-map": {
+        label: "Linear map",
+        prereqs: [],
+        repairMaterial: "Review Chapter 2.1 and read Xb as a linear combination of columns of X.",
+        gateWeight: "high"
+      },
+      "column-space-projection": {
+        label: "Column-space projection",
+        prereqs: ["column-space", "projection-matrix"],
+        repairMaterial: "Review Chapter 10.1 and Chapter 4.3: the fitted vector is the closest vector in Col(X).",
+        gateWeight: "high"
+      },
+      "column-space": {
+        label: "Column space",
+        prereqs: [],
+        repairMaterial: "Review Chapter 3.2 and identify Col(X) as all linear combinations of columns of X.",
+        gateWeight: "high"
+      },
+      "projection-matrix": {
+        label: "Projection matrix",
+        prereqs: [],
+        repairMaterial: "Review Chapter 4.4 and remember projections fix the target subspace and leave perpendicular residuals.",
+        gateWeight: "high"
+      },
+      "residual-orthogonality": {
+        label: "Residual orthogonality",
+        prereqs: ["column-space-projection", "orthogonality"],
+        repairMaterial: "Review Chapter 10.2 and use X^T(y-Xb)=0 at the best fit.",
+        gateWeight: "high"
+      },
+      orthogonality: {
+        label: "Orthogonality",
+        prereqs: [],
+        repairMaterial: "Review Chapter 4.1 and translate perpendicular to columns into dot products equal to zero.",
+        gateWeight: "high"
+      },
+      "normal-equations": {
+        label: "Normal equations",
+        prereqs: ["residual-orthogonality", "matrix-product"],
+        repairMaterial: "Review Chapter 10.3 and derive X^T X b=X^T y from X^T(y-Xb)=0.",
+        gateWeight: "high"
+      },
+      "matrix-product": {
+        label: "Matrix products",
+        prereqs: [],
+        repairMaterial: "Review Chapter 2.5 and track dimensions before multiplying X^T X or X^T y.",
+        gateWeight: "medium"
+      },
+      "full-column-rank": {
+        label: "Full column rank",
+        prereqs: ["linear-independence", "gram-positive-definite"],
+        repairMaterial: "Review Chapter 10.3 and remember independent columns make X^T X invertible.",
+        gateWeight: "high"
+      },
+      "linear-independence": {
+        label: "Linear independence",
+        prereqs: [],
+        repairMaterial: "Review Chapter 1.5 and check whether one column is redundant.",
+        gateWeight: "high"
+      },
+      "gram-positive-definite": {
+        label: "Gram positive definite",
+        prereqs: ["ata-psd"],
+        repairMaterial: "Review Chapter 8.4 and Chapter 9.2: X^T X is positive definite when X has independent columns.",
+        gateWeight: "high"
+      },
+      "ata-psd": {
+        label: "X^T X positive semidefinite",
+        prereqs: [],
+        repairMaterial: "Review Chapter 9.2 and rewrite b^T X^T X b as ||Xb||^2.",
+        gateWeight: "high"
+      },
+      "hat-matrix": {
+        label: "Hat matrix",
+        prereqs: ["normal-equations", "projection-matrix"],
+        repairMaterial: "Review Chapter 10.4 and recognize H=X(X^T X)^(-1)X^T as projection onto Col(X).",
+        gateWeight: "high"
+      },
+      "ridge-regression": {
+        label: "Ridge regression",
+        prereqs: ["normal-equations", "regularization"],
+        repairMaterial: "Review Chapter 10.5 and write ridge as (X^T X+lambda I)b=X^T y.",
+        gateWeight: "high"
+      },
+      regularization: {
+        label: "Regularization",
+        prereqs: [],
+        repairMaterial: "Review Chapter 10.5 and state that lambda||b||^2 penalizes large coefficients.",
+        gateWeight: "high"
+      },
+      "ridge-shrinkage": {
+        label: "Ridge shrinkage",
+        prereqs: ["ridge-regression", "singular-value"],
+        repairMaterial: "Review Chapter 10.6 and remember small singular-value directions are shrunk more.",
+        gateWeight: "high"
+      },
+      "singular-value": {
+        label: "Singular value",
+        prereqs: [],
+        repairMaterial: "Review Chapter 9.1 and interpret singular values as stretch factors.",
+        gateWeight: "high"
+      }
+    }
+  };
+}
+
 function conditionalProbabilityConceptGraph() {
   return {
     chapterId: "gate-da-conditional-probability",
@@ -14634,6 +15003,200 @@ function linearAlgebraSvdSingularValuesReviewQuestions() {
   }));
 }
 
+function linearAlgebraLeastSquaresRidgeProblems() {
+  return [
+    {
+      label: "Problem 1: Least-squares objective",
+      concept: "Least-squares objective",
+      difficulty: "Concept",
+      technique: "Identify the minimized quantity",
+      prompt: "When Xb=y has no exact solution, what quantity does least squares minimize?",
+      solution: "Least squares minimizes the squared residual length ||y-Xb||^2. It chooses the vector Xb inside the column space of X that is closest to y."
+    },
+    {
+      label: "Problem 2: Projection interpretation",
+      concept: "Column-space projection",
+      difficulty: "Concept",
+      technique: "Closest vector in Col(X)",
+      prompt: "What is the geometric meaning of the fitted vector y_hat=Xb in ordinary least squares?",
+      solution: "The fitted vector y_hat is the orthogonal projection of y onto the column space of X. It is the closest vector to y that can be written as a linear combination of columns of X."
+    },
+    {
+      label: "Problem 3: Residual orthogonality",
+      concept: "Residual orthogonality",
+      difficulty: "Application",
+      technique: "Set column dot products to zero",
+      prompt: "If r=y-Xb is the least-squares residual, what equation states that r is perpendicular to every column of X?",
+      solution: "The equation is X^T r=0. Since r=y-Xb, this becomes X^T(y-Xb)=0."
+    },
+    {
+      label: "Problem 4: Normal equations",
+      concept: "Normal equations",
+      difficulty: "Application",
+      technique: "Expand residual orthogonality",
+      prompt: "Derive the normal equations from X^T(y-Xb)=0.",
+      solution: "Expand: X^T y-X^T X b=0. Move terms to get X^T X b=X^T y."
+    },
+    {
+      label: "Problem 5: Full column rank",
+      concept: "Full column rank",
+      difficulty: "GATE-style",
+      technique: "Check uniqueness before inverse",
+      prompt: "If X has linearly independent columns, why is the ordinary least-squares solution unique?",
+      solution: "Independent columns make X^T X positive definite and invertible. Therefore the normal equations have the unique solution b=(X^T X)^(-1)X^T y."
+    },
+    {
+      label: "Problem 6: Simple normal-equation computation",
+      concept: "Normal equations",
+      difficulty: "GATE-style",
+      technique: "Compute X^T X and X^T y",
+      prompt: "Let X=[[1],[2]] and y=[1,3]. Find the least-squares coefficient b.",
+      solution: "X^T X=1^2+2^2=5 and X^T y=1*1+2*3=7. The normal equation is 5b=7, so b=7/5."
+    },
+    {
+      label: "Problem 7: Residual check",
+      concept: "Residual orthogonality",
+      difficulty: "GATE-style",
+      technique: "Verify X^T r=0",
+      prompt: "For X=[[1],[2]], y=[1,3], and b=7/5, verify residual orthogonality.",
+      solution: "Xb=[7/5,14/5], so r=y-Xb=[-2/5,1/5]. Then X^T r=1*(-2/5)+2*(1/5)=0. The residual is perpendicular to the column of X."
+    },
+    {
+      label: "Problem 8: Hat matrix properties",
+      concept: "Hat matrix",
+      difficulty: "GATE-style",
+      technique: "Recognize projection",
+      prompt: "For full-column-rank X, what does H=X(X^T X)^(-1)X^T project onto, and what two matrix properties does H have?",
+      solution: "H projects onto Col(X). It is symmetric and idempotent, so H^T=H and H^2=H."
+    },
+    {
+      label: "Problem 9: Ridge normal equations",
+      concept: "Ridge regression",
+      difficulty: "GATE-style",
+      technique: "Add lambda I",
+      prompt: "What linear system gives the ridge-regression coefficient for penalty lambda>0?",
+      solution: "Ridge solves (X^T X+lambda I)b=X^T y. The lambda I term penalizes large coefficients and stabilizes the system."
+    },
+    {
+      label: "Problem 10: Ridge shrinkage intuition",
+      concept: "Ridge shrinkage",
+      difficulty: "GATE-style",
+      technique: "Read weak directions",
+      prompt: "Why does ridge shrink directions with small singular values more strongly?",
+      solution: "In singular-vector coordinates, ridge divides by sigma_i^2+lambda instead of sigma_i^2. When sigma_i is small, adding lambda is a large relative change, so that direction is damped more."
+    }
+  ];
+}
+
+function linearAlgebraLeastSquaresRidgeReviewQuestions() {
+  const metadata = {
+    "la-ls-review-1": { targetConcept: "least-squares-objective", prereqsUsed: ["norm", "linear-map"], difficulty: 1, gateWeight: "high" },
+    "la-ls-review-2": { targetConcept: "column-space-projection", prereqsUsed: ["column-space", "projection-matrix"], difficulty: 2, gateWeight: "high" },
+    "la-ls-review-3": { targetConcept: "residual-orthogonality", prereqsUsed: ["column-space-projection", "orthogonality"], difficulty: 2, gateWeight: "high" },
+    "la-ls-review-4": { targetConcept: "normal-equations", prereqsUsed: ["residual-orthogonality", "matrix-product"], difficulty: 2, gateWeight: "high" },
+    "la-ls-review-5": { targetConcept: "full-column-rank", prereqsUsed: ["linear-independence", "gram-positive-definite"], difficulty: 2, gateWeight: "high" },
+    "la-ls-review-6": { targetConcept: "hat-matrix", prereqsUsed: ["normal-equations", "projection-matrix"], difficulty: 3, gateWeight: "high" },
+    "la-ls-review-7": { targetConcept: "ridge-shrinkage", prereqsUsed: ["ridge-regression", "singular-value"], difficulty: 3, gateWeight: "high" }
+  };
+  const questions = [
+    {
+      id: "la-ls-review-1",
+      kind: "single concept",
+      tags: ["least-squares-objective", "norm", "linear-map"],
+      prompt: "What does ordinary least squares minimize?",
+      options: [
+        { id: "a", text: "||y-Xb||^2" },
+        { id: "b", text: "||X||^2 only" },
+        { id: "c", text: "det(X)" },
+        { id: "d", text: "The largest eigenvalue of X" }
+      ],
+      answer: "a"
+    },
+    {
+      id: "la-ls-review-2",
+      kind: "mixed: two concepts",
+      tags: ["column-space-projection", "column-space", "projection-matrix"],
+      prompt: "Geometrically, the least-squares fitted vector Xb is what?",
+      options: [
+        { id: "a", text: "The projection of y onto Col(X)." },
+        { id: "b", text: "The projection of X onto y." },
+        { id: "c", text: "Always equal to y." },
+        { id: "d", text: "Always the zero vector." }
+      ],
+      answer: "a"
+    },
+    {
+      id: "la-ls-review-3",
+      kind: "mixed: two concepts",
+      tags: ["residual-orthogonality", "column-space-projection", "orthogonality"],
+      prompt: "At the least-squares solution, which equation expresses residual orthogonality?",
+      options: [
+        { id: "a", text: "X^T(y-Xb)=0" },
+        { id: "b", text: "Xb=0" },
+        { id: "c", text: "X^T X=0" },
+        { id: "d", text: "y-Xb=y" }
+      ],
+      answer: "a"
+    },
+    {
+      id: "la-ls-review-4",
+      kind: "mixed: two concepts",
+      tags: ["normal-equations", "residual-orthogonality", "matrix-product"],
+      prompt: "What are the ordinary least-squares normal equations?",
+      options: [
+        { id: "a", text: "X^T X b=X^T y" },
+        { id: "b", text: "Xb=X^T y" },
+        { id: "c", text: "X^T b=y" },
+        { id: "d", text: "X^T X y=b" }
+      ],
+      answer: "a"
+    },
+    {
+      id: "la-ls-review-5",
+      kind: "mixed: two concepts",
+      tags: ["full-column-rank", "linear-independence", "gram-positive-definite"],
+      prompt: "If X has linearly independent columns, what can we say about X^T X?",
+      options: [
+        { id: "a", text: "It is invertible and positive definite." },
+        { id: "b", text: "It must be the zero matrix." },
+        { id: "c", text: "It is never symmetric." },
+        { id: "d", text: "It has negative diagonal entries." }
+      ],
+      answer: "a"
+    },
+    {
+      id: "la-ls-review-6",
+      kind: "mixed: three concepts",
+      tags: ["hat-matrix", "normal-equations", "projection-matrix"],
+      prompt: "For full-column-rank X, H=X(X^T X)^(-1)X^T is best recognized as what?",
+      options: [
+        { id: "a", text: "A projection matrix onto Col(X)." },
+        { id: "b", text: "A stochastic matrix." },
+        { id: "c", text: "A skew-symmetric rotation." },
+        { id: "d", text: "A diagonal matrix of singular values." }
+      ],
+      answer: "a"
+    },
+    {
+      id: "la-ls-review-7",
+      kind: "mixed: three concepts",
+      tags: ["ridge-shrinkage", "ridge-regression", "singular-value"],
+      prompt: "Which equation is the ridge-regression normal equation for lambda>0?",
+      options: [
+        { id: "a", text: "(X^T X+lambda I)b=X^T y" },
+        { id: "b", text: "X^T X b=0" },
+        { id: "c", text: "(X+lambda I)b=y" },
+        { id: "d", text: "Xb=X^T y+lambda y" }
+      ],
+      answer: "a"
+    }
+  ];
+  return questions.map((question) => ({
+    ...question,
+    ...(metadata[question.id] || { targetConcept: question.tags[0], prereqsUsed: question.tags.slice(1), difficulty: question.tags.length, gateWeight: "medium" })
+  }));
+}
+
 function discreteMathMilestones() {
   return [
     {
@@ -16043,6 +16606,7 @@ function conceptGraphForSection(section) {
   if (section?.id === "gate-da-linear-algebra-symmetric-quadratic-forms") return linearAlgebraSymmetricQuadraticFormsConceptGraph();
   if (section?.id === "gate-da-linear-algebra-special-matrices") return linearAlgebraSpecialMatricesConceptGraph();
   if (section?.id === "gate-da-linear-algebra-svd-singular-values") return linearAlgebraSvdSingularValuesConceptGraph();
+  if (section?.id === "gate-da-linear-algebra-least-squares-ridge") return linearAlgebraLeastSquaresRidgeConceptGraph();
   if (section?.id === "gate-da-probability-foundations") return probabilityFoundationConceptGraph();
   if (section?.id === "gate-da-conditional-probability") return conditionalProbabilityConceptGraph();
   if (section?.id === "gate-da-random-variables-expectation") return randomVariablesExpectationConceptGraph();
