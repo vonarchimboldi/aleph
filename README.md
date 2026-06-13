@@ -89,7 +89,7 @@ OPENAI_API_KEY=...
 Optional feedback model override:
 
 ```text
-OPENAI_FEEDBACK_MODEL=gpt-5.1-mini
+OPENAI_FEEDBACK_MODEL=gpt-4.1-mini
 ```
 
 If the email API is not configured, the app falls back to opening a prefilled mail draft in the user's email client.

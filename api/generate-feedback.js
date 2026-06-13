@@ -115,7 +115,7 @@ export default async function handler(request, response) {
     solutionText: String(solutionText).slice(0, 30000)
   };
 
-  const model = process.env.OPENAI_FEEDBACK_MODEL || "gpt-5.1-mini";
+  const model = process.env.OPENAI_FEEDBACK_MODEL || "gpt-4.1-mini";
   let openaiResponse;
   try {
     openaiResponse = await fetch("https://api.openai.com/v1/responses", {
