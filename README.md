@@ -76,7 +76,7 @@ If the app appears stale after code changes, hard refresh the page. The service 
 
 ## Email Setup
 
-Aleph can send learner login email through a Vercel serverless function backed by Resend.
+Aleph can send learner login, feedback, overdue, and Platinum pace-check email through Vercel serverless functions backed by Resend.
 
 Required Vercel environment variables:
 
@@ -86,6 +86,32 @@ FROM_EMAIL=Aleph <onboarding@your-verified-domain.com>
 ```
 
 If the email API is not configured, the app falls back to opening a prefilled mail draft in the user's email client.
+
+## Platinum Weekly Cron
+
+The Platinum learner browser syncs a compact progress snapshot to `/api/platinum-progress` whenever local progress changes. The Vercel cron job at `/api/cron/platinum-weekly-check` runs weekly on Sunday at 14:00 UTC and evaluates:
+
+- due task completion
+- overdue and due-today work
+- due material submissions
+- feedback readiness and recent feedback summaries
+- revision-risk signals from structured feedback
+
+Required durable snapshot storage environment variables:
+
+```text
+KV_REST_API_URL=...
+KV_REST_API_TOKEN=...
+```
+
+Optional environment variables:
+
+```text
+CRON_SECRET=...
+PLATINUM_MONITOR_EMAIL=...
+```
+
+If `PLATINUM_MONITOR_EMAIL` is set, the weekly report is sent there. Otherwise, the endpoint sends learner email only when action is needed. Without KV variables, local development uses in-memory storage only; production cron checks need KV.
 
 ## Verification
 

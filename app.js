@@ -1,15 +1,17 @@
 const STORAGE_KEY = "learning-studio-data-v2";
 const LEGACY_STORAGE_KEYS = ["learning-studio-data-v1"];
 const SESSION_KEY = "aleph-session";
-const COURSE_PLAN_VERSION = "seeded-user-canonical-workspace-v82";
+const COURSE_PLAN_VERSION = "seeded-user-canonical-workspace-v83";
 const PRIYANKA_PLATINUM_START_DATE = "2026-06-07";
 const DEFAULT_PLAN_START_DATE = "2026-06-01";
+const PLATINUM_PROGRESS_SYNC_DEBOUNCE_MS = 1500;
 
 const state = loadState();
 let selectedSubjectId = null;
 let selectedSectionId = null;
 let selectedPatternMaterialId = null;
 let activeTestId = null;
+let platinumProgressSyncTimer = null;
 ensureCoursePlan();
 enforceSeededUserWorkspace();
 
@@ -16107,6 +16109,33 @@ function prototypeUsers() {
 
 function persist() {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+  schedulePlatinumProgressSync();
+}
+
+function schedulePlatinumProgressSync() {
+  if (!isPlatinumPrototypeUser(state.user)) return;
+  window.clearTimeout(platinumProgressSyncTimer);
+  platinumProgressSyncTimer = window.setTimeout(syncPlatinumProgressSnapshot, PLATINUM_PROGRESS_SYNC_DEBOUNCE_MS);
+}
+
+async function syncPlatinumProgressSnapshot() {
+  if (!isPlatinumPrototypeUser(state.user)) return;
+  const snapshot = buildPlatinumProgressSnapshot();
+  try {
+    const result = await fetch("/api/platinum-progress", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(snapshot)
+    });
+    if (result.ok) {
+      state.user.lastPlatinumProgressSyncedAt = new Date().toISOString();
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    }
+  } catch {
+    // Local-only development and offline sessions can still use browser state.
+  }
 }
 
 function enforceActivePlanIntegrity() {
@@ -18952,6 +18981,114 @@ function platinumPaceReport() {
     completedExpectedCount: completedExpected.length,
     completionRate
   };
+}
+
+function buildPlatinumProgressSnapshot() {
+  const today = todayDateString();
+  const pace = platinumPaceReport();
+  const dueTasks = state.tasks
+    .filter((task) => taskDueDate(task) && taskDueDate(task) <= today)
+    .map(platinumTaskSnapshot);
+  const upcomingTasks = state.tasks
+    .filter((task) => taskDueDate(task) && taskDueDate(task) > today)
+    .sort((a, b) => taskDueDate(a).localeCompare(taskDueDate(b)))
+    .slice(0, 12)
+    .map(platinumTaskSnapshot);
+  const materials = platinumMaterialSnapshots();
+  const dueMaterials = materials.filter((material) => material.date && material.date <= today);
+
+  return {
+    schemaVersion: 1,
+    accountTypeId: activeAccountTypeId(),
+    coursePlanVersion: COURSE_PLAN_VERSION,
+    syncedAt: new Date().toISOString(),
+    today,
+    currentWeek: pace.currentWeek,
+    user: {
+      id: state.user.id || "",
+      name: state.user.name || "",
+      displayName: state.user.displayName || state.user.name || "",
+      email: state.user.email || "",
+      accountTypeId: state.user.accountTypeId || ""
+    },
+    pace: {
+      statusLabel: pace.status.label,
+      completionRate: pace.completionRate,
+      currentWeek: pace.currentWeek,
+      expectedCount: pace.expectedCount,
+      completedExpectedCount: pace.completedExpectedCount,
+      overdueCount: pace.overdue.length,
+      dueTodayCount: pace.dueToday.length,
+      upcomingCount: pace.upcoming.length
+    },
+    tasks: {
+      due: dueTasks,
+      upcoming: upcomingTasks
+    },
+    materials: {
+      due: dueMaterials,
+      upcoming: materials.filter((material) => material.date && material.date > today).slice(0, 12)
+    },
+    feedback: {
+      latest: dueMaterials
+        .filter((material) => material.feedbackReady)
+        .sort((a, b) => (b.feedbackUpdatedAt || "").localeCompare(a.feedbackUpdatedAt || ""))
+        .slice(0, 8)
+    }
+  };
+}
+
+function platinumTaskSnapshot(task) {
+  const scheduleItem = linkedScheduleForTask(task);
+  const dueState = taskDueState(task);
+  return {
+    id: task.id,
+    title: task.title,
+    type: task.type || scheduleItem?.kind || "Task",
+    week: task.week || weekFromDate(taskDueDate(task)),
+    dueDate: taskDueDate(task),
+    status: task.status,
+    done: Boolean(task.done),
+    dueState: dueState.status,
+    dueLabel: dueState.label,
+    scheduleId: scheduleItem?.id || "",
+    scheduleTitle: scheduleItem?.title || ""
+  };
+}
+
+function platinumMaterialSnapshots() {
+  const materials = [];
+  state.subjects.forEach((subject) => {
+    (subject.patternWorkspaces || []).forEach((pattern) => {
+      (pattern.weeks || []).forEach((week) => {
+        const submission = patternSubmission(week.id);
+        const feedbackRecord = submission?.feedbackRecord || null;
+        materials.push({
+          materialId: week.id,
+          subjectId: subject.id,
+          subjectTitle: subject.title,
+          patternId: pattern.id,
+          patternTitle: pattern.title,
+          week: week.week,
+          date: week.date,
+          materialTitle: week.materialTitle,
+          materialUrl: week.materialUrl || "",
+          submitted: Boolean(submission?.uploadedAt || submission?.fileName),
+          uploadedAt: submission?.uploadedAt || "",
+          fileName: submission?.fileName || "",
+          feedbackReady: Boolean(submission?.feedbackUpdatedAt || submission?.feedback),
+          feedbackUpdatedAt: submission?.feedbackUpdatedAt || "",
+          feedbackSummary: submission?.feedback || "",
+          feedbackVerdict: feedbackRecord?.verdict || "",
+          feedbackScore: feedbackRecord?.score ?? null,
+          feedbackConceptGap: feedbackRecord?.conceptGap?.tag || "",
+          feedbackFirstIssue: feedbackRecord?.firstIssue?.location || "",
+          feedbackNextDrill: feedbackRecord?.nextDrill?.instruction || ""
+        });
+      });
+    });
+  });
+  return materials.sort((a, b) => (a.date || "").localeCompare(b.date || ""));
 }
 
 function paceStatusFromCounts(overdueCount, dueTodayCount, completionRate) {

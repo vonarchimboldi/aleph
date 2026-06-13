@@ -1,4 +1,10 @@
 {
+  "crons": [
+    {
+      "path": "/api/cron/platinum-weekly-check",
+      "schedule": "0 14 * * 0"
+    }
+  ],
   "headers": [
     {
       "source": "/fresh-start.html",
