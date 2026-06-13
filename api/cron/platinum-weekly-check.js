@@ -179,7 +179,12 @@ function weeklyEmailText(learnerName, snapshot, report) {
   if (report.latestFeedback.length) {
     lines.push(
       "Latest feedback:",
-      ...report.latestFeedback.map((item) => `- ${item.materialTitle}: ${item.feedbackSummary || "Feedback recorded."}`),
+      ...report.latestFeedback.map((item) => {
+        const notUnderstood = item.feedbackNotUnderstood?.length ? ` Not understood yet: ${item.feedbackNotUnderstood.join("; ")}` : "";
+        const executionIssues = item.feedbackExecutionIssues?.length ? ` Execution issues: ${item.feedbackExecutionIssues.join("; ")}` : "";
+        const next = item.feedbackNextDrill ? ` Next drill: ${item.feedbackNextDrill}` : "";
+        return `- ${item.materialTitle}: ${item.feedbackSummary || "Feedback recorded."}${notUnderstood}${executionIssues}${next}`;
+      }),
       ""
     );
   }

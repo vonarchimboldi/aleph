@@ -1,7 +1,7 @@
 const STORAGE_KEY = "learning-studio-data-v2";
 const LEGACY_STORAGE_KEYS = ["learning-studio-data-v1"];
 const SESSION_KEY = "aleph-session";
-const COURSE_PLAN_VERSION = "seeded-user-canonical-workspace-v83";
+const COURSE_PLAN_VERSION = "seeded-user-canonical-workspace-v84";
 const PRIYANKA_PLATINUM_START_DATE = "2026-06-07";
 const DEFAULT_PLAN_START_DATE = "2026-06-01";
 const PLATINUM_PROGRESS_SYNC_DEBOUNCE_MS = 1500;
@@ -17309,7 +17309,7 @@ function weekPlanTemplate(group) {
         </div>
         <div class="week-summary-meta">
           <span class="tag">${group.days.length} days</span>
-          <span class="tag">${completed}/${group.days.length} feedback complete</span>
+        <span class="tag">${completed}/${group.days.length} AI reports complete</span>
         </div>
       </summary>
       <div class="day-material-list">
@@ -17350,10 +17350,10 @@ function dayMaterialTemplate({ pattern, week }) {
         </div>
       </div>
       <div class="day-status-row">
-        <span class="tag">${hasFeedback ? "Feedback saved" : hasUpload ? "Ready for feedback" : "Submit solution first"}</span>
+        <span class="tag">${hasFeedback ? "AI feedback ready" : hasUpload ? "Ready for AI feedback" : "Submit solution first"}</span>
         ${hasUpload
-          ? `<button class="small-btn" data-open-day-feedback="${escapeHtml(week.id)}" type="button">${hasFeedback ? "Review feedback" : "Give feedback"}</button>`
-          : '<p class="feedback-placeholder">Feedback page unlocks after a solution is submitted for this day.</p>'}
+          ? `<button class="small-btn" data-open-day-feedback="${escapeHtml(week.id)}" type="button">${hasFeedback ? "Review feedback" : "Generate feedback"}</button>`
+          : '<p class="feedback-placeholder">Feedback generation unlocks after a solution is submitted for this day.</p>'}
       </div>
     </article>
   `;
@@ -17399,15 +17399,19 @@ function patternMaterialFeedbackPageTemplate(subject, material) {
           </section>
           <section class="feedback-context-card">
             <h5>Submission</h5>
-            <p>${hasSubmission ? `Submitted file: ${escapeHtml(submission.fileName)}` : "Submit the solution for this day before recording feedback."}</p>
+            <p>${hasSubmission ? `Submitted file: ${escapeHtml(submission.fileName)}` : "Submit the solution for this day before generating feedback."}</p>
             <label class="solution-upload compact-upload">
               <span>${hasSubmission ? "Replace solution" : "Submit solution"}</span>
               <input type="file" data-solution-upload="${escapeHtml(week.id)}" accept=".pdf,.txt,.md,.png,.jpg,.jpeg">
             </label>
+            <label class="feedback-note">
+              <span>Solution text for AI feedback</span>
+              <textarea data-solution-text="${escapeHtml(week.id)}" rows="7" placeholder="Paste the learner's written solution here. Text or Markdown uploads are copied here automatically.">${escapeHtml(submission?.solutionText || "")}</textarea>
+            </label>
           </section>
           <section class="feedback-context-card">
             <h5>Current Feedback</h5>
-            <p>${submission?.feedback ? escapeHtml(submission.feedback) : "No feedback saved yet."}</p>
+            <p>${submission?.feedback ? escapeHtml(submission.feedback) : "No AI feedback generated yet."}</p>
             ${submission?.feedbackEmailSentAt ? `<p class="fine-print">Email sent ${formatDate(submission.feedbackEmailSentAt.slice(0, 10))}.</p>` : ""}
           </section>
         </div>
@@ -17416,10 +17420,10 @@ function patternMaterialFeedbackPageTemplate(subject, material) {
           ? `<section class="feedback-editor" data-material-card="${escapeHtml(week.id)}">
               ${feedbackWorkflowTemplate(workflow, feedbackRecord)}
               <div class="feedback-page-actions">
-                <button class="primary-btn" data-save-pattern-feedback type="button">Save feedback</button>
+                <button class="primary-btn" data-save-pattern-feedback type="button">Generate AI feedback report</button>
               </div>
             </section>`
-          : '<section class="feedback-placeholder feedback-page-empty">Upload a solution first. The feedback editor will appear here for this day only.</section>'}
+          : '<section class="feedback-placeholder feedback-page-empty">Upload a solution first. The AI feedback generator will appear here for this day only.</section>'}
       </section>
     </article>
   `;
@@ -17451,8 +17455,12 @@ function patternWeekTemplate(pattern, week) {
         </label>
       </div>
       <p class="fine-print">${escapeHtml(uploadLabel)}</p>
+      <label class="feedback-note">
+        <span>Solution text for AI feedback</span>
+        <textarea data-solution-text="${escapeHtml(week.id)}" rows="5" placeholder="Paste the learner's written solution here. Text or Markdown uploads are copied here automatically.">${escapeHtml(submission?.solutionText || "")}</textarea>
+      </label>
       ${feedbackWorkflowTemplate(workflow, feedbackRecord)}
-      <button class="small-btn" data-save-pattern-feedback type="button">Save feedback</button>
+      <button class="small-btn" data-save-pattern-feedback type="button">Generate AI feedback report</button>
     </section>
   `;
 }
@@ -17490,19 +17498,15 @@ function defaultFeedbackWorkflow(pattern, week) {
 }
 
 function feedbackWorkflowTemplate(workflow, feedbackRecord) {
-  const selectedVerdict = feedbackRecord.verdict || "yellow";
-  const selectedGapTag = feedbackRecord.conceptGap?.tag || workflow.skills?.[0]?.id || "";
-  const selectedNextSkill = feedbackRecord.nextDrill?.skillTag || selectedGapTag;
-  const masteryUpdates = feedbackRecord.masteryUpdates || [];
   return `
     <section class="structured-feedback" data-feedback-workflow="${escapeHtml(workflow.id)}">
       <div class="structured-feedback-header">
         <div>
-          <p class="eyebrow">Feedback workflow</p>
+          <p class="eyebrow">AI feedback rubric</p>
           <h6>${escapeHtml(workflow.title)}</h6>
-          <p>${escapeHtml(workflow.promptUse)}</p>
+          <p>${escapeHtml(workflow.promptUse)} The model uses this rubric to produce the feedback report.</p>
         </div>
-        <span class="tag">JSON schema</span>
+        <span class="tag">LLM generated</span>
       </div>
       <section class="feedback-spec">
         <div class="feedback-spec-title">Rubric, skills, and next action guide</div>
@@ -17533,84 +17537,39 @@ function feedbackWorkflowTemplate(workflow, feedbackRecord) {
           </div>
         </div>
       </section>
-      <div class="feedback-form-grid">
-        <label>
-          <span>Verdict</span>
-          <select data-feedback-field="verdict">
-            ${(workflow.verdicts || []).map((verdict) => `<option value="${escapeHtml(verdict.id)}"${selectedVerdict === verdict.id ? " selected" : ""}>${escapeHtml(verdict.label)}</option>`).join("")}
-          </select>
-        </label>
-        <label>
-          <span>Score / 10</span>
-          <input data-feedback-field="score" type="number" min="0" max="10" step="0.5" value="${escapeHtml(feedbackRecord.score ?? "")}" placeholder="6">
-        </label>
-        <label class="wide-field">
-          <span>Student answer summary</span>
-          <textarea data-feedback-field="studentSummary" rows="2" placeholder="${escapeHtml(workflow.studentSummaryHint)}">${escapeHtml(feedbackRecord.studentSummary || "")}</textarea>
-        </label>
-        <label class="wide-field">
-          <span>What worked</span>
-          <textarea data-feedback-field="strengths" rows="2" placeholder="One strength per line.">${escapeHtml(linesToText(feedbackRecord.strengths))}</textarea>
-        </label>
-        <label>
-          <span>First issue location</span>
-          <input data-feedback-field="firstIssueLocation" value="${escapeHtml(feedbackRecord.firstIssue?.location || "")}" placeholder="indicator definition">
-        </label>
-        <label>
-          <span>Concept gap</span>
-          <select data-feedback-field="conceptGapTag">
-            ${(workflow.skills || []).map((skill) => `<option value="${escapeHtml(skill.id)}"${selectedGapTag === skill.id ? " selected" : ""}>${escapeHtml(skill.label)}</option>`).join("")}
-          </select>
-        </label>
-        <label class="wide-field">
-          <span>Where it breaks</span>
-          <textarea data-feedback-field="firstIssueExplanation" rows="2" placeholder="Point to the first weak or wrong step.">${escapeHtml(feedbackRecord.firstIssue?.explanation || "")}</textarea>
-        </label>
-        <label class="wide-field">
-          <span>Missing idea</span>
-          <textarea data-feedback-field="conceptGapDescription" rows="2" placeholder="Explain the missing pattern in simple language.">${escapeHtml(feedbackRecord.conceptGap?.description || "")}</textarea>
-        </label>
-        <label class="wide-field">
-          <span>Correct approach</span>
-          <textarea data-feedback-field="correctApproach" rows="3" placeholder="One step per line.">${escapeHtml(linesToText(feedbackRecord.correctApproach))}</textarea>
-        </label>
-        <label class="wide-field">
-          <span>Minimal correction</span>
-          <textarea data-feedback-field="minimalCorrection" rows="2" placeholder="The smallest rewrite that would fix the solution.">${escapeHtml(feedbackRecord.minimalCorrection || "")}</textarea>
-        </label>
-        <label>
-          <span>Next drill skill</span>
-          <select data-feedback-field="nextDrillSkill">
-            ${(workflow.skills || []).map((skill) => `<option value="${escapeHtml(skill.id)}"${selectedNextSkill === skill.id ? " selected" : ""}>${escapeHtml(skill.label)}</option>`).join("")}
-          </select>
-        </label>
-        <label>
-          <span>Next drill difficulty</span>
-          <select data-feedback-field="nextDrillDifficulty">
-            ${["mechanics", "application", "hard"].map((level) => `<option value="${level}"${feedbackRecord.nextDrill?.difficulty === level ? " selected" : ""}>${level}</option>`).join("")}
-          </select>
-        </label>
-        <label class="wide-field">
-          <span>Next drill instruction</span>
-          <textarea data-feedback-field="nextDrillInstruction" rows="2" placeholder="${escapeHtml(workflow.defaultNextDrills?.[0]?.instruction || "Assign one concrete correction drill.")}">${escapeHtml(feedbackRecord.nextDrill?.instruction || "")}</textarea>
-        </label>
+      ${feedbackRecord?.studentReport ? generatedFeedbackReportTemplate(feedbackRecord) : '<p class="feedback-placeholder">No AI report generated yet. Paste the learner solution text and run the generator.</p>'}
+    </section>
+  `;
+}
+
+function generatedFeedbackReportTemplate(record) {
+  const report = record.studentReport || {};
+  return `
+    <section class="feedback-spec generated-feedback-report">
+      <div class="feedback-spec-title">${escapeHtml(report.headline || "Generated feedback report")}</div>
+      <div class="feedback-spec-grid">
+        <div>
+          <strong>What you got right</strong>
+          <ul>${(report.right || record.whatTheyGotRight || []).map((item) => `<li>${escapeHtml(item)}</li>`).join("") || "<li>No strengths identified yet.</li>"}</ul>
+        </div>
+        <div>
+          <strong>What is not understood yet</strong>
+          <ul>${(report.notYet || record.stillNotUnderstood || []).map((item) => `<li>${escapeHtml(item)}</li>`).join("") || "<li>No conceptual gap recorded.</li>"}</ul>
+        </div>
+        <div>
+          <strong>Errors despite knowing the concept</strong>
+          <ul>${(report.executionIssues || record.errorsDespiteKnowing || []).map((item) => `<li>${escapeHtml(item)}</li>`).join("") || "<li>No execution issue recorded.</li>"}</ul>
+        </div>
+        <div>
+          <strong>Mastery plan</strong>
+          <ul>${(report.masteryPlan || []).map((item) => `<li>${escapeHtml(item)}</li>`).join("") || "<li>No next plan recorded.</li>"}</ul>
+        </div>
       </div>
-      <div class="mastery-grid">
-        ${(workflow.skills || []).map((skill) => {
-          const update = masteryUpdates.find((entry) => entry.skill === skill.id);
-          const delta = update?.delta ?? 0;
-          return `
-            <label>
-              <span>${escapeHtml(skill.label)}</span>
-              <select data-mastery-skill="${escapeHtml(skill.id)}">
-                <option value="1"${delta === 1 ? " selected" : ""}>improved</option>
-                <option value="0"${delta === 0 ? " selected" : ""}>unchanged</option>
-                <option value="-1"${delta === -1 ? " selected" : ""}>needs review</option>
-              </select>
-            </label>
-          `;
-        }).join("")}
-      </div>
+      <p><strong>First issue:</strong> ${escapeHtml(record.firstIssue?.location || "not marked")} - ${escapeHtml(record.firstIssue?.explanation || "")}</p>
+      <p><strong>Concept gap:</strong> ${escapeHtml(record.conceptGap?.tag || "not tagged")} - ${escapeHtml(record.conceptGap?.description || "")}</p>
+      <p><strong>Minimal correction:</strong> ${escapeHtml(record.minimalCorrection || "")}</p>
+      <p><strong>Next drill:</strong> ${escapeHtml(record.nextDrill?.instruction || "")}</p>
+      <p>${escapeHtml(report.encouragement || "")}</p>
     </section>
   `;
 }
@@ -17644,25 +17603,96 @@ function savePatternSolutionUpload(input) {
     fileType: file.type || "unknown",
     uploadedAt: new Date().toISOString()
   });
+  if (isTextSolutionFile(file)) {
+    const reader = new FileReader();
+    reader.onload = () => {
+      upsertPatternSubmission(materialId, {
+        solutionText: String(reader.result || "").slice(0, 30000)
+      });
+      selectedPatternMaterialId = materialId;
+      persist();
+      renderSubjects();
+    };
+    reader.readAsText(file);
+    return;
+  }
   selectedPatternMaterialId = materialId;
   persist();
   renderSubjects();
+}
+
+function isTextSolutionFile(file) {
+  const name = file.name.toLowerCase();
+  return file.type.startsWith("text/") || name.endsWith(".txt") || name.endsWith(".md");
 }
 
 async function savePatternFeedback(button) {
   const card = button.closest("[data-material-card]");
   if (!card) return;
   const materialId = card.dataset.materialCard;
-  const feedbackRecord = collectStructuredFeedback(card);
-  const feedback = summarizeFeedbackRecord(feedbackRecord);
+  const solutionText = card.querySelector(`[data-solution-text="${CSS.escape(materialId)}"]`)?.value.trim() || "";
+  if (!solutionText) {
+    alert("Paste the learner solution text before generating feedback.");
+    return;
+  }
+  const material = findPatternMaterialAcrossState(materialId);
+  const workflow = material?.week?.feedbackWorkflow || defaultFeedbackWorkflow(material?.pattern || {}, material?.week || { id: materialId, materialTitle: "Aleph material" });
+  button.disabled = true;
+  button.textContent = "Generating...";
+  const payload = {
+    materialTitle: material?.week?.materialTitle || "Aleph material",
+    materialContext: buildFeedbackMaterialContext(material),
+    workflow,
+    solutionText,
+    learnerName: state.user.displayName || state.user.name
+  };
+  let feedbackRecord;
+  let feedback;
+  try {
+    const result = await fetch("/api/generate-feedback", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(payload)
+    });
+    if (!result.ok) {
+      const details = await result.json().catch(() => ({}));
+      throw new Error(details.error || "Feedback generation failed");
+    }
+    const generated = await result.json();
+    feedbackRecord = generated.feedbackRecord;
+    feedback = generated.feedback || summarizeFeedbackRecord(feedbackRecord);
+  } catch (error) {
+    alert(`${error.message}. Check OPENAI_API_KEY / OPENAI_FEEDBACK_MODEL configuration and try again.`);
+    button.disabled = false;
+    button.textContent = "Generate AI feedback report";
+    return;
+  }
   const submission = upsertPatternSubmission(materialId, {
+    solutionText,
     feedbackRecord,
+    feedbackReportText: formatFeedbackReportText(feedbackRecord),
     feedback,
     feedbackUpdatedAt: new Date().toISOString()
   });
   await sendFeedbackEmail(materialId, submission);
   persist();
   renderSubjects();
+}
+
+function buildFeedbackMaterialContext(material) {
+  if (!material) return {};
+  const { pattern, week } = material;
+  return {
+    patternTitle: pattern.title,
+    patternFocus: pattern.focus,
+    week: week.week,
+    date: week.date,
+    expectedWork: week.expectedWork,
+    materialUrl: week.materialUrl || "",
+    status: week.status
+  };
 }
 
 function findPatternMaterialAcrossState(materialId) {
@@ -17682,7 +17712,7 @@ async function sendFeedbackEmail(materialId, submission) {
     email,
     name: state.user.displayName || state.user.name,
     materialTitle,
-    feedback: submission.feedback,
+    feedback: submission.feedbackReportText || submission.feedback,
     appUrl: window.location.origin
   };
 
@@ -17760,6 +17790,35 @@ function summarizeFeedbackRecord(record) {
   const gap = record.conceptGap?.tag || "no skill tag";
   const issue = record.firstIssue?.location || "first issue not marked";
   return `${verdict.toUpperCase()} - ${score}. Gap: ${gap}. First issue: ${issue}. ${record.minimalCorrection || "Correction task not recorded."}`;
+}
+
+function formatFeedbackReportText(record) {
+  const report = record.studentReport || {};
+  const section = (title, items) => [
+    title,
+    ...(items?.length ? items.map((item) => `- ${item}`) : ["- Not identified."]),
+    ""
+  ];
+  return [
+    report.headline || "Aleph feedback report",
+    "",
+    `Verdict: ${(record.verdict || "yellow").toUpperCase()}`,
+    `Score: ${Number.isFinite(record.score) ? `${record.score}/${record.maxScore || 10}` : "unscored"}`,
+    "",
+    `Summary: ${record.studentSummary || "No summary generated."}`,
+    "",
+    ...section("What you got right", report.right || record.whatTheyGotRight),
+    ...section("What you still do not understand", report.notYet || record.stillNotUnderstood),
+    ...section("What you are getting wrong despite knowing the concept", report.executionIssues || record.errorsDespiteKnowing),
+    `First issue: ${record.firstIssue?.location || "not marked"} - ${record.firstIssue?.explanation || ""}`,
+    `Concept gap: ${record.conceptGap?.tag || "not tagged"} - ${record.conceptGap?.description || ""}`,
+    `Minimal correction: ${record.minimalCorrection || "not generated"}`,
+    "",
+    ...section("What to do next", report.masteryPlan),
+    `Next drill: ${record.nextDrill?.instruction || "not generated"}`,
+    "",
+    report.encouragement || ""
+  ].join("\n");
 }
 
 function textToLines(value) {
@@ -19079,11 +19138,16 @@ function platinumMaterialSnapshots() {
           feedbackReady: Boolean(submission?.feedbackUpdatedAt || submission?.feedback),
           feedbackUpdatedAt: submission?.feedbackUpdatedAt || "",
           feedbackSummary: submission?.feedback || "",
+          feedbackReportText: submission?.feedbackReportText || "",
           feedbackVerdict: feedbackRecord?.verdict || "",
           feedbackScore: feedbackRecord?.score ?? null,
           feedbackConceptGap: feedbackRecord?.conceptGap?.tag || "",
           feedbackFirstIssue: feedbackRecord?.firstIssue?.location || "",
-          feedbackNextDrill: feedbackRecord?.nextDrill?.instruction || ""
+          feedbackNextDrill: feedbackRecord?.nextDrill?.instruction || "",
+          feedbackRight: feedbackRecord?.whatTheyGotRight || feedbackRecord?.studentReport?.right || [],
+          feedbackNotUnderstood: feedbackRecord?.stillNotUnderstood || feedbackRecord?.studentReport?.notYet || [],
+          feedbackExecutionIssues: feedbackRecord?.errorsDespiteKnowing || feedbackRecord?.studentReport?.executionIssues || [],
+          feedbackMasteryPlan: feedbackRecord?.studentReport?.masteryPlan || []
         });
       });
     });
