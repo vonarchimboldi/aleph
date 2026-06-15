@@ -57,8 +57,9 @@ function buildWeeklyReport(snapshot) {
     .slice(0, 5);
   const severeFeedback = feedbackReady.filter((material) => {
     const verdict = String(material.feedbackVerdict || "").toLowerCase();
-    return verdict.includes("revise") || verdict.includes("weak") || verdict.includes("incomplete");
+    return verdict.includes("revise") || verdict.includes("weak") || verdict.includes("incomplete") || verdict === "red" || verdict === "yellow";
   });
+  const adaptivePlan = buildAdaptiveWeeklyPlan(snapshot, feedbackReady);
 
   const alerts = [];
   if (overdueTasks.length) alerts.push(`${overdueTasks.length} overdue task(s)`);
@@ -90,8 +91,205 @@ function buildWeeklyReport(snapshot) {
     nextTasks: incompleteDueTasks.slice(0, 8),
     missingSubmissions: missingSubmissions.slice(0, 8),
     missingFeedback: missingFeedback.slice(0, 8),
-    latestFeedback
+    latestFeedback,
+    adaptivePlan
   };
+}
+
+function buildAdaptiveWeeklyPlan(snapshot, feedbackReady) {
+  const hypotheses = collectPrerequisiteHypotheses(feedbackReady);
+  const sundayEvidence = feedbackReady.filter((material) => /review|quiz/i.test(material.materialTitle || ""));
+  const ranked = rankPrerequisiteHypotheses(hypotheses, sundayEvidence);
+  const top = ranked.slice(0, 6);
+  const confirmed = top.filter((item) => item.status === "confirmed");
+  const highPriority = top.filter((item) => item.repairPriority === "high" || item.confidence === "high");
+  const allocation = adaptiveAllocation({ top, confirmed, highPriority });
+
+  return {
+    status: top.length ? "adaptive_plan_ready" : "no_prerequisite_gaps_detected",
+    rationale: top.length
+      ? "Next week's problem sets should adapt to the strongest prerequisite hypotheses from daily feedback and use Sunday diagnostics to confirm or falsify them."
+      : "No prerequisite hypotheses are available yet. Generate structured feedback or run the Sunday diagnostic before adapting next week's material.",
+    currentWeek: snapshot.pace?.currentWeek || snapshot.currentWeek || null,
+    hypotheses: top,
+    sundayDiagnosticPlan: buildSundayDiagnosticPlan(top),
+    nextWeekProblemSetPlan: buildNextWeekProblemSetPlan(top, allocation),
+    allocation
+  };
+}
+
+function collectPrerequisiteHypotheses(feedbackReady) {
+  const hypotheses = [];
+  feedbackReady.forEach((material) => {
+    (material.feedbackPrerequisiteHypotheses || []).forEach((hypothesis) => {
+      hypotheses.push({
+        prerequisite: hypothesis.prerequisite || material.feedbackConceptGap || "unspecified prerequisite",
+        hypothesis: hypothesis.hypothesis || "Prerequisite may be shaky.",
+        confidence: hypothesis.confidence || "medium",
+        evidence: hypothesis.evidence || material.feedbackSummary || "",
+        sourceSkill: hypothesis.sourceSkill || material.feedbackConceptGap || "",
+        testOnSunday: hypothesis.testOnSunday !== false,
+        repairPriority: hypothesis.repairPriority || "medium",
+        sourceMaterialId: material.materialId,
+        sourceMaterialTitle: material.materialTitle,
+        sourceDate: material.date,
+        fromSundayReview: /review|quiz/i.test(material.materialTitle || "")
+      });
+    });
+
+    (material.feedbackErrorAnalysis || [])
+      .filter((error) => error.likelyPrerequisite)
+      .forEach((error) => {
+        hypotheses.push({
+          prerequisite: error.likelyPrerequisite,
+          hypothesis: `Observed ${error.errorType || "error"} suggests ${error.likelyPrerequisite} is shaky.`,
+          confidence: error.confidence || "medium",
+          evidence: error.evidence || error.observedError || "",
+          sourceSkill: material.feedbackConceptGap || "",
+          testOnSunday: true,
+          repairPriority: error.repairPriority || "medium",
+          sourceMaterialId: material.materialId,
+          sourceMaterialTitle: material.materialTitle,
+          sourceDate: material.date,
+          fromSundayReview: /review|quiz/i.test(material.materialTitle || "")
+        });
+      });
+  });
+  return hypotheses;
+}
+
+function rankPrerequisiteHypotheses(hypotheses, sundayEvidence) {
+  const grouped = new Map();
+  hypotheses.forEach((hypothesis) => {
+    const key = normalizePrerequisite(hypothesis.prerequisite);
+    if (!grouped.has(key)) {
+      grouped.set(key, {
+        prerequisite: hypothesis.prerequisite,
+        score: 0,
+        confidence: "low",
+        repairPriority: "low",
+        evidence: [],
+        sources: [],
+        diagnosticProblemTypes: new Set(),
+        status: "needs_confirmation"
+      });
+    }
+    const entry = grouped.get(key);
+    const weight = confidenceWeight(hypothesis.confidence) + priorityWeight(hypothesis.repairPriority) + (hypothesis.fromSundayReview ? 2 : 0);
+    entry.score += weight;
+    entry.confidence = strongerLabel(entry.confidence, hypothesis.confidence);
+    entry.repairPriority = strongerLabel(entry.repairPriority, hypothesis.repairPriority);
+    if (hypothesis.evidence) entry.evidence.push(hypothesis.evidence);
+    entry.sources.push({
+      materialId: hypothesis.sourceMaterialId,
+      materialTitle: hypothesis.sourceMaterialTitle,
+      date: hypothesis.sourceDate,
+      sourceSkill: hypothesis.sourceSkill,
+      fromSundayReview: hypothesis.fromSundayReview
+    });
+    if (hypothesis.fromSundayReview) entry.status = "confirmed";
+  });
+
+  const sundayText = JSON.stringify(sundayEvidence.map((item) => ({
+    title: item.materialTitle,
+    gaps: item.feedbackPrerequisiteHypotheses,
+    errors: item.feedbackErrorAnalysis
+  }))).toLowerCase();
+
+  return Array.from(grouped.values())
+    .map((entry) => {
+      if (entry.status !== "confirmed" && sundayText.includes(normalizePrerequisite(entry.prerequisite))) {
+        entry.status = "confirmed";
+        entry.score += 2;
+      }
+      return {
+        prerequisite: entry.prerequisite,
+        status: entry.status,
+        confidence: entry.confidence,
+        repairPriority: entry.repairPriority,
+        score: entry.score,
+        evidence: entry.evidence.slice(0, 3),
+        sources: entry.sources.slice(0, 4)
+      };
+    })
+    .sort((a, b) => b.score - a.score || priorityWeight(b.repairPriority) - priorityWeight(a.repairPriority));
+}
+
+function buildSundayDiagnosticPlan(hypotheses) {
+  if (!hypotheses.length) {
+    return {
+      purpose: "Collect baseline evidence before adapting next week.",
+      items: []
+    };
+  }
+  return {
+    purpose: "Confirm or falsify prerequisite hypotheses before generating next week's adaptive problem sets.",
+    items: hypotheses.map((hypothesis, index) => ({
+      id: `sunday-diagnostic-${index + 1}`,
+      prerequisite: hypothesis.prerequisite,
+      statusBeforeSunday: hypothesis.status,
+      directCheck: `One short prerequisite-only problem for ${hypothesis.prerequisite}.`,
+      bridgeCheck: `One bridge problem where ${hypothesis.prerequisite} is needed inside the current week's topic.`,
+      confirmationCriterion: "Confirmed if either the direct check or bridge check shows the same error pattern seen in daily feedback.",
+      nextActionIfConfirmed: "Allocate repair plus bridge problems next week before advancing the target topic.",
+      nextActionIfCleared: "Treat as an execution slip; include only light spaced review."
+    }))
+  };
+}
+
+function buildNextWeekProblemSetPlan(hypotheses, allocation) {
+  return {
+    rule: "Generate next week's Platinum problem sets from nominal target topics plus the prerequisite evidence below.",
+    allocation,
+    blocks: [
+      {
+        block: "repair",
+        ratio: allocation.repair,
+        instruction: "Direct prerequisite drills for confirmed or high-confidence weak prerequisites.",
+        prerequisites: hypotheses.filter((item) => item.status === "confirmed" || item.repairPriority === "high").map((item) => item.prerequisite)
+      },
+      {
+        block: "bridge",
+        ratio: allocation.bridge,
+        instruction: "Problems that connect repaired prerequisites to the next target topic.",
+        prerequisites: hypotheses.map((item) => item.prerequisite)
+      },
+      {
+        block: "target",
+        ratio: allocation.target,
+        instruction: "Nominal next-week syllabus topics, reduced when prerequisites are shaky.",
+        prerequisites: []
+      },
+      {
+        block: "cumulative",
+        ratio: allocation.cumulative,
+        instruction: "Exam-style mixed review so important topics keep recurring even when repaired.",
+        prerequisites: hypotheses.slice(0, 3).map((item) => item.prerequisite)
+      }
+    ]
+  };
+}
+
+function adaptiveAllocation({ top, confirmed, highPriority }) {
+  if (!top.length) return { repair: 0.05, bridge: 0.15, target: 0.65, cumulative: 0.15 };
+  if (confirmed.length || highPriority.length) return { repair: 0.3, bridge: 0.3, target: 0.3, cumulative: 0.1 };
+  return { repair: 0.2, bridge: 0.3, target: 0.4, cumulative: 0.1 };
+}
+
+function normalizePrerequisite(value) {
+  return String(value || "").toLowerCase().trim().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+}
+
+function confidenceWeight(value) {
+  return { high: 3, medium: 2, low: 1 }[value] || 1;
+}
+
+function priorityWeight(value) {
+  return { high: 3, medium: 2, low: 1 }[value] || 1;
+}
+
+function strongerLabel(current, candidate) {
+  return priorityWeight(candidate) > priorityWeight(current) ? candidate : current;
 }
 
 async function maybeSendWeeklyEmail(snapshot, report) {
@@ -185,6 +383,30 @@ function weeklyEmailText(learnerName, snapshot, report) {
         const next = item.feedbackNextDrill ? ` Next drill: ${item.feedbackNextDrill}` : "";
         return `- ${item.materialTitle}: ${item.feedbackSummary || "Feedback recorded."}${notUnderstood}${executionIssues}${next}`;
       }),
+      ""
+    );
+  }
+
+  if (report.adaptivePlan?.hypotheses?.length) {
+    lines.push(
+      "Adaptive prerequisite analysis:",
+      ...report.adaptivePlan.hypotheses.map((item) => `- ${item.prerequisite}: ${item.status}, ${item.confidence} confidence, ${item.repairPriority} repair priority.`),
+      ""
+    );
+  }
+
+  if (report.adaptivePlan?.sundayDiagnosticPlan?.items?.length) {
+    lines.push(
+      "Sunday diagnostic plan:",
+      ...report.adaptivePlan.sundayDiagnosticPlan.items.map((item) => `- ${item.prerequisite}: ${item.directCheck} Bridge: ${item.bridgeCheck}`),
+      ""
+    );
+  }
+
+  if (report.adaptivePlan?.nextWeekProblemSetPlan?.blocks?.length) {
+    lines.push(
+      "Next week pset generation mix:",
+      ...report.adaptivePlan.nextWeekProblemSetPlan.blocks.map((block) => `- ${Math.round(block.ratio * 100)}% ${block.block}: ${block.instruction}`),
       ""
     );
   }

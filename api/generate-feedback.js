@@ -15,6 +15,10 @@ const FEEDBACK_SCHEMA = {
     "minimalCorrection",
     "nextDrill",
     "masteryUpdates",
+    "errorAnalysis",
+    "prerequisiteHypotheses",
+    "diagnosticRecommendations",
+    "adaptivePlanSignal",
     "studentReport"
   ],
   properties: {
@@ -66,6 +70,79 @@ const FEEDBACK_SCHEMA = {
           delta: { type: "number", enum: [-1, 0, 1] },
           reason: { type: "string" }
         }
+      }
+    },
+    errorAnalysis: {
+      type: "array",
+      items: {
+        type: "object",
+        additionalProperties: false,
+        required: ["errorType", "observedError", "likelyPrerequisite", "confidence", "evidence", "repairPriority"],
+        properties: {
+          errorType: {
+            type: "string",
+            enum: [
+              "conceptual_gap",
+              "prerequisite_gap",
+              "representation_error",
+              "setup_error",
+              "algebra_error",
+              "calculus_error",
+              "probability_model_error",
+              "execution_error",
+              "communication_error"
+            ]
+          },
+          observedError: { type: "string" },
+          likelyPrerequisite: { type: "string" },
+          confidence: { type: "string", enum: ["low", "medium", "high"] },
+          evidence: { type: "string" },
+          repairPriority: { type: "string", enum: ["low", "medium", "high"] }
+        }
+      }
+    },
+    prerequisiteHypotheses: {
+      type: "array",
+      items: {
+        type: "object",
+        additionalProperties: false,
+        required: ["prerequisite", "hypothesis", "confidence", "evidence", "sourceSkill", "testOnSunday", "repairPriority"],
+        properties: {
+          prerequisite: { type: "string" },
+          hypothesis: { type: "string" },
+          confidence: { type: "string", enum: ["low", "medium", "high"] },
+          evidence: { type: "string" },
+          sourceSkill: { type: "string" },
+          testOnSunday: { type: "boolean" },
+          repairPriority: { type: "string", enum: ["low", "medium", "high"] }
+        }
+      }
+    },
+    diagnosticRecommendations: {
+      type: "array",
+      items: {
+        type: "object",
+        additionalProperties: false,
+        required: ["prerequisite", "diagnosticProblemType", "confirmationCriterion", "bridgeProblemType"],
+        properties: {
+          prerequisite: { type: "string" },
+          diagnosticProblemType: { type: "string" },
+          confirmationCriterion: { type: "string" },
+          bridgeProblemType: { type: "string" }
+        }
+      }
+    },
+    adaptivePlanSignal: {
+      type: "object",
+      additionalProperties: false,
+      required: ["advanceNormally", "repairRatio", "bridgeRatio", "targetRatio", "cumulativeRatio", "rationale"],
+      properties: {
+        advanceNormally: { type: "boolean" },
+        repairRatio: { type: "number", minimum: 0, maximum: 1 },
+        bridgeRatio: { type: "number", minimum: 0, maximum: 1 },
+        targetRatio: { type: "number", minimum: 0, maximum: 1 },
+        cumulativeRatio: { type: "number", minimum: 0, maximum: 1 },
+        rationale: { type: "string" }
       }
     },
     studentReport: {
@@ -134,6 +211,10 @@ export default async function handler(request, response) {
               "Generate student-facing feedback from the submitted solution and rubric.",
               "Do not invent work the student did not do.",
               "Separate conceptual gaps from execution mistakes.",
+              "Use the workflow prerequisite graph when provided; do not invent a prerequisite label if a supplied graph label applies.",
+              "For every non-green solution, produce concrete errorAnalysis, prerequisiteHypotheses, and diagnosticRecommendations.",
+              "Sunday diagnostics should confirm or falsify the prerequisite hypotheses using direct prerequisite checks and bridge problems.",
+              "Set adaptivePlanSignal ratios so they sum to roughly 1. Use repair/bridge weight when prerequisite gaps are likely.",
               "Be specific, concrete, and kind without being vague.",
               "If the submitted solution is too incomplete to evaluate, say that and assign a red verdict.",
               "Return only the requested JSON schema."

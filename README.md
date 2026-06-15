@@ -103,6 +103,11 @@ The Platinum learner browser syncs a compact progress snapshot to `/api/platinum
 - due material submissions
 - feedback readiness and recent LLM-generated feedback summaries
 - revision-risk signals from structured feedback
+- prerequisite hypotheses from detailed error analysis
+- Sunday diagnostic recommendations for confirming or falsifying weak prerequisites
+- next-week adaptive problem-set mix across repair, bridge, target, and cumulative blocks
+
+The feedback schema requires `errorAnalysis`, `prerequisiteHypotheses`, `diagnosticRecommendations`, and `adaptivePlanSignal`. The browser snapshot preserves those fields, and the weekly cron aggregates them into `report.adaptivePlan`. If Sunday review confirms a prerequisite gap, next week should allocate more repair and bridge problems before advancing the nominal target topic.
 
 Required durable snapshot storage environment variables:
 

@@ -1,7 +1,7 @@
 const STORAGE_KEY = "learning-studio-data-v2";
 const LEGACY_STORAGE_KEYS = ["learning-studio-data-v1"];
 const SESSION_KEY = "aleph-session";
-const COURSE_PLAN_VERSION = "seeded-user-canonical-workspace-v84";
+const COURSE_PLAN_VERSION = "seeded-user-canonical-workspace-v87";
 const PRIYANKA_PLATINUM_START_DATE = "2026-06-07";
 const DEFAULT_PLAN_START_DATE = "2026-06-01";
 const PLATINUM_PROGRESS_SYNC_DEBOUNCE_MS = 1500;
@@ -702,6 +702,10 @@ function buildGateDaBasicPlan(now, accountTypes, sections, user = basicGateDaUse
   const weekNineSunday = addDays(weekNineMonday, 6);
   const weekTenMonday = addDays(monday, 63);
   const weekTenSunday = addDays(weekTenMonday, 6);
+  const weekElevenMonday = addDays(monday, 70);
+  const weekElevenSunday = addDays(weekElevenMonday, 6);
+  const weekTwelveMonday = addDays(monday, 77);
+  const weekTwelveSunday = addDays(weekTwelveMonday, 6);
   const linearAlgebraWeekOneMonday = monday;
   const linearAlgebraWeekOneSunday = sunday;
   const linearAlgebraWeekTwoMonday = weekTwoMonday;
@@ -722,6 +726,10 @@ function buildGateDaBasicPlan(now, accountTypes, sections, user = basicGateDaUse
   const linearAlgebraWeekNineSunday = weekNineSunday;
   const linearAlgebraWeekTenMonday = weekTenMonday;
   const linearAlgebraWeekTenSunday = weekTenSunday;
+  const linearAlgebraWeekElevenMonday = weekElevenMonday;
+  const linearAlgebraWeekElevenSunday = weekElevenSunday;
+  const linearAlgebraWeekTwelveMonday = weekTwelveMonday;
+  const linearAlgebraWeekTwelveSunday = weekTwelveSunday;
   const userId = user.id || "user-basic-demo";
   const userSlug = slugify(user.name || userId);
   const enrollmentId = `enrollment-${userSlug}-gate-da-basic`;
@@ -748,7 +756,7 @@ function buildGateDaBasicPlan(now, accountTypes, sections, user = basicGateDaUse
         title: "Linear Algebra",
         date: linearAlgebraWeekOneMonday,
         status: "In progress",
-        details: "GATE DA Basic Linear Algebra, built around transformations, invariants, and physical intuition. Chapters 1-10 cover vectors, coordinates, transformations, rank/nullity, projections, determinants, trace, eigenvalues, symmetric quadratic forms, special matrices, SVD, singular values, least squares, normal equations, and ridge regression.",
+        details: "GATE DA Basic Linear Algebra, built around transformations, invariants, and physical intuition. Chapters 1-12 cover vectors, coordinates, transformations, rank/nullity, projections, determinants, trace, eigenvalues, symmetric quadratic forms, special matrices, SVD, singular values, least squares, ridge regression, covariance matrices, PCA, and mixed data-linear-algebra recognition.",
         sectionIds: linearAlgebraSections.map((section) => section.id),
         updatedAt: now
       }
@@ -1343,6 +1351,66 @@ function buildGateDaBasicPlan(now, accountTypes, sections, user = basicGateDaUse
         date: linearAlgebraWeekTenSunday,
         details: "Take the graph-backed objective quiz for column-space projection, normal equations, residual orthogonality, full-rank uniqueness, ridge stabilization, and shrinkage.",
         updatedAt: now
+      },
+      {
+        id: "schedule-linear-algebra-chapter-11-study",
+        title: "Linear Algebra Chapter 11: Covariance Matrices and PCA",
+        week: 11,
+        subject: "Linear Algebra",
+        kind: "Study",
+        date: linearAlgebraWeekElevenMonday,
+        details: "Study centered data matrices, covariance matrices as symmetric PSD objects, PCA as eigen-direction reading, explained variance, and the SVD connection.",
+        updatedAt: now
+      },
+      {
+        id: "schedule-linear-algebra-chapter-11-practice",
+        title: "Linear Algebra Chapter 11: Labelled Practice",
+        week: 11,
+        subject: "Linear Algebra",
+        kind: "Practice",
+        date: addDays(linearAlgebraWeekElevenMonday, 2),
+        details: "Solve centering, covariance-matrix, PCA direction, explained-variance, projection, and SVD-link practice problems.",
+        updatedAt: now
+      },
+      {
+        id: "schedule-linear-algebra-chapter-11-review",
+        title: "Linear Algebra Chapter 11: Objective Review",
+        week: 11,
+        subject: "Linear Algebra",
+        kind: "Review",
+        date: linearAlgebraWeekElevenSunday,
+        details: "Take the graph-backed objective quiz for centered data, covariance PSD structure, PCA eigenvectors, explained variance, reconstruction, and SVD-based PCA.",
+        updatedAt: now
+      },
+      {
+        id: "schedule-linear-algebra-chapter-12-study",
+        title: "Linear Algebra Chapter 12: Data Linear Algebra Synthesis",
+        week: 12,
+        subject: "Linear Algebra",
+        kind: "Study",
+        date: linearAlgebraWeekTwelveMonday,
+        details: "Study mixed recognition across rank, projections, SVD, least squares, ridge, covariance, and PCA. The emphasis is deciding what a transformation preserves, kills, approximates, or discards.",
+        updatedAt: now
+      },
+      {
+        id: "schedule-linear-algebra-chapter-12-practice",
+        title: "Linear Algebra Chapter 12: Labelled Practice",
+        week: 12,
+        subject: "Linear Algebra",
+        kind: "Practice",
+        date: addDays(linearAlgebraWeekTwelveMonday, 2),
+        details: "Solve mixed data-linear-algebra recognition problems before choosing formulas: identify the object, invariant, lost subspace, and fastest computation.",
+        updatedAt: now
+      },
+      {
+        id: "schedule-linear-algebra-chapter-12-review",
+        title: "Linear Algebra Chapter 12: Objective Review",
+        week: 12,
+        subject: "Linear Algebra",
+        kind: "Review",
+        date: linearAlgebraWeekTwelveSunday,
+        details: "Take the graph-backed objective quiz for structural recognition across projections, rank, SVD, least squares, ridge, covariance, PCA, and trace/determinant shortcuts.",
+        updatedAt: now
       }
     ],
     tests: [
@@ -1524,6 +1592,24 @@ function buildGateDaBasicPlan(now, accountTypes, sections, user = basicGateDaUse
         details: "Objective end-of-chapter quiz for least squares and ridge regression: projection geometry, normal equations, residual orthogonality, rank conditions, and regularized shrinkage.",
         sectionId: linearAlgebraSections[9]?.id,
         quizId: "quiz-linear-algebra-chapter-10-objective-review",
+        updatedAt: now
+      },
+      {
+        id: "test-linear-algebra-chapter-11-objective-review",
+        title: "Linear Algebra Chapter 11 Objective Review",
+        date: linearAlgebraWeekElevenSunday,
+        details: "Objective end-of-chapter quiz for covariance matrices and PCA: centering, PSD covariance, eigen-directions, explained variance, projection/reconstruction, and SVD links.",
+        sectionId: linearAlgebraSections[10]?.id,
+        quizId: "quiz-linear-algebra-chapter-11-objective-review",
+        updatedAt: now
+      },
+      {
+        id: "test-linear-algebra-chapter-12-objective-review",
+        title: "Linear Algebra Chapter 12 Objective Review",
+        date: linearAlgebraWeekTwelveSunday,
+        details: "Objective synthesis quiz for mixed data-linear-algebra recognition: rank, projection, SVD, least squares, ridge, covariance, PCA, and structural shortcuts.",
+        sectionId: linearAlgebraSections[11]?.id,
+        quizId: "quiz-linear-algebra-chapter-12-objective-review",
         updatedAt: now
       }
     ],
@@ -2177,6 +2263,72 @@ function buildGateDaBasicPlan(now, accountTypes, sections, user = basicGateDaUse
         done: false,
         details: "Submit the Chapter 10 objective quiz so the learner record logs least-squares, normal-equation, and ridge-regression strengths and weaknesses.",
         updatedAt: now
+      },
+      {
+        id: "task-linear-algebra-chapter-11-read",
+        week: 11,
+        title: "Linear Algebra Ch 11: Read covariance matrices and PCA",
+        type: "Study",
+        date: linearAlgebraWeekElevenMonday,
+        status: "todo",
+        done: false,
+        details: "Open Subjects -> Linear Algebra -> Chapter 11 and study centering, covariance matrices, PCA eigen-directions, explained variance, and SVD-based PCA.",
+        updatedAt: now
+      },
+      {
+        id: "task-linear-algebra-chapter-11-practice",
+        week: 11,
+        title: "Linear Algebra Ch 11: Solve PCA practice",
+        type: "Practice",
+        date: addDays(linearAlgebraWeekElevenMonday, 2),
+        status: "todo",
+        done: false,
+        details: "Attempt the Chapter 11 labelled practice problems before opening worked solutions.",
+        updatedAt: now
+      },
+      {
+        id: "task-linear-algebra-chapter-11-review",
+        week: 11,
+        title: "Linear Algebra Ch 11: Take objective review",
+        type: "Review",
+        date: linearAlgebraWeekElevenSunday,
+        status: "todo",
+        done: false,
+        details: "Submit the Chapter 11 objective quiz so the learner record logs covariance-matrix and PCA strengths and weaknesses.",
+        updatedAt: now
+      },
+      {
+        id: "task-linear-algebra-chapter-12-read",
+        week: 12,
+        title: "Linear Algebra Ch 12: Read data synthesis",
+        type: "Study",
+        date: linearAlgebraWeekTwelveMonday,
+        status: "todo",
+        done: false,
+        details: "Open Subjects -> Linear Algebra -> Chapter 12 and study mixed recognition across projections, rank, SVD, least squares, ridge, covariance, and PCA.",
+        updatedAt: now
+      },
+      {
+        id: "task-linear-algebra-chapter-12-practice",
+        week: 12,
+        title: "Linear Algebra Ch 12: Solve synthesis practice",
+        type: "Practice",
+        date: addDays(linearAlgebraWeekTwelveMonday, 2),
+        status: "todo",
+        done: false,
+        details: "Attempt the Chapter 12 labelled practice problems before opening worked solutions.",
+        updatedAt: now
+      },
+      {
+        id: "task-linear-algebra-chapter-12-review",
+        week: 12,
+        title: "Linear Algebra Ch 12: Take objective review",
+        type: "Review",
+        date: linearAlgebraWeekTwelveSunday,
+        status: "todo",
+        done: false,
+        details: "Submit the Chapter 12 objective quiz so the learner record logs mixed data-linear-algebra recognition strengths and weaknesses.",
+        updatedAt: now
       }
     ],
     accountTypes,
@@ -2203,7 +2355,7 @@ function buildGateDaBasicPlan(now, accountTypes, sections, user = basicGateDaUse
         startDate: monday,
         endDate: "2026-08-30",
         status: "active",
-        details: `GATE DA Basic plan surfaces: Subjects, Tasks, Schedule, Tests, Feedback, Resources, and Share. Recommended pace: study three subjects in parallel. Every 15 days, Aleph should generate an adaptive cumulative review quiz from prior performance, repeating missed concepts more often, reducing mastered concepts, and keeping high-weight exam topics in rotation. Current material build: Probability Chapters 1-10 and Linear Algebra Chapters 1-10.${trialNote}`,
+        details: `GATE DA Basic plan surfaces: Subjects, Tasks, Schedule, Tests, Feedback, Resources, and Share. Recommended pace: study three subjects in parallel. Every 15 days, Aleph should generate an adaptive cumulative review quiz from prior performance, repeating missed concepts more often, reducing mastered concepts, and keeping high-weight exam topics in rotation. Current material build: Probability Chapters 1-10 and Linear Algebra Chapters 1-12.${trialNote}`,
         updatedAt: now
       }
     ],
@@ -2284,6 +2436,20 @@ function buildGateDaBasicPlan(now, accountTypes, sections, user = basicGateDaUse
         title: "Linear Algebra Chapter 10 feedback focus",
         date: linearAlgebraWeekTenSunday,
         details: "Review misses for treating inconsistent systems as impossible instead of approximable, forgetting residual orthogonality X^T(y-Xb)=0, using normal equations without checking rank, confusing X^T X with X, and missing how ridge adds lambda I to stabilize and shrink coefficients.",
+        updatedAt: now
+      },
+      {
+        id: "feedback-linear-algebra-chapter-11",
+        title: "Linear Algebra Chapter 11 feedback focus",
+        date: linearAlgebraWeekElevenSunday,
+        details: "Review misses for forgetting to center data, confusing rows and columns in a data matrix, missing that covariance is symmetric PSD, choosing the smallest eigenvalue for the first principal component, and treating PCA projection as exact reconstruction.",
+        updatedAt: now
+      },
+      {
+        id: "feedback-linear-algebra-chapter-12",
+        title: "Linear Algebra Chapter 12 feedback focus",
+        date: linearAlgebraWeekTwelveSunday,
+        details: "Review misses for starting with computation before recognizing the matrix family, confusing rank with dimension of the ambient space, missing fixed/killed subspaces, treating SVD and eigen-decomposition as interchangeable in all cases, and not connecting discarded variance with projection error.",
         updatedAt: now
       }
     ],
@@ -2453,6 +2619,22 @@ function buildGateDaBasicPlan(now, accountTypes, sections, user = basicGateDaUse
         title: "Linear Algebra Chapter 10: Least Squares and Ridge Regression",
         date: linearAlgebraWeekTenMonday,
         details: "Open Subjects -> Linear Algebra to study least squares as column-space projection, normal equations as residual orthogonality, rank conditions for uniqueness, and ridge regression as regularized stabilization.",
+        link: "",
+        updatedAt: now
+      },
+      {
+        id: "resource-linear-algebra-covariance-pca",
+        title: "Linear Algebra Chapter 11: Covariance Matrices and PCA",
+        date: linearAlgebraWeekElevenMonday,
+        details: "Open Subjects -> Linear Algebra to study centered data, covariance as a symmetric PSD matrix, principal directions, explained variance, projection/reconstruction, and the SVD link.",
+        link: "",
+        updatedAt: now
+      },
+      {
+        id: "resource-linear-algebra-data-synthesis",
+        title: "Linear Algebra Chapter 12: Data Linear Algebra Synthesis",
+        date: linearAlgebraWeekTwelveMonday,
+        details: "Open Subjects -> Linear Algebra to practice mixed recognition across projections, rank, SVD, least squares, ridge, covariance, PCA, and structural shortcuts.",
         link: "",
         updatedAt: now
       }
@@ -4820,6 +5002,342 @@ function gateDaLinearAlgebraSections(updatedAt = new Date().toISOString()) {
         "The hat matrix H=X(X^T X)^(-1)X^T is a projection matrix.",
         "Ridge regression solves (X^T X+lambda I)b=X^T y.",
         "Ridge stabilizes weak directions and shrinks coefficients."
+      ],
+      updatedAt
+    },
+    {
+      id: "gate-da-linear-algebra-covariance-pca",
+      exam: "GATE DA",
+      accountTier: "Basic",
+      subject: "Linear Algebra",
+      chapter: "Chapter 11",
+      section: "11",
+      title: "Covariance Matrices and PCA",
+      summary: "A data-facing chapter on how covariance matrices record spread, why they are symmetric positive semidefinite, and how PCA finds the orthogonal directions that preserve the most variance.",
+      sectionPreview: "PCA asks a geometric question: if a cloud of points must be viewed from one line or plane, which direction keeps the most spread? The answer comes from eigenvectors of the centered covariance matrix.",
+      previewActivity: "Imagine a long, tilted cloud of points on a page. If you shine a light so the cloud casts a shadow on one line, which line should you choose to make the shadow as spread out as possible? That line is the first principal component.",
+      chapterIntro: [
+        "Covariance matrices turn data into geometry. Each direction u has a variance u^T C u, so C tells us how spread changes when we rotate our viewpoint.",
+        "The key invariant is spectral: covariance matrices are symmetric positive semidefinite, so their eigenvectors are orthogonal and their eigenvalues are nonnegative variances.",
+        "PCA keeps the strongest variance directions. This is not just a formula; it is a compression rule that chooses what remains visible when data is projected."
+      ],
+      bookSections: [
+        {
+          number: "11.1",
+          title: "Data as a Matrix and Why We Center",
+          paragraphs: [
+            "A data matrix usually stores observations as rows and features as columns. If X has n rows and p columns, each row is one point in R^p.",
+            "Before covariance and PCA, we subtract the column means. This moves the origin to the center of the point cloud.",
+            "Centering matters because PCA should measure spread around the average point, not distance from an arbitrary origin."
+          ],
+          blocks: [
+            { type: "definition", title: "Definition: centered data matrix", body: "If X is the raw data matrix, X_c is obtained by subtracting each column mean from that column." },
+            { type: "example", title: "Example 11.1: moving the origin", body: "If heights are all near 170 cm, centering turns them into deviations such as -5, 0, and 6. PCA studies these deviations." }
+          ]
+        },
+        {
+          number: "11.2",
+          title: "Covariance Matrix",
+          paragraphs: [
+            "For centered data X_c, the sample covariance matrix is C=(1/(n-1)) X_c^T X_c.",
+            "The diagonal entries are feature variances. The off-diagonal entries are covariances between features.",
+            "Because C is built as X_c^T X_c scaled by a positive number, it is symmetric positive semidefinite."
+          ],
+          blocks: [
+            { type: "definition", title: "Definition: covariance matrix", body: "C=(1/(n-1))X_c^T X_c for centered data with n observations." },
+            { type: "principle", title: "PSD check", body: "For any vector u, u^T C u=(1/(n-1))||X_c u||^2 >= 0." }
+          ]
+        },
+        {
+          number: "11.3",
+          title: "Variance Along a Direction",
+          paragraphs: [
+            "Pick a unit direction u. The projected data scores are X_c u.",
+            "The variance of those scores is u^T C u. So the quadratic form tells us how much spread remains when the cloud is viewed along u.",
+            "This connects PCA directly to the Rayleigh quotient from symmetric matrices."
+          ],
+          blocks: [
+            { type: "principle", title: "Directional variance", body: "For ||u||=1, variance along u is u^T C u." },
+            { type: "example", title: "Example 11.2: diagonal covariance", body: "If C=diag(9,1), then variance along e1 is 9 and variance along e2 is 1. The cloud is much longer in the e1 direction." }
+          ]
+        },
+        {
+          number: "11.4",
+          title: "Principal Components",
+          paragraphs: [
+            "The first principal component is the unit direction that maximizes u^T C u.",
+            "For a symmetric covariance matrix, this direction is the eigenvector with the largest eigenvalue.",
+            "The eigenvalue is the variance captured by that principal component. Later principal components use orthogonal eigenvectors with smaller eigenvalues."
+          ],
+          blocks: [
+            { type: "strategy", title: "PCA read", body: "Largest covariance eigenvalue gives the first principal variance; its eigenvector gives the first principal direction." },
+            { type: "warning", title: "Common trap", body: "The first principal component uses the largest eigenvalue, not the smallest. The smallest eigenvalue gives the weakest spread direction." }
+          ]
+        },
+        {
+          number: "11.5",
+          title: "Explained Variance",
+          paragraphs: [
+            "The total variance in the centered data is trace(C), which is also the sum of covariance eigenvalues.",
+            "The explained-variance ratio for an eigenvalue lambda_i is lambda_i divided by the sum of all eigenvalues.",
+            "This gives a practical rule for deciding how many components to keep."
+          ],
+          blocks: [
+            { type: "principle", title: "Explained variance", body: "Explained ratio for component i is lambda_i/(lambda_1+...+lambda_p)." },
+            { type: "example", title: "Example 11.3: two eigenvalues", body: "If eigenvalues are 9 and 1, the first component explains 9/(9+1)=90% of the variance." }
+          ]
+        },
+        {
+          number: "11.6",
+          title: "Projection, Reconstruction, and Information Loss",
+          paragraphs: [
+            "Keeping k principal components projects the centered data onto a k-dimensional subspace.",
+            "The projection preserves the variance in the kept directions and discards variance in the omitted directions.",
+            "This is why PCA is both a compression method and a geometric approximation method."
+          ],
+          blocks: [
+            { type: "example", title: "Example 11.4: one-dimensional shadow", body: "A tilted two-dimensional cloud can be replaced by its shadow on the longest direction. The leftover perpendicular spread is the reconstruction error." },
+            { type: "warning", title: "Common trap", body: "Projection onto one component is not exact unless all data variation lies on that one line." }
+          ]
+        },
+        {
+          number: "11.7",
+          title: "SVD Link",
+          paragraphs: [
+            "If X_c=U Sigma V^T, then C=(1/(n-1))V Sigma^2 V^T.",
+            "So the right singular vectors of centered data are the PCA directions.",
+            "The covariance eigenvalues are sigma_i^2/(n-1). This lets you move between SVD language and covariance-eigenvalue language."
+          ],
+          blocks: [
+            { type: "principle", title: "PCA through SVD", body: "Right singular vectors of centered X_c are principal directions; sigma_i^2/(n-1) are covariance eigenvalues." },
+            { type: "strategy", title: "Exam posture", body: "For GATE DA, recognize the relationship before doing long matrix multiplication." }
+          ]
+        }
+      ],
+      concepts: [
+        { name: "Centered data", description: "Subtract feature means before covariance/PCA.", cue: "Move the origin to the cloud center." },
+        { name: "Covariance matrix", description: "C=(1/(n-1))X_c^T X_c.", cue: "Diagonal variances, off-diagonal covariances." },
+        { name: "PSD covariance", description: "Covariance matrices are symmetric positive semidefinite.", cue: "Use u^T C u=||X_c u||^2/(n-1)." },
+        { name: "Directional variance", description: "Variance along unit direction u is u^T C u.", cue: "Read spread after projection." },
+        { name: "Principal component", description: "Eigenvector of C giving a variance direction.", cue: "Largest eigenvalue gives first PC." },
+        { name: "Explained variance", description: "Eigenvalue share of total variance.", cue: "Divide by trace(C)." },
+        { name: "PCA projection", description: "Keep the strongest eigen-directions and drop the rest.", cue: "Compression by orthogonal projection." },
+        { name: "SVD-PCA link", description: "Right singular vectors of centered data give PCA directions.", cue: "Covariance eigenvalues are sigma_i^2/(n-1)." }
+      ],
+      techniques: [
+        { name: "Center first", when: "raw data matrix is given.", move: "Subtract column means before forming covariance." },
+        { name: "PSD proof", when: "asked why covariance eigenvalues are nonnegative.", move: "Write u^T C u as ||X_c u||^2/(n-1)." },
+        { name: "Directional variance read", when: "a direction u is given.", move: "Compute u^T C u if ||u||=1." },
+        { name: "PCA eigen-read", when: "covariance eigenpairs are given.", move: "Pick the largest eigenvalue for first PC and report its eigenvector." },
+        { name: "Explained-variance ratio", when: "component share is asked.", move: "Divide kept eigenvalue sum by total eigenvalue sum." },
+        { name: "SVD conversion", when: "centered data singular values are given.", move: "Use lambda_i=sigma_i^2/(n-1) for covariance eigenvalues." }
+      ],
+      practiceProblems: linearAlgebraCovariancePcaProblems(),
+      reviewPrompts: [
+        "Why must data be centered before covariance/PCA?",
+        "What information lives on the diagonal and off-diagonal of a covariance matrix?",
+        "Why is every covariance matrix positive semidefinite?",
+        "What does u^T C u mean when u is a unit vector?",
+        "Which eigenvector gives the first principal component?",
+        "How is explained variance computed?",
+        "What is lost when PCA keeps only one component?",
+        "How does SVD of centered data recover PCA directions?"
+      ],
+      reviewQuiz: {
+        id: "quiz-linear-algebra-chapter-11-objective-review",
+        title: "Linear Algebra Chapter 11 Objective Review",
+        instructions: "Complete this after studying covariance matrices and PCA. The quiz emphasizes centering, covariance PSD structure, directional variance, principal components, explained variance, projection, and the SVD link.",
+        questions: linearAlgebraCovariancePcaReviewQuestions()
+      },
+      readingQuestions: [
+        "What does centering do to a data cloud?",
+        "How is the covariance matrix built from centered data?",
+        "Why are covariance eigenvalues nonnegative?",
+        "What does directional variance measure?",
+        "Why does the largest eigenvalue matter in PCA?",
+        "How do you compute explained variance?",
+        "Why is PCA projection a lossy compression unless all variance lies in the kept subspace?",
+        "What are the PCA directions in the SVD of centered data?"
+      ],
+      chapterSummary: [
+        "Center data by subtracting feature means before forming covariance.",
+        "For centered X_c, the covariance matrix is C=(1/(n-1))X_c^T X_c.",
+        "Covariance matrices are symmetric positive semidefinite.",
+        "For unit u, u^T C u is variance along direction u.",
+        "The first principal component is the covariance eigenvector with largest eigenvalue.",
+        "An eigenvalue is the variance captured by its component.",
+        "Explained variance is eigenvalue divided by the total eigenvalue sum.",
+        "PCA projection keeps high-variance directions and discards lower-variance directions.",
+        "If X_c=U Sigma V^T, PCA directions are columns of V and covariance eigenvalues are sigma_i^2/(n-1)."
+      ],
+      updatedAt
+    },
+    {
+      id: "gate-da-linear-algebra-data-synthesis",
+      exam: "GATE DA",
+      accountTier: "Basic",
+      subject: "Linear Algebra",
+      chapter: "Chapter 12",
+      section: "12",
+      title: "Data Linear Algebra Synthesis",
+      summary: "A mixed recognition chapter that trains the core GATE DA skill: identify the matrix family, state what is fixed, killed, preserved, approximated, or discarded, and then compute only the quantity asked.",
+      sectionPreview: "Most exam problems do not announce their chapter. A matrix may look like regression, PCA, projection, rank, SVD, or covariance all at once. The right first move is not computation; it is structural recognition.",
+      previewActivity: "You see H=X(X^T X)^(-1)X^T and C=(1/(n-1))X_c^T X_c in the same problem. Which one is a projection? Which one is a covariance matrix? Which directions are fixed, and which directions measure variance?",
+      chapterIntro: [
+        "This chapter is about choosing the right lens. The same data matrix can produce a column-space projection, a Gram matrix, a covariance matrix, singular values, ridge shrinkage, or PCA directions.",
+        "The recurring question is: what remains invariant, what changes, what is lost, and what is preserved?",
+        "For GATE DA, this recognition often saves more time than algebra. Once the object is identified, rank, trace, determinant, eigenvalue, or projection facts usually give the answer quickly."
+      ],
+      bookSections: [
+        {
+          number: "12.1",
+          title: "The Recognition-First Routine",
+          paragraphs: [
+            "Before calculating, name the object. Is it a projection matrix, a Gram matrix, a covariance matrix, a rank-one update, a normal equation, or an SVD expression?",
+            "Then state the invariant: rank, trace, determinant, fixed subspace, killed subspace, length, angle, variance, or residual orthogonality.",
+            "Only after that should you compute. The computation is usually short once the structure is visible."
+          ],
+          blocks: [
+            { type: "strategy", title: "Three-step routine", body: "Identify the object, state what it preserves or loses, then compute the asked quantity." },
+            { type: "warning", title: "Common trap", body: "Starting with entrywise multiplication often hides the shortcut. Read the matrix family first." }
+          ]
+        },
+        {
+          number: "12.2",
+          title: "Projection Objects",
+          paragraphs: [
+            "Projection matrices satisfy P^2=P. Orthogonal projections are also symmetric.",
+            "They fix vectors in the target subspace and kill the perpendicular component.",
+            "For an orthogonal projection, rank, trace, and the number of eigenvalues equal to 1 all match the dimension of the projected subspace."
+          ],
+          blocks: [
+            { type: "principle", title: "Projection read", body: "P^2=P means apply once or twice gives the same result. Eigenvalues are usually 0 or 1 for projection matrices." },
+            { type: "example", title: "Example 12.1: hat matrix", body: "H=X(X^T X)^(-1)X^T fixes Col(X), kills residual directions, and has rank equal to the number of independent columns of X." }
+          ]
+        },
+        {
+          number: "12.3",
+          title: "Gram, Covariance, and PSD Objects",
+          paragraphs: [
+            "Matrices of the form X^T X, XX^T, and centered covariance matrices are positive semidefinite.",
+            "Their quadratic forms become squared lengths. This proves nonnegative eigenvalues and often reveals rank.",
+            "Covariance adds interpretation: eigenvectors are variance directions and eigenvalues are captured variances."
+          ],
+          blocks: [
+            { type: "principle", title: "Squared-length proof", body: "u^T X^T X u=||Xu||^2, so X^T X is positive semidefinite." },
+            { type: "example", title: "Example 12.2: covariance rank", body: "If centered data lies on one line in R^2, the covariance matrix has rank 1. One variance direction remains and one is discarded." }
+          ]
+        },
+        {
+          number: "12.4",
+          title: "SVD as the Universal Data Lens",
+          paragraphs: [
+            "SVD separates a matrix into input directions, stretch factors, and output directions.",
+            "Nonzero singular values give rank. Large singular values give dominant data directions. Zero singular values reveal killed directions.",
+            "For centered data, right singular vectors connect to PCA and singular values convert to covariance eigenvalues."
+          ],
+          blocks: [
+            { type: "strategy", title: "SVD read", body: "Rank is the number of nonzero singular values; strongest directions are the largest singular values." },
+            { type: "example", title: "Example 12.3: low-rank data", body: "If singular values are 10, 2, 0, then rank is 2 and the first direction is much more important than the second." }
+          ]
+        },
+        {
+          number: "12.5",
+          title: "Least Squares, Ridge, and What the Fit Preserves",
+          paragraphs: [
+            "Ordinary least squares projects y onto Col(X). The residual is perpendicular to every column of X.",
+            "The hat matrix preserves the column-space component of y and removes the residual component.",
+            "Ridge keeps the same data-fit language but shrinks coefficient directions, especially those tied to small singular values."
+          ],
+          blocks: [
+            { type: "principle", title: "Residual invariant", body: "At the least-squares solution, X^T(y-Xb)=0." },
+            { type: "warning", title: "Ridge trap", body: "Ridge is not a projection of y by the ordinary hat matrix. It changes coefficient estimates by adding lambda I." }
+          ]
+        },
+        {
+          number: "12.6",
+          title: "Rank, Trace, and Determinant Shortcuts",
+          paragraphs: [
+            "Rank counts dimensions that survive. Trace often counts total fixed/projection dimension or total variance. Determinant records volume scaling and invertibility.",
+            "For projections, trace gives rank. For covariance, trace gives total variance. For diagonal or spectral data, determinant is the product of eigenvalues.",
+            "These shortcuts work only after the matrix family is correctly identified."
+          ],
+          blocks: [
+            { type: "strategy", title: "Shortcut match", body: "Projection -> trace equals rank. Covariance -> trace equals total variance. Invertible transform -> determinant nonzero." },
+            { type: "example", title: "Example 12.4: avoid expansion", body: "A rank-one matrix uv^T has rank at most 1, so do not compute a full row reduction unless the problem asks for entries." }
+          ]
+        },
+        {
+          number: "12.7",
+          title: "What Is Fixed, Killed, Preserved, or Discarded",
+          paragraphs: [
+            "A transformation question is often asking one of four things: what is fixed, what is killed, what is preserved, or what is discarded.",
+            "Projection fixes a subspace and kills the perpendicular component. Orthogonal matrices preserve lengths and angles. PCA keeps high-variance directions and discards low-variance directions.",
+            "This language makes mixed problems easier because it turns formulas into physical actions."
+          ],
+          blocks: [
+            { type: "principle", title: "Structural language", body: "Fixed means unchanged; killed means mapped to zero; preserved means the quantity stays the same; discarded means lost by projection or approximation." },
+            { type: "example", title: "Example 12.5: PCA shadow", body: "Keeping one principal component fixes the coordinate along the top variance direction and discards perpendicular variance." }
+          ]
+        }
+      ],
+      concepts: [
+        { name: "Recognition-first routine", description: "Identify the matrix family before computing.", cue: "Name object, invariant, then calculate." },
+        { name: "Projection structure", description: "P^2=P; orthogonal projections are symmetric too.", cue: "Fixed subspace and killed residual." },
+        { name: "Gram PSD structure", description: "X^T X and XX^T are positive semidefinite.", cue: "Rewrite quadratic form as a squared norm." },
+        { name: "Rank survival", description: "Rank counts dimensions that survive the transformation.", cue: "Nonzero singular values or independent columns." },
+        { name: "SVD data lens", description: "Singular values show stretch, rank, and dominant directions.", cue: "Input direction, stretch, output direction." },
+        { name: "Least-squares projection", description: "Fitted values are the projection of y onto Col(X).", cue: "Residual is orthogonal to columns." },
+        { name: "Ridge shrinkage", description: "lambda I stabilizes and shrinks weak coefficient directions.", cue: "Small singular values shrink more." },
+        { name: "Covariance/PCA read", description: "Covariance eigenvectors are principal directions; eigenvalues are variances.", cue: "Largest eigenvalue gives first PC." },
+        { name: "Trace/determinant shortcut", description: "Trace and determinant often reveal total variance, rank, or invertibility.", cue: "Use only after identifying the matrix family." },
+        { name: "Fixed/killed/discarded language", description: "State what the transformation keeps, removes, preserves, or loses.", cue: "Turn formulas into actions." }
+      ],
+      techniques: [
+        { name: "Object identification", when: "a mixed expression appears.", move: "Classify it as projection, Gram, covariance, SVD, normal equation, ridge, or rank-one object." },
+        { name: "Invariant statement", when: "a transformation is described.", move: "Say what is fixed, killed, preserved, approximated, or discarded." },
+        { name: "Projection shortcut", when: "P^2=P or H=X(X^T X)^(-1)X^T appears.", move: "Use fixed/killed subspaces, eigenvalues 0/1, and trace/rank facts." },
+        { name: "PSD shortcut", when: "X^T X or covariance appears.", move: "Rewrite the quadratic form as a squared norm." },
+        { name: "SVD shortcut", when: "singular values are given.", move: "Read rank, dominant directions, and low-rank approximation directly." },
+        { name: "Regression geometry", when: "least squares or ridge appears.", move: "Separate fitted projection, residual orthogonality, and coefficient shrinkage." }
+      ],
+      practiceProblems: linearAlgebraDataSynthesisProblems(),
+      reviewPrompts: [
+        "Why should you identify the matrix family before computing?",
+        "What does a projection matrix fix and what does it kill?",
+        "How do you prove X^T X is positive semidefinite?",
+        "How do singular values reveal rank?",
+        "What does least squares preserve about the residual?",
+        "How does ridge change weak singular-value directions?",
+        "How do trace and determinant act as structural shortcuts?",
+        "In PCA, what variance is kept and what variance is discarded?"
+      ],
+      reviewQuiz: {
+        id: "quiz-linear-algebra-chapter-12-objective-review",
+        title: "Linear Algebra Chapter 12 Objective Review",
+        instructions: "Complete this after studying the mixed data-linear-algebra synthesis chapter. The quiz emphasizes recognition before computation: projections, PSD/Gram/covariance structure, SVD, least squares, ridge, PCA, rank, trace, determinant, and fixed/killed/discarded language.",
+        questions: linearAlgebraDataSynthesisReviewQuestions()
+      },
+      readingQuestions: [
+        "What are the three steps in the recognition-first routine?",
+        "How can you recognize an orthogonal projection?",
+        "Why do Gram and covariance matrices have nonnegative eigenvalues?",
+        "What does a zero singular value mean physically?",
+        "What is the geometric difference between least squares and ridge?",
+        "When does trace count total variance?",
+        "When does trace count projection rank?",
+        "How does fixed/killed/discarded language help in mixed problems?"
+      ],
+      chapterSummary: [
+        "Mixed GATE DA linear algebra questions should begin with matrix-family recognition.",
+        "Projection matrices fix a target subspace and kill the complementary component.",
+        "Gram and covariance matrices are positive semidefinite because their quadratic forms are squared norms.",
+        "SVD reads rank, dominant directions, killed directions, and low-rank approximation.",
+        "Least squares projects y onto Col(X) and leaves a residual orthogonal to every column.",
+        "Ridge adds lambda I and shrinks unstable coefficient directions.",
+        "Covariance/PCA keeps high-variance directions and discards lower-variance directions.",
+        "Trace and determinant are fast only after the structure is identified.",
+        "The key physical language is fixed, killed, preserved, approximated, and discarded."
       ],
       updatedAt
     }
@@ -12334,6 +12852,244 @@ function linearAlgebraLeastSquaresRidgeConceptGraph() {
   };
 }
 
+function linearAlgebraCovariancePcaConceptGraph() {
+  return {
+    chapterId: "gate-da-linear-algebra-covariance-pca",
+    chapterTitle: "Linear Algebra Chapter 11: Covariance Matrices and PCA",
+    gateWeight: "high",
+    fallbackConcepts: ["centered-data", "covariance-matrix", "principal-component", "explained-variance"],
+    fallbackDifficultyMix: [1, 2, 2, 3],
+    fallbackInstruction: "Retest centering, covariance PSD structure, PCA eigen-direction reads, explained variance, and SVD conversion.",
+    stableNextAction: "Next: try a mixed data-linear-algebra set that combines covariance, SVD, projections, least squares, and rank.",
+    nodes: {
+      "centered-data": {
+        label: "Centered data",
+        prereqs: ["feature-mean"],
+        repairMaterial: "Review Chapter 11.1 and subtract each feature mean before forming covariance or PCA.",
+        gateWeight: "high"
+      },
+      "feature-mean": {
+        label: "Feature mean",
+        prereqs: [],
+        repairMaterial: "Review averages column by column; each feature has its own mean.",
+        gateWeight: "high"
+      },
+      "covariance-matrix": {
+        label: "Covariance matrix",
+        prereqs: ["centered-data", "matrix-product"],
+        repairMaterial: "Review Chapter 11.2 and write C=(1/(n-1))X_c^T X_c for centered data.",
+        gateWeight: "high"
+      },
+      "matrix-product": {
+        label: "Matrix products",
+        prereqs: [],
+        repairMaterial: "Review Chapter 2.5 and track dimensions before multiplying X_c^T X_c.",
+        gateWeight: "medium"
+      },
+      "psd-covariance": {
+        label: "PSD covariance",
+        prereqs: ["covariance-matrix", "squared-norm"],
+        repairMaterial: "Review Chapter 11.2 and prove u^T C u=||X_c u||^2/(n-1)>=0.",
+        gateWeight: "high"
+      },
+      "squared-norm": {
+        label: "Squared norm",
+        prereqs: [],
+        repairMaterial: "Review Chapter 1.2 and remember ||z||^2 is always nonnegative.",
+        gateWeight: "high"
+      },
+      "directional-variance": {
+        label: "Directional variance",
+        prereqs: ["quadratic-form", "covariance-matrix"],
+        repairMaterial: "Review Chapter 11.3 and read u^T C u as variance along unit direction u.",
+        gateWeight: "high"
+      },
+      "quadratic-form": {
+        label: "Quadratic form",
+        prereqs: [],
+        repairMaterial: "Review Chapter 7.2 and interpret x^T A x as a direction-dependent measurement.",
+        gateWeight: "high"
+      },
+      "principal-component": {
+        label: "Principal component",
+        prereqs: ["eigenvalue", "directional-variance"],
+        repairMaterial: "Review Chapter 11.4 and choose the eigenvector with the largest covariance eigenvalue for the first PC.",
+        gateWeight: "high"
+      },
+      eigenvalue: {
+        label: "Eigenvalue",
+        prereqs: [],
+        repairMaterial: "Review Chapter 6.1 and connect eigenvalues with stretch/variance in invariant directions.",
+        gateWeight: "high"
+      },
+      "explained-variance": {
+        label: "Explained variance",
+        prereqs: ["principal-component", "trace"],
+        repairMaterial: "Review Chapter 11.5 and divide kept eigenvalue sum by the total eigenvalue sum.",
+        gateWeight: "high"
+      },
+      trace: {
+        label: "Trace",
+        prereqs: [],
+        repairMaterial: "Review Chapter 5.2 and remember trace equals the sum of eigenvalues for square matrices.",
+        gateWeight: "high"
+      },
+      "pca-projection": {
+        label: "PCA projection",
+        prereqs: ["principal-component", "orthogonal-projection", "explained-variance"],
+        repairMaterial: "Review Chapter 11.6 and treat PCA as projection onto kept orthogonal eigen-directions.",
+        gateWeight: "high"
+      },
+      "orthogonal-projection": {
+        label: "Orthogonal projection",
+        prereqs: [],
+        repairMaterial: "Review Chapter 4.3 and connect projection with closest shadow on a subspace.",
+        gateWeight: "high"
+      },
+      "svd-pca-link": {
+        label: "SVD-PCA link",
+        prereqs: ["singular-value", "covariance-matrix"],
+        repairMaterial: "Review Chapter 11.7 and use covariance eigenvalues sigma_i^2/(n-1) with right singular vectors as PCA directions.",
+        gateWeight: "high"
+      },
+      "singular-value": {
+        label: "Singular value",
+        prereqs: [],
+        repairMaterial: "Review Chapter 9.1 and interpret singular values as stretch factors of a data matrix.",
+        gateWeight: "high"
+      }
+    }
+  };
+}
+
+function linearAlgebraDataSynthesisConceptGraph() {
+  return {
+    chapterId: "gate-da-linear-algebra-data-synthesis",
+    chapterTitle: "Linear Algebra Chapter 12: Data Linear Algebra Synthesis",
+    gateWeight: "high",
+    fallbackConcepts: ["recognition-routine", "projection-structure", "svd-data-lens", "covariance-pca-read"],
+    fallbackDifficultyMix: [1, 2, 2, 3],
+    fallbackInstruction: "Retest mixed recognition: identify the matrix family, state what is fixed/killed/preserved/discarded, and compute the shortest structural quantity.",
+    stableNextAction: "Next: use cumulative mixed Linear Algebra drills with past-paper style prompts and no chapter labels.",
+    nodes: {
+      "recognition-routine": {
+        label: "Recognition-first routine",
+        prereqs: ["matrix-family"],
+        repairMaterial: "Review Chapter 12.1 and write object -> invariant -> computation before solving.",
+        gateWeight: "high"
+      },
+      "matrix-family": {
+        label: "Matrix family",
+        prereqs: [],
+        repairMaterial: "Review projection, Gram, covariance, SVD, normal-equation, ridge, and rank-one forms.",
+        gateWeight: "high"
+      },
+      "projection-structure": {
+        label: "Projection structure",
+        prereqs: ["idempotent", "fixed-killed-language"],
+        repairMaterial: "Review Chapter 12.2 and recognize P^2=P, fixed subspace, killed component, and trace/rank facts.",
+        gateWeight: "high"
+      },
+      idempotent: {
+        label: "Idempotent matrix",
+        prereqs: [],
+        repairMaterial: "Review Chapter 4.4 and Chapter 8.2: P^2=P means projecting twice changes nothing after the first projection.",
+        gateWeight: "high"
+      },
+      "fixed-killed-language": {
+        label: "Fixed/killed/discarded language",
+        prereqs: [],
+        repairMaterial: "Review Chapter 12.7 and state what the transformation keeps unchanged, maps to zero, or loses.",
+        gateWeight: "high"
+      },
+      "gram-psd-structure": {
+        label: "Gram PSD structure",
+        prereqs: ["squared-norm", "matrix-product"],
+        repairMaterial: "Review Chapter 12.3 and rewrite u^T X^T X u as ||Xu||^2.",
+        gateWeight: "high"
+      },
+      "squared-norm": {
+        label: "Squared norm",
+        prereqs: [],
+        repairMaterial: "Review Chapter 1.2 and remember squared lengths are nonnegative.",
+        gateWeight: "high"
+      },
+      "matrix-product": {
+        label: "Matrix products",
+        prereqs: [],
+        repairMaterial: "Review Chapter 2.5 and check dimensions before multiplying X^T X, XX^T, or X^T y.",
+        gateWeight: "medium"
+      },
+      "rank-survival": {
+        label: "Rank survival",
+        prereqs: ["singular-value", "column-space"],
+        repairMaterial: "Review Chapter 3 and Chapter 9: rank counts surviving independent directions or nonzero singular values.",
+        gateWeight: "high"
+      },
+      "singular-value": {
+        label: "Singular value",
+        prereqs: [],
+        repairMaterial: "Review Chapter 9.1 and read singular values as stretch factors.",
+        gateWeight: "high"
+      },
+      "column-space": {
+        label: "Column space",
+        prereqs: [],
+        repairMaterial: "Review Chapter 3.2 and identify Col(X) as all fitted vectors Xb.",
+        gateWeight: "high"
+      },
+      "svd-data-lens": {
+        label: "SVD data lens",
+        prereqs: ["singular-value", "rank-survival"],
+        repairMaterial: "Review Chapter 12.4 and use singular values to read rank, dominant directions, and killed directions.",
+        gateWeight: "high"
+      },
+      "least-squares-geometry": {
+        label: "Least-squares geometry",
+        prereqs: ["projection-structure", "residual-orthogonality"],
+        repairMaterial: "Review Chapter 12.5 and read least squares as projecting y onto Col(X).",
+        gateWeight: "high"
+      },
+      "residual-orthogonality": {
+        label: "Residual orthogonality",
+        prereqs: [],
+        repairMaterial: "Review Chapter 10.2 and use X^T(y-Xb)=0 at the best fit.",
+        gateWeight: "high"
+      },
+      "ridge-shrinkage": {
+        label: "Ridge shrinkage",
+        prereqs: ["least-squares-geometry", "singular-value"],
+        repairMaterial: "Review Chapter 12.5 and remember lambda I shrinks weak singular-value directions.",
+        gateWeight: "high"
+      },
+      "covariance-pca-read": {
+        label: "Covariance/PCA read",
+        prereqs: ["gram-psd-structure", "eigenvalue", "variance-direction"],
+        repairMaterial: "Review Chapter 12.3 and Chapter 12.7: covariance eigenvectors give PCA directions and eigenvalues give variances.",
+        gateWeight: "high"
+      },
+      eigenvalue: {
+        label: "Eigenvalue",
+        prereqs: [],
+        repairMaterial: "Review Chapter 6.1 and connect eigenvalues to stretch or variance along invariant directions.",
+        gateWeight: "high"
+      },
+      "variance-direction": {
+        label: "Variance direction",
+        prereqs: [],
+        repairMaterial: "Review Chapter 11.3 and compute u^T C u for variance along unit direction u.",
+        gateWeight: "high"
+      },
+      "trace-determinant-shortcut": {
+        label: "Trace/determinant shortcut",
+        prereqs: ["projection-structure", "covariance-pca-read"],
+        repairMaterial: "Review Chapter 12.6 and match trace with projection rank or total covariance variance before using it.",
+        gateWeight: "high"
+      }
+    }
+  };
+}
+
 function conditionalProbabilityConceptGraph() {
   return {
     chapterId: "gate-da-conditional-probability",
@@ -15199,6 +15955,422 @@ function linearAlgebraLeastSquaresRidgeReviewQuestions() {
   }));
 }
 
+function linearAlgebraCovariancePcaProblems() {
+  return [
+    {
+      label: "Problem 1: Centering a feature",
+      concept: "Centered data",
+      difficulty: "Concept",
+      technique: "Subtract the column mean",
+      prompt: "A feature column is [2,4,10]. Center it.",
+      solution: "The mean is (2+4+10)/3=16/3. The centered column is [-10/3,-4/3,14/3]. Centering records deviations from the average."
+    },
+    {
+      label: "Problem 2: Covariance matrix formula",
+      concept: "Covariance matrix",
+      difficulty: "Concept",
+      technique: "Read X_c^T X_c",
+      prompt: "If X_c is an n by p centered data matrix, what is the sample covariance matrix?",
+      solution: "The sample covariance matrix is C=(1/(n-1))X_c^T X_c. Its diagonal entries are feature variances and its off-diagonal entries are covariances."
+    },
+    {
+      label: "Problem 3: PSD covariance proof",
+      concept: "PSD covariance",
+      difficulty: "Application",
+      technique: "Rewrite as a squared norm",
+      prompt: "Explain why C=(1/(n-1))X_c^T X_c is positive semidefinite.",
+      solution: "For any vector u, u^T C u=(1/(n-1))u^T X_c^T X_c u=(1/(n-1))||X_c u||^2>=0. Therefore C is positive semidefinite."
+    },
+    {
+      label: "Problem 4: Directional variance",
+      concept: "Directional variance",
+      difficulty: "Application",
+      technique: "Evaluate u^T C u",
+      prompt: "Let C=diag(9,1). What is the variance along u=e1?",
+      solution: "u^T C u=e1^T C e1=9. The data has variance 9 along the first coordinate direction."
+    },
+    {
+      label: "Problem 5: First principal component",
+      concept: "Principal component",
+      difficulty: "GATE-style",
+      technique: "Choose the largest covariance eigenvalue",
+      prompt: "A covariance matrix has eigenpairs (e1,9) and (e2,1). Which direction is the first principal component?",
+      solution: "The first principal component is e1 because it has the largest eigenvalue, 9. That direction captures the most variance."
+    },
+    {
+      label: "Problem 6: Explained variance ratio",
+      concept: "Explained variance",
+      difficulty: "GATE-style",
+      technique: "Divide by total variance",
+      prompt: "If covariance eigenvalues are 9, 3, and 0, what fraction of variance is explained by the first component?",
+      solution: "The total variance is 9+3+0=12. The first component explains 9/12=3/4=75% of the variance."
+    },
+    {
+      label: "Problem 7: Two-component explained variance",
+      concept: "Explained variance",
+      difficulty: "GATE-style",
+      technique: "Add kept eigenvalues",
+      prompt: "If covariance eigenvalues are 10, 4, 1, what fraction of variance is kept by the first two principal components?",
+      solution: "The kept variance is 10+4=14 and the total variance is 15. The first two components keep 14/15 of the variance."
+    },
+    {
+      label: "Problem 8: Projection is lossy",
+      concept: "PCA projection",
+      difficulty: "GATE-style",
+      technique: "Read discarded eigenvalues",
+      prompt: "A 2D centered data cloud has covariance eigenvalues 9 and 1. If PCA keeps only the first component, what variance is discarded?",
+      solution: "The omitted second component has eigenvalue 1, so variance 1 is discarded. The one-dimensional projection is not exact unless the discarded eigenvalue is 0."
+    },
+    {
+      label: "Problem 9: Trace and total variance",
+      concept: "Explained variance",
+      difficulty: "GATE-style",
+      technique: "Use trace as eigenvalue sum",
+      prompt: "If C has eigenvalues 6 and 2, what is trace(C), and what does it mean?",
+      solution: "trace(C)=6+2=8. It is the total variance across all principal directions."
+    },
+    {
+      label: "Problem 10: SVD to PCA",
+      concept: "SVD-PCA link",
+      difficulty: "GATE-style",
+      technique: "Convert singular values to covariance eigenvalues",
+      prompt: "Centered data X_c has n=5 observations and singular values 6 and 2. What are the covariance eigenvalues?",
+      solution: "Covariance eigenvalues are sigma_i^2/(n-1). With n=5, they are 36/4=9 and 4/4=1. The right singular vectors give the PCA directions."
+    }
+  ];
+}
+
+function linearAlgebraCovariancePcaReviewQuestions() {
+  const metadata = {
+    "la-pca-review-1": { targetConcept: "centered-data", prereqsUsed: ["feature-mean"], difficulty: 1, gateWeight: "high" },
+    "la-pca-review-2": { targetConcept: "covariance-matrix", prereqsUsed: ["centered-data", "matrix-product"], difficulty: 1, gateWeight: "high" },
+    "la-pca-review-3": { targetConcept: "psd-covariance", prereqsUsed: ["covariance-matrix", "squared-norm"], difficulty: 2, gateWeight: "high" },
+    "la-pca-review-4": { targetConcept: "directional-variance", prereqsUsed: ["quadratic-form", "covariance-matrix"], difficulty: 2, gateWeight: "high" },
+    "la-pca-review-5": { targetConcept: "principal-component", prereqsUsed: ["eigenvalue", "directional-variance"], difficulty: 2, gateWeight: "high" },
+    "la-pca-review-6": { targetConcept: "explained-variance", prereqsUsed: ["principal-component", "trace"], difficulty: 2, gateWeight: "high" },
+    "la-pca-review-7": { targetConcept: "pca-projection", prereqsUsed: ["principal-component", "orthogonal-projection", "explained-variance"], difficulty: 3, gateWeight: "high" },
+    "la-pca-review-8": { targetConcept: "svd-pca-link", prereqsUsed: ["singular-value", "covariance-matrix"], difficulty: 3, gateWeight: "high" }
+  };
+  const questions = [
+    {
+      id: "la-pca-review-1",
+      kind: "single concept",
+      tags: ["centered-data", "feature-mean"],
+      prompt: "What does it mean to center a data matrix before PCA?",
+      options: [
+        { id: "a", text: "Subtract each feature's mean from that feature column." },
+        { id: "b", text: "Divide every entry by the determinant." },
+        { id: "c", text: "Make every row length equal to 1." },
+        { id: "d", text: "Replace all covariances by zero." }
+      ],
+      answer: "a"
+    },
+    {
+      id: "la-pca-review-2",
+      kind: "single concept",
+      tags: ["covariance-matrix", "centered-data", "matrix-product"],
+      prompt: "For centered data X_c with n observations, what is the sample covariance matrix?",
+      options: [
+        { id: "a", text: "(1/(n-1)) X_c^T X_c" },
+        { id: "b", text: "X_c X_c^T without scaling" },
+        { id: "c", text: "X_c+X_c^T" },
+        { id: "d", text: "det(X_c)I" }
+      ],
+      answer: "a"
+    },
+    {
+      id: "la-pca-review-3",
+      kind: "mixed: two concepts",
+      tags: ["psd-covariance", "covariance-matrix", "squared-norm"],
+      prompt: "Why is C=(1/(n-1))X_c^T X_c positive semidefinite?",
+      options: [
+        { id: "a", text: "Because u^T C u=||X_c u||^2/(n-1) >= 0." },
+        { id: "b", text: "Because every covariance entry is positive." },
+        { id: "c", text: "Because C must be diagonal." },
+        { id: "d", text: "Because C has determinant 1." }
+      ],
+      answer: "a"
+    },
+    {
+      id: "la-pca-review-4",
+      kind: "mixed: two concepts",
+      tags: ["directional-variance", "quadratic-form", "covariance-matrix"],
+      prompt: "For unit vector u and covariance matrix C, what does u^T C u represent?",
+      options: [
+        { id: "a", text: "Variance of centered data along direction u." },
+        { id: "b", text: "The mean of all features." },
+        { id: "c", text: "The number of observations." },
+        { id: "d", text: "The determinant of the data matrix." }
+      ],
+      answer: "a"
+    },
+    {
+      id: "la-pca-review-5",
+      kind: "mixed: two concepts",
+      tags: ["principal-component", "eigenvalue", "directional-variance"],
+      prompt: "Which covariance eigenvector is the first principal component?",
+      options: [
+        { id: "a", text: "The eigenvector with the largest eigenvalue." },
+        { id: "b", text: "The eigenvector with the smallest eigenvalue." },
+        { id: "c", text: "Any vector with zero entries." },
+        { id: "d", text: "The row mean vector." }
+      ],
+      answer: "a"
+    },
+    {
+      id: "la-pca-review-6",
+      kind: "mixed: two concepts",
+      tags: ["explained-variance", "principal-component", "trace"],
+      prompt: "Covariance eigenvalues are 9 and 1. What fraction of total variance does the first principal component explain?",
+      options: [
+        { id: "a", text: "9/10" },
+        { id: "b", text: "1/10" },
+        { id: "c", text: "9" },
+        { id: "d", text: "10/9" }
+      ],
+      answer: "a"
+    },
+    {
+      id: "la-pca-review-7",
+      kind: "mixed: three concepts",
+      tags: ["pca-projection", "principal-component", "orthogonal-projection", "explained-variance"],
+      prompt: "A covariance matrix has eigenvalues 5, 2, and 0. If PCA keeps the first two components, how much variance is discarded?",
+      options: [
+        { id: "a", text: "0" },
+        { id: "b", text: "2" },
+        { id: "c", text: "5" },
+        { id: "d", text: "7" }
+      ],
+      answer: "a"
+    },
+    {
+      id: "la-pca-review-8",
+      kind: "mixed: three concepts",
+      tags: ["svd-pca-link", "singular-value", "covariance-matrix"],
+      prompt: "If centered X_c=U Sigma V^T, which vectors give the PCA directions?",
+      options: [
+        { id: "a", text: "The right singular vectors, columns of V." },
+        { id: "b", text: "Only the column means." },
+        { id: "c", text: "Only the diagonal entries of U." },
+        { id: "d", text: "The residual vector y-Xb." }
+      ],
+      answer: "a"
+    }
+  ];
+  return questions.map((question) => ({
+    ...question,
+    ...(metadata[question.id] || { targetConcept: question.tags[0], prereqsUsed: question.tags.slice(1), difficulty: question.tags.length, gateWeight: "medium" })
+  }));
+}
+
+function linearAlgebraDataSynthesisProblems() {
+  return [
+    {
+      label: "Problem 1: Identify the object",
+      concept: "Recognition-first routine",
+      difficulty: "Concept",
+      technique: "Name the matrix family",
+      prompt: "A problem gives H=X(X^T X)^(-1)X^T with X full column rank. What object should you recognize before computing entries?",
+      solution: "Recognize H as the orthogonal projection matrix onto Col(X). It fixes fitted vectors in Col(X), kills residual directions orthogonal to Col(X), and is symmetric and idempotent."
+    },
+    {
+      label: "Problem 2: Projection trace shortcut",
+      concept: "Projection structure",
+      difficulty: "Concept",
+      technique: "Use trace equals rank for projection",
+      prompt: "An orthogonal projection in R^5 projects onto a 2-dimensional subspace. What are its rank and trace?",
+      solution: "Both rank and trace are 2. The projection has two eigenvalues equal to 1 on the fixed subspace and three eigenvalues equal to 0 on killed directions."
+    },
+    {
+      label: "Problem 3: Gram PSD recognition",
+      concept: "Gram PSD structure",
+      difficulty: "Application",
+      technique: "Rewrite as squared norm",
+      prompt: "Why must every eigenvalue of X^T X be nonnegative?",
+      solution: "For any vector u, u^T X^T X u=||Xu||^2>=0. Therefore X^T X is positive semidefinite, so its eigenvalues are nonnegative."
+    },
+    {
+      label: "Problem 4: Rank from singular values",
+      concept: "Rank survival",
+      difficulty: "Application",
+      technique: "Count nonzero singular values",
+      prompt: "A matrix has singular values 7, 3, 0, 0. What is its rank, and what do the zeros mean?",
+      solution: "The rank is 2. The two zero singular values mean two independent input directions are killed by the transformation."
+    },
+    {
+      label: "Problem 5: Least-squares geometry",
+      concept: "Least-squares geometry",
+      difficulty: "GATE-style",
+      technique: "State residual orthogonality",
+      prompt: "In ordinary least squares, what is preserved about the residual r=y-Xb at the best fit?",
+      solution: "The residual is orthogonal to every column of X, so X^T r=0. Geometrically, the fitted vector is the projection of y onto Col(X)."
+    },
+    {
+      label: "Problem 6: Ridge versus projection",
+      concept: "Ridge shrinkage",
+      difficulty: "GATE-style",
+      technique: "Separate fitted projection from coefficient shrinkage",
+      prompt: "Why should ridge regression not be described as the same projection as ordinary least squares?",
+      solution: "Ordinary least squares projects y onto Col(X). Ridge solves (X^T X+lambda I)b=X^T y and shrinks coefficients, especially weak singular-value directions. It changes the coefficient estimate rather than using the ordinary hat matrix."
+    },
+    {
+      label: "Problem 7: Covariance/PCA read",
+      concept: "Covariance/PCA read",
+      difficulty: "GATE-style",
+      technique: "Read eigenvectors as variance directions",
+      prompt: "A covariance matrix has eigenpairs (u1,12), (u2,3), (u3,0). What is the first PC and what variance is discarded by keeping the first two PCs?",
+      solution: "The first PC is u1 because 12 is largest. Keeping the first two PCs discards the third eigenvalue, 0, so no variance is discarded in the third direction."
+    },
+    {
+      label: "Problem 8: Trace shortcut match",
+      concept: "Trace/determinant shortcut",
+      difficulty: "GATE-style",
+      technique: "Match trace to matrix family",
+      prompt: "For a covariance matrix with eigenvalues 5, 2, 1, what is trace(C), and what does it mean?",
+      solution: "trace(C)=5+2+1=8. For covariance, trace means total variance across all principal directions."
+    },
+    {
+      label: "Problem 9: Mixed projection and covariance",
+      concept: "Fixed/killed/discarded language",
+      difficulty: "GATE-style",
+      technique: "State what is kept and lost",
+      prompt: "A PCA projection keeps only the top eigenvector of a covariance matrix with eigenvalues 9 and 4. What is preserved and what is discarded?",
+      solution: "The projection preserves the coordinate along the top variance direction and discards variance 4 in the second principal direction. It is a one-dimensional approximation, not the full data."
+    },
+    {
+      label: "Problem 10: Mixed SVD and PCA",
+      concept: "SVD data lens",
+      difficulty: "GATE-style",
+      technique: "Convert singular values to variance",
+      prompt: "Centered data has n=6 observations and singular values 5 and 0. What is the rank of the data matrix and the nonzero covariance eigenvalue?",
+      solution: "The data matrix has rank 1 because only one singular value is nonzero. The nonzero covariance eigenvalue is 5^2/(6-1)=25/5=5."
+    }
+  ];
+}
+
+function linearAlgebraDataSynthesisReviewQuestions() {
+  const metadata = {
+    "la-synth-review-1": { targetConcept: "recognition-routine", prereqsUsed: ["matrix-family"], difficulty: 1, gateWeight: "high" },
+    "la-synth-review-2": { targetConcept: "projection-structure", prereqsUsed: ["idempotent", "fixed-killed-language"], difficulty: 1, gateWeight: "high" },
+    "la-synth-review-3": { targetConcept: "gram-psd-structure", prereqsUsed: ["squared-norm", "matrix-product"], difficulty: 2, gateWeight: "high" },
+    "la-synth-review-4": { targetConcept: "rank-survival", prereqsUsed: ["singular-value", "column-space"], difficulty: 2, gateWeight: "high" },
+    "la-synth-review-5": { targetConcept: "least-squares-geometry", prereqsUsed: ["projection-structure", "residual-orthogonality"], difficulty: 2, gateWeight: "high" },
+    "la-synth-review-6": { targetConcept: "ridge-shrinkage", prereqsUsed: ["least-squares-geometry", "singular-value"], difficulty: 3, gateWeight: "high" },
+    "la-synth-review-7": { targetConcept: "covariance-pca-read", prereqsUsed: ["gram-psd-structure", "eigenvalue", "variance-direction"], difficulty: 3, gateWeight: "high" },
+    "la-synth-review-8": { targetConcept: "trace-determinant-shortcut", prereqsUsed: ["projection-structure", "covariance-pca-read"], difficulty: 3, gateWeight: "high" }
+  };
+  const questions = [
+    {
+      id: "la-synth-review-1",
+      kind: "single concept",
+      tags: ["recognition-routine", "matrix-family"],
+      prompt: "What is the best first move in a mixed linear algebra exam problem?",
+      options: [
+        { id: "a", text: "Identify the matrix family and invariant before computing." },
+        { id: "b", text: "Always expand every matrix product entry by entry." },
+        { id: "c", text: "Always compute a determinant first." },
+        { id: "d", text: "Ignore whether the matrix is a projection or covariance matrix." }
+      ],
+      answer: "a"
+    },
+    {
+      id: "la-synth-review-2",
+      kind: "single concept",
+      tags: ["projection-structure", "idempotent", "fixed-killed-language"],
+      prompt: "A matrix P satisfies P^2=P and is an orthogonal projection. What does it do structurally?",
+      options: [
+        { id: "a", text: "It fixes the target subspace and kills the perpendicular component." },
+        { id: "b", text: "It rotates every vector by 90 degrees." },
+        { id: "c", text: "It makes every eigenvalue negative." },
+        { id: "d", text: "It always has full rank." }
+      ],
+      answer: "a"
+    },
+    {
+      id: "la-synth-review-3",
+      kind: "mixed: two concepts",
+      tags: ["gram-psd-structure", "squared-norm", "matrix-product"],
+      prompt: "What is the structural reason X^T X is positive semidefinite?",
+      options: [
+        { id: "a", text: "u^T X^T X u=||Xu||^2 for every u." },
+        { id: "b", text: "X^T X is always the identity." },
+        { id: "c", text: "Every entry of X must be positive." },
+        { id: "d", text: "X^T X always has determinant 1." }
+      ],
+      answer: "a"
+    },
+    {
+      id: "la-synth-review-4",
+      kind: "mixed: two concepts",
+      tags: ["rank-survival", "singular-value", "column-space"],
+      prompt: "A matrix has singular values 4, 1, 0. What is its rank?",
+      options: [
+        { id: "a", text: "2" },
+        { id: "b", text: "3" },
+        { id: "c", text: "1" },
+        { id: "d", text: "0" }
+      ],
+      answer: "a"
+    },
+    {
+      id: "la-synth-review-5",
+      kind: "mixed: two concepts",
+      tags: ["least-squares-geometry", "projection-structure", "residual-orthogonality"],
+      prompt: "At the ordinary least-squares solution, what is true of the residual r=y-Xb?",
+      options: [
+        { id: "a", text: "X^T r=0" },
+        { id: "b", text: "r must equal y" },
+        { id: "c", text: "r must be in Col(X)" },
+        { id: "d", text: "Xr=b" }
+      ],
+      answer: "a"
+    },
+    {
+      id: "la-synth-review-6",
+      kind: "mixed: three concepts",
+      tags: ["ridge-shrinkage", "least-squares-geometry", "singular-value"],
+      prompt: "What is the ridge-regression normal equation?",
+      options: [
+        { id: "a", text: "(X^T X+lambda I)b=X^T y" },
+        { id: "b", text: "Xb=0" },
+        { id: "c", text: "X^T X=I+lambda y" },
+        { id: "d", text: "X^T y=lambda I" }
+      ],
+      answer: "a"
+    },
+    {
+      id: "la-synth-review-7",
+      kind: "mixed: three concepts",
+      tags: ["covariance-pca-read", "gram-psd-structure", "eigenvalue", "variance-direction"],
+      prompt: "A covariance matrix has eigenvalues 8, 2, 0. What variance does the first principal component capture?",
+      options: [
+        { id: "a", text: "8" },
+        { id: "b", text: "2" },
+        { id: "c", text: "0" },
+        { id: "d", text: "10" }
+      ],
+      answer: "a"
+    },
+    {
+      id: "la-synth-review-8",
+      kind: "mixed: three concepts",
+      tags: ["trace-determinant-shortcut", "projection-structure", "covariance-pca-read"],
+      prompt: "For an orthogonal projection onto a 3-dimensional subspace, what is trace(P)?",
+      options: [
+        { id: "a", text: "3" },
+        { id: "b", text: "0" },
+        { id: "c", text: "The determinant of P" },
+        { id: "d", text: "The ambient dimension must be 3" }
+      ],
+      answer: "a"
+    }
+  ];
+  return questions.map((question) => ({
+    ...question,
+    ...(metadata[question.id] || { targetConcept: question.tags[0], prereqsUsed: question.tags.slice(1), difficulty: question.tags.length, gateWeight: "medium" })
+  }));
+}
+
 function discreteMathMilestones() {
   return [
     {
@@ -15568,9 +16740,101 @@ function baseFeedbackWorkflow(overrides = {}) {
       "correctApproach",
       "minimalCorrection",
       "nextDrill",
-      "masteryUpdates"
+      "masteryUpdates",
+      "errorAnalysis",
+      "prerequisiteHypotheses",
+      "diagnosticRecommendations",
+      "adaptivePlanSignal"
     ],
+    prerequisiteGraph: overrides.prerequisiteGraph || platinumPrerequisiteGraph(overrides.id),
     ...overrides
+  };
+}
+
+function platinumPrerequisiteGraph(workflowId = "") {
+  const common = {
+    "algebra-control": {
+      label: "Algebra control",
+      prereqs: ["signs-and-inequalities", "simplification"],
+      diagnostic: "Give a short algebra-only simplification that appears inside the topic."
+    },
+    "calculus-control": {
+      label: "Calculus control",
+      prereqs: ["derivatives", "critical-points", "boundary-checks"],
+      diagnostic: "Optimize a one-variable expression and state whether the answer is interior or boundary."
+    },
+    "distribution-recognition": {
+      label: "Distribution recognition",
+      prereqs: ["pmf-pdf-support", "cdf-tail-probability"],
+      diagnostic: "Identify the distribution, support, and relevant tail/CDF from a short statement."
+    },
+    "written-justification": {
+      label: "Written justification",
+      prereqs: ["method-trigger", "final-interpretation"],
+      diagnostic: "Explain why the selected method applies before computing."
+    }
+  };
+  const graphs = {
+    "feedback-workflow-indicators-v1": {
+      topic: "Method of Indicators",
+      skills: {
+        "indicator-definition": { prereqs: ["counted-object", "index-set-choice"], diagnostic: "Define indicators for a small count before computing expectation." },
+        "linearity-of-expectation": { prereqs: ["indicator-definition", "expectation-of-indicator"], diagnostic: "Compute E[sum Ii] without assuming independence." },
+        "pair-products": { prereqs: ["joint-probability", "overlap-cases", "variance-expansion"], diagnostic: "Compute E[Ii Ij] for overlapping and non-overlapping pairs." },
+        "conditioning-bridge": { prereqs: ["conditioning-choice", "tower-property"], diagnostic: "Condition on a random batch size, then use indicators inside the conditional problem." }
+      }
+    },
+    "feedback-workflow-conditional-expectation-v1": {
+      topic: "Conditional Expectation and Tower Property",
+      skills: {
+        "conditioning-choice": { prereqs: ["simplifying-variable", "sigma-field-intuition"], diagnostic: "Choose the variable that makes the inner expectation simple." },
+        "inner-expectation": { prereqs: ["conditional-distribution", "support-tracking"], diagnostic: "Compute E[X | Y=y] from a conditional PMF/PDF." },
+        "tower-property": { prereqs: ["outer-expectation", "random-inner-expectation"], diagnostic: "Average E[X|Y] over Y without treating it as constant." },
+        "total-variance": { prereqs: ["conditional-variance", "variance-of-conditional-mean"], diagnostic: "Split variance into E[Var(X|Y)] and Var(E[X|Y])." }
+      }
+    },
+    "feedback-workflow-order-statistics-v1": {
+      topic: "Order Statistics",
+      skills: {
+        "event-translation": { prereqs: ["sample-to-sorted-event", "support-tracking"], diagnostic: "Translate max/min/kth statements into events about the original sample." },
+        "cdf-method": { prereqs: ["cdf-tail-probability", "independence-product"], diagnostic: "Derive a min or max CDF from first principles." },
+        "density-setup": { prereqs: ["combinatorial-constant", "joint-support"], diagnostic: "Write the kth-order density with the correct support and constant." },
+        spacings: { prereqs: ["joint-density", "change-of-variables"], diagnostic: "Set up a range or spacing problem with correct bounds." }
+      }
+    },
+    "feedback-workflow-mle-estimation-v1": {
+      topic: "MLE and Estimation",
+      skills: {
+        "likelihood-setup": { prereqs: ["joint-density-product", "parameter-relevant-terms"], diagnostic: "Write a likelihood and remove parameter-free constants." },
+        "log-likelihood": { prereqs: ["log-rules", "support-constraint"], diagnostic: "Convert a likelihood to a log-likelihood without changing the optimizer." },
+        optimizer: { prereqs: ["calculus-control", "boundary-checks"], diagnostic: "Find and verify the likelihood maximizer." },
+        "support-constraint": { prereqs: ["parameter-space", "sample-dependent-support"], diagnostic: "Solve a support-dependent MLE by finding the allowed parameter interval." },
+        "estimator-quality": { prereqs: ["expectation", "variance", "mse-bias-decomposition"], diagnostic: "Compute bias and MSE for a simple estimator." }
+      }
+    },
+    "feedback-workflow-ump-np-v1": {
+      topic: "UMP and NP Tests",
+      skills: {
+        "likelihood-ratio": { prereqs: ["likelihood-setup", "ratio-simplification"], diagnostic: "Form L1/L0 in a simple-vs-simple test before choosing a critical region." },
+        "rejection-direction": { prereqs: ["signs-and-inequalities", "monotone-transformation"], diagnostic: "Simplify a likelihood ratio and decide whether large or small statistic values reject." },
+        "size-calibration": { prereqs: ["null-distribution", "tail-probability", "quantile-reading"], diagnostic: "Choose a cutoff so P0(reject)=alpha." },
+        randomization: { prereqs: ["discrete-tail-probability", "boundary-probability"], diagnostic: "Calibrate a discrete test with boundary randomization." },
+        "power-computation": { prereqs: ["alternative-distribution", "tail-probability"], diagnostic: "Compute rejection probability under the alternative." },
+        "mlr-ump": { prereqs: ["monotone-likelihood-ratio", "one-sided-alternative"], diagnostic: "Identify a statistic with MLR and state the one-sided UMP direction." }
+      }
+    },
+    "feedback-workflow-weekly-psb-review-v1": {
+      topic: "Weekly PSB Review Quiz",
+      skills: {
+        "topic-recognition": { prereqs: ["method-trigger", "problem-translation"], diagnostic: "Label the intended topic and method trigger for each subpart before solving." },
+        "weakest-topic": { prereqs: ["error-pattern-comparison", "prerequisite-identification"], diagnostic: "Compare misses across topics and name the first prerequisite that breaks." },
+        "written-justification": { prereqs: ["method-trigger", "subpart-completeness"], diagnostic: "Rewrite one solution with the method trigger and conclusion for each subpart." }
+      }
+    }
+  };
+  return {
+    ...(graphs[workflowId] || { topic: "Platinum material", skills: {} }),
+    common
   };
 }
 
@@ -16636,6 +17900,8 @@ function conceptGraphForSection(section) {
   if (section?.id === "gate-da-linear-algebra-special-matrices") return linearAlgebraSpecialMatricesConceptGraph();
   if (section?.id === "gate-da-linear-algebra-svd-singular-values") return linearAlgebraSvdSingularValuesConceptGraph();
   if (section?.id === "gate-da-linear-algebra-least-squares-ridge") return linearAlgebraLeastSquaresRidgeConceptGraph();
+  if (section?.id === "gate-da-linear-algebra-covariance-pca") return linearAlgebraCovariancePcaConceptGraph();
+  if (section?.id === "gate-da-linear-algebra-data-synthesis") return linearAlgebraDataSynthesisConceptGraph();
   if (section?.id === "gate-da-probability-foundations") return probabilityFoundationConceptGraph();
   if (section?.id === "gate-da-conditional-probability") return conditionalProbabilityConceptGraph();
   if (section?.id === "gate-da-random-variables-expectation") return randomVariablesExpectationConceptGraph();
@@ -17569,6 +18835,24 @@ function generatedFeedbackReportTemplate(record) {
       <p><strong>Concept gap:</strong> ${escapeHtml(record.conceptGap?.tag || "not tagged")} - ${escapeHtml(record.conceptGap?.description || "")}</p>
       <p><strong>Minimal correction:</strong> ${escapeHtml(record.minimalCorrection || "")}</p>
       <p><strong>Next drill:</strong> ${escapeHtml(record.nextDrill?.instruction || "")}</p>
+      <div class="feedback-spec-grid">
+        <div>
+          <strong>Error analysis</strong>
+          <ul>${(record.errorAnalysis || []).map((item) => `<li>${escapeHtml(item.errorType || "error")}: ${escapeHtml(item.observedError || "")} ${item.likelyPrerequisite ? `(Prereq: ${escapeHtml(item.likelyPrerequisite)})` : ""}</li>`).join("") || "<li>No detailed error analysis recorded.</li>"}</ul>
+        </div>
+        <div>
+          <strong>Prerequisite hypotheses</strong>
+          <ul>${(record.prerequisiteHypotheses || []).map((item) => `<li>${escapeHtml(item.prerequisite || "Prereq")}: ${escapeHtml(item.hypothesis || "")} (${escapeHtml(item.confidence || "unknown")} confidence)</li>`).join("") || "<li>No prerequisite hypothesis recorded.</li>"}</ul>
+        </div>
+        <div>
+          <strong>Sunday diagnostic recommendations</strong>
+          <ul>${(record.diagnosticRecommendations || []).map((item) => `<li>${escapeHtml(item.prerequisite || "Prereq")}: ${escapeHtml(item.diagnosticProblemType || "")}</li>`).join("") || "<li>No Sunday diagnostic recommendation recorded.</li>"}</ul>
+        </div>
+        <div>
+          <strong>Next-week adaptation signal</strong>
+          <p>${escapeHtml(record.adaptivePlanSignal?.rationale || "No adaptive signal recorded.")}</p>
+        </div>
+      </div>
       <p>${escapeHtml(report.encouragement || "")}</p>
     </section>
   `;
@@ -17816,6 +19100,11 @@ function formatFeedbackReportText(record) {
     "",
     ...section("What to do next", report.masteryPlan),
     `Next drill: ${record.nextDrill?.instruction || "not generated"}`,
+    "",
+    ...section("Detailed error analysis", (record.errorAnalysis || []).map((item) => `${item.errorType}: ${item.observedError} Prereq: ${item.likelyPrerequisite}. Evidence: ${item.evidence}`)),
+    ...section("Prerequisite hypotheses to test", (record.prerequisiteHypotheses || []).map((item) => `${item.prerequisite}: ${item.hypothesis} (${item.confidence}; ${item.repairPriority} priority)`)),
+    ...section("Sunday diagnostic recommendations", (record.diagnosticRecommendations || []).map((item) => `${item.prerequisite}: ${item.diagnosticProblemType}. Confirm if: ${item.confirmationCriterion}. Bridge: ${item.bridgeProblemType}`)),
+    `Adaptive next-week signal: ${record.adaptivePlanSignal?.rationale || "not generated"}`,
     "",
     report.encouragement || ""
   ].join("\n");
@@ -19147,7 +20436,12 @@ function platinumMaterialSnapshots() {
           feedbackRight: feedbackRecord?.whatTheyGotRight || feedbackRecord?.studentReport?.right || [],
           feedbackNotUnderstood: feedbackRecord?.stillNotUnderstood || feedbackRecord?.studentReport?.notYet || [],
           feedbackExecutionIssues: feedbackRecord?.errorsDespiteKnowing || feedbackRecord?.studentReport?.executionIssues || [],
-          feedbackMasteryPlan: feedbackRecord?.studentReport?.masteryPlan || []
+          feedbackMasteryPlan: feedbackRecord?.studentReport?.masteryPlan || [],
+          feedbackMasteryUpdates: feedbackRecord?.masteryUpdates || [],
+          feedbackErrorAnalysis: feedbackRecord?.errorAnalysis || [],
+          feedbackPrerequisiteHypotheses: feedbackRecord?.prerequisiteHypotheses || [],
+          feedbackDiagnosticRecommendations: feedbackRecord?.diagnosticRecommendations || [],
+          feedbackAdaptivePlanSignal: feedbackRecord?.adaptivePlanSignal || null
         });
       });
     });
