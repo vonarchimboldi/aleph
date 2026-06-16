@@ -1,7 +1,7 @@
 const STORAGE_KEY = "learning-studio-data-v2";
 const LEGACY_STORAGE_KEYS = ["learning-studio-data-v1"];
 const SESSION_KEY = "aleph-session";
-const COURSE_PLAN_VERSION = "seeded-user-canonical-workspace-v88";
+const COURSE_PLAN_VERSION = "seeded-user-canonical-workspace-v89";
 const PRIYANKA_PLATINUM_START_DATE = "2026-06-07";
 const DEFAULT_PLAN_START_DATE = "2026-06-01";
 const PLATINUM_PROGRESS_SYNC_DEBOUNCE_MS = 1500;
@@ -123,23 +123,24 @@ function loadState() {
       ...buildCoursePlan(user)
     };
     const shouldUseCanonicalPlan = isSeededPrototypeUser(user) || parsed.coursePlanVersion !== COURSE_PLAN_VERSION;
+    const mergedStarter = shouldUseCanonicalPlan ? mergeCanonicalPlanWithProgress(starter, parsed) : starter;
     user.password = user.password || user.tempPassword;
     user.mustChangePassword = false;
     return {
       user,
-      subjects: shouldUseCanonicalPlan ? starter.subjects : parsed.subjects?.length ? parsed.subjects : starter.subjects,
-      schedule: shouldUseCanonicalPlan ? starter.schedule : parsed.schedule?.length ? parsed.schedule : starter.schedule,
-      tests: shouldUseCanonicalPlan ? starter.tests : parsed.tests || [],
+      subjects: shouldUseCanonicalPlan ? mergedStarter.subjects : parsed.subjects?.length ? parsed.subjects : starter.subjects,
+      schedule: shouldUseCanonicalPlan ? mergedStarter.schedule : parsed.schedule?.length ? parsed.schedule : starter.schedule,
+      tests: shouldUseCanonicalPlan ? mergedStarter.tests : parsed.tests || [],
       quizAttempts: parsed.quizAttempts || [],
       patternSubmissions: parsed.patternSubmissions || [],
-      feedback: shouldUseCanonicalPlan ? starter.feedback : parsed.feedback || [],
-      resources: shouldUseCanonicalPlan ? starter.resources : parsed.resources || [],
-      tasks: shouldUseCanonicalPlan ? starter.tasks : parsed.tasks || [],
-      accountTypes: shouldUseCanonicalPlan ? starter.accountTypes : parsed.accountTypes?.length ? parsed.accountTypes : parsed.products?.length ? parsed.products : starter.accountTypes,
-      enrollments: shouldUseCanonicalPlan ? starter.enrollments : parsed.enrollments?.length ? parsed.enrollments : starter.enrollments,
-      lessonPlans: shouldUseCanonicalPlan ? starter.lessonPlans : parsed.lessonPlans?.length ? parsed.lessonPlans : starter.lessonPlans,
-      gateDaSections: shouldUseCanonicalPlan ? starter.gateDaSections : parsed.gateDaSections?.length ? parsed.gateDaSections : starter.gateDaSections,
-      coursePlanVersion: parsed.coursePlanVersion || ""
+      feedback: shouldUseCanonicalPlan ? mergedStarter.feedback : parsed.feedback || [],
+      resources: shouldUseCanonicalPlan ? mergedStarter.resources : parsed.resources || [],
+      tasks: shouldUseCanonicalPlan ? mergedStarter.tasks : parsed.tasks || [],
+      accountTypes: shouldUseCanonicalPlan ? mergedStarter.accountTypes : parsed.accountTypes?.length ? parsed.accountTypes : parsed.products?.length ? parsed.products : starter.accountTypes,
+      enrollments: shouldUseCanonicalPlan ? mergedStarter.enrollments : parsed.enrollments?.length ? parsed.enrollments : starter.enrollments,
+      lessonPlans: shouldUseCanonicalPlan ? mergedStarter.lessonPlans : parsed.lessonPlans?.length ? parsed.lessonPlans : starter.lessonPlans,
+      gateDaSections: shouldUseCanonicalPlan ? mergedStarter.gateDaSections : parsed.gateDaSections?.length ? parsed.gateDaSections : starter.gateDaSections,
+      coursePlanVersion: shouldUseCanonicalPlan ? mergedStarter.coursePlanVersion : parsed.coursePlanVersion || ""
     };
   } catch {
     return initialState();
@@ -158,7 +159,7 @@ function initialState() {
 function ensureCoursePlan() {
   if (state.coursePlanVersion === COURSE_PLAN_VERSION) return;
   const user = normalizeSeededUser(state.user || defaultUser());
-  Object.assign(state, buildCoursePlan(user), {
+  Object.assign(state, mergeCanonicalPlanWithProgress(buildCoursePlan(user), state), {
     user
   });
 }
@@ -172,6 +173,44 @@ function buildCoursePlan(user = defaultUser()) {
     return buildGateDaBasicPlan(now, accountTypes, sections, user);
   }
   return buildPriyankaPlatinumPlan(now, accountTypes, sections, user);
+}
+
+function mergeCanonicalPlanWithProgress(canonicalPlan, previousState = {}) {
+  return {
+    ...canonicalPlan,
+    tasks: mergeCanonicalTasks(canonicalPlan.tasks || [], previousState.tasks || []),
+    quizAttempts: previousState.quizAttempts || [],
+    patternSubmissions: previousState.patternSubmissions || [],
+    coursePlanVersion: canonicalPlan.coursePlanVersion || COURSE_PLAN_VERSION
+  };
+}
+
+function mergeCanonicalTasks(canonicalTasks, previousTasks) {
+  const previousById = new Map((previousTasks || []).map((task) => [task.id, task]));
+  const canonicalIds = new Set(canonicalTasks.map((task) => task.id));
+  const merged = canonicalTasks.map((task) => mergeTaskProgress(task, previousById.get(task.id)));
+  const customTasks = (previousTasks || [])
+    .filter((task) => task?.id && !canonicalIds.has(task.id))
+    .map((task) => mergeTaskProgress(task, task));
+  return [...merged, ...customTasks];
+}
+
+function mergeTaskProgress(task, previousTask) {
+  if (!previousTask) return task;
+  const status = previousTask.done === true ? "completed" : normalizeTaskStatus(previousTask.status);
+  return {
+    ...task,
+    status,
+    done: status === "completed" ? true : false,
+    updatedAt: previousTask.updatedAt || task.updatedAt,
+    scheduleId: previousTask.scheduleId || task.scheduleId
+  };
+}
+
+function normalizeTaskStatus(status) {
+  if (status === "done") return "completed";
+  if (status === "doing") return "todo";
+  return ["todo", "completed", "not-completed"].includes(status) ? status : "todo";
 }
 
 function isBasicPrototypeUser(user) {
@@ -18028,12 +18067,13 @@ function enforceActivePlanIntegrity() {
   if (!hasBasicProbabilitySubject && !hasBasicSections && !missingPatternWorkspace) return;
 
   const canonicalUser = normalizeSeededUser(state.user);
-  Object.assign(state, buildPriyankaPlatinumPlan(
+  const canonicalPlan = buildPriyankaPlatinumPlan(
     new Date().toISOString(),
     accountTypeCatalog(new Date().toISOString()),
     [],
     canonicalUser
-  ), {
+  );
+  Object.assign(state, mergeCanonicalPlanWithProgress(canonicalPlan, state), {
     user: canonicalUser,
     quizAttempts: state.quizAttempts || [],
     patternSubmissions: state.patternSubmissions || []
@@ -18045,7 +18085,7 @@ function enforceSeededUserWorkspace() {
   const canonicalUser = normalizeSeededUser(state.user);
   if (!isSeededPrototypeUser(canonicalUser)) return;
 
-  Object.assign(state, buildCoursePlan(canonicalUser), {
+  Object.assign(state, mergeCanonicalPlanWithProgress(buildCoursePlan(canonicalUser), state), {
     user: canonicalUser,
     quizAttempts: state.quizAttempts || [],
     patternSubmissions: state.patternSubmissions || []
@@ -18079,10 +18119,11 @@ function login(event) {
 
   if (matchedUser) {
     const canonicalUser = normalizeSeededUser(matchedUser);
-    Object.assign(state, buildCoursePlan(canonicalUser), {
+    const previousState = state.user?.name === canonicalUser.name ? state : {};
+    Object.assign(state, mergeCanonicalPlanWithProgress(buildCoursePlan(canonicalUser), previousState), {
       user: canonicalUser,
-      quizAttempts: [],
-      patternSubmissions: []
+      quizAttempts: previousState.quizAttempts || [],
+      patternSubmissions: previousState.patternSubmissions || []
     });
     persist();
     sessionStorage.setItem(SESSION_KEY, canonicalUser.name);
@@ -18103,10 +18144,11 @@ function applyDemoLogin() {
   const matchedUser = prototypeUsers().find((user) => user.name === demoName);
   if (!matchedUser) return;
   const canonicalUser = normalizeSeededUser(matchedUser);
-  Object.assign(state, buildCoursePlan(canonicalUser), {
+  const previousState = state.user?.name === canonicalUser.name ? state : {};
+  Object.assign(state, mergeCanonicalPlanWithProgress(buildCoursePlan(canonicalUser), previousState), {
     user: canonicalUser,
-    quizAttempts: [],
-    patternSubmissions: []
+    quizAttempts: previousState.quizAttempts || [],
+    patternSubmissions: previousState.patternSubmissions || []
   });
   sessionStorage.setItem(SESSION_KEY, canonicalUser.name);
   window.history.replaceState({}, document.title, window.location.pathname);
@@ -20824,6 +20866,7 @@ function taskSummaryTemplate(task) {
 function setTaskStatus(id, status) {
   const task = state.tasks.find((entry) => entry.id === id);
   if (!task) return;
+  status = normalizeTaskStatus(status);
   task.status = status;
   if (status === "completed") task.done = true;
   if (status !== "completed") task.done = false;
@@ -20836,6 +20879,7 @@ function setTaskDone(id, done) {
   const task = state.tasks.find((entry) => entry.id === id);
   if (!task) return;
   task.done = done;
+  if (done) task.status = "completed";
   if (!done && task.status === "completed") task.status = "todo";
   task.updatedAt = new Date().toISOString();
   persist();
@@ -20844,10 +20888,9 @@ function setTaskDone(id, done) {
 
 function normalizeTaskStatuses() {
   state.tasks.forEach((task) => {
-    if (task.status === "done") task.status = "completed";
-    if (task.status === "doing") task.status = "todo";
-    if (!["todo", "completed", "not-completed"].includes(task.status)) task.status = "todo";
-    if (typeof task.done !== "boolean") task.done = task.status === "completed";
+    task.status = task.done === true ? "completed" : normalizeTaskStatus(task.status);
+    if (task.status === "completed") task.done = true;
+    if (task.status !== "completed") task.done = false;
     if (!task.scheduleId) {
       const linkedSchedule = linkedScheduleForTask(task);
       if (linkedSchedule) task.scheduleId = linkedSchedule.id;
