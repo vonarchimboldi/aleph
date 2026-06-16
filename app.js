@@ -1,7 +1,7 @@
 const STORAGE_KEY = "learning-studio-data-v2";
 const LEGACY_STORAGE_KEYS = ["learning-studio-data-v1"];
 const SESSION_KEY = "aleph-session";
-const COURSE_PLAN_VERSION = "seeded-user-canonical-workspace-v87";
+const COURSE_PLAN_VERSION = "seeded-user-canonical-workspace-v88";
 const PRIYANKA_PLATINUM_START_DATE = "2026-06-07";
 const DEFAULT_PLAN_START_DATE = "2026-06-01";
 const PLATINUM_PROGRESS_SYNC_DEBOUNCE_MS = 1500;
@@ -706,6 +706,8 @@ function buildGateDaBasicPlan(now, accountTypes, sections, user = basicGateDaUse
   const weekElevenSunday = addDays(weekElevenMonday, 6);
   const weekTwelveMonday = addDays(monday, 77);
   const weekTwelveSunday = addDays(weekTwelveMonday, 6);
+  const weekThirteenMonday = addDays(monday, 84);
+  const weekThirteenSunday = addDays(weekThirteenMonday, 6);
   const linearAlgebraWeekOneMonday = monday;
   const linearAlgebraWeekOneSunday = sunday;
   const linearAlgebraWeekTwoMonday = weekTwoMonday;
@@ -730,6 +732,8 @@ function buildGateDaBasicPlan(now, accountTypes, sections, user = basicGateDaUse
   const linearAlgebraWeekElevenSunday = weekElevenSunday;
   const linearAlgebraWeekTwelveMonday = weekTwelveMonday;
   const linearAlgebraWeekTwelveSunday = weekTwelveSunday;
+  const linearAlgebraWeekThirteenMonday = weekThirteenMonday;
+  const linearAlgebraWeekThirteenSunday = weekThirteenSunday;
   const userId = user.id || "user-basic-demo";
   const userSlug = slugify(user.name || userId);
   const enrollmentId = `enrollment-${userSlug}-gate-da-basic`;
@@ -756,7 +760,7 @@ function buildGateDaBasicPlan(now, accountTypes, sections, user = basicGateDaUse
         title: "Linear Algebra",
         date: linearAlgebraWeekOneMonday,
         status: "In progress",
-        details: "GATE DA Basic Linear Algebra, built around transformations, invariants, and physical intuition. Chapters 1-12 cover vectors, coordinates, transformations, rank/nullity, projections, determinants, trace, eigenvalues, symmetric quadratic forms, special matrices, SVD, singular values, least squares, ridge regression, covariance matrices, PCA, and mixed data-linear-algebra recognition.",
+        details: "GATE DA Basic Linear Algebra, built around transformations, invariants, and physical intuition. Chapters 1-12 cover the core sequence; the final cumulative drill shifts into chapterless past-paper style recognition across projections, eigenvalues, rank, SVD, PCA, least squares, ridge, centering, Gram matrices, and quadratic forms.",
         sectionIds: linearAlgebraSections.map((section) => section.id),
         updatedAt: now
       }
@@ -1411,6 +1415,36 @@ function buildGateDaBasicPlan(now, accountTypes, sections, user = basicGateDaUse
         date: linearAlgebraWeekTwelveSunday,
         details: "Take the graph-backed objective quiz for structural recognition across projections, rank, SVD, least squares, ridge, covariance, PCA, and trace/determinant shortcuts.",
         updatedAt: now
+      },
+      {
+        id: "schedule-linear-algebra-cumulative-drill-study",
+        title: "Linear Algebra Cumulative Drill: Past-Paper Style",
+        week: 13,
+        subject: "Linear Algebra",
+        kind: "Study",
+        date: linearAlgebraWeekThirteenMonday,
+        details: "Study the chapterless cumulative drill. Start each prompt by identifying the matrix family, then state what is fixed, killed, preserved, invariant, or discarded before computing.",
+        updatedAt: now
+      },
+      {
+        id: "schedule-linear-algebra-cumulative-drill-practice",
+        title: "Linear Algebra Cumulative Drill: Structural Practice",
+        week: 13,
+        subject: "Linear Algebra",
+        kind: "Practice",
+        date: addDays(linearAlgebraWeekThirteenMonday, 2),
+        details: "Solve past-paper style structural drills without chapter labels: projection, centering, Gram, rank-one, rotation, PCA, ridge, least squares, and quadratic-form prompts.",
+        updatedAt: now
+      },
+      {
+        id: "schedule-linear-algebra-cumulative-drill-review",
+        title: "Linear Algebra Cumulative Drill: Objective Review",
+        week: 13,
+        subject: "Linear Algebra",
+        kind: "Review",
+        date: linearAlgebraWeekThirteenSunday,
+        details: "Take the cumulative graph-backed objective review for GATE DA Linear Algebra structural recognition.",
+        updatedAt: now
       }
     ],
     tests: [
@@ -1610,6 +1644,15 @@ function buildGateDaBasicPlan(now, accountTypes, sections, user = basicGateDaUse
         details: "Objective synthesis quiz for mixed data-linear-algebra recognition: rank, projection, SVD, least squares, ridge, covariance, PCA, and structural shortcuts.",
         sectionId: linearAlgebraSections[11]?.id,
         quizId: "quiz-linear-algebra-chapter-12-objective-review",
+        updatedAt: now
+      },
+      {
+        id: "test-linear-algebra-cumulative-drill-objective-review",
+        title: "Linear Algebra Cumulative Drill Objective Review",
+        date: linearAlgebraWeekThirteenSunday,
+        details: "Chapterless past-paper style objective review for structural GATE DA Linear Algebra: recognize the object, state the invariant, and compute only the requested quantity.",
+        sectionId: linearAlgebraSections[12]?.id,
+        quizId: "quiz-linear-algebra-cumulative-drill-objective-review",
         updatedAt: now
       }
     ],
@@ -2329,6 +2372,39 @@ function buildGateDaBasicPlan(now, accountTypes, sections, user = basicGateDaUse
         done: false,
         details: "Submit the Chapter 12 objective quiz so the learner record logs mixed data-linear-algebra recognition strengths and weaknesses.",
         updatedAt: now
+      },
+      {
+        id: "task-linear-algebra-cumulative-drill-read",
+        week: 13,
+        title: "Linear Algebra: Read cumulative drill",
+        type: "Study",
+        date: linearAlgebraWeekThirteenMonday,
+        status: "todo",
+        done: false,
+        details: "Open Subjects -> Linear Algebra -> Cumulative Drill and study the past-paper style recognition routine without chapter labels.",
+        updatedAt: now
+      },
+      {
+        id: "task-linear-algebra-cumulative-drill-practice",
+        week: 13,
+        title: "Linear Algebra: Solve structural drills",
+        type: "Practice",
+        date: addDays(linearAlgebraWeekThirteenMonday, 2),
+        status: "todo",
+        done: false,
+        details: "Attempt the cumulative structural drills before reading worked solutions. For each problem, write object, invariant, and shortest computation.",
+        updatedAt: now
+      },
+      {
+        id: "task-linear-algebra-cumulative-drill-review",
+        week: 13,
+        title: "Linear Algebra: Take cumulative review",
+        type: "Review",
+        date: linearAlgebraWeekThirteenSunday,
+        status: "todo",
+        done: false,
+        details: "Submit the cumulative objective quiz so Aleph logs structural recognition gaps across the full Linear Algebra track.",
+        updatedAt: now
       }
     ],
     accountTypes,
@@ -2355,7 +2431,7 @@ function buildGateDaBasicPlan(now, accountTypes, sections, user = basicGateDaUse
         startDate: monday,
         endDate: "2026-08-30",
         status: "active",
-        details: `GATE DA Basic plan surfaces: Subjects, Tasks, Schedule, Tests, Feedback, Resources, and Share. Recommended pace: study three subjects in parallel. Every 15 days, Aleph should generate an adaptive cumulative review quiz from prior performance, repeating missed concepts more often, reducing mastered concepts, and keeping high-weight exam topics in rotation. Current material build: Probability Chapters 1-10 and Linear Algebra Chapters 1-12.${trialNote}`,
+        details: `GATE DA Basic plan surfaces: Subjects, Tasks, Schedule, Tests, Feedback, Resources, and Share. Recommended pace: study three subjects in parallel. Every 15 days, Aleph should generate an adaptive cumulative review quiz from prior performance, repeating missed concepts more often, reducing mastered concepts, and keeping high-weight exam topics in rotation. Current material build: Probability Chapters 1-10 and Linear Algebra Chapters 1-12 plus a chapterless cumulative past-paper style drill.${trialNote}`,
         updatedAt: now
       }
     ],
@@ -2450,6 +2526,13 @@ function buildGateDaBasicPlan(now, accountTypes, sections, user = basicGateDaUse
         title: "Linear Algebra Chapter 12 feedback focus",
         date: linearAlgebraWeekTwelveSunday,
         details: "Review misses for starting with computation before recognizing the matrix family, confusing rank with dimension of the ambient space, missing fixed/killed subspaces, treating SVD and eigen-decomposition as interchangeable in all cases, and not connecting discarded variance with projection error.",
+        updatedAt: now
+      },
+      {
+        id: "feedback-linear-algebra-cumulative-drill",
+        title: "Linear Algebra cumulative drill feedback focus",
+        date: linearAlgebraWeekThirteenSunday,
+        details: "Review misses for failing to name the matrix family, skipping invariant language, expanding when trace/rank/eigenvalue shortcuts apply, misreading MSQ wording, and treating data-science LA prompts as separate from core projection, PSD, SVD, and spectral reasoning.",
         updatedAt: now
       }
     ],
@@ -2635,6 +2718,14 @@ function buildGateDaBasicPlan(now, accountTypes, sections, user = basicGateDaUse
         title: "Linear Algebra Chapter 12: Data Linear Algebra Synthesis",
         date: linearAlgebraWeekTwelveMonday,
         details: "Open Subjects -> Linear Algebra to practice mixed recognition across projections, rank, SVD, least squares, ridge, covariance, PCA, and structural shortcuts.",
+        link: "",
+        updatedAt: now
+      },
+      {
+        id: "resource-linear-algebra-cumulative-drill",
+        title: "Linear Algebra Cumulative Drill: Past-Paper Style",
+        date: linearAlgebraWeekThirteenMonday,
+        details: "Open Subjects -> Linear Algebra to finish the Basic track with chapterless GATE DA style drills across projection, centering, Gram, rank, eigenvalue, SVD, least squares, ridge, PCA, LDA, and quadratic-form patterns.",
         link: "",
         updatedAt: now
       }
@@ -5338,6 +5429,125 @@ function gateDaLinearAlgebraSections(updatedAt = new Date().toISOString()) {
         "Covariance/PCA keeps high-variance directions and discards lower-variance directions.",
         "Trace and determinant are fast only after the structure is identified.",
         "The key physical language is fixed, killed, preserved, approximated, and discarded."
+      ],
+      updatedAt
+    },
+    {
+      id: "gate-da-linear-algebra-cumulative-drill",
+      exam: "GATE DA",
+      accountTier: "Basic",
+      subject: "Linear Algebra",
+      chapter: "Cumulative Drill",
+      section: "Final",
+      title: "Cumulative Past-Paper Style Drill",
+      summary: "Chapterless GATE DA Linear Algebra drills that mix projection, centering, Gram, rank, eigenvalue, SVD, PCA, least-squares, ridge, LDA, and quadratic-form patterns.",
+      sectionPreview: "In the actual paper, the problem rarely tells you which chapter it belongs to. This drill hides the labels and trains the exam move: identify the object, name the invariant, then compute only what is asked.",
+      previewActivity: "A prompt gives a symmetric idempotent matrix with trace 4, a rank-one update I+xx^T, and a covariance matrix with eigenvalues 9, 2, 0. Before calculating anything, write what each object fixes, preserves, or discards.",
+      chapterIntro: [
+        "This is the finishing Linear Algebra drill for Basic GATE DA. It is intentionally chapterless.",
+        "Every prompt begins like a past-paper question: a matrix property, a data expression, or a short transformation story. Your first line should name the matrix family.",
+        "Then write the structural sentence: fixed subspace, killed direction, preserved length, nonnegative spectrum, rank survival, discarded variance, residual orthogonality, or regularized shrinkage."
+      ],
+      bookSections: [
+        {
+          number: "D.1",
+          title: "The Exam Routine",
+          paragraphs: [
+            "Use the same first three steps every time: identify the object, state the invariant, and compute the requested quantity.",
+            "Do not expand entries unless the problem truly asks for entries. GATE DA Linear Algebra often rewards recognizing a projection, Gram matrix, centering matrix, rank-one update, rotation, or covariance object.",
+            "For MSQ prompts, test every statement separately. One true structural fact does not make the neighbouring statement true."
+          ],
+          blocks: [
+            { type: "strategy", title: "Answer line", body: "Object -> invariant -> requested value. Example: orthogonal projection -> eigenvalues 0/1 and trace equals rank -> trace 3." },
+            { type: "warning", title: "MSQ trap", body: "A matrix can be idempotent without being identity. A norm-preserving real matrix need not have only real eigenvalues." }
+          ]
+        },
+        {
+          number: "D.2",
+          title: "High-Yield Objects",
+          paragraphs: [
+            "Projection and centering matrices fix a subspace and kill a complementary direction. Their trace often gives rank.",
+            "Gram and covariance matrices are positive semidefinite because their quadratic forms become squared lengths.",
+            "Orthogonal matrices preserve lengths and angles. Rank-one updates change only the direction they are built from. SVD reads stretch, rank, and killed directions directly."
+          ],
+          blocks: [
+            { type: "principle", title: "Object signatures", body: "P^2=P suggests projection; X^T X suggests PSD Gram; C=(1/(n-1))X_c^T X_c suggests covariance; A^T A eigenvalues give singular values." },
+            { type: "example", title: "Fast read", body: "If A=I+xx^T and x^T x=1, then x has eigenvalue 2 and every vector orthogonal to x has eigenvalue 1." }
+          ]
+        },
+        {
+          number: "D.3",
+          title: "Data-Science Linear Algebra",
+          paragraphs: [
+            "PCA, least squares, ridge regression, and Fisher-style discriminant questions are still Linear Algebra questions.",
+            "PCA asks for variance directions. Least squares asks for projection and residual orthogonality. Ridge asks how lambda I stabilizes small singular-value directions.",
+            "LDA-style prompts often reduce to a Rayleigh quotient or generalized eigenvalue direction: maximize separation while controlling within-class scatter."
+          ],
+          blocks: [
+            { type: "strategy", title: "Application read", body: "Translate data words back into matrix objects: covariance, projection, residual, singular value, quadratic form, or generalized eigenvalue." },
+            { type: "warning", title: "Regression trap", body: "Ridge changes coefficient shrinkage; ordinary least squares projects y onto the column space." }
+          ]
+        },
+        {
+          number: "D.4",
+          title: "What To Write Before Computing",
+          paragraphs: [
+            "For each problem, write one sentence beginning with fixed, killed, preserved, invariant, or discarded.",
+            "That sentence prevents most common mistakes: confusing trace with determinant, treating every idempotent matrix as identity, choosing the smallest PCA eigenvalue, or assuming a rotation has real eigenvectors.",
+            "After the sentence, the calculation is usually one line."
+          ],
+          blocks: [
+            { type: "principle", title: "Structural sentence", body: "A correct structural sentence is often the difference between a fast solution and a long calculation." }
+          ]
+        }
+      ],
+      concepts: [
+        { name: "Past-paper recognition", description: "Start from the object rather than a chapter label.", cue: "Name the matrix family first." },
+        { name: "Projection and centering", description: "Read fixed/killed subspaces, trace, rank, and idempotence.", cue: "P^2=P and symmetry." },
+        { name: "Orthogonal and rotation structure", description: "Length and angle preservation; possible complex eigenvalues.", cue: "A^T A=I." },
+        { name: "Rank-one update", description: "Only the generating direction changes; orthogonal directions stay fixed.", cue: "I+xx^T or uv^T." },
+        { name: "PSD and Gram reasoning", description: "Use squared norms to prove nonnegative eigenvalues.", cue: "u^T X^T X u=||Xu||^2." },
+        { name: "SVD and rank read", description: "Nonzero singular values give rank and stretch directions.", cue: "Count nonzero sigma values." },
+        { name: "PCA and covariance", description: "Eigenvalues are variances and eigenvectors are principal directions.", cue: "Largest eigenvalue first." },
+        { name: "Regression geometry", description: "OLS projects; ridge stabilizes and shrinks.", cue: "Residual orthogonal or lambda I." },
+        { name: "Quadratic-form optimization", description: "Rayleigh quotient maximum is the largest eigenvalue.", cue: "Unit-vector constraint." },
+        { name: "MSQ discipline", description: "Judge each statement independently.", cue: "No partial truth shortcut." }
+      ],
+      techniques: [
+        { name: "Object-first scan", when: "a formula or property appears.", move: "Classify it as projection, orthogonal, Gram, covariance, rank-one, SVD, regression, ridge, or quadratic form." },
+        { name: "Invariant sentence", when: "the object is classified.", move: "Write fixed, killed, preserved, invariant, or discarded before computing." },
+        { name: "Trace/rank shortcut", when: "a projection, covariance, or spectral list appears.", move: "Use trace as projection rank or total variance only after matching the object." },
+        { name: "Squared-norm proof", when: "PSD is tested.", move: "Rewrite the quadratic form as a norm squared." },
+        { name: "MSQ isolation", when: "multiple statements are offered.", move: "Mark each statement true or false from the structure, not from neighbouring options." }
+      ],
+      practiceProblems: linearAlgebraCumulativeDrillProblems(),
+      reviewPrompts: [
+        "What object is being described?",
+        "What is fixed, killed, preserved, invariant, or discarded?",
+        "Can trace, rank, determinant, eigenvalues, or singular values answer the question faster than expansion?",
+        "Which statements in an MSQ are independently true?",
+        "How does the data-science wording translate into projection, covariance, SVD, or quadratic-form language?"
+      ],
+      reviewQuiz: {
+        id: "quiz-linear-algebra-cumulative-drill-objective-review",
+        title: "Linear Algebra Cumulative Drill Objective Review",
+        instructions: "Complete this as a chapterless GATE DA Linear Algebra review. For every prompt, identify the matrix family, state the invariant, and then choose or compute the requested answer.",
+        questions: linearAlgebraCumulativeDrillReviewQuestions()
+      },
+      readingQuestions: [
+        "What is the three-step exam routine?",
+        "How can you recognize projection, Gram, covariance, orthogonal, rank-one, and ridge objects?",
+        "Which objects preserve length, fix a subspace, kill a direction, or discard variance?",
+        "How do PCA, least squares, ridge, and LDA reduce to Linear Algebra structures?",
+        "What should you check separately in an MSQ?"
+      ],
+      chapterSummary: [
+        "The finishing drill is chapterless because past-paper prompts are chapterless.",
+        "Projection and centering matrices are high-yield because trace, rank, fixed subspaces, and killed directions appear repeatedly.",
+        "Gram and covariance matrices are PSD by squared-norm reasoning.",
+        "SVD and singular values reveal rank, stretch, dominant directions, and killed directions.",
+        "PCA, least squares, ridge, and LDA are applications of the same projection, spectral, and quadratic-form ideas.",
+        "The fastest solutions start with object, invariant, and requested value."
       ],
       updatedAt
     }
@@ -13090,6 +13300,158 @@ function linearAlgebraDataSynthesisConceptGraph() {
   };
 }
 
+function linearAlgebraCumulativeDrillConceptGraph() {
+  return {
+    chapterId: "gate-da-linear-algebra-cumulative-drill",
+    chapterTitle: "Linear Algebra Cumulative Drill",
+    gateWeight: "high",
+    fallbackConcepts: ["past-paper-recognition", "projection-centering", "psd-gram-reasoning", "pca-covariance"],
+    fallbackDifficultyMix: [2, 2, 3, 3],
+    fallbackInstruction: "Retest chapterless structural recognition with GATE DA style MCQ, MSQ, and NAT prompts.",
+    stableNextAction: "Next: start timed mixed GATE DA Linear Algebra review sets and revisit only the object families missed.",
+    nodes: {
+      "past-paper-recognition": {
+        label: "Past-paper recognition",
+        prereqs: ["matrix-family", "invariant-sentence"],
+        repairMaterial: "Redo the cumulative drill routine: object -> invariant -> requested value before computing.",
+        gateWeight: "high"
+      },
+      "matrix-family": {
+        label: "Matrix family",
+        prereqs: [],
+        repairMaterial: "Review projection, centering, Gram, covariance, rank-one, orthogonal, SVD, least-squares, ridge, and quadratic-form signatures.",
+        gateWeight: "high"
+      },
+      "invariant-sentence": {
+        label: "Invariant sentence",
+        prereqs: [],
+        repairMaterial: "Before solving, write what is fixed, killed, preserved, invariant, or discarded.",
+        gateWeight: "high"
+      },
+      "projection-centering": {
+        label: "Projection and centering",
+        prereqs: ["idempotent", "trace-rank-shortcut"],
+        repairMaterial: "Review projection and centering matrices: P^2=P, symmetry for orthogonal projections, fixed subspace, killed direction, trace equals rank.",
+        gateWeight: "high"
+      },
+      idempotent: {
+        label: "Idempotent matrix",
+        prereqs: [],
+        repairMaterial: "Review why P^2=P means applying the transform twice changes nothing after the first application.",
+        gateWeight: "high"
+      },
+      "trace-rank-shortcut": {
+        label: "Trace/rank shortcut",
+        prereqs: [],
+        repairMaterial: "Match trace to projection rank, covariance total variance, or eigenvalue sum only after identifying the object.",
+        gateWeight: "high"
+      },
+      "orthogonal-rotation": {
+        label: "Orthogonal and rotation structure",
+        prereqs: ["length-preservation"],
+        repairMaterial: "Review A^T A=I as length and angle preservation; real rotations may have complex eigenvalues.",
+        gateWeight: "high"
+      },
+      "length-preservation": {
+        label: "Length preservation",
+        prereqs: [],
+        repairMaterial: "Check ||Ax||=||x|| by using x^T A^T A x.",
+        gateWeight: "high"
+      },
+      "rank-one-update": {
+        label: "Rank-one update",
+        prereqs: ["eigenvalue", "orthogonal-complement"],
+        repairMaterial: "For I+xx^T, test direction x and every direction orthogonal to x.",
+        gateWeight: "high"
+      },
+      "orthogonal-complement": {
+        label: "Orthogonal complement",
+        prereqs: [],
+        repairMaterial: "Review vectors with x^T u=0 and how projections or rank-one updates act on them.",
+        gateWeight: "medium"
+      },
+      "psd-gram-reasoning": {
+        label: "PSD and Gram reasoning",
+        prereqs: ["squared-norm", "matrix-product"],
+        repairMaterial: "Rewrite u^T X^T X u as ||Xu||^2 and connect PSD to nonnegative eigenvalues.",
+        gateWeight: "high"
+      },
+      "squared-norm": {
+        label: "Squared norm",
+        prereqs: [],
+        repairMaterial: "Remember squared lengths are always nonnegative.",
+        gateWeight: "high"
+      },
+      "matrix-product": {
+        label: "Matrix products",
+        prereqs: [],
+        repairMaterial: "Check dimensions and product order for X^T X, XX^T, X^T y, and rank-one products.",
+        gateWeight: "medium"
+      },
+      "svd-rank-read": {
+        label: "SVD and rank read",
+        prereqs: ["singular-value"],
+        repairMaterial: "Read rank from nonzero singular values and read killed directions from zero singular values.",
+        gateWeight: "high"
+      },
+      "singular-value": {
+        label: "Singular value",
+        prereqs: [],
+        repairMaterial: "Review singular values as stretch factors and square roots of eigenvalues of A^T A.",
+        gateWeight: "high"
+      },
+      "pca-covariance": {
+        label: "PCA and covariance",
+        prereqs: ["eigenvalue", "variance-direction"],
+        repairMaterial: "Review covariance eigenvectors as principal directions and eigenvalues as captured variances.",
+        gateWeight: "high"
+      },
+      eigenvalue: {
+        label: "Eigenvalue",
+        prereqs: [],
+        repairMaterial: "Connect eigenvalues to invariant-direction scaling, trace sums, determinant products, and variance values.",
+        gateWeight: "high"
+      },
+      "variance-direction": {
+        label: "Variance direction",
+        prereqs: [],
+        repairMaterial: "Use u^T C u to read variance along a unit direction.",
+        gateWeight: "high"
+      },
+      "regression-geometry": {
+        label: "Regression geometry",
+        prereqs: ["projection-centering", "residual-orthogonality"],
+        repairMaterial: "Separate ordinary least-squares projection from ridge coefficient shrinkage.",
+        gateWeight: "high"
+      },
+      "residual-orthogonality": {
+        label: "Residual orthogonality",
+        prereqs: [],
+        repairMaterial: "At the OLS solution, X^T(y-Xb)=0.",
+        gateWeight: "high"
+      },
+      "quadratic-form-optimization": {
+        label: "Quadratic-form optimization",
+        prereqs: ["eigenvalue", "symmetric-matrix"],
+        repairMaterial: "For symmetric A, max ||x||=1 of x^T A x is the largest eigenvalue.",
+        gateWeight: "high"
+      },
+      "symmetric-matrix": {
+        label: "Symmetric matrix",
+        prereqs: [],
+        repairMaterial: "Use real eigenvalues and orthogonal eigenvectors for symmetric matrices.",
+        gateWeight: "high"
+      },
+      "msq-discipline": {
+        label: "MSQ discipline",
+        prereqs: ["past-paper-recognition"],
+        repairMaterial: "Judge each statement independently; do not infer one option from another.",
+        gateWeight: "high"
+      }
+    }
+  };
+}
+
 function conditionalProbabilityConceptGraph() {
   return {
     chapterId: "gate-da-conditional-probability",
@@ -16371,6 +16733,258 @@ function linearAlgebraDataSynthesisReviewQuestions() {
   }));
 }
 
+function linearAlgebraCumulativeDrillProblems() {
+  return [
+    {
+      label: "Drill 1: Projection MSQ",
+      concept: "Projection and centering",
+      difficulty: "GATE-style MSQ",
+      technique: "Use idempotence, trace, and fixed/killed subspaces",
+      prompt: "A real symmetric matrix P satisfies P^2=P and trace(P)=3 in R^7. Which facts are forced?",
+      solution: "P is an orthogonal projection. Its eigenvalues are 0 or 1, rank(P)=trace(P)=3, it fixes a 3-dimensional subspace, and it kills a 4-dimensional perpendicular subspace."
+    },
+    {
+      label: "Drill 2: Centering matrix NAT",
+      concept: "Projection and centering",
+      difficulty: "GATE-style NAT",
+      technique: "Read fixed and killed directions",
+      prompt: "Let C=I-(1/n)11^T. What is rank(C), and which direction does C kill?",
+      solution: "C kills the all-ones direction because C1=0. It fixes all vectors whose entries sum to 0. Therefore rank(C)=n-1."
+    },
+    {
+      label: "Drill 3: Rank-one update",
+      concept: "Rank-one update",
+      difficulty: "GATE-style MCQ",
+      technique: "Test x and x-perpendicular directions",
+      prompt: "Let x^T x=1 and A=I+xx^T. What are the eigenvalues of A?",
+      solution: "Along x, Ax=x+x(x^T x)=2x, so eigenvalue 2. Every u with x^T u=0 satisfies Au=u, so eigenvalue 1 on the n-1 orthogonal directions."
+    },
+    {
+      label: "Drill 4: Gram matrix",
+      concept: "PSD and Gram reasoning",
+      difficulty: "GATE-style MSQ",
+      technique: "Rewrite as squared norm",
+      prompt: "For any real matrix X, what can be concluded about X^T X?",
+      solution: "It is symmetric and positive semidefinite because u^T X^T X u=||Xu||^2>=0. Its rank equals rank(X). It is invertible only when X has full column rank."
+    },
+    {
+      label: "Drill 5: Norm-preserving trap",
+      concept: "Orthogonal and rotation structure",
+      difficulty: "GATE-style MSQ",
+      technique: "Separate real matrix facts from real eigenvalue claims",
+      prompt: "A real square matrix Q satisfies ||Qx||=||x|| for every real x. What is forced, and what is not forced?",
+      solution: "Q^T Q=I, so Q is orthogonal and full rank. It preserves lengths and angles. It is not forced to be symmetric or to have only real eigenvalues; a planar rotation is the standard trap."
+    },
+    {
+      label: "Drill 6: SVD rank read",
+      concept: "SVD and rank read",
+      difficulty: "GATE-style NAT",
+      technique: "Count nonzero singular values",
+      prompt: "A 6 by 4 matrix has singular values 5, 2, 0, 0. What are rank(A), dim Null(A), and rank(A^T A)?",
+      solution: "rank(A)=2. The nullity in the 4-dimensional input space is 4-2=2. A^T A has the same rank as A, so rank(A^T A)=2."
+    },
+    {
+      label: "Drill 7: PCA variance read",
+      concept: "PCA and covariance",
+      difficulty: "GATE-style NAT",
+      technique: "Read kept and discarded eigenvalues",
+      prompt: "A covariance matrix has eigenvalues 10, 3, 1. If PCA keeps the first two directions, what fraction of variance is preserved and what variance is discarded?",
+      solution: "Total variance is 14. Kept variance is 13, so the preserved fraction is 13/14. Discarded variance is 1."
+    },
+    {
+      label: "Drill 8: Least-squares geometry",
+      concept: "Regression geometry",
+      difficulty: "GATE-style MCQ",
+      technique: "Use residual orthogonality",
+      prompt: "At the ordinary least-squares solution for full-column-rank X, what geometric statement must hold?",
+      solution: "The fitted vector Xb is the projection of y onto Col(X), and the residual r=y-Xb is orthogonal to every column of X. Equivalently, X^T r=0."
+    },
+    {
+      label: "Drill 9: Ridge shrinkage",
+      concept: "Regression geometry",
+      difficulty: "GATE-style MCQ",
+      technique: "Separate projection from coefficient regularization",
+      prompt: "Why does ridge regression stabilize weak directions compared with ordinary least squares?",
+      solution: "Ridge solves (X^T X+lambda I)b=X^T y. In singular-vector coordinates, lambda increases small sigma_i^2 denominators, so unstable weak directions shrink more."
+    },
+    {
+      label: "Drill 10: Quadratic-form maximum",
+      concept: "Quadratic-form optimization",
+      difficulty: "GATE-style NAT",
+      technique: "Use Rayleigh quotient",
+      prompt: "A symmetric matrix has eigenvalues 6, 2, -1. What is max x^T A x over ||x||=1?",
+      solution: "The maximum Rayleigh quotient is the largest eigenvalue, so the answer is 6. It is achieved along an eigenvector for eigenvalue 6."
+    },
+    {
+      label: "Drill 11: LDA structure",
+      concept: "Quadratic-form optimization",
+      difficulty: "GATE-style Application",
+      technique: "Translate ML wording to generalized eigenvalue language",
+      prompt: "Fisher-style linear discriminant asks for a direction with high between-class separation and controlled within-class scatter. What Linear Algebra structure is this?",
+      solution: "It is a Rayleigh quotient/generalized eigenvalue problem. The direction maximizes a quadratic form measuring between-class separation relative to a quadratic form measuring within-class scatter."
+    },
+    {
+      label: "Drill 12: Determinant from eigenvalues",
+      concept: "Past-paper recognition",
+      difficulty: "GATE-style NAT",
+      technique: "Use spectral product after identifying the object",
+      prompt: "A 3 by 3 matrix has eigenvalues 1, 2, and 4. What is det(A^2+I)?",
+      solution: "If eigenvalues of A are 1,2,4, then eigenvalues of A^2+I are 2,5,17. The determinant is their product: 2*5*17=170."
+    }
+  ];
+}
+
+function linearAlgebraCumulativeDrillReviewQuestions() {
+  const metadata = {
+    "la-cum-review-1": { targetConcept: "past-paper-recognition", prereqsUsed: ["matrix-family", "invariant-sentence"], difficulty: 2, gateWeight: "high" },
+    "la-cum-review-2": { targetConcept: "projection-centering", prereqsUsed: ["idempotent", "trace-rank-shortcut"], difficulty: 2, gateWeight: "high" },
+    "la-cum-review-3": { targetConcept: "rank-one-update", prereqsUsed: ["eigenvalue", "orthogonal-complement"], difficulty: 3, gateWeight: "high" },
+    "la-cum-review-4": { targetConcept: "psd-gram-reasoning", prereqsUsed: ["squared-norm", "matrix-product"], difficulty: 2, gateWeight: "high" },
+    "la-cum-review-5": { targetConcept: "orthogonal-rotation", prereqsUsed: ["length-preservation"], difficulty: 3, gateWeight: "high" },
+    "la-cum-review-6": { targetConcept: "svd-rank-read", prereqsUsed: ["singular-value"], difficulty: 2, gateWeight: "high" },
+    "la-cum-review-7": { targetConcept: "pca-covariance", prereqsUsed: ["eigenvalue", "variance-direction"], difficulty: 3, gateWeight: "high" },
+    "la-cum-review-8": { targetConcept: "regression-geometry", prereqsUsed: ["residual-orthogonality", "projection-centering"], difficulty: 3, gateWeight: "high" },
+    "la-cum-review-9": { targetConcept: "quadratic-form-optimization", prereqsUsed: ["eigenvalue", "symmetric-matrix"], difficulty: 3, gateWeight: "high" },
+    "la-cum-review-10": { targetConcept: "msq-discipline", prereqsUsed: ["past-paper-recognition"], difficulty: 3, gateWeight: "high" }
+  };
+  const questions = [
+    {
+      id: "la-cum-review-1",
+      kind: "mixed: two concepts",
+      tags: ["past-paper-recognition", "matrix-family", "invariant-sentence"],
+      prompt: "A prompt gives X^T X and asks about eigenvalue signs. What is the best first structural sentence?",
+      options: [
+        { id: "a", text: "X^T X is a Gram matrix, and u^T X^T X u=||Xu||^2>=0." },
+        { id: "b", text: "X^T X must be orthogonal." },
+        { id: "c", text: "X^T X must have determinant 1." },
+        { id: "d", text: "X^T X always kills every vector." }
+      ],
+      answer: "a"
+    },
+    {
+      id: "la-cum-review-2",
+      kind: "mixed: two concepts",
+      tags: ["projection-centering", "idempotent", "trace-rank-shortcut"],
+      prompt: "A symmetric idempotent 8 by 8 matrix has trace 5. What is its rank?",
+      options: [
+        { id: "a", text: "5" },
+        { id: "b", text: "8" },
+        { id: "c", text: "3" },
+        { id: "d", text: "Cannot be inferred because it is idempotent." }
+      ],
+      answer: "a"
+    },
+    {
+      id: "la-cum-review-3",
+      kind: "mixed: three concepts",
+      tags: ["rank-one-update", "eigenvalue", "orthogonal-complement"],
+      prompt: "Let x^T x=1 and A=I+xx^T. Which statement is true?",
+      options: [
+        { id: "a", text: "x is an eigenvector with eigenvalue 2, and x-perpendicular directions have eigenvalue 1." },
+        { id: "b", text: "Every direction has eigenvalue 2." },
+        { id: "c", text: "A is singular." },
+        { id: "d", text: "A has one negative eigenvalue." }
+      ],
+      answer: "a"
+    },
+    {
+      id: "la-cum-review-4",
+      kind: "mixed: two concepts",
+      tags: ["psd-gram-reasoning", "squared-norm", "matrix-product"],
+      prompt: "Why are all eigenvalues of a real Gram matrix X^T X nonnegative?",
+      options: [
+        { id: "a", text: "Because u^T X^T X u=||Xu||^2>=0 for every u." },
+        { id: "b", text: "Because every entry of X is nonnegative." },
+        { id: "c", text: "Because X^T X is always diagonal." },
+        { id: "d", text: "Because X must be square." }
+      ],
+      answer: "a"
+    },
+    {
+      id: "la-cum-review-5",
+      kind: "mixed: three concepts",
+      tags: ["orthogonal-rotation", "length-preservation"],
+      prompt: "A real matrix Q satisfies ||Qx||=||x|| for every x. Which conclusion is forced?",
+      options: [
+        { id: "a", text: "Q^T Q=I." },
+        { id: "b", text: "Q must be symmetric." },
+        { id: "c", text: "Q must have only real eigenvalues." },
+        { id: "d", text: "Q must be a projection." }
+      ],
+      answer: "a"
+    },
+    {
+      id: "la-cum-review-6",
+      kind: "mixed: two concepts",
+      tags: ["svd-rank-read", "singular-value"],
+      prompt: "A 5 by 4 matrix has singular values 7, 0, 0, 0. What is its rank?",
+      options: [
+        { id: "a", text: "1" },
+        { id: "b", text: "4" },
+        { id: "c", text: "5" },
+        { id: "d", text: "0" }
+      ],
+      answer: "a"
+    },
+    {
+      id: "la-cum-review-7",
+      kind: "mixed: three concepts",
+      tags: ["pca-covariance", "eigenvalue", "variance-direction"],
+      prompt: "Covariance eigenvalues are 9, 4, 1. If PCA keeps the first two directions, what variance is discarded?",
+      options: [
+        { id: "a", text: "1" },
+        { id: "b", text: "4" },
+        { id: "c", text: "5" },
+        { id: "d", text: "13" }
+      ],
+      answer: "a"
+    },
+    {
+      id: "la-cum-review-8",
+      kind: "mixed: three concepts",
+      tags: ["regression-geometry", "residual-orthogonality", "projection-centering"],
+      prompt: "At the ordinary least-squares solution, which equation expresses residual orthogonality?",
+      options: [
+        { id: "a", text: "X^T(y-Xb)=0" },
+        { id: "b", text: "X(y-Xb)=0" },
+        { id: "c", text: "X^T X=0" },
+        { id: "d", text: "y-Xb is always zero." }
+      ],
+      answer: "a"
+    },
+    {
+      id: "la-cum-review-9",
+      kind: "mixed: three concepts",
+      tags: ["quadratic-form-optimization", "eigenvalue", "symmetric-matrix"],
+      prompt: "For symmetric A with eigenvalues 5, 2, -3, what is max x^T A x over ||x||=1?",
+      options: [
+        { id: "a", text: "5" },
+        { id: "b", text: "2" },
+        { id: "c", text: "-3" },
+        { id: "d", text: "10" }
+      ],
+      answer: "a"
+    },
+    {
+      id: "la-cum-review-10",
+      kind: "mixed: three concepts",
+      tags: ["msq-discipline", "past-paper-recognition"],
+      prompt: "In an MSQ about an idempotent matrix P, which solving habit is safest?",
+      options: [
+        { id: "a", text: "Test each statement independently from P^2=P and any given symmetry/rank facts." },
+        { id: "b", text: "Assume P=I because P^2=P." },
+        { id: "c", text: "Select all options if one option mentions eigenvalues." },
+        { id: "d", text: "Ignore whether P is symmetric." }
+      ],
+      answer: "a"
+    }
+  ];
+  return questions.map((question) => ({
+    ...question,
+    ...(metadata[question.id] || { targetConcept: question.tags[0], prereqsUsed: question.tags.slice(1), difficulty: question.tags.length, gateWeight: "medium" })
+  }));
+}
+
 function discreteMathMilestones() {
   return [
     {
@@ -17902,6 +18516,7 @@ function conceptGraphForSection(section) {
   if (section?.id === "gate-da-linear-algebra-least-squares-ridge") return linearAlgebraLeastSquaresRidgeConceptGraph();
   if (section?.id === "gate-da-linear-algebra-covariance-pca") return linearAlgebraCovariancePcaConceptGraph();
   if (section?.id === "gate-da-linear-algebra-data-synthesis") return linearAlgebraDataSynthesisConceptGraph();
+  if (section?.id === "gate-da-linear-algebra-cumulative-drill") return linearAlgebraCumulativeDrillConceptGraph();
   if (section?.id === "gate-da-probability-foundations") return probabilityFoundationConceptGraph();
   if (section?.id === "gate-da-conditional-probability") return conditionalProbabilityConceptGraph();
   if (section?.id === "gate-da-random-variables-expectation") return randomVariablesExpectationConceptGraph();
