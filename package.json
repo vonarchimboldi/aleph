@@ -1,0 +1,27 @@
+{
+  "name": "aleph",
+  "version": "0.2.0",
+  "private": true,
+  "description": "Aleph learning platform monorepo",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev:learner": "npm run dev --workspace=aleph-learner",
+    "dev:admin": "npm run dev --workspace=aleph-admin",
+    "dev": "npm run dev:learner & npm run dev:admin",
+    "build:learner": "npm run build --workspace=aleph-learner",
+    "build:admin": "npm run build --workspace=aleph-admin",
+    "build": "npm run build:learner && npm run build:admin",
+    "lint": "npm run lint --workspaces",
+    "types:build": "npm run build --workspace=@aleph/types"
+  },
+  "devDependencies": {
+    "turbo": "^2.0.0",
+    "typescript": "^5"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  }
+}
