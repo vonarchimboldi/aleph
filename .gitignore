@@ -1,13 +1,9 @@
-# Monorepo
+# Dependencies
 node_modules/
-.pnpm-store/
-.yarn/
-.turbo/
 
 # Next.js
 .next/
 out/
-.source/
 
 # Env files
 .env*.local
@@ -17,8 +13,6 @@ out/
 
 # TypeScript
 *.tsbuildinfo
-dist/
-build/
 
 # macOS
 .DS_Store
