@@ -14,6 +14,9 @@ create table if not exists exams (
   slug text unique not null,
   title text not null,
   description text,
+  month int check (month between 1 and 12),
+  year int,
+  is_active boolean default true,
   created_at timestamptz default now()
 );
 
@@ -23,8 +26,11 @@ create table if not exists courses (
   exam_id uuid references exams(id) on delete cascade,
   title text not null,
   tagline text,
-  duration text,
+  description text,
   difficulty text,
+  duration text,
+  estimated_hours int default 0,
+  is_active boolean default true,
   created_at timestamptz default now()
 );
 
@@ -37,6 +43,8 @@ create table if not exists subjects (
   order_index int not null default 0,
   outcomes text[] default '{}',
   prerequisites text[] default '{}',
+  weight_in_exam_percent int default 0,
+  is_active boolean default true,
   created_at timestamptz default now()
 );
 
@@ -47,6 +55,7 @@ create table if not exists chapters (
   number int not null,
   title text not null,
   description text,
+  estimated_minutes int default 0,
   created_at timestamptz default now(),
   unique (subject_id, slug)
 );
@@ -60,6 +69,7 @@ create table if not exists sections (
   order_index int not null default 0,
   estimated_minutes int default 0,
   content text default '',
+  content_path text,                       -- optional path to MDX file, e.g. courses/probability/ch1/core-ideas.mdx
   reading_questions jsonb default '[]',
   is_locked boolean default false,
   created_at timestamptz default now(),
@@ -77,6 +87,8 @@ create table if not exists tasks (
   answer text not null,
   solution text not null,
   hints text[] default '{}',
+  difficulty int check (difficulty between 1 and 3),
+  estimated_minutes int default 0,
   order_index int not null default 0,
   concept_id text,
   concept_name text,
@@ -100,9 +112,11 @@ create table if not exists quiz_questions (
   options jsonb default '[]',
   correct_answer text not null,
   explanation text,
-  order_index int not null default 0,
+  difficulty int check (difficulty between 1 and 3),
+  gate_weight text check (gate_weight in ('high', 'medium', 'low')),
   concept_id text,
   concept_name text,
+  order_index int not null default 0,
   created_at timestamptz default now()
 );
 
@@ -115,6 +129,10 @@ create table if not exists profiles (
   full_name text,
   role text not null default 'student',
   account_type text not null default 'gate-da-basic',
+  xp int default 0,
+  level int default 1,
+  streak_days int default 0,
+  last_active_at timestamptz,
   created_at timestamptz default now(),
   updated_at timestamptz default now()
 );
