@@ -1,0 +1,50 @@
+---
+section_id: 55555555-5555-5555-5555-555555555555
+type: read
+estimated_minutes: 30
+---
+
+## Sample spaces
+
+A **sample space** \( \Omega \) is the set of all possible outcomes of a random experiment.
+
+### Example: rolling a die
+
+When you roll a fair six-sided die:
+
+\[
+\Omega = \{1, 2, 3, 4, 5, 6\}
+\]
+
+An **event** is any subset of \( \Omega \). For example, the event "rolling an even number" is:
+
+\[
+A = \{2, 4, 6\}
+\]
+
+## Axioms of probability
+
+A probability measure \( P \) assigns a number to each event such that:
+
+1. **Non-negativity:** \( P(A) \geq 0 \)
+2. **Normalization:** \( P(\Omega) = 1 \)
+3. **Countable additivity:** For disjoint events \( A_1, A_2, \dots \),
+
+\[
+P\left(\bigcup_{i=1}^{\infty} A_i\right) = \sum_{i=1}^{\infty} P(A_i)
+\]
+
+## Counting
+
+When \( \Omega \) is finite and all outcomes are equally likely:
+
+\[
+P(A) = \frac{|A|}{|\Omega|}
+\]
+
+Two classic tools:
+
+- **Permutations:** order matters.
+- **Combinations:** order does not matter.
+
+> **Key idea:** Before computing a probability, always define the sample space clearly.

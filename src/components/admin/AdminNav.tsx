@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { BookOpen, FileText, Layers, Database, Home, Target } from "lucide-react";
+import { BookOpen, FileText, Layers, Database, Home, Target, Eye } from "lucide-react";
 
 const links = [
   { href: "/", label: "Dashboard", icon: Home },
@@ -10,6 +10,7 @@ const links = [
   { href: "/material-sets", label: "Material Sets", icon: FileText },
   { href: "/concept-graphs", label: "Concept Graphs", icon: Layers },
   { href: "/insights", label: "Insights", icon: Target },
+  { href: "/preview/55555555-5555-5555-5555-555555555555", label: "Preview", icon: Eye },
   { href: "/bulk-import", label: "Bulk Import", icon: Database },
 ];
 
