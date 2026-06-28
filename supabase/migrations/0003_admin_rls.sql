@@ -16,52 +16,45 @@ $$ language plpgsql security definer;
 
 -- ---------------------------------------------------------------------------
 -- Admin write access to content tables
+-- Public read policies already exist from 0001_schema.sql.
 -- ---------------------------------------------------------------------------
 
 -- Exams
-alter policy "Public read" on exams for select to anon, authenticated using (true);
 create policy "Admin write" on exams for insert to authenticated with check (public.is_admin());
 create policy "Admin update" on exams for update to authenticated using (public.is_admin());
 create policy "Admin delete" on exams for delete to authenticated using (public.is_admin());
 
 -- Courses
-alter policy "Public read" on courses for select to anon, authenticated using (true);
 create policy "Admin write" on courses for insert to authenticated with check (public.is_admin());
 create policy "Admin update" on courses for update to authenticated using (public.is_admin());
 create policy "Admin delete" on courses for delete to authenticated using (public.is_admin());
 
 -- Subjects
-alter policy "Public read" on subjects for select to anon, authenticated using (true);
 create policy "Admin write" on subjects for insert to authenticated with check (public.is_admin());
 create policy "Admin update" on subjects for update to authenticated using (public.is_admin());
 create policy "Admin delete" on subjects for delete to authenticated using (public.is_admin());
 
 -- Chapters
-alter policy "Public read" on chapters for select to anon, authenticated using (true);
 create policy "Admin write" on chapters for insert to authenticated with check (public.is_admin());
 create policy "Admin update" on chapters for update to authenticated using (public.is_admin());
 create policy "Admin delete" on chapters for delete to authenticated using (public.is_admin());
 
 -- Sections
-alter policy "Public read" on sections for select to anon, authenticated using (true);
 create policy "Admin write" on sections for insert to authenticated with check (public.is_admin());
 create policy "Admin update" on sections for update to authenticated using (public.is_admin());
 create policy "Admin delete" on sections for delete to authenticated using (public.is_admin());
 
 -- Tasks
-alter policy "Public read" on tasks for select to anon, authenticated using (true);
 create policy "Admin write" on tasks for insert to authenticated with check (public.is_admin());
 create policy "Admin update" on tasks for update to authenticated using (public.is_admin());
 create policy "Admin delete" on tasks for delete to authenticated using (public.is_admin());
 
 -- Quizzes
-alter policy "Public read" on quizzes for select to anon, authenticated using (true);
 create policy "Admin write" on quizzes for insert to authenticated with check (public.is_admin());
 create policy "Admin update" on quizzes for update to authenticated using (public.is_admin());
 create policy "Admin delete" on quizzes for delete to authenticated using (public.is_admin());
 
 -- Quiz questions
-alter policy "Public read" on quiz_questions for select to anon, authenticated using (true);
 create policy "Admin write" on quiz_questions for insert to authenticated with check (public.is_admin());
 create policy "Admin update" on quiz_questions for update to authenticated using (public.is_admin());
 create policy "Admin delete" on quiz_questions for delete to authenticated using (public.is_admin());
