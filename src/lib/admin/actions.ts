@@ -224,3 +224,31 @@ function parseOptions(value: string | null): { id: string; text: string }[] {
     }))
     .filter((o) => o.text);
 }
+
+
+export async function enrollStudent(formData: FormData) {
+  const supabase = await createClient();
+  const userId = formData.get("user_id") as string;
+  const subjectId = formData.get("subject_id") as string;
+
+  const { error } = await supabase.from("enrollments").insert({
+    user_id: userId,
+    subject_id: subjectId,
+    status: "active",
+    progress_percentage: 0,
+  });
+
+  if (error) throw error;
+  revalidatePath(`/students/${userId}`);
+}
+
+export async function unenrollStudent(formData: FormData) {
+  const supabase = await createClient();
+  const enrollmentId = formData.get("enrollment_id") as string;
+  const userId = formData.get("user_id") as string;
+
+  const { error } = await supabase.from("enrollments").delete().eq("id", enrollmentId);
+
+  if (error) throw error;
+  revalidatePath(`/students/${userId}`);
+}

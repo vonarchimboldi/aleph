@@ -2,11 +2,12 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { BookOpen, FileText, Layers, Database, Home, Target, Eye } from "lucide-react";
+import { BookOpen, FileText, Layers, Database, Home, Target, Eye, Users } from "lucide-react";
 
 const links = [
   { href: "/", label: "Dashboard", icon: Home },
   { href: "/courses", label: "Courses", icon: BookOpen },
+  { href: "/students", label: "Students", icon: Users },
   { href: "/material-sets", label: "Material Sets", icon: FileText },
   { href: "/concept-graphs", label: "Concept Graphs", icon: Layers },
   { href: "/insights", label: "Insights", icon: Target },
