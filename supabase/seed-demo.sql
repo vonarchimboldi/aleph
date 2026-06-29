@@ -74,7 +74,7 @@ values (
   'read',
   0,
   30,
-  '',
+  E'## Sample spaces\n\nA **sample space** \\( \\Omega \\) is the set of all possible outcomes of a random experiment.\n\n### Example: rolling a die\n\nWhen you roll a fair six-sided die:\n\n\\[\\n\\Omega = \\{1, 2, 3, 4, 5, 6\\}\n\\]\n\nAn **event** is any subset of \\( \\Omega \\). For example, the event "rolling an even number" is:\n\n\\[\\nA = \\{2, 4, 6\\}\n\\]\n\n## Axioms of probability\n\nA probability measure \\( P \\) assigns a number to each event such that:\n\n1. **Non-negativity:** \\( P(A) \\geq 0 \\)\n2. **Normalization:** \\( P(\\Omega) = 1 \\)\n3. **Countable additivity:** For disjoint events \\( A_1, A_2, \\dots \\),\n\n\\[\\nP\\left(\\bigcup_{i=1}^{\\infty} A_i\\right) = \\sum_{i=1}^{\\infty} P(A_i)\n\\]\n\n## Counting\n\nWhen \\( \\Omega \\) is finite and all outcomes are equally likely:\n\n\\[\\nP(A) = \\frac{|A|}{|\\Omega|}\n\\]\n\nTwo classic tools:\n\n- **Permutations:** order matters.\n- **Combinations:** order does not matter.\n\n> **Key idea:** Before computing a probability, always define the sample space clearly.',
   'courses/probability/ch1/core-ideas.mdx',
   '[{"question": "What is the probability of the empty set?", "hint": "Use axiom 1 and axiom 2."}]'::jsonb,
   false
