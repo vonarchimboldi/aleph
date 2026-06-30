@@ -1,10 +1,10 @@
-const CACHE_NAME = "learning-studio-v124";
+const CACHE_NAME = "learning-studio-v138";
 const IS_LOCAL = ["localhost", "127.0.0.1", "0.0.0.0", "::1"].includes(self.location.hostname);
 const ASSETS = [
   "./",
   "./index.html",
   "./styles.css",
-  "./app.js?v=seeded-user-canonical-workspace-v89",
+  "./app.js?v=seeded-user-canonical-workspace-v100",
   "./icons/icon-192.svg",
   "./icons/icon-512.svg"
 ];

@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>June 29 Pset — Conditional Indicators</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" />
+  <link rel="stylesheet" href="/psets/material-page.css" />
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+  <script defer src="/psets/material-page.js"></script>
+</head>
+<body>
+  <main class="wrap">
+    <section class="hero">
+      <h1>June 29 Pset: Conditional Indicators</h1>
+      <p class="sub">
+        Ten problems for the second Indicators cycle: condition on the variable that makes each indicator simple, then average back out. The goal is faster method choice under mixed Probability and Statistics pressure.
+      </p>
+      <div class="meta">
+        <span class="chip">Probability and Statistics</span>
+        <span class="chip">Monday</span>
+        <span class="chip">5 concept builders</span>
+        <span class="chip">3 integration problems</span>
+        <span class="chip">2 hidden-pattern problems</span>
+        <span class="chip">Solutions included</span>
+      </div>
+      <p class="math-fallback">Math rendering did not load from the CDN. Refresh once, or use a network that allows KaTeX CDN files.</p>
+    </section>
+
+    <section class="panel accent">
+      <h2>Core Pattern</h2>
+      <p>When the probability of one indicator changes with a hidden variable, condition first.</p>
+      <div class="formula">
+        \[
+          X=\sum_i I_i,\qquad
+          E[X\mid Y]=\sum_i P(I_i=1\mid Y),
+          \qquad
+          E[X]=E[E[X\mid Y]].
+        \]
+      </div>
+      <p>For pair terms, condition first if it makes the pair probability easy:</p>
+      <div class="formula">
+        \[
+          E[X(X-1)\mid Y]=\sum_{i\ne j}P(I_i=1,I_j=1\mid Y).
+        \]
+      </div>
+    </section>
+
+    <section class="panel">
+      <h2>Recognition Checklist</h2>
+      <div class="grid">
+        <ul>
+          <li>What is being counted?</li>
+          <li>What is the yes/no event for one object?</li>
+          <li>Which hidden variable changes the event probability?</li>
+          <li>Does conditioning make the indicators symmetric?</li>
+        </ul>
+        <ul>
+          <li>Do I need only \(E[X]\), or a pair term too?</li>
+          <li>Can I compute \(E[X\mid Y]\) before \(E[X]\)?</li>
+          <li>Are pair indicators independent only after conditioning?</li>
+          <li>Is the full distribution more work than needed?</li>
+        </ul>
+      </div>
+    </section>
+
+    <div class="section-label">Problems 1-5 · Concept Builders</div>
+
+    <article class="problem">
+      <div class="problem-head">
+        <div class="problem-title">1. Coins After a Random Spinner</div>
+        <div class="tags">
+          <span class="tag concept">Concept</span>
+          <span class="tag">Tower</span>
+          <span class="tag">6 min</span>
+        </div>
+      </div>
+      <p>A spinner chooses \(P\), where \(P=1/4\) with probability \(1/3\) and \(P=3/4\) with probability \(2/3\). Then \(10\) independent coins are tossed, each with head probability \(P\). Let \(H\) be the number of heads. Find \(E[H]\).</p>
+      <details>
+        <summary>Solution</summary>
+        <p>Let \(I_i=\mathbf{1}\{\text{coin }i\text{ is heads}\}\). Conditional on \(P\), each indicator has expectation \(P\). So</p>
+        \[
+          E[H\mid P]=\sum_{i=1}^{10}E[I_i\mid P]=10P.
+        \]
+        <p>Now average over the spinner:</p>
+        \[
+          E[H]=E[10P]=10E[P].
+        \]
+        <p>Compute</p>
+        \[
+          E[P]=\frac13\cdot\frac14+\frac23\cdot\frac34
+          =\frac{1}{12}+\frac12=\frac7{12}.
+        \]
+        <p>Therefore</p>
+        \[
+          E[H]=10\cdot\frac7{12}=\frac{35}{6}.
+        \]
+      </details>
+    </article>
+
+    <article class="problem">
+      <div class="problem-head">
+        <div class="problem-title">2. Random Number of Customer Arrivals</div>
+        <div class="tags">
+          <span class="tag concept">Concept</span>
+          <span class="tag">Random count</span>
+          <span class="tag">7 min</span>
+        </div>
+      </div>
+      <p>A shop receives \(N\) customers in a day, where \(E[N]=40\). Conditional on \(N\), each customer buys a notebook independently with probability \(0.3\). Let \(B\) be the number of notebook buyers. Find \(E[B]\).</p>
+      <details>
+        <summary>Solution</summary>
+        <p>Conditional on \(N=n\), write</p>
+        \[
+          B=\sum_{i=1}^{n} I_i,
+        \]
+        <p>where \(I_i\) indicates that customer \(i\) buys a notebook. Then</p>
+        \[
+          E[B\mid N=n]=0.3n.
+        \]
+        <p>Use the tower property:</p>
+        \[
+          E[B]=E[E[B\mid N]]=E[0.3N]=0.3E[N]=12.
+        \]
+      </details>
+    </article>
+
+    <article class="problem">
+      <div class="problem-head">
+        <div class="problem-title">3. Defects With a Random Machine</div>
+        <div class="tags">
+          <span class="tag concept">Concept</span>
+          <span class="tag">Mixture</span>
+          <span class="tag">8 min</span>
+        </div>
+      </div>
+      <p>A machine is chosen at random. Machine A is chosen with probability \(0.6\) and has defect probability \(0.02\). Machine B is chosen with probability \(0.4\) and has defect probability \(0.05\). After the machine is chosen, \(100\) items are made independently. Let \(D\) be the number of defective items. Find \(E[D]\).</p>
+      <details>
+        <summary>Solution</summary>
+        <p>Let \(M\) be the chosen machine. Conditional on \(M\), each item has the same defect probability. So</p>
+        \[
+          E[D\mid M=A]=100(0.02)=2,
+          \qquad
+          E[D\mid M=B]=100(0.05)=5.
+        \]
+        <p>Average over the machine choice:</p>
+        \[
+          E[D]=0.6(2)+0.4(5)=1.2+2=3.2.
+        \]
+        <p>The indicator method is behind this: \(D=\sum I_i\), but the success probability is easier after conditioning on \(M\).</p>
+      </details>
+    </article>
+
+    <article class="problem">
+      <div class="problem-head">
+        <div class="problem-title">4. Active Sensors After a Random Weather State</div>
+        <div class="tags">
+          <span class="tag concept">Concept</span>
+          <span class="tag">Conditioning</span>
+          <span class="tag">8 min</span>
+        </div>
+      </div>
+      <p>There are \(n\) sensors. The weather state \(W\) is dry with probability \(0.7\) and wet with probability \(0.3\). Conditional on \(W\), sensors act independently. A sensor is active with probability \(0.1\) in dry weather and \(0.4\) in wet weather. Let \(A\) be the number of active sensors. Find \(E[A]\).</p>
+      <details>
+        <summary>Solution</summary>
+        <p>Let \(I_i=\mathbf{1}\{\text{sensor }i\text{ is active}\}\). Conditional on the weather,</p>
+        \[
+          E[A\mid W=\text{dry}]=0.1n,
+          \qquad
+          E[A\mid W=\text{wet}]=0.4n.
+        \]
+        <p>Now average over the two weather states:</p>
+        \[
+          E[A]=0.7(0.1n)+0.3(0.4n)=0.07n+0.12n=0.19n.
+        \]
+      </details>
+    </article>
+
+    <article class="problem">
+      <div class="problem-head">
+        <div class="problem-title">5. Matching Answers With a Random Key</div>
+        <div class="tags">
+          <span class="tag concept">Concept</span>
+          <span class="tag">Symmetry</span>
+          <span class="tag">10 min</span>
+        </div>
+      </div>
+      <p>A test has \(m\) multiple-choice questions, each with \(4\) choices. A student guesses independently and uniformly. The answer key is chosen uniformly among the \(4^m\) possible keys, independently of the guesses. Let \(C\) be the number of correct answers. Find \(E[C]\) by conditioning on the answer key.</p>
+      <details>
+        <summary>Solution</summary>
+        <p>Let \(K\) be the answer key. Conditional on any fixed key \(K\), each guessed answer matches its key answer with probability \(1/4\). Define</p>
+        \[
+          I_i=\mathbf{1}\{\text{question }i\text{ is correct}\}.
+        \]
+        <p>Then</p>
+        \[
+          E[C\mid K]=\sum_{i=1}^{m}P(I_i=1\mid K)=\frac{m}{4}.
+        \]
+        <p>This value does not depend on \(K\), so</p>
+        \[
+          E[C]=E[E[C\mid K]]=\frac{m}{4}.
+        \]
+      </details>
+    </article>
+
+    <div class="section-label">Problems 6-8 · Integration Problems</div>
+
+    <article class="problem">
+      <div class="problem-head">
+        <div class="problem-title">6. Shared Random Success Probability</div>
+        <div class="tags">
+          <span class="tag integration">Integration</span>
+          <span class="tag">Pair terms</span>
+          <span class="tag">15 min</span>
+        </div>
+      </div>
+      <p>A random variable \(P\) is chosen first, with \(E[P]=\mu\) and \(\operatorname{Var}(P)=\tau^2\). Conditional on \(P\), \(X_1,\ldots,X_n\) are independent Bernoulli\((P)\) variables. Let \(S=X_1+\cdots+X_n\). Find \(E[S]\) and \(\operatorname{Var}(S)\).</p>
+      <details>
+        <summary>Solution</summary>
+        <p>Conditional on \(P\), \(S\) is binomial with parameters \(n\) and \(P\). Hence</p>
+        \[
+          E[S\mid P]=nP,
+          \qquad
+          \operatorname{Var}(S\mid P)=nP(1-P).
+        \]
+        <p>The expectation is</p>
+        \[
+          E[S]=E[nP]=n\mu.
+        \]
+        <p>Use total variance:</p>
+        \[
+          \operatorname{Var}(S)
+          =E[nP(1-P)]+\operatorname{Var}(nP).
+        \]
+        <p>Now \(E[P(1-P)]=E[P]-E[P^2]\). Since \(E[P^2]=\tau^2+\mu^2\),</p>
+        \[
+          E[P(1-P)]=\mu-\tau^2-\mu^2.
+        \]
+        <p>Therefore</p>
+        \[
+          \operatorname{Var}(S)=n(\mu-\mu^2-\tau^2)+n^2\tau^2
+          =n\mu(1-\mu)+n(n-1)\tau^2.
+        \]
+        <p>The extra term appears because all indicators share the same random \(P\).</p>
+      </details>
+    </article>
+
+    <article class="problem">
+      <div class="problem-head">
+        <div class="problem-title">7. Empty Tables After a Random Crowd</div>
+        <div class="tags">
+          <span class="tag integration">Integration</span>
+          <span class="tag">Occupancy</span>
+          <span class="tag">16 min</span>
+        </div>
+      </div>
+      <p>A restaurant has \(r\) tables. A random number \(N\) of customers arrives. Conditional on \(N\), each customer independently chooses one of the \(r\) tables uniformly. Let \(E_r\) be the number of empty tables. Express \(E[E_r]\) in terms of the probability generating function \(G_N(s)=E[s^N]\).</p>
+      <details>
+        <summary>Solution</summary>
+        <p>Let \(I_j=\mathbf{1}\{\text{table }j\text{ is empty}\}\). Then \(E_r=\sum_{j=1}^{r}I_j\). Conditional on \(N=n\), a fixed table is empty if every customer chooses one of the other \(r-1\) tables:</p>
+        \[
+          P(I_j=1\mid N=n)=\left(1-\frac1r\right)^n.
+        \]
+        <p>So</p>
+        \[
+          E[E_r\mid N=n]=r\left(1-\frac1r\right)^n.
+        \]
+        <p>Average over \(N\):</p>
+        \[
+          E[E_r]
+          =rE\left[\left(1-\frac1r\right)^N\right]
+          =rG_N\left(1-\frac1r\right).
+        \]
+      </details>
+    </article>
+
+    <article class="problem">
+      <div class="problem-head">
+        <div class="problem-title">8. Pair Collisions With a Random Number of Draws</div>
+        <div class="tags">
+          <span class="tag integration">Integration</span>
+          <span class="tag">Pair indicators</span>
+          <span class="tag">18 min</span>
+        </div>
+      </div>
+      <p>There are \(k\) equally likely colors. A random number \(N\) of balls is drawn independently with replacement, where \(E[N(N-1)]<\infty\). Conditional on \(N\), let \(Y\) be the number of unordered pairs of drawn balls that have the same color. Find \(E[Y]\) in terms of \(E[N(N-1)]\) and \(k\).</p>
+      <details>
+        <summary>Solution</summary>
+        <p>Conditional on \(N=n\), index unordered pairs of positions \(\{a,b\}\), with \(1\le a<b\le n\). Let</p>
+        \[
+          I_{ab}=\mathbf{1}\{\text{positions }a\text{ and }b\text{ have the same color}\}.
+        \]
+        <p>Then \(Y=\sum_{a<b}I_{ab}\). For one fixed pair, after the first color is chosen, the second matches it with probability \(1/k\). Therefore</p>
+        \[
+          E[Y\mid N=n]=\binom n2\frac1k.
+        \]
+        <p>Average over \(N\):</p>
+        \[
+          E[Y]=E\left[\binom N2\frac1k\right]
+          =\frac{E[N(N-1)]}{2k}.
+        \]
+      </details>
+    </article>
+
+    <div class="section-label">Problems 9-10 · Hidden-Pattern Problems</div>
+
+    <article class="problem">
+      <div class="problem-head">
+        <div class="problem-title">9. Hidden Indicators in a Random Study Group</div>
+        <div class="tags">
+          <span class="tag hidden">Hidden</span>
+          <span class="tag">Exchangeability</span>
+          <span class="tag">22 min</span>
+        </div>
+      </div>
+      <p>A class has \(a\) algebra students and \(b\) statistics students. First choose a random group size \(N\), where \(1\le N\le a+b\). Conditional on \(N=n\), choose \(n\) students uniformly without replacement. Let \(T\) be the number of unordered pairs inside the chosen group that contain one algebra student and one statistics student. Find \(E[T]\) in terms of \(E[N(N-1)]\), \(a\), and \(b\).</p>
+      <details>
+        <summary>Solution</summary>
+        <p>Conditional on \(N=n\), count pairs of positions in the chosen group. For each unordered position pair \(\{u,v\}\), let \(I_{uv}=1\) if one selected student in those two positions is algebra and the other is statistics.</p>
+        <p>For a fixed pair of positions, the two students are like two draws without replacement from the whole class. The probability of one algebra and one statistics student is</p>
+        \[
+          \frac{a}{a+b}\frac{b}{a+b-1}
+          +\frac{b}{a+b}\frac{a}{a+b-1}
+          =\frac{2ab}{(a+b)(a+b-1)}.
+        \]
+        <p>Thus, conditional on \(N=n\),</p>
+        \[
+          E[T\mid N=n]
+          =\binom n2\frac{2ab}{(a+b)(a+b-1)}.
+        \]
+        <p>Average over \(N\):</p>
+        \[
+          E[T]
+          =\frac{E[N(N-1)]}{2}\cdot\frac{2ab}{(a+b)(a+b-1)}
+          =\frac{ab\,E[N(N-1)]}{(a+b)(a+b-1)}.
+        \]
+      </details>
+    </article>
+
+    <article class="problem">
+      <div class="problem-head">
+        <div class="problem-title">10. Conditional Indicator Choice in a Screening Test</div>
+        <div class="tags">
+          <span class="tag hidden">Hidden</span>
+          <span class="tag">ISI style</span>
+          <span class="tag">25 min</span>
+        </div>
+      </div>
+      <p>A lab tests \(N\) samples, where \(E[N]=m\) and \(\operatorname{Var}(N)=v\). Conditional on \(N\), each sample is truly positive independently with probability \(p\). A truly positive sample is detected with probability \(s\), and a truly negative sample gives a false positive with probability \(f\). All detection outcomes are conditionally independent given the true statuses and \(N\). Let \(Z\) be the number of positive test results. Find \(E[Z]\) and \(\operatorname{Var}(Z)\).</p>
+      <details>
+        <summary>Solution</summary>
+        <p>For one sample, the unconditional positive-test probability after the true status is mixed out is</p>
+        \[
+          q=ps+(1-p)f.
+        \]
+        <p>Conditional on \(N=n\), the \(n\) test-result indicators are independent Bernoulli\((q)\). Therefore</p>
+        \[
+          E[Z\mid N=n]=nq,
+          \qquad
+          \operatorname{Var}(Z\mid N=n)=nq(1-q).
+        \]
+        <p>Use the tower property for the mean:</p>
+        \[
+          E[Z]=E[nq]=mq.
+        \]
+        <p>Use total variance:</p>
+        \[
+          \operatorname{Var}(Z)
+          =E[Nq(1-q)]+\operatorname{Var}(Nq)
+          =mq(1-q)+v q^2.
+        \]
+        <p>The main decision is to choose the final test-result indicators, not separate indicators for every true-status and test-status combination.</p>
+      </details>
+    </article>
+
+    <section class="panel">
+      <h2>Answer Summary</h2>
+      <div class="answer-list">
+        <div><strong>1.</strong> \(35/6\)</div>
+        <div><strong>2.</strong> \(12\)</div>
+        <div><strong>3.</strong> \(3.2\)</div>
+        <div><strong>4.</strong> \(0.19n\)</div>
+        <div><strong>5.</strong> \(m/4\)</div>
+        <div><strong>6.</strong> \(E[S]=n\mu\), \(\operatorname{Var}(S)=n\mu(1-\mu)+n(n-1)\tau^2\)</div>
+        <div><strong>7.</strong> \(rG_N(1-1/r)\)</div>
+        <div><strong>8.</strong> \(E[N(N-1)]/(2k)\)</div>
+        <div><strong>9.</strong> \(abE[N(N-1)]/((a+b)(a+b-1))\)</div>
+        <div><strong>10.</strong> \(E[Z]=mq\), \(\operatorname{Var}(Z)=mq(1-q)+vq^2\), where \(q=ps+(1-p)f\)</div>
+      </div>
+    </section>
+  </main>
+</body>
+</html>

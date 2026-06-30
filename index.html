@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="theme-color" content="#1f5f70">
-    <title>Learning Studio</title>
+    <title>Aleph</title>
     <link rel="stylesheet" href="styles.css">
   </head>
   <body>
@@ -12,17 +12,31 @@
       <div class="landing-panel">
         <div class="landing-copy">
           <span class="brand-mark">A</span>
-          <p class="eyebrow">Aleph Learning Studio</p>
-          <h1>A focused workspace for structured independent learning.</h1>
-          <p>
-            Weekly plans, linked course resources, review quizzes, spaced review, and task tracking in one web app.
+          <p class="eyebrow">Aleph</p>
+          <h1>Adaptive exam prep that turns a weekly plan into daily work.</h1>
+          <p class="landing-lede">
+            Aleph organizes GATE DA and advanced math study into subject workspaces, readable lessons, practice sets, review quizzes, feedback, and task boards.
           </p>
+          <div class="landing-feature-grid" aria-label="Aleph workspace highlights">
+            <article>
+              <strong>Structured by subject</strong>
+              <span>Probability, Linear Algebra, Discrete Math, DSA, and custom Platinum tracks stay separated but synchronized.</span>
+            </article>
+            <article>
+              <strong>Practice with feedback</strong>
+              <span>Daily problem sets, objective reviews, uploaded solutions, and learner-facing feedback reports.</span>
+            </article>
+            <article>
+              <strong>Review that recurs</strong>
+              <span>Weekly quizzes, spaced review, prerequisite repair, and task status carry forward automatically.</span>
+            </article>
+          </div>
         </div>
 
         <form class="login-card" id="login-form">
           <div>
             <h2>Sign in</h2>
-            <p class="muted">Prototype access for the current learner workspace.</p>
+            <p class="muted">Access the learner workspace or open a password-free prototype demo.</p>
           </div>
           <label>
             <span>Username</span>
@@ -39,12 +53,14 @@
             <button class="text-btn" id="show-forgot-password-btn" type="button">Forgot password?</button>
             <button class="text-btn" id="show-password-change-btn" type="button">Change password</button>
           </div>
-          <div class="credential-hints" aria-label="Prototype credentials">
-            <div><span>Priyanka</span><code>priyanka</code><code>l!pschitz</code></div>
-            <div><span>Platinum demo</span><code>platinum</code><code>platinum</code></div>
-            <div><span>Course designer</span><code>designer</code><code>designer</code><a href="?demo=designer">Direct link</a></div>
-            <div><span>DA Basic demo</span><code>basic</code><code>basic</code><a href="?demo=basic">Direct link</a></div>
-            <div><span>Reviewer</span><code>reviewer</code><a href="?demo=reviewer">Direct link</a></div>
+          <div class="demo-access" aria-label="Prototype demos">
+            <p class="demo-access-title">Preview a demo workspace</p>
+            <div class="demo-access-links">
+              <a class="demo-link" href="?demo=basic">GATE DA Basic</a>
+              <a class="demo-link" href="?demo=platinum">Platinum plan</a>
+              <a class="demo-link" href="?demo=designer">Course designer</a>
+              <a class="demo-link" href="?demo=reviewer">Reviewer</a>
+            </div>
           </div>
           <p class="fine-print build-note" id="login-build-stamp">Current build: loading</p>
           <p class="fine-print"><a href="/fresh-start.html">Clear old browser state</a></p>

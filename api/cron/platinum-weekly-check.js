@@ -50,11 +50,15 @@ function buildWeeklyReport(snapshot) {
   const materialsDue = snapshot.materials?.due || [];
   const missingSubmissions = materialsDue.filter((material) => !material.submitted);
   const missingFeedback = materialsDue.filter((material) => material.submitted && !material.feedbackReady);
-  const feedbackReady = materialsDue.filter((material) => material.feedbackReady);
+  const feedbackReady = mergeFeedbackItems(
+    materialsDue.filter((material) => material.feedbackReady),
+    snapshot.feedback?.consolidated?.feedbackItems || [],
+    snapshot.feedback?.latest || []
+  );
   const latestFeedback = feedbackReady
     .slice()
     .sort((a, b) => (b.feedbackUpdatedAt || "").localeCompare(a.feedbackUpdatedAt || ""))
-    .slice(0, 5);
+    .slice(0, 8);
   const severeFeedback = feedbackReady.filter((material) => {
     const verdict = String(material.feedbackVerdict || "").toLowerCase();
     return verdict.includes("revise") || verdict.includes("weak") || verdict.includes("incomplete") || verdict === "red" || verdict === "yellow";
@@ -92,8 +96,27 @@ function buildWeeklyReport(snapshot) {
     missingSubmissions: missingSubmissions.slice(0, 8),
     missingFeedback: missingFeedback.slice(0, 8),
     latestFeedback,
+    consolidatedFeedback: {
+      feedbackCount: snapshot.feedback?.consolidated?.feedbackCount ?? feedbackReady.length,
+      archivedFeedbackCount: snapshot.feedback?.consolidated?.archivedFeedbackCount ?? feedbackReady.filter((material) => material.archived).length,
+      currentFeedbackCount: snapshot.feedback?.consolidated?.currentFeedbackCount ?? feedbackReady.filter((material) => !material.archived).length,
+      submittedWaitingForFeedback: snapshot.feedback?.consolidated?.submittedWaitingForFeedback || [],
+      topicSummaries: snapshot.feedback?.consolidated?.topicSummaries || []
+    },
     adaptivePlan
   };
+}
+
+function mergeFeedbackItems(...groups) {
+  const byId = new Map();
+  groups.flat().forEach((item) => {
+    if (!item?.materialId) return;
+    const existing = byId.get(item.materialId);
+    if (!existing || (item.feedbackUpdatedAt || "") > (existing.feedbackUpdatedAt || "")) {
+      byId.set(item.materialId, item);
+    }
+  });
+  return Array.from(byId.values());
 }
 
 function buildAdaptiveWeeklyPlan(snapshot, feedbackReady) {
@@ -121,6 +144,25 @@ function buildAdaptiveWeeklyPlan(snapshot, feedbackReady) {
 function collectPrerequisiteHypotheses(feedbackReady) {
   const hypotheses = [];
   feedbackReady.forEach((material) => {
+    (material.feedbackPrerequisiteChecks || []).forEach((check) => {
+      if (!check.prerequisite || check.status === "secure") return;
+      hypotheses.push({
+        prerequisite: check.prerequisite,
+        hypothesis: `Prerequisite check marked ${check.status}.`,
+        confidence: check.status === "missing" ? "high" : check.status === "shaky" ? "medium" : "low",
+        evidence: check.evidence || material.feedbackSummary || "",
+        sourceSkill: material.feedbackConceptGap || "",
+        testOnSunday: true,
+        repairPriority: check.status === "missing" ? "high" : "medium",
+        repairWork: check.repairWork || "",
+        bridgeWork: check.bridgeWork || "",
+        sourceMaterialId: material.materialId,
+        sourceMaterialTitle: material.materialTitle,
+        sourceDate: material.date,
+        fromSundayReview: /review|quiz/i.test(material.materialTitle || "")
+      });
+    });
+
     (material.feedbackPrerequisiteHypotheses || []).forEach((hypothesis) => {
       hypotheses.push({
         prerequisite: hypothesis.prerequisite || material.feedbackConceptGap || "unspecified prerequisite",
@@ -130,6 +172,8 @@ function collectPrerequisiteHypotheses(feedbackReady) {
         sourceSkill: hypothesis.sourceSkill || material.feedbackConceptGap || "",
         testOnSunday: hypothesis.testOnSunday !== false,
         repairPriority: hypothesis.repairPriority || "medium",
+        repairWork: hypothesis.repairWork || "",
+        bridgeWork: hypothesis.bridgeWork || "",
         sourceMaterialId: material.materialId,
         sourceMaterialTitle: material.materialTitle,
         sourceDate: material.date,
@@ -148,6 +192,8 @@ function collectPrerequisiteHypotheses(feedbackReady) {
           sourceSkill: material.feedbackConceptGap || "",
           testOnSunday: true,
           repairPriority: error.repairPriority || "medium",
+          repairWork: "",
+          bridgeWork: "",
           sourceMaterialId: material.materialId,
           sourceMaterialTitle: material.materialTitle,
           sourceDate: material.date,
@@ -170,6 +216,8 @@ function rankPrerequisiteHypotheses(hypotheses, sundayEvidence) {
         repairPriority: "low",
         evidence: [],
         sources: [],
+        repairWork: [],
+        bridgeWork: [],
         diagnosticProblemTypes: new Set(),
         status: "needs_confirmation"
       });
@@ -180,6 +228,8 @@ function rankPrerequisiteHypotheses(hypotheses, sundayEvidence) {
     entry.confidence = strongerLabel(entry.confidence, hypothesis.confidence);
     entry.repairPriority = strongerLabel(entry.repairPriority, hypothesis.repairPriority);
     if (hypothesis.evidence) entry.evidence.push(hypothesis.evidence);
+    if (hypothesis.repairWork) entry.repairWork.push(hypothesis.repairWork);
+    if (hypothesis.bridgeWork) entry.bridgeWork.push(hypothesis.bridgeWork);
     entry.sources.push({
       materialId: hypothesis.sourceMaterialId,
       materialTitle: hypothesis.sourceMaterialTitle,
@@ -209,6 +259,8 @@ function rankPrerequisiteHypotheses(hypotheses, sundayEvidence) {
         repairPriority: entry.repairPriority,
         score: entry.score,
         evidence: entry.evidence.slice(0, 3),
+        repairWork: [...new Set(entry.repairWork)].slice(0, 3),
+        bridgeWork: [...new Set(entry.bridgeWork)].slice(0, 3),
         sources: entry.sources.slice(0, 4)
       };
     })
@@ -239,32 +291,43 @@ function buildSundayDiagnosticPlan(hypotheses) {
 
 function buildNextWeekProblemSetPlan(hypotheses, allocation) {
   return {
-    rule: "Generate next week's Platinum problem sets from nominal target topics plus the prerequisite evidence below.",
+    rule: "Generate next week's Platinum Probability and Statistics material from nominal target topics plus the prerequisite evidence below.",
+    materialType: "Expository lesson material with embedded problem sets, not a bare list of questions.",
+    expositionRequirements: [
+      "Open each material page with a concise topic narrative explaining the pattern and why it matters.",
+      "Contextualize every question block with the recognition trigger, setup idea, and prerequisite being tested.",
+      "Include repair and bridge exposition before target/ISI-style questions when feedback shows prerequisite gaps.",
+      "End each block with synthesis notes that connect the questions back to the learner's feedback evidence."
+    ],
     allocation,
     blocks: [
       {
         block: "repair",
         ratio: allocation.repair,
-        instruction: "Direct prerequisite drills for confirmed or high-confidence weak prerequisites.",
-        prerequisites: hypotheses.filter((item) => item.status === "confirmed" || item.repairPriority === "high").map((item) => item.prerequisite)
+        instruction: "Direct prerequisite drills for confirmed or high-confidence weak prerequisites, preceded by a short explanatory mini-lesson.",
+        prerequisites: hypotheses.filter((item) => item.status === "confirmed" || item.repairPriority === "high").map((item) => item.prerequisite),
+        requiredWork: hypotheses.flatMap((item) => item.repairWork || []).slice(0, 6)
       },
       {
         block: "bridge",
         ratio: allocation.bridge,
-        instruction: "Problems that connect repaired prerequisites to the next target topic.",
-        prerequisites: hypotheses.map((item) => item.prerequisite)
+        instruction: "Problems that connect repaired prerequisites to the next target topic, with context showing why the prerequisite is needed.",
+        prerequisites: hypotheses.map((item) => item.prerequisite),
+        requiredWork: hypotheses.flatMap((item) => item.bridgeWork || []).slice(0, 6)
       },
       {
         block: "target",
         ratio: allocation.target,
-        instruction: "Nominal next-week syllabus topics, reduced when prerequisites are shaky.",
-        prerequisites: []
+        instruction: "Nominal next-week syllabus topics, introduced with pattern-recognition exposition before the question set.",
+        prerequisites: [],
+        requiredWork: ["Only advance target difficulty after the repair and bridge checks above are represented in the set."]
       },
       {
         block: "cumulative",
         ratio: allocation.cumulative,
-        instruction: "Exam-style mixed review so important topics keep recurring even when repaired.",
-        prerequisites: hypotheses.slice(0, 3).map((item) => item.prerequisite)
+        instruction: "Exam-style mixed review with short cues that make older patterns visible without revealing the solution.",
+        prerequisites: hypotheses.slice(0, 3).map((item) => item.prerequisite),
+        requiredWork: ["Include at least one mixed problem that reuses the highest-priority repaired prerequisite."]
       }
     ]
   };
@@ -406,7 +469,10 @@ function weeklyEmailText(learnerName, snapshot, report) {
   if (report.adaptivePlan?.nextWeekProblemSetPlan?.blocks?.length) {
     lines.push(
       "Next week pset generation mix:",
-      ...report.adaptivePlan.nextWeekProblemSetPlan.blocks.map((block) => `- ${Math.round(block.ratio * 100)}% ${block.block}: ${block.instruction}`),
+      ...report.adaptivePlan.nextWeekProblemSetPlan.blocks.map((block) => {
+        const required = block.requiredWork?.length ? ` Required: ${block.requiredWork.join(" | ")}` : "";
+        return `- ${Math.round(block.ratio * 100)}% ${block.block}: ${block.instruction}${required}`;
+      }),
       ""
     );
   }

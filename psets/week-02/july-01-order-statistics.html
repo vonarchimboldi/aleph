@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>July 1 Pset — Conditional Order Statistics</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" />
+  <link rel="stylesheet" href="/psets/material-page.css" />
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+  <script defer src="/psets/material-page.js"></script>
+</head>
+<body>
+  <main class="wrap">
+    <section class="hero">
+      <h1>July 1 Pset: Conditional Order Statistics</h1>
+      <p class="sub">
+        Ten problems for Order Statistics Week 2. The focus is conditional laws, spacings, and recognizing when a sorted-sample problem should become a count, a beta law, or a joint-density region.
+      </p>
+      <div class="meta">
+        <span class="chip">Probability and Statistics</span>
+        <span class="chip">Wednesday</span>
+        <span class="chip">5 concept builders</span>
+        <span class="chip">3 applications</span>
+        <span class="chip">2 hidden-pattern problems</span>
+        <span class="chip">Solutions included</span>
+      </div>
+      <p class="math-fallback">Math rendering did not load from the CDN. Refresh once, or use a network that allows KaTeX CDN files.</p>
+    </section>
+
+    <section class="panel accent">
+      <h2>Core Pattern</h2>
+      <p>Order-statistic problems often become easier after translating the sorted event into counts of original observations.</p>
+      <div class="formula">
+        \[
+          P(X_{(k)}\le x)=P(\#\{i:X_i\le x\}\ge k).
+        \]
+      </div>
+      <p>For conditional laws, first describe the region. For spacings, use the fact that uniform spacings split the unit interval into random gaps.</p>
+    </section>
+
+    <section class="panel">
+      <h2>Recognition Guide</h2>
+      <div class="grid">
+        <ul>
+          <li>For a kth value, count observations below the cutoff.</li>
+          <li>For two sorted values, draw \(0<u<v<1\).</li>
+          <li>For a conditional order law, rescale the remaining interval.</li>
+          <li>For exponential races, remember the minimum rate adds.</li>
+        </ul>
+        <ul>
+          <li>Uniform \(U_{(k)}\) has Beta\((k,n+1-k)\) distribution.</li>
+          <li>Given a maximum \(m\), the lower observations behave like uniforms on \([0,m]\).</li>
+          <li>Given a minimum \(a\), the upper observations behave like uniforms on \([a,1]\).</li>
+          <li>Joint densities usually solve range and gap questions faster than CDFs.</li>
+        </ul>
+      </div>
+    </section>
+
+    <div class="section-label">Problems 1-5 · Concept Builders</div>
+
+    <article class="problem">
+      <div class="problem-head">
+        <div class="problem-title">1. Third Order Statistic by Counting</div>
+        <div class="tags">
+          <span class="tag concept">Concept</span>
+          <span class="tag">Counting CDF</span>
+          <span class="tag">7 min</span>
+        </div>
+      </div>
+      <p>Let \(X_1,\ldots,X_6\) be independent Uniform\((0,1)\). Let \(Y=X_{(3)}\). Write \(P(Y\le y)\) for \(0\le y\le1\) as a binomial tail.</p>
+      <details>
+        <summary>Solution</summary>
+        <p>The event \(Y\le y\) means at least three observations are at most \(y\). The number of observations at most \(y\) is Binomial\((6,y)\). Therefore</p>
+        \[
+          P(Y\le y)=P(\operatorname{Binomial}(6,y)\ge3).
+        \]
+        <p>Writing the tail explicitly,</p>
+        \[
+          P(Y\le y)=\sum_{j=3}^{6}\binom6j y^j(1-y)^{6-j}.
+        \]
+      </details>
+    </article>
+
+    <article class="problem">
+      <div class="problem-head">
+        <div class="problem-title">2. Beta Mean for a Quartile</div>
+        <div class="tags">
+          <span class="tag concept">Concept</span>
+          <span class="tag">Beta</span>
+          <span class="tag">6 min</span>
+        </div>
+      </div>
+      <p>Let \(U_{(4)}\) be the fourth order statistic from \(9\) independent Uniform\((0,1)\) observations. Identify its beta distribution and find \(E[U_{(4)}]\).</p>
+      <details>
+        <summary>Solution</summary>
+        <p>For uniform order statistics,</p>
+        \[
+          U_{(k)}\sim\operatorname{Beta}(k,n+1-k).
+        \]
+        <p>Here \(k=4\) and \(n=9\), so</p>
+        \[
+          U_{(4)}\sim\operatorname{Beta}(4,6).
+        \]
+        <p>The mean of Beta\((a,b)\) is \(a/(a+b)\), hence</p>
+        \[
+          E[U_{(4)}]=\frac{4}{10}=\frac25.
+        \]
+      </details>
+    </article>
+
+    <article class="problem">
+      <div class="problem-head">
+        <div class="problem-title">3. Conditional on the Maximum</div>
+        <div class="tags">
+          <span class="tag concept">Concept</span>
+          <span class="tag">Conditional law</span>
+          <span class="tag">9 min</span>
+        </div>
+      </div>
+      <p>Let \(U_1,U_2,U_3\) be independent Uniform\((0,1)\), and let \(M=U_{(3)}\). Given \(M=m\), what is the conditional distribution of the smaller two sample values?</p>
+      <details>
+        <summary>Solution</summary>
+        <p>Given that the maximum equals \(m\), the other two observations must lie in \([0,m]\). By symmetry and the standard conditional order-statistic property, the smaller two sample values behave like two independent Uniform\((0,m)\) observations, sorted.</p>
+        <p>Equivalently, if the two lower values are \(V_{(1)}\le V_{(2)}\), then</p>
+        \[
+          \left(\frac{V_{(1)}}{m},\frac{V_{(2)}}{m}\right)
+        \]
+        <p>has the same law as the order statistics of two independent Uniform\((0,1)\) observations.</p>
+      </details>
+    </article>
+
+    <article class="problem">
+      <div class="problem-head">
+        <div class="problem-title">4. Conditional on the Minimum</div>
+        <div class="tags">
+          <span class="tag concept">Concept</span>
+          <span class="tag">Rescaling</span>
+          <span class="tag">9 min</span>
+        </div>
+      </div>
+      <p>Let \(U_1,\ldots,U_5\) be independent Uniform\((0,1)\). Given that the minimum is \(a\), find the expected maximum of the remaining four observations.</p>
+      <details>
+        <summary>Solution</summary>
+        <p>Given the minimum is \(a\), the remaining four observations behave like four independent Uniform\((a,1)\) observations. If \(Z\) is the maximum of four Uniform\((0,1)\) observations, then \(E[Z]=4/5\).</p>
+        <p>Rescale from \([0,1]\) to \([a,1]\):</p>
+        \[
+          \text{remaining maximum}=a+(1-a)Z.
+        \]
+        <p>Therefore</p>
+        \[
+          E[\text{remaining maximum}\mid U_{(1)}=a]
+          =a+(1-a)\frac45
+          =\frac45+\frac{a}{5}.
+        \]
+      </details>
+    </article>
+
+    <article class="problem">
+      <div class="problem-head">
+        <div class="problem-title">5. First Exponential Arrival</div>
+        <div class="tags">
+          <span class="tag concept">Concept</span>
+          <span class="tag">Exponential race</span>
+          <span class="tag">8 min</span>
+        </div>
+      </div>
+      <p>Let \(T_1,\ldots,T_n\) be independent Exponential\((\lambda)\) waiting times. Let \(T_{(1)}\) be the first arrival. Find \(P(T_{(1)}>t)\) and \(E[T_{(1)}]\).</p>
+      <details>
+        <summary>Solution</summary>
+        <p>The first arrival is after time \(t\) exactly when every waiting time is after \(t\):</p>
+        \[
+          P(T_{(1)}>t)=P(T_1>t,\ldots,T_n>t).
+        \]
+        <p>Each term has survival probability \(e^{-\lambda t}\), so</p>
+        \[
+          P(T_{(1)}>t)=e^{-n\lambda t}.
+        \]
+        <p>Thus \(T_{(1)}\sim\operatorname{Exponential}(n\lambda)\), and</p>
+        \[
+          E[T_{(1)}]=\frac{1}{n\lambda}.
+        \]
+      </details>
+    </article>
+
+    <div class="section-label">Problems 6-8 · Applications</div>
+
+    <article class="problem">
+      <div class="problem-head">
+        <div class="problem-title">6. Expected Gap Around the Median</div>
+        <div class="tags">
+          <span class="tag integration">Application</span>
+          <span class="tag">Spacings</span>
+          <span class="tag">15 min</span>
+        </div>
+      </div>
+      <p>Let \(U_{(1)}<U_{(2)}<U_{(3)}\) be the sorted values of three independent Uniform\((0,1)\) observations. Find \(E[U_{(3)}-U_{(1)}]\).</p>
+      <details>
+        <summary>Solution</summary>
+        <p>Use linearity of expectation:</p>
+        \[
+          E[U_{(3)}-U_{(1)}]=E[U_{(3)}]-E[U_{(1)}].
+        \]
+        <p>For \(n=3\),</p>
+        \[
+          E[U_{(3)}]=\frac{3}{4},
+          \qquad
+          E[U_{(1)}]=\frac{1}{4}.
+        \]
+        <p>Therefore</p>
+        \[
+          E[U_{(3)}-U_{(1)}]=\frac12.
+        \]
+      </details>
+    </article>
+
+    <article class="problem">
+      <div class="problem-head">
+        <div class="problem-title">7. Joint Density for a Middle Interval</div>
+        <div class="tags">
+          <span class="tag integration">Application</span>
+          <span class="tag">Joint order law</span>
+          <span class="tag">17 min</span>
+        </div>
+      </div>
+      <p>Let \(U_{(2)}\) and \(U_{(5)}\) be order statistics from \(7\) independent Uniform\((0,1)\) observations. Write the joint density of \((U_{(2)},U_{(5)})\) for \(0<u<v<1\).</p>
+      <details>
+        <summary>Solution</summary>
+        <p>Use the joint density formula for \(i=2\), \(j=5\), \(n=7\):</p>
+        \[
+          f_{U_{(2)},U_{(5)}}(u,v)
+          =
+          \frac{7!}{(2-1)!(5-2-1)!(7-5)!}
+          u^{1}(v-u)^{2}(1-v)^2.
+        \]
+        <p>The constant is</p>
+        \[
+          \frac{7!}{1!2!2!}=1260.
+        \]
+        <p>So</p>
+        \[
+          f_{U_{(2)},U_{(5)}}(u,v)=1260u(v-u)^2(1-v)^2,
+          \qquad 0<u<v<1.
+        \]
+      </details>
+    </article>
+
+    <article class="problem">
+      <div class="problem-head">
+        <div class="problem-title">8. Exponential Spacing After the First Arrival</div>
+        <div class="tags">
+          <span class="tag integration">Application</span>
+          <span class="tag">Spacing</span>
+          <span class="tag">18 min</span>
+        </div>
+      </div>
+      <p>Let \(T_1,\ldots,T_n\) be independent Exponential\((\lambda)\) waiting times. Let \(T_{(1)}<T_{(2)}\) be the first two ordered arrivals. State the distribution of \(T_{(2)}-T_{(1)}\), and find its expectation.</p>
+      <details>
+        <summary>Solution</summary>
+        <p>After the first arrival, there are \(n-1\) exponential clocks still running. By the memoryless property, the additional wait until the next arrival is the minimum of \(n-1\) independent Exponential\((\lambda)\) clocks.</p>
+        <p>Therefore</p>
+        \[
+          T_{(2)}-T_{(1)}\sim\operatorname{Exponential}((n-1)\lambda).
+        \]
+        <p>Its expectation is</p>
+        \[
+          E[T_{(2)}-T_{(1)}]=\frac{1}{(n-1)\lambda}.
+        \]
+      </details>
+    </article>
+
+    <div class="section-label">Problems 9-10 · Hidden-Pattern Problems</div>
+
+    <article class="problem">
+      <div class="problem-head">
+        <div class="problem-title">9. Hidden Order Statistic in a Coverage Radius</div>
+        <div class="tags">
+          <span class="tag hidden">Hidden</span>
+          <span class="tag">Maximum distance</span>
+          <span class="tag">22 min</span>
+        </div>
+      </div>
+      <p>A router is placed at \(0\) on a line segment \([0,1]\). Three devices are placed independently and uniformly on \([0,1]\). The router must cover the farthest device. Let \(R\) be the required coverage radius. Find \(E[R]\).</p>
+      <details>
+        <summary>Solution</summary>
+        <p>The required radius is the largest device location:</p>
+        \[
+          R=U_{(3)}.
+        \]
+        <p>For the maximum of \(3\) independent Uniform\((0,1)\) variables,</p>
+        \[
+          E[U_{(3)}]=\frac{3}{4}.
+        \]
+        <p>So</p>
+        \[
+          E[R]=\frac34.
+        \]
+        <p>The hidden step is translating "cover the farthest device" into a maximum order statistic.</p>
+      </details>
+    </article>
+
+    <article class="problem">
+      <div class="problem-head">
+        <div class="problem-title">10. Hidden Joint Region for a Short Sample Range</div>
+        <div class="tags">
+          <span class="tag hidden">Hidden</span>
+          <span class="tag">ISI style</span>
+          <span class="tag">25 min</span>
+        </div>
+      </div>
+      <p>Four points are chosen independently and uniformly from \([0,1]\). Let \(R=U_{(4)}-U_{(1)}\) be the sample range. Find \(P(R\le 1/2)\).</p>
+      <details>
+        <summary>Solution</summary>
+        <p>Use the joint density of the minimum \(A=U_{(1)}\) and maximum \(B=U_{(4)}\):</p>
+        \[
+          f_{A,B}(a,b)=4\cdot3\,(b-a)^2=12(b-a)^2,
+          \qquad 0<a<b<1.
+        \]
+        <p>The event is \(b-a\le 1/2\). Let \(s=b-a\). For a fixed range \(s\), the left endpoint \(a\) can run from \(0\) to \(1-s\). Hence</p>
+        \[
+          P(R\le 1/2)=\int_0^{1/2}\int_0^{1-s}12s^2\,da\,ds.
+        \]
+        <p>The inner integral contributes \(1-s\):</p>
+        \[
+          P(R\le 1/2)=12\int_0^{1/2}s^2(1-s)\,ds.
+        \]
+        <p>Compute:</p>
+        \[
+          12\left[\frac{s^3}{3}-\frac{s^4}{4}\right]_0^{1/2}
+          =12\left(\frac{1}{24}-\frac{1}{64}\right)
+          =\frac{5}{16}.
+        \]
+      </details>
+    </article>
+
+    <section class="panel">
+      <h2>Answer Summary</h2>
+      <div class="answer-list">
+        <div><strong>1.</strong> \(\sum_{j=3}^{6}\binom6j y^j(1-y)^{6-j}\)</div>
+        <div><strong>2.</strong> \(U_{(4)}\sim\operatorname{Beta}(4,6)\), \(E[U_{(4)}]=2/5\)</div>
+        <div><strong>3.</strong> The lower two values are sorted Uniform\((0,m)\) observations.</div>
+        <div><strong>4.</strong> \(4/5+a/5\)</div>
+        <div><strong>5.</strong> \(P(T_{(1)}>t)=e^{-n\lambda t}\), \(E[T_{(1)}]=1/(n\lambda)\)</div>
+        <div><strong>6.</strong> \(1/2\)</div>
+        <div><strong>7.</strong> \(1260u(v-u)^2(1-v)^2\), \(0<u<v<1\)</div>
+        <div><strong>8.</strong> Exponential\(((n-1)\lambda)\), mean \(1/((n-1)\lambda)\)</div>
+        <div><strong>9.</strong> \(3/4\)</div>
+        <div><strong>10.</strong> \(5/16\)</div>
+      </div>
+    </section>
+  </main>
+</body>
+</html>

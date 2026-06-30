@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>June 30 Pset — Choosing the Conditioning Variable</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" />
+  <link rel="stylesheet" href="/psets/material-page.css" />
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+  <script defer src="/psets/material-page.js"></script>
+</head>
+<body>
+  <main class="wrap">
+    <section class="hero">
+      <h1>June 30 Pset: Choosing the Conditioning Variable</h1>
+      <p class="sub">
+        Ten problems for Tower Property Week 2. The main skill is not the formula. The main skill is choosing the variable that makes the inside problem short.
+      </p>
+      <div class="meta">
+        <span class="chip">Probability and Statistics</span>
+        <span class="chip">Tuesday</span>
+        <span class="chip">5 mechanics problems</span>
+        <span class="chip">3 application problems</span>
+        <span class="chip">2 hidden-pattern problems</span>
+        <span class="chip">Solutions included</span>
+      </div>
+      <p class="math-fallback">Math rendering did not load from the CDN. Refresh once, or use a network that allows KaTeX CDN files.</p>
+    </section>
+
+    <section class="panel accent">
+      <h2>Core Pattern</h2>
+      <p>Before calculating, ask which random variable makes the question easy after it is known.</p>
+      <div class="formula">
+        \[
+          E[X]=E[E[X\mid Y]],
+          \qquad
+          \operatorname{Var}(X)=E[\operatorname{Var}(X\mid Y)]
+          +\operatorname{Var}(E[X\mid Y]).
+        \]
+      </div>
+      <p>A useful conditioning variable often gives a simple binomial, geometric, uniform, or indicator-count problem inside.</p>
+    </section>
+
+    <section class="panel">
+      <h2>Choice Checklist</h2>
+      <div class="grid">
+        <ul>
+          <li>Does one variable decide the sample size?</li>
+          <li>Does one variable decide the success probability?</li>
+          <li>Does one variable decide the range of another variable?</li>
+          <li>Does one variable make indicators independent?</li>
+        </ul>
+        <ul>
+          <li>Write the conditioning variable before the formula.</li>
+          <li>Compute the inner expectation in plain words first.</li>
+          <li>Only then average over the conditioning variable.</li>
+          <li>For variance, keep both total-variance terms.</li>
+        </ul>
+      </div>
+    </section>
+
+    <div class="section-label">Problems 1-5 · Mechanics</div>
+
+    <article class="problem">
+      <div class="problem-head">
+        <div class="problem-title">1. Choose the Easier First Card</div>
+        <div class="tags">
+          <span class="tag concept">Mechanics</span>
+          <span class="tag">Conditioning choice</span>
+          <span class="tag">6 min</span>
+        </div>
+      </div>
+      <p>A card is drawn from a standard deck. If it is red, a fair coin is tossed \(4\) times. If it is black, the coin is tossed \(10\) times. Let \(H\) be the number of heads. Find \(E[H]\).</p>
+      <details>
+        <summary>Solution</summary>
+        <p>Condition on the card color. The color tells us the number of tosses.</p>
+        \[
+          E[H\mid \text{red}]=4\cdot\frac12=2,
+          \qquad
+          E[H\mid \text{black}]=10\cdot\frac12=5.
+        \]
+        <p>Both colors have probability \(1/2\), so</p>
+        \[
+          E[H]=\frac12(2)+\frac12(5)=\frac72.
+        \]
+      </details>
+    </article>
+
+    <article class="problem">
+      <div class="problem-head">
+        <div class="problem-title">2. Random Trial Count From a Die</div>
+        <div class="tags">
+          <span class="tag concept">Mechanics</span>
+          <span class="tag">Random count</span>
+          <span class="tag">7 min</span>
+        </div>
+      </div>
+      <p>A fair die is rolled and shows \(K\). Then \(K+2\) independent Bernoulli trials are run, each with success probability \(p\). Let \(S\) be the number of successes. Find \(E[S]\).</p>
+      <details>
+        <summary>Solution</summary>
+        <p>Condition on \(K\), because \(K\) fixes the number of trials. If \(K=k\), then</p>
+        \[
+          E[S\mid K=k]=(k+2)p.
+        \]
+        <p>Thus \(E[S\mid K]=(K+2)p\). Average over \(K\):</p>
+        \[
+          E[S]=E[(K+2)p]=p(E[K]+2).
+        \]
+        <p>For a fair die, \(E[K]=7/2\). Therefore</p>
+        \[
+          E[S]=\frac{11p}{2}.
+        \]
+      </details>
+    </article>
+
+    <article class="problem">
+      <div class="problem-head">
+        <div class="problem-title">3. Random Success Probability From a Switch</div>
+        <div class="tags">
+          <span class="tag concept">Mechanics</span>
+          <span class="tag">Mixture</span>
+          <span class="tag">8 min</span>
+        </div>
+      </div>
+      <p>A switch chooses mode A with probability \(1/5\) and mode B with probability \(4/5\). In mode A, each of \(20\) messages is delivered with probability \(0.9\). In mode B, each is delivered with probability \(0.6\). Conditional on the mode, deliveries are independent. Let \(D\) be the number delivered. Find \(E[D]\).</p>
+      <details>
+        <summary>Solution</summary>
+        <p>Condition on the mode, since the mode decides the delivery probability.</p>
+        \[
+          E[D\mid A]=20(0.9)=18,
+          \qquad
+          E[D\mid B]=20(0.6)=12.
+        \]
+        <p>Now average:</p>
+        \[
+          E[D]=\frac15(18)+\frac45(12)=\frac{18+48}{5}=\frac{66}{5}.
+        \]
+      </details>
+    </article>
+
+    <article class="problem">
+      <div class="problem-head">
+        <div class="problem-title">4. Conditional Range of a Uniform Variable</div>
+        <div class="tags">
+          <span class="tag concept">Mechanics</span>
+          <span class="tag">Random range</span>
+          <span class="tag">9 min</span>
+        </div>
+      </div>
+      <p>Let \(U\sim\operatorname{Unif}(0,1)\). Conditional on \(U=u\), let \(X\sim\operatorname{Unif}(u,1)\). Find \(E[X]\).</p>
+      <details>
+        <summary>Solution</summary>
+        <p>Condition on \(U\), because \(U\) decides the interval for \(X\). For fixed \(u\), the mean of a uniform variable on \([u,1]\) is</p>
+        \[
+          E[X\mid U=u]=\frac{u+1}{2}.
+        \]
+        <p>So</p>
+        \[
+          E[X]=E\left[\frac{U+1}{2}\right]
+          =\frac{E[U]+1}{2}.
+        \]
+        <p>Since \(E[U]=1/2\),</p>
+        \[
+          E[X]=\frac{3}{4}.
+        \]
+      </details>
+    </article>
+
+    <article class="problem">
+      <div class="problem-head">
+        <div class="problem-title">5. Two Possible Conditioning Variables</div>
+        <div class="tags">
+          <span class="tag concept">Mechanics</span>
+          <span class="tag">Method choice</span>
+          <span class="tag">10 min</span>
+        </div>
+      </div>
+      <p>First choose a box: Box A with probability \(1/3\), Box B with probability \(2/3\). Box A gives a red ball with probability \(1/4\); Box B gives a red ball with probability \(3/5\). Then draw \(12\) times with replacement from the chosen box. Let \(R\) be the number of red draws. Find \(E[R]\), and state why conditioning on the box is better than conditioning on \(R\).</p>
+      <details>
+        <summary>Solution</summary>
+        <p>Condition on the box because the box decides the red probability. If Box A is chosen,</p>
+        \[
+          E[R\mid A]=12\cdot\frac14=3.
+        \]
+        <p>If Box B is chosen,</p>
+        \[
+          E[R\mid B]=12\cdot\frac35=\frac{36}{5}.
+        \]
+        <p>Average over the box:</p>
+        \[
+          E[R]=\frac13(3)+\frac23\left(\frac{36}{5}\right)
+          =1+\frac{24}{5}
+          =\frac{29}{5}.
+        \]
+        <p>Conditioning on \(R\) is not useful because \(R\) is the final quantity we are trying to understand. The box is useful because it simplifies the inside probability.</p>
+      </details>
+    </article>
+
+    <div class="section-label">Problems 6-8 · Applications</div>
+
+    <article class="problem">
+      <div class="problem-head">
+        <div class="problem-title">6. Variance Under a Random Mode</div>
+        <div class="tags">
+          <span class="tag integration">Application</span>
+          <span class="tag">Total variance</span>
+          <span class="tag">16 min</span>
+        </div>
+      </div>
+      <p>A mode \(M\) is chosen. With probability \(1/2\), \(M=A\), and then \(X\sim\operatorname{Binomial}(10,1/5)\). With probability \(1/2\), \(M=B\), and then \(X\sim\operatorname{Binomial}(10,4/5)\). Find \(E[X]\) and \(\operatorname{Var}(X)\).</p>
+      <details>
+        <summary>Solution</summary>
+        <p>Condition on \(M\). The conditional means are</p>
+        \[
+          E[X\mid A]=10\cdot\frac15=2,
+          \qquad
+          E[X\mid B]=10\cdot\frac45=8.
+        \]
+        <p>Thus</p>
+        \[
+          E[X]=\frac12(2)+\frac12(8)=5.
+        \]
+        <p>The conditional variances are equal:</p>
+        \[
+          \operatorname{Var}(X\mid A)=10\cdot\frac15\cdot\frac45=\frac85,
+          \qquad
+          \operatorname{Var}(X\mid B)=10\cdot\frac45\cdot\frac15=\frac85.
+        \]
+        <p>Use total variance:</p>
+        \[
+          \operatorname{Var}(X)=E[\operatorname{Var}(X\mid M)]
+          +\operatorname{Var}(E[X\mid M]).
+        \]
+        <p>The first term is \(8/5\). The second term is the variance of a variable that is \(2\) or \(8\), each with probability \(1/2\), whose mean is \(5\):</p>
+        \[
+          \operatorname{Var}(E[X\mid M])
+          =\frac12(2-5)^2+\frac12(8-5)^2=9.
+        \]
+        <p>So</p>
+        \[
+          \operatorname{Var}(X)=\frac85+9=\frac{53}{5}.
+        \]
+      </details>
+    </article>
+
+    <article class="problem">
+      <div class="problem-head">
+        <div class="problem-title">7. Indicators After Freezing the Environment</div>
+        <div class="tags">
+          <span class="tag integration">Application</span>
+          <span class="tag">Indicators</span>
+          <span class="tag">17 min</span>
+        </div>
+      </div>
+      <p>A random variable \(P\) has \(E[P]=\mu\). Conditional on \(P\), events \(A_1,\ldots,A_n\) are independent and each has probability \(P\). Let \(X\) be the number of events that occur. Find \(E[X]\). Then explain why the independence after conditioning is not needed for the expectation.</p>
+      <details>
+        <summary>Solution</summary>
+        <p>Let \(I_i=\mathbf{1}_{A_i}\). Conditional on \(P\),</p>
+        \[
+          E[I_i\mid P]=P.
+        \]
+        <p>Therefore</p>
+        \[
+          E[X\mid P]=E\left[\sum_{i=1}^n I_i\mid P\right]=nP.
+        \]
+        <p>Average over \(P\):</p>
+        \[
+          E[X]=E[nP]=n\mu.
+        \]
+        <p>Independence after conditioning would matter for products or variance. For expectation, linearity only needs the individual conditional expectations.</p>
+      </details>
+    </article>
+
+    <article class="problem">
+      <div class="problem-head">
+        <div class="problem-title">8. Conditional Geometric Waiting Time</div>
+        <div class="tags">
+          <span class="tag integration">Application</span>
+          <span class="tag">Geometric</span>
+          <span class="tag">18 min</span>
+        </div>
+      </div>
+      <p>A random variable \(P\) takes values \(1/2\) and \(1/4\), each with probability \(1/2\). Conditional on \(P=p\), a sequence of independent trials is run until the first success, with success probability \(p\) on each trial. Let \(T\) be the number of trials needed. Find \(E[T]\).</p>
+      <details>
+        <summary>Solution</summary>
+        <p>Condition on \(P\), because \(P\) decides the geometric mean. If the success probability is \(p\), then</p>
+        \[
+          E[T\mid P=p]=\frac1p.
+        \]
+        <p>So</p>
+        \[
+          E[T]=E\left[\frac1P\right]
+          =\frac12\cdot 2+\frac12\cdot 4=3.
+        \]
+        <p>Notice that this is not \(1/E[P]\). The tower property averages the conditional mean \(1/P\), not the parameter first.</p>
+      </details>
+    </article>
+
+    <div class="section-label">Problems 9-10 · Hidden-Pattern Problems</div>
+
+    <article class="problem">
+      <div class="problem-head">
+        <div class="problem-title">9. Hidden Tower in a Random Sample Maximum</div>
+        <div class="tags">
+          <span class="tag hidden">Hidden</span>
+          <span class="tag">Random sample size</span>
+          <span class="tag">22 min</span>
+        </div>
+      </div>
+      <p>A random sample size \(N\) is chosen, where \(P(N=1)=P(N=2)=1/2\). Conditional on \(N=n\), draw \(n\) independent Uniform\((0,1)\) variables and let \(M\) be their maximum. Find \(E[M]\).</p>
+      <details>
+        <summary>Solution</summary>
+        <p>Condition on \(N\), because \(N\) decides which maximum problem we have. For \(n\) independent Uniform\((0,1)\) variables, the expected maximum is</p>
+        \[
+          E[M\mid N=n]=\frac{n}{n+1}.
+        \]
+        <p>Therefore</p>
+        \[
+          E[M]=\frac12\cdot\frac12+\frac12\cdot\frac23
+          =\frac14+\frac13
+          =\frac7{12}.
+        \]
+        <p>The hidden step is recognizing that the sample size is the useful conditioning variable.</p>
+      </details>
+    </article>
+
+    <article class="problem">
+      <div class="problem-head">
+        <div class="problem-title">10. Hidden Total Variance in a Prediction Error</div>
+        <div class="tags">
+          <span class="tag hidden">Hidden</span>
+          <span class="tag">Prediction</span>
+          <span class="tag">25 min</span>
+        </div>
+      </div>
+      <p>A random variable \(Y\) has \(E[Y]=0\) and \(\operatorname{Var}(Y)=\sigma^2\). Conditional on \(Y\), let \(X=Y+\varepsilon\), where \(E[\varepsilon\mid Y]=0\) and \(\operatorname{Var}(\varepsilon\mid Y)=1+Y^2\). Find \(E[X]\) and \(\operatorname{Var}(X)\).</p>
+      <details>
+        <summary>Solution</summary>
+        <p>Condition on \(Y\). Since \(X=Y+\varepsilon\),</p>
+        \[
+          E[X\mid Y]=Y+E[\varepsilon\mid Y]=Y.
+        \]
+        <p>So</p>
+        \[
+          E[X]=E[E[X\mid Y]]=E[Y]=0.
+        \]
+        <p>For variance, use total variance:</p>
+        \[
+          \operatorname{Var}(X)=E[\operatorname{Var}(X\mid Y)]
+          +\operatorname{Var}(E[X\mid Y]).
+        \]
+        <p>Given \(Y\), the only random part of \(X\) is \(\varepsilon\), so</p>
+        \[
+          \operatorname{Var}(X\mid Y)=1+Y^2.
+        \]
+        <p>Also \(E[X\mid Y]=Y\). Therefore</p>
+        \[
+          \operatorname{Var}(X)=E[1+Y^2]+\operatorname{Var}(Y)
+          =1+\sigma^2+\sigma^2
+          =1+2\sigma^2.
+        \]
+      </details>
+    </article>
+
+    <section class="panel">
+      <h2>Answer Summary</h2>
+      <div class="answer-list">
+        <div><strong>1.</strong> \(7/2\)</div>
+        <div><strong>2.</strong> \(11p/2\)</div>
+        <div><strong>3.</strong> \(66/5\)</div>
+        <div><strong>4.</strong> \(3/4\)</div>
+        <div><strong>5.</strong> \(29/5\)</div>
+        <div><strong>6.</strong> \(E[X]=5\), \(\operatorname{Var}(X)=53/5\)</div>
+        <div><strong>7.</strong> \(n\mu\)</div>
+        <div><strong>8.</strong> \(3\)</div>
+        <div><strong>9.</strong> \(7/12\)</div>
+        <div><strong>10.</strong> \(E[X]=0\), \(\operatorname{Var}(X)=1+2\sigma^2\)</div>
+      </div>
+    </section>
+  </main>
+</body>
+</html>

@@ -1,8 +1,14 @@
 const STORAGE_KEY = "learning-studio-data-v2";
 const LEGACY_STORAGE_KEYS = ["learning-studio-data-v1"];
 const SESSION_KEY = "aleph-session";
-const COURSE_PLAN_VERSION = "seeded-user-canonical-workspace-v89";
-const PRIYANKA_PLATINUM_START_DATE = "2026-06-07";
+const COURSE_PLAN_VERSION = "seeded-user-canonical-workspace-v100";
+const MAX_FEEDBACK_ATTACHMENT_BYTES = 3 * 1024 * 1024;
+const MAX_COMPRESSED_FEEDBACK_BYTES = 2400 * 1024;
+const MAX_FEEDBACK_PDF_PAGES = 6;
+const PDFJS_MODULE_URL = "https://cdn.jsdelivr.net/npm/pdfjs-dist@4.10.38/build/pdf.mjs";
+const PDFJS_WORKER_URL = "https://cdn.jsdelivr.net/npm/pdfjs-dist@4.10.38/build/pdf.worker.mjs";
+const PRIYANKA_PLATINUM_START_DATE = "2026-06-29";
+const PRIYANKA_PLATINUM_REBASE_ID = "june-29-2026";
 const DEFAULT_PLAN_START_DATE = "2026-06-01";
 const PLATINUM_PROGRESS_SYNC_DEBOUNCE_MS = 1500;
 
@@ -12,6 +18,7 @@ let selectedSectionId = null;
 let selectedPatternMaterialId = null;
 let activeTestId = null;
 let platinumProgressSyncTimer = null;
+const pendingUploadFiles = new Map();
 ensureCoursePlan();
 enforceSeededUserWorkspace();
 
@@ -109,6 +116,7 @@ renderBuildState();
 persist();
 render();
 applyAuthState();
+refreshFeedbackMode();
 
 function loadState() {
   const saved = localStorage.getItem(STORAGE_KEY);
@@ -190,9 +198,57 @@ function mergeCanonicalTasks(canonicalTasks, previousTasks) {
   const canonicalIds = new Set(canonicalTasks.map((task) => task.id));
   const merged = canonicalTasks.map((task) => mergeTaskProgress(task, previousById.get(task.id)));
   const customTasks = (previousTasks || [])
-    .filter((task) => task?.id && !canonicalIds.has(task.id))
+    .filter((task) => task?.id && !canonicalIds.has(task.id) && !isSupersededSeededPlatinumTask(task))
     .map((task) => mergeTaskProgress(task, task));
   return [...merged, ...customTasks];
+}
+
+function isSupersededSeededPlatinumTask(task) {
+  const id = String(task?.id || "");
+  return /^task-(dm|dsa|ps|cm)-week-\d+-/.test(id)
+    || /^task-platinum-week-\d+-cross-subject-spaced-review$/.test(id);
+}
+
+async function refreshFeedbackMode() {
+  if (!isLocalTestHost()) return;
+  try {
+    const result = await fetch("/api/feedback-mode", { cache: "no-store" });
+    if (!result.ok) return;
+    const info = await result.json();
+    if (info.mode !== "real") return;
+    if (clearStaleLocalMockFeedback()) {
+      persist();
+      renderSubjects();
+    }
+  } catch {
+    // The production deployment does not need the local feedback-mode helper.
+  }
+}
+
+function isLocalTestHost() {
+  return ["localhost", "127.0.0.1", "0.0.0.0"].includes(window.location.hostname);
+}
+
+function clearStaleLocalMockFeedback() {
+  let changed = false;
+  (state.patternSubmissions || []).forEach((submission) => {
+    if (!isLocalMockFeedbackRecord(submission.feedbackRecord)) return;
+    delete submission.feedbackRecord;
+    delete submission.feedbackReportText;
+    delete submission.feedback;
+    delete submission.feedbackUpdatedAt;
+    delete submission.feedbackEmailSentAt;
+    changed = true;
+  });
+  return changed;
+}
+
+function isLocalMockFeedbackRecord(record) {
+  if (!record) return false;
+  return record.feedbackModel === "aleph-local-mock-feedback"
+    || /local test feedback/i.test(record.studentSummary || "")
+    || /local test feedback/i.test(record.studentReport?.headline || "")
+    || /local mock signal/i.test(record.adaptivePlanSignal?.rationale || "");
 }
 
 function mergeTaskProgress(task, previousTask) {
@@ -301,7 +357,7 @@ function slugify(value) {
 
 function buildPriyankaPlatinumPlan(now, accountTypes, sections, user = defaultUser()) {
   const startDate = PRIYANKA_PLATINUM_START_DATE;
-  const endDate = "2026-09-05";
+  const endDate = addDays(startDate, 90);
   const userSlug = slugify(user.name || user.id || "learner");
   const lessonPlanId = `lesson-${userSlug}-platinum`;
   const subjects = [
@@ -311,8 +367,8 @@ function buildPriyankaPlatinumPlan(now, accountTypes, sections, user = defaultUs
       lessonPlanId,
       title: "Discrete Mathematics",
       date: endDate,
-      status: "Not started",
-      details: "Learning plan: integrate CMU 21-228, MIT 6.1200J, and MIT 18.200 over 13 weeks. Each week has coursework milestones, one combined Sunday review quiz, and every other Sunday a cumulative spaced-review quiz.",
+      status: "In progress",
+      details: "Learning plan rebased to June 29, 2026 after completing the first two weeks of CMU 21-228, MIT 6.1200J, and MIT 18.200. Active Week 1 now begins with the next counting, relations, state-machine, and permutation/combination block.",
       updatedAt: now
     },
     {
@@ -321,8 +377,8 @@ function buildPriyankaPlatinumPlan(now, accountTypes, sections, user = defaultUs
       lessonPlanId,
       title: "Data Structures and Algorithms",
       date: endDate,
-      status: "Not started",
-      details: "Learning plan: complexity analysis, arrays, linked lists, stacks, queues, hashing, trees, heaps, graphs, sorting, searching, dynamic programming basics, and implementation practice.",
+      status: "In progress",
+      details: "Learning plan rebased to June 29, 2026 after completing Cartesian complexity analysis, arrays, search, recursion, strings, and sorting. Active Week 1 now begins with lists, stacks, queues, and representation invariants.",
       updatedAt: now
     },
     {
@@ -331,9 +387,9 @@ function buildPriyankaPlatinumPlan(now, accountTypes, sections, user = defaultUs
       lessonPlanId,
       title: "Probability and Statistics",
       date: endDate,
-      status: "Not started",
-      details: "GATE DA Probability and Statistics with Priyanka's Platinum pacing: six recurring PSB patterns, daily 10-problem sets, Sunday mixed review, solution upload, correction notes, and feedback.",
-      patternWorkspaces: probabilityStatsPatternWorkspaces(),
+      status: "In progress",
+      details: "GATE DA Probability and Statistics with Priyanka's Platinum pacing, rebased to June 29, 2026 after completing the first seven-problem-set cycle. Active weeks continue the six-pattern PSB rotation with solution upload, correction notes, and feedback.",
+      patternWorkspaces: probabilityStatsPatternWorkspaces(1),
       updatedAt: now
     },
     {
@@ -342,9 +398,9 @@ function buildPriyankaPlatinumPlan(now, accountTypes, sections, user = defaultUs
       lessonPlanId,
       title: "Competition Math",
       date: endDate,
-      status: "Not started",
-      details: "June-August slice of the 9-10 month mathematical maturity track: one hour per day, technique journal, weekly written review, algebra foundations in weeks 1-8, then number theory foundations beginning in weeks 9-13. Combinatorics and analysis continue after the current app horizon.",
-      materialWorkspaces: competitionMathMaterialWorkspaces(),
+      status: "In progress",
+      details: "June-September slice of the 9-10 month mathematical maturity track, rebased to June 29, 2026 after completing the Vieta/polynomial fundamentals pset. Active Week 1 now continues algebra foundations with identities and factoring tricks.",
+      materialWorkspaces: competitionMathMaterialWorkspaces(1),
       updatedAt: now
     }
   ];
@@ -353,29 +409,44 @@ function buildPriyankaPlatinumPlan(now, accountTypes, sections, user = defaultUs
     {
       key: "DM",
       label: "Discrete Math",
+      subjectId: "subject-discrete-mathematics",
       resources: "CMU 21-228, MIT 6.1200J Math for CS, and MIT 18.200",
-      milestones: discreteMathMilestones()
+      completedWeeks: 2,
+      milestones: activeMilestones(discreteMathMilestones(), 2)
     },
     {
       key: "DSA",
       label: "Data Structures and Algorithms",
+      subjectId: "subject-data-structures-algorithms",
       resources: "Aho/Ullman Foundations of Computer Science and Cartesian",
-      milestones: dsaMilestones()
+      completedWeeks: 2,
+      milestones: activeMilestones(dsaMilestones(), 2)
     },
     {
       key: "PS",
       label: "Probability and Statistics",
+      subjectId: "subject-probability-statistics",
       resources: "ISI PSB pattern notes and published pattern practice material",
-      milestones: probabilityStatsMilestones(),
+      completedWeeks: 1,
+      milestones: activeMilestones(probabilityStatsMilestones(), 1),
       dailyProblemSets: true
     },
     {
       key: "CM",
       label: "Competition Math",
+      subjectId: "subject-competition-math",
       resources: "Engel Problem-Solving Strategies, AoPS, Putnam and Beyond, and the Competition Math plan",
-      milestones: competitionMathMilestones()
+      completedWeeks: 1,
+      milestones: activeMilestones(competitionMathMilestones(), 1)
     }
   ];
+
+  plans.forEach((plan) => {
+    const subject = subjects.find((entry) => entry.id === plan.subjectId);
+    if (subject) {
+      subject.weeklyReviewWorkflows = subjectWeeklyReviewWorkflows(plan, startDate);
+    }
+  });
 
   const schedule = [];
   const tests = [];
@@ -385,14 +456,15 @@ function buildPriyankaPlatinumPlan(now, accountTypes, sections, user = defaultUs
   plans.forEach((plan) => {
     plan.milestones.forEach((milestone, index) => {
       const week = index + 1;
+      const sourceWeek = milestone.sourceWeek || week;
+      const idStem = `${plan.key.toLowerCase()}-${PRIYANKA_PLATINUM_REBASE_ID}-w${week}-src${sourceWeek}`;
       const monday = addDays(startDate, index * 7);
       const sunday = addDays(monday, 6);
-      const spaced = spacedReviewDetails(week, plan.milestones, plan.label);
       const weekWindow = `${formatShortDate(monday)}-${formatShortDate(sunday)}`;
 
       if (plan.dailyProblemSets) {
         schedule.push({
-          id: `schedule-${plan.key.toLowerCase()}-week-${week}-cycle`,
+          id: `schedule-${idStem}-cycle`,
           title: `Week ${week}: ${plan.label} pattern cycle`,
           week,
           subject: plan.label,
@@ -406,7 +478,7 @@ function buildPriyankaPlatinumPlan(now, accountTypes, sections, user = defaultUs
           const date = addDays(monday, dayIndex);
           const details = probabilityProblemSetDetails(dayPlan, week);
           const dayId = dayPlan.day.toLowerCase();
-          const scheduleId = `schedule-${plan.key.toLowerCase()}-week-${week}-${dayId}`;
+          const scheduleId = `schedule-${idStem}-${dayId}`;
           schedule.push({
             id: scheduleId,
             title: `Week ${week} ${dayPlan.day}: ${dayPlan.topic} problem set`,
@@ -418,7 +490,7 @@ function buildPriyankaPlatinumPlan(now, accountTypes, sections, user = defaultUs
             updatedAt: now
           });
           tasks.push({
-            id: `task-${plan.key.toLowerCase()}-week-${week}-${dayId}`,
+            id: `task-${idStem}-${dayId}`,
             week,
             title: `${plan.key} W${week} ${dayPlan.day}: 10-problem ${dayPlan.topic} set`,
             type: "Problem set",
@@ -431,22 +503,22 @@ function buildPriyankaPlatinumPlan(now, accountTypes, sections, user = defaultUs
           });
         });
 
-        const sundayTestScheduleId = `schedule-${plan.key.toLowerCase()}-week-${week}-sunday-test`;
+        const sundayTestScheduleId = `schedule-${idStem}-sunday-review`;
         schedule.push({
           id: sundayTestScheduleId,
-          title: `Week ${week}: ${plan.label} Sunday PSB test`,
+          title: `Week ${week}: ${plan.label} Sunday weekly review quiz`,
           week,
           subject: plan.label,
-          kind: "Test",
+          kind: "Review quiz",
           date: sunday,
           details: probabilitySundayTestDetails(milestone),
           updatedAt: now
         });
         tasks.push({
-          id: `task-${plan.key.toLowerCase()}-week-${week}-sunday-test`,
+          id: `task-${idStem}-sunday-review`,
           week,
-          title: `${plan.key} W${week}: Take Sunday PSB pattern test`,
-          type: "Test",
+          title: `${plan.key} W${week}: Take Sunday weekly review quiz`,
+          type: "Review quiz",
           date: sunday,
           scheduleId: sundayTestScheduleId,
           status: "todo",
@@ -454,15 +526,8 @@ function buildPriyankaPlatinumPlan(now, accountTypes, sections, user = defaultUs
           details: probabilitySundayTestDetails(milestone),
           updatedAt: now
         });
-        tests.push({
-          id: `test-${plan.key.toLowerCase()}-week-${week}-sunday-test`,
-          title: `Week ${week}: ${plan.label} Sunday PSB pattern test`,
-          date: sunday,
-          details: probabilitySundayTestDetails(milestone),
-          updatedAt: now
-        });
         feedback.push({
-          id: `feedback-${plan.key.toLowerCase()}-week-${week}`,
+          id: `feedback-${idStem}`,
           title: `Week ${week}: ${plan.label} default solution feedback`,
           date: sunday,
           details: probabilityDefaultFeedback(milestone),
@@ -471,10 +536,9 @@ function buildPriyankaPlatinumPlan(now, accountTypes, sections, user = defaultUs
         return;
       }
 
-      const milestoneScheduleId = `schedule-${plan.key.toLowerCase()}-week-${week}-milestone`;
-      const assignmentScheduleId = `schedule-${plan.key.toLowerCase()}-week-${week}-assignment`;
-      const reviewScheduleId = `schedule-${plan.key.toLowerCase()}-week-${week}-review`;
-      const spacedReviewScheduleId = `schedule-${plan.key.toLowerCase()}-week-${week}-spaced-review`;
+      const milestoneScheduleId = `schedule-${idStem}-milestone`;
+      const assignmentScheduleId = `schedule-${idStem}-assignment`;
+      const reviewScheduleId = `schedule-${idStem}-review`;
       const assignmentDetails = `Do the related problem set/homework work for ${plan.label}, ${weekWindow}. Convert missed problems into correction notes before Sunday's quiz.`;
 
       schedule.push(
@@ -503,29 +567,16 @@ function buildPriyankaPlatinumPlan(now, accountTypes, sections, user = defaultUs
           title: `Week ${week}: ${plan.label} Sunday combined review`,
           week,
           subject: plan.label,
-          kind: "Review",
+          kind: "Review quiz",
           date: sunday,
           details: `One quiz covering the week's ${plan.label} material across ${plan.resources}. Focus: ${milestone.focus}.`,
           updatedAt: now
         }
       );
 
-      if (week % 2 === 0) {
-        schedule.push({
-          id: spacedReviewScheduleId,
-          title: `Week ${week}: ${plan.label} Sunday cumulative spaced review`,
-          week,
-          subject: plan.label,
-          kind: "Spaced review",
-          date: sunday,
-          details: spaced,
-          updatedAt: now
-        });
-      }
-
       tasks.push(
         {
-          id: `task-${plan.key.toLowerCase()}-week-${week}-lectures`,
+          id: `task-${idStem}-lectures`,
           week,
           title: `${plan.key} W${week}: Watch lectures`,
           type: "Lecture",
@@ -537,7 +588,7 @@ function buildPriyankaPlatinumPlan(now, accountTypes, sections, user = defaultUs
           updatedAt: now
         },
         {
-          id: `task-${plan.key.toLowerCase()}-week-${week}-assignment`,
+          id: `task-${idStem}-assignment`,
           week,
           title: `${plan.key} W${week}: Complete associated assignment`,
           type: "Assignment",
@@ -549,7 +600,7 @@ function buildPriyankaPlatinumPlan(now, accountTypes, sections, user = defaultUs
           updatedAt: now
         },
         {
-          id: `task-${plan.key.toLowerCase()}-week-${week}-review`,
+          id: `task-${idStem}-review`,
           week,
           title: `${plan.key} W${week}: Take Sunday combined review quiz`,
           type: "Review quiz",
@@ -562,40 +613,47 @@ function buildPriyankaPlatinumPlan(now, accountTypes, sections, user = defaultUs
         }
       );
 
-      if (week % 2 === 0) {
-        tasks.push({
-          id: `task-${plan.key.toLowerCase()}-week-${week}-spaced-review`,
-          week,
-          title: `${plan.key} W${week}: Take Sunday cumulative spaced review quiz`,
-          type: "Spaced review",
-          date: sunday,
-          scheduleId: spacedReviewScheduleId,
-          status: "todo",
-          done: false,
-          details: spaced,
-          updatedAt: now
-        });
-      }
-
-      tests.push({
-        id: `test-${plan.key.toLowerCase()}-week-${week}-review`,
-        title: `Week ${week}: ${plan.label} Sunday combined review quiz`,
-        date: sunday,
-        details: `Single integrated quiz for ${plan.label}. Include implementation, proof/analysis, and application questions for: ${milestone.focus}.`,
-        updatedAt: now
-      });
-
-      if (week % 2 === 0) {
-        tests.push({
-          id: `test-${plan.key.toLowerCase()}-week-${week}-spaced-review`,
-          title: `Week ${week}: ${plan.label} Sunday cumulative spaced review quiz`,
-          date: sunday,
-          details: spaced,
-          updatedAt: now
-        });
-      }
     });
   });
+
+  const maxWeeks = Math.max(...plans.map((plan) => plan.milestones.length));
+  for (let week = 2; week <= maxWeeks; week += 2) {
+    const monday = addDays(startDate, (week - 1) * 7);
+    const sunday = addDays(monday, 6);
+    const scheduleId = `schedule-platinum-${PRIYANKA_PLATINUM_REBASE_ID}-week-${week}-cross-subject-spaced-review`;
+    const details = crossSubjectSpacedReviewDetails(week, plans);
+    schedule.push({
+      id: scheduleId,
+      title: `Week ${week}: All-subject cumulative spaced review`,
+      week,
+      subject: "All subjects",
+      kind: "Spaced review",
+      date: sunday,
+      details,
+      updatedAt: now
+    });
+    tasks.push({
+      id: `task-platinum-${PRIYANKA_PLATINUM_REBASE_ID}-week-${week}-cross-subject-spaced-review`,
+      week,
+      title: `Week ${week}: Take all-subject spaced review quiz`,
+      type: "Spaced review",
+      date: sunday,
+      scheduleId,
+      status: "todo",
+      done: false,
+      details,
+      updatedAt: now
+    });
+    tests.push({
+      id: `test-platinum-${PRIYANKA_PLATINUM_REBASE_ID}-week-${week}-cross-subject-spaced-review`,
+      title: `Week ${week}: All-subject cumulative spaced review quiz`,
+      date: sunday,
+      details,
+      workflowType: "cross-subject-spaced-review",
+      subjectScope: plans.map((plan) => plan.label),
+      updatedAt: now
+    });
+  }
 
   return {
     subjects,
@@ -631,7 +689,7 @@ function buildPriyankaPlatinumPlan(now, accountTypes, sections, user = defaultUs
         startDate,
         endDate,
         status: "active",
-        details: "Personalized June-August Platinum plan for the GATE DA exam plus a Competition Math maturity track. The Probability and Statistics subject is organized as recurring PSB patterns with weekly material, solution upload, and feedback.",
+        details: "Personalized June-September Platinum plan for the GATE DA exam plus a Competition Math maturity track. The Probability and Statistics subject is organized as recurring PSB patterns with weekly material, solution upload, and feedback.",
         updatedAt: now
       }
     ],
@@ -641,7 +699,14 @@ function buildPriyankaPlatinumPlan(now, accountTypes, sections, user = defaultUs
         id: "feedback-three-subject-plan-created",
         title: "Four-subject Platinum plan created",
         date: startDate,
-        details: "June-August plans map Discrete Math, Data Structures and Algorithms, Probability and Statistics, and Competition Math into weekly work. Competition Math follows the long roadmap without force-fitting the whole track: algebra in weeks 1-8, then the start of number theory in weeks 9-13.",
+        details: "June-September plans map Discrete Math, Data Structures and Algorithms, Probability and Statistics, and Competition Math into weekly work. Competition Math follows the long roadmap without force-fitting the whole track: algebra in weeks 1-8, then the start of number theory in weeks 9-13.",
+        updatedAt: now
+      },
+      {
+        id: `feedback-platinum-${PRIYANKA_PLATINUM_REBASE_ID}-completed-work-archive`,
+        title: "Completed work archived before June 29 active plan",
+        date: addDays(startDate, -1),
+        details: completedPlatinumWorkSummary(),
         updatedAt: now
       }
     ].concat(feedback),
@@ -706,7 +771,7 @@ function buildPriyankaPlatinumPlan(now, accountTypes, sections, user = defaultUs
         id: "resource-competition-math-plan",
         title: "Competition Math 9-10 Month Plan",
         date: startDate,
-        details: "Local planning note for Priyanka's high-school competition math maturity track. June-August uses the algebra and early number theory slice; the local markdown roadmap continues into combinatorics, analysis, olympiad rotation, timed mocks, technique journal, spaced review, and proof-writing practice.",
+        details: "Local planning note for Priyanka's high-school competition math maturity track. June-September uses the algebra and early number theory slice; the local markdown roadmap continues into combinatorics, analysis, olympiad rotation, timed mocks, technique journal, spaced review, and proof-writing practice.",
         link: "",
         updatedAt: now
       }
@@ -17235,13 +17300,65 @@ function probabilityStatsMilestones() {
       return {
         day,
         intensity,
+        prerequisiteLadder: prerequisiteLadderForProbabilityTopic(theme.topic),
+        prerequisiteStage: prerequisiteStageForWeek(weekIndex + 1),
         ...theme
       };
     })
   }));
 }
 
-function probabilityStatsPatternWorkspaces() {
+function activeMilestones(milestones, completedWeeks = 0) {
+  return milestones.slice(completedWeeks).map((milestone, index) => ({
+    ...milestone,
+    sourceWeek: completedWeeks + index + 1,
+    problemDays: milestone.problemDays?.map((dayPlan) => ({
+      ...dayPlan,
+      sourceWeek: completedWeeks + index + 1
+    }))
+  }));
+}
+
+function prerequisiteStageForWeek(week) {
+  if (week <= 2) return "basic prerequisites and mechanics";
+  if (week <= 5) return "mechanics plus bridge problems";
+  if (week <= 9) return "bridge problems plus target-topic applications";
+  return "target applications plus cumulative exam synthesis";
+}
+
+function prerequisiteLadderForProbabilityTopic(topic) {
+  const ladders = {
+    "MLE and estimation": [
+      "Level 0: distribution support, joint density/product rule, log rules, parameter space, and single-variable calculus.",
+      "Level 1: write likelihood and log-likelihood while keeping only parameter-relevant factors.",
+      "Level 2: optimize with derivative/monotonicity plus boundary and support checks.",
+      "Level 3: estimator quality: bias, variance, MSE, sufficiency, Rao-Blackwell, and UMVUE cues."
+    ],
+    "UMP/NP tests": [
+      "Level 0: hypotheses, null versus alternative distribution, tail probability, quantiles, and inequality direction.",
+      "Level 1: simple-vs-simple likelihood ratio and rejection direction.",
+      "Level 2: size calibration under H0, boundary randomization, and power under H1.",
+      "Level 3: monotone likelihood ratio, one-sided UMP, composite-null boundary, and no-UMP two-sided conflicts."
+    ],
+    "regression and OLS": [
+      "Level 0: vectors, matrix multiplication, transpose products, sample mean/variance, covariance, and basic expectation.",
+      "Level 1: simple regression slope/intercept, covariance-over-variance form, and fitted versus residual values.",
+      "Level 2: matrix OLS, normal equations, projection geometry, residual orthogonality, and rank conditions.",
+      "Level 3: constrained OLS, non-Gaussian errors, residual/fitted-value identities, and invariance arguments."
+    ]
+  };
+  return ladders[topic] || [];
+}
+
+function probabilityStatsPatternWorkspaces(completedWeeks = 0) {
+  const weekOneStart = PRIYANKA_PLATINUM_START_DATE;
+  const sourceWeek = completedWeeks + 1;
+  const dayOneDate = weekOneStart;
+  const dayTwoDate = addDays(weekOneStart, 1);
+  const dayThreeDate = addDays(weekOneStart, 2);
+  const dayFourDate = addDays(weekOneStart, 3);
+  const dayFiveDate = addDays(weekOneStart, 4);
+  const daySixDate = addDays(weekOneStart, 5);
   return [
     {
       id: "pattern-indicators",
@@ -17250,12 +17367,13 @@ function probabilityStatsPatternWorkspaces() {
       focus: "Convert random counts into sums of yes/no variables, then use linearity, symmetry, and pairwise products.",
       weeks: [
         {
-          id: "ps-w1-indicators",
+          id: `ps-${PRIYANKA_PLATINUM_REBASE_ID}-w1-src${sourceWeek}-indicators`,
           week: 1,
-          date: "2026-06-07",
-          materialTitle: "June 7: Method of Indicators Pset",
-          materialUrl: "psets/week-01/june-01-indicators.html",
-          status: "Published",
+          sourceWeek,
+          date: dayOneDate,
+          materialTitle: `${formatMaterialTitleDate(dayOneDate)}: Method of Indicators Pset`,
+          materialUrl: probabilityStatsMaterialUrl(sourceWeek, "method of indicators"),
+          status: probabilityStatsMaterialStatus(sourceWeek, "method of indicators"),
           expectedWork: "10 problems: 5 concept builders, 3 integration problems, 2 ISI past-year/reconstructed problems.",
           feedbackWorkflow: indicatorFeedbackWorkflow()
         }
@@ -17268,12 +17386,13 @@ function probabilityStatsPatternWorkspaces() {
       focus: "Choose the simplifying variable, compute the inner expectation, and average back out.",
       weeks: [
         {
-          id: "ps-w1-conditional-expectation",
+          id: `ps-${PRIYANKA_PLATINUM_REBASE_ID}-w1-src${sourceWeek}-conditional-expectation`,
           week: 1,
-          date: "2026-06-08",
-          materialTitle: "June 8: Conditional Expectation and Tower Property Pset",
-          materialUrl: "psets/week-01/june-02-conditional-expectation-tower.html",
-          status: "Published",
+          sourceWeek,
+          date: dayTwoDate,
+          materialTitle: `${formatMaterialTitleDate(dayTwoDate)}: Conditional Expectation and Tower Property Pset`,
+          materialUrl: probabilityStatsMaterialUrl(sourceWeek, "conditional expectation and tower property"),
+          status: probabilityStatsMaterialStatus(sourceWeek, "conditional expectation and tower property"),
           expectedWork: "10 problems: 5 mechanics drills, 3 application problems, and 2 hard hidden-pattern problems.",
           feedbackWorkflow: conditionalExpectationFeedbackWorkflow()
         }
@@ -17286,12 +17405,13 @@ function probabilityStatsPatternWorkspaces() {
       focus: "Derive exact min/max/kth-order laws, joint laws, spacings, and scaling limits.",
       weeks: [
         {
-          id: "ps-w1-order-statistics",
+          id: `ps-${PRIYANKA_PLATINUM_REBASE_ID}-w1-src${sourceWeek}-order-statistics`,
           week: 1,
-          date: "2026-06-09",
-          materialTitle: "June 9: Order Statistics Pset",
-          materialUrl: "psets/week-01/june-03-order-statistics.html",
-          status: "Published",
+          sourceWeek,
+          date: dayThreeDate,
+          materialTitle: `${formatMaterialTitleDate(dayThreeDate)}: Order Statistics Pset`,
+          materialUrl: probabilityStatsMaterialUrl(sourceWeek, "order statistics"),
+          status: probabilityStatsMaterialStatus(sourceWeek, "order statistics"),
           expectedWork: "10 problems: 5 concept builders, 3 application problems, and 2 challenge/ISI-style problems.",
           feedbackWorkflow: orderStatisticsFeedbackWorkflow()
         }
@@ -17304,13 +17424,14 @@ function probabilityStatsPatternWorkspaces() {
       focus: "Set up likelihoods, identify optimizer location, and evaluate estimator quality.",
       weeks: [
         {
-          id: "ps-w1-mle",
+          id: `ps-${PRIYANKA_PLATINUM_REBASE_ID}-w1-src${sourceWeek}-mle`,
           week: 1,
-          date: "2026-06-10",
-          materialTitle: "June 10: MLE and Estimation Pset",
-          materialUrl: "psets/week-01/june-04-mle-estimation.html",
-          status: "Published",
-          expectedWork: "10 problems: 5 likelihood mechanics, 3 application problems, and 2 ISI-style sufficiency/UMVUE problems.",
+          sourceWeek,
+          date: dayFourDate,
+          materialTitle: `${formatMaterialTitleDate(dayFourDate)}: MLE and Estimation Pset`,
+          materialUrl: probabilityStatsMaterialUrl(sourceWeek, "MLE and estimation"),
+          status: probabilityStatsMaterialStatus(sourceWeek, "MLE and estimation"),
+          expectedWork: "10 problems, basics first: 3 support/joint-density/log-rule prerequisite checks, 3 likelihood mechanics, 2 optimizer/support bridge problems, and 2 target estimation problems.",
           feedbackWorkflow: mleEstimationFeedbackWorkflow()
         }
       ]
@@ -17322,13 +17443,14 @@ function probabilityStatsPatternWorkspaces() {
       focus: "Construct likelihood-ratio tests, calibrate size, and compute power under alternatives.",
       weeks: [
         {
-          id: "ps-w1-ump-np",
+          id: `ps-${PRIYANKA_PLATINUM_REBASE_ID}-w1-src${sourceWeek}-ump-np`,
           week: 1,
-          date: "2026-06-11",
-          materialTitle: "June 11: UMP/NP Tests Pset",
-          materialUrl: "psets/week-01/june-05-ump-np-tests.html",
-          status: "Published",
-          expectedWork: "10 problems: 5 NP mechanics drills, 3 UMP/MLR applications, and 2 ISI-style randomized/no-UMP arguments.",
+          sourceWeek,
+          date: dayFiveDate,
+          materialTitle: `${formatMaterialTitleDate(dayFiveDate)}: UMP/NP Tests Pset`,
+          materialUrl: probabilityStatsMaterialUrl(sourceWeek, "UMP/NP tests"),
+          status: probabilityStatsMaterialStatus(sourceWeek, "UMP/NP tests"),
+          expectedWork: "10 problems, basics first: 3 null/alternative/tail-probability prerequisite checks, 3 likelihood-ratio mechanics, 2 size/power bridge problems, and 2 UMP/MLR target problems.",
           feedbackWorkflow: umpNpFeedbackWorkflow()
         }
       ]
@@ -17340,36 +17462,65 @@ function probabilityStatsPatternWorkspaces() {
       focus: "Use normal equations, projection geometry, and estimator interpretation in regression problems.",
       weeks: [
         {
-          id: "ps-w1-regression-ols",
+          id: `ps-${PRIYANKA_PLATINUM_REBASE_ID}-w1-src${sourceWeek}-regression-ols`,
           week: 1,
-          date: "2026-06-12",
-          materialTitle: "June 12: Regression and OLS Pset",
+          sourceWeek,
+          date: daySixDate,
+          materialTitle: `${formatMaterialTitleDate(daySixDate)}: Regression and OLS Pset`,
           materialUrl: "",
           status: "Pending",
-          expectedWork: "Planned 10-problem set: simple OLS, matrix OLS, constrained OLS, slope invariance, residual identities, and L1 contrast."
+          expectedWork: "Planned 10-problem set, basics first: 3 vector/covariance/expectation prerequisite checks, 3 simple-regression mechanics, 2 normal-equation/projection bridge problems, and 2 OLS target problems.",
+          feedbackWorkflow: regressionOlsFeedbackWorkflow()
         }
       ]
     }
   ];
 }
 
-function competitionMathMaterialWorkspaces() {
+function probabilityStatsMaterialUrl(sourceWeek, topic) {
+  const urls = {
+    1: {
+      "method of indicators": "psets/week-01/june-01-indicators.html",
+      "conditional expectation and tower property": "psets/week-01/june-02-conditional-expectation-tower.html",
+      "order statistics": "psets/week-01/june-03-order-statistics.html",
+      "MLE and estimation": "psets/week-01/june-04-mle-estimation.html",
+      "UMP/NP tests": "psets/week-01/june-05-ump-np-tests.html"
+    },
+    2: {
+      "method of indicators": "psets/week-02/june-29-indicators.html",
+      "conditional expectation and tower property": "psets/week-02/june-30-conditional-expectation-tower.html",
+      "order statistics": "psets/week-02/july-01-order-statistics.html"
+    }
+  };
+  return urls[sourceWeek]?.[topic] || "";
+}
+
+function probabilityStatsMaterialStatus(sourceWeek, topic) {
+  return probabilityStatsMaterialUrl(sourceWeek, topic) ? "Published" : "Pending";
+}
+
+function competitionMathMaterialWorkspaces(completedWeeks = 0) {
+  const weekOneStart = PRIYANKA_PLATINUM_START_DATE;
+  const sourceWeek = completedWeeks + 1;
+  const milestone = competitionMathMilestones()[completedWeeks] || competitionMathMilestones()[0];
+  const hasPublishedWeekMaterial = sourceWeek === 1;
   return [
     {
       id: "competition-algebra-foundations",
       title: "Algebra Foundations",
       day: "Week 1",
-      focus: "Vieta's formulas, polynomial manipulation, factor theorem, rational roots, and root transformations.",
+      focus: milestone.focus,
       weeks: [
         {
-          id: "cm-w1-vietas-polynomials",
+          id: `cm-${PRIYANKA_PLATINUM_REBASE_ID}-w1-src${sourceWeek}-algebra`,
           week: 1,
-          date: "2026-06-07",
-          materialTitle: "June 7: Vieta and Polynomial Fundamentals",
-          materialUrl: "psets/week-01/june-01-competition-math-vietas-polynomials.html",
-          expectedWork: "One-hour session: review the core Vieta pattern, solve 10 scaffolded problems, then write technique-journal notes for missed triggers.",
-          status: "Published",
-          feedbackWorkflow: competitionMathVietaFeedbackWorkflow()
+          sourceWeek,
+          date: weekOneStart,
+          materialTitle: `${formatMaterialTitleDate(weekOneStart)}: ${milestone.focus}`,
+          materialUrl: hasPublishedWeekMaterial ? "psets/week-01/june-01-competition-math-vietas-polynomials.html" : "",
+          expectedWork: `One-hour session: ${milestone.practice} Technique journal: ${milestone.journal}`,
+          status: hasPublishedWeekMaterial ? "Published" : "Pending",
+          feedbackWorkflow: competitionMathFeedbackWorkflow(milestone)
         }
       ]
     }
@@ -17394,6 +17545,7 @@ function baseFeedbackWorkflow(overrides = {}) {
       "minimalCorrection",
       "nextDrill",
       "masteryUpdates",
+      "prerequisiteChecks",
       "errorAnalysis",
       "prerequisiteHypotheses",
       "diagnosticRecommendations",
@@ -17474,6 +17626,17 @@ function platinumPrerequisiteGraph(workflowId = "") {
         randomization: { prereqs: ["discrete-tail-probability", "boundary-probability"], diagnostic: "Calibrate a discrete test with boundary randomization." },
         "power-computation": { prereqs: ["alternative-distribution", "tail-probability"], diagnostic: "Compute rejection probability under the alternative." },
         "mlr-ump": { prereqs: ["monotone-likelihood-ratio", "one-sided-alternative"], diagnostic: "Identify a statistic with MLR and state the one-sided UMP direction." }
+      }
+    },
+    "feedback-workflow-regression-ols-v1": {
+      topic: "Regression and OLS",
+      skills: {
+        "simple-regression": { prereqs: ["sample-mean", "sample-variance", "sample-covariance"], diagnostic: "Compute slope as covariance over variance in a small dataset." },
+        "matrix-setup": { prereqs: ["vector-matrix-multiplication", "transpose-products", "rank-condition"], diagnostic: "Write X, y, X^T X, and X^T y for a two-feature dataset." },
+        "normal-equations": { prereqs: ["matrix-setup", "least-squares-objective", "gradient-zero"], diagnostic: "Derive X^T X beta = X^T y from the squared-error objective." },
+        "projection-geometry": { prereqs: ["column-space", "orthogonality", "residual-definition"], diagnostic: "State why the residual is orthogonal to every column of X." },
+        "estimator-interpretation": { prereqs: ["expectation", "variance", "unbiasedness"], diagnostic: "Interpret slope/intercept and fitted value in one sentence." },
+        "advanced-ols-identities": { prereqs: ["normal-equations", "projection-geometry", "algebra-control"], diagnostic: "Prove one residual/fitted-value identity from the normal equations." }
       }
     },
     "feedback-workflow-weekly-psb-review-v1": {
@@ -17676,6 +17839,42 @@ function umpNpFeedbackWorkflow() {
   });
 }
 
+function regressionOlsFeedbackWorkflow() {
+  return baseFeedbackWorkflow({
+    id: "feedback-workflow-regression-ols-v1",
+    title: "Structured Feedback: Regression and OLS",
+    promptUse: "Use this after reading the submitted solution. Diagnose the prerequisite ladder first: covariance/variance basics, vector-matrix setup, normal equations, projection geometry, and then higher-level OLS identities.",
+    studentSummaryHint: "Summarize whether the learner can move from simple regression basics into matrix OLS without losing the normal-equation or projection meaning.",
+    skills: [
+      { id: "simple-regression", label: "Uses covariance/variance slope basics" },
+      { id: "matrix-setup", label: "Builds X, y, and transpose products" },
+      { id: "normal-equations", label: "Derives and uses normal equations" },
+      { id: "projection-geometry", label: "Understands fitted/residual geometry" },
+      { id: "estimator-interpretation", label: "Interprets coefficients and fitted values" },
+      { id: "advanced-ols-identities", label: "Handles constrained/identity arguments" }
+    ],
+    rubric: [
+      { criterion: "Prerequisite basics", points: 2, cue: "Checked covariance, variance, expectation, vector, and matrix basics before matrix OLS." },
+      { criterion: "Setup", points: 2, cue: "Defined X, y, coefficients, fitted values, and residuals cleanly." },
+      { criterion: "Normal equations", points: 2, cue: "Used X^T X beta = X^T y or the simple-regression equivalent correctly." },
+      { criterion: "Geometry and interpretation", points: 2, cue: "Explained projection, residual orthogonality, or coefficient meaning." },
+      { criterion: "Final answer and justification", points: 2, cue: "Stated the result clearly and justified any identity, constraint, or invariance claim." }
+    ],
+    commonIssues: [
+      "Started with matrix formulas before checking covariance/variance basics.",
+      "Mixed up rows, columns, observations, and features.",
+      "Used normal equations without defining residuals or fitted values.",
+      "Forgot residual orthogonality or projection interpretation.",
+      "Treated constrained OLS or residual identities as memorized formulas instead of deriving them."
+    ],
+    defaultNextDrills: [
+      { skill: "simple-regression", difficulty: "mechanics", instruction: "Compute slope and intercept from a tiny dataset using means, variance, and covariance." },
+      { skill: "matrix-setup", difficulty: "mechanics", instruction: "Write X, y, X^T X, and X^T y for a small regression table before solving." },
+      { skill: "projection-geometry", difficulty: "application", instruction: "Prove the residual is orthogonal to the columns of X for one fitted model." }
+    ]
+  });
+}
+
 function weeklyPsbReviewFeedbackWorkflow() {
   return baseFeedbackWorkflow({
     id: "feedback-workflow-weekly-psb-review-v1",
@@ -17713,39 +17912,39 @@ function weeklyPsbReviewFeedbackWorkflow() {
   });
 }
 
-function competitionMathVietaFeedbackWorkflow() {
+function competitionMathFeedbackWorkflow(milestone = competitionMathMilestones()[0]) {
+  const isVietaWeek = /Vieta/i.test(milestone.focus || "");
   return baseFeedbackWorkflow({
-    id: "feedback-workflow-competition-vieta-v1",
-    title: "Structured Feedback: Competition Math Vieta and Polynomials",
-    promptUse: "Use this after reading the submitted solution. Diagnose whether the learner recognized the polynomial/root structure, chose the right Vieta relation or factor move, and kept the algebra justified.",
-    studentSummaryHint: "Summarize whether the learner saw the root-coefficient pattern and used it efficiently.",
+    id: `feedback-workflow-competition-${slugify(milestone.focus)}-v1`,
+    title: `Structured Feedback: Competition Math ${milestone.focus}`,
+    promptUse: `Use this after reading the submitted solution. Diagnose whether the learner recognized the intended algebra pattern, chose an efficient transformation, and kept the work justified. Current focus: ${milestone.focus}. Toolkit: ${milestone.competition}`,
+    studentSummaryHint: "Summarize whether the learner saw the useful algebra structure and used it efficiently.",
     skills: [
-      { id: "vieta-recognition", label: "Recognizes root-coefficient cue" },
-      { id: "symmetric-expression", label: "Converts symmetric root expressions" },
-      { id: "factor-theorem", label: "Uses factor/remainder theorem" },
-      { id: "root-transformation", label: "Tracks transformed roots" },
+      { id: isVietaWeek ? "vieta-recognition" : "pattern-recognition", label: isVietaWeek ? "Recognizes root-coefficient cue" : "Recognizes algebra trigger" },
+      { id: "transformation-choice", label: "Chooses an efficient transformation" },
+      { id: "factorization-control", label: "Controls factoring or identity use" },
       { id: "algebra-control", label: "Controls expansion and simplification" },
       { id: "proof-justification", label: "Justifies each identity or factor step" },
       { id: "technique-journal", label: "Records reusable trigger pattern" }
     ],
     rubric: [
-      { criterion: "Pattern recognition", points: 2, cue: "Identified when roots, coefficients, factors, or transformed roots should drive the solution." },
-      { criterion: "Setup", points: 2, cue: "Named the roots/coefficients cleanly and selected the right Vieta, factor theorem, or substitution move." },
+      { criterion: "Pattern recognition", points: 2, cue: "Identified the algebra trigger before calculating." },
+      { criterion: "Setup", points: 2, cue: "Selected the right identity, factoring move, substitution, or structural rewrite." },
       { criterion: "Algebra execution", points: 2, cue: "Expanded, factored, or simplified without losing signs, powers, or domains." },
       { criterion: "Justification", points: 2, cue: "Explained why the identity, transformation, or factor conclusion is valid." },
       { criterion: "Final answer and journal note", points: 2, cue: "Stated the result clearly and wrote a reusable technique note for the trigger." }
     ],
     commonIssues: [
-      "Used Vieta mechanically but chose the wrong coefficient relation.",
-      "Did not convert a symmetric expression before substituting root sums/products.",
-      "Lost a sign while transforming roots or forming a new polynomial.",
-      "Applied the factor theorem without checking the polynomial value or multiplicity.",
+      "Started expanding before identifying the algebra structure.",
+      "Chose a valid identity but applied it to the wrong grouping.",
+      "Lost a sign, exponent, or domain condition during the transformation.",
+      "Skipped the reason why a factorization or substitution is allowed.",
       "Did not write the technique-journal trigger after a missed pattern."
     ],
     defaultNextDrills: [
-      { skill: "vieta-recognition", difficulty: "mechanics", instruction: "Do three short problems where the only task is to identify the needed Vieta relation before solving." },
-      { skill: "symmetric-expression", difficulty: "application", instruction: "Rewrite two root expressions into sums/products before substituting coefficients." },
-      { skill: "root-transformation", difficulty: "hard", instruction: "Build the polynomial whose roots are transformed from the original roots, and explain each transformation step." }
+      { skill: "pattern-recognition", difficulty: "mechanics", instruction: "Do three short problems where the only task is to name the algebra trigger before solving." },
+      { skill: "transformation-choice", difficulty: "application", instruction: "Rewrite two expressions using the intended identity or substitution before simplifying." },
+      { skill: "written-justification", difficulty: "hard", instruction: "Write one complete solution that explains why each factorization or transformation is legal." }
     ]
   });
 }
@@ -17847,10 +18046,25 @@ function milestoneDetails(milestone) {
   return `CMU 21-228: ${milestone.cmu} MIT 6.1200J: ${milestone.mitMcs} MIT 18.200: ${milestone.mitApplied}`;
 }
 
+function completedPlatinumWorkSummary() {
+  return [
+    "Moved out of the active June 29 plan because it is already done:",
+    "Discrete Math W1: CMU 21-228 basic counting and induction; MIT 6.1200J Lectures 1-2; MIT 18.200 Lecture 1.",
+    "Discrete Math W2: CMU 21-228 inclusion-exclusion and pigeonhole principle; MIT 6.1200J Lecture 3; MIT 18.200 Lectures 2-3.",
+    "Problem Solving W1: Probability and Statistics seven problem sets, Competition Math one problem set, and MIT 6.1200J Problem Set 1.",
+    "Problem Solving W2: MIT 18.200 Homework 1 and CMU 21-228 Homework 1.",
+    "Data Structures and Algorithms W1: Cartesian complexity analysis, arrays, and search.",
+    "Data Structures and Algorithms W2: Cartesian recursion, strings, and sorting."
+  ].join(" ");
+}
+
 function probabilityProblemSetDetails(dayPlan, week) {
-  const weekOneMonday = week === 1 && dayPlan.day === "Day 1" && dayPlan.topic === "method of indicators";
-  const resource = weekOneMonday ? " Material: psets/week-01/june-01-indicators.html." : "";
-  return `Complete a 10-problem PSB practice set for Week ${week} ${dayPlan.day}. Theme: ${dayPlan.topic}. Structure: 5 concept builders, 3 pattern-integration problems, 2 ISI past-year or ISI-style problems. Pattern: ${dayPlan.pattern}. Variations to include: ${dayPlan.variations}. Mode: ${dayPlan.intensity}.${resource} After solving, write a short correction note for every missed setup, wrong statistic, algebra slip, or unsupported conclusion.`;
+  const materialUrl = probabilityStatsMaterialUrl(dayPlan.sourceWeek, dayPlan.topic);
+  const resource = materialUrl ? ` Material: ${materialUrl}.` : "";
+  const ladder = dayPlan.prerequisiteLadder?.length
+    ? ` Prerequisite ladder: ${dayPlan.prerequisiteLadder.join(" ")} Stage this week: ${dayPlan.prerequisiteStage}. Problem mix must start with prerequisite checks before target problems: 3 prerequisite basics, 3 mechanics, 2 bridge problems, and 2 target/ISI-style problems.`
+    : "";
+  return `Complete a 10-problem PSB practice set for Week ${week} ${dayPlan.day}. Theme: ${dayPlan.topic}. Structure: 5 concept builders, 3 pattern-integration problems, 2 ISI past-year or ISI-style problems. Pattern: ${dayPlan.pattern}. Variations to include: ${dayPlan.variations}. Mode: ${dayPlan.intensity}.${ladder}${resource} After solving, write a short correction note for every missed setup, wrong statistic, algebra slip, or unsupported conclusion.`;
 }
 
 function probabilitySundayTestDetails(milestone) {
@@ -17862,12 +18076,55 @@ function probabilityDefaultFeedback(milestone) {
   return `Default feedback template for the Sunday Probability and Statistics test. Weekly focus: ${milestone.focus}. For each produced solution, score: 1) did the learner identify the recurring pattern, 2) did they choose the right statistic/conditioning/event, 3) is the calculation correct, 4) is the argument justified, 5) is the final answer clearly stated, and 6) does the correction note explain the fix. Tag each miss by theme so the next week's daily sets can repeat the weak pattern.`;
 }
 
+function subjectWeeklyReviewWorkflows(plan, startDate) {
+  return plan.milestones.map((milestone, index) => {
+    const week = index + 1;
+    const sourceWeek = milestone.sourceWeek || week;
+    const monday = addDays(startDate, index * 7);
+    const sunday = addDays(monday, 6);
+    return {
+      id: `workflow-${plan.key.toLowerCase()}-${PRIYANKA_PLATINUM_REBASE_ID}-week-${week}-src${sourceWeek}-weekly-review`,
+      week,
+      sourceWeek,
+      date: sunday,
+      title: `Week ${week}: ${plan.label} weekly review quiz`,
+      status: "Workflow ready",
+      workflowType: "subject-weekly-review",
+      subject: plan.label,
+      details: subjectWeeklyReviewDetails(plan, milestone, week),
+      generationPolicy: "Generate the quiz shell every Sunday inside this subject. Content generation is intentionally pending; use feedback, task completion, and missed prerequisites when content generation is enabled.",
+      coverage: milestone.focus,
+      inputs: [
+        "current week schedule items",
+        "submitted problem-set feedback",
+        "missed prerequisites and correction notes",
+        "subject milestone focus"
+      ],
+      outputs: [
+        "subject-local Sunday review quiz placeholder",
+        "question slots tagged by topic and prerequisite",
+        "post-quiz signals for next week's repair and bridge work"
+      ]
+    };
+  });
+}
+
+function subjectWeeklyReviewDetails(plan, milestone, week) {
+  if (plan.dailyProblemSets) return probabilitySundayTestDetails(milestone);
+  return `Sunday subject review workflow for ${plan.label} Week ${week}. Generate a subject-local quiz covering this week's material only. Focus: ${milestone.focus}. Inputs should include completed tasks, uploaded-solution feedback, correction notes, and prerequisite gaps. Content generation is pending; this item reserves the workflow and placement in the subject section.`;
+}
+
 function spacedReviewDetails(week, milestones, label = "subject") {
   const covered = milestones
     .slice(0, week)
     .map((milestone, index) => `W${index + 1}: ${milestone.focus}`)
     .join(" | ");
   return `Cumulative spaced review for ${label}. Re-test everything covered so far across the resources, not separate resource-specific quizzes. Covered material: ${covered}`;
+}
+
+function crossSubjectSpacedReviewDetails(week, plans) {
+  const covered = plans.map((plan) => spacedReviewDetails(week, plan.milestones, plan.label)).join(" || ");
+  return `Every-other-Sunday all-subject spaced review workflow. Generate one cumulative quiz in the Tests section covering all subjects and all material covered through Week ${week}. Content generation is intentionally pending; when enabled, sample more heavily from missed prerequisites, recent feedback gaps, not-completed tasks, and older concepts due for retrieval. Coverage: ${covered}`;
 }
 
 function addDays(dateValue, days) {
@@ -17890,6 +18147,10 @@ function activePlanStartDate() {
 
 function formatShortDate(value) {
   return new Intl.DateTimeFormat(undefined, { month: "short", day: "numeric" }).format(new Date(`${value}T00:00:00`));
+}
+
+function formatMaterialTitleDate(value) {
+  return new Intl.DateTimeFormat(undefined, { month: "long", day: "numeric" }).format(new Date(`${value}T00:00:00`));
 }
 
 function defaultUser() {
@@ -18963,6 +19224,9 @@ function testTemplate(test) {
   const attemptSummary = latestAttempt
     ? `<p class="muted">Latest logged score: ${latestAttempt.score}/${latestAttempt.total} (${latestAttempt.percent}%). ${escapeHtml(latestAttempt.feedback.summary)}</p>`
     : test.quizId ? '<p class="muted">No attempt logged yet.</p>' : "";
+  const workflowTag = test.workflowType
+    ? `<span class="tag">${escapeHtml(test.workflowType === "cross-subject-spaced-review" ? "All-subject spaced review" : test.workflowType)}</span>`
+    : "";
 
   return `
     <article class="item">
@@ -18972,7 +19236,10 @@ function testTemplate(test) {
           <p>${escapeHtml(test.details || "No details added.")}</p>
           ${attemptSummary}
         </div>
-        <span class="tag">${test.date ? formatDate(test.date) : "No date"}</span>
+        <div class="stacked-tags">
+          <span class="tag">${test.date ? formatDate(test.date) : "No date"}</span>
+          ${workflowTag}
+        </div>
       </div>
       <div class="item-actions">
         ${quizAction}
@@ -19031,11 +19298,14 @@ function subjectMenuCardTemplate(subject) {
   const chapterCount = (subject.sectionIds || []).length;
   const patternCount = (subject.patternWorkspaces || []).length;
   const materialCount = (subject.materialWorkspaces || []).reduce((count, workspace) => count + (workspace.weeks || []).length, 0);
+  const weeklyReviewCount = (subject.weeklyReviewWorkflows || []).length;
   const countLabel = patternCount
     ? `${patternCount} patterns`
     : materialCount
       ? `${materialCount} material${materialCount === 1 ? "" : "s"}`
-      : `${chapterCount} chapter${chapterCount === 1 ? "" : "s"}`;
+      : weeklyReviewCount
+        ? `${weeklyReviewCount} review workflows`
+        : `${chapterCount} chapter${chapterCount === 1 ? "" : "s"}`;
   return `
     <article class="subject-menu-card">
       <div>
@@ -19056,6 +19326,9 @@ function subjectReaderTemplate(subject) {
   }
   if (subject.materialWorkspaces?.length) {
     return subjectMaterialWorkspaceTemplate(subject);
+  }
+  if (subject.weeklyReviewWorkflows?.length) {
+    return subjectWeeklyReviewWorkspaceTemplate(subject);
   }
 
   const sections = (subject.sectionIds || [])
@@ -19099,6 +19372,7 @@ function subjectPatternWorkspaceTemplate(subject) {
           <h4>Week -> Day -> Material</h4>
           <p>${escapeHtml(subject.details || "Choose a week, open the day's material in a new page, upload the solution, then record feedback for that day.")}</p>
         </div>
+        ${weeklyReviewWorkflowSection(subject)}
         <div class="week-plan-list">
           ${weekGroups.map(weekPlanTemplate).join("")}
         </div>
@@ -19119,10 +19393,64 @@ function subjectMaterialWorkspaceTemplate(subject) {
           <h4>Weekly Materials</h4>
           <p>${escapeHtml(subject.details || "Choose a week to work through material, submit solutions, and record feedback.")}</p>
         </div>
+        ${weeklyReviewWorkflowSection(subject)}
         <div class="pattern-grid">
           ${subject.materialWorkspaces.map(materialWorkspaceTemplate).join("")}
         </div>
       </section>
+    </article>
+  `;
+}
+
+function subjectWeeklyReviewWorkspaceTemplate(subject) {
+  return `
+    <article class="subject-reader pattern-workspace weekly-plan-workspace">
+      <div class="subject-reader-header">
+        <button class="text-btn" data-subject-back type="button">Back to subjects</button>
+      </div>
+      <section class="chapter-menu">
+        <div class="chapter-menu-header">
+          <p class="eyebrow">${escapeHtml(subject.title)} review workflow</p>
+          <h4>Weekly Sunday Review Quizzes</h4>
+          <p>${escapeHtml(subject.details || "Weekly review quiz workflow for this subject.")}</p>
+        </div>
+        ${weeklyReviewWorkflowSection(subject)}
+      </section>
+    </article>
+  `;
+}
+
+function weeklyReviewWorkflowSection(subject) {
+  const workflows = subject.weeklyReviewWorkflows || [];
+  if (!workflows.length) return "";
+  return `
+    <section class="weekly-review-workflows">
+      <div class="workflow-section-heading">
+        <div>
+          <p class="eyebrow">Sunday workflow</p>
+          <h5>Weekly review quizzes</h5>
+        </div>
+        <span class="tag">${workflows.length} Sundays</span>
+      </div>
+      <div class="weekly-review-grid">
+        ${workflows.map(weeklyReviewWorkflowCard).join("")}
+      </div>
+    </section>
+  `;
+}
+
+function weeklyReviewWorkflowCard(workflow) {
+  return `
+    <article class="weekly-review-card">
+      <div>
+        <p class="eyebrow">Week ${escapeHtml(workflow.week)}</p>
+        <h6>${escapeHtml(workflow.title)}</h6>
+        <p>${escapeHtml(workflow.details)}</p>
+      </div>
+      <div class="review-card-meta">
+        <span class="tag">${formatDate(workflow.date)}</span>
+        <span class="tag">${escapeHtml(workflow.status || "Workflow ready")}</span>
+      </div>
     </article>
   `;
 }
@@ -19172,6 +19500,7 @@ function patternWeekGroups(patterns) {
         groups.set(key, {
           week: key,
           date: week.date,
+          sourceWeek: week.sourceWeek || key,
           days: []
         });
       }
@@ -19192,7 +19521,8 @@ function patternWeekGroups(patterns) {
 
 function weeklyReviewDay(group) {
   const sunday = addDays(group.date || group.days[0]?.week?.date || PRIYANKA_PLATINUM_START_DATE, 6);
-  const publishedWeekOne = Number(group.week) === 1;
+  const sourceWeek = group.sourceWeek || group.days[0]?.week?.sourceWeek || group.week;
+  const publishedWeekOne = Number(sourceWeek) === 1;
   return {
     pattern: {
       day: "Day 7",
@@ -19200,8 +19530,9 @@ function weeklyReviewDay(group) {
       focus: "One ISI-style multi-part question per weekly topic: indicators, conditional expectation, order statistics, MLE, UMP/NP tests, and regression/OLS."
     },
     week: {
-      id: `ps-w${group.week}-sunday-review`,
+      id: `ps-${PRIYANKA_PLATINUM_REBASE_ID}-w${group.week}-src${sourceWeek}-sunday-review`,
       week: group.week,
+      sourceWeek,
       date: sunday,
       materialTitle: `${formatShortDate(sunday)}: Week ${group.week} PSB Review Quiz`,
       materialUrl: publishedWeekOne ? "psets/week-01/june-07-psb-review-quiz.html" : "",
@@ -19296,6 +19627,7 @@ function patternMaterialFeedbackPageTemplate(subject, material) {
   const workflow = week.feedbackWorkflow || defaultFeedbackWorkflow(pattern, week);
   const feedbackRecord = submission?.feedbackRecord || {};
   const hasSubmission = Boolean(submission?.fileName);
+  const uploadSummary = submissionSummary(submission);
   return `
     <article class="subject-reader pattern-workspace feedback-page-workspace">
       <div class="subject-reader-header">
@@ -19322,15 +19654,16 @@ function patternMaterialFeedbackPageTemplate(subject, material) {
           </section>
           <section class="feedback-context-card">
             <h5>Submission</h5>
-            <p>${hasSubmission ? `Submitted file: ${escapeHtml(submission.fileName)}` : "Submit the solution for this day before generating feedback."}</p>
+            <p>${hasSubmission ? escapeHtml(uploadSummary) : "Submit the solution for this day before generating feedback."}</p>
             <label class="solution-upload compact-upload">
               <span>${hasSubmission ? "Replace solution" : "Submit solution"}</span>
               <input type="file" data-solution-upload="${escapeHtml(week.id)}" accept=".pdf,.txt,.md,.png,.jpg,.jpeg">
             </label>
-            <label class="feedback-note">
-              <span>Solution text for AI feedback</span>
-              <textarea data-solution-text="${escapeHtml(week.id)}" rows="7" placeholder="Paste the learner's written solution here. Text or Markdown uploads are copied here automatically.">${escapeHtml(submission?.solutionText || "")}</textarea>
-            </label>
+            ${submission?.storageWarning ? `<p class="feedback-warning">${escapeHtml(submission.storageWarning)}</p>` : ""}
+            <details class="feedback-note feedback-note-optional">
+              <summary>Optional notes for feedback</summary>
+              <textarea data-solution-text="${escapeHtml(week.id)}" rows="5" placeholder="Add any handwritten context that the upload may not capture.">${escapeHtml(submission?.solutionText || "")}</textarea>
+            </details>
           </section>
           <section class="feedback-context-card">
             <h5>Current Feedback</h5>
@@ -19355,7 +19688,7 @@ function patternMaterialFeedbackPageTemplate(subject, material) {
 function patternWeekTemplate(pattern, week) {
   const submission = patternSubmission(week.id);
   const uploadLabel = submission?.fileName
-    ? `Uploaded: ${submission.fileName}`
+    ? submissionSummary(submission)
     : "No solution uploaded";
   const workflow = week.feedbackWorkflow || defaultFeedbackWorkflow(pattern, week);
   const feedbackRecord = submission?.feedbackRecord || {};
@@ -19378,10 +19711,11 @@ function patternWeekTemplate(pattern, week) {
         </label>
       </div>
       <p class="fine-print">${escapeHtml(uploadLabel)}</p>
-      <label class="feedback-note">
-        <span>Solution text for AI feedback</span>
-        <textarea data-solution-text="${escapeHtml(week.id)}" rows="5" placeholder="Paste the learner's written solution here. Text or Markdown uploads are copied here automatically.">${escapeHtml(submission?.solutionText || "")}</textarea>
-      </label>
+      ${submission?.storageWarning ? `<p class="feedback-warning">${escapeHtml(submission.storageWarning)}</p>` : ""}
+      <details class="feedback-note feedback-note-optional">
+        <summary>Optional notes for feedback</summary>
+        <textarea data-solution-text="${escapeHtml(week.id)}" rows="4" placeholder="Add any handwritten context that the upload may not capture.">${escapeHtml(submission?.solutionText || "")}</textarea>
+      </details>
       ${feedbackWorkflowTemplate(workflow, feedbackRecord)}
       <button class="small-btn" data-save-pattern-feedback type="button">Generate AI feedback report</button>
     </section>
@@ -19425,42 +19759,13 @@ function feedbackWorkflowTemplate(workflow, feedbackRecord) {
     <section class="structured-feedback" data-feedback-workflow="${escapeHtml(workflow.id)}">
       <div class="structured-feedback-header">
         <div>
-          <p class="eyebrow">AI feedback rubric</p>
-          <h6>${escapeHtml(workflow.title)}</h6>
-          <p>${escapeHtml(workflow.promptUse)} The model uses this rubric to produce the feedback report.</p>
+          <p class="eyebrow">Feedback</p>
+          <h6>${feedbackRecord?.studentReport ? "Question-by-question review" : "Ready to generate feedback"}</h6>
+          <p>${feedbackRecord?.studentReport ? "Review each question on this page, then use the repair plan at the end." : "Upload the solution, then generate feedback on the same page."}</p>
         </div>
-        <span class="tag">LLM generated</span>
+        <span class="tag">${feedbackRecord?.studentReport ? "Generated" : "Awaiting review"}</span>
       </div>
-      <section class="feedback-spec">
-        <div class="feedback-spec-title">Rubric, skills, and next action guide</div>
-        <div class="feedback-spec-grid">
-          <div>
-            <strong>Rubric</strong>
-            <ul>
-              ${(workflow.rubric || []).map((item) => `<li>${escapeHtml(item.criterion)} (${escapeHtml(item.points)}): ${escapeHtml(item.cue)}</li>`).join("")}
-            </ul>
-          </div>
-          <div>
-            <strong>Skills</strong>
-            <div class="skill-chip-list">
-              ${(workflow.skills || []).map((skill) => `<span class="tag">${escapeHtml(skill.id)}</span>`).join("")}
-            </div>
-          </div>
-          <div>
-            <strong>Common first issues</strong>
-            <ul>
-              ${(workflow.commonIssues || []).map((issue) => `<li>${escapeHtml(issue)}</li>`).join("")}
-            </ul>
-          </div>
-          <div>
-            <strong>Default next drills</strong>
-            <ul>
-              ${(workflow.defaultNextDrills || []).map((drill) => `<li>${escapeHtml(drill.skill)} / ${escapeHtml(drill.difficulty)}: ${escapeHtml(drill.instruction)}</li>`).join("")}
-            </ul>
-          </div>
-        </div>
-      </section>
-      ${feedbackRecord?.studentReport ? generatedFeedbackReportTemplate(feedbackRecord) : '<p class="feedback-placeholder">No AI report generated yet. Paste the learner solution text and run the generator.</p>'}
+      ${feedbackRecord?.studentReport ? generatedFeedbackReportTemplate(feedbackRecord) : '<p class="feedback-placeholder">No feedback generated yet. Upload the learner solution and run the generator.</p>'}
     </section>
   `;
 }
@@ -19470,24 +19775,10 @@ function generatedFeedbackReportTemplate(record) {
   return `
     <section class="feedback-spec generated-feedback-report">
       <div class="feedback-spec-title">${escapeHtml(report.headline || "Generated feedback report")}</div>
-      <div class="feedback-spec-grid">
-        <div>
-          <strong>What you got right</strong>
-          <ul>${(report.right || record.whatTheyGotRight || []).map((item) => `<li>${escapeHtml(item)}</li>`).join("") || "<li>No strengths identified yet.</li>"}</ul>
-        </div>
-        <div>
-          <strong>What is not understood yet</strong>
-          <ul>${(report.notYet || record.stillNotUnderstood || []).map((item) => `<li>${escapeHtml(item)}</li>`).join("") || "<li>No conceptual gap recorded.</li>"}</ul>
-        </div>
-        <div>
-          <strong>Errors despite knowing the concept</strong>
-          <ul>${(report.executionIssues || record.errorsDespiteKnowing || []).map((item) => `<li>${escapeHtml(item)}</li>`).join("") || "<li>No execution issue recorded.</li>"}</ul>
-        </div>
-        <div>
-          <strong>Mastery plan</strong>
-          <ul>${(report.masteryPlan || []).map((item) => `<li>${escapeHtml(item)}</li>`).join("") || "<li>No next plan recorded.</li>"}</ul>
-        </div>
-      </div>
+      ${feedbackModelTemplate(record)}
+      ${narrativeFeedbackTemplate(record)}
+      ${prerequisiteChecksTemplate(record.prerequisiteChecks)}
+      ${questionFeedbackTemplate(record.questionFeedback)}
       <p><strong>First issue:</strong> ${escapeHtml(record.firstIssue?.location || "not marked")} - ${escapeHtml(record.firstIssue?.explanation || "")}</p>
       <p><strong>Concept gap:</strong> ${escapeHtml(record.conceptGap?.tag || "not tagged")} - ${escapeHtml(record.conceptGap?.description || "")}</p>
       <p><strong>Minimal correction:</strong> ${escapeHtml(record.minimalCorrection || "")}</p>
@@ -19515,8 +19806,111 @@ function generatedFeedbackReportTemplate(record) {
   `;
 }
 
+function feedbackModelTemplate(record) {
+  const model = record.feedbackModel || record.model || "";
+  if (!model) return "";
+  return `<p class="feedback-model-note">Generated with ${escapeHtml(model)}.</p>`;
+}
+
+function narrativeFeedbackTemplate(record) {
+  const narrative = record.narrativeFeedback || {};
+  const fallbackReport = record.studentReport || {};
+  const understoodFallback = (fallbackReport.right || record.whatTheyGotRight || []).join(" ");
+  const shakyFallback = (fallbackReport.executionIssues || record.errorsDespiteKnowing || []).join(" ");
+  const missingFallback = (fallbackReport.notYet || record.stillNotUnderstood || []).join(" ");
+  const improvementFallback = (fallbackReport.masteryPlan || []).join(" ");
+  const sections = [
+    ["Overall read", narrative.overall || record.studentSummary || ""],
+    ["What you understood", narrative.understood || understoodFallback],
+    ["What is shaky", narrative.shaky || shakyFallback],
+    ["What is missing", narrative.missing || missingFallback],
+    ["How to improve", narrative.improvementPlan || improvementFallback || record.minimalCorrection || ""]
+  ].filter(([, text]) => text);
+  if (!sections.length) return "";
+  return `
+    <section class="narrative-feedback">
+      ${sections.map(([title, text]) => `
+        <article>
+          <strong>${escapeHtml(title)}</strong>
+          <p>${escapeHtml(text)}</p>
+        </article>
+      `).join("")}
+    </section>
+  `;
+}
+
+function questionFeedbackTemplate(questionFeedback = []) {
+  if (!questionFeedback.length) return "";
+  return `
+    <div class="question-feedback-list">
+      ${questionFeedback.map((item) => `
+        <article class="question-feedback-card">
+          <div class="question-feedback-top">
+            <strong>Question ${escapeHtml(item.question || "")}</strong>
+            <span class="tag">${escapeHtml(item.status || "reviewed")}</span>
+          </div>
+          <p>${escapeHtml(item.summary || "")}</p>
+          <div class="feedback-spec-grid">
+            <div>
+              <strong>What to fix</strong>
+              <p>${escapeHtml(item.issue || "No specific issue recorded.")}</p>
+            </div>
+            <div>
+              <strong>Correction</strong>
+              <p>${escapeHtml(item.correction || "No correction recorded.")}</p>
+            </div>
+            <div>
+              <strong>Skill tag</strong>
+              <p>${escapeHtml(item.skillTag || "not tagged")}</p>
+            </div>
+          </div>
+        </article>
+      `).join("")}
+    </div>
+  `;
+}
+
+function prerequisiteChecksTemplate(checks = []) {
+  if (!checks.length) return "";
+  return `
+    <section class="prerequisite-checks">
+      <h6>Prerequisite check</h6>
+      ${checks.map((check) => `
+        <article class="prerequisite-check-card">
+          <div class="question-feedback-top">
+            <strong>${escapeHtml(check.prerequisite || "Prerequisite")}</strong>
+            <span class="tag">${escapeHtml(check.status || "not checked")}</span>
+          </div>
+          <p>${escapeHtml(check.evidence || "No evidence recorded.")}</p>
+          <div class="feedback-spec-grid">
+            <div>
+              <strong>Repair work</strong>
+              <p>${escapeHtml(check.repairWork || "No repair work recorded.")}</p>
+            </div>
+            <div>
+              <strong>Bridge work for next material</strong>
+              <p>${escapeHtml(check.bridgeWork || "No bridge work recorded.")}</p>
+            </div>
+          </div>
+        </article>
+      `).join("")}
+    </section>
+  `;
+}
+
 function patternSubmission(materialId) {
   return (state.patternSubmissions || []).find((entry) => entry.materialId === materialId);
+}
+
+function submissionSummary(submission) {
+  if (!submission?.fileName) return "No solution uploaded";
+  const parts = [`Submitted file: ${submission.fileName}`];
+  if (submission.fileSizeLabel) parts.push(submission.fileSizeLabel);
+  if (submission.uploadedAt) parts.push(`uploaded ${formatDate(submission.uploadedAt.slice(0, 10))}`);
+  if (submission.solutionText) parts.push("text captured");
+  else if (submission.fileDataUrl) parts.push("file saved locally");
+  else parts.push("replace upload to attach file content");
+  return parts.join(" - ");
 }
 
 function upsertPatternSubmission(materialId, updates) {
@@ -19539,27 +19933,97 @@ function savePatternSolutionUpload(input) {
   const file = input.files?.[0];
   if (!file) return;
   const materialId = input.dataset.solutionUpload;
-  upsertPatternSubmission(materialId, {
+  input.disabled = true;
+  const baseUpdates = {
     fileName: file.name,
     fileType: file.type || "unknown",
+    fileSize: file.size,
+    fileSizeLabel: formatFileSize(file.size),
+    solutionText: "",
+    fileDataUrl: "",
+    storageWarning: "",
     uploadedAt: new Date().toISOString()
-  });
+  };
   if (isTextSolutionFile(file)) {
     const reader = new FileReader();
     reader.onload = () => {
+      const solutionText = String(reader.result || "").slice(0, 30000);
       upsertPatternSubmission(materialId, {
-        solutionText: String(reader.result || "").slice(0, 30000)
+        ...baseUpdates,
+        solutionText
       });
-      selectedPatternMaterialId = materialId;
-      persist();
-      renderSubjects();
+      finishPatternUpload(materialId, true);
+    };
+    reader.onerror = () => {
+      input.disabled = false;
+      alert("Could not read this text upload. Try exporting the solution as PDF or plain text and upload again.");
     };
     reader.readAsText(file);
     return;
   }
+  const reader = new FileReader();
+  reader.onload = async () => {
+    const fileDataUrl = String(reader.result || "");
+    const canPersistFile = file.size <= 2500000;
+    let canSendForFeedback = file.size <= MAX_FEEDBACK_ATTACHMENT_BYTES;
+    let feedbackFiles = canSendForFeedback
+      ? [{
+          fileName: file.name,
+          fileType: file.type || "unknown",
+          fileDataUrl
+        }]
+      : [];
+    let storageWarning = canSendForFeedback
+      ? (canPersistFile ? "" : "This file is attached for feedback in the current browser session but is too large for local persistence. Production backend file storage is still needed for durable uploads after refresh.")
+      : `This file is too large for direct feedback upload. Use a PDF/image under ${formatFileSize(MAX_FEEDBACK_ATTACHMENT_BYTES)} or upload text/Markdown for automatic parsing.`;
+    if (!canSendForFeedback && isPdfSolutionFile(file)) {
+      try {
+        feedbackFiles = await renderPdfUploadForFeedback(file);
+        canSendForFeedback = feedbackFiles.length > 0;
+        storageWarning = canSendForFeedback
+          ? `This large PDF was converted in the browser into ${feedbackFiles.length} compressed page image${feedbackFiles.length === 1 ? "" : "s"} for feedback. Reupload after refresh until durable file storage is added.`
+          : storageWarning;
+      } catch (error) {
+        storageWarning = `This PDF is too large for direct feedback, and browser compression failed: ${error.message}`;
+      }
+    }
+    pendingUploadFiles.set(materialId, {
+      fileName: file.name,
+      fileType: file.type || "unknown",
+      fileDataUrl,
+      feedbackFiles
+    });
+    upsertPatternSubmission(materialId, {
+      ...baseUpdates,
+      fileDataUrl: canPersistFile ? fileDataUrl : "",
+      storageWarning
+    });
+    finishPatternUpload(materialId, canSendForFeedback);
+    if (!canSendForFeedback) {
+      alert(`This ${formatFileSize(file.size)} file is too large for direct browser-to-LLM feedback, and Aleph could not compress it automatically. Upload a smaller PDF/image or export the solution as text/Markdown so Aleph can parse and evaluate it automatically.`);
+    }
+  };
+  reader.onerror = () => {
+    input.disabled = false;
+    alert("Could not read this upload. Try a smaller PDF/image or export the solution as text.");
+  };
+  reader.readAsDataURL(file);
+}
+
+function finishPatternUpload(materialId, shouldGenerateFeedback = false) {
   selectedPatternMaterialId = materialId;
   persist();
   renderSubjects();
+  if (shouldGenerateFeedback) {
+    window.setTimeout(() => autoGeneratePatternFeedback(materialId), 150);
+  }
+}
+
+function autoGeneratePatternFeedback(materialId) {
+  const card = document.querySelector(`[data-material-card="${CSS.escape(materialId)}"]`);
+  const button = card?.querySelector("[data-save-pattern-feedback]");
+  if (!button || button.disabled) return;
+  savePatternFeedback(button);
 }
 
 function isTextSolutionFile(file) {
@@ -19567,26 +20031,98 @@ function isTextSolutionFile(file) {
   return file.type.startsWith("text/") || name.endsWith(".txt") || name.endsWith(".md");
 }
 
+function isPdfSolutionFile(file) {
+  return String(file.type || "").toLowerCase() === "application/pdf" || /\.pdf$/i.test(file.name || "");
+}
+
+async function renderPdfUploadForFeedback(file) {
+  const pdfjs = await loadPdfJs();
+  const pdf = await pdfjs.getDocument({ data: await file.arrayBuffer() }).promise;
+  const pageCount = Math.min(pdf.numPages, MAX_FEEDBACK_PDF_PAGES);
+  const pages = [];
+  let totalBytes = 0;
+  for (let pageNumber = 1; pageNumber <= pageCount; pageNumber += 1) {
+    const page = await pdf.getPage(pageNumber);
+    const viewport = page.getViewport({ scale: 1 });
+    const maxSide = 1600;
+    const scale = Math.min(2, maxSide / Math.max(viewport.width, viewport.height));
+    const scaledViewport = page.getViewport({ scale });
+    const canvas = document.createElement("canvas");
+    const context = canvas.getContext("2d", { alpha: false });
+    canvas.width = Math.floor(scaledViewport.width);
+    canvas.height = Math.floor(scaledViewport.height);
+    await page.render({ canvasContext: context, viewport: scaledViewport }).promise;
+    let quality = 0.82;
+    let dataUrl = canvas.toDataURL("image/jpeg", quality);
+    while (estimateDataUrlBytes(dataUrl) > 550 * 1024 && quality > 0.46) {
+      quality -= 0.12;
+      dataUrl = canvas.toDataURL("image/jpeg", quality);
+    }
+    const bytes = estimateDataUrlBytes(dataUrl);
+    if (totalBytes + bytes > MAX_COMPRESSED_FEEDBACK_BYTES && pages.length > 0) break;
+    pages.push({
+      fileName: `${file.name || "solution.pdf"} page ${pageNumber}.jpg`,
+      fileType: "image/jpeg",
+      fileDataUrl: dataUrl
+    });
+    totalBytes += bytes;
+  }
+  if (!pages.length) {
+    throw new Error("no PDF page could be compressed under the feedback limit");
+  }
+  return pages;
+}
+
+async function loadPdfJs() {
+  if (window.alephPdfJs) return window.alephPdfJs;
+  const pdfjs = await import(PDFJS_MODULE_URL);
+  pdfjs.GlobalWorkerOptions.workerSrc = PDFJS_WORKER_URL;
+  window.alephPdfJs = pdfjs;
+  return pdfjs;
+}
+
+function estimateDataUrlBytes(dataUrl) {
+  const text = String(dataUrl || "");
+  const base64 = text.includes(",") ? text.split(",").pop() || "" : text;
+  const padding = base64.endsWith("==") ? 2 : base64.endsWith("=") ? 1 : 0;
+  return Math.max(0, Math.floor((base64.length * 3) / 4) - padding);
+}
+
+function formatFileSize(size) {
+  if (!Number.isFinite(size)) return "";
+  if (size < 1024) return `${size} B`;
+  if (size < 1024 * 1024) return `${Math.round(size / 1024)} KB`;
+  return `${(size / (1024 * 1024)).toFixed(1)} MB`;
+}
+
 async function savePatternFeedback(button) {
   const card = button.closest("[data-material-card]");
   if (!card) return;
   const materialId = card.dataset.materialCard;
-  const solutionText = card.querySelector(`[data-solution-text="${CSS.escape(materialId)}"]`)?.value.trim() || "";
-  if (!solutionText) {
-    alert("Paste the learner solution text before generating feedback.");
+  const submission = patternSubmission(materialId);
+  if (!submission?.fileName) {
+    alert("Upload the learner solution before generating feedback.");
     return;
   }
+  if (submissionNeedsAttachedContent(materialId, submission)) {
+    alert("The uploaded file content is no longer available in this browser session. Upload the PDF/image again, and feedback will start automatically.");
+    return;
+  }
+  const optionalNotes = card.querySelector(`[data-solution-text="${CSS.escape(materialId)}"]`)?.value.trim() || "";
+  const solutionText = buildSubmissionFeedbackText(submission, optionalNotes);
   const material = findPatternMaterialAcrossState(materialId);
   const workflow = material?.week?.feedbackWorkflow || defaultFeedbackWorkflow(material?.pattern || {}, material?.week || { id: materialId, materialTitle: "Aleph material" });
   button.disabled = true;
   button.textContent = "Generating...";
-  const payload = {
-    materialTitle: material?.week?.materialTitle || "Aleph material",
-    materialContext: buildFeedbackMaterialContext(material),
-    workflow,
-    solutionText,
-    learnerName: state.user.displayName || state.user.name
-  };
+    const payload = {
+      materialTitle: material?.week?.materialTitle || "Aleph material",
+      materialContext: buildFeedbackMaterialContext(material),
+      workflow,
+      solutionText,
+      uploadedFile: buildFeedbackUploadedFile(materialId, submission),
+      uploadedFiles: buildFeedbackUploadedFiles(materialId, submission),
+      learnerName: state.user.displayName || state.user.name
+    };
   let feedbackRecord;
   let feedback;
   try {
@@ -19598,28 +20134,97 @@ async function savePatternFeedback(button) {
       body: JSON.stringify(payload)
     });
     if (!result.ok) {
-      const details = await result.json().catch(() => ({}));
-      throw new Error(details.error || "Feedback generation failed");
+      throw new Error(await parseFeedbackErrorMessage(result));
     }
     const generated = await result.json();
     feedbackRecord = generated.feedbackRecord;
+    feedbackRecord.feedbackModel = generated.model || "";
     feedback = generated.feedback || summarizeFeedbackRecord(feedbackRecord);
   } catch (error) {
-    alert(`${error.message}. Check OPENAI_API_KEY / OPENAI_FEEDBACK_MODEL configuration and try again.`);
+    alert(error.message);
     button.disabled = false;
     button.textContent = "Generate AI feedback report";
     return;
   }
-  const submission = upsertPatternSubmission(materialId, {
-    solutionText,
+  upsertPatternSubmission(materialId, {
+    solutionText: optionalNotes || submission?.solutionText || "",
     feedbackRecord,
     feedbackReportText: formatFeedbackReportText(feedbackRecord),
     feedback,
     feedbackUpdatedAt: new Date().toISOString()
   });
-  await sendFeedbackEmail(materialId, submission);
   persist();
   renderSubjects();
+}
+
+async function parseFeedbackErrorMessage(result) {
+  const raw = await result.text().catch(() => "");
+  let details = {};
+  if (raw) {
+    try {
+      details = JSON.parse(raw);
+    } catch {
+      details = { details: raw };
+    }
+  }
+  const base = details.error || `Feedback generation failed (${result.status})`;
+  const extra = typeof details.details === "string" ? details.details : "";
+  if (extra) {
+    return `${base}: ${extra.slice(0, 600)}`;
+  }
+  if (result.status === 413) {
+    return "Feedback generation failed: the uploaded file is too large for the current direct upload path. Try a smaller PDF/image or upload text/Markdown.";
+  }
+  return `${base}. Try again, or upload text/Markdown if the PDF/image is large.`;
+}
+
+function submissionNeedsAttachedContent(materialId, submission) {
+  if (submission.solutionText || submission.fileDataUrl || pendingUploadFiles.has(materialId)) return false;
+  return isPdfOrImageSubmission(submission);
+}
+
+function isPdfOrImageSubmission(submission) {
+  const fileName = String(submission?.fileName || "").toLowerCase();
+  const fileType = String(submission?.fileType || "").toLowerCase();
+  return fileType.startsWith("image/") || fileType === "application/pdf" || /\.(pdf|png|jpe?g)$/i.test(fileName);
+}
+
+function buildFeedbackUploadedFile(materialId, submission) {
+  const files = buildFeedbackUploadedFiles(materialId, submission);
+  return files[0] || null;
+}
+
+function buildFeedbackUploadedFiles(materialId, submission) {
+  const pending = pendingUploadFiles.get(materialId);
+  if (Array.isArray(pending?.feedbackFiles) && pending.feedbackFiles.length) {
+    return pending.feedbackFiles.filter((file) => file?.fileDataUrl).slice(0, MAX_FEEDBACK_PDF_PAGES);
+  }
+  const fileDataUrl = submission?.fileDataUrl || pending?.fileDataUrl || "";
+  if (!fileDataUrl) return [];
+  if (!isPdfOrImageSubmission(submission)) return [];
+  return [{
+    fileName: submission.fileName || pending?.fileName || "uploaded-solution",
+    fileType: submission.fileType || pending?.fileType || "application/octet-stream",
+    fileDataUrl
+  }];
+}
+
+function buildSubmissionFeedbackText(submission, optionalNotes = "") {
+  const lines = [
+    `Uploaded solution file: ${submission.fileName || "unknown file"}`,
+    `File type: ${submission.fileType || "unknown"}`,
+    `File size: ${submission.fileSizeLabel || "unknown"}`,
+    `Uploaded at: ${submission.uploadedAt || "unknown"}`
+  ];
+  const capturedText = optionalNotes || submission.solutionText || "";
+  if (capturedText) {
+    lines.push("", "Captured solution text or learner notes:", capturedText.slice(0, 30000));
+  } else if (submission.fileDataUrl || pendingUploadFiles.has(submission.materialId)) {
+    lines.push("", "The uploaded PDF/image is attached to this feedback request. Use the attached file as the primary evidence, parse visible handwritten or typed solution content, and then evaluate it against the rubric and prerequisite ladder.");
+  } else {
+    lines.push("", "Only upload metadata is available in this browser state. Generate a limited feedback report and ask for a smaller file, text upload, or backend file processing for content-specific grading.");
+  }
+  return lines.join("\n");
 }
 
 function buildFeedbackMaterialContext(material) {
@@ -19641,6 +20246,8 @@ function findPatternMaterialAcrossState(materialId) {
     const match = findPatternMaterial(subject, materialId);
     if (match) return match;
   }
+  const archived = archivedPlatinumProbabilityMaterials().find((entry) => entry.week.id === materialId);
+  if (archived) return archived;
   return null;
 }
 
@@ -19735,6 +20342,7 @@ function summarizeFeedbackRecord(record) {
 
 function formatFeedbackReportText(record) {
   const report = record.studentReport || {};
+  const narrative = record.narrativeFeedback || {};
   const section = (title, items) => [
     title,
     ...(items?.length ? items.map((item) => `- ${item}`) : ["- Not identified."]),
@@ -19745,9 +20353,18 @@ function formatFeedbackReportText(record) {
     "",
     `Verdict: ${(record.verdict || "yellow").toUpperCase()}`,
     `Score: ${Number.isFinite(record.score) ? `${record.score}/${record.maxScore || 10}` : "unscored"}`,
+    record.feedbackModel ? `Model: ${record.feedbackModel}` : "",
     "",
     `Summary: ${record.studentSummary || "No summary generated."}`,
     "",
+    narrative.overall ? `Overall read: ${narrative.overall}` : "",
+    narrative.understood ? `What you understood: ${narrative.understood}` : "",
+    narrative.shaky ? `What is shaky: ${narrative.shaky}` : "",
+    narrative.missing ? `What is missing: ${narrative.missing}` : "",
+    narrative.improvementPlan ? `How to improve: ${narrative.improvementPlan}` : "",
+    "",
+    ...section("Question-by-question feedback", (record.questionFeedback || []).map((item) => `Question ${item.question}: ${item.status}. ${item.summary} Fix: ${item.issue} Correction: ${item.correction} Skill: ${item.skillTag}`)),
+    ...section("Prerequisite checks", (record.prerequisiteChecks || []).map((item) => `${item.prerequisite}: ${item.status}. Evidence: ${item.evidence}. Repair: ${item.repairWork}. Bridge: ${item.bridgeWork}`)),
     ...section("What you got right", report.right || record.whatTheyGotRight),
     ...section("What you still do not understand", report.notYet || record.stillNotUnderstood),
     ...section("What you are getting wrong despite knowing the concept", report.executionIssues || record.errorsDespiteKnowing),
@@ -21002,6 +21619,9 @@ function buildPlatinumProgressSnapshot() {
     .map(platinumTaskSnapshot);
   const materials = platinumMaterialSnapshots();
   const dueMaterials = materials.filter((material) => material.date && material.date <= today);
+  const feedbackReadyMaterials = materials
+    .filter((material) => material.feedbackReady)
+    .sort((a, b) => (b.feedbackUpdatedAt || "").localeCompare(a.feedbackUpdatedAt || ""));
 
   return {
     schemaVersion: 1,
@@ -21033,13 +21653,12 @@ function buildPlatinumProgressSnapshot() {
     },
     materials: {
       due: dueMaterials,
-      upcoming: materials.filter((material) => material.date && material.date > today).slice(0, 12)
+      upcoming: materials.filter((material) => material.date && material.date > today).slice(0, 12),
+      archivedWithSubmissions: materials.filter((material) => material.archived && material.submitted).slice(0, 20)
     },
     feedback: {
-      latest: dueMaterials
-        .filter((material) => material.feedbackReady)
-        .sort((a, b) => (b.feedbackUpdatedAt || "").localeCompare(a.feedbackUpdatedAt || ""))
-        .slice(0, 8)
+      latest: feedbackReadyMaterials.slice(0, 12),
+      consolidated: buildPlatinumFeedbackConsolidation(materials, today)
     }
   };
 }
@@ -21067,44 +21686,248 @@ function platinumMaterialSnapshots() {
   state.subjects.forEach((subject) => {
     (subject.patternWorkspaces || []).forEach((pattern) => {
       (pattern.weeks || []).forEach((week) => {
-        const submission = patternSubmission(week.id);
-        const feedbackRecord = submission?.feedbackRecord || null;
-        materials.push({
-          materialId: week.id,
-          subjectId: subject.id,
-          subjectTitle: subject.title,
-          patternId: pattern.id,
-          patternTitle: pattern.title,
-          week: week.week,
-          date: week.date,
-          materialTitle: week.materialTitle,
-          materialUrl: week.materialUrl || "",
-          submitted: Boolean(submission?.uploadedAt || submission?.fileName),
-          uploadedAt: submission?.uploadedAt || "",
-          fileName: submission?.fileName || "",
-          feedbackReady: Boolean(submission?.feedbackUpdatedAt || submission?.feedback),
-          feedbackUpdatedAt: submission?.feedbackUpdatedAt || "",
-          feedbackSummary: submission?.feedback || "",
-          feedbackReportText: submission?.feedbackReportText || "",
-          feedbackVerdict: feedbackRecord?.verdict || "",
-          feedbackScore: feedbackRecord?.score ?? null,
-          feedbackConceptGap: feedbackRecord?.conceptGap?.tag || "",
-          feedbackFirstIssue: feedbackRecord?.firstIssue?.location || "",
-          feedbackNextDrill: feedbackRecord?.nextDrill?.instruction || "",
-          feedbackRight: feedbackRecord?.whatTheyGotRight || feedbackRecord?.studentReport?.right || [],
-          feedbackNotUnderstood: feedbackRecord?.stillNotUnderstood || feedbackRecord?.studentReport?.notYet || [],
-          feedbackExecutionIssues: feedbackRecord?.errorsDespiteKnowing || feedbackRecord?.studentReport?.executionIssues || [],
-          feedbackMasteryPlan: feedbackRecord?.studentReport?.masteryPlan || [],
-          feedbackMasteryUpdates: feedbackRecord?.masteryUpdates || [],
-          feedbackErrorAnalysis: feedbackRecord?.errorAnalysis || [],
-          feedbackPrerequisiteHypotheses: feedbackRecord?.prerequisiteHypotheses || [],
-          feedbackDiagnosticRecommendations: feedbackRecord?.diagnosticRecommendations || [],
-          feedbackAdaptivePlanSignal: feedbackRecord?.adaptivePlanSignal || null
-        });
+        materials.push(platinumMaterialSnapshot(subject, pattern, week));
       });
     });
   });
+  archivedPlatinumProbabilityMaterials().forEach(({ subject, pattern, week }) => {
+    const submission = patternSubmission(week.id);
+    if (submission?.uploadedAt || submission?.fileName || submission?.feedbackUpdatedAt || submission?.feedback) {
+      materials.push(platinumMaterialSnapshot(subject, pattern, week, { archived: true }));
+    }
+  });
   return materials.sort((a, b) => (a.date || "").localeCompare(b.date || ""));
+}
+
+function platinumMaterialSnapshot(subject, pattern, week, options = {}) {
+  const submission = patternSubmission(week.id);
+  const feedbackRecord = submission?.feedbackRecord || null;
+  return {
+    materialId: week.id,
+    subjectId: subject.id,
+    subjectTitle: subject.title,
+    patternId: pattern.id,
+    patternTitle: pattern.title,
+    week: week.week,
+    sourceWeek: week.sourceWeek || week.week,
+    date: week.date,
+    materialTitle: week.materialTitle,
+    materialUrl: week.materialUrl || "",
+    archived: Boolean(options.archived),
+    submitted: Boolean(submission?.uploadedAt || submission?.fileName),
+    uploadedAt: submission?.uploadedAt || "",
+    fileName: submission?.fileName || "",
+    feedbackReady: Boolean(submission?.feedbackUpdatedAt || submission?.feedback),
+    feedbackUpdatedAt: submission?.feedbackUpdatedAt || "",
+    feedbackSummary: submission?.feedback || "",
+    feedbackReportText: submission?.feedbackReportText || "",
+    feedbackModel: feedbackRecord?.feedbackModel || "",
+    feedbackVerdict: feedbackRecord?.verdict || "",
+    feedbackScore: feedbackRecord?.score ?? null,
+    feedbackConceptGap: feedbackRecord?.conceptGap?.tag || "",
+    feedbackFirstIssue: feedbackRecord?.firstIssue?.location || "",
+    feedbackNextDrill: feedbackRecord?.nextDrill?.instruction || "",
+    feedbackRight: feedbackRecord?.whatTheyGotRight || feedbackRecord?.studentReport?.right || [],
+    feedbackNotUnderstood: feedbackRecord?.stillNotUnderstood || feedbackRecord?.studentReport?.notYet || [],
+    feedbackExecutionIssues: feedbackRecord?.errorsDespiteKnowing || feedbackRecord?.studentReport?.executionIssues || [],
+    feedbackMasteryPlan: feedbackRecord?.studentReport?.masteryPlan || [],
+    feedbackMasteryUpdates: feedbackRecord?.masteryUpdates || [],
+    feedbackPrerequisiteChecks: feedbackRecord?.prerequisiteChecks || [],
+    feedbackQuestionFeedback: feedbackRecord?.questionFeedback || [],
+    feedbackNarrative: feedbackRecord?.narrativeFeedback || null,
+    feedbackErrorAnalysis: feedbackRecord?.errorAnalysis || [],
+    feedbackPrerequisiteHypotheses: feedbackRecord?.prerequisiteHypotheses || [],
+    feedbackDiagnosticRecommendations: feedbackRecord?.diagnosticRecommendations || [],
+    feedbackAdaptivePlanSignal: feedbackRecord?.adaptivePlanSignal || null
+  };
+}
+
+function archivedPlatinumProbabilityMaterials() {
+  const subject = {
+    id: "subject-probability-statistics",
+    title: "Probability and Statistics"
+  };
+  const archivedWeekStart = addDays(PRIYANKA_PLATINUM_START_DATE, -7);
+  const rows = [
+    {
+      id: "ps-w1-indicators",
+      patternId: "pattern-indicators",
+      patternTitle: "Method of Indicators",
+      day: "Day 1",
+      dateOffset: 0,
+      materialTitle: "June 22: Method of Indicators Pset",
+      materialUrl: "psets/week-01/june-01-indicators.html",
+      expectedWork: "10 problems on indicator variables, linearity of expectation, and pairwise indicator products.",
+      feedbackWorkflow: indicatorFeedbackWorkflow()
+    },
+    {
+      id: "ps-w1-conditional-expectation",
+      patternId: "pattern-conditional-expectation",
+      patternTitle: "Conditional Expectation and Tower Property",
+      day: "Day 2",
+      dateOffset: 1,
+      materialTitle: "June 23: Conditional Expectation and Tower Property Pset",
+      materialUrl: "psets/week-01/june-02-conditional-expectation-tower.html",
+      expectedWork: "10 problems on conditioning choices, inner expectations, and tower-property simplification.",
+      feedbackWorkflow: conditionalExpectationFeedbackWorkflow()
+    },
+    {
+      id: "ps-w1-order-statistics",
+      patternId: "pattern-order-statistics",
+      patternTitle: "Order Statistics",
+      day: "Day 3",
+      dateOffset: 2,
+      materialTitle: "June 24: Order Statistics Pset",
+      materialUrl: "psets/week-01/june-03-order-statistics.html",
+      expectedWork: "10 problems on min/max/kth-order laws, joint densities, spacings, and scaling.",
+      feedbackWorkflow: orderStatisticsFeedbackWorkflow()
+    },
+    {
+      id: "ps-w1-mle",
+      patternId: "pattern-mle",
+      patternTitle: "MLE and Estimation",
+      day: "Day 4",
+      dateOffset: 3,
+      materialTitle: "June 25: MLE and Estimation Pset",
+      materialUrl: "psets/week-01/june-04-mle-estimation.html",
+      expectedWork: "10 problems on likelihood setup, log-likelihood optimization, support checks, and estimator quality.",
+      feedbackWorkflow: mleEstimationFeedbackWorkflow()
+    },
+    {
+      id: "ps-w1-ump-np",
+      patternId: "pattern-ump-np",
+      patternTitle: "UMP/NP Tests",
+      day: "Day 5",
+      dateOffset: 4,
+      materialTitle: "June 26: UMP/NP Tests Pset",
+      materialUrl: "psets/week-01/june-05-ump-np-tests.html",
+      expectedWork: "10 problems on likelihood-ratio tests, size calibration, power, and UMP/MLR decisions.",
+      feedbackWorkflow: umpNpFeedbackWorkflow()
+    },
+    {
+      id: "ps-w1-regression-ols",
+      patternId: "pattern-regression-ols",
+      patternTitle: "Regression and OLS",
+      day: "Day 6",
+      dateOffset: 5,
+      materialTitle: "June 27: Regression and OLS Pset",
+      materialUrl: "",
+      expectedWork: "Planned 10-problem set on covariance, simple regression, normal equations, and projection geometry.",
+      feedbackWorkflow: regressionOlsFeedbackWorkflow()
+    },
+    {
+      id: "ps-w1-sunday-review",
+      patternId: "pattern-weekly-review",
+      patternTitle: "Weekly Review Quiz",
+      day: "Day 7",
+      dateOffset: 6,
+      materialTitle: "June 28: Week 1 PSB Review Quiz",
+      materialUrl: "psets/week-01/june-07-psb-review-quiz.html",
+      expectedWork: "Six-topic ISI-style weekly review covering indicators, conditional expectation, order statistics, MLE, UMP/NP, and regression/OLS.",
+      feedbackWorkflow: weeklyPsbReviewFeedbackWorkflow()
+    }
+  ];
+
+  return rows.map((row) => ({
+    subject,
+    pattern: {
+      id: row.patternId,
+      title: row.patternTitle,
+      day: row.day,
+      focus: row.expectedWork
+    },
+    week: {
+      id: row.id,
+      week: 1,
+      sourceWeek: 1,
+      date: addDays(archivedWeekStart, row.dateOffset),
+      materialTitle: row.materialTitle,
+      materialUrl: row.materialUrl,
+      status: row.materialUrl ? "Published" : "Archived",
+      expectedWork: row.expectedWork,
+      feedbackWorkflow: row.feedbackWorkflow
+    }
+  }));
+}
+
+function buildPlatinumFeedbackConsolidation(materials, today) {
+  const feedbackItems = materials
+    .filter((material) => material.feedbackReady)
+    .sort((a, b) => (b.feedbackUpdatedAt || "").localeCompare(a.feedbackUpdatedAt || ""));
+  const missingFeedback = materials
+    .filter((material) => material.submitted && !material.feedbackReady && (!material.date || material.date <= today))
+    .sort((a, b) => (a.date || "").localeCompare(b.date || ""));
+  const topicMap = new Map();
+  feedbackItems.forEach((material) => {
+    const key = material.patternTitle || material.materialTitle || "Uncategorized";
+    if (!topicMap.has(key)) {
+      topicMap.set(key, {
+        topic: key,
+        feedbackCount: 0,
+        latestFeedbackAt: "",
+        materialIds: [],
+        conceptGaps: new Set(),
+        notUnderstood: new Set(),
+        executionIssues: new Set(),
+        nextDrills: new Set(),
+        prerequisiteHypotheses: new Set()
+      });
+    }
+    const topic = topicMap.get(key);
+    topic.feedbackCount += 1;
+    topic.latestFeedbackAt = [topic.latestFeedbackAt, material.feedbackUpdatedAt || ""].sort().at(-1) || "";
+    topic.materialIds.push(material.materialId);
+    if (material.feedbackConceptGap) topic.conceptGaps.add(material.feedbackConceptGap);
+    (material.feedbackNotUnderstood || []).forEach((item) => topic.notUnderstood.add(item));
+    (material.feedbackExecutionIssues || []).forEach((item) => topic.executionIssues.add(item));
+    if (material.feedbackNextDrill) topic.nextDrills.add(material.feedbackNextDrill);
+    (material.feedbackPrerequisiteHypotheses || []).forEach((item) => {
+      if (item?.prerequisite) topic.prerequisiteHypotheses.add(item.prerequisite);
+    });
+  });
+
+  return {
+    purpose: "Internal planning input: use every generated Platinum pset feedback report, including archived previous psets, as local evidence for next week's lesson and problem-set generation.",
+    feedbackCount: feedbackItems.length,
+    archivedFeedbackCount: feedbackItems.filter((material) => material.archived).length,
+    currentFeedbackCount: feedbackItems.filter((material) => !material.archived).length,
+    submittedWaitingForFeedback: missingFeedback.map((material) => ({
+      materialId: material.materialId,
+      materialTitle: material.materialTitle,
+      date: material.date,
+      fileName: material.fileName,
+      archived: Boolean(material.archived)
+    })),
+    feedbackItems: feedbackItems.slice(0, 24),
+    topicSummaries: Array.from(topicMap.values()).map((topic) => ({
+      topic: topic.topic,
+      feedbackCount: topic.feedbackCount,
+      latestFeedbackAt: topic.latestFeedbackAt,
+      materialIds: topic.materialIds.slice(0, 8),
+      conceptGaps: Array.from(topic.conceptGaps).slice(0, 6),
+      notUnderstood: Array.from(topic.notUnderstood).slice(0, 6),
+      executionIssues: Array.from(topic.executionIssues).slice(0, 6),
+      nextDrills: Array.from(topic.nextDrills).slice(0, 4),
+      prerequisiteHypotheses: Array.from(topic.prerequisiteHypotheses).slice(0, 6)
+    })),
+    nextWeekLessonInputs: {
+      rule: "Start lesson generation from the highest-priority prerequisite hypotheses and repeated execution issues, then bridge into the nominal next-week topics.",
+      materialType: "Expository lesson material with embedded questions, not a bare problem list.",
+      expositionRequirements: [
+        "Open with a short topic narrative that explains why the pattern matters and where it appears in ISI/GATE-style work.",
+        "Before each question block, state the setup idea, the recognition trigger, and the prerequisite skill being tested.",
+        "For every question, include enough contextual framing that the learner knows what pattern to look for without giving away the solution.",
+        "After each block, add synthesis notes that connect the repair, bridge, target, and cumulative questions back to the feedback evidence."
+      ],
+      requiredEvidence: [
+        "latest generated feedback reports",
+        "archived previous pset feedback",
+        "current Week 2 feedback",
+        "submitted materials still waiting for feedback"
+      ],
+      missingFeedbackMaterialIds: missingFeedback.map((material) => material.materialId)
+    }
+  };
 }
 
 function paceStatusFromCounts(overdueCount, dueTodayCount, completionRate) {
