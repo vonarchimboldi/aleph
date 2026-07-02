@@ -32,7 +32,7 @@ export default async function handler(request, response) {
   const itemLines = reminderItems
     .slice(0, 12)
     .map((item) => {
-      const type = item.type || "Task";
+      const type = item.type || "Work item";
       const dueDate = item.dueDate || "date not set";
       return `- ${item.title} (${type}, due ${dueDate})`;
     });
@@ -43,7 +43,7 @@ export default async function handler(request, response) {
     `Week ${currentWeek || "current"} completion: ${Number.isFinite(completionRate) ? completionRate : 0}% of due items.`,
     `Open items: ${overdueCount || 0} overdue, ${dueTodayCount || 0} due today.`,
     "",
-    "Please complete these next:",
+    "Please complete or submit these next:",
     "",
     ...itemLines,
     "",

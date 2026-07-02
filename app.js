@@ -1,7 +1,7 @@
 const STORAGE_KEY = "learning-studio-data-v2";
 const LEGACY_STORAGE_KEYS = ["learning-studio-data-v1"];
 const SESSION_KEY = "aleph-session";
-const COURSE_PLAN_VERSION = "seeded-user-canonical-workspace-v104";
+const COURSE_PLAN_VERSION = "seeded-user-canonical-workspace-v105";
 const MAX_FEEDBACK_ATTACHMENT_BYTES = 3 * 1024 * 1024;
 const MAX_COMPRESSED_FEEDBACK_BYTES = 2400 * 1024;
 const MAX_FEEDBACK_PDF_PAGES = 6;
@@ -21634,7 +21634,11 @@ function renderTaskAlerts() {
   const panel = document.querySelector("#task-alert-panel");
   if (!panel) return;
   const alerts = taskScheduleAlerts();
-  const hasDueWork = alerts.overdue.length || alerts.dueToday.length;
+  const materialAlerts = materialSubmissionAlerts();
+  const overdueCount = alerts.overdue.length + materialAlerts.overdue.length;
+  const dueTodayCount = alerts.dueToday.length + materialAlerts.dueToday.length;
+  const upcomingCount = alerts.upcoming.length + materialAlerts.upcoming.length;
+  const hasDueWork = overdueCount || dueTodayCount;
   const emailStatus = state.user.lastOverdueEmailAt
     ? `Last reminder sent ${formatDate(state.user.lastOverdueEmailAt.slice(0, 10))}.`
     : "No overdue reminder sent yet.";
@@ -21642,15 +21646,19 @@ function renderTaskAlerts() {
   panel.innerHTML = `
     <div class="task-alert-copy">
       <strong>${hasDueWork ? "Due-work monitor" : "Due-work monitor is clear"}</strong>
-      <p>${alerts.overdue.length} overdue, ${alerts.dueToday.length} due today, ${alerts.upcoming.length} upcoming in the next two days. These counts are computed from linked schedule dates.</p>
+      <p>${overdueCount} overdue, ${dueTodayCount} due today, ${upcomingCount} upcoming in the next two days. This includes scheduled tasks and required material submissions.</p>
+      ${materialAlerts.overdue.length || materialAlerts.dueToday.length ? `<p class="fine-print">${materialAlerts.overdue.length} overdue material submission(s), ${materialAlerts.dueToday.length} due today.</p>` : ""}
       <p class="fine-print">${escapeHtml(emailStatus)}</p>
     </div>
     <div class="task-alert-actions">
-      <span class="tag due-overdue">${alerts.overdue.length} overdue</span>
-      <span class="tag due-today">${alerts.dueToday.length} due today</span>
-      <button class="small-btn" data-send-overdue-email type="button" ${alerts.overdue.length ? "" : "disabled"}>Send overdue email</button>
+      <span class="tag due-overdue">${overdueCount} overdue</span>
+      <span class="tag due-today">${dueTodayCount} due today</span>
+      <button class="small-btn" data-send-overdue-email type="button" ${overdueCount ? "" : "disabled"}>Send overdue email</button>
     </div>
-    ${alerts.overdue.length ? `<div class="task-alert-list">${alerts.overdue.slice(0, 4).map(taskAlertTemplate).join("")}</div>` : ""}
+    ${overdueCount ? `<div class="task-alert-list">${[
+      ...alerts.overdue.slice(0, 4).map(taskAlertTemplate),
+      ...materialAlerts.overdue.slice(0, 4).map(materialAlertTemplate)
+    ].slice(0, 6).join("")}</div>` : ""}
   `;
 
   const sendButton = panel.querySelector("[data-send-overdue-email]");
@@ -21668,6 +21676,39 @@ function taskAlertTemplate(task) {
   `;
 }
 
+function materialAlertTemplate(material) {
+  return `
+    <article>
+      <strong>${escapeHtml(material.materialTitle)}</strong>
+      <span>${material.date ? formatDate(material.date) : "No due date"} - Missing submission</span>
+    </article>
+  `;
+}
+
+function dueAlertTemplate(item) {
+  return item?.materialId ? materialAlertTemplate(item) : taskAlertTemplate(item);
+}
+
+function taskReminderItem(task) {
+  const scheduleItem = linkedScheduleForTask(task);
+  return {
+    title: task.title,
+    dueDate: taskDueDate(task),
+    type: task.type || scheduleItem?.kind || "Task",
+    scheduleTitle: scheduleItem?.title || ""
+  };
+}
+
+function materialReminderItem(material, status = "Missing submission") {
+  return {
+    title: material.materialTitle,
+    dueDate: material.date || "",
+    type: status,
+    scheduleTitle: material.patternTitle || material.subjectTitle || "",
+    materialId: material.materialId
+  };
+}
+
 function taskScheduleAlerts() {
   const activeTasks = state.tasks
     .filter((task) => task.status !== "completed")
@@ -21679,23 +21720,58 @@ function taskScheduleAlerts() {
   };
 }
 
+function materialSubmissionAlerts() {
+  if (!isPlatinumPrototypeUser(state.user)) {
+    return { overdue: [], dueToday: [], upcoming: [] };
+  }
+  const today = todayDateString();
+  const upcomingLimit = addDays(today, 2);
+  const materials = platinumMaterialSnapshots()
+    .filter((material) => !material.archived)
+    .filter((material) => material.date && material.materialUrl)
+    .filter((material) => !material.submitted);
+  return {
+    overdue: materials.filter((material) => material.date < today),
+    dueToday: materials.filter((material) => material.date === today),
+    upcoming: materials.filter((material) => material.date > today && material.date <= upcomingLimit)
+  };
+}
+
 function platinumPaceReport() {
   const activeTasks = state.tasks.filter((task) => task.date || linkedScheduleForTask(task)?.date);
   const today = todayDateString();
   const expectedTasks = activeTasks.filter((task) => taskDueDate(task) && taskDueDate(task) <= today);
   const completedExpected = expectedTasks.filter((task) => task.status === "completed");
   const alerts = taskScheduleAlerts();
+  const materialAlerts = materialSubmissionAlerts();
+  const dueMaterials = platinumMaterialSnapshots()
+    .filter((material) => !material.archived)
+    .filter((material) => material.date && material.materialUrl)
+    .filter((material) => material.date <= today);
+  const submittedDueMaterials = dueMaterials.filter((material) => material.submitted);
+  const overdue = [...alerts.overdue, ...materialAlerts.overdue];
+  const dueToday = [...alerts.dueToday, ...materialAlerts.dueToday];
+  const upcoming = [...alerts.upcoming, ...materialAlerts.upcoming];
   const currentWeek = currentWeekNumber();
-  const completionRate = expectedTasks.length
-    ? Math.round((completedExpected.length / expectedTasks.length) * 100)
+  const expectedCount = expectedTasks.length + dueMaterials.length;
+  const completedExpectedCount = completedExpected.length + submittedDueMaterials.length;
+  const completionRate = expectedCount
+    ? Math.round((completedExpectedCount / expectedCount) * 100)
     : 100;
-  const status = paceStatusFromCounts(alerts.overdue.length, alerts.dueToday.length, completionRate);
+  const status = paceStatusFromCounts(overdue.length, dueToday.length, completionRate);
   return {
     ...alerts,
+    overdue,
+    dueToday,
+    upcoming,
+    taskAlerts: alerts,
+    materialAlerts,
+    dueMaterialCount: dueMaterials.length,
+    submittedDueMaterialCount: submittedDueMaterials.length,
     status,
     currentWeek,
-    expectedCount: expectedTasks.length,
-    completedExpectedCount: completedExpected.length,
+    expectedCount,
+    completedExpectedCount,
     completionRate
   };
 }
@@ -21739,7 +21815,12 @@ function buildPlatinumProgressSnapshot() {
       completedExpectedCount: pace.completedExpectedCount,
       overdueCount: pace.overdue.length,
       dueTodayCount: pace.dueToday.length,
-      upcomingCount: pace.upcoming.length
+      upcomingCount: pace.upcoming.length,
+      overdueMaterialCount: pace.materialAlerts.overdue.length,
+      dueTodayMaterialCount: pace.materialAlerts.dueToday.length,
+      upcomingMaterialCount: pace.materialAlerts.upcoming.length,
+      dueMaterialCount: pace.dueMaterialCount,
+      submittedDueMaterialCount: pace.submittedDueMaterialCount
     },
     tasks: {
       due: dueTasks,
@@ -22063,6 +22144,7 @@ function renderPlatinumPacePanel() {
     : "No pace email sent yet.";
   const pushStatus = "Push notifications need a registered service worker, browser permission, stored subscriptions, and a backend sender. This prototype can flag the need, but email is the active reminder channel.";
   const canSendEmail = report.overdue.length || report.dueToday.length;
+  const visiblePaceAlerts = report.overdue.length ? report.overdue : report.dueToday;
 
   panel.innerHTML = `
     <div class="pace-panel">
@@ -22084,7 +22166,7 @@ function renderPlatinumPacePanel() {
         <button class="small-btn" type="button" disabled>Push alerts need backend</button>
       </div>
       <p class="fine-print">${escapeHtml(pushStatus)}</p>
-      ${report.overdue.length ? `<div class="task-alert-list">${report.overdue.slice(0, 4).map(taskAlertTemplate).join("")}</div>` : ""}
+      ${visiblePaceAlerts.length ? `<div class="task-alert-list">${visiblePaceAlerts.slice(0, 6).map(dueAlertTemplate).join("")}</div>` : ""}
     </div>
   `;
 
@@ -22144,8 +22226,15 @@ function todayDateString() {
 
 async function sendOverdueEmail() {
   const alerts = taskScheduleAlerts();
-  const overdue = alerts.overdue.slice(0, 12);
-  if (!overdue.length) return;
+  const materialAlerts = materialSubmissionAlerts();
+  const overdueTasks = alerts.overdue;
+  const overdueMaterials = materialAlerts.overdue;
+  const overdueCount = overdueTasks.length + overdueMaterials.length;
+  const overdue = [
+    ...overdueTasks.map(taskReminderItem),
+    ...overdueMaterials.map((material) => materialReminderItem(material))
+  ].slice(0, 12);
+  if (!overdueCount) return;
   const email = state.user.email || "";
   if (!email) {
     alert("Add the learner email in Share and Updates before sending overdue reminders.");
@@ -22159,15 +22248,7 @@ async function sendOverdueEmail() {
     button.textContent = "Sending...";
   }
 
-  const overdueItems = overdue.map((task) => {
-    const scheduleItem = linkedScheduleForTask(task);
-    return {
-      title: task.title,
-      dueDate: taskDueDate(task),
-      type: task.type || scheduleItem?.kind || "Task",
-      scheduleTitle: scheduleItem?.title || ""
-    };
-  });
+  const overdueItems = overdue;
 
   try {
     const result = await fetch("/api/send-overdue", {
@@ -22203,8 +22284,13 @@ async function sendOverdueEmail() {
 async function sendPaceReminderEmail() {
   const report = platinumPaceReport();
   const email = state.user.email || "";
-  const reminderTasks = [...report.overdue, ...report.dueToday].slice(0, 12);
-  if (!reminderTasks.length) return;
+  const reminderItems = [
+    ...report.taskAlerts.overdue.map(taskReminderItem),
+    ...report.materialAlerts.overdue.map((material) => materialReminderItem(material)),
+    ...report.taskAlerts.dueToday.map(taskReminderItem),
+    ...report.materialAlerts.dueToday.map((material) => materialReminderItem(material, "Due today submission"))
+  ].slice(0, 12);
+  if (!reminderItems.length) return;
   if (!email) {
     alert("Add the learner email in Share and Updates before sending pace reminders.");
     return;
@@ -22215,16 +22301,6 @@ async function sendPaceReminderEmail() {
     button.disabled = true;
     button.textContent = "Sending...";
   }
-
-  const reminderItems = reminderTasks.map((task) => {
-    const scheduleItem = linkedScheduleForTask(task);
-    return {
-      title: task.title,
-      dueDate: taskDueDate(task),
-      type: task.type || scheduleItem?.kind || "Task",
-      scheduleTitle: scheduleItem?.title || ""
-    };
-  });
 
   try {
     const result = await fetch("/api/send-pace-reminder", {
@@ -22271,7 +22347,7 @@ function draftPaceReminderEmail(email, report, reminderItems) {
     `Week ${report.currentWeek}: ${report.completedExpectedCount}/${report.expectedCount} due items complete (${report.completionRate}%).`,
     `Open items: ${report.overdue.length} overdue, ${report.dueToday.length} due today.`,
     "",
-    "Please complete these next:",
+    "Please complete or submit these next:",
     "",
     ...reminderItems.map((item) => `- ${item.title} (${item.type}, due ${item.dueDate || "date not set"})`),
     "",
@@ -22283,11 +22359,11 @@ function draftPaceReminderEmail(email, report, reminderItems) {
 }
 
 function draftOverdueEmail(email, overdueItems) {
-  const subject = "Aleph overdue task reminder";
+  const subject = "Aleph overdue work reminder";
   const body = [
     `Hi ${state.user.displayName || state.user.name},`,
     "",
-    "These Aleph tasks are overdue:",
+    "These Aleph tasks/material submissions are overdue:",
     "",
     ...overdueItems.map((item) => `- ${item.title} (${item.type}, due ${item.dueDate || "date not set"})`),
     "",

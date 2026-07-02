@@ -22,14 +22,14 @@ export default async function handler(request, response) {
   const itemLines = overdueItems
     .slice(0, 12)
     .map((item) => {
-      const type = item.type || "Task";
+      const type = item.type || "Work item";
       const dueDate = item.dueDate || "date not set";
       return `- ${item.title} (${type}, due ${dueDate})`;
     });
   const text = [
     `Hi ${learnerName},`,
     "",
-    "These Aleph tasks are overdue:",
+    "These Aleph tasks/material submissions are overdue:",
     "",
     ...itemLines,
     "",
@@ -47,7 +47,7 @@ export default async function handler(request, response) {
     body: JSON.stringify({
       from,
       to: email,
-      subject: "Aleph overdue task reminder",
+      subject: "Aleph overdue work reminder",
       text
     })
   });
