@@ -1,7 +1,7 @@
 const STORAGE_KEY = "learning-studio-data-v2";
 const LEGACY_STORAGE_KEYS = ["learning-studio-data-v1"];
 const SESSION_KEY = "aleph-session";
-const COURSE_PLAN_VERSION = "seeded-user-canonical-workspace-v105";
+const COURSE_PLAN_VERSION = "seeded-user-canonical-workspace-v106";
 const MAX_FEEDBACK_ATTACHMENT_BYTES = 3 * 1024 * 1024;
 const MAX_COMPRESSED_FEEDBACK_BYTES = 2400 * 1024;
 const MAX_FEEDBACK_PDF_PAGES = 6;
@@ -313,9 +313,10 @@ function activeGateDaSections() {
 
 function sectionUnlockState(section, sections = activeGateDaSections()) {
   if (activeAccountTypeId() !== "gate-da-basic") return { locked: false, previousSection: null, previousTest: null, previousAttempt: null };
-  const index = sections.findIndex((entry) => entry.id === section.id);
+  const subjectSections = sections.filter((entry) => entry.subject === section.subject);
+  const index = subjectSections.findIndex((entry) => entry.id === section.id);
   if (index <= 0) return { locked: false, previousSection: null, previousTest: null, previousAttempt: null };
-  const previousSection = sections[index - 1];
+  const previousSection = subjectSections[index - 1];
   const previousTest = state.tests.find((entry) => entry.sectionId === previousSection.id);
   const previousAttempt = latestQuizAttemptForTest(previousTest?.id);
   const learnerLocked = !previousSection.reviewQuiz || !previousAttempt;
@@ -783,6 +784,7 @@ function buildPriyankaPlatinumPlan(now, accountTypes, sections, user = defaultUs
 function buildGateDaBasicPlan(now, accountTypes, sections, user = basicGateDaUser()) {
   const probabilitySections = sections.filter((section) => section.subject === "Probability");
   const linearAlgebraSections = sections.filter((section) => section.subject === "Linear Algebra");
+  const dsaSections = sections.filter((section) => section.subject === "Data Structures and Algorithms");
   const probabilitySection = probabilitySections[0];
   const conditionalSection = probabilitySections[1];
   const linearAlgebraSection = linearAlgebraSections[0];
@@ -866,6 +868,17 @@ function buildGateDaBasicPlan(now, accountTypes, sections, user = basicGateDaUse
         status: "In progress",
         details: "GATE DA Basic Linear Algebra, built around transformations, invariants, and physical intuition. Chapters 1-12 cover the core sequence; the final cumulative drill shifts into chapterless past-paper style recognition across projections, eigenvalues, rank, SVD, PCA, least squares, ridge, centering, Gram matrices, and quadratic forms.",
         sectionIds: linearAlgebraSections.map((section) => section.id),
+        updatedAt: now
+      },
+      {
+        id: "subject-gate-da-dsa",
+        accountTypeId: "gate-da-basic",
+        lessonPlanId,
+        title: "Data Structures and Algorithms",
+        date: monday,
+        status: "In progress",
+        details: "GATE DA Basic Data Structures and Algorithms starts with Asymptotic Analysis. The first module motivates runtime through concrete programs, then trains loop counting, nested-loop regions, halving loops, recurrence reads, and dominant-term simplification.",
+        sectionIds: dsaSections.map((section) => section.id),
         updatedAt: now
       }
     ],
@@ -1549,7 +1562,8 @@ function buildGateDaBasicPlan(now, accountTypes, sections, user = basicGateDaUse
         date: linearAlgebraWeekThirteenSunday,
         details: "Take the cumulative graph-backed objective review for GATE DA Linear Algebra structural recognition.",
         updatedAt: now
-      }
+      },
+      ...dsaBasicScheduleItems(now, monday, sunday)
     ],
     tests: [
       {
@@ -1758,7 +1772,8 @@ function buildGateDaBasicPlan(now, accountTypes, sections, user = basicGateDaUse
         sectionId: linearAlgebraSections[12]?.id,
         quizId: "quiz-linear-algebra-cumulative-drill-objective-review",
         updatedAt: now
-      }
+      },
+      ...dsaBasicTests(now, dsaSections, sunday)
     ],
     quizAttempts: [],
     tasks: [
@@ -2509,7 +2524,8 @@ function buildGateDaBasicPlan(now, accountTypes, sections, user = basicGateDaUse
         done: false,
         details: "Submit the cumulative objective quiz so Aleph logs structural recognition gaps across the full Linear Algebra track.",
         updatedAt: now
-      }
+      },
+      ...dsaBasicTasks(now, monday, sunday)
     ],
     accountTypes,
     enrollments: [
@@ -2531,11 +2547,11 @@ function buildGateDaBasicPlan(now, accountTypes, sections, user = basicGateDaUse
         userId,
         title: "GATE DA Basic plan",
         type: "exam",
-        subjects: ["Probability", "Linear Algebra"],
+        subjects: ["Probability", "Linear Algebra", "Data Structures and Algorithms"],
         startDate: monday,
         endDate: "2026-08-30",
         status: "active",
-        details: `GATE DA Basic plan surfaces: Subjects, Tasks, Schedule, Tests, Feedback, Resources, and Share. Recommended pace: study three subjects in parallel. Every 15 days, Aleph should generate an adaptive cumulative review quiz from prior performance, repeating missed concepts more often, reducing mastered concepts, and keeping high-weight exam topics in rotation. Current material build: Probability Chapters 1-10 and Linear Algebra Chapters 1-12 plus a chapterless cumulative past-paper style drill.${trialNote}`,
+        details: `GATE DA Basic plan surfaces: Subjects, Tasks, Schedule, Tests, Feedback, Resources, and Share. Recommended pace: study three subjects in parallel. Every 15 days, Aleph should generate an adaptive cumulative review quiz from prior performance, repeating missed concepts more often, reducing mastered concepts, and keeping high-weight exam topics in rotation. Current material build: Probability Chapters 1-10, Linear Algebra Chapters 1-12 plus a chapterless cumulative past-paper style drill, and DSA Chapter 1.${trialNote}`,
         updatedAt: now
       }
     ],
@@ -2638,7 +2654,8 @@ function buildGateDaBasicPlan(now, accountTypes, sections, user = basicGateDaUse
         date: linearAlgebraWeekThirteenSunday,
         details: "Review misses for failing to name the matrix family, skipping invariant language, expanding when trace/rank/eigenvalue shortcuts apply, misreading MSQ wording, and treating data-science LA prompts as separate from core projection, PSD, SVD, and spectral reasoning.",
         updatedAt: now
-      }
+      },
+      ...dsaBasicFeedback(now, sunday)
     ],
     resources: [
       {
@@ -2832,7 +2849,8 @@ function buildGateDaBasicPlan(now, accountTypes, sections, user = basicGateDaUse
         details: "Open Subjects -> Linear Algebra to finish the Basic track with chapterless GATE DA style drills across projection, centering, Gram, rank, eigenvalue, SVD, least squares, ridge, PCA, LDA, and quadratic-form patterns.",
         link: "",
         updatedAt: now
-      }
+      },
+      ...dsaBasicResources(now, monday)
     ],
     coursePlanVersion: COURSE_PLAN_VERSION
   };
@@ -2859,7 +2877,306 @@ function accountTypeCatalog(updatedAt = new Date().toISOString()) {
 function gateDaBasicSections(updatedAt = new Date().toISOString()) {
   return [
     ...gateDaProbabilitySections(updatedAt),
-    ...gateDaLinearAlgebraSections(updatedAt)
+    ...gateDaLinearAlgebraSections(updatedAt),
+    ...gateDaDsaSections(updatedAt)
+  ];
+}
+
+function dsaBasicScheduleItems(now, monday, sunday) {
+  return [
+    {
+      id: "schedule-dsa-chapter-1-study",
+      title: "DSA Chapter 1: Asymptotic Analysis",
+      week: 1,
+      subject: "Data Structures and Algorithms",
+      kind: "Study",
+      date: monday,
+      details: "Study why runtime grows, how Big-O/Theta/Omega compare algorithms, and how to determine runtime from loops, branches, halving patterns, and simple recurrences.",
+      updatedAt: now
+    },
+    {
+      id: "schedule-dsa-chapter-1-practice",
+      title: "DSA Chapter 1: Labelled Practice",
+      week: 1,
+      subject: "Data Structures and Algorithms",
+      kind: "Practice",
+      date: addDays(monday, 2),
+      details: "Solve escalating runtime-analysis exercises before reading worked solutions: single loops, separate loops, nested loops, triangular loops, halving loops, and simple recurrences.",
+      updatedAt: now
+    },
+    {
+      id: "schedule-dsa-chapter-1-review",
+      title: "DSA Chapter 1: Objective Review",
+      week: 1,
+      subject: "Data Structures and Algorithms",
+      kind: "Review",
+      date: sunday,
+      details: "Take the graph-backed objective review for asymptotic notation, dominant terms, loop counting, nested loops, halving loops, and recurrences.",
+      updatedAt: now
+    }
+  ];
+}
+
+function dsaBasicTests(now, dsaSections, sunday) {
+  return [
+    {
+      id: "test-dsa-chapter-1-objective-review",
+      title: "DSA Chapter 1 Objective Review",
+      date: sunday,
+      details: "Objective review for asymptotic notation, dominant terms, loop counting, nested loops, logarithmic loops, and simple recurrence recognition.",
+      sectionId: dsaSections[0]?.id,
+      quizId: "quiz-dsa-chapter-1-objective-review",
+      updatedAt: now
+    }
+  ];
+}
+
+function dsaBasicTasks(now, monday, sunday) {
+  return [
+    {
+      id: "task-dsa-chapter-1-read",
+      week: 1,
+      title: "DSA Ch 1: Read asymptotic analysis",
+      type: "Study",
+      date: monday,
+      status: "todo",
+      done: false,
+      details: "Open Subjects -> Data Structures and Algorithms -> Chapter 1 and study asymptotic notation, runtime-counting techniques, and worked examples.",
+      updatedAt: now
+    },
+    {
+      id: "task-dsa-chapter-1-practice",
+      week: 1,
+      title: "DSA Ch 1: Solve runtime analysis practice",
+      type: "Practice",
+      date: addDays(monday, 2),
+      status: "todo",
+      done: false,
+      details: "Attempt the labelled practice problems before opening worked solutions.",
+      updatedAt: now
+    },
+    {
+      id: "task-dsa-chapter-1-review",
+      week: 1,
+      title: "DSA Ch 1: Take objective review",
+      type: "Review",
+      date: sunday,
+      status: "todo",
+      done: false,
+      details: "Submit the Chapter 1 objective quiz so Aleph logs asymptotic notation, loop-counting, and recurrence-analysis gaps.",
+      updatedAt: now
+    }
+  ];
+}
+
+function dsaBasicFeedback(now, sunday) {
+  return [
+    {
+      id: "feedback-dsa-chapter-1",
+      title: "DSA Chapter 1 feedback focus",
+      date: sunday,
+      details: "Review misses for confusing Big-O/Theta/Omega, keeping constants as dominant terms, counting nested loops incorrectly, missing triangular sums, missing logarithmic halving, and misreading simple recurrences.",
+      updatedAt: now
+    }
+  ];
+}
+
+function dsaBasicResources(now, monday) {
+  return [
+    {
+      id: "resource-dsa-algorithms-arrays-search",
+      title: "DSA Chapter 1: Asymptotic Analysis",
+      date: monday,
+      details: "Open Subjects -> Data Structures and Algorithms to study asymptotic notation, runtime motivation, loop-counting techniques, nested-loop regions, halving loops, and simple recurrences.",
+      link: "",
+      updatedAt: now
+    }
+  ];
+}
+
+function gateDaDsaSections(updatedAt = new Date().toISOString()) {
+  return [
+    {
+      id: "gate-da-dsa-asymptotic-analysis",
+      exam: "GATE DA",
+      accountTier: "Basic",
+      subject: "Data Structures and Algorithms",
+      chapter: "Chapter 1",
+      section: "1",
+      title: "Asymptotic Analysis",
+      summary: "Runtime growth, Big-O/Theta/Omega, dominant terms, loop counting, nested-loop regions, halving patterns, and simple recurrences motivated through concrete programs.",
+      sectionPreview: "Asymptotic analysis answers a practical question: what happens when the input becomes too large for small examples to tell the truth? Two programs can both be instant for n=10 and completely different for n=10^7. This chapter teaches how to predict that difference before coding.",
+      previewActivity: "Program A checks every pair in a list of n numbers. Program B sorts the list, then scans it once. For n=100 both may feel fine. For n=1,000,000, which one is likely to survive? Do not compute exact seconds; compare growth.",
+      chapterIntro: [
+        "This first DSA chapter is not about memorising O(n), O(n log n), or O(n^2). It is about seeing where those expressions come from.",
+        "We start with concrete examples: scanning marks, checking all pairs, repeatedly halving a search range, and splitting a problem into subproblems. Then we turn those examples into repeatable techniques.",
+        "By the end, a learner should be able to look at short pseudocode and answer: what operation is repeated, how many times can it repeat, which term dominates, and what runtime class should be reported?"
+      ],
+      bookSections: [
+        {
+          number: "1.1",
+          title: "Why Runtime Growth Matters",
+          paragraphs: [
+            "Suppose one program checks n items once, and another program checks every pair of items. For n=10, the difference may be invisible. For n=1,000,000, one program does about a million checks and the other does about a trillion pair checks.",
+            "Asymptotic analysis ignores hardware details and asks how the work grows as input size grows. It is the language that lets us compare algorithms before implementation details hide the main idea.",
+            "For GATE DA, this matters because many questions show short pseudocode and ask for time complexity. The exam is testing whether you can see the growth pattern."
+          ],
+          blocks: [
+            {
+              type: "principle",
+              title: "Growth beats constants",
+              body: "A program doing 100n operations can beat a program doing n^2 operations once n is large enough. Asymptotic analysis focuses on the long-run growth, not the exact machine time."
+            },
+            {
+              type: "example",
+              title: "Example 1.1: scan versus pairs",
+              body: "Scanning all entries of a list does n checks. Checking every unordered pair does n(n-1)/2 checks. The first is linear; the second is quadratic."
+            }
+          ]
+        },
+        {
+          number: "1.2",
+          title: "Big-O, Theta, and Omega",
+          paragraphs: [
+            "Big-O is an upper-bound language: the work grows no faster than this kind of function, up to constant factors. Theta is a tight-bound language: the work grows like this function. Omega is a lower-bound language: the work grows at least this fast.",
+            "In most beginning runtime questions, the expected answer is a tight bound, so Theta(n^2) is more informative than O(n^2). But many exams write 'Big-O' informally while expecting the dominant tight class.",
+            "Constants and lower-order terms disappear because they do not control large-n growth."
+          ],
+          blocks: [
+            {
+              type: "definition",
+              title: "Definition: Big-O",
+              body: "f(n) is O(g(n)) when f(n) grows no faster than a constant multiple of g(n) after n is large enough."
+            },
+            {
+              type: "definition",
+              title: "Definition: Theta",
+              body: "f(n) is Theta(g(n)) when f(n) is bounded above and below by constant multiples of g(n) for large n. It means the growth class is tight."
+            },
+            {
+              type: "warning",
+              title: "Common trap",
+              body: "3n^2 + 20n + 7 is Theta(n^2), not Theta(3n^2 + 20n + 7), because the n^2 term dominates."
+            }
+          ]
+        },
+        {
+          number: "1.3",
+          title: "Technique 1: Count Loop Executions",
+          paragraphs: [
+            "For a single loop, count how many times the body runs as a function of n. A loop from 1 to n is n executions. A loop from 1 to n with step 2 is about n/2 executions, still Theta(n).",
+            "For separate loops, add the work and simplify the dominant term. A loop of n followed by a loop of n^2 has total n+n^2, so the runtime is Theta(n^2).",
+            "For nested loops, multiply only when each loop independently spans its full range. If the inner loop depends on the outer variable, draw or sum the iteration region."
+          ],
+          blocks: [
+            {
+              type: "strategy",
+              title: "Loop-count routine",
+              body: "Find the repeated body, count executions, multiply by body cost, then keep the dominant term."
+            },
+            {
+              type: "example",
+              title: "Example 1.2: separate loops",
+              body: "for i=1..n do constant work, then for j=1..n^2 do constant work. Total work is n+n^2, so the runtime is Theta(n^2)."
+            }
+          ]
+        },
+        {
+          number: "1.4",
+          title: "Technique 2: Recognize Common Shapes",
+          paragraphs: [
+            "Some runtime shapes appear constantly. A full scan is linear. All pairs are quadratic. All triples are cubic. Repeated halving is logarithmic. Sorting comparison-based data is usually n log n.",
+            "Triangular loops often look nested, but the exact count is 1+2+...+(n-1), which is n(n-1)/2, still Theta(n^2).",
+            "A loop that doubles i each time, such as i=1,2,4,8,..., reaches n in about log2 n steps."
+          ],
+          blocks: [
+            {
+              type: "example",
+              title: "Example 1.3: triangular loop",
+              body: "for i=1..n, for j=1..i, do work. The count is 1+2+...+n = n(n+1)/2, so the runtime is Theta(n^2)."
+            },
+            {
+              type: "example",
+              title: "Example 1.4: halving loop",
+              body: "while n>1, set n=floor(n/2). The value halves each time, so the loop runs Theta(log n) times."
+            }
+          ]
+        },
+        {
+          number: "1.5",
+          title: "Technique 3: Read Simple Recurrences",
+          paragraphs: [
+            "Recursive algorithms describe their runtime using recurrences. T(n)=T(n/2)+1 means one half-size recursive call plus constant extra work, giving Theta(log n).",
+            "T(n)=T(n-1)+1 means the problem size drops by one each time, giving Theta(n). T(n)=2T(n/2)+n is the classic divide-and-conquer recurrence for merge sort, giving Theta(n log n).",
+            "At this stage, the goal is not to prove the Master Theorem. The goal is to recognize common recurrence shapes and connect them to recursion trees."
+          ],
+          blocks: [
+            {
+              type: "strategy",
+              title: "Recurrence read",
+              body: "Ask: how many subproblems, how large are they, and how much work is done outside the recursive calls?"
+            },
+            {
+              type: "example",
+              title: "Example 1.5: merge-sort shape",
+              body: "T(n)=2T(n/2)+n splits into two half-size problems and spends linear work merging. The recursion has log n levels and n work per level, so total work is Theta(n log n)."
+            }
+          ]
+        }
+      ],
+      concepts: [
+        { name: "Growth motivation", description: "Large inputs reveal differences that small examples hide.", cue: "Ask what happens when n becomes huge." },
+        { name: "Asymptotic notation", description: "Big-O, Theta, and Omega describe upper, tight, and lower growth bounds.", cue: "Separate upper bound from tight bound." },
+        { name: "Dominant term", description: "The highest-growth term controls the asymptotic class.", cue: "Drop constants and lower-order terms." },
+        { name: "Loop counting", description: "Runtime comes from counting repeated work.", cue: "Count body executions as a function of n." },
+        { name: "Nested regions", description: "Nested loops may form rectangles, triangles, or other iteration regions.", cue: "Do not multiply blindly when loop bounds depend on each other." },
+        { name: "Logarithmic growth", description: "Repeated halving or doubling creates logarithmic steps.", cue: "Halving until 1 means log n levels." },
+        { name: "Recurrence shape", description: "Recursive runtime depends on number of calls, subproblem size, and combine work.", cue: "Read T(n)=aT(n/b)+work as a recursion tree." }
+      ],
+      techniques: [
+        { name: "Dominant-term simplification", when: "given a polynomial or sum of runtime terms.", move: "Drop constants and lower-order terms, then state Theta of the dominant term." },
+        { name: "Single-loop count", when: "one loop advances by a fixed step.", move: "Count iterations and ignore constant factors." },
+        { name: "Nested-loop region", when: "one loop bound depends on another variable.", move: "Write the sum or draw the iteration region before simplifying." },
+        { name: "Halving/doubling recognition", when: "a variable is multiplied or divided by a constant each step.", move: "Use logarithmic growth." },
+        { name: "Recursion-tree read", when: "given T(n)=aT(n/b)+f(n).", move: "Estimate work per level and number of levels for the common cases." }
+      ],
+      practiceProblems: dsaAlgorithmsArraysSearchProblems(),
+      implementationDrills: dsaAsymptoticImplementationDrills(),
+      reviewPrompts: [
+        "Why can an O(n^2) algorithm look fine on small inputs but fail on large inputs?",
+        "What is the difference between O(g(n)) and Theta(g(n))?",
+        "Why is 5n + 100 simplified to Theta(n)?",
+        "When can nested loops be multiplied directly?",
+        "Why does 1+2+...+n still give Theta(n^2)?",
+        "Why does repeated halving give Theta(log n)?",
+        "What information does T(n)=2T(n/2)+n give you about recursive work?"
+      ],
+      reviewQuiz: {
+        id: "quiz-dsa-chapter-1-objective-review",
+        title: "DSA Chapter 1 Objective Review",
+        instructions: "Complete this after studying asymptotic notation, runtime motivation, loop-counting techniques, nested-loop regions, logarithmic loops, and simple recurrence reads.",
+        questions: dsaAlgorithmsArraysSearchReviewQuestions()
+      },
+      readingQuestions: [
+        "What practical problem does asymptotic analysis solve?",
+        "What do Big-O, Theta, and Omega mean?",
+        "What terms can be dropped when simplifying runtime?",
+        "How do you count a single loop?",
+        "How do triangular nested loops differ from rectangular nested loops?",
+        "What code pattern usually produces logarithmic runtime?",
+        "How do you read a simple recurrence?"
+      ],
+      chapterSummary: [
+        "Asymptotic analysis compares how runtime grows with input size.",
+        "Big-O gives an upper bound, Theta gives a tight bound, and Omega gives a lower bound.",
+        "Dominant terms control large-input growth.",
+        "Single loops are counted by the number of body executions.",
+        "Nested loops require reading the iteration region, not guessing.",
+        "Repeated halving or doubling usually gives logarithmic runtime.",
+        "Simple recurrences can be read from subproblem count, subproblem size, and non-recursive work."
+      ],
+      updatedAt
+    }
   ];
 }
 
@@ -11668,6 +11985,314 @@ function varianceReviewQuestions() {
   }));
 }
 
+function dsaAlgorithmsArraysSearchProblems() {
+  return [
+    {
+      title: "Exercise 1: Simplify a Runtime Expression",
+      prompt: "An algorithm performs 7n + 40 operations. Give a tight asymptotic bound.",
+      solution: "The linear term 7n dominates the constant 40. Constants are ignored asymptotically, so the tight bound is Theta(n).",
+      tags: ["dominant-term", "theta-notation"]
+    },
+    {
+      title: "Exercise 2: Drop Lower-Order Terms",
+      prompt: "An algorithm performs 3n^2 + 20n + 100 operations. Give a tight asymptotic bound and explain why.",
+      solution: "The n^2 term dominates n and the constant term for large n. The tight bound is Theta(n^2).",
+      tags: ["dominant-term", "theta-notation"]
+    },
+    {
+      title: "Exercise 3: Single Loop",
+      prompt: "for i = 1 to n: do constant work. Determine the runtime.",
+      solution: "The loop body runs n times. Each run costs constant work, so the runtime is Theta(n).",
+      tags: ["single-loop", "loop-count"]
+    },
+    {
+      title: "Exercise 4: Fixed Step Size",
+      prompt: "for i = 1 to n step 3: do constant work. Determine the runtime.",
+      solution: "The loop runs about n/3 times. Constant factors are ignored, so the runtime is Theta(n).",
+      tags: ["single-loop", "constant-factor"]
+    },
+    {
+      title: "Exercise 5: Separate Loops",
+      prompt: "First loop: for i = 1 to n do constant work. Second loop: for j = 1 to n^2 do constant work. Determine the total runtime.",
+      solution: "The total work is n + n^2. The n^2 term dominates, so the runtime is Theta(n^2).",
+      tags: ["separate-loops", "dominant-term"]
+    },
+    {
+      title: "Exercise 6: Rectangular Nested Loop",
+      prompt: "for i = 1 to n: for j = 1 to n: do constant work. Determine the runtime.",
+      solution: "For each of n values of i, the inner loop runs n times. Total work is n*n = n^2, so the runtime is Theta(n^2).",
+      tags: ["nested-loop", "rectangular-loop"]
+    },
+    {
+      title: "Exercise 7: Triangular Nested Loop",
+      prompt: "for i = 1 to n: for j = 1 to i: do constant work. Determine the runtime.",
+      solution: "The work is 1 + 2 + ... + n = n(n+1)/2. The tight runtime is Theta(n^2).",
+      tags: ["nested-loop", "triangular-loop"]
+    },
+    {
+      title: "Exercise 8: Shrinking Inner Loop",
+      prompt: "for i = 1 to n: for j = i to n: do constant work. Determine the runtime.",
+      solution: "The inner loop lengths are n, n-1, n-2, ..., 1. The sum is n(n+1)/2, so the runtime is Theta(n^2).",
+      tags: ["nested-loop", "triangular-loop"]
+    },
+    {
+      title: "Exercise 9: Logarithmic Loop",
+      prompt: "while n > 1: n = floor(n/2); do constant work. Determine the runtime.",
+      solution: "The value halves each iteration. After k iterations it is about n/2^k. It reaches 1 when k is about log2 n, so the runtime is Theta(log n).",
+      tags: ["halving-loop", "logarithmic-growth"]
+    },
+    {
+      title: "Exercise 10: Doubling Loop",
+      prompt: "i = 1; while i < n: i = 2*i; do constant work. Determine the runtime.",
+      solution: "The values of i are 1, 2, 4, 8, ... until n. The number of doublings is Theta(log n).",
+      tags: ["doubling-loop", "logarithmic-growth"]
+    },
+    {
+      title: "Exercise 11: Mixed Linear and Logarithmic Work",
+      prompt: "for i = 1 to n: run a loop that halves x from n to 1. Determine the runtime.",
+      solution: "The outer loop runs n times. The inner halving loop runs Theta(log n) times each time. Total runtime is Theta(n log n).",
+      tags: ["nested-loop", "logarithmic-growth"]
+    },
+    {
+      title: "Exercise 12: Simple Recurrence",
+      prompt: "A recursive algorithm satisfies T(n) = T(n/2) + 1 with T(1)=1. Determine the runtime.",
+      solution: "There is one half-size recursive call and constant work per level. The input halves until 1, giving Theta(log n) levels and runtime Theta(log n).",
+      tags: ["recurrence", "halving-loop"]
+    },
+    {
+      title: "Exercise 13: Merge-Sort Shape",
+      prompt: "A recursive algorithm satisfies T(n) = 2T(n/2) + n. Use recursion-tree reasoning to determine the runtime.",
+      solution: "At each level, total combine work is n. There are Theta(log n) levels because subproblem size halves each level. Total runtime is Theta(n log n).",
+      tags: ["recurrence", "recursion-tree"]
+    },
+    {
+      title: "Exercise 14: Compare Two Algorithms",
+      prompt: "Algorithm A runs in Theta(n^2). Algorithm B runs in Theta(n log n) but has a larger constant factor. Which is better for sufficiently large n, and why?",
+      solution: "For sufficiently large n, Algorithm B is better because n log n grows more slowly than n^2. A larger constant can matter for small n, but asymptotically the growth class wins.",
+      tags: ["growth-comparison", "dominant-term"]
+    }
+  ];
+}
+
+function dsaAsymptoticImplementationDrills() {
+  return [
+    {
+      title: "Contains Duplicate",
+      source: "LeetCode 217 / NeetCode Arrays & Hashing",
+      difficulty: "Easy",
+      focus: "linear scan",
+      url: "https://leetcode.com/problems/contains-duplicate/",
+      targetTime: "O(n)",
+      reason: "Good first implementation because the brute-force O(n^2) pair check and the hash-set O(n) solution can be compared directly.",
+      writeup: "Explain why checking every pair is quadratic and why a set makes each lookup expected constant time."
+    },
+    {
+      title: "Valid Anagram",
+      source: "LeetCode 242 / NeetCode Arrays & Hashing",
+      difficulty: "Easy",
+      focus: "frequency count",
+      url: "https://leetcode.com/problems/valid-anagram/",
+      targetTime: "O(n)",
+      reason: "Trains linear counting and constant-size alphabet reasoning.",
+      writeup: "State whether your space is O(1) for a fixed alphabet or O(k) for k distinct characters."
+    },
+    {
+      title: "Two Sum",
+      source: "LeetCode 1 / NeetCode Arrays & Hashing",
+      difficulty: "Easy",
+      focus: "quadratic to linear",
+      url: "https://leetcode.com/problems/two-sum/",
+      targetTime: "O(n)",
+      reason: "Forces a clear comparison between the all-pairs O(n^2) method and one-pass hash-map O(n) method.",
+      writeup: "Write both runtimes and identify exactly which loop disappeared in the optimized version."
+    },
+    {
+      title: "Binary Search",
+      source: "LeetCode 704 / NeetCode Binary Search",
+      difficulty: "Easy",
+      focus: "logarithmic loop",
+      url: "https://leetcode.com/problems/binary-search/",
+      targetTime: "O(log n)",
+      reason: "Implements the halving pattern from the chapter in its cleanest form.",
+      writeup: "Explain why the search interval halves after every comparison."
+    },
+    {
+      title: "Search Insert Position",
+      source: "LeetCode 35",
+      difficulty: "Easy",
+      focus: "binary-search boundary",
+      url: "https://leetcode.com/problems/search-insert-position/",
+      targetTime: "O(log n)",
+      reason: "Adds boundary discipline without changing the logarithmic runtime.",
+      writeup: "State the invariant for the insertion position and why the loop still halves the interval."
+    },
+    {
+      title: "Product of Array Except Self",
+      source: "LeetCode 238 / NeetCode Arrays & Hashing",
+      difficulty: "Medium",
+      focus: "two linear passes",
+      url: "https://leetcode.com/problems/product-of-array-except-self/",
+      targetTime: "O(n)",
+      reason: "Shows that multiple separate passes can still simplify to linear time.",
+      writeup: "Count the prefix pass, suffix pass, and final work separately, then simplify."
+    },
+    {
+      title: "Find Minimum in Rotated Sorted Array",
+      source: "LeetCode 153 / NeetCode Binary Search",
+      difficulty: "Medium",
+      focus: "logarithmic decision",
+      url: "https://leetcode.com/problems/find-minimum-in-rotated-sorted-array/",
+      targetTime: "O(log n)",
+      reason: "Uses binary-search style interval reduction when the comparison is less direct than equality.",
+      writeup: "Explain what half is discarded and why the minimum remains in the retained interval."
+    },
+    {
+      title: "Koko Eating Bananas",
+      source: "LeetCode 875 / NeetCode Binary Search",
+      difficulty: "Medium",
+      focus: "answer-space binary search",
+      url: "https://leetcode.com/problems/koko-eating-bananas/",
+      targetTime: "O(n log m)",
+      reason: "Connects a logarithmic outer search over answers with a linear feasibility check.",
+      writeup: "Define m as the maximum pile size, then justify log m feasibility trials times O(n) per trial."
+    },
+    {
+      title: "Median of Two Sorted Arrays",
+      source: "LeetCode 4",
+      difficulty: "Hard",
+      focus: "logarithmic partition",
+      url: "https://leetcode.com/problems/median-of-two-sorted-arrays/",
+      targetTime: "O(log min(m,n))",
+      reason: "A hard extension of binary search where the runtime comes from searching partition positions.",
+      writeup: "Identify the smaller search space and explain why each partition test discards half of it."
+    },
+    {
+      title: "Count of Smaller Numbers After Self",
+      source: "LeetCode 315",
+      difficulty: "Hard",
+      focus: "n log n via merge",
+      url: "https://leetcode.com/problems/count-of-smaller-numbers-after-self/",
+      targetTime: "O(n log n)",
+      reason: "Introduces the merge-sort runtime shape before the formal divide-and-conquer chapter.",
+      writeup: "Explain why the recursion has log n levels and why each level does O(n) merge/count work."
+    }
+  ];
+}
+
+function dsaAlgorithmsArraysSearchReviewQuestions() {
+  const metadata = {
+    "dsa-ch1-q1": { targetConcept: "dominant-term", prereqsUsed: ["theta-notation"], difficulty: 1, gateWeight: "high" },
+    "dsa-ch1-q2": { targetConcept: "single-loop", prereqsUsed: ["loop-count"], difficulty: 1, gateWeight: "high" },
+    "dsa-ch1-q3": { targetConcept: "separate-loops", prereqsUsed: ["dominant-term"], difficulty: 2, gateWeight: "high" },
+    "dsa-ch1-q4": { targetConcept: "nested-loop", prereqsUsed: ["rectangular-loop"], difficulty: 2, gateWeight: "high" },
+    "dsa-ch1-q5": { targetConcept: "triangular-loop", prereqsUsed: ["nested-loop"], difficulty: 3, gateWeight: "high" },
+    "dsa-ch1-q6": { targetConcept: "logarithmic-growth", prereqsUsed: ["halving-loop"], difficulty: 2, gateWeight: "high" },
+    "dsa-ch1-q7": { targetConcept: "recurrence", prereqsUsed: ["recursion-tree", "logarithmic-growth"], difficulty: 3, gateWeight: "high" },
+    "dsa-ch1-q8": { targetConcept: "growth-comparison", prereqsUsed: ["dominant-term"], difficulty: 2, gateWeight: "medium" }
+  };
+  return [
+    {
+      id: "dsa-ch1-q1",
+      prompt: "What is the tight asymptotic bound for 4n^2 + 30n + 100?",
+      tags: ["dominant-term", "theta-notation"],
+      options: [
+        { id: "a", text: "Theta(1)" },
+        { id: "b", text: "Theta(n)" },
+        { id: "c", text: "Theta(n^2)" },
+        { id: "d", text: "Theta(4n^2 + 30n + 100)" }
+      ],
+      answer: "c"
+    },
+    {
+      id: "dsa-ch1-q2",
+      prompt: "A loop runs from i=1 to n with constant work in the body. What is the tight runtime?",
+      tags: ["single-loop", "loop-count"],
+      options: [
+        { id: "a", text: "O(1)" },
+        { id: "b", text: "O(log n)" },
+        { id: "c", text: "Theta(n)" },
+        { id: "d", text: "Theta(n log n)" }
+      ],
+      answer: "c"
+    },
+    {
+      id: "dsa-ch1-q3",
+      prompt: "One loop takes Theta(n), followed by another loop taking Theta(n^2). What is the total tight runtime?",
+      tags: ["separate-loops", "dominant-term"],
+      options: [
+        { id: "a", text: "Theta(n)" },
+        { id: "b", text: "Theta(n^2)" },
+        { id: "c", text: "Theta(n^3)" },
+        { id: "d", text: "Theta(log n)" }
+      ],
+      answer: "b"
+    },
+    {
+      id: "dsa-ch1-q4",
+      prompt: "for i=1..n: for j=1..n: do constant work. What is the tight runtime?",
+      tags: ["nested-loop", "rectangular-loop"],
+      options: [
+        { id: "a", text: "Theta(n)" },
+        { id: "b", text: "Theta(n log n)" },
+        { id: "c", text: "Theta(n^2)" },
+        { id: "d", text: "Theta(2^n)" }
+      ],
+      answer: "c"
+    },
+    {
+      id: "dsa-ch1-q5",
+      prompt: "for i=1..n: for j=1..i: do constant work. What is the tight runtime?",
+      tags: ["triangular-loop", "nested-loop"],
+      options: [
+        { id: "a", text: "Theta(n)" },
+        { id: "b", text: "Theta(n log n)" },
+        { id: "c", text: "Theta(n^2)" },
+        { id: "d", text: "Theta(n^3)" }
+      ],
+      answer: "c"
+    },
+    {
+      id: "dsa-ch1-q6",
+      prompt: "A loop repeatedly divides n by 2 until n becomes 1. What is the tight runtime?",
+      tags: ["logarithmic-growth", "halving-loop"],
+      options: [
+        { id: "a", text: "Theta(1)" },
+        { id: "b", text: "Theta(log n)" },
+        { id: "c", text: "Theta(n)" },
+        { id: "d", text: "Theta(n^2)" }
+      ],
+      answer: "b"
+    },
+    {
+      id: "dsa-ch1-q7",
+      prompt: "What is the common tight runtime for T(n)=2T(n/2)+n?",
+      tags: ["recurrence", "recursion-tree", "logarithmic-growth"],
+      options: [
+        { id: "a", text: "Theta(log n)" },
+        { id: "b", text: "Theta(n)" },
+        { id: "c", text: "Theta(n log n)" },
+        { id: "d", text: "Theta(n^2)" }
+      ],
+      answer: "c"
+    },
+    {
+      id: "dsa-ch1-q8",
+      prompt: "For sufficiently large n, which growth class is better?",
+      tags: ["growth-comparison", "dominant-term"],
+      options: [
+        { id: "a", text: "Theta(n^2), because squares are simpler" },
+        { id: "b", text: "Theta(n log n), because it grows more slowly than n^2" },
+        { id: "c", text: "They are asymptotically equal" },
+        { id: "d", text: "The one with the larger constant factor" }
+      ],
+      answer: "b"
+    }
+  ].map((question) => ({
+    ...question,
+    ...(metadata[question.id] || { targetConcept: question.tags[0], prereqsUsed: question.tags.slice(1), difficulty: question.tags.length, gateWeight: "medium" })
+  }));
+}
+
 function conditionalProbabilityReviewQuestions() {
   const metadata = {
     "cp-review-1": { targetConcept: "conditional-denominator", prereqsUsed: ["conditional-probability"], difficulty: 1, gateWeight: "high" },
@@ -12013,6 +12638,116 @@ function probabilityFoundationConceptGraph() {
         prereqs: ["event-translation", "counting"],
         repairMaterial: "Review Chapter 1.5 and mark the overlap before adding two counts.",
         gateWeight: "medium"
+      }
+    }
+  };
+}
+
+function dsaAlgorithmsArraysSearchConceptGraph() {
+  return {
+    chapterId: "gate-da-dsa-asymptotic-analysis",
+    chapterTitle: "DSA Chapter 1: Asymptotic Analysis",
+    gateWeight: "high",
+    fallbackConcepts: ["dominant-term", "loop-count", "nested-loop", "logarithmic-growth"],
+    fallbackDifficultyMix: [1, 2, 2, 3],
+    fallbackInstruction: "Retest dominant-term simplification, then add loop-count, nested-loop, logarithmic-loop, and recurrence checks.",
+    stableNextAction: "Next: move to arrays and search only after asymptotic notation, loop counting, and recurrence shapes are reliable.",
+    nodes: {
+      "growth-motivation": {
+        label: "Growth motivation",
+        prereqs: [],
+        repairMaterial: "Review DSA Chapter 1.1 and compare one scan, all-pairs, and sorting-plus-scan for large n.",
+        gateWeight: "high"
+      },
+      "theta-notation": {
+        label: "Theta notation",
+        prereqs: ["growth-motivation"],
+        repairMaterial: "Review DSA Chapter 1.2 and state the difference between O, Theta, and Omega for three examples.",
+        gateWeight: "high"
+      },
+      "dominant-term": {
+        label: "Dominant term",
+        prereqs: ["theta-notation"],
+        repairMaterial: "Review DSA Chapter 1.2 and simplify 7n+4, 3n^2+20n+1, and n log n+n.",
+        gateWeight: "high"
+      },
+      "loop-count": {
+        label: "Loop count",
+        prereqs: ["dominant-term"],
+        repairMaterial: "Review DSA Chapter 1.3 and count exact body executions before simplifying.",
+        gateWeight: "high"
+      },
+      "single-loop": {
+        label: "Single loop",
+        prereqs: ["loop-count"],
+        repairMaterial: "Review fixed-step loops and explain why step size 2 or 3 does not change Theta(n).",
+        gateWeight: "high"
+      },
+      "separate-loops": {
+        label: "Separate loops",
+        prereqs: ["dominant-term", "loop-count"],
+        repairMaterial: "Add runtimes from separate loops, then keep only the dominant growth class.",
+        gateWeight: "high"
+      },
+      "nested-loop": {
+        label: "Nested loop",
+        prereqs: ["loop-count"],
+        repairMaterial: "Review DSA Chapter 1.4 and draw the iteration region before multiplying loop lengths.",
+        gateWeight: "high"
+      },
+      "rectangular-loop": {
+        label: "Rectangular nested loop",
+        prereqs: ["nested-loop"],
+        repairMaterial: "Practice loops where both loop variables independently run over n values.",
+        gateWeight: "high"
+      },
+      "triangular-loop": {
+        label: "Triangular loop",
+        prereqs: ["nested-loop"],
+        repairMaterial: "Review sums 1+2+...+n and n+(n-1)+...+1 as Theta(n^2).",
+        gateWeight: "high"
+      },
+      "constant-factor": {
+        label: "Constant factor",
+        prereqs: ["dominant-term"],
+        repairMaterial: "Practice explaining why n/2, 3n, and 100n are all Theta(n).",
+        gateWeight: "medium"
+      },
+      "logarithmic-growth": {
+        label: "Logarithmic growth",
+        prereqs: ["loop-count"],
+        repairMaterial: "Review DSA Chapter 1.4 and list powers of 2 until n to see why halving/doubling is logarithmic.",
+        gateWeight: "high"
+      },
+      "halving-loop": {
+        label: "Halving loop",
+        prereqs: ["logarithmic-growth"],
+        repairMaterial: "Trace n, n/2, n/4, ... until 1 and count levels.",
+        gateWeight: "high"
+      },
+      "doubling-loop": {
+        label: "Doubling loop",
+        prereqs: ["logarithmic-growth"],
+        repairMaterial: "Trace 1, 2, 4, 8, ... until n and count levels.",
+        gateWeight: "high"
+      },
+      recurrence: {
+        label: "Recurrence",
+        prereqs: ["logarithmic-growth", "dominant-term"],
+        repairMaterial: "Review DSA Chapter 1.5 and identify number of subproblems, subproblem size, and outside work.",
+        gateWeight: "high"
+      },
+      "recursion-tree": {
+        label: "Recursion tree",
+        prereqs: ["recurrence"],
+        repairMaterial: "Draw levels for T(n)=2T(n/2)+n and mark n work per level for log n levels.",
+        gateWeight: "high"
+      },
+      "growth-comparison": {
+        label: "Growth comparison",
+        prereqs: ["dominant-term", "logarithmic-growth"],
+        repairMaterial: "Order 1, log n, n, n log n, n^2, n^3, and 2^n from slowest to fastest growth.",
+        gateWeight: "high"
       }
     }
   };
@@ -18843,6 +19578,7 @@ function buildQuizFeedbackReport({ answers, quiz, section, conceptScores, strong
 }
 
 function conceptGraphForSection(section) {
+  if (section?.id === "gate-da-dsa-asymptotic-analysis") return dsaAlgorithmsArraysSearchConceptGraph();
   if (section?.id === "gate-da-linear-algebra-vector-spaces-coordinates") return linearAlgebraVectorSpacesConceptGraph();
   if (section?.id === "gate-da-linear-algebra-transformations-matrices") return linearAlgebraTransformationsConceptGraph();
   if (section?.id === "gate-da-linear-algebra-rank-nullity-systems") return linearAlgebraRankNullityConceptGraph();
@@ -20740,7 +21476,7 @@ function renderGateDaWorkspace() {
         <div class="item-top">
           <div>
             <h4>GATE DA Basic Workspace</h4>
-            <p>Basic account workspace for the current GATE DA material. Use this plan to inspect Subjects -> Probability and Subjects -> Linear Algebra, labelled practice, and objective review quizzes with prerequisite feedback.</p>
+            <p>Basic account workspace for the current GATE DA material. Use this plan to inspect Subjects -> Probability, Linear Algebra, and Data Structures and Algorithms, labelled practice, and objective review quizzes with prerequisite feedback.</p>
           </div>
           <span class="tag">${escapeHtml(gateDaEnrollment.paymentStatus || "active")}</span>
         </div>
@@ -20829,6 +21565,7 @@ function sectionTemplate(section) {
             `).join("")}
             ${section.readingQuestions?.length ? `<a href="#${section.id}-reading">Reading</a>` : ""}
             ${section.practiceProblems?.length ? `<a href="#${section.id}-practice">Practice</a>` : ""}
+            ${section.implementationDrills?.length ? `<a href="#${section.id}-implementation">Code</a>` : ""}
             ${section.reviewPrompts?.length ? `<a href="#${section.id}-review">Review</a>` : ""}
             ${section.reviewQuiz ? `<a href="#${section.id}-quiz">Quiz</a>` : ""}
             <a href="#${section.id}-summary">Summary</a>
@@ -20883,6 +21620,14 @@ function sectionTemplate(section) {
             <p class="book-kicker">Labelled Practice Problems</p>
             <div class="problem-list book-problems">
               ${section.practiceProblems.map(practiceProblemTemplate).join("")}
+            </div>
+          </section>` : ""}
+
+          ${section.implementationDrills?.length ? `<section class="book-section" id="${section.id}-implementation">
+            <p class="book-kicker">Implementation Drills</p>
+            <p class="muted">For each drill: implement it, submit it on the source platform when possible, then write time complexity, space complexity, and one sentence justifying the growth class.</p>
+            <div class="problem-list book-problems">
+              ${section.implementationDrills.map(implementationDrillTemplate).join("")}
             </div>
           </section>` : ""}
 
@@ -21136,20 +21881,44 @@ function tailDiagramTemplate(visual) {
 }
 
 function practiceProblemTemplate(problem) {
+  const title = problem.label || problem.title || "Practice problem";
+  const technique = problem.technique || (problem.tags || []).join(", ") || "Practice";
+  const difficulty = problem.difficulty || "Core";
+  const concept = problem.concept || problem.tags?.[0] || "practice";
   return `
     <article class="practice-problem">
       <div class="problem-heading">
         <div>
-          <strong>${escapeHtml(problem.label)}</strong>
-          <p>${escapeHtml(problem.technique)} - ${escapeHtml(problem.difficulty)}</p>
+          <strong>${escapeHtml(title)}</strong>
+          <p>${escapeHtml(technique)} - ${escapeHtml(difficulty)}</p>
         </div>
-        <span class="tag">${escapeHtml(problem.concept)}</span>
+        <span class="tag">${escapeHtml(concept)}</span>
       </div>
       <p>${mathHtml(problem.prompt)}</p>
       <details>
         <summary>Show solution</summary>
         <p>${mathHtml(problem.solution)}</p>
       </details>
+    </article>
+  `;
+}
+
+function implementationDrillTemplate(drill) {
+  return `
+    <article class="practice-problem">
+      <div class="problem-heading">
+        <div>
+          <strong>${escapeHtml(drill.title)}</strong>
+          <p>${escapeHtml(drill.source)} - ${escapeHtml(drill.difficulty)}</p>
+        </div>
+        <span class="tag">${escapeHtml(drill.focus)}</span>
+      </div>
+      <p>${escapeHtml(drill.reason)}</p>
+      <ul class="summary-list">
+        <li>Target runtime: ${escapeHtml(drill.targetTime)}</li>
+        <li>Write-up: ${escapeHtml(drill.writeup)}</li>
+      </ul>
+      ${drill.url ? `<a class="text-btn" href="${escapeHtml(drill.url)}" target="_blank" rel="noopener">Open problem</a>` : ""}
     </article>
   `;
 }
