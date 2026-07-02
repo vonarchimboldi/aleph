@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>July 4 Pset — Regression and OLS Foundations</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" />
+  <link rel="stylesheet" href="/psets/material-page.css" />
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+  <script defer src="/psets/material-page.js"></script>
+</head>
+<body>
+  <main class="wrap">
+    <section class="hero">
+      <h1>July 4 Pset: Regression and OLS Foundations</h1>
+      <p class="sub">
+        Ten problems for Regression and OLS Week 2. This is Day 1 for the topic: compute means, covariance, slope, intercept, fitted values, and residuals before moving to matrix OLS or constrained estimators.
+      </p>
+      <div class="meta">
+        <span class="chip">Probability and Statistics</span>
+        <span class="chip">Saturday</span>
+        <span class="chip">5 concept builders</span>
+        <span class="chip">3 applications</span>
+        <span class="chip">2 hidden-pattern problems</span>
+        <span class="chip">Solutions included</span>
+      </div>
+      <p class="math-fallback">Math rendering did not load from the CDN. Refresh once, or use a network that allows KaTeX CDN files.</p>
+    </section>
+
+    <section class="panel accent">
+      <h2>Core Pattern</h2>
+      <p>Simple least squares fits a line \( \widehat y=a+bx \) by making squared residuals small. For one predictor, the slope is a covariance-over-variance ratio.</p>
+      <div class="formula">
+        \[
+          \widehat b=\frac{\sum_i (x_i-\overline x)(y_i-\overline y)}{\sum_i (x_i-\overline x)^2},
+          \qquad
+          \widehat a=\overline y-\widehat b\,\overline x.
+        \]
+      </div>
+      <p>The fitted line passes through the mean point \((\overline x,\overline y)\). Residuals are observed minus fitted values: \(e_i=y_i-\widehat y_i\).</p>
+    </section>
+
+    <section class="panel">
+      <h2>Setup Checklist</h2>
+      <div class="grid">
+        <ul>
+          <li>Compute \(\overline x\) and \(\overline y\) first.</li>
+          <li>Center each value: \(x_i-\overline x\) and \(y_i-\overline y\).</li>
+          <li>Compute the slope as centered cross-product divided by centered \(x\)-square.</li>
+          <li>Use the mean point to get the intercept.</li>
+        </ul>
+        <ul>
+          <li>Fitted value: \(\widehat y_i=\widehat a+\widehat b x_i\).</li>
+          <li>Residual: \(e_i=y_i-\widehat y_i\).</li>
+          <li>In simple OLS with intercept, residuals sum to zero.</li>
+          <li>The matrix equation \(X^TX\widehat\beta=X^Ty\) comes later; today is the meaning of each quantity.</li>
+        </ul>
+      </div>
+    </section>
+
+    <div class="section-label">Problems 1-5 · Concept Builders</div>
+
+    <article class="problem">
+      <div class="problem-head">
+        <div class="problem-title">1. Mean Point of a Small Dataset</div>
+        <div class="tags">
+          <span class="tag concept">Concept</span>
+          <span class="tag">Means</span>
+          <span class="tag">6 min</span>
+        </div>
+      </div>
+      <p>For the data points \((1,2),(2,4),(3,5)\), compute \(\overline x\) and \(\overline y\). State the mean point.</p>
+      <details>
+        <summary>Solution</summary>
+        <p>The average of the \(x\)-values is</p>
+        \[
+          \overline x=\frac{1+2+3}{3}=2.
+        \]
+        <p>The average of the \(y\)-values is</p>
+        \[
+          \overline y=\frac{2+4+5}{3}=\frac{11}{3}.
+        \]
+        <p>The mean point is</p>
+        \[
+          \left(2,\frac{11}{3}\right).
+        \]
+      </details>
+    </article>
+
+    <article class="problem">
+      <div class="problem-head">
+        <div class="problem-title">2. Centered Cross-Products</div>
+        <div class="tags">
+          <span class="tag concept">Concept</span>
+          <span class="tag">Covariance numerator</span>
+          <span class="tag">8 min</span>
+        </div>
+      </div>
+      <p>Using the same points \((1,2),(2,4),(3,5)\), compute \(\sum_i (x_i-\overline x)(y_i-\overline y)\).</p>
+      <details>
+        <summary>Solution</summary>
+        <p>From Problem 1, \(\overline x=2\) and \(\overline y=11/3\). The centered values are</p>
+        \[
+          x_i-\overline x:\ -1,0,1.
+        \]
+        <p>For \(y\), the centered values are</p>
+        \[
+          2-\frac{11}{3}=-\frac53,\quad
+          4-\frac{11}{3}=\frac13,\quad
+          5-\frac{11}{3}=\frac43.
+        \]
+        <p>The cross-products sum to</p>
+        \[
+          (-1)\left(-\frac53\right)+0\left(\frac13\right)+1\left(\frac43\right)
+          =\frac53+\frac43=3.
+        \]
+      </details>
+    </article>
+
+    <article class="problem">
+      <div class="problem-head">
+        <div class="problem-title">3. Simple OLS Slope</div>
+        <div class="tags">
+          <span class="tag concept">Concept</span>
+          <span class="tag">Slope</span>
+          <span class="tag">8 min</span>
+        </div>
+      </div>
+      <p>For the data points \((1,2),(2,4),(3,5)\), use the centered formula to compute the OLS slope \(\widehat b\).</p>
+      <details>
+        <summary>Solution</summary>
+        <p>From Problem 2, the numerator is \(3\). The denominator is</p>
+        \[
+          \sum_i (x_i-\overline x)^2=(-1)^2+0^2+1^2=2.
+        \]
+        <p>Therefore</p>
+        \[
+          \widehat b=\frac{3}{2}.
+        \]
+      </details>
+    </article>
+
+    <article class="problem">
+      <div class="problem-head">
+        <div class="problem-title">4. Intercept From the Mean Point</div>
+        <div class="tags">
+          <span class="tag concept">Concept</span>
+          <span class="tag">Intercept</span>
+          <span class="tag">7 min</span>
+        </div>
+      </div>
+      <p>For the same dataset, use \(\widehat b=3/2\), \(\overline x=2\), and \(\overline y=11/3\) to find the intercept \(\widehat a\).</p>
+      <details>
+        <summary>Solution</summary>
+        <p>The fitted line with intercept passes through \((\overline x,\overline y)\), so</p>
+        \[
+          \widehat a=\overline y-\widehat b\,\overline x.
+        \]
+        <p>Substitute the values:</p>
+        \[
+          \widehat a=\frac{11}{3}-\frac32\cdot2
+          =\frac{11}{3}-3
+          =\frac23.
+        \]
+        <p>The fitted line is</p>
+        \[
+          \widehat y=\frac23+\frac32x.
+        \]
+      </details>
+    </article>
+
+    <article class="problem">
+      <div class="problem-head">
+        <div class="problem-title">5. Fitted Values and Residuals</div>
+        <div class="tags">
+          <span class="tag concept">Concept</span>
+          <span class="tag">Residuals</span>
+          <span class="tag">9 min</span>
+        </div>
+      </div>
+      <p>For the fitted line \(\widehat y=2/3+(3/2)x\) and data \((1,2),(2,4),(3,5)\), compute the three residuals and check their sum.</p>
+      <details>
+        <summary>Solution</summary>
+        <p>The fitted values are</p>
+        \[
+          \widehat y_1=\frac23+\frac32=\frac{13}{6},
+          \quad
+          \widehat y_2=\frac23+3=\frac{11}{3},
+          \quad
+          \widehat y_3=\frac23+\frac92=\frac{31}{6}.
+        \]
+        <p>The residuals \(e_i=y_i-\widehat y_i\) are</p>
+        \[
+          2-\frac{13}{6}=-\frac16,\quad
+          4-\frac{11}{3}=\frac13,\quad
+          5-\frac{31}{6}=-\frac16.
+        \]
+        <p>Their sum is</p>
+        \[
+          -\frac16+\frac13-\frac16=0.
+        \]
+      </details>
+    </article>
+
+    <div class="section-label">Problems 6-8 · Applications</div>
+
+    <article class="problem">
+      <div class="problem-head">
+        <div class="problem-title">6. Regression Through a Perfect Line</div>
+        <div class="tags">
+          <span class="tag integration">Application</span>
+          <span class="tag">Perfect fit</span>
+          <span class="tag">10 min</span>
+        </div>
+      </div>
+      <p>The data points are \((1,3),(2,5),(3,7),(4,9)\). Find the OLS line without doing a long table.</p>
+      <details>
+        <summary>Solution</summary>
+        <p>Each time \(x\) increases by \(1\), \(y\) increases by \(2\). The points lie on a line with slope \(2\).</p>
+        <p>Use one point, say \((1,3)\), to find the intercept:</p>
+        \[
+          3=a+2(1).
+        \]
+        <p>So \(a=1\). The OLS line is</p>
+        \[
+          \widehat y=1+2x.
+        \]
+        <p>Because all points are exactly on this line, every residual is zero.</p>
+      </details>
+    </article>
+
+    <article class="problem">
+      <div class="problem-head">
+        <div class="problem-title">7. Slope From Summary Sums</div>
+        <div class="tags">
+          <span class="tag integration">Application</span>
+          <span class="tag">Summary statistics</span>
+          <span class="tag">12 min</span>
+        </div>
+      </div>
+      <p>For a dataset, suppose \(\sum_i (x_i-\overline x)(y_i-\overline y)=18\) and \(\sum_i (x_i-\overline x)^2=12\). Also suppose \(\overline x=4\) and \(\overline y=10\). Find the OLS line.</p>
+      <details>
+        <summary>Solution</summary>
+        <p>The slope is</p>
+        \[
+          \widehat b=\frac{18}{12}=\frac32.
+        \]
+        <p>The intercept is</p>
+        \[
+          \widehat a=\overline y-\widehat b\,\overline x
+          =10-\frac32\cdot4
+          =10-6=4.
+        \]
+        <p>So the OLS line is</p>
+        \[
+          \widehat y=4+\frac32x.
+        \]
+      </details>
+    </article>
+
+    <article class="problem">
+      <div class="problem-head">
+        <div class="problem-title">8. Residual Orthogonality to the Intercept</div>
+        <div class="tags">
+          <span class="tag integration">Application</span>
+          <span class="tag">Residual sum</span>
+          <span class="tag">13 min</span>
+        </div>
+      </div>
+      <p>A fitted line with intercept gives fitted values \(\widehat y_1,\ldots,\widehat y_n\) and residuals \(e_i=y_i-\widehat y_i\). Explain why the residuals should sum to zero in an OLS fit with intercept.</p>
+      <details>
+        <summary>Solution</summary>
+        <p>OLS chooses \(a\) and \(b\) to minimize</p>
+        \[
+          S(a,b)=\sum_i (y_i-a-bx_i)^2.
+        \]
+        <p>Differentiate with respect to the intercept \(a\):</p>
+        \[
+          \frac{\partial S}{\partial a}
+          =
+          -2\sum_i (y_i-a-bx_i).
+        \]
+        <p>At the minimum this derivative is zero, so</p>
+        \[
+          \sum_i (y_i-\widehat a-\widehat b x_i)=0.
+        \]
+        <p>The terms inside the sum are residuals. Hence</p>
+        \[
+          \sum_i e_i=0.
+        \]
+      </details>
+    </article>
+
+    <div class="section-label">Problems 9-10 · Hidden-Pattern / ISI Style</div>
+
+    <article class="problem">
+      <div class="problem-head">
+        <div class="problem-title">9. First Normal Equation</div>
+        <div class="tags">
+          <span class="tag challenge">Challenge</span>
+          <span class="tag">Normal equations</span>
+          <span class="tag">16 min</span>
+        </div>
+      </div>
+      <p>For simple regression with intercept, show that minimizing \(\sum_i(y_i-a-bx_i)^2\) gives the equation \(\sum_i y_i=n a+b\sum_i x_i\).</p>
+      <details>
+        <summary>Solution</summary>
+        <p>Let</p>
+        \[
+          S(a,b)=\sum_i(y_i-a-bx_i)^2.
+        \]
+        <p>Differentiate with respect to \(a\):</p>
+        \[
+          \frac{\partial S}{\partial a}
+          =
+          -2\sum_i(y_i-a-bx_i).
+        \]
+        <p>Set this equal to zero:</p>
+        \[
+          \sum_i(y_i-a-bx_i)=0.
+        \]
+        <p>Expand the sum:</p>
+        \[
+          \sum_i y_i-\sum_i a-b\sum_i x_i=0.
+        \]
+        <p>Since \(\sum_i a=na\), this becomes</p>
+        \[
+          \sum_i y_i=n a+b\sum_i x_i.
+        \]
+      </details>
+    </article>
+
+    <article class="problem">
+      <div class="problem-head">
+        <div class="problem-title">10. Prediction and Residual Check</div>
+        <div class="tags">
+          <span class="tag isi">ISI-style</span>
+          <span class="tag">Interpretation</span>
+          <span class="tag">18 min</span>
+        </div>
+      </div>
+      <p>A fitted regression line is \(\widehat y=5+0.8x\). A point has \(x=10\) and observed value \(y=14\). Find the fitted value and residual. Then say whether this point lies above or below the fitted line.</p>
+      <details>
+        <summary>Solution</summary>
+        <p>The fitted value is</p>
+        \[
+          \widehat y=5+0.8(10)=13.
+        \]
+        <p>The residual is observed minus fitted:</p>
+        \[
+          e=y-\widehat y=14-13=1.
+        \]
+        <p>The residual is positive, so the observed point lies above the fitted line.</p>
+      </details>
+    </article>
+
+    <section class="panel">
+      <h2>Answer Summary</h2>
+      <ol>
+        <li>Mean point \((2,11/3)\).</li>
+        <li>Centered cross-product sum \(=3\).</li>
+        <li>Slope \(\widehat b=3/2\).</li>
+        <li>Intercept \(\widehat a=2/3\); fitted line \(\widehat y=2/3+(3/2)x\).</li>
+        <li>Residuals \(-1/6,1/3,-1/6\), summing to \(0\).</li>
+        <li>\(\widehat y=1+2x\).</li>
+        <li>\(\widehat y=4+(3/2)x\).</li>
+        <li>Residuals sum to zero because the intercept derivative sets \(\sum_i e_i=0\).</li>
+        <li>The first normal equation is \(\sum_i y_i=n a+b\sum_i x_i\).</li>
+        <li>Fitted value \(13\), residual \(1\), point above the line.</li>
+      </ol>
+    </section>
+  </main>
+</body>
+</html>

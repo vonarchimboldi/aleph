@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>July 3 Pset — UMP/NP Foundations</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" />
+  <link rel="stylesheet" href="/psets/material-page.css" />
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+  <script defer src="/psets/material-page.js"></script>
+</head>
+<body>
+  <main class="wrap">
+    <section class="hero">
+      <h1>July 3 Pset: UMP/NP Foundations</h1>
+      <p class="sub">
+        Ten problems for UMP/NP Week 2. This is Day 1 for testing basics: state the hypotheses, compare likelihoods, choose the rejection direction, set the size under \(H_0\), then compute power under \(H_1\).
+      </p>
+      <div class="meta">
+        <span class="chip">Probability and Statistics</span>
+        <span class="chip">Friday</span>
+        <span class="chip">5 concept builders</span>
+        <span class="chip">3 applications</span>
+        <span class="chip">2 hidden-pattern problems</span>
+        <span class="chip">Solutions included</span>
+      </div>
+      <p class="math-fallback">Math rendering did not load from the CDN. Refresh once, or use a network that allows KaTeX CDN files.</p>
+    </section>
+
+    <section class="panel accent">
+      <h2>Core Pattern</h2>
+      <p>The Neyman-Pearson idea starts with simple hypotheses. A test should reject \(H_0\) when the observed data is much more likely under \(H_1\) than under \(H_0\).</p>
+      <div class="formula">
+        \[
+          \Lambda(x)=\frac{f_1(x)}{f_0(x)}.
+        \]
+      </div>
+      <p>Large \(\Lambda(x)\) favors \(H_1\). After finding the rejection region, choose its cutoff so that the probability of rejection under \(H_0\) is the required size.</p>
+    </section>
+
+    <section class="panel">
+      <h2>Setup Checklist</h2>
+      <div class="grid">
+        <ul>
+          <li>Write \(H_0\) and \(H_1\) before doing algebra.</li>
+          <li>Write the likelihood under each hypothesis.</li>
+          <li>Form \(f_1/f_0\), then decide whether large or small observations favor \(H_1\).</li>
+          <li>Choose the cutoff using probability under \(H_0\), not under \(H_1\).</li>
+        </ul>
+        <ul>
+          <li>Size is \(P_{H_0}(\text{reject }H_0)\).</li>
+          <li>Power is \(P_{H_1}(\text{reject }H_0)\).</li>
+          <li>For discrete data, exact size may require a conservative cutoff or randomization.</li>
+          <li>Composite and monotone-likelihood-ratio tests come later; today is simple-vs-simple fluency.</li>
+        </ul>
+      </div>
+    </section>
+
+    <div class="section-label">Problems 1-5 · Concept Builders</div>
+
+    <article class="problem">
+      <div class="problem-head">
+        <div class="problem-title">1. State Size and Power</div>
+        <div class="tags">
+          <span class="tag concept">Concept</span>
+          <span class="tag">Definitions</span>
+          <span class="tag">6 min</span>
+        </div>
+      </div>
+      <p>A test rejects \(H_0\) when an observation falls in a region \(R\). Write the size and power of this test when \(H_0:f=f_0\) and \(H_1:f=f_1\) are simple hypotheses.</p>
+      <details>
+        <summary>Solution</summary>
+        <p>The size is the probability of rejecting \(H_0\) when \(H_0\) is true:</p>
+        \[
+          \alpha=P_0(X\in R).
+        \]
+        <p>The power is the probability of rejecting \(H_0\) when \(H_1\) is true:</p>
+        \[
+          \pi=P_1(X\in R).
+        \]
+        <p>The same rejection region is measured under two different distributions. Size uses \(H_0\); power uses \(H_1\).</p>
+      </details>
+    </article>
+
+    <article class="problem">
+      <div class="problem-head">
+        <div class="problem-title">2. Likelihood Ratio Direction for Bernoulli</div>
+        <div class="tags">
+          <span class="tag concept">Concept</span>
+          <span class="tag">Direction</span>
+          <span class="tag">7 min</span>
+        </div>
+      </div>
+      <p>Let \(X\sim\operatorname{Bernoulli}(p)\). Test \(H_0:p=0.3\) against \(H_1:p=0.7\). Compute \(f_1(x)/f_0(x)\) for \(x=0,1\), and say which value of \(X\) favors \(H_1\).</p>
+      <details>
+        <summary>Solution</summary>
+        <p>For \(x=1\),</p>
+        \[
+          \frac{f_1(1)}{f_0(1)}=\frac{0.7}{0.3}=\frac{7}{3}.
+        \]
+        <p>For \(x=0\),</p>
+        \[
+          \frac{f_1(0)}{f_0(0)}=\frac{0.3}{0.7}=\frac{3}{7}.
+        \]
+        <p>The likelihood ratio is larger when \(X=1\). So \(X=1\) favors \(H_1\).</p>
+      </details>
+    </article>
+
+    <article class="problem">
+      <div class="problem-head">
+        <div class="problem-title">3. Normal Mean Direction</div>
+        <div class="tags">
+          <span class="tag concept">Concept</span>
+          <span class="tag">Normal shift</span>
+          <span class="tag">8 min</span>
+        </div>
+      </div>
+      <p>Let \(X\sim N(\mu,1)\). Test \(H_0:\mu=0\) against \(H_1:\mu=1\). Without choosing a cutoff yet, show that large \(X\) values favor \(H_1\).</p>
+      <details>
+        <summary>Solution</summary>
+        <p>The likelihood ratio is</p>
+        \[
+          \frac{f_1(x)}{f_0(x)}
+          =
+          \frac{\exp\{-(x-1)^2/2\}}{\exp\{-x^2/2\}}.
+        \]
+        <p>Simplify the exponent:</p>
+        \[
+          -\frac{(x-1)^2}{2}+\frac{x^2}{2}
+          =
+          x-\frac12.
+        \]
+        <p>So</p>
+        \[
+          \frac{f_1(x)}{f_0(x)}=\exp\left(x-\frac12\right).
+        \]
+        <p>This increases as \(x\) increases. Large observations favor \(H_1\).</p>
+      </details>
+    </article>
+
+    <article class="problem">
+      <div class="problem-head">
+        <div class="problem-title">4. Size Cutoff for a Standard Normal Test</div>
+        <div class="tags">
+          <span class="tag concept">Concept</span>
+          <span class="tag">Cutoff</span>
+          <span class="tag">8 min</span>
+        </div>
+      </div>
+      <p>For \(X\sim N(\mu,1)\), test \(H_0:\mu=0\) against \(H_1:\mu=1\) by rejecting for \(X>c\). Choose \(c\) so the size is \(0.05\). You may write the answer using the standard normal quantile \(z_{0.95}\).</p>
+      <details>
+        <summary>Solution</summary>
+        <p>Size is computed under \(H_0\). Under \(H_0\), \(X\sim N(0,1)\). We need</p>
+        \[
+          P_0(X>c)=0.05.
+        \]
+        <p>Thus \(c\) is the 95th percentile of the standard normal distribution:</p>
+        \[
+          c=z_{0.95}.
+        \]
+        <p>Numerically this is about \(1.645\), but the quantile form is enough.</p>
+      </details>
+    </article>
+
+    <article class="problem">
+      <div class="problem-head">
+        <div class="problem-title">5. Power After Choosing the Cutoff</div>
+        <div class="tags">
+          <span class="tag concept">Concept</span>
+          <span class="tag">Power</span>
+          <span class="tag">9 min</span>
+        </div>
+      </div>
+      <p>Continue Problem 4. With \(c=z_{0.95}\), write the power of the test under \(H_1:\mu=1\).</p>
+      <details>
+        <summary>Solution</summary>
+        <p>Power is computed under \(H_1\). Under \(H_1\), \(X\sim N(1,1)\). The power is</p>
+        \[
+          P_1(X>z_{0.95}).
+        \]
+        <p>Standardize using \(Z=X-1\sim N(0,1)\):</p>
+        \[
+          P_1(X>z_{0.95})=P(Z>z_{0.95}-1).
+        \]
+        <p>Equivalently,</p>
+        \[
+          \text{Power}=1-\Phi(z_{0.95}-1).
+        \]
+      </details>
+    </article>
+
+    <div class="section-label">Problems 6-8 · Applications</div>
+
+    <article class="problem">
+      <div class="problem-head">
+        <div class="problem-title">6. One Observation From an Exponential Model</div>
+        <div class="tags">
+          <span class="tag integration">Application</span>
+          <span class="tag">Exponential</span>
+          <span class="tag">13 min</span>
+        </div>
+      </div>
+      <p>Let \(X\sim\operatorname{Exponential}(\lambda)\) with density \(\lambda e^{-\lambda x}\), \(x\ge0\). Test \(H_0:\lambda=1\) against \(H_1:\lambda=2\). Find whether small or large \(X\) favors \(H_1\).</p>
+      <details>
+        <summary>Solution</summary>
+        <p>The likelihood ratio is</p>
+        \[
+          \frac{f_1(x)}{f_0(x)}
+          =
+          \frac{2e^{-2x}}{e^{-x}}
+          =
+          2e^{-x}.
+        \]
+        <p>This decreases as \(x\) increases. It is largest for small \(x\).</p>
+        <p>So small observations favor \(H_1:\lambda=2\). This makes sense because a larger exponential rate has a smaller mean waiting time.</p>
+      </details>
+    </article>
+
+    <article class="problem">
+      <div class="problem-head">
+        <div class="problem-title">7. Exponential Size and Power</div>
+        <div class="tags">
+          <span class="tag integration">Application</span>
+          <span class="tag">Tail probability</span>
+          <span class="tag">15 min</span>
+        </div>
+      </div>
+      <p>Continue Problem 6. Use a test that rejects \(H_0\) for \(X<c\). Choose \(c\) so the size is \(0.10\), then compute the power under \(H_1:\lambda=2\).</p>
+      <details>
+        <summary>Solution</summary>
+        <p>Under \(H_0:\lambda=1\), the CDF is \(P_0(X<c)=1-e^{-c}\). Size \(0.10\) means</p>
+        \[
+          1-e^{-c}=0.10.
+        \]
+        <p>So \(e^{-c}=0.90\), and</p>
+        \[
+          c=-\log(0.90).
+        \]
+        <p>Under \(H_1:\lambda=2\), the power is</p>
+        \[
+          P_1(X<c)=1-e^{-2c}.
+        \]
+        <p>Using \(e^{-c}=0.90\),</p>
+        \[
+          e^{-2c}=(0.90)^2=0.81.
+        \]
+        <p>Therefore the power is</p>
+        \[
+          1-0.81=0.19.
+        \]
+      </details>
+    </article>
+
+    <article class="problem">
+      <div class="problem-head">
+        <div class="problem-title">8. Binomial Cutoff Without Randomization</div>
+        <div class="tags">
+          <span class="tag integration">Application</span>
+          <span class="tag">Discrete size</span>
+          <span class="tag">15 min</span>
+        </div>
+      </div>
+      <p>Let \(X\sim\operatorname{Binomial}(4,p)\). Test \(H_0:p=0.25\) against \(H_1:p=0.75\). The likelihood ratio favors large \(X\). If the test rejects for \(X\ge3\), compute its size and power.</p>
+      <details>
+        <summary>Solution</summary>
+        <p>The size is \(P_{0.25}(X\ge3)\):</p>
+        \[
+          P_{0.25}(X\ge3)
+          =
+          \binom43(0.25)^3(0.75)+(0.25)^4.
+        \]
+        <p>This is</p>
+        \[
+          4\cdot\frac{1}{64}\cdot\frac34+\frac{1}{256}
+          =
+          \frac{12}{256}+\frac{1}{256}
+          =
+          \frac{13}{256}.
+        \]
+        <p>The power is \(P_{0.75}(X\ge3)\):</p>
+        \[
+          \binom43(0.75)^3(0.25)+(0.75)^4
+          =
+          \frac{108}{256}+\frac{81}{256}
+          =
+          \frac{189}{256}.
+        \]
+      </details>
+    </article>
+
+    <div class="section-label">Problems 9-10 · Hidden-Pattern / ISI Style</div>
+
+    <article class="problem">
+      <div class="problem-head">
+        <div class="problem-title">9. Normal Sample Mean Test</div>
+        <div class="tags">
+          <span class="tag challenge">Challenge</span>
+          <span class="tag">Sample mean</span>
+          <span class="tag">18 min</span>
+        </div>
+      </div>
+      <p>Let \(X_1,\ldots,X_n\) be independent \(N(\mu,1)\). Test \(H_0:\mu=0\) against \(H_1:\mu=1\). Show that the likelihood-ratio test rejects for large \(\overline X\), and give the size \(0.05\) cutoff.</p>
+      <details>
+        <summary>Solution</summary>
+        <p>The likelihood ratio is</p>
+        \[
+          \frac{L_1}{L_0}
+          =
+          \exp\left(\sum_{i=1}^n x_i-\frac{n}{2}\right).
+        \]
+        <p>This increases as \(\sum_i x_i\) increases, so it also increases as \(\overline X\) increases. The test rejects for large \(\overline X\).</p>
+        <p>Under \(H_0\), \(\overline X\sim N(0,1/n)\). For size \(0.05\), choose \(c\) so</p>
+        \[
+          P_0(\overline X>c)=0.05.
+        \]
+        <p>Standardizing gives</p>
+        \[
+          P(Z>\sqrt n\,c)=0.05.
+        \]
+        <p>Hence</p>
+        \[
+          c=\frac{z_{0.95}}{\sqrt n}.
+        \]
+      </details>
+    </article>
+
+    <article class="problem">
+      <div class="problem-head">
+        <div class="problem-title">10. Randomization at a Boundary Point</div>
+        <div class="tags">
+          <span class="tag isi">ISI-style</span>
+          <span class="tag">Discrete test</span>
+          <span class="tag">20 min</span>
+        </div>
+      </div>
+      <p>Let \(X\sim\operatorname{Binomial}(2,p)\). Test \(H_0:p=0.5\) against \(H_1:p=0.9\). Since large \(X\) favors \(H_1\), consider rejecting always when \(X=2\), rejecting with probability \(\gamma\) when \(X=1\), and not rejecting when \(X=0\). Choose \(\gamma\) so the size is \(0.30\), then compute the power.</p>
+      <details>
+        <summary>Solution</summary>
+        <p>Under \(H_0:p=0.5\),</p>
+        \[
+          P_0(X=2)=0.25,
+          \qquad
+          P_0(X=1)=0.50.
+        \]
+        <p>The size is</p>
+        \[
+          0.25+\gamma(0.50).
+        \]
+        <p>Set this equal to \(0.30\):</p>
+        \[
+          0.25+0.50\gamma=0.30.
+        \]
+        <p>Thus</p>
+        \[
+          \gamma=0.10.
+        \]
+        <p>Under \(H_1:p=0.9\),</p>
+        \[
+          P_1(X=2)=0.81,
+          \qquad
+          P_1(X=1)=2(0.9)(0.1)=0.18.
+        \]
+        <p>The power is</p>
+        \[
+          0.81+0.10(0.18)=0.828.
+        \]
+      </details>
+    </article>
+
+    <section class="panel">
+      <h2>Answer Summary</h2>
+      <ol>
+        <li>Size \(=P_0(X\in R)\); power \(=P_1(X\in R)\).</li>
+        <li>\(X=1\) favors \(H_1:p=0.7\).</li>
+        <li>\(f_1/f_0=\exp(x-1/2)\), so large \(X\) favors \(H_1\).</li>
+        <li>\(c=z_{0.95}\).</li>
+        <li>Power \(=1-\Phi(z_{0.95}-1)\).</li>
+        <li>Small \(X\) favors \(H_1:\lambda=2\).</li>
+        <li>\(c=-\log(0.90)\), power \(=0.19\).</li>
+        <li>Size \(=13/256\), power \(=189/256\).</li>
+        <li>Reject for \(\overline X>z_{0.95}/\sqrt n\).</li>
+        <li>\(\gamma=0.10\), power \(=0.828\).</li>
+      </ol>
+    </section>
+  </main>
+</body>
+</html>

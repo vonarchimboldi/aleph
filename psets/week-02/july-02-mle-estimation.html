@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>July 2 Pset — MLE Foundations</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" />
+  <link rel="stylesheet" href="/psets/material-page.css" />
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+  <script defer src="/psets/material-page.js"></script>
+</head>
+<body>
+  <main class="wrap">
+    <section class="hero">
+      <h1>July 2 Pset: MLE Foundations</h1>
+      <p class="sub">
+        Ten problems for MLE Week 2. This is still a basics-first week: name the model, write the likelihood, protect the parameter space, then optimize. Harder support-dependent and UMVUE ideas come later after the setup is automatic.
+      </p>
+      <div class="meta">
+        <span class="chip">Probability and Statistics</span>
+        <span class="chip">Thursday</span>
+        <span class="chip">5 concept builders</span>
+        <span class="chip">3 applications</span>
+        <span class="chip">2 hidden-pattern problems</span>
+        <span class="chip">Solutions included</span>
+      </div>
+      <p class="math-fallback">Math rendering did not load from the CDN. Refresh once, or use a network that allows KaTeX CDN files.</p>
+    </section>
+
+    <section class="panel accent">
+      <h2>Core Pattern</h2>
+      <p>Maximum likelihood estimation has one repeated shape. The estimator is the parameter value that makes the observed sample most plausible.</p>
+      <div class="formula">
+        \[
+          L(\theta)=\prod_{i=1}^{n} f_\theta(x_i),
+          \qquad
+          \ell(\theta)=\log L(\theta).
+        \]
+      </div>
+      <p>The log-likelihood is usually easier to optimize. But the allowed values of the parameter come first. A derivative answer outside the parameter space is not the MLE.</p>
+    </section>
+
+    <section class="panel">
+      <h2>Setup Checklist</h2>
+      <div class="grid">
+        <ul>
+          <li>Write the model and the parameter space before calculating.</li>
+          <li>Write the product likelihood. Keep only factors that involve the parameter when optimizing.</li>
+          <li>Take logs after checking the likelihood is positive on the allowed parameter range.</li>
+          <li>Find interior critical points, then compare them with boundaries when boundaries exist.</li>
+        </ul>
+        <ul>
+          <li>For Bernoulli and binomial models, the MLE is usually a sample proportion.</li>
+          <li>For exponential models, decide whether the parameter is the rate or the mean.</li>
+          <li>For uniform support models, the support condition often determines the MLE.</li>
+          <li>After the answer, state what the estimator means in the original model.</li>
+        </ul>
+      </div>
+    </section>
+
+    <div class="section-label">Problems 1-5 · Concept Builders</div>
+
+    <article class="problem">
+      <div class="problem-head">
+        <div class="problem-title">1. Bernoulli Likelihood From Counts</div>
+        <div class="tags">
+          <span class="tag concept">Concept</span>
+          <span class="tag">Product likelihood</span>
+          <span class="tag">7 min</span>
+        </div>
+      </div>
+      <p>Let \(X_1,\ldots,X_n\) be independent Bernoulli\((p)\), where \(0<p<1\). Suppose the sample contains \(s=\sum_i X_i\) ones. Write the likelihood \(L(p)\) using \(s\), and find the MLE of \(p\).</p>
+      <details>
+        <summary>Solution</summary>
+        <p>The joint probability of the observed sample is</p>
+        \[
+          L(p)=\prod_{i=1}^n p^{x_i}(1-p)^{1-x_i}.
+        \]
+        <p>Collect the powers of \(p\) and \(1-p\):</p>
+        \[
+          L(p)=p^s(1-p)^{n-s}.
+        \]
+        <p>The log-likelihood is</p>
+        \[
+          \ell(p)=s\log p+(n-s)\log(1-p).
+        \]
+        <p>Differentiate and set equal to zero:</p>
+        \[
+          \ell'(p)=\frac{s}{p}-\frac{n-s}{1-p}=0.
+        \]
+        <p>Solving gives \(s(1-p)=(n-s)p\), so \(s=np\). Hence</p>
+        \[
+          \widehat p=\frac{s}{n}=\overline X.
+        \]
+      </details>
+    </article>
+
+    <article class="problem">
+      <div class="problem-head">
+        <div class="problem-title">2. Poisson Mean Setup</div>
+        <div class="tags">
+          <span class="tag concept">Concept</span>
+          <span class="tag">Log-likelihood</span>
+          <span class="tag">8 min</span>
+        </div>
+      </div>
+      <p>Let \(X_1,\ldots,X_n\) be independent Poisson\((\lambda)\), where \(\lambda>0\). Write the log-likelihood up to constants that do not depend on \(\lambda\), and find the MLE of \(\lambda\).</p>
+      <details>
+        <summary>Solution</summary>
+        <p>The joint likelihood is</p>
+        \[
+          L(\lambda)=\prod_{i=1}^n e^{-\lambda}\frac{\lambda^{x_i}}{x_i!}
+          =e^{-n\lambda}\lambda^{\sum_i x_i}\prod_{i=1}^n \frac{1}{x_i!}.
+        \]
+        <p>The factorial term does not involve \(\lambda\). The log-likelihood for optimizing is</p>
+        \[
+          \ell(\lambda)=-n\lambda+\left(\sum_i x_i\right)\log\lambda + C.
+        \]
+        <p>Differentiate:</p>
+        \[
+          \ell'(\lambda)=-n+\frac{\sum_i x_i}{\lambda}.
+        \]
+        <p>Set this equal to zero:</p>
+        \[
+          \widehat\lambda=\frac{1}{n}\sum_{i=1}^n x_i=\overline X.
+        \]
+      </details>
+    </article>
+
+    <article class="problem">
+      <div class="problem-head">
+        <div class="problem-title">3. Exponential Rate, Not Mean</div>
+        <div class="tags">
+          <span class="tag concept">Concept</span>
+          <span class="tag">Rate parameter</span>
+          <span class="tag">8 min</span>
+        </div>
+      </div>
+      <p>Let \(X_1,\ldots,X_n\) be independent Exponential\((\lambda)\) with density \(f_\lambda(x)=\lambda e^{-\lambda x}\) for \(x\ge0\), \(\lambda>0\). Find the MLE of the rate \(\lambda\).</p>
+      <details>
+        <summary>Solution</summary>
+        <p>The likelihood is</p>
+        \[
+          L(\lambda)=\prod_{i=1}^n \lambda e^{-\lambda x_i}
+          =\lambda^n e^{-\lambda\sum_i x_i}.
+        \]
+        <p>The log-likelihood is</p>
+        \[
+          \ell(\lambda)=n\log\lambda-\lambda\sum_i x_i.
+        \]
+        <p>Differentiate:</p>
+        \[
+          \ell'(\lambda)=\frac{n}{\lambda}-\sum_i x_i.
+        \]
+        <p>The critical point is</p>
+        \[
+          \widehat\lambda=\frac{n}{\sum_i x_i}=\frac{1}{\overline X}.
+        \]
+        <p>This estimates the rate. The estimated mean would be \(1/\widehat\lambda=\overline X\).</p>
+      </details>
+    </article>
+
+    <article class="problem">
+      <div class="problem-head">
+        <div class="problem-title">4. Normal Mean With Known Variance</div>
+        <div class="tags">
+          <span class="tag concept">Concept</span>
+          <span class="tag">Quadratic loss</span>
+          <span class="tag">8 min</span>
+        </div>
+      </div>
+      <p>Let \(X_1,\ldots,X_n\) be independent \(N(\mu,\sigma^2)\), where \(\sigma^2\) is known and \(\mu\in\mathbb R\). Show that the MLE of \(\mu\) is the sample mean.</p>
+      <details>
+        <summary>Solution</summary>
+        <p>The likelihood is proportional to</p>
+        \[
+          \exp\left(-\frac{1}{2\sigma^2}\sum_{i=1}^n (x_i-\mu)^2\right).
+        \]
+        <p>Maximizing this is the same as minimizing</p>
+        \[
+          \sum_{i=1}^n (x_i-\mu)^2.
+        \]
+        <p>Differentiate this sum with respect to \(\mu\):</p>
+        \[
+          \frac{d}{d\mu}\sum_i(x_i-\mu)^2=-2\sum_i(x_i-\mu).
+        \]
+        <p>Set the derivative equal to zero:</p>
+        \[
+          \sum_i x_i-n\mu=0.
+        \]
+        <p>Thus</p>
+        \[
+          \widehat\mu=\overline X.
+        \]
+      </details>
+    </article>
+
+    <article class="problem">
+      <div class="problem-head">
+        <div class="problem-title">5. Uniform Upper Endpoint</div>
+        <div class="tags">
+          <span class="tag concept">Concept</span>
+          <span class="tag">Support check</span>
+          <span class="tag">9 min</span>
+        </div>
+      </div>
+      <p>Let \(X_1,\ldots,X_n\) be independent Uniform\((0,\theta)\), where \(\theta>0\). Let \(m=\max_i x_i\). Write the likelihood and find the MLE of \(\theta\).</p>
+      <details>
+        <summary>Solution</summary>
+        <p>The density of one observation is \(1/\theta\) when \(0\le x_i\le\theta\). For the whole sample to be possible, \(\theta\) must be at least the largest observation \(m\).</p>
+        <p>The likelihood is</p>
+        \[
+          L(\theta)=\theta^{-n}\mathbf 1\{\theta\ge m\}.
+        \]
+        <p>For \(\theta\ge m\), the value \(\theta^{-n}\) decreases as \(\theta\) increases. So the largest likelihood occurs at the smallest allowed value:</p>
+        \[
+          \widehat\theta=m=X_{(n)}.
+        \]
+      </details>
+    </article>
+
+    <div class="section-label">Problems 6-8 · Applications</div>
+
+    <article class="problem">
+      <div class="problem-head">
+        <div class="problem-title">6. Binomial Sample With Known Trial Size</div>
+        <div class="tags">
+          <span class="tag integration">Application</span>
+          <span class="tag">Sample proportion</span>
+          <span class="tag">12 min</span>
+        </div>
+      </div>
+      <p>For each day \(i=1,\ldots,n\), \(X_i\sim\operatorname{Binomial}(r,p)\) independently, where \(r\) is known and \(0<p<1\). Find the MLE of \(p\).</p>
+      <details>
+        <summary>Solution</summary>
+        <p>The likelihood contains the factor</p>
+        \[
+          \prod_{i=1}^n p^{x_i}(1-p)^{r-x_i}.
+        \]
+        <p>Ignoring binomial coefficients that do not depend on \(p\), this is</p>
+        \[
+          L(p)\propto p^{\sum_i x_i}(1-p)^{nr-\sum_i x_i}.
+        \]
+        <p>This is the same shape as a Bernoulli likelihood with \(nr\) total trials and \(\sum_i x_i\) successes. Therefore</p>
+        \[
+          \widehat p=\frac{\sum_{i=1}^n x_i}{nr}.
+        \]
+      </details>
+    </article>
+
+    <article class="problem">
+      <div class="problem-head">
+        <div class="problem-title">7. Geometric Probability</div>
+        <div class="tags">
+          <span class="tag integration">Application</span>
+          <span class="tag">Support and log rules</span>
+          <span class="tag">14 min</span>
+        </div>
+      </div>
+      <p>Let \(X_1,\ldots,X_n\) be independent geometric random variables with \(P(X=k)=p(1-p)^{k-1}\) for \(k=1,2,\ldots\), where \(0<p<1\). Find the MLE of \(p\).</p>
+      <details>
+        <summary>Solution</summary>
+        <p>The likelihood is</p>
+        \[
+          L(p)=\prod_{i=1}^n p(1-p)^{x_i-1}
+          =p^n(1-p)^{\sum_i x_i-n}.
+        \]
+        <p>The log-likelihood is</p>
+        \[
+          \ell(p)=n\log p+\left(\sum_i x_i-n\right)\log(1-p).
+        \]
+        <p>Differentiate:</p>
+        \[
+          \ell'(p)=\frac{n}{p}-\frac{\sum_i x_i-n}{1-p}.
+        \]
+        <p>Set this equal to zero:</p>
+        \[
+          n(1-p)=p\left(\sum_i x_i-n\right).
+        \]
+        <p>So \(n=p\sum_i x_i\), and</p>
+        \[
+          \widehat p=\frac{n}{\sum_i x_i}=\frac{1}{\overline X}.
+        \]
+      </details>
+    </article>
+
+    <article class="problem">
+      <div class="problem-head">
+        <div class="problem-title">8. Boundary From a Constrained Mean</div>
+        <div class="tags">
+          <span class="tag integration">Application</span>
+          <span class="tag">Constraint</span>
+          <span class="tag">13 min</span>
+        </div>
+      </div>
+      <p>Let \(X_1,\ldots,X_n\) be independent \(N(\mu,1)\), but suppose the model requires \(\mu\ge0\). Find the MLE of \(\mu\).</p>
+      <details>
+        <summary>Solution</summary>
+        <p>Without the constraint, the MLE is \(\overline X\). The parameter space is now \([0,\infty)\).</p>
+        <p>The log-likelihood is maximized by choosing the allowed \(\mu\) closest to \(\overline X\), because the likelihood depends on \(\sum_i(x_i-\mu)^2\).</p>
+        <p>If \(\overline X\ge0\), the unconstrained maximizer is allowed. If \(\overline X<0\), the nearest allowed value is the boundary \(0\). Therefore</p>
+        \[
+          \widehat\mu=\max(0,\overline X).
+        \]
+      </details>
+    </article>
+
+    <div class="section-label">Problems 9-10 · Hidden-Pattern / ISI Style</div>
+
+    <article class="problem">
+      <div class="problem-head">
+        <div class="problem-title">9. Shifted Uniform Support</div>
+        <div class="tags">
+          <span class="tag challenge">Challenge</span>
+          <span class="tag">Support-dependent</span>
+          <span class="tag">18 min</span>
+        </div>
+      </div>
+      <p>Let \(X_1,\ldots,X_n\) be independent Uniform\((\theta,\theta+1)\), where \(\theta\in\mathbb R\). Let \(a=\min_i x_i\) and \(b=\max_i x_i\). Describe all allowed \(\theta\), then find the MLE.</p>
+      <details>
+        <summary>Solution</summary>
+        <p>For every observation to lie in \((\theta,\theta+1)\), we need</p>
+        \[
+          \theta\le a
+          \qquad\text{and}\qquad
+          b\le\theta+1.
+        \]
+        <p>The second condition is \(\theta\ge b-1\). So the allowed interval is</p>
+        \[
+          b-1\le\theta\le a.
+        \]
+        <p>Inside this interval, the likelihood is \(1\), because the density height is \(1\) for each observation. Outside this interval, the likelihood is \(0\).</p>
+        <p>Every \(\theta\) in the interval maximizes the likelihood. The MLE is not unique:</p>
+        \[
+          \widehat\theta\in[b-1,a].
+        \]
+      </details>
+    </article>
+
+    <article class="problem">
+      <div class="problem-head">
+        <div class="problem-title">10. Two-Parameter Normal Basics</div>
+        <div class="tags">
+          <span class="tag isi">ISI-style</span>
+          <span class="tag">Mean and variance</span>
+          <span class="tag">20 min</span>
+        </div>
+      </div>
+      <p>Let \(X_1,\ldots,X_n\) be independent \(N(\mu,\sigma^2)\), where both \(\mu\in\mathbb R\) and \(\sigma^2>0\) are unknown. State the MLEs of \(\mu\) and \(\sigma^2\), and explain why the variance MLE has denominator \(n\), not \(n-1\).</p>
+      <details>
+        <summary>Solution</summary>
+        <p>The likelihood is maximized over \(\mu\) at</p>
+        \[
+          \widehat\mu=\overline X.
+        \]
+        <p>Plugging this into the likelihood leaves the variance parameter. The MLE is</p>
+        \[
+          \widehat{\sigma^2}=\frac{1}{n}\sum_{i=1}^n (X_i-\overline X)^2.
+        \]
+        <p>The denominator is \(n\) because MLE maximizes likelihood. The denominator \(n-1\) belongs to the unbiased sample variance. MLE and unbiased estimation answer different questions.</p>
+      </details>
+    </article>
+
+    <section class="panel">
+      <h2>Answer Summary</h2>
+      <ol>
+        <li>\(\widehat p=s/n=\overline X\).</li>
+        <li>\(\widehat\lambda=\overline X\) for Poisson mean.</li>
+        <li>\(\widehat\lambda=n/\sum_i x_i=1/\overline X\) for exponential rate.</li>
+        <li>\(\widehat\mu=\overline X\).</li>
+        <li>\(\widehat\theta=X_{(n)}\).</li>
+        <li>\(\widehat p=\sum_i x_i/(nr)\).</li>
+        <li>\(\widehat p=n/\sum_i x_i=1/\overline X\).</li>
+        <li>\(\widehat\mu=\max(0,\overline X)\).</li>
+        <li>All \(\theta\in[b-1,a]\) are MLEs.</li>
+        <li>\(\widehat\mu=\overline X\), \(\widehat{\sigma^2}=n^{-1}\sum_i(X_i-\overline X)^2\).</li>
+      </ol>
+    </section>
+  </main>
+</body>
+</html>

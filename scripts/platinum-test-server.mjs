@@ -24,6 +24,7 @@ const mimeTypes = new Map([
 ]);
 
 let latestPlatinumSnapshot = null;
+const latestPlatinumSubmissions = [];
 
 const server = createServer(async (request, response) => {
   try {
@@ -41,6 +42,9 @@ const server = createServer(async (request, response) => {
     }
     if (request.url?.startsWith("/api/platinum-progress")) {
       return handlePlatinumProgress(request, response);
+    }
+    if (request.url?.startsWith("/api/platinum-submissions")) {
+      return handlePlatinumSubmissions(request, response);
     }
     return serveStatic(request, response);
   } catch (error) {
@@ -153,6 +157,7 @@ async function handlePlatinumProgress(request, response) {
 
   if (request.method === "POST") {
     latestPlatinumSnapshot = await readJson(request);
+    upsertLocalSubmissionRecords(submissionRecordsFromSnapshot(latestPlatinumSnapshot));
     sendJson(response, 200, {
       ok: true,
       store: "local-memory-test",
@@ -163,6 +168,103 @@ async function handlePlatinumProgress(request, response) {
 
   response.writeHead(405, { Allow: "GET, POST" });
   response.end();
+}
+
+async function handlePlatinumSubmissions(request, response) {
+  if (request.method === "GET") {
+    const parsed = new URL(request.url || "/", `http://${HOST}:${PORT}`);
+    const userId = parsed.searchParams.get("userId") || "";
+    const sourceWeek = parsed.searchParams.get("sourceWeek") || "";
+    const submissions = latestPlatinumSubmissions
+      .filter((entry) => !userId || entry.userId === userId || entry.learnerEmail === userId || entry.learnerName === userId)
+      .filter((entry) => !sourceWeek || String(entry.sourceWeek || entry.week || "") === sourceWeek);
+    sendJson(response, 200, {
+      ok: true,
+      store: "local-memory-test",
+      count: submissions.length,
+      submissions
+    });
+    return;
+  }
+
+  if (request.method === "POST") {
+    const record = await readJson(request);
+    if (!record.materialId) {
+      sendJson(response, 400, { error: "Submission record must include materialId" });
+      return;
+    }
+    const saved = upsertLocalSubmissionRecords([record])[0];
+    sendJson(response, 200, {
+      ok: true,
+      store: "local-memory-test",
+      submission: saved
+    });
+    return;
+  }
+
+  response.writeHead(405, { Allow: "GET, POST" });
+  response.end();
+}
+
+function upsertLocalSubmissionRecords(records) {
+  const now = new Date().toISOString();
+  return records.map((record) => {
+    const normalized = {
+      ...record,
+      userId: record.userId || record.learnerEmail || record.learnerName || "unknown-user",
+      submittedAt: record.submittedAt || record.uploadedAt || now,
+      updatedAt: now,
+      feedbackStatus: record.feedbackStatus || (record.feedbackReady ? "completed" : "not_requested"),
+      status: record.status || "submitted"
+    };
+    const key = `${normalized.userId}::${normalized.materialId}`;
+    const existingIndex = latestPlatinumSubmissions.findIndex((entry) => `${entry.userId}::${entry.materialId}` === key);
+    if (existingIndex >= 0) {
+      latestPlatinumSubmissions[existingIndex] = {
+        ...latestPlatinumSubmissions[existingIndex],
+        ...normalized,
+        submittedAt: latestPlatinumSubmissions[existingIndex].submittedAt || normalized.submittedAt
+      };
+      return latestPlatinumSubmissions[existingIndex];
+    }
+    latestPlatinumSubmissions.push(normalized);
+    return normalized;
+  });
+}
+
+function submissionRecordsFromSnapshot(snapshot) {
+  const user = snapshot?.user || {};
+  const materials = [
+    ...(snapshot?.materials?.due || []),
+    ...(snapshot?.materials?.upcoming || []),
+    ...(snapshot?.materials?.archivedWithSubmissions || []),
+    ...(snapshot?.feedback?.latest || []),
+    ...(snapshot?.feedback?.consolidated?.feedbackItems || [])
+  ];
+  return materials
+    .filter((material) => material?.submitted || material?.fileName || material?.feedbackReady)
+    .map((material) => ({
+      userId: user.id || user.email || user.name || "unknown-user",
+      learnerName: user.displayName || user.name || "",
+      learnerEmail: user.email || "",
+      materialId: material.materialId,
+      materialTitle: material.materialTitle,
+      materialUrl: material.materialUrl,
+      subjectId: material.subjectId,
+      subjectTitle: material.subjectTitle,
+      patternId: material.patternId,
+      patternTitle: material.patternTitle,
+      week: material.week,
+      sourceWeek: material.sourceWeek,
+      date: material.date,
+      fileName: material.fileName,
+      uploadedAt: material.uploadedAt,
+      feedbackReady: material.feedbackReady,
+      feedbackUpdatedAt: material.feedbackUpdatedAt,
+      feedbackModel: material.feedbackModel,
+      feedbackVerdict: material.feedbackVerdict,
+      feedbackScore: material.feedbackScore
+    }));
 }
 
 function buildMockFeedback(payload) {

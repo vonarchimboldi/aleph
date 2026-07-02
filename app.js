@@ -1,7 +1,7 @@
 const STORAGE_KEY = "learning-studio-data-v2";
 const LEGACY_STORAGE_KEYS = ["learning-studio-data-v1"];
 const SESSION_KEY = "aleph-session";
-const COURSE_PLAN_VERSION = "seeded-user-canonical-workspace-v100";
+const COURSE_PLAN_VERSION = "seeded-user-canonical-workspace-v104";
 const MAX_FEEDBACK_ATTACHMENT_BYTES = 3 * 1024 * 1024;
 const MAX_COMPRESSED_FEEDBACK_BYTES = 2400 * 1024;
 const MAX_FEEDBACK_PDF_PAGES = 6;
@@ -17277,19 +17277,19 @@ function probabilityStatsMilestones() {
   ];
 
   const weeklyFocus = [
-    "baseline diagnostic cycle across all six patterns",
-    "conditioning and LR-statistic selection under time pressure",
-    "support-dependent likelihoods plus exact distribution calculations",
-    "indicator decompositions and OLS algebra fluency",
-    "NP/MP tests with composite alternatives and one-sided UMP arguments",
-    "MLE edge cases, sufficiency, Rao-Blackwell improvement, and UMVUE recognition",
-    "order-statistic joint laws, conditional laws, and asymptotic scaling",
-    "conditional expectation, stopping-time counts, and variance decomposition",
-    "regression/OLS plus mixed estimation and testing arguments",
-    "full PSB reconstruction: identify the pattern before calculating",
-    "weak-area rotation using errors from the first ten weeks",
-    "timed mixed PSB sets with written-solution discipline",
-    "final cumulative synthesis across all six recurring patterns"
+    "foundation cycle 1: name the six patterns and secure the minimum setup skills before speed or subtle variations",
+    "foundation cycle 2: keep all six patterns simple while making setup choices automatic",
+    "foundation cycle 3: repeat the basics with slightly more algebra and distribution recognition",
+    "foundation cycle 4: consolidate MLE, UMP/NP, and regression/OLS basics before harder variations",
+    "harder variation cycle 1: support-dependent likelihoods, one-sided UMP, and OLS algebra under constraints",
+    "harder variation cycle 2: MLE edge cases, sufficiency, Rao-Blackwell improvement, and UMVUE recognition",
+    "harder variation cycle 3: order-statistic joint laws, conditional laws, and asymptotic scaling",
+    "harder variation cycle 4: conditional expectation, stopping-time counts, and variance decomposition",
+    "harder variation cycle 5: regression/OLS plus mixed estimation and testing arguments",
+    "harder variation cycle 6: full PSB reconstruction; identify the pattern before calculating",
+    "harder variation cycle 7: weak-area rotation using errors from the first ten weeks",
+    "harder variation cycle 8: timed mixed PSB sets with written-solution discipline",
+    "harder variation cycle 9: final cumulative synthesis across all six recurring patterns"
   ];
 
   return weeklyFocus.map((focus, weekIndex) => ({
@@ -17302,7 +17302,8 @@ function probabilityStatsMilestones() {
         intensity,
         prerequisiteLadder: prerequisiteLadderForProbabilityTopic(theme.topic),
         prerequisiteStage: prerequisiteStageForWeek(weekIndex + 1),
-        ...theme
+        ...theme,
+        variations: probabilityTopicWeekFocus(theme.topic, weekIndex + 1, theme.variations)
       };
     })
   }));
@@ -17320,10 +17321,42 @@ function activeMilestones(milestones, completedWeeks = 0) {
 }
 
 function prerequisiteStageForWeek(week) {
-  if (week <= 2) return "basic prerequisites and mechanics";
-  if (week <= 5) return "mechanics plus bridge problems";
-  if (week <= 9) return "bridge problems plus target-topic applications";
+  if (week <= 4) return "foundation basics and mechanics";
+  if (week <= 6) return "mechanics plus bridge problems";
+  if (week <= 12) return "harder variations, subtler details, and target-topic applications";
   return "target applications plus cumulative exam synthesis";
+}
+
+function probabilityTopicWeekFocus(topic, week, fallback) {
+  if (week <= 4) {
+    const foundations = {
+      "MLE and estimation": [
+        "identify the model and parameter space",
+        "write the likelihood as a product",
+        "take logs without dropping parameter-dependent terms",
+        "separate interior optimization from boundary/support checks",
+        "interpret the estimator in one sentence"
+      ],
+      "UMP/NP tests": [
+        "state H0 and H1 cleanly",
+        "write the likelihood ratio in the correct direction",
+        "turn the likelihood-ratio inequality into a rejection region",
+        "choose the cutoff from size under H0",
+        "compute basic power under H1"
+      ],
+      "regression and OLS": [
+        "compute sample means, variances, and covariance",
+        "use slope equals covariance over variance",
+        "find intercept from the fitted line passing through the mean point",
+        "connect residuals to fitted values",
+        "recognize the normal-equation form without matrix tricks"
+      ]
+    };
+    if (foundations[topic]) {
+      return `${foundations[topic].join("; ")}. Weeks 1-4 are basics-first; avoid edge-case theory unless it supports setup fluency.`;
+    }
+  }
+  return fallback;
 }
 
 function prerequisiteLadderForProbabilityTopic(topic) {
@@ -17489,7 +17522,10 @@ function probabilityStatsMaterialUrl(sourceWeek, topic) {
     2: {
       "method of indicators": "psets/week-02/june-29-indicators.html",
       "conditional expectation and tower property": "psets/week-02/june-30-conditional-expectation-tower.html",
-      "order statistics": "psets/week-02/july-01-order-statistics.html"
+      "order statistics": "psets/week-02/july-01-order-statistics.html",
+      "MLE and estimation": "psets/week-02/july-02-mle-estimation.html",
+      "UMP/NP tests": "psets/week-02/july-03-ump-np-foundations.html",
+      "regression and OLS": "psets/week-02/july-04-regression-ols-foundations.html"
     }
   };
   return urls[sourceWeek]?.[topic] || "";
@@ -19929,6 +19965,55 @@ function upsertPatternSubmission(materialId, updates) {
   return entry;
 }
 
+function durableSubmissionRecord(materialId, submission, overrides = {}) {
+  const material = findPatternMaterialAcrossState(materialId);
+  const feedbackRecord = submission?.feedbackRecord || null;
+  return {
+    userId: state.user.id || state.user.email || state.user.name || "unknown-user",
+    learnerName: state.user.displayName || state.user.name || "",
+    learnerEmail: state.user.email || "",
+    materialId,
+    materialTitle: material?.week?.materialTitle || "",
+    materialUrl: material?.week?.materialUrl || "",
+    subjectId: material?.subject?.id || "subject-probability-statistics",
+    subjectTitle: material?.subject?.title || "Probability and Statistics",
+    patternId: material?.pattern?.id || "",
+    patternTitle: material?.pattern?.title || "",
+    week: material?.week?.week ?? null,
+    sourceWeek: material?.week?.sourceWeek ?? null,
+    date: material?.week?.date || "",
+    fileName: submission?.fileName || "",
+    fileType: submission?.fileType || "",
+    fileSize: submission?.fileSize ?? null,
+    fileSizeLabel: submission?.fileSizeLabel || "",
+    submittedAt: submission?.uploadedAt || submission?.updatedAt || new Date().toISOString(),
+    feedbackStatus: submission?.feedbackUpdatedAt || submission?.feedback ? "completed" : "not_requested",
+    feedbackReady: Boolean(submission?.feedbackUpdatedAt || submission?.feedback),
+    feedbackUpdatedAt: submission?.feedbackUpdatedAt || "",
+    feedbackModel: feedbackRecord?.feedbackModel || "",
+    feedbackVerdict: feedbackRecord?.verdict || "",
+    feedbackScore: feedbackRecord?.score ?? null,
+    ...overrides
+  };
+}
+
+async function syncPatternSubmissionRecord(materialId, overrides = {}) {
+  if (!isPlatinumPrototypeUser(state.user)) return;
+  const submission = patternSubmission(materialId);
+  if (!submission?.fileName && !overrides.feedbackReady) return;
+  try {
+    await fetch("/api/platinum-submissions", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(durableSubmissionRecord(materialId, submission, overrides))
+    });
+  } catch {
+    // The local browser state remains usable; the next snapshot sync can backfill metadata.
+  }
+}
+
 function savePatternSolutionUpload(input) {
   const file = input.files?.[0];
   if (!file) return;
@@ -20013,6 +20098,7 @@ function savePatternSolutionUpload(input) {
 function finishPatternUpload(materialId, shouldGenerateFeedback = false) {
   selectedPatternMaterialId = materialId;
   persist();
+  syncPatternSubmissionRecord(materialId);
   renderSubjects();
   if (shouldGenerateFeedback) {
     window.setTimeout(() => autoGeneratePatternFeedback(materialId), 150);
@@ -20154,6 +20240,14 @@ async function savePatternFeedback(button) {
     feedbackUpdatedAt: new Date().toISOString()
   });
   persist();
+  syncPatternSubmissionRecord(materialId, {
+    feedbackStatus: "completed",
+    feedbackReady: true,
+    feedbackUpdatedAt: new Date().toISOString(),
+    feedbackModel: feedbackRecord?.feedbackModel || "",
+    feedbackVerdict: feedbackRecord?.verdict || "",
+    feedbackScore: feedbackRecord?.score ?? null
+  });
   renderSubjects();
 }
 
@@ -20244,7 +20338,7 @@ function buildFeedbackMaterialContext(material) {
 function findPatternMaterialAcrossState(materialId) {
   for (const subject of state.subjects || []) {
     const match = findPatternMaterial(subject, materialId);
-    if (match) return match;
+    if (match) return { ...match, subject };
   }
   const archived = archivedPlatinumProbabilityMaterials().find((entry) => entry.week.id === materialId);
   if (archived) return archived;
