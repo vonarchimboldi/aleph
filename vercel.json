@@ -2,7 +2,7 @@
   "crons": [
     {
       "path": "/api/cron/platinum-weekly-check",
-      "schedule": "0 14 * * 0"
+      "schedule": "0 14 * * *"
     }
   ],
   "headers": [

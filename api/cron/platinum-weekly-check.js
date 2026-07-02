@@ -28,8 +28,8 @@ export default async function handler(request, response) {
     return response.status(200).json(result);
   }
 
-  const report = buildWeeklyReport(snapshot);
-  const emailResult = await maybeSendWeeklyEmail(snapshot, report);
+  const report = buildDailyDueWorkReport(snapshot);
+  const emailResult = await maybeSendDueWorkEmail(snapshot, report);
   const result = {
     ok: true,
     checkedAt: new Date().toISOString(),
@@ -41,7 +41,7 @@ export default async function handler(request, response) {
   return response.status(200).json(result);
 }
 
-function buildWeeklyReport(snapshot) {
+function buildDailyDueWorkReport(snapshot) {
   const pace = snapshot.pace || {};
   const dueTasks = snapshot.tasks?.due || [];
   const overdueTasks = dueTasks.filter((task) => task.dueState === "overdue");
@@ -355,7 +355,7 @@ function strongerLabel(current, candidate) {
   return priorityWeight(candidate) > priorityWeight(current) ? candidate : current;
 }
 
-async function maybeSendWeeklyEmail(snapshot, report) {
+async function maybeSendDueWorkEmail(snapshot, report) {
   const apiKey = process.env.RESEND_API_KEY;
   const from = process.env.FROM_EMAIL;
   const monitorEmail = process.env.PLATINUM_MONITOR_EMAIL;
@@ -377,7 +377,7 @@ async function maybeSendWeeklyEmail(snapshot, report) {
   }
 
   const learnerName = snapshot.user?.displayName || snapshot.user?.name || "Learner";
-  const text = weeklyEmailText(learnerName, snapshot, report);
+  const text = dueWorkEmailText(learnerName, snapshot, report);
   const resendResponse = await fetch("https://api.resend.com/emails", {
     method: "POST",
     headers: {
@@ -387,7 +387,7 @@ async function maybeSendWeeklyEmail(snapshot, report) {
     body: JSON.stringify({
       from,
       to,
-      subject: `Aleph Platinum weekly check: ${report.statusLabel}`,
+      subject: `Aleph Platinum due-work check: ${report.statusLabel}`,
       text
     })
   });
@@ -409,9 +409,9 @@ async function maybeSendWeeklyEmail(snapshot, report) {
   };
 }
 
-function weeklyEmailText(learnerName, snapshot, report) {
+function dueWorkEmailText(learnerName, snapshot, report) {
   const lines = [
-    `Weekly Platinum check for ${learnerName}`,
+    `Daily Platinum due-work check for ${learnerName}`,
     "",
     `Status: ${report.statusLabel}`,
     `Week: ${report.currentWeek || "current"}`,
