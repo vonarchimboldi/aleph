@@ -131,6 +131,7 @@ function verifyPage(file) {
   const relative = path.relative(root, file);
   const content = fs.readFileSync(file, "utf8");
   const errors = [];
+  const isLockedSubmissionQuiz = /"unlockPolicy"\s*:\s*"solutions-after-submission"/.test(content);
 
   requiredSnippets.forEach(([label, snippet]) => {
     if (!content.includes(snippet)) {
@@ -148,11 +149,11 @@ function verifyPage(file) {
   if (problemCount === 0) {
     errors.push(`${relative}: no problem cards found`);
   }
-  if (problemCount !== solutionCount) {
+  if (!isLockedSubmissionQuiz && problemCount !== solutionCount) {
     errors.push(`${relative}: ${problemCount} problem cards but ${solutionCount} solutions`);
   }
 
-  if (!/Answer Summary/.test(content)) {
+  if (!isLockedSubmissionQuiz && !/Answer Summary/.test(content)) {
     errors.push(`${relative}: missing Answer Summary`);
   }
 

@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>July 5 Review Quiz - CMI-Level Discrete Math and DSA</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" />
+  <link rel="stylesheet" href="/psets/material-page.css" />
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+  <script defer src="/psets/material-page.js"></script>
+  <script id="quiz-metadata" type="application/json">
+{
+  "id": "cmi-dm-dsa-review-2026-07-05",
+  "title": "July 5 CMI-Level Discrete Math and DSA Review Quiz",
+  "durationMinutes": 120,
+  "questionCount": 30,
+  "unlockPolicy": "solutions-after-submission",
+  "feedbackWorkflow": {
+    "errorAnalysis": true,
+    "submissionFields": ["selectedOptions", "shortAnswers", "scratchWork", "confidence"],
+    "diagnosticTags": ["overcount", "missed-case", "invalid-proof-step", "wrong-invariant", "off-by-one", "recurrence-misread", "data-structure-confusion"],
+    "postSubmissionOutputs": ["topicScore", "firstErrorPerTopic", "repairDrills", "nextWeekPriority"]
+  },
+  "questions": [
+    {"id":"q01","topic":"dm-counting-binomial","type":"mcq","difficulty":"medium","skills":["restricted-counting","multiset-arrangements"],"cmiFit":"CMI-level counting often hides the main work in one clean restriction rather than long computation."},
+    {"id":"q02","topic":"dm-counting-binomial","type":"mcq","difficulty":"medium-hard","skills":["binomial-coefficients","combinatorial-identity"],"cmiFit":"The item tests whether the learner can interpret an identity by choosing a counted object."},
+    {"id":"q03","topic":"dm-counting-binomial","type":"mcq","difficulty":"medium-hard","skills":["permutations-combinations","case-split"],"cmiFit":"CMI questions often punish mixing ordered and unordered selections in the same count."},
+    {"id":"q04","topic":"dm-counting-binomial","type":"short-answer","difficulty":"medium-hard","skills":["inclusion-exclusion","onto-functions"],"cmiFit":"Function counts with missing codomain values are a compact inclusion-exclusion test."},
+    {"id":"q05","topic":"dm-counting-binomial","type":"short-answer","difficulty":"hard","skills":["coefficient-extraction","subset-counting"],"cmiFit":"This is CMI-style because it asks for a structural count rather than direct enumeration."},
+    {"id":"q06","topic":"dm-relations-state-machines","type":"mcq","difficulty":"medium","skills":["relation-properties","counterexample"],"cmiFit":"Relations are tested by exact definitions, with traps around symmetry and transitivity."},
+    {"id":"q07","topic":"dm-relations-state-machines","type":"mcq","difficulty":"medium-hard","skills":["equivalence-relations","partitions"],"cmiFit":"CMI can ask relation questions through partitions because it tests concept transfer."},
+    {"id":"q08","topic":"dm-relations-state-machines","type":"short-answer","difficulty":"medium","skills":["state-machine-trace","transition-table"],"cmiFit":"A small transition system checks disciplined tracing, not memorized formulas."},
+    {"id":"q09","topic":"dm-relations-state-machines","type":"short-answer","difficulty":"medium-hard","skills":["invariant","reachable-states"],"cmiFit":"The learner must identify a state invariant, a common mathematical-computing skill."},
+    {"id":"q10","topic":"dm-relations-state-machines","type":"short-answer","difficulty":"hard","skills":["relation-composition","transitive-closure"],"cmiFit":"This combines relation algebra with finite case control at a CMI-appropriate level."},
+    {"id":"q11","topic":"dm-proofs-inclusion-induction","type":"mcq","difficulty":"medium","skills":["pigeonhole","minimum-guarantee"],"cmiFit":"Pigeonhole questions are common CMI-style tests of exact threshold reasoning."},
+    {"id":"q12","topic":"dm-proofs-inclusion-induction","type":"mcq","difficulty":"medium-hard","skills":["strong-induction","recurrence-proof"],"cmiFit":"The question checks whether the induction hypothesis is strong enough for a recurrence."},
+    {"id":"q13","topic":"dm-proofs-inclusion-induction","type":"short-answer","difficulty":"medium","skills":["proof-by-contradiction","parity"],"cmiFit":"Short proof questions test whether the learner can state the contradiction cleanly."},
+    {"id":"q14","topic":"dm-proofs-inclusion-induction","type":"short-answer","difficulty":"medium-hard","skills":["inclusion-exclusion","set-counting"],"cmiFit":"The item requires careful union counting and avoids plug-in-only computation."},
+    {"id":"q15","topic":"dm-proofs-inclusion-induction","type":"short-answer","difficulty":"hard","skills":["induction","divisibility"],"cmiFit":"CMI-level induction often asks for a concise algebraic invariant across all n."},
+    {"id":"q16","topic":"dsa-lists-stacks-queues","type":"mcq","difficulty":"medium","skills":["linked-list-pointers","invariant"],"cmiFit":"Pointer update order is a high-signal test of actual list understanding."},
+    {"id":"q17","topic":"dsa-lists-stacks-queues","type":"mcq","difficulty":"medium","skills":["stack-behavior","lifo"],"cmiFit":"Stack questions test whether operations are traced exactly under time pressure."},
+    {"id":"q18","topic":"dsa-lists-stacks-queues","type":"mcq","difficulty":"medium-hard","skills":["queue-behavior","circular-buffer"],"cmiFit":"Circular indexing exposes off-by-one and representation-invariant mistakes."},
+    {"id":"q19","topic":"dsa-lists-stacks-queues","type":"short-answer","difficulty":"medium-hard","skills":["representation-invariant","linked-list-deletion"],"cmiFit":"The item asks for an invariant and edge cases, matching CMI's reasoning style."},
+    {"id":"q20","topic":"dsa-lists-stacks-queues","type":"short-answer","difficulty":"hard","skills":["amortized-reasoning","two-stack-queue"],"cmiFit":"A two-stack queue is a compact CMI-level data-structure reasoning problem."},
+    {"id":"q21","topic":"dsa-complexity-arrays-search","type":"mcq","difficulty":"medium","skills":["big-o","loop-count"],"cmiFit":"Loop-count questions test asymptotic reasoning without requiring advanced algorithms."},
+    {"id":"q22","topic":"dsa-complexity-arrays-search","type":"mcq","difficulty":"medium-hard","skills":["binary-search","comparison-count"],"cmiFit":"Binary search is covered, but the CMI-level twist is exact worst-case comparison control."},
+    {"id":"q23","topic":"dsa-complexity-arrays-search","type":"mcq","difficulty":"medium","skills":["array-invariant","prefix-sum"],"cmiFit":"Prefix accumulation checks whether the learner can state and use a loop invariant."},
+    {"id":"q24","topic":"dsa-complexity-arrays-search","type":"short-answer","difficulty":"medium-hard","skills":["linear-search","expected-position"],"cmiFit":"This blends simple search with exact finite-sum reasoning, which is typical aptitude style."},
+    {"id":"q25","topic":"dsa-complexity-arrays-search","type":"short-answer","difficulty":"hard","skills":["two-pointer-search","sorted-array"],"cmiFit":"The item asks for a correctness invariant, not merely the final complexity."},
+    {"id":"q26","topic":"dsa-recursion-strings-sorting","type":"mcq","difficulty":"medium","skills":["recursion-trace","base-case"],"cmiFit":"CMI-style code reading often begins with exact recursion tracing."},
+    {"id":"q27","topic":"dsa-recursion-strings-sorting","type":"mcq","difficulty":"medium-hard","skills":["merge-sort","recurrence"],"cmiFit":"Merge-sort analysis is covered and tests recurrence recognition at exam speed."},
+    {"id":"q28","topic":"dsa-recursion-strings-sorting","type":"short-answer","difficulty":"medium","skills":["string-scan","invariant"],"cmiFit":"A string scan checks simple program reasoning with a clear invariant."},
+    {"id":"q29","topic":"dsa-recursion-strings-sorting","type":"short-answer","difficulty":"medium-hard","skills":["sorting-stability","counterexample"],"cmiFit":"Stability asks for conceptual understanding of sorting beyond running time."},
+    {"id":"q30","topic":"dsa-recursion-strings-sorting","type":"short-answer","difficulty":"hard","skills":["recursive-procedure","recurrence-solution"],"cmiFit":"The item requires forming and solving a recurrence from a recursive procedure."}
+  ]
+}
+  </script>
+</head>
+<body>
+  <main class="wrap">
+    <section class="hero">
+      <h1>July 5: CMI-Level Discrete Math and DSA Review Quiz</h1>
+      <p class="sub">
+        Two-hour review quiz with 30 questions: 15 multiple choice and 15 short answer. Scope is only covered Platinum Discrete Math and DSA material, pushed to CMI MS DS reasoning difficulty.
+      </p>
+      <div class="meta">
+        <span class="chip">Discrete Math</span>
+        <span class="chip">DSA</span>
+        <span class="chip">120 minutes</span>
+        <span class="chip">30 questions</span>
+        <span class="chip">15 MCQ</span>
+        <span class="chip">15 short answer</span>
+      </div>
+      <p class="math-fallback">Math rendering did not load from the CDN. Refresh once, or use a network that allows KaTeX CDN files.</p>
+    </section>
+
+    <section class="panel accent">
+      <h2>Instructions</h2>
+      <div class="grid">
+        <ul>
+          <li>Use the first 60 minutes for MCQs and the next 60 minutes for short answers.</li>
+          <li>For MCQs, select one option unless the question says otherwise.</li>
+          <li>For short answers, show the setup, key invariant or count, and final expression.</li>
+        </ul>
+        <ul>
+          <li>Do not consult notes while attempting the quiz.</li>
+          <li>Mark the first step where you feel uncertain.</li>
+          <li>After submission, feedback should tag the first error in each topic.</li>
+        </ul>
+      </div>
+    </section>
+
+    <div class="section-label">Topic 1 - Counting, Binomial Coefficients, Permutations</div>
+
+    <article class="problem" id="q01">
+      <div class="problem-head"><div class="problem-title">1. Restricted arrangements</div><div class="tags"><span class="tag concept">MCQ</span><span class="tag">Counting</span></div></div>
+      <p>How many arrangements of the letters of \(AABBC\) have the two \(A\)'s not adjacent?</p>
+      <ol type="A"><li>12</li><li>18</li><li>24</li><li>30</li></ol>
+    </article>
+
+    <article class="problem" id="q02">
+      <div class="problem-head"><div class="problem-title">2. Binomial identity</div><div class="tags"><span class="tag concept">MCQ</span><span class="tag">Combinatorial identity</span></div></div>
+      <p>Which expression counts the number of ways to choose a committee of size \(3\) from \(8\) people and then choose one chair from the committee?</p>
+      <ol type="A"><li>\(3\binom{8}{3}\)</li><li>\(\binom{8}{3}\)</li><li>\(8\binom{7}{3}\)</li><li>\(\binom{8}{2}\)</li></ol>
+    </article>
+
+    <article class="problem" id="q03">
+      <div class="problem-head"><div class="problem-title">3. Order and no repetition</div><div class="tags"><span class="tag concept">MCQ</span><span class="tag">Permutations</span></div></div>
+      <p>How many 4-letter strings can be formed from the letters \(A,B,C,D,E,F\) with no repeated letter and with \(A\) appearing somewhere in the string?</p>
+      <ol type="A"><li>\(4\cdot5\cdot4\cdot3\)</li><li>\(\binom{6}{4}\)</li><li>\(6^4-5^4\)</li><li>\(4!\)</li></ol>
+    </article>
+
+    <article class="problem" id="q04">
+      <div class="problem-head"><div class="problem-title">4. Onto functions</div><div class="tags"><span class="tag concept">Short answer</span><span class="tag">Inclusion-exclusion</span></div></div>
+      <p>How many onto functions are there from a 5-element labelled set to a 3-element labelled set? Give the expression and simplify it.</p>
+      <p class="response-line">Answer space:</p>
+    </article>
+
+    <article class="problem" id="q05">
+      <div class="problem-head"><div class="problem-title">5. Coefficient count</div><div class="tags"><span class="tag concept">Short answer</span><span class="tag">Coefficient extraction</span></div></div>
+      <p>Find the coefficient of \(x^7\) in \((1+x+x^2+x^3)^4\). Write the counting interpretation you use.</p>
+      <p class="response-line">Answer space:</p>
+    </article>
+
+    <div class="section-label">Topic 2 - Relations and State Machines</div>
+
+    <article class="problem" id="q06">
+      <div class="problem-head"><div class="problem-title">6. Relation properties</div><div class="tags"><span class="tag concept">MCQ</span><span class="tag">Relations</span></div></div>
+      <p>On integers, define \(aRb\) if \(a-b\) is even. Which statement is true?</p>
+      <ol type="A"><li>\(R\) is an equivalence relation.</li><li>\(R\) is symmetric but not reflexive.</li><li>\(R\) is reflexive but not transitive.</li><li>\(R\) is antisymmetric.</li></ol>
+    </article>
+
+    <article class="problem" id="q07">
+      <div class="problem-head"><div class="problem-title">7. Partitions</div><div class="tags"><span class="tag concept">MCQ</span><span class="tag">Equivalence classes</span></div></div>
+      <p>An equivalence relation on \(\{1,2,3,4,5\}\) has classes \(\{1,4\}\), \(\{2,3,5\}\). How many ordered pairs are in the relation?</p>
+      <ol type="A"><li>13</li><li>10</li><li>7</li><li>25</li></ol>
+    </article>
+
+    <article class="problem" id="q08">
+      <div class="problem-head"><div class="problem-title">8. State trace</div><div class="tags"><span class="tag concept">Short answer</span><span class="tag">Transition table</span></div></div>
+      <p>A machine has states \(0,1,2\). On input \(a\), it sends \(0\to1\), \(1\to2\), \(2\to0\). Starting at state \(0\), what state is reached after reading \(aaaaaaa\)?</p>
+      <p class="response-line">Answer space:</p>
+    </article>
+
+    <article class="problem" id="q09">
+      <div class="problem-head"><div class="problem-title">9. Reachability invariant</div><div class="tags"><span class="tag concept">Short answer</span><span class="tag">Invariant</span></div></div>
+      <p>A machine state is a pair \((x,y)\) of integers. Each move adds \((2,2)\), \((2,-2)\), or \((-2,2)\). Starting from \((0,0)\), give one invariant that proves \((1,1)\) is unreachable.</p>
+      <p class="response-line">Answer space:</p>
+    </article>
+
+    <article class="problem" id="q10">
+      <div class="problem-head"><div class="problem-title">10. Relation composition</div><div class="tags"><span class="tag concept">Short answer</span><span class="tag">Composition</span></div></div>
+      <p>On \(\{1,2,3\}\), let \(R=\{(1,2),(2,3)\}\). Find \(R\circ R\), where \((a,c)\in R\circ R\) if there exists \(b\) with \((a,b)\in R\) and \((b,c)\in R\).</p>
+      <p class="response-line">Answer space:</p>
+    </article>
+
+    <div class="section-label">Topic 3 - Proofs, Induction, Pigeonhole, Inclusion-Exclusion</div>
+
+    <article class="problem" id="q11">
+      <div class="problem-head"><div class="problem-title">11. Pigeonhole threshold</div><div class="tags"><span class="tag concept">MCQ</span><span class="tag">Pigeonhole</span></div></div>
+      <p>What is the minimum number of integers needed to guarantee that two have the same remainder when divided by \(7\)?</p>
+      <ol type="A"><li>8</li><li>7</li><li>14</li><li>6</li></ol>
+    </article>
+
+    <article class="problem" id="q12">
+      <div class="problem-head"><div class="problem-title">12. Strong induction need</div><div class="tags"><span class="tag concept">MCQ</span><span class="tag">Induction</span></div></div>
+      <p>To prove a statement \(P(n)\) when the proof of \(P(n)\) uses both \(P(n-1)\) and \(P(n-2)\), which induction setup is most natural?</p>
+      <ol type="A"><li>Strong induction with enough base cases</li><li>Contradiction only</li><li>No base case is needed</li><li>Checking \(P(1)\) alone always suffices</li></ol>
+    </article>
+
+    <article class="problem" id="q13">
+      <div class="problem-head"><div class="problem-title">13. Parity contradiction</div><div class="tags"><span class="tag concept">Short answer</span><span class="tag">Contradiction</span></div></div>
+      <p>Prove in two or three lines that no integer \(n\) satisfies \(n^2+n+1\) even.</p>
+      <p class="response-line">Answer space:</p>
+    </article>
+
+    <article class="problem" id="q14">
+      <div class="problem-head"><div class="problem-title">14. Three-set count</div><div class="tags"><span class="tag concept">Short answer</span><span class="tag">Inclusion-exclusion</span></div></div>
+      <p>In a class of 40 students, 22 take math, 18 take CS, 15 take physics, 10 take both math and CS, 8 take both math and physics, 7 take both CS and physics, and 4 take all three. How many take at least one of the three?</p>
+      <p class="response-line">Answer space:</p>
+    </article>
+
+    <article class="problem" id="q15">
+      <div class="problem-head"><div class="problem-title">15. Divisibility induction</div><div class="tags"><span class="tag concept">Short answer</span><span class="tag">Induction</span></div></div>
+      <p>Prove by induction that \(3\mid (4^n-1)\) for every integer \(n\ge1\).</p>
+      <p class="response-line">Answer space:</p>
+    </article>
+
+    <div class="section-label">Topic 4 - Lists, Linked Lists, Stacks, Queues</div>
+
+    <article class="problem" id="q16">
+      <div class="problem-head"><div class="problem-title">16. Pointer update order</div><div class="tags"><span class="tag concept">MCQ</span><span class="tag">Linked list</span></div></div>
+      <p>To insert node \(N\) after node \(P\) in a singly linked list, which update order is safe?</p>
+      <ol type="A"><li>\(N.next=P.next\), then \(P.next=N\)</li><li>\(P.next=N\), then \(N.next=P.next\)</li><li>\(N.next=N\), then \(P.next=P\)</li><li>Set both pointers to null first</li></ol>
+    </article>
+
+    <article class="problem" id="q17">
+      <div class="problem-head"><div class="problem-title">17. Stack trace</div><div class="tags"><span class="tag concept">MCQ</span><span class="tag">Stack</span></div></div>
+      <p>A stack receives operations: push 2, push 5, pop, push 7, push 1, pop. What is on top at the end?</p>
+      <ol type="A"><li>7</li><li>5</li><li>2</li><li>1</li></ol>
+    </article>
+
+    <article class="problem" id="q18">
+      <div class="problem-head"><div class="problem-title">18. Circular queue</div><div class="tags"><span class="tag concept">MCQ</span><span class="tag">Queue</span></div></div>
+      <p>A circular queue has array size \(8\). If rear is at index \(6\), what is the next rear index after one enqueue, using zero-based indexing and wrap-around?</p>
+      <ol type="A"><li>7</li><li>0</li><li>6</li><li>8</li></ol>
+    </article>
+
+    <article class="problem" id="q19">
+      <div class="problem-head"><div class="problem-title">19. Delete edge cases</div><div class="tags"><span class="tag concept">Short answer</span><span class="tag">Representation invariant</span></div></div>
+      <p>When deleting a node from a singly linked list, list two edge cases that must be handled separately or checked carefully.</p>
+      <p class="response-line">Answer space:</p>
+    </article>
+
+    <article class="problem" id="q20">
+      <div class="problem-head"><div class="problem-title">20. Queue from two stacks</div><div class="tags"><span class="tag concept">Short answer</span><span class="tag">Amortized reasoning</span></div></div>
+      <p>A queue is implemented using an input stack and an output stack. Describe enqueue and dequeue, and explain why each element moves between stacks at most once.</p>
+      <p class="response-line">Answer space:</p>
+    </article>
+
+    <div class="section-label">Topic 5 - Complexity, Arrays, Search</div>
+
+    <article class="problem" id="q21">
+      <div class="problem-head"><div class="problem-title">21. Loop count</div><div class="tags"><span class="tag concept">MCQ</span><span class="tag">Big-O</span></div></div>
+      <p>The loop runs \(i=1,2,4,8,\ldots\) while \(i\le n\). What is the number of iterations?</p>
+      <ol type="A"><li>\(\lfloor\log_2 n\rfloor+1\)</li><li>\(n\)</li><li>\(n/2\)</li><li>\(2^n\)</li></ol>
+    </article>
+
+    <article class="problem" id="q22">
+      <div class="problem-head"><div class="problem-title">22. Binary search comparisons</div><div class="tags"><span class="tag concept">MCQ</span><span class="tag">Search</span></div></div>
+      <p>In a sorted array of 31 elements, what is the maximum number of middle-element comparisons needed by standard binary search?</p>
+      <ol type="A"><li>5</li><li>4</li><li>31</li><li>6</li></ol>
+    </article>
+
+    <article class="problem" id="q23">
+      <div class="problem-head"><div class="problem-title">23. Prefix invariant</div><div class="tags"><span class="tag concept">MCQ</span><span class="tag">Array invariant</span></div></div>
+      <p>A loop sets \(s=0\), then for \(i=1\) to \(n\), updates \(s=s+A[i]\). Which invariant is true after processing index \(i\)?</p>
+      <ol type="A"><li>\(s=A[1]+\cdots+A[i]\)</li><li>\(s=A[i]\)</li><li>\(s=A[1]+\cdots+A[n]\)</li><li>\(s=i\)</li></ol>
+    </article>
+
+    <article class="problem" id="q24">
+      <div class="problem-head"><div class="problem-title">24. Linear search average</div><div class="tags"><span class="tag concept">Short answer</span><span class="tag">Finite sum</span></div></div>
+      <p>If a target is equally likely to be at any one of \(n\) positions in an array, what is the expected number of comparisons used by linear search?</p>
+      <p class="response-line">Answer space:</p>
+    </article>
+
+    <article class="problem" id="q25">
+      <div class="problem-head"><div class="problem-title">25. Two-pointer invariant</div><div class="tags"><span class="tag concept">Short answer</span><span class="tag">Sorted array</span></div></div>
+      <p>For finding whether a sorted array contains two numbers summing to \(T\), describe the two-pointer method and state the invariant that justifies moving the left or right pointer.</p>
+      <p class="response-line">Answer space:</p>
+    </article>
+
+    <div class="section-label">Topic 6 - Recursion, Strings, Sorting</div>
+
+    <article class="problem" id="q26">
+      <div class="problem-head"><div class="problem-title">26. Recursion trace</div><div class="tags"><span class="tag concept">MCQ</span><span class="tag">Base case</span></div></div>
+      <p>Suppose \(F(0)=1\), and for \(n>0\), \(F(n)=2F(n-1)\). What is \(F(4)\)?</p>
+      <ol type="A"><li>16</li><li>8</li><li>32</li><li>10</li></ol>
+    </article>
+
+    <article class="problem" id="q27">
+      <div class="problem-head"><div class="problem-title">27. Merge-sort recurrence</div><div class="tags"><span class="tag concept">MCQ</span><span class="tag">Sorting recurrence</span></div></div>
+      <p>Which recurrence best models merge sort on \(n\) items?</p>
+      <ol type="A"><li>\(T(n)=2T(n/2)+cn\)</li><li>\(T(n)=T(n-1)+c\)</li><li>\(T(n)=T(n/2)+c\)</li><li>\(T(n)=nT(n-1)\)</li></ol>
+    </article>
+
+    <article class="problem" id="q28">
+      <div class="problem-head"><div class="problem-title">28. String scan invariant</div><div class="tags"><span class="tag concept">Short answer</span><span class="tag">Strings</span></div></div>
+      <p>A loop scans a string left to right and increments \(c\) whenever it sees the character \(a\). State a loop invariant after scanning the first \(i\) characters.</p>
+      <p class="response-line">Answer space:</p>
+    </article>
+
+    <article class="problem" id="q29">
+      <div class="problem-head"><div class="problem-title">29. Stability</div><div class="tags"><span class="tag concept">Short answer</span><span class="tag">Sorting concept</span></div></div>
+      <p>What does it mean for a sorting algorithm to be stable? Give a tiny example where stability matters.</p>
+      <p class="response-line">Answer space:</p>
+    </article>
+
+    <article class="problem" id="q30">
+      <div class="problem-head"><div class="problem-title">30. Recursive running time</div><div class="tags"><span class="tag concept">Short answer</span><span class="tag">Recurrence</span></div></div>
+      <p>A procedure on input size \(n\) makes two recursive calls on size \(n-1\) and then does constant extra work. Write the recurrence and give the order of growth.</p>
+      <p class="response-line">Answer space:</p>
+    </article>
+
+    <section class="panel">
+      <h2>Submission and Feedback</h2>
+      <p>Submit selected options, short-answer work, and scratch-work photos. Feedback should classify each miss by topic, first failed step, and repair drill. Worked explanations are withheld until the submission is recorded.</p>
+    </section>
+  </main>
+</body>
+</html>

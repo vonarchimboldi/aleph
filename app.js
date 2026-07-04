@@ -1,7 +1,7 @@
 const STORAGE_KEY = "learning-studio-data-v2";
 const LEGACY_STORAGE_KEYS = ["learning-studio-data-v1"];
 const SESSION_KEY = "aleph-session";
-const COURSE_PLAN_VERSION = "seeded-user-canonical-workspace-v106";
+const COURSE_PLAN_VERSION = "seeded-user-canonical-workspace-v108";
 const MAX_FEEDBACK_ATTACHMENT_BYTES = 3 * 1024 * 1024;
 const MAX_COMPRESSED_FEEDBACK_BYTES = 2400 * 1024;
 const MAX_FEEDBACK_PDF_PAGES = 6;
@@ -389,8 +389,8 @@ function buildPriyankaPlatinumPlan(now, accountTypes, sections, user = defaultUs
       title: "Probability and Statistics",
       date: endDate,
       status: "In progress",
-      details: "GATE DA Probability and Statistics with Priyanka's Platinum pacing, rebased to June 29, 2026 after completing the first seven-problem-set cycle. Active weeks continue the six-pattern PSB rotation with solution upload, correction notes, and feedback.",
-      patternWorkspaces: probabilityStatsPatternWorkspaces(1),
+      details: "GATE DA Probability and Statistics with Priyanka's Platinum pacing, rebased to June 29, 2026 after completing the first seven-problem-set cycle. The current Probability cycle was shifted forward one week, so the active PSB rotation now runs Monday July 6 through Saturday July 11 with Sunday review on July 12.",
+      patternWorkspaces: probabilityStatsPatternWorkspaces(1, 1),
       updatedAt: now
     },
     {
@@ -430,6 +430,7 @@ function buildPriyankaPlatinumPlan(now, accountTypes, sections, user = defaultUs
       resources: "ISI PSB pattern notes and published pattern practice material",
       completedWeeks: 1,
       milestones: activeMilestones(probabilityStatsMilestones(), 1),
+      startWeekOffset: 1,
       dailyProblemSets: true
     },
     {
@@ -456,10 +457,11 @@ function buildPriyankaPlatinumPlan(now, accountTypes, sections, user = defaultUs
 
   plans.forEach((plan) => {
     plan.milestones.forEach((milestone, index) => {
-      const week = index + 1;
+      const weekOffset = plan.startWeekOffset || 0;
+      const week = index + 1 + weekOffset;
       const sourceWeek = milestone.sourceWeek || week;
       const idStem = `${plan.key.toLowerCase()}-${PRIYANKA_PLATINUM_REBASE_ID}-w${week}-src${sourceWeek}`;
-      const monday = addDays(startDate, index * 7);
+      const monday = addDays(startDate, (index + weekOffset) * 7);
       const sunday = addDays(monday, 6);
       const weekWindow = `${formatShortDate(monday)}-${formatShortDate(sunday)}`;
 
@@ -655,6 +657,11 @@ function buildPriyankaPlatinumPlan(now, accountTypes, sections, user = defaultUs
       updatedAt: now
     });
   }
+
+  const cmiReview = cmiDiscreteDsaReviewQuiz(now, startDate);
+  schedule.push(cmiReview.schedule);
+  tasks.push(cmiReview.task);
+  tests.push(cmiReview.test);
 
   return {
     subjects,
@@ -18029,7 +18036,7 @@ function probabilityStatsMilestones() {
 
   return weeklyFocus.map((focus, weekIndex) => ({
     focus,
-    problemDays: ["Day 1", "Day 2", "Day 3", "Day 4", "Day 5", "Day 6"].map((day, dayIndex) => {
+    problemDays: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"].map((day, dayIndex) => {
       const theme = cycle[dayIndex % cycle.length];
       const intensity = dayIndex < 3 ? "core drill" : dayIndex < 5 ? "variation drill" : "mixed PSB-style drill";
       return {
@@ -18118,8 +18125,9 @@ function prerequisiteLadderForProbabilityTopic(topic) {
   return ladders[topic] || [];
 }
 
-function probabilityStatsPatternWorkspaces(completedWeeks = 0) {
-  const weekOneStart = PRIYANKA_PLATINUM_START_DATE;
+function probabilityStatsPatternWorkspaces(completedWeeks = 0, startWeekOffset = 0) {
+  const weekOneStart = addDays(PRIYANKA_PLATINUM_START_DATE, startWeekOffset * 7);
+  const activeWeek = 1 + startWeekOffset;
   const sourceWeek = completedWeeks + 1;
   const dayOneDate = weekOneStart;
   const dayTwoDate = addDays(weekOneStart, 1);
@@ -18131,12 +18139,12 @@ function probabilityStatsPatternWorkspaces(completedWeeks = 0) {
     {
       id: "pattern-indicators",
       title: "Method of Indicators",
-      day: "Day 1",
+      day: "Monday",
       focus: "Convert random counts into sums of yes/no variables, then use linearity, symmetry, and pairwise products.",
       weeks: [
         {
-          id: `ps-${PRIYANKA_PLATINUM_REBASE_ID}-w1-src${sourceWeek}-indicators`,
-          week: 1,
+          id: `ps-${PRIYANKA_PLATINUM_REBASE_ID}-w${activeWeek}-src${sourceWeek}-indicators`,
+          week: activeWeek,
           sourceWeek,
           date: dayOneDate,
           materialTitle: `${formatMaterialTitleDate(dayOneDate)}: Method of Indicators Pset`,
@@ -18150,12 +18158,12 @@ function probabilityStatsPatternWorkspaces(completedWeeks = 0) {
     {
       id: "pattern-conditional-expectation",
       title: "Conditional Expectation and Tower Property",
-      day: "Day 2",
+      day: "Tuesday",
       focus: "Choose the simplifying variable, compute the inner expectation, and average back out.",
       weeks: [
         {
-          id: `ps-${PRIYANKA_PLATINUM_REBASE_ID}-w1-src${sourceWeek}-conditional-expectation`,
-          week: 1,
+          id: `ps-${PRIYANKA_PLATINUM_REBASE_ID}-w${activeWeek}-src${sourceWeek}-conditional-expectation`,
+          week: activeWeek,
           sourceWeek,
           date: dayTwoDate,
           materialTitle: `${formatMaterialTitleDate(dayTwoDate)}: Conditional Expectation and Tower Property Pset`,
@@ -18169,12 +18177,12 @@ function probabilityStatsPatternWorkspaces(completedWeeks = 0) {
     {
       id: "pattern-order-statistics",
       title: "Order Statistics",
-      day: "Day 3",
+      day: "Wednesday",
       focus: "Derive exact min/max/kth-order laws, joint laws, spacings, and scaling limits.",
       weeks: [
         {
-          id: `ps-${PRIYANKA_PLATINUM_REBASE_ID}-w1-src${sourceWeek}-order-statistics`,
-          week: 1,
+          id: `ps-${PRIYANKA_PLATINUM_REBASE_ID}-w${activeWeek}-src${sourceWeek}-order-statistics`,
+          week: activeWeek,
           sourceWeek,
           date: dayThreeDate,
           materialTitle: `${formatMaterialTitleDate(dayThreeDate)}: Order Statistics Pset`,
@@ -18188,12 +18196,12 @@ function probabilityStatsPatternWorkspaces(completedWeeks = 0) {
     {
       id: "pattern-mle",
       title: "MLE and Estimation",
-      day: "Day 4",
+      day: "Thursday",
       focus: "Set up likelihoods, identify optimizer location, and evaluate estimator quality.",
       weeks: [
         {
-          id: `ps-${PRIYANKA_PLATINUM_REBASE_ID}-w1-src${sourceWeek}-mle`,
-          week: 1,
+          id: `ps-${PRIYANKA_PLATINUM_REBASE_ID}-w${activeWeek}-src${sourceWeek}-mle`,
+          week: activeWeek,
           sourceWeek,
           date: dayFourDate,
           materialTitle: `${formatMaterialTitleDate(dayFourDate)}: MLE and Estimation Pset`,
@@ -18207,12 +18215,12 @@ function probabilityStatsPatternWorkspaces(completedWeeks = 0) {
     {
       id: "pattern-ump-np",
       title: "UMP/NP Tests",
-      day: "Day 5",
+      day: "Friday",
       focus: "Construct likelihood-ratio tests, calibrate size, and compute power under alternatives.",
       weeks: [
         {
-          id: `ps-${PRIYANKA_PLATINUM_REBASE_ID}-w1-src${sourceWeek}-ump-np`,
-          week: 1,
+          id: `ps-${PRIYANKA_PLATINUM_REBASE_ID}-w${activeWeek}-src${sourceWeek}-ump-np`,
+          week: activeWeek,
           sourceWeek,
           date: dayFiveDate,
           materialTitle: `${formatMaterialTitleDate(dayFiveDate)}: UMP/NP Tests Pset`,
@@ -18226,17 +18234,17 @@ function probabilityStatsPatternWorkspaces(completedWeeks = 0) {
     {
       id: "pattern-regression-ols",
       title: "Regression and OLS",
-      day: "Day 6",
+      day: "Saturday",
       focus: "Use normal equations, projection geometry, and estimator interpretation in regression problems.",
       weeks: [
         {
-          id: `ps-${PRIYANKA_PLATINUM_REBASE_ID}-w1-src${sourceWeek}-regression-ols`,
-          week: 1,
+          id: `ps-${PRIYANKA_PLATINUM_REBASE_ID}-w${activeWeek}-src${sourceWeek}-regression-ols`,
+          week: activeWeek,
           sourceWeek,
           date: daySixDate,
           materialTitle: `${formatMaterialTitleDate(daySixDate)}: Regression and OLS Pset`,
-          materialUrl: "",
-          status: "Pending",
+          materialUrl: probabilityStatsMaterialUrl(sourceWeek, "regression and OLS"),
+          status: probabilityStatsMaterialStatus(sourceWeek, "regression and OLS"),
           expectedWork: "Planned 10-problem set, basics first: 3 vector/covariance/expectation prerequisite checks, 3 simple-regression mechanics, 2 normal-equation/projection bridge problems, and 2 OLS target problems.",
           feedbackWorkflow: regressionOlsFeedbackWorkflow()
         }
@@ -18849,9 +18857,10 @@ function probabilityDefaultFeedback(milestone) {
 
 function subjectWeeklyReviewWorkflows(plan, startDate) {
   return plan.milestones.map((milestone, index) => {
-    const week = index + 1;
+    const weekOffset = plan.startWeekOffset || 0;
+    const week = index + 1 + weekOffset;
     const sourceWeek = milestone.sourceWeek || week;
-    const monday = addDays(startDate, index * 7);
+    const monday = addDays(startDate, (index + weekOffset) * 7);
     const sunday = addDays(monday, 6);
     return {
       id: `workflow-${plan.key.toLowerCase()}-${PRIYANKA_PLATINUM_REBASE_ID}-week-${week}-src${sourceWeek}-weekly-review`,
@@ -18883,6 +18892,65 @@ function subjectWeeklyReviewWorkflows(plan, startDate) {
 function subjectWeeklyReviewDetails(plan, milestone, week) {
   if (plan.dailyProblemSets) return probabilitySundayTestDetails(milestone);
   return `Sunday subject review workflow for ${plan.label} Week ${week}. Generate a subject-local quiz covering this week's material only. Focus: ${milestone.focus}. Inputs should include completed tasks, uploaded-solution feedback, correction notes, and prerequisite gaps. Content generation is pending; this item reserves the workflow and placement in the subject section.`;
+}
+
+function cmiDiscreteDsaReviewQuiz(now, startDate) {
+  const week = 1;
+  const date = addDays(startDate, 6);
+  const materialUrl = "psets/week-02/july-05-cmi-msds-review-quiz.html";
+  const details = [
+    "Two-hour CMI-level review quiz for covered Platinum Discrete Math and DSA only.",
+    "Format: 30 questions, 15 MCQ and 15 short answer, five each across six covered topic groups.",
+    "Discrete Math groups: counting/binomial/permutations, relations/state machines, proofs/induction/pigeonhole/inclusion-exclusion.",
+    "DSA groups: lists/stacks/queues, complexity/arrays/search, recursion/strings/sorting.",
+    "Worked explanations remain locked until submission; post-submission feedback should tag first error, misconception, and repair drill by topic."
+  ].join(" ");
+  const scheduleId = `schedule-platinum-${PRIYANKA_PLATINUM_REBASE_ID}-week-1-cmi-dm-dsa-review`;
+  const taskId = `task-platinum-${PRIYANKA_PLATINUM_REBASE_ID}-week-1-cmi-dm-dsa-review`;
+  const testId = `test-platinum-${PRIYANKA_PLATINUM_REBASE_ID}-week-1-cmi-dm-dsa-review`;
+  return {
+    schedule: {
+      id: scheduleId,
+      title: "Week 1: CMI-level Discrete Math and DSA review quiz",
+      week,
+      subject: "Discrete Math + DSA",
+      kind: "Review quiz",
+      date,
+      details,
+      materialUrl,
+      updatedAt: now
+    },
+    task: {
+      id: taskId,
+      week,
+      title: "DM/DSA W1: Take CMI-level 30-question review quiz",
+      type: "Review quiz",
+      date,
+      scheduleId,
+      status: "todo",
+      done: false,
+      details,
+      updatedAt: now
+    },
+    test: {
+      id: testId,
+      title: "Week 1: CMI-level Discrete Math and DSA review quiz",
+      date,
+      details,
+      materialUrl,
+      workflowType: "cmi-dm-dsa-review",
+      durationMinutes: 120,
+      questionCount: 30,
+      unlockPolicy: "solutions-after-submission",
+      subjectScope: ["Discrete Math", "Data Structures and Algorithms"],
+      feedbackWorkflow: {
+        errorAnalysis: true,
+        diagnosticTags: ["overcount", "missed-case", "invalid-proof-step", "wrong-invariant", "off-by-one", "recurrence-misread", "data-structure-confusion"],
+        outputs: ["topicScore", "firstErrorPerTopic", "repairDrills", "nextWeekPriority"]
+      },
+      updatedAt: now
+    }
+  };
 }
 
 function spacedReviewDetails(week, milestones, label = "subject") {
@@ -19993,6 +20061,9 @@ function testTemplate(test) {
   const quizAction = test.quizId
     ? `<button class="primary-btn" data-start-test="${test.id}" type="button">${latestAttempt ? "Retake objective quiz" : "Start objective quiz"}</button>`
     : "";
+  const materialAction = test.materialUrl
+    ? `<a class="primary-btn inline-link" href="${escapeHtml(test.materialUrl)}" target="_blank" rel="noreferrer">Open quiz</a>`
+    : "";
   const attemptSummary = latestAttempt
     ? `<p class="muted">Latest logged score: ${latestAttempt.score}/${latestAttempt.total} (${latestAttempt.percent}%). ${escapeHtml(latestAttempt.feedback.summary)}</p>`
     : test.quizId ? '<p class="muted">No attempt logged yet.</p>' : "";
@@ -20014,6 +20085,7 @@ function testTemplate(test) {
         </div>
       </div>
       <div class="item-actions">
+        ${materialAction}
         ${quizAction}
         <button class="small-btn" data-edit="${test.id}" type="button">Edit</button>
         <button class="small-btn" data-delete="${test.id}" type="button">Delete</button>
@@ -20297,7 +20369,7 @@ function weeklyReviewDay(group) {
   const publishedWeekOne = Number(sourceWeek) === 1;
   return {
     pattern: {
-      day: "Day 7",
+      day: "Sunday",
       title: "Weekly Review Quiz",
       focus: "One ISI-style multi-part question per weekly topic: indicators, conditional expectation, order statistics, MLE, UMP/NP tests, and regression/OLS."
     },
