@@ -3,7 +3,7 @@ name: discrete-math-question-generation
 description: Use when generating Discrete Math questions, quizzes, drills, or review sets for Priyanka's Platinum plan; questions must stay explicitly anchored to the Platinum Discrete Math course sources and current weekly topic sequence.
 tags: [question-generation, discrete-math, platinum]
 created_from_pattern: user-approved-direct-2026-07-04
-last_verified: 2026-07-04
+last_verified: 2026-07-05
 ---
 
 # Discrete Math Question Generation
@@ -66,6 +66,8 @@ Use this sequence when selecting scope:
 
 ## Exam-Level Calibration Rubric
 
+When `exam_target` is CMI or CMI-MSDS, first load the shared rubric at `../cmi-msds-review-rubric.md` and apply its six CMI dimensions in addition to the generic rubric below. The CMI rubric is authoritative for subject coverage, multi-select MCQ format, speed, analysis level, and regeneration rules.
+
 Use this rubric to decide whether each generated question matches the requested exam level. Score each dimension 0-2.
 
 | Dimension | 0 | 1 | 2 |
@@ -95,6 +97,9 @@ When generating questions for later DSPy or GEPA optimization, emit a structured
   "source_block": "",
   "platinum_week": null,
   "exam_target": "GATE|ISI|CMI|mixed|none",
+  "cmi_rubric_version": "",
+  "cmi_dimensions": null,
+  "cmi_pass": null,
   "question_type": "mcq|short-answer|proof|multi-part",
   "target_skill": "",
   "difficulty": "easy|medium|medium-hard|hard",
@@ -117,7 +122,7 @@ Optimization objective: maximize pass rate, topic coverage, and post-submission 
 
 ## TODO
 
-- Add detailed exam-skill maps for GATE DA, ISI, and CMI.
-- Refine exam-specific difficulty calibration and question-form rules after the GATE/ISI/CMI skill analysis is complete.
+- Add detailed exam-skill maps for GATE DA and ISI.
+- Refine non-CMI exam-specific difficulty calibration and question-form rules after the GATE/ISI skill analysis is complete.
 - Run DSPy and GEPA against generated question records to tune prompts and rubric weights.
 - Add validators for topic coverage, source anchoring, and solution-lock compliance.

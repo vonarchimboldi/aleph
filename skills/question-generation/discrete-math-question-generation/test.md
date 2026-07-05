@@ -16,7 +16,7 @@ Check that the generated questions:
 2. Name the source course block or week for each question.
 3. Avoid future topics unless explicitly requested.
 4. Include difficulty, target skill, expected first step, and common mistake tag.
-5. Include exam-level rubric scores and regenerate any item that fails the pass rule.
+5. For CMI requests, load `../cmi-msds-review-rubric.md`, include six-dimension CMI rubric scores, and regenerate any item that fails the CMI pass rule.
 6. Keep solutions separate if the quiz is locked until submission.
 
 ## Expected Result

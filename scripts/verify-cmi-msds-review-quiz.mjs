@@ -45,6 +45,9 @@ if (!metadataMatch) {
   if (metadata) {
     if (metadata.durationMinutes !== 120) fail("Duration must be 120 minutes.");
     if (metadata.questionCount !== 30) fail("Question count must be 30.");
+    if (metadata.examTarget !== "CMI-MSDS") fail("Missing CMI-MSDS exam target metadata.");
+    if (metadata.cmiRubricVersion !== "cmi-msds-review-rubric-v1") fail("Missing CMI rubric version metadata.");
+    if (metadata.mcqPolicy !== "multi-select-all-correct-no-partial-credit") fail("MCQ policy must match CMI all-correct/no-partial-credit format.");
     if (metadata.unlockPolicy !== "solutions-after-submission") fail("Solutions must be locked until submission.");
     if (!metadata.feedbackWorkflow?.errorAnalysis) fail("Missing error-analysis feedback workflow metadata.");
 
