@@ -1,7 +1,7 @@
 const STORAGE_KEY = "learning-studio-data-v2";
 const LEGACY_STORAGE_KEYS = ["learning-studio-data-v1"];
 const SESSION_KEY = "aleph-session";
-const COURSE_PLAN_VERSION = "seeded-user-canonical-workspace-v108";
+const COURSE_PLAN_VERSION = "seeded-user-canonical-workspace-v109";
 const MAX_FEEDBACK_ATTACHMENT_BYTES = 3 * 1024 * 1024;
 const MAX_COMPRESSED_FEEDBACK_BYTES = 2400 * 1024;
 const MAX_FEEDBACK_PDF_PAGES = 6;
@@ -18898,6 +18898,7 @@ function cmiDiscreteDsaReviewQuiz(now, startDate) {
   const week = 1;
   const date = addDays(startDate, 6);
   const materialUrl = "psets/week-02/july-05-cmi-msds-review-quiz.html";
+  const materialId = `review-platinum-${PRIYANKA_PLATINUM_REBASE_ID}-week-1-cmi-dm-dsa`;
   const details = [
     "Two-hour CMI-level review quiz for covered Platinum Discrete Math and DSA only.",
     "Format: 30 questions, 15 MCQ and 15 short answer, five each across six covered topic groups.",
@@ -18938,18 +18939,75 @@ function cmiDiscreteDsaReviewQuiz(now, startDate) {
       date,
       details,
       materialUrl,
+      materialId,
       workflowType: "cmi-dm-dsa-review",
       durationMinutes: 120,
       questionCount: 30,
       unlockPolicy: "solutions-after-submission",
       subjectScope: ["Discrete Math", "Data Structures and Algorithms"],
-      feedbackWorkflow: {
-        errorAnalysis: true,
-        diagnosticTags: ["overcount", "missed-case", "invalid-proof-step", "wrong-invariant", "off-by-one", "recurrence-misread", "data-structure-confusion"],
-        outputs: ["topicScore", "firstErrorPerTopic", "repairDrills", "nextWeekPriority"]
-      },
+      feedbackWorkflow: cmiDmDsaReviewFeedbackWorkflow(),
       updatedAt: now
     }
+  };
+}
+
+function reviewQuizFeedbackWorkflow(test = {}) {
+  if (test.workflowType === "cmi-dm-dsa-review") return cmiDmDsaReviewFeedbackWorkflow();
+  return {
+    id: `feedback-workflow-${test.id || "review-quiz"}`,
+    title: `Structured Feedback: ${test.title || "Review Quiz"}`,
+    promptUse: "Use this after reading the submitted review quiz solution. Grade only visible uploaded work, classify mistakes by topic and error type, and recommend targeted repair drills.",
+    studentSummaryHint: "Summarize topic readiness, first recurring mistake, and next repair priority.",
+    rubric: [
+      { criterion: "Question coverage", points: 2, cue: "Identified attempted, missing, and unclear questions without inventing work." },
+      { criterion: "Correctness", points: 3, cue: "Checked final answers against the quiz requirements." },
+      { criterion: "Reasoning quality", points: 3, cue: "Evaluated setup, method choice, invariants, cases, proof steps, and calculations." },
+      { criterion: "Error analysis", points: 2, cue: "Classified mistakes and gave targeted remedies." }
+    ],
+    skills: ["review-quiz", "error-analysis"],
+    commonFirstIssues: ["missing uploaded work", "unreadable solution", "incomplete answers", "unsupported final answer"],
+    defaultNextDrills: ["Redo missed questions by topic, then complete one near-transfer drill for the highest-priority error type."]
+  };
+}
+
+function cmiDmDsaReviewFeedbackWorkflow() {
+  return {
+    id: "feedback-workflow-cmi-dm-dsa-review-v1",
+    title: "Structured Feedback: CMI-Level Discrete Math and DSA Review",
+    promptUse: "Use this after reading the submitted July 5 review quiz. Grade visible uploaded work across 30 questions, classify errors by topic and mistake type, and recommend targeted repair work.",
+    studentSummaryHint: "Summarize readiness across Discrete Math and DSA at CMI-style difficulty, naming the first blocking skill and the highest-priority repair.",
+    rubric: [
+      { criterion: "Coverage and evidence", points: 1, cue: "Identify which of the 30 questions were attempted, missing, unreadable, or only partially visible." },
+      { criterion: "Discrete Math reasoning", points: 2, cue: "Check counting/binomial/permutation setup, relations/state machines, and proof/induction/inclusion-exclusion reasoning." },
+      { criterion: "DSA reasoning", points: 2, cue: "Check list/stack/queue traces, representation invariants, complexity/search reasoning, recursion/string/sorting reasoning." },
+      { criterion: "CMI-level method choice", points: 2, cue: "Evaluate whether the learner chose the correct method under traps such as overcounting, converse errors, wrong invariant, off-by-one, and recurrence misread." },
+      { criterion: "Calculation and execution", points: 1, cue: "Separate arithmetic/algebra slips from setup, concept, and procedure errors." },
+      { criterion: "Error analysis and remedies", points: 2, cue: "Classify each recurring mistake and prescribe a concrete repair drill with success criterion." }
+    ],
+    skills: [
+      "dm-counting-binomial",
+      "dm-relations-state-machines",
+      "dm-proofs-inclusion-induction",
+      "dsa-lists-stacks-queues",
+      "dsa-complexity-arrays-search",
+      "dsa-recursion-strings-sorting"
+    ],
+    commonFirstIssues: [
+      "misread-question",
+      "case-coverage",
+      "method-selection",
+      "setup-modeling",
+      "procedure-execution",
+      "edge-case-boundary",
+      "calculation-algebra",
+      "logic-justification"
+    ],
+    defaultNextDrills: [
+      "Redo the first missed question in each weak topic with a written first-step explanation.",
+      "Complete three near-transfer questions for the highest-priority mistake type.",
+      "For DSA misses, write the invariant or state table before calculating.",
+      "For Discrete Math misses, write the counted object and case partition before using formulas."
+    ]
   };
 }
 
@@ -20053,11 +20111,20 @@ function renderTests() {
   });
 
   container.querySelector("[data-quiz-form]")?.addEventListener("submit", submitQuizAttempt);
+  container.querySelectorAll("[data-solution-upload]").forEach((input) => {
+    input.addEventListener("change", () => savePatternSolutionUpload(input));
+  });
+  container.querySelectorAll("[data-save-pattern-feedback]").forEach((button) => {
+    button.addEventListener("click", () => savePatternFeedback(button));
+  });
 }
 
 function testTemplate(test) {
   const attempts = state.quizAttempts.filter((attempt) => attempt.testId === test.id);
   const latestAttempt = attempts[attempts.length - 1];
+  const materialId = test.materialId || test.id;
+  const submission = test.materialUrl ? patternSubmission(materialId) : null;
+  const feedbackRecord = submission?.feedbackRecord || null;
   const quizAction = test.quizId
     ? `<button class="primary-btn" data-start-test="${test.id}" type="button">${latestAttempt ? "Retake objective quiz" : "Start objective quiz"}</button>`
     : "";
@@ -20078,6 +20145,7 @@ function testTemplate(test) {
           <h4>${escapeHtml(test.title)}</h4>
           <p>${escapeHtml(test.details || "No details added.")}</p>
           ${attemptSummary}
+          ${test.materialUrl ? reviewQuizSubmissionTemplate(test, submission, feedbackRecord) : ""}
         </div>
         <div class="stacked-tags">
           <span class="tag">${test.date ? formatDate(test.date) : "No date"}</span>
@@ -20091,6 +20159,29 @@ function testTemplate(test) {
         <button class="small-btn" data-delete="${test.id}" type="button">Delete</button>
       </div>
     </article>
+  `;
+}
+
+function reviewQuizSubmissionTemplate(test, submission, feedbackRecord) {
+  const materialId = test.materialId || test.id;
+  const hasFeedback = Boolean(submission?.feedbackUpdatedAt || submission?.feedback);
+  return `
+    <section class="feedback-editor review-upload-panel" data-material-card="${escapeHtml(materialId)}">
+      <div class="submission-status">
+        <span class="tag">${escapeHtml(submissionSummary(submission))}</span>
+        ${submission?.storageWarning ? `<span class="tag warning">${escapeHtml(submission.storageWarning)}</span>` : ""}
+      </div>
+      <label class="solution-upload compact-upload">
+        <span>Upload completed quiz solution</span>
+        <input type="file" data-solution-upload="${escapeHtml(materialId)}" accept=".pdf,.txt,.md,.png,.jpg,.jpeg">
+      </label>
+      <label class="feedback-notes">
+        <span>Optional notes for grader</span>
+        <textarea data-solution-text="${escapeHtml(materialId)}" rows="4" placeholder="Add typed answers, scratch-work notes, or context if the upload is handwritten.">${escapeHtml(submission?.solutionText || "")}</textarea>
+      </label>
+      <button class="small-btn" data-save-pattern-feedback type="button" ${submission?.fileName ? "" : "disabled"}>${hasFeedback ? "Regenerate AI feedback report" : "Generate AI feedback report"}</button>
+      ${feedbackWorkflowTemplate(test.feedbackWorkflow || reviewQuizFeedbackWorkflow(test), feedbackRecord)}
+    </section>
   `;
 }
 
@@ -20828,6 +20919,7 @@ function savePatternSolutionUpload(input) {
   const materialId = input.dataset.solutionUpload;
   input.disabled = true;
   const baseUpdates = {
+    materialId,
     fileName: file.name,
     fileType: file.type || "unknown",
     fileSize: file.size,
@@ -20907,7 +20999,7 @@ function finishPatternUpload(materialId, shouldGenerateFeedback = false) {
   selectedPatternMaterialId = materialId;
   persist();
   syncPatternSubmissionRecord(materialId);
-  renderSubjects();
+  render();
   if (shouldGenerateFeedback) {
     window.setTimeout(() => autoGeneratePatternFeedback(materialId), 150);
   }
@@ -21056,7 +21148,7 @@ async function savePatternFeedback(button) {
     feedbackVerdict: feedbackRecord?.verdict || "",
     feedbackScore: feedbackRecord?.score ?? null
   });
-  renderSubjects();
+  render();
 }
 
 async function parseFeedbackErrorMessage(result) {
@@ -21148,9 +21240,37 @@ function findPatternMaterialAcrossState(materialId) {
     const match = findPatternMaterial(subject, materialId);
     if (match) return { ...match, subject };
   }
+  const reviewTest = reviewQuizMaterial(materialId);
+  if (reviewTest) return reviewTest;
   const archived = archivedPlatinumProbabilityMaterials().find((entry) => entry.week.id === materialId);
   if (archived) return archived;
   return null;
+}
+
+function reviewQuizMaterial(materialId) {
+  const test = (state.tests || []).find((entry) => (entry.materialId || entry.id) === materialId && entry.materialUrl);
+  if (!test) return null;
+  const subject = {
+    id: "subject-platinum-review-quizzes",
+    title: test.subjectScope?.join(" + ") || "Review Quizzes"
+  };
+  const pattern = {
+    id: test.workflowType || "review-quiz",
+    title: test.title || "Review Quiz",
+    focus: test.details || ""
+  };
+  const week = {
+    id: test.materialId || test.id,
+    week: test.week || weekFromDate(test.date),
+    sourceWeek: test.sourceWeek || test.week || weekFromDate(test.date),
+    date: test.date || "",
+    materialTitle: test.title || "Review Quiz",
+    materialUrl: test.materialUrl || "",
+    status: "Published",
+    expectedWork: test.details || "",
+    feedbackWorkflow: test.feedbackWorkflow || reviewQuizFeedbackWorkflow(test)
+  };
+  return { subject, pattern, week };
 }
 
 async function sendFeedbackEmail(materialId, submission) {
@@ -22706,6 +22826,14 @@ function platinumMaterialSnapshots() {
       });
     });
   });
+  (state.tests || [])
+    .filter((test) => test.materialUrl)
+    .forEach((test) => {
+      const material = reviewQuizMaterial(test.materialId || test.id);
+      if (material) {
+        materials.push(platinumMaterialSnapshot(material.subject, material.pattern, material.week));
+      }
+    });
   archivedPlatinumProbabilityMaterials().forEach(({ subject, pattern, week }) => {
     const submission = patternSubmission(week.id);
     if (submission?.uploadedAt || submission?.fileName || submission?.feedbackUpdatedAt || submission?.feedback) {
