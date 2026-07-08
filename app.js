@@ -1,7 +1,7 @@
 const STORAGE_KEY = "learning-studio-data-v2";
 const LEGACY_STORAGE_KEYS = ["learning-studio-data-v1"];
 const SESSION_KEY = "aleph-session";
-const COURSE_PLAN_VERSION = "seeded-user-canonical-workspace-v110";
+const COURSE_PLAN_VERSION = "seeded-user-canonical-workspace-v111";
 const MAX_FEEDBACK_ATTACHMENT_BYTES = 3 * 1024 * 1024;
 const MAX_COMPRESSED_FEEDBACK_BYTES = 2400 * 1024;
 const MAX_FEEDBACK_PDF_PAGES = 6;
@@ -2558,7 +2558,7 @@ function buildGateDaBasicPlan(now, accountTypes, sections, user = basicGateDaUse
         startDate: monday,
         endDate: "2026-08-30",
         status: "active",
-        details: `GATE DA Basic plan surfaces: Subjects, Tasks, Schedule, Tests, Feedback, Resources, and Share. Recommended pace: study three subjects in parallel. Every 15 days, Aleph should generate an adaptive cumulative review quiz from prior performance, repeating missed concepts more often, reducing mastered concepts, and keeping high-weight exam topics in rotation. Current material build: Probability Chapters 1-10, Linear Algebra Chapters 1-12 plus a chapterless cumulative past-paper style drill, and DSA Chapter 1.${trialNote}`,
+        details: `GATE DA Basic plan surfaces: Subjects, Tasks, Schedule, Tests, Feedback, Resources, and Share. Recommended pace: study three subjects in parallel. Every 15 days, Aleph should generate an adaptive cumulative review quiz from prior performance, repeating missed concepts more often, reducing mastered concepts, and keeping high-weight exam topics in rotation. Current material build: Probability Chapters 1-10, Linear Algebra Chapters 1-12 plus a chapterless cumulative past-paper style drill, and DSA Chapters 1-2.${trialNote}`,
         updatedAt: now
       }
     ],
@@ -2890,6 +2890,8 @@ function gateDaBasicSections(updatedAt = new Date().toISOString()) {
 }
 
 function dsaBasicScheduleItems(now, monday, sunday) {
+  const weekTwoMonday = addDays(monday, 7);
+  const weekTwoSunday = addDays(sunday, 7);
   return [
     {
       id: "schedule-dsa-chapter-1-study",
@@ -2920,11 +2922,42 @@ function dsaBasicScheduleItems(now, monday, sunday) {
       date: sunday,
       details: "Take the graph-backed objective review for asymptotic notation, dominant terms, loop counting, nested loops, halving loops, and recurrences.",
       updatedAt: now
+    },
+    {
+      id: "schedule-dsa-chapter-2-study",
+      title: "DSA Chapter 2: Induction and Recursion",
+      week: 2,
+      subject: "Data Structures and Algorithms",
+      kind: "Study",
+      date: weekTwoMonday,
+      details: "Study recursive state, base cases, induction proofs, call-stack traces, recurrence extraction, tail recursion, recursion trees, and Master Method exam shapes.",
+      updatedAt: now
+    },
+    {
+      id: "schedule-dsa-chapter-2-practice",
+      title: "DSA Chapter 2: Labelled Practice",
+      week: 2,
+      subject: "Data Structures and Algorithms",
+      kind: "Practice",
+      date: addDays(weekTwoMonday, 2),
+      details: "Solve recursion and induction practice before reading worked solutions: stack traces, base-case traps, recurrence reads, tail-recursion space, and recursion-tree counts.",
+      updatedAt: now
+    },
+    {
+      id: "schedule-dsa-chapter-2-review",
+      title: "DSA Chapter 2: Objective Review",
+      week: 2,
+      subject: "Data Structures and Algorithms",
+      kind: "Review",
+      date: weekTwoSunday,
+      details: "Take the graph-backed objective review for recursion state, induction, recurrence extraction, recursion trees, tail recursion, and Master Method recognition.",
+      updatedAt: now
     }
   ];
 }
 
 function dsaBasicTests(now, dsaSections, sunday) {
+  const weekTwoSunday = addDays(sunday, 7);
   return [
     {
       id: "test-dsa-chapter-1-objective-review",
@@ -2934,11 +2967,22 @@ function dsaBasicTests(now, dsaSections, sunday) {
       sectionId: dsaSections[0]?.id,
       quizId: "quiz-dsa-chapter-1-objective-review",
       updatedAt: now
+    },
+    {
+      id: "test-dsa-chapter-2-objective-review",
+      title: "DSA Chapter 2 Objective Review",
+      date: weekTwoSunday,
+      details: "Objective review for recursion state, base cases, induction proof shape, call-stack tracing, recurrence extraction, recursion trees, tail recursion, and Master Method recognition.",
+      sectionId: dsaSections[1]?.id,
+      quizId: "quiz-dsa-chapter-2-objective-review",
+      updatedAt: now
     }
   ];
 }
 
 function dsaBasicTasks(now, monday, sunday) {
+  const weekTwoMonday = addDays(monday, 7);
+  const weekTwoSunday = addDays(sunday, 7);
   return [
     {
       id: "task-dsa-chapter-1-read",
@@ -2972,11 +3016,45 @@ function dsaBasicTasks(now, monday, sunday) {
       done: false,
       details: "Submit the Chapter 1 objective quiz so Aleph logs asymptotic notation, loop-counting, and recurrence-analysis gaps.",
       updatedAt: now
+    },
+    {
+      id: "task-dsa-chapter-2-read",
+      week: 2,
+      title: "DSA Ch 2: Read induction and recursion",
+      type: "Study",
+      date: weekTwoMonday,
+      status: "todo",
+      done: false,
+      details: "Open Subjects -> Data Structures and Algorithms -> Chapter 2 and study recursive state, induction, call-stack traces, and recurrence extraction.",
+      updatedAt: now
+    },
+    {
+      id: "task-dsa-chapter-2-practice",
+      week: 2,
+      title: "DSA Ch 2: Solve recursion practice",
+      type: "Practice",
+      date: addDays(weekTwoMonday, 2),
+      status: "todo",
+      done: false,
+      details: "Attempt the labelled recursion and induction practice problems before opening worked solutions.",
+      updatedAt: now
+    },
+    {
+      id: "task-dsa-chapter-2-review",
+      week: 2,
+      title: "DSA Ch 2: Take objective review",
+      type: "Review",
+      date: weekTwoSunday,
+      status: "todo",
+      done: false,
+      details: "Submit the Chapter 2 objective quiz so Aleph logs recursion, induction, recurrence, and call-stack gaps.",
+      updatedAt: now
     }
   ];
 }
 
 function dsaBasicFeedback(now, sunday) {
+  const weekTwoSunday = addDays(sunday, 7);
   return [
     {
       id: "feedback-dsa-chapter-1",
@@ -2984,17 +3062,33 @@ function dsaBasicFeedback(now, sunday) {
       date: sunday,
       details: "Review misses for confusing Big-O/Theta/Omega, keeping constants as dominant terms, counting nested loops incorrectly, missing triangular sums, missing logarithmic halving, and misreading simple recurrences.",
       updatedAt: now
+    },
+    {
+      id: "feedback-dsa-chapter-2",
+      title: "DSA Chapter 2 feedback focus",
+      date: weekTwoSunday,
+      details: "Review misses for missing base cases, tracing calls without return values, using weak induction hypotheses, confusing time with recursion-stack space, double-counting recursion-tree levels, and misapplying Master Method cases.",
+      updatedAt: now
     }
   ];
 }
 
 function dsaBasicResources(now, monday) {
+  const weekTwoMonday = addDays(monday, 7);
   return [
     {
       id: "resource-dsa-algorithms-arrays-search",
       title: "DSA Chapter 1: Asymptotic Analysis",
       date: monday,
       details: "Open Subjects -> Data Structures and Algorithms to study asymptotic notation, runtime motivation, loop-counting techniques, nested-loop regions, halving loops, and simple recurrences.",
+      link: "",
+      updatedAt: now
+    },
+    {
+      id: "resource-dsa-induction-recursion",
+      title: "DSA Chapter 2: Induction and Recursion",
+      date: weekTwoMonday,
+      details: "Open Subjects -> Data Structures and Algorithms to study recursive state, induction proofs, stack traces, recurrence extraction, tail recursion, recursion trees, and Master Method exam shapes.",
       link: "",
       updatedAt: now
     }
@@ -3181,6 +3275,212 @@ function gateDaDsaSections(updatedAt = new Date().toISOString()) {
         "Nested loops require reading the iteration region, not guessing.",
         "Repeated halving or doubling usually gives logarithmic runtime.",
         "Simple recurrences can be read from subproblem count, subproblem size, and non-recursive work."
+      ],
+      updatedAt
+    },
+    {
+      id: "gate-da-dsa-induction-recursion",
+      exam: "GATE DA",
+      accountTier: "Basic",
+      subject: "Data Structures and Algorithms",
+      chapter: "Chapter 2",
+      section: "2",
+      title: "Induction and Recursion",
+      summary: "Recursive state, base cases, call-stack traces, induction proof shape, recurrence extraction, tail recursion, recursion trees, and Master Method recognition for GATE DA.",
+      sectionPreview: "Recursion is not magic. A recursive program keeps asking a smaller version of the same question until a base case can answer directly. The exam skill is to see the state, trace the calls and returns, prove the recursive step, and read the runtime recurrence.",
+      previewActivity: "Trace sum(A, 0) for A = [4, 1, 3] when sum(A, i) returns 0 if i==len(A), otherwise A[i] + sum(A, i+1). Write the calls first, then write the return values in reverse order. What invariant is true about sum(A, i)?",
+      chapterIntro: [
+        "Chapter 1 taught how to read growth. Chapter 2 teaches how recursive algorithms create that growth.",
+        "We will use small programs where the state is visible: array sums, powers, binary exponentiation, Fibonacci-style branching, and divide-and-conquer maximum. For each one, we ask the same questions: what is the state, what is the base case, what smaller problem is solved, what is the invariant, what is the runtime, and what stack space is used?",
+        "The GATE DA target is compact reasoning. Given short pseudocode, you should be able to trace calls, identify a broken base case, write a recurrence, solve common recurrence shapes, and justify correctness with induction."
+      ],
+      bookSections: [
+        {
+          number: "2.1",
+          title: "Recursive State and Base Cases",
+          paragraphs: [
+            "Every recursive function has a state: the information that changes from one call to the next. In an array sum, the state might be the index i. In exponentiation, the state might be the exponent k. In backtracking, the state might be the partial solution and the remaining choices.",
+            "A base case is the state where the answer is immediate. Without it, the recursion never stops. With a wrong base case, the algorithm may stop too early, skip a value, or read outside the input.",
+            "The invariant says what a call means. For sum(A, i), a useful invariant is: this call returns the sum of A[i], A[i+1], ..., A[n-1]. Once that meaning is clear, the recursive step is almost forced."
+          ],
+          blocks: [
+            {
+              type: "principle",
+              title: "State before code",
+              body: "Before tracing recursion, name the changing state and write what one call is supposed to return."
+            },
+            {
+              type: "example",
+              title: "Example 2.1: suffix-sum invariant",
+              body: "sum(A, i) returns 0 when i==n, else A[i]+sum(A, i+1). The invariant is: sum(A, i) equals the sum of the suffix starting at i. The base case i==n is the empty suffix."
+            },
+            {
+              type: "warning",
+              title: "Common trap",
+              body: "If the base case is i==n-1 returning 0, the last element is skipped. If the recursive call uses i instead of i+1, the state does not get smaller."
+            }
+          ]
+        },
+        {
+          number: "2.2",
+          title: "Call-Stack Traces",
+          paragraphs: [
+            "A recursive trace has two phases. The call phase moves toward the base case. The return phase combines answers while the stack unwinds.",
+            "For GATE DA, the mistake is often to compute only the calls and forget the returns. A function that returns A[i]+sum(A,i+1) cannot finish the first call until the smaller call returns.",
+            "Runtime counts all calls and the work outside the recursive calls. Stack space counts the maximum number of unfinished calls at the same time."
+          ],
+          blocks: [
+            {
+              type: "example",
+              title: "Example 2.2: trace sum([4,1,3],0)",
+              body: "Calls: sum(0) -> sum(1) -> sum(2) -> sum(3). Return phase: sum(3)=0, sum(2)=3, sum(1)=1+3=4, sum(0)=4+4=8. There are n+1 calls, so time is Theta(n), and maximum stack depth is Theta(n)."
+            },
+            {
+              type: "simulation",
+              title: "Simulation practice",
+              body: "For A=[2,5,1,4], make a table with columns call, waiting expression, returned value, and stack depth. Fill the return values from the base case upward."
+            }
+          ]
+        },
+        {
+          number: "2.3",
+          title: "Induction Is the Correctness Proof",
+          paragraphs: [
+            "Recursive correctness is usually proved by induction. The induction hypothesis is the promise that the recursive call is correct for the smaller state.",
+            "For sum(A,i), assume sum(A,i+1) correctly returns the suffix sum from i+1. Then A[i]+sum(A,i+1) returns the suffix sum from i. The base case i==n returns the empty suffix sum, 0.",
+            "A weak proof only says 'it calls itself'. A useful proof names the smaller input, states the induction hypothesis, and shows how the current answer follows."
+          ],
+          blocks: [
+            {
+              type: "strategy",
+              title: "Induction proof routine",
+              body: "State the meaning of f(state). Prove the base state. Assume the smaller call is correct. Show the current return value is correct."
+            },
+            {
+              type: "example",
+              title: "Example 2.3: recursive maximum",
+              body: "maxSuffix(A,i) returns max(A[i..n-1]). The recursive step returns max(A[i], maxSuffix(A,i+1)). By induction, maxSuffix(A,i+1) is the maximum of the rest, so taking the larger of A[i] and that value gives the suffix maximum."
+            }
+          ]
+        },
+        {
+          number: "2.4",
+          title: "Writing Recurrences from Code",
+          paragraphs: [
+            "A recurrence describes the runtime of a recursive algorithm. Read it directly from code: number of recursive calls, size of each subproblem, and non-recursive work.",
+            "A linear recursive scan usually gives T(n)=T(n-1)+Theta(1), so time is Theta(n). Binary exponentiation gives T(k)=T(floor(k/2))+Theta(1), so time is Theta(log k). Naive Fibonacci gives T(n)=T(n-1)+T(n-2)+Theta(1), which grows exponentially.",
+            "Space is separate. Binary exponentiation has logarithmic stack depth, while a tail-recursive linear scan has linear call depth unless the language/runtime optimizes tail calls."
+          ],
+          blocks: [
+            {
+              type: "example",
+              title: "Example 2.4: binary exponentiation",
+              body: "power(x,k): if k==0 return 1; y=power(x,floor(k/2)); return y*y if k even, else x*y*y. There is one half-size recursive call and constant extra work, so T(k)=T(k/2)+Theta(1)=Theta(log k). Stack space is Theta(log k)."
+            },
+            {
+              type: "warning",
+              title: "Common trap",
+              body: "Do not write 2T(k/2) for binary exponentiation. The value y is computed once, then reused. Two appearances of y in y*y are not two recursive calls."
+            }
+          ]
+        },
+        {
+          number: "2.5",
+          title: "Recursion Trees and Master Method Shapes",
+          paragraphs: [
+            "For divide-and-conquer recurrences T(n)=aT(n/b)+f(n), a recursion tree asks how many levels exist and how much work each level contains.",
+            "T(n)=2T(n/2)+n has log n levels and n total work per level, giving Theta(n log n). T(n)=T(n/2)+1 has log n levels and constant work per level, giving Theta(log n). T(n)=2T(n/2)+1 has growing leaves and total Theta(n).",
+            "For this Basic chapter, use the Master Method only as recognition for common GATE DA forms. The important skill is to connect the recurrence to the code shape and avoid counting a call that is not there."
+          ],
+          blocks: [
+            {
+              type: "strategy",
+              title: "Recursion-tree routine",
+              body: "Write work at level 0, level 1, level 2, then infer the pattern. Count levels until the subproblem size becomes 1."
+            },
+            {
+              type: "example",
+              title: "Example 2.5: divide-and-conquer maximum",
+              body: "maxRange splits the array into two halves and compares the two returned maxima. The recurrence is T(n)=2T(n/2)+Theta(1). The tree has n leaves and less than n internal nodes, so time is Theta(n), stack space is Theta(log n)."
+            }
+          ]
+        },
+        {
+          number: "2.6",
+          title: "Tail Recursion and Space",
+          paragraphs: [
+            "A tail-recursive function returns the result of the recursive call directly, usually carrying an accumulator. The current call has no work left after the recursive call returns.",
+            "Tail recursion can be rewritten as a loop because the state update happens before the next call. For exam reasoning, this matters most for space: without tail-call optimization, the stack can still grow linearly; rewritten as a loop, auxiliary space is constant.",
+            "The canonical check is simple: after the recursive call, is there still pending work? If yes, it is not tail recursion."
+          ],
+          blocks: [
+            {
+              type: "example",
+              title: "Example 2.6: factorial styles",
+              body: "fact(n)=n*fact(n-1) is not tail-recursive because multiplication waits after the call. factTail(n,acc)=factTail(n-1,n*acc) is tail-recursive because the recursive call is the final action."
+            },
+            {
+              type: "simulation",
+              title: "Simulation practice",
+              body: "Trace factTail(4,1): (4,1) -> (3,4) -> (2,12) -> (1,24). The accumulator invariant is acc times n! of the remaining state equals the original factorial target."
+            }
+          ]
+        }
+      ],
+      concepts: [
+        { name: "Recursive state", description: "The part of the input or partial answer that changes between calls.", cue: "Name the state before tracing calls." },
+        { name: "Base case", description: "A state with an immediate answer that stops recursion.", cue: "Check empty, one-element, and zero-exponent states." },
+        { name: "Recursive invariant", description: "The meaning promised by each call.", cue: "Write what f(state) returns." },
+        { name: "Call-stack trace", description: "Calls move down to the base case; returns combine answers upward.", cue: "Trace calls first, then return values." },
+        { name: "Induction proof", description: "Correctness follows by proving the base case and using the smaller call.", cue: "Assume the smaller call is correct, then justify the current result." },
+        { name: "Recurrence extraction", description: "Runtime follows from number of calls, subproblem sizes, and outside work.", cue: "Read a, b, and f(n) from the code." },
+        { name: "Recursion tree", description: "A level-by-level view of recursive work.", cue: "Count work per level and number of levels." },
+        { name: "Tail recursion", description: "The recursive call is the final action, often with an accumulator.", cue: "Ask whether work remains after the call returns." },
+        { name: "Stack space", description: "Maximum unfinished recursive calls at once.", cue: "Do not confuse total calls with maximum depth." }
+      ],
+      techniques: [
+        { name: "State-invariant writeup", when: "given recursive pseudocode.", move: "State what one call means before computing." },
+        { name: "Call-return table", when: "asked to trace recursion.", move: "List calls downward and returned values upward." },
+        { name: "Induction skeleton", when: "asked why recursion is correct.", move: "Prove base case, assume smaller case, then prove current case." },
+        { name: "Recurrence extraction", when: "reading recursive code.", move: "Count recursive calls, subproblem sizes, and non-recursive work." },
+        { name: "Stack-space check", when: "runtime and space are both asked.", move: "Use maximum depth, not total number of calls." },
+        { name: "Tail-recursion test", when: "comparing recursive styles.", move: "Check whether the recursive call is the final action." }
+      ],
+      practiceProblems: dsaInductionRecursionProblems(),
+      implementationDrills: dsaInductionRecursionImplementationDrills(),
+      reviewPrompts: [
+        "What is the changing state in a recursive function?",
+        "How does a base case differ from a stopping condition that is too late or too early?",
+        "Why should recursive traces include return values?",
+        "How is induction used to prove recursive correctness?",
+        "How do you write a recurrence from short recursive pseudocode?",
+        "Why can binary exponentiation be logarithmic while naive Fibonacci is exponential?",
+        "What is the difference between runtime and recursion-stack space?",
+        "How can you recognize tail recursion?"
+      ],
+      reviewQuiz: {
+        id: "quiz-dsa-chapter-2-objective-review",
+        title: "DSA Chapter 2 Objective Review",
+        instructions: "Complete this after studying recursive state, base cases, call-stack traces, induction proof shape, recurrence extraction, recursion trees, tail recursion, and stack-space reasoning.",
+        questions: dsaInductionRecursionReviewQuestions()
+      },
+      readingQuestions: [
+        "What is the invariant for a recursive suffix sum?",
+        "Why must the state get smaller or closer to a base case?",
+        "What is the difference between call order and return order?",
+        "What does the induction hypothesis say in a recursive proof?",
+        "How do you separate time complexity from stack-space complexity?",
+        "How do you distinguish T(n)=T(n/2)+1 from T(n)=2T(n/2)+1?",
+        "When is a recursive function tail-recursive?"
+      ],
+      chapterSummary: [
+        "Recursive algorithms are easiest to understand by naming the changing state and invariant.",
+        "Base cases must match the empty, one-element, or smallest valid state.",
+        "Call-stack traces go down through calls and up through return values.",
+        "Induction proves recursive correctness by trusting the smaller call and checking the current combination step.",
+        "Recurrences come from number of recursive calls, subproblem sizes, and outside work.",
+        "Runtime and recursion-stack space are different measurements.",
+        "Tail recursion can often be rewritten as a loop, but stack savings depend on optimization or rewriting."
       ],
       updatedAt
     }
@@ -12300,6 +12600,278 @@ function dsaAlgorithmsArraysSearchReviewQuestions() {
   }));
 }
 
+function dsaInductionRecursionProblems() {
+  return [
+    {
+      title: "Exercise 1: State and Base Case",
+      prompt: "A function suffixSum(A, i) should return the sum of A[i], A[i+1], ..., A[n-1]. Write the correct base case and recursive return expression.",
+      solution: "Base case: if i == n return 0. Recursive expression: return A[i] + suffixSum(A, i+1). The state i moves toward n, and the invariant is that suffixSum(A,i) returns the suffix sum from i onward.",
+      tags: ["recursive-state", "base-case", "recursive-invariant"]
+    },
+    {
+      title: "Exercise 2: Call-Stack Trace",
+      prompt: "Trace suffixSum([2,5,1],0). List the calls and the returned values.",
+      solution: "Calls: suffixSum(0) -> suffixSum(1) -> suffixSum(2) -> suffixSum(3). Returns: suffixSum(3)=0, suffixSum(2)=1, suffixSum(1)=5+1=6, suffixSum(0)=2+6=8.",
+      tags: ["call-stack-trace", "simulation"]
+    },
+    {
+      title: "Exercise 3: Find the Bug",
+      prompt: "A learner writes suffixSum(A,i): if i == n-1 return 0; else return A[i] + suffixSum(A,i+1). What goes wrong?",
+      solution: "The last element is skipped. For A=[4,7], suffixSum(A,0) returns 4 + suffixSum(A,1), and suffixSum(A,1) returns 0 instead of 7. The correct empty-suffix base case is i == n.",
+      tags: ["base-case", "edge-case"]
+    },
+    {
+      title: "Exercise 4: Induction Proof Skeleton",
+      prompt: "Give a short induction proof that suffixSum(A,i) returns the suffix sum from i to n-1.",
+      solution: "Base case: i=n returns 0, the sum of the empty suffix. Induction hypothesis: suffixSum(A,i+1) returns the sum of A[i+1..n-1]. Step: suffixSum(A,i) returns A[i] plus that smaller suffix sum, so it returns the sum of A[i..n-1].",
+      tags: ["induction-proof", "recursive-invariant"]
+    },
+    {
+      title: "Exercise 5: Recurrence from Code",
+      prompt: "f(n): if n<=1 return 1; return f(n-1)+3. Write the recurrence for time and solve it.",
+      solution: "There is one recursive call on n-1 and constant extra work, so T(n)=T(n-1)+Theta(1). Expanding gives Theta(n) time. The maximum call-stack depth is Theta(n).",
+      tags: ["recurrence-extraction", "stack-space"]
+    },
+    {
+      title: "Exercise 6: Binary Exponentiation",
+      prompt: "power(x,k) makes one recursive call power(x, floor(k/2)), then does constant extra arithmetic. Write and solve the recurrence.",
+      solution: "T(k)=T(floor(k/2))+Theta(1). The exponent halves each level, so there are Theta(log k) levels. Time is Theta(log k), and stack space is Theta(log k).",
+      tags: ["recurrence-extraction", "logarithmic-recursion", "stack-space"]
+    },
+    {
+      title: "Exercise 7: Duplicate Work",
+      prompt: "fib(n): if n<=1 return n; return fib(n-1)+fib(n-2). Why is this not linear recursion?",
+      solution: "Each non-base call branches into two recursive calls. Many states are recomputed, such as fib(n-2), fib(n-3), and smaller values. The recurrence is T(n)=T(n-1)+T(n-2)+Theta(1), which grows exponentially.",
+      tags: ["branching-recursion", "duplicate-work", "recurrence-extraction"]
+    },
+    {
+      title: "Exercise 8: Divide-and-Conquer Maximum",
+      prompt: "maxRange splits an array range into two halves, recursively finds each maximum, then compares the two answers. Give time and stack space.",
+      solution: "The recurrence is T(n)=2T(n/2)+Theta(1). The recursion tree has n leaves and fewer than n internal nodes, so time is Theta(n). The maximum depth is Theta(log n), so stack space is Theta(log n).",
+      tags: ["recursion-tree", "divide-and-conquer", "stack-space"]
+    },
+    {
+      title: "Exercise 9: Master Method Recognition",
+      prompt: "Use recursion-tree or Master Method recognition to solve T(n)=2T(n/2)+n.",
+      solution: "At each level the total non-recursive work is n. The problem size halves for Theta(log n) levels. Total work is Theta(n log n).",
+      tags: ["master-method", "recursion-tree"]
+    },
+    {
+      title: "Exercise 10: Tail Recursion",
+      prompt: "Which is tail-recursive: fact(n)=n*fact(n-1), or factTail(n,acc)=factTail(n-1,n*acc)? Explain the space implication.",
+      solution: "factTail is tail-recursive because the recursive call is the final action. fact is not tail-recursive because multiplication waits after the recursive call returns. Without tail-call optimization both may use Theta(n) stack; rewritten as a loop, the tail-recursive version uses O(1) auxiliary space.",
+      tags: ["tail-recursion", "stack-space"]
+    },
+    {
+      title: "Exercise 11: Exact Trace with Accumulator",
+      prompt: "Trace factTail(4,1) until the base case n==1. What invariant does the accumulator carry?",
+      solution: "States: (4,1) -> (3,4) -> (2,12) -> (1,24). At each step, acc times factorial of the remaining n equals the original target 4!. The returned value is 24.",
+      tags: ["tail-recursion", "simulation", "recursive-invariant"]
+    },
+    {
+      title: "Exercise 12: Compare Two Recursive Algorithms",
+      prompt: "Algorithm A has T(n)=T(n-1)+1. Algorithm B has T(n)=T(n/2)+1. Which is asymptotically faster and why?",
+      solution: "Algorithm B is faster. A reduces the size by 1, so it has Theta(n) levels. B halves the size, so it has Theta(log n) levels. Both do constant work per level.",
+      tags: ["growth-comparison", "recurrence-extraction"]
+    }
+  ];
+}
+
+function dsaInductionRecursionImplementationDrills() {
+  return [
+    {
+      title: "Recursive Array Sum",
+      source: "Original GATE-style implementation drill",
+      difficulty: "Easy",
+      focus: "state invariant and stack trace",
+      url: "",
+      targetTime: "O(n)",
+      reason: "Forces the learner to name the index state, empty-suffix base case, return order, and linear stack depth.",
+      writeup: "Implement recursive and iterative versions, then compare time Theta(n), recursive stack Theta(n), and iterative auxiliary space O(1)."
+    },
+    {
+      title: "Pow(x, n) Pattern",
+      source: "LeetCode-style pattern mining: fast power",
+      difficulty: "Medium",
+      focus: "one half-size recursive call",
+      url: "https://leetcode.com/problems/powx-n/",
+      targetTime: "O(log n)",
+      reason: "Trains the crucial distinction between reusing one recursive answer and making two recursive calls.",
+      writeup: "State the recurrence T(n)=T(n/2)+Theta(1), handle n=0 and odd n, and record stack space."
+    },
+    {
+      title: "Generate Subsets",
+      source: "LeetCode-style pattern mining: recursive choice tree",
+      difficulty: "Medium",
+      focus: "branching recursion and output size",
+      url: "https://leetcode.com/problems/subsets/",
+      targetTime: "O(n 2^n) output-sensitive",
+      reason: "Shows when exponential recursion is unavoidable because the output itself has 2^n subsets.",
+      writeup: "Draw include/exclude choices for three elements, then separate recursion-tree nodes from output-copying cost."
+    },
+    {
+      title: "Climbing Stairs Recursion",
+      source: "LeetCode-style pattern mining: duplicate subproblems",
+      difficulty: "Easy",
+      focus: "naive branching versus memoized recursion",
+      url: "https://leetcode.com/problems/climbing-stairs/",
+      targetTime: "O(n) with memoization",
+      reason: "Makes duplicate work visible before dynamic programming is formally introduced.",
+      writeup: "Trace the naive tree for n=5 and mark repeated states; then explain why memoization changes the state count to n."
+    },
+    {
+      title: "Recursive Binary Search Trace",
+      source: "Original GATE-style implementation drill",
+      difficulty: "Medium",
+      focus: "halving state and base cases",
+      url: "",
+      targetTime: "O(log n)",
+      reason: "Connects Chapter 2 recursion to Chapter 3 binary search by making low/high state explicit.",
+      writeup: "Trace low, high, mid on found and not-found cases; state the base case low > high."
+    }
+  ];
+}
+
+function dsaInductionRecursionReviewQuestions() {
+  const metadata = {
+    "dsa-ch2-q1": { targetConcept: "base-case", prereqsUsed: ["recursive-state"], difficulty: 1, gateWeight: "high" },
+    "dsa-ch2-q2": { targetConcept: "call-stack-trace", prereqsUsed: ["recursive-state"], difficulty: 2, gateWeight: "high" },
+    "dsa-ch2-q3": { targetConcept: "recursive-invariant", prereqsUsed: ["base-case"], difficulty: 2, gateWeight: "high" },
+    "dsa-ch2-q4": { targetConcept: "induction-proof", prereqsUsed: ["recursive-invariant"], difficulty: 2, gateWeight: "high" },
+    "dsa-ch2-q5": { targetConcept: "recurrence-extraction", prereqsUsed: ["call-stack-trace"], difficulty: 2, gateWeight: "high" },
+    "dsa-ch2-q6": { targetConcept: "logarithmic-recursion", prereqsUsed: ["recurrence-extraction"], difficulty: 2, gateWeight: "high" },
+    "dsa-ch2-q7": { targetConcept: "branching-recursion", prereqsUsed: ["recurrence-extraction"], difficulty: 3, gateWeight: "medium" },
+    "dsa-ch2-q8": { targetConcept: "recursion-tree", prereqsUsed: ["recurrence-extraction"], difficulty: 3, gateWeight: "high" },
+    "dsa-ch2-q9": { targetConcept: "tail-recursion", prereqsUsed: ["stack-space"], difficulty: 2, gateWeight: "medium" },
+    "dsa-ch2-q10": { targetConcept: "stack-space", prereqsUsed: ["call-stack-trace"], difficulty: 2, gateWeight: "high" }
+  };
+  return [
+    {
+      id: "dsa-ch2-q1",
+      prompt: "For suffixSum(A,i), which base case correctly represents the empty suffix?",
+      tags: ["base-case", "recursive-state"],
+      options: [
+        { id: "a", text: "if i == 0 return 0" },
+        { id: "b", text: "if i == n return 0" },
+        { id: "c", text: "if i == n-1 return 0" },
+        { id: "d", text: "if A[i] == 0 return 0" }
+      ],
+      answer: "b"
+    },
+    {
+      id: "dsa-ch2-q2",
+      prompt: "suffixSum([3,2],0) uses suffixSum(A,i)=A[i]+suffixSum(A,i+1), base suffixSum(A,n)=0. What does suffixSum([3,2],0) return?",
+      tags: ["call-stack-trace", "simulation"],
+      options: [
+        { id: "a", text: "0" },
+        { id: "b", text: "2" },
+        { id: "c", text: "3" },
+        { id: "d", text: "5" }
+      ],
+      answer: "d"
+    },
+    {
+      id: "dsa-ch2-q3",
+      prompt: "What is the best invariant for maxSuffix(A,i)?",
+      tags: ["recursive-invariant"],
+      options: [
+        { id: "a", text: "It returns the index i." },
+        { id: "b", text: "It returns the maximum value in A[i..n-1]." },
+        { id: "c", text: "It returns the sum of A[0..i]." },
+        { id: "d", text: "It sorts the suffix A[i..n-1]." }
+      ],
+      answer: "b"
+    },
+    {
+      id: "dsa-ch2-q4",
+      prompt: "In an induction proof for suffixSum(A,i), what should the induction hypothesis say?",
+      tags: ["induction-proof", "recursive-invariant"],
+      options: [
+        { id: "a", text: "The program is recursive." },
+        { id: "b", text: "suffixSum(A,i+1) correctly returns the suffix sum from i+1 onward." },
+        { id: "c", text: "The array is sorted." },
+        { id: "d", text: "The runtime is linear." }
+      ],
+      answer: "b"
+    },
+    {
+      id: "dsa-ch2-q5",
+      prompt: "A function makes one recursive call on n-1 and does constant extra work. What recurrence describes its time?",
+      tags: ["recurrence-extraction"],
+      options: [
+        { id: "a", text: "T(n)=T(n-1)+Theta(1)" },
+        { id: "b", text: "T(n)=2T(n/2)+Theta(n)" },
+        { id: "c", text: "T(n)=T(n/2)+Theta(n)" },
+        { id: "d", text: "T(n)=Theta(1)" }
+      ],
+      answer: "a"
+    },
+    {
+      id: "dsa-ch2-q6",
+      prompt: "Binary exponentiation makes one recursive call on floor(k/2) and does constant extra work. What is the tight time complexity?",
+      tags: ["logarithmic-recursion", "recurrence-extraction"],
+      options: [
+        { id: "a", text: "Theta(1)" },
+        { id: "b", text: "Theta(log k)" },
+        { id: "c", text: "Theta(k)" },
+        { id: "d", text: "Theta(k log k)" }
+      ],
+      answer: "b"
+    },
+    {
+      id: "dsa-ch2-q7",
+      prompt: "Why is naive Fibonacci recursion much slower than a single recursive scan?",
+      tags: ["branching-recursion", "duplicate-work"],
+      options: [
+        { id: "a", text: "It has no base case." },
+        { id: "b", text: "It branches into overlapping recursive calls and recomputes many states." },
+        { id: "c", text: "It uses arrays." },
+        { id: "d", text: "It does constant work." }
+      ],
+      answer: "b"
+    },
+    {
+      id: "dsa-ch2-q8",
+      prompt: "What is the tight solution of T(n)=2T(n/2)+n?",
+      tags: ["recursion-tree", "master-method"],
+      options: [
+        { id: "a", text: "Theta(log n)" },
+        { id: "b", text: "Theta(n)" },
+        { id: "c", text: "Theta(n log n)" },
+        { id: "d", text: "Theta(n^2)" }
+      ],
+      answer: "c"
+    },
+    {
+      id: "dsa-ch2-q9",
+      prompt: "Which statement about factTail(n,acc)=factTail(n-1,n*acc) is correct?",
+      tags: ["tail-recursion", "stack-space"],
+      options: [
+        { id: "a", text: "It is tail-recursive because the recursive call is the final action." },
+        { id: "b", text: "It is not recursive." },
+        { id: "c", text: "It is exponential." },
+        { id: "d", text: "It has two recursive calls." }
+      ],
+      answer: "a"
+    },
+    {
+      id: "dsa-ch2-q10",
+      prompt: "A recursive scan over n items has one recursive call on n-1. Without tail-call optimization, what is its stack-space complexity?",
+      tags: ["stack-space", "call-stack-trace"],
+      options: [
+        { id: "a", text: "O(1)" },
+        { id: "b", text: "Theta(log n)" },
+        { id: "c", text: "Theta(n)" },
+        { id: "d", text: "Theta(n^2)" }
+      ],
+      answer: "c"
+    }
+  ].map((question) => ({
+    ...question,
+    ...(metadata[question.id] || { targetConcept: question.tags[0], prereqsUsed: question.tags.slice(1), difficulty: question.tags.length, gateWeight: "medium" })
+  }));
+}
+
 function conditionalProbabilityReviewQuestions() {
   const metadata = {
     "cp-review-1": { targetConcept: "conditional-denominator", prereqsUsed: ["conditional-probability"], difficulty: 1, gateWeight: "high" },
@@ -12754,6 +13326,110 @@ function dsaAlgorithmsArraysSearchConceptGraph() {
         label: "Growth comparison",
         prereqs: ["dominant-term", "logarithmic-growth"],
         repairMaterial: "Order 1, log n, n, n log n, n^2, n^3, and 2^n from slowest to fastest growth.",
+        gateWeight: "high"
+      }
+    }
+  };
+}
+
+function dsaInductionRecursionConceptGraph() {
+  return {
+    chapterId: "gate-da-dsa-induction-recursion",
+    chapterTitle: "DSA Chapter 2: Induction and Recursion",
+    gateWeight: "high",
+    fallbackConcepts: ["base-case", "call-stack-trace", "recurrence-extraction", "stack-space"],
+    fallbackDifficultyMix: [1, 2, 2, 3],
+    fallbackInstruction: "Retest recursive state and base cases, then add call-stack traces, recurrence extraction, induction proof, and stack-space checks.",
+    stableNextAction: "Next: move to arrays, strings, and binary search only after recursive traces, recurrences, and stack-space reasoning are reliable.",
+    nodes: {
+      "recursive-state": {
+        label: "Recursive state",
+        prereqs: [],
+        repairMaterial: "Review DSA Chapter 2.1 and write the changing state for suffix sum, factorial, power, and binary search.",
+        gateWeight: "high"
+      },
+      "base-case": {
+        label: "Base case",
+        prereqs: ["recursive-state"],
+        repairMaterial: "Review DSA Chapter 2.1 and test empty, one-element, and zero-exponent inputs before writing the recursive step.",
+        gateWeight: "high"
+      },
+      "recursive-invariant": {
+        label: "Recursive invariant",
+        prereqs: ["recursive-state", "base-case"],
+        repairMaterial: "Review DSA Chapter 2.1 and write what f(state) returns before tracing code.",
+        gateWeight: "high"
+      },
+      "call-stack-trace": {
+        label: "Call-stack trace",
+        prereqs: ["recursive-state", "base-case"],
+        repairMaterial: "Review DSA Chapter 2.2 and make separate columns for calls, waiting expressions, returned values, and stack depth.",
+        gateWeight: "high"
+      },
+      simulation: {
+        label: "Simulation",
+        prereqs: ["call-stack-trace"],
+        repairMaterial: "Trace suffixSum([2,5,1],0), factTail(4,1), and power(x,5) by hand with return values.",
+        gateWeight: "high"
+      },
+      "induction-proof": {
+        label: "Induction proof",
+        prereqs: ["recursive-invariant"],
+        repairMaterial: "Review DSA Chapter 2.3 and write base case, induction hypothesis, and current-step justification.",
+        gateWeight: "high"
+      },
+      "recurrence-extraction": {
+        label: "Recurrence extraction",
+        prereqs: ["call-stack-trace"],
+        repairMaterial: "Review DSA Chapter 2.4 and read number of calls, subproblem size, and outside work from each pseudocode block.",
+        gateWeight: "high"
+      },
+      "logarithmic-recursion": {
+        label: "Logarithmic recursion",
+        prereqs: ["recurrence-extraction"],
+        repairMaterial: "Review binary exponentiation and explain why one call on n/2 gives Theta(log n).",
+        gateWeight: "high"
+      },
+      "branching-recursion": {
+        label: "Branching recursion",
+        prereqs: ["recurrence-extraction"],
+        repairMaterial: "Draw the naive Fibonacci or subset recursion tree and mark repeated states or unavoidable output leaves.",
+        gateWeight: "medium"
+      },
+      "duplicate-work": {
+        label: "Duplicate work",
+        prereqs: ["branching-recursion"],
+        repairMaterial: "Trace naive fib(5) and circle repeated fib(3), fib(2), and fib(1) calls.",
+        gateWeight: "medium"
+      },
+      "recursion-tree": {
+        label: "Recursion tree",
+        prereqs: ["recurrence-extraction"],
+        repairMaterial: "Review DSA Chapter 2.5 and write level work for T(n)=2T(n/2)+n and T(n)=2T(n/2)+1.",
+        gateWeight: "high"
+      },
+      "master-method": {
+        label: "Master Method recognition",
+        prereqs: ["recursion-tree"],
+        repairMaterial: "Match common forms T(n)=T(n/2)+1, 2T(n/2)+1, and 2T(n/2)+n to their tree shapes.",
+        gateWeight: "medium"
+      },
+      "tail-recursion": {
+        label: "Tail recursion",
+        prereqs: ["recursive-state"],
+        repairMaterial: "Review DSA Chapter 2.6 and check whether work remains after the recursive call returns.",
+        gateWeight: "medium"
+      },
+      "stack-space": {
+        label: "Stack space",
+        prereqs: ["call-stack-trace"],
+        repairMaterial: "Review DSA Chapter 2.2 and compare total calls with maximum unfinished calls for linear and halving recursion.",
+        gateWeight: "high"
+      },
+      "growth-comparison": {
+        label: "Recursive growth comparison",
+        prereqs: ["recurrence-extraction"],
+        repairMaterial: "Compare T(n)=T(n-1)+1, T(n)=T(n/2)+1, T(n)=2T(n/2)+1, and T(n)=2T(n/2)+n.",
         gateWeight: "high"
       }
     }
@@ -19705,6 +20381,7 @@ function buildQuizFeedbackReport({ answers, quiz, section, conceptScores, strong
 
 function conceptGraphForSection(section) {
   if (section?.id === "gate-da-dsa-asymptotic-analysis") return dsaAlgorithmsArraysSearchConceptGraph();
+  if (section?.id === "gate-da-dsa-induction-recursion") return dsaInductionRecursionConceptGraph();
   if (section?.id === "gate-da-linear-algebra-vector-spaces-coordinates") return linearAlgebraVectorSpacesConceptGraph();
   if (section?.id === "gate-da-linear-algebra-transformations-matrices") return linearAlgebraTransformationsConceptGraph();
   if (section?.id === "gate-da-linear-algebra-rank-nullity-systems") return linearAlgebraRankNullityConceptGraph();
