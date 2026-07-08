@@ -75,19 +75,40 @@ Use for:
 
 Source facts: Erickson's page provides a free electronic version of Algorithms and notes that the book assumes discrete math, basic data structures, and especially recursion. It is not a first data-structures textbook, so use it for rigor and problem flavor after basic intuition is established.
 
+### LeetCode-Style Pattern Mining
+
+Primary URL: https://leetcode.com/problemset/
+
+Use for:
+
+- identifying canonical problem families;
+- finding adversarial edge cases and boundary traps;
+- collecting pattern names such as binary-search-on-answer, two pointers, stack simulation, recursion/backtracking, prefix/suffix state, and sliding window when they are in chapter scope;
+- understanding what makes a short problem tricky.
+
+Do not use for:
+
+- copied problem statements;
+- copied examples;
+- copied editorial solution text;
+- off-scope interview patterns that do not support the current GATE DA Basic chapter.
+
+Rewrite every prompt from first principles and keep it small enough for GATE DA-style timed reasoning.
+
 ## Source-Mining Procedure
 
 For each chapter:
 
 1. Pick at least one implementation-focused source: CS 61B, CS106X, or Open Data Structures.
 2. Pick at least one analysis/proof-focused source: MIT 6.006 or Jeff Erickson.
-3. Extract ideas, not text:
+3. Optionally use LeetCode-style pattern mining to find canonical applications and traps, not wording.
+4. Extract ideas, not text:
    - one motivating example;
    - one trace/table/invariant pattern;
    - one common bug or misconception;
    - one end-of-chapter problem style.
-4. Convert each extracted idea into original Aleph material.
-5. Keep source notes in internal metadata or comments if editing `app.js`.
+5. Convert each extracted idea into original Aleph material.
+6. Keep source notes in internal metadata or comments if editing `app.js`.
 
 ## GATE DA Fit
 
@@ -135,6 +156,18 @@ Required end problems:
 - prove a recursive algorithm by induction;
 - distinguish tail recursion from non-tail recursion.
 
+Canonical applications to include when in scope:
+
+- factorial, powers, and binary exponentiation;
+- Fibonacci-style branching recursion and repeated work;
+- recursive array/string scans;
+- divide-and-conquer sum, maximum, or search;
+- subset generation and backtracking state;
+- tail-recursive accumulator transformations;
+- recurrence extraction from short pseudocode.
+
+Simulation practice should include stack-frame tables, return-value flow, recursion-tree node counts, and base-case failure examples.
+
 ## Chapter 3 Source Routing
 
 Topic: Arrays, Strings, and Binary Search.
@@ -155,3 +188,16 @@ Required end problems:
 - apply binary search on a small sorted input;
 - state why binary search discards the correct half;
 - handle not-found and duplicate-value cases.
+
+Canonical applications to include when in scope:
+
+- first/last occurrence in a sorted array;
+- lower bound and upper bound;
+- two-sum in a sorted array;
+- merging two sorted arrays;
+- reversing or rotating an array/string;
+- prefix sums for range queries;
+- two-pointer duplicate handling;
+- binary search termination with closed, half-open, and answer-space intervals.
+
+Simulation practice should include low/high/mid updates, pointer movement tables, duplicate-value traces, not-found traces, and exact iteration-count questions.

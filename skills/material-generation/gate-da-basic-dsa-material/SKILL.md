@@ -29,6 +29,19 @@ Before generating material, read `references/source-map.md`. Use the listed sour
 
 Do not copy source exercises verbatim. Reconstruct new examples and problems that train the same idea.
 
+## Mandatory Material Generation Pipeline
+
+Run this workflow whenever generating DSA material, examples, practice problems, review quizzes, or end-of-chapter exercises:
+
+1. Skill lookup: check `skills/skill-index.md`, load this skill, then read `references/source-map.md`.
+2. Source/tool call: consult the relevant source families for the chapter. Use at least one implementation source and one analysis/proof source. Add LeetCode-style pattern mining only for canonical applications and traps; do not copy problem statements or editorials.
+3. Source extraction: record the examples, traces, invariants, misconceptions, canonical applications, and problem patterns that will be adapted.
+4. Material draft: write the chapter around concrete state changes, not generic summaries.
+5. Deep-learning rubric check: score the draft with the rubric below. Revise before writing final problems if any hard gate fails.
+6. Practice generation: generate labelled practice, end-of-chapter problems, and app review metadata.
+7. Solution verification: solve every generated problem independently, test small cases or manual traces, and verify answer uniqueness.
+8. Submit gate: submit only after the rubric and solution-verification checks pass.
+
 ## Generation Workflow
 
 1. Identify the chapter's GATE DA endpoint: what the learner must be able to answer in MCQ/MSQ/NAT style.
@@ -43,6 +56,33 @@ Do not copy source exercises verbatim. Reconstruct new examples and problems tha
 4. Check the chapter against the GATE DA coverage checklist.
 5. Revise until every end-of-chapter problem maps to at least one explicit GATE DA skill.
 
+## Deep-Learning Rubric
+
+Score each dimension 0-3. A generated chapter or quiz passes only if every dimension is at least 2, solution correctness is 3, and the total score is at least 25/30.
+
+| Dimension | 0 | 1 | 2 | 3 |
+| --- | --- | --- | --- | --- |
+| Conceptual model and invariants | No invariant or state model. | Names the concept but does not use it. | States the working invariant/state model and uses it in examples. | Learner must create, repair, or compare invariants in practice problems. |
+| Runtime complexity | Missing or superficial. | Gives Big-O without derivation. | Derives loop/recursion cost from the trace or recurrence. | Includes exact counts or competing approaches where exam traps are plausible. |
+| Space complexity | Missing. | Mentions auxiliary space only once. | Explains stack/array/temporary storage for the main method. | Tests in-place vs auxiliary-space tradeoffs, recursion stack depth, or data-structure storage. |
+| Simulation practice | No trace. | One passive worked trace. | Learner traces at least one loop/recursion/search step. | Multiple traces include boundary cases, updates, and final-state checks under time pressure. |
+| Canonical applications | No applications. | One application named without transfer. | Shows at least two canonical uses relevant to GATE DA. | Problems require recognizing which canonical pattern applies in a compressed exam setting. |
+| Tricky examples | Only standard happy paths. | One mild edge case. | Includes off-by-one, equality, duplicates, empty/one-element, or not-found traps as relevant. | Includes LeetCode-style adversarial patterns rewritten as original prompts with exam-level traps. |
+| Correctness reasoning | No proof or justification. | Informal intuition only. | Includes a one- or two-sentence correctness argument. | Learner must identify why a step is valid, where an invariant breaks, or how induction applies. |
+| GATE DA transfer | Not exam-shaped. | Too project-like or implementation-heavy. | Uses MCQ/MSQ/NAT/short-answer styles and short pseudocode. | Compresses reasoning to GATE timing with plausible distractors and answer checks. |
+| Feedback metadata | Missing. | Partial tags only. | Every problem has concept, prerequisite, common mistake, and answer-check metadata. | Metadata supports targeted remediation and distinguishes misconception types. |
+| Solution correctness | Solutions absent or unchecked. | Solutions present but not independently verified. | Solutions checked by manual reasoning. | Every solution is independently solved, traced on small cases, and checked for objective-answer uniqueness. |
+
+Hard failure conditions:
+
+- The material lacks a usable invariant or state model.
+- Runtime or space complexity is missing for algorithmic content.
+- There is no learner-facing simulation/trace practice.
+- Canonical applications are not identified.
+- Tricky examples are copied from a source instead of rewritten.
+- Any generated problem lacks a verified solution.
+- MCQ/MSQ/NAT answers are ambiguous, have multiple unintended answers, or cannot be checked.
+
 ## Chapter Style
 
 - Lead with a small concrete program, array, string, tree, graph, or trace.
@@ -51,6 +91,9 @@ Do not copy source exercises verbatim. Reconstruct new examples and problems tha
 - Use compact pseudocode and clear indexing conventions.
 - Use examples with small inputs first, then one exam-style compressed example.
 - Avoid generic motivational prose; every paragraph should support a skill, trace, or exam move.
+- Include runtime and space analysis close to the example that creates the cost.
+- Include simulation practice where the learner updates variables, stack frames, pointers, bounds, or data-structure state by hand.
+- Include canonical applications and original tricky examples, especially patterns that resemble common LeetCode traps but are rewritten for GATE DA scope.
 
 ## End-Of-Chapter Problem Requirements
 
@@ -75,6 +118,18 @@ Every DSA chapter must end with:
   "answer_check": ""
 }
 ```
+
+## Solution Verification
+
+Before accepting generated problems:
+
+1. Write or derive the canonical solution privately before finalizing the prompt.
+2. For algorithmic questions, simulate at least two cases: one standard case and one edge/trap case.
+3. Check runtime and auxiliary-space claims against the simulation, recurrence, or data-structure operations.
+4. For MCQ/MSQ, verify that exactly the intended choices are correct.
+5. For NAT/integer answers, verify that the answer is unique under the stated assumptions.
+6. For short-answer questions, define the minimal acceptable invariant, recurrence, trace state, or explanation.
+7. Regenerate or revise any problem whose solution cannot be checked cleanly.
 
 ## GATE DA Coverage Checklist
 
