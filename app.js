@@ -1,7 +1,7 @@
 const STORAGE_KEY = "learning-studio-data-v2";
 const LEGACY_STORAGE_KEYS = ["learning-studio-data-v1"];
 const SESSION_KEY = "aleph-session";
-const COURSE_PLAN_VERSION = "seeded-user-canonical-workspace-v112";
+const COURSE_PLAN_VERSION = "seeded-user-canonical-workspace-v113";
 const MAX_FEEDBACK_ATTACHMENT_BYTES = 3 * 1024 * 1024;
 const MAX_COMPRESSED_FEEDBACK_BYTES = 2400 * 1024;
 const MAX_FEEDBACK_PDF_PAGES = 6;
@@ -2562,7 +2562,7 @@ function buildGateDaBasicPlan(now, accountTypes, sections, user = basicGateDaUse
         startDate: monday,
         endDate: "2026-08-30",
         status: "active",
-        details: `GATE DA Basic plan surfaces: Subjects, Tasks, Schedule, Tests, Feedback, Resources, and Share. Recommended pace: study three subjects in parallel. Every 15 days, Aleph should generate an adaptive cumulative review quiz from prior performance, repeating missed concepts more often, reducing mastered concepts, and keeping high-weight exam topics in rotation. Current material build: Probability Chapters 1-10, Linear Algebra Chapters 1-12 plus a chapterless cumulative past-paper style drill, and DSA Chapters 1-2 with a progression gate before Chapter 3.${trialNote}`,
+        details: `GATE DA Basic plan surfaces: Subjects, Tasks, Schedule, Tests, Feedback, Resources, and Share. Recommended pace: study three subjects in parallel. Every 15 days, Aleph should generate an adaptive cumulative review quiz from prior performance, repeating missed concepts more often, reducing mastered concepts, and keeping high-weight exam topics in rotation. Current material build: Probability Chapters 1-10, Linear Algebra Chapters 1-12 plus a chapterless cumulative past-paper style drill, and DSA Chapters 1-3 with a progression gate before Chapter 3.${trialNote}`,
         updatedAt: now
       }
     ],
@@ -2897,6 +2897,7 @@ function dsaBasicScheduleItems(now, monday, sunday) {
   const weekTwoMonday = addDays(monday, 7);
   const weekTwoSunday = addDays(sunday, 7);
   const weekThreeMonday = addDays(monday, 14);
+  const weekThreeSunday = addDays(sunday, 14);
   return [
     {
       id: "schedule-dsa-chapter-1-study",
@@ -2967,6 +2968,36 @@ function dsaBasicScheduleItems(now, monday, sunday) {
       date: weekThreeMonday,
       details: "Take the cumulative gate review across asymptotic analysis, loop shapes, recursion state, call traces, recurrence extraction, recursion trees, and stack space before opening Chapter 3.",
       updatedAt: now
+    },
+    {
+      id: "schedule-dsa-chapter-3-study",
+      title: "DSA Chapter 3: Arrays, Strings, and Binary Search",
+      week: 3,
+      subject: "Data Structures and Algorithms",
+      kind: "Study",
+      date: addDays(weekThreeMonday, 1),
+      details: "Study array/string scans, prefix and suffix state, two-pointer reasoning, sorted-array invariants, binary search boundaries, duplicate cases, and not-found cases.",
+      updatedAt: now
+    },
+    {
+      id: "schedule-dsa-chapter-3-practice",
+      title: "DSA Chapter 3: Labelled Practice",
+      week: 3,
+      subject: "Data Structures and Algorithms",
+      kind: "Practice",
+      date: addDays(weekThreeMonday, 3),
+      details: "Solve array, string, two-pointer, prefix-state, and binary-search boundary exercises before opening worked solutions.",
+      updatedAt: now
+    },
+    {
+      id: "schedule-dsa-chapter-3-review",
+      title: "DSA Chapter 3: Objective Review",
+      week: 3,
+      subject: "Data Structures and Algorithms",
+      kind: "Review",
+      date: weekThreeSunday,
+      details: "Take the graph-backed objective review for scan invariants, prefix/suffix state, string scans, two pointers, sorted arrays, and binary search boundaries.",
+      updatedAt: now
     }
   ];
 }
@@ -2974,6 +3005,7 @@ function dsaBasicScheduleItems(now, monday, sunday) {
 function dsaBasicTests(now, dsaSections, sunday) {
   const weekTwoSunday = addDays(sunday, 7);
   const weekThreeMonday = addDays(sunday, 8);
+  const weekThreeSunday = addDays(sunday, 14);
   return [
     {
       id: "test-dsa-chapter-1-objective-review",
@@ -3003,6 +3035,15 @@ function dsaBasicTests(now, dsaSections, sunday) {
       workflowType: "gate-da-basic-progression-gate",
       unlocks: ["gate-da-dsa-arrays-strings-binary-search"],
       updatedAt: now
+    },
+    {
+      id: "test-dsa-chapter-3-objective-review",
+      title: "DSA Chapter 3 Objective Review",
+      date: weekThreeSunday,
+      details: "Objective review for arrays, strings, scan invariants, prefix/suffix state, two-pointer reasoning, sorted arrays, binary search boundaries, duplicate cases, and not-found cases.",
+      sectionId: dsaSections[3]?.id,
+      quizId: "quiz-dsa-chapter-3-objective-review",
+      updatedAt: now
     }
   ];
 }
@@ -3011,6 +3052,7 @@ function dsaBasicTasks(now, monday, sunday) {
   const weekTwoMonday = addDays(monday, 7);
   const weekTwoSunday = addDays(sunday, 7);
   const weekThreeMonday = addDays(monday, 14);
+  const weekThreeSunday = addDays(sunday, 14);
   return [
     {
       id: "task-dsa-chapter-1-read",
@@ -3088,6 +3130,39 @@ function dsaBasicTasks(now, monday, sunday) {
       done: false,
       details: "Submit the cumulative Chapters 1-2 gate review before moving to Chapter 3 arrays, strings, and binary search.",
       updatedAt: now
+    },
+    {
+      id: "task-dsa-chapter-3-read",
+      week: 3,
+      title: "DSA Ch 3: Read arrays, strings, and binary search",
+      type: "Study",
+      date: addDays(weekThreeMonday, 1),
+      status: "todo",
+      done: false,
+      details: "Open Subjects -> Data Structures and Algorithms -> Chapter 3 and study scan invariants, prefix/suffix state, two pointers, sorted arrays, and binary search.",
+      updatedAt: now
+    },
+    {
+      id: "task-dsa-chapter-3-practice",
+      week: 3,
+      title: "DSA Ch 3: Solve array/search practice",
+      type: "Practice",
+      date: addDays(weekThreeMonday, 3),
+      status: "todo",
+      done: false,
+      details: "Attempt the labelled Chapter 3 practice problems before opening worked solutions.",
+      updatedAt: now
+    },
+    {
+      id: "task-dsa-chapter-3-review",
+      week: 3,
+      title: "DSA Ch 3: Take objective review",
+      type: "Review",
+      date: weekThreeSunday,
+      status: "todo",
+      done: false,
+      details: "Submit the Chapter 3 objective quiz so Aleph logs array, string, two-pointer, and binary-search boundary gaps.",
+      updatedAt: now
     }
   ];
 }
@@ -3095,6 +3170,7 @@ function dsaBasicTasks(now, monday, sunday) {
 function dsaBasicFeedback(now, sunday) {
   const weekTwoSunday = addDays(sunday, 7);
   const weekThreeMonday = addDays(sunday, 8);
+  const weekThreeSunday = addDays(sunday, 14);
   return [
     {
       id: "feedback-dsa-chapter-1",
@@ -3115,6 +3191,13 @@ function dsaBasicFeedback(now, sunday) {
       title: "DSA Chapters 1-2 progression gate feedback",
       date: weekThreeMonday,
       details: "Review cumulative gate misses for runtime simplification, loop-counting, logarithmic patterns, recursive state, call-stack returns, recurrence extraction, recursion trees, and stack-space reasoning before Chapter 3.",
+      updatedAt: now
+    },
+    {
+      id: "feedback-dsa-chapter-3",
+      title: "DSA Chapter 3 feedback focus",
+      date: weekThreeSunday,
+      details: "Review misses for off-by-one indexing, weak scan invariants, prefix/suffix state confusion, wrong pointer movement, invalid sorted-array assumptions, binary-search termination errors, duplicate handling, and not-found cases.",
       updatedAt: now
     }
   ];
@@ -3145,6 +3228,14 @@ function dsaBasicResources(now, monday) {
       title: "DSA Chapters 1-2: Progression Gate Review",
       date: weekThreeMonday,
       details: "Open Subjects -> Data Structures and Algorithms to take the cumulative Chapters 1-2 gate review. This gate checks readiness for Chapter 3 arrays, strings, and binary search.",
+      link: "",
+      updatedAt: now
+    },
+    {
+      id: "resource-dsa-arrays-strings-binary-search",
+      title: "DSA Chapter 3: Arrays, Strings, and Binary Search",
+      date: addDays(weekThreeMonday, 1),
+      details: "Open Subjects -> Data Structures and Algorithms to study array/string scans, prefix/suffix state, two-pointer reasoning, sorted arrays, binary search invariants, and boundary-case discipline.",
       link: "",
       updatedAt: now
     }
@@ -3626,6 +3717,192 @@ function gateDaDsaSections(updatedAt = new Date().toISOString()) {
         "The quiz samples one-topic, two-topic, and three-topic questions from the DSA concept graph.",
         "A submitted gate unlocks the next DSA chapter in the current prototype workflow.",
         "A score below the pass threshold should trigger repair work before Chapter 3."
+      ],
+      updatedAt
+    },
+    {
+      id: "gate-da-dsa-arrays-strings-binary-search",
+      exam: "GATE DA",
+      accountTier: "Basic",
+      subject: "Data Structures and Algorithms",
+      chapter: "Chapter 3",
+      section: "3",
+      title: "Arrays, Strings, and Binary Search",
+      summary: "Array and string scans, prefix/suffix state, two-pointer reasoning, sorted-array invariants, binary search boundaries, duplicate cases, not-found cases, and exact trace discipline.",
+      sectionPreview: "Arrays and strings look simple because values sit in numbered positions. Most mistakes come from the boundary: which positions have already been processed, which positions remain possible, and when the loop should stop.",
+      previewActivity: "For A=[1,3,3,5,8] and target 3, trace a binary search that returns the first occurrence. Write low, high, mid, and the invariant after each step. Why is ordinary 'return when equal' not enough?",
+      chapterIntro: [
+        "Chapter 3 turns loop-counting and invariants into concrete array and string reasoning.",
+        "The running idea is state. In a scan, the processed prefix has a meaning. In a two-pointer method, the discarded region has a reason. In binary search, the remaining interval must still contain every possible answer.",
+        "The GATE DA target is short-pseudocode accuracy: trace indices, state the invariant, handle empty and one-element inputs, avoid off-by-one errors, and explain why sortedness lets you discard work."
+      ],
+      bookSections: [
+        {
+          number: "3.1",
+          title: "Array Positions and Scan State",
+          paragraphs: [
+            "An array stores values at positions 0,1,...,n-1. A scan moves an index through those positions and updates a small amount of state.",
+            "The invariant is the meaning of the state after each step. If maxSoFar is maintained while scanning left to right, the invariant after processing A[0..i] is: maxSoFar is the maximum value in that prefix.",
+            "Runtime is usually Theta(n) because each position is visited once. Auxiliary space is O(1) when only a few variables are stored."
+          ],
+          blocks: [
+            {
+              type: "principle",
+              title: "Processed prefix",
+              body: "At index i, always ask: which positions have been processed, and what does my variable mean for those positions?"
+            },
+            {
+              type: "example",
+              title: "Example 3.1: maximum scan",
+              body: "For A=[4,1,7,3], start maxSoFar=4. After scanning 1 it remains 4; after 7 it becomes 7; after 3 it remains 7. The invariant is that maxSoFar is the maximum of the processed prefix."
+            }
+          ]
+        },
+        {
+          number: "3.2",
+          title: "Prefix and Suffix State",
+          paragraphs: [
+            "A prefix value summarizes everything to the left of a position. A suffix value summarizes everything to the right. These are useful when a question asks about every split point.",
+            "For example, prefixSum[i] can mean the sum of A[0..i-1]. This half-open convention makes range sums clean: sum of A[l..r-1] is prefixSum[r]-prefixSum[l].",
+            "The common trap is mixing inclusive and exclusive endpoints. Choose one convention and state it before calculating."
+          ],
+          blocks: [
+            {
+              type: "definition",
+              title: "Half-open prefix convention",
+              body: "prefix[0]=0 and prefix[i] is the sum of A[0..i-1]. Then every range [l,r) has sum prefix[r]-prefix[l]."
+            },
+            {
+              type: "warning",
+              title: "Boundary trap",
+              body: "If prefix[i] means sum through index i in one line and sum before index i in the next, off-by-one errors are almost guaranteed."
+            }
+          ]
+        },
+        {
+          number: "3.3",
+          title: "String Scans",
+          paragraphs: [
+            "A string scan is an array scan where the values are characters. The same state ideas apply: index, processed prefix, remaining suffix, and a small variable such as a count, last seen character, or mismatch flag.",
+            "Many GATE-style string questions are not about library functions. They ask whether a loop visits the right characters and handles empty strings, one-character strings, repeated characters, or case conditions.",
+            "A frequency-count scan over a fixed alphabet uses O(1) auxiliary space if the alphabet size is treated as constant; otherwise it uses O(k), where k is the number of possible or distinct characters being tracked."
+          ],
+          blocks: [
+            {
+              type: "example",
+              title: "Example 3.2: adjacent duplicate check",
+              body: "To check whether a string has equal adjacent characters, scan i from 1 to n-1 and compare s[i] with s[i-1]. The loop intentionally starts at 1 so s[i-1] is valid."
+            }
+          ]
+        },
+        {
+          number: "3.4",
+          title: "Two Pointers",
+          paragraphs: [
+            "Two-pointer methods keep two indices that move toward each other or move in the same direction. They are useful when movement can safely discard many impossible pairs.",
+            "For a sorted array two-sum problem, if A[left]+A[right] is too small, increasing left is safe because every pair with the old left and a smaller right is even smaller. If the sum is too large, decreasing right is safe.",
+            "The invariant is not merely 'left is less than right'. The invariant is that no discarded pair can still be a valid answer."
+          ],
+          blocks: [
+            {
+              type: "example",
+              title: "Example 3.3: sorted two-sum trace",
+              body: "A=[1,2,4,7,11], target=9. left=0,right=4 gives 12, too large, so right moves left. left=0,right=3 gives 8, too small, so left moves right. left=1,right=3 gives 9."
+            },
+            {
+              type: "principle",
+              title: "Discard proof",
+              body: "Move a pointer only when sortedness proves the discarded pairs cannot work."
+            }
+          ]
+        },
+        {
+          number: "3.5",
+          title: "Binary Search Invariants",
+          paragraphs: [
+            "Binary search is a loop over a sorted search interval. The invariant says where the answer could still be.",
+            "For ordinary search, a useful invariant is: if target occurs, it is inside [low, high]. Each comparison discards a half that cannot contain target.",
+            "For lower bound or first occurrence, the answer is a position, not just a value. A clean invariant is: all indices before low are known too small, and all indices at or after high are possible answer positions or beyond the array."
+          ],
+          blocks: [
+            {
+              type: "example",
+              title: "Example 3.4: first occurrence",
+              body: "For A=[1,3,3,3,8], target=3, equality does not finish the job. When A[mid] >= target, move high=mid to keep searching left. The final low is the first position whose value is at least target."
+            },
+            {
+              type: "warning",
+              title: "Termination trap",
+              body: "If low and high are updated without shrinking the interval, the loop can repeat forever. Check that every branch removes at least one candidate position."
+            }
+          ]
+        },
+        {
+          number: "3.6",
+          title: "Duplicates, Not Found, and Insert Position",
+          paragraphs: [
+            "Sorted arrays often contain duplicates, so 'found target' is not always the final answer. First occurrence, last occurrence, count of occurrences, and insertion position all need boundary-aware variants.",
+            "A not-found case should return a meaningful result: -1 for ordinary search, or the insertion index for lower bound. The chosen return value must be part of the specification.",
+            "Binary search is Theta(log n) time because the interval shrinks by a constant factor each step. It uses O(1) auxiliary space in iterative form."
+          ],
+          blocks: [
+            {
+              type: "simulation",
+              title: "Simulation practice",
+              body: "Trace lowerBound([1,2,4,4,4,9],4) using [low, high) with low=0, high=6. Record mid, A[mid], and which side is discarded until low==high."
+            }
+          ]
+        }
+      ],
+      concepts: [
+        { name: "Array indexing", description: "Positions run from 0 to n-1, and every access must stay inside that range.", cue: "Check empty and one-element cases." },
+        { name: "Scan invariant", description: "A loop variable summarizes the processed part of the array or string.", cue: "State what is true after each iteration." },
+        { name: "Prefix state", description: "A compact summary of everything before a position.", cue: "Use half-open intervals for range sums." },
+        { name: "Suffix state", description: "A compact summary of everything after a position.", cue: "Build from right to left when needed." },
+        { name: "String scan", description: "A character array scan with the same boundary and invariant rules.", cue: "Watch i-1 and i+1 accesses." },
+        { name: "Two-pointer reasoning", description: "Two indices move because a sorted/order property proves discarded cases impossible.", cue: "Justify the pointer move." },
+        { name: "Sorted-array reasoning", description: "Sortedness lets comparisons discard ranges, not just values.", cue: "Ask which side is impossible." },
+        { name: "Binary search invariant", description: "The search interval keeps every possible answer.", cue: "State what [low, high] or [low, high) means." },
+        { name: "Boundary cases", description: "Duplicates, not-found targets, and first/last occurrence need explicit rules.", cue: "Do not stop at equality unless equality answers the exact question." }
+      ],
+      techniques: [
+        { name: "Processed-prefix trace", when: "given a scan over an array or string.", move: "Track index, processed region, state variable, and invariant." },
+        { name: "Prefix difference", when: "given repeated range-sum questions.", move: "Use prefix[r]-prefix[l] with a stated half-open convention." },
+        { name: "Pointer discard proof", when: "using two pointers on sorted data.", move: "Explain why every discarded pair is impossible." },
+        { name: "Binary search interval", when: "writing or tracing binary search.", move: "Choose closed or half-open bounds and prove every update shrinks the interval." },
+        { name: "Lower-bound variant", when: "asked for first occurrence or insertion position.", move: "Keep values below target to the left of low and candidates at or after high." }
+      ],
+      practiceProblems: dsaArraysStringsBinarySearchProblems(),
+      implementationDrills: dsaArraysStringsBinarySearchImplementationDrills(),
+      reviewPrompts: [
+        "What does the state variable mean after processing the first i items?",
+        "Which prefix-sum convention are you using: inclusive or half-open?",
+        "Why is a pointer move safe in sorted two-sum?",
+        "What invariant does your binary search interval maintain?",
+        "What should the algorithm return when the target is absent?",
+        "How do duplicates change first/last occurrence problems?"
+      ],
+      reviewQuiz: {
+        id: "quiz-dsa-chapter-3-objective-review",
+        title: "DSA Chapter 3 Objective Review",
+        instructions: "Complete this after studying arrays, strings, prefix/suffix state, two pointers, sorted arrays, and binary search. The sampled mix is 5 single-topic checks, 3 two-topic mixes, and 2 three-topic synthesis questions.",
+        questions: dsaArraysStringsBinarySearchReviewQuestions()
+      },
+      readingQuestions: [
+        "What is the processed-prefix invariant for a maximum scan?",
+        "Why does half-open prefix notation reduce off-by-one errors?",
+        "When is a two-pointer move justified?",
+        "What does binary search keep true after each comparison?",
+        "How do duplicate target values change the search goal?",
+        "What are the time and space costs of iterative binary search?"
+      ],
+      chapterSummary: [
+        "Array and string algorithms are mostly state and boundary discipline.",
+        "A scan should have a clear invariant for the processed prefix or suffix.",
+        "Prefix sums trade O(n) preprocessing and O(n) space for O(1) range queries.",
+        "Two-pointer methods require a proof that discarded pairs cannot work.",
+        "Binary search is about preserving a search-interval invariant.",
+        "Duplicates and not-found cases must be specified before tracing."
       ],
       updatedAt
     }
@@ -13183,6 +13460,266 @@ function dsaChaptersOneTwoProgressionGateQuestions() {
   }));
 }
 
+function dsaArraysStringsBinarySearchProblems() {
+  return [
+    {
+      title: "Exercise 1: Maximum Scan Invariant",
+      prompt: "Trace maxSoFar for A=[5,2,9,1]. State the invariant after each processed prefix.",
+      solution: "Start maxSoFar=5 for prefix [5]. After 2, maxSoFar=5 for [5,2]. After 9, maxSoFar=9 for [5,2,9]. After 1, maxSoFar=9 for the whole array. Invariant: maxSoFar is the maximum of the processed prefix. Time Theta(n), auxiliary space O(1).",
+      tags: ["array-indexing", "scan-invariant"]
+    },
+    {
+      title: "Exercise 2: Prefix Sum Convention",
+      prompt: "For A=[3,1,4,2], build prefix where prefix[0]=0 and prefix[i] is the sum of A[0..i-1]. Use it to find the sum of A[1..3).",
+      solution: "prefix=[0,3,4,8,10]. The half-open range A[1..3) contains 1 and 4, so the sum is prefix[3]-prefix[1]=8-3=5. Preprocessing time Theta(n), query time O(1), space Theta(n).",
+      tags: ["prefix-state", "array-indexing"]
+    },
+    {
+      title: "Exercise 3: Adjacent String Duplicate",
+      prompt: "Write the safe index range for checking whether a string has equal adjacent characters using s[i] and s[i-1]. What happens for an empty string?",
+      solution: "Scan i from 1 to n-1. This keeps i-1 valid. For n=0 or n=1, the loop does not run and the answer is false. Time Theta(n), auxiliary space O(1).",
+      tags: ["string-scan", "array-indexing", "edge-case"]
+    },
+    {
+      title: "Exercise 4: Sorted Two-Sum Trace",
+      prompt: "Trace the two-pointer method on A=[1,2,4,7,11], target=9. Record left, right, sum, and the pointer move.",
+      solution: "left=0,right=4,sum=12, too large so decrement right. left=0,right=3,sum=8, too small so increment left. left=1,right=3,sum=9, found. The discard proof uses sortedness. Time Theta(n), auxiliary space O(1).",
+      tags: ["two-pointer", "sorted-array", "scan-invariant"]
+    },
+    {
+      title: "Exercise 5: Binary Search Trace",
+      prompt: "Trace ordinary binary search for target 8 in A=[1,3,5,8,13] using low=0, high=4, mid=floor((low+high)/2).",
+      solution: "low=0,high=4,mid=2,A[mid]=5, target is larger so low=3. low=3,high=4,mid=3,A[mid]=8, found. The invariant is that if target occurs, it remains inside [low,high]. Time Theta(log n), auxiliary space O(1).",
+      tags: ["binary-search-invariant", "sorted-array"]
+    },
+    {
+      title: "Exercise 6: First Occurrence",
+      prompt: "For A=[1,3,3,3,8], target=3, explain why returning immediately on equality may be wrong if the task is first occurrence.",
+      solution: "Equality only proves some occurrence was found. It does not prove it is the first. A first-occurrence variant should keep searching left when A[mid]>=target, then verify that the final position contains target. Time Theta(log n), auxiliary space O(1).",
+      tags: ["binary-search-boundary", "duplicates-not-found"]
+    },
+    {
+      title: "Exercise 7: Lower Bound Not Found",
+      prompt: "Use lowerBound on A=[1,2,4,4,9] for target=5. What insertion index is returned?",
+      solution: "The first value at least 5 is 9 at index 4, so lowerBound returns 4. If inserting 5, it goes before 9 and after both 4s. Time Theta(log n), auxiliary space O(1).",
+      tags: ["binary-search-boundary", "duplicates-not-found", "sorted-array"]
+    },
+    {
+      title: "Exercise 8: Suffix State",
+      prompt: "For A=[2,1,5,3], build suffixMax[i] as the maximum of A[i..n-1].",
+      solution: "suffixMax[3]=3, suffixMax[2]=max(5,3)=5, suffixMax[1]=max(1,5)=5, suffixMax[0]=max(2,5)=5. So suffixMax=[5,5,5,3]. Time Theta(n), space Theta(n).",
+      tags: ["suffix-state", "scan-invariant"]
+    },
+    {
+      title: "Exercise 9: Spot the Off-by-One",
+      prompt: "A loop checks for adjacent duplicates using for i=0..n-1 and compares s[i] with s[i-1]. What is wrong?",
+      solution: "At i=0, s[i-1] is s[-1], which is invalid in most array/string models and conceptually outside the string. Start i at 1, or compare s[i] with s[i+1] only while i<n-1.",
+      tags: ["string-scan", "array-indexing", "edge-case"]
+    },
+    {
+      title: "Exercise 10: Binary Search Termination",
+      prompt: "In a half-open lower-bound search [low, high), why is high=mid safe when A[mid]>=target, but high=mid-1 may be wrong?",
+      solution: "When A[mid]>=target, mid itself could be the first valid answer, so it must remain in the candidate interval. Setting high=mid keeps mid. Setting high=mid-1 discards a possible answer and also mixes closed-interval logic with half-open logic.",
+      tags: ["binary-search-boundary", "binary-search-invariant"]
+    }
+  ];
+}
+
+function dsaArraysStringsBinarySearchImplementationDrills() {
+  return [
+    {
+      title: "First Occurrence in Sorted Array",
+      source: "LeetCode-style pattern mining: lower bound",
+      difficulty: "Easy",
+      focus: "binary-search boundary",
+      url: "https://leetcode.com/problems/search-insert-position/",
+      targetTime: "O(log n)",
+      reason: "Trains binary-search interval invariants and duplicate/not-found handling without copying a prompt.",
+      writeup: "State whether your interval is closed or half-open, then prove every branch shrinks it."
+    },
+    {
+      title: "Sorted Two-Sum",
+      source: "LeetCode-style pattern mining: two pointers",
+      difficulty: "Easy",
+      focus: "pointer discard proof",
+      url: "https://leetcode.com/problems/two-sum-ii-input-array-is-sorted/",
+      targetTime: "O(n)",
+      reason: "Forces a sortedness-based explanation for pointer movement.",
+      writeup: "For each pointer move, write the discarded pair family and why it cannot hit the target."
+    },
+    {
+      title: "Range Sum Queries",
+      source: "Original GATE-style implementation drill",
+      difficulty: "Easy",
+      focus: "prefix state",
+      url: "",
+      targetTime: "O(n) preprocessing, O(1) query",
+      reason: "Makes the prefix invariant and space tradeoff explicit.",
+      writeup: "Define prefix[0]=0 and use half-open intervals consistently."
+    },
+    {
+      title: "Adjacent Duplicate Character",
+      source: "Original GATE-style implementation drill",
+      difficulty: "Easy",
+      focus: "string boundary cases",
+      url: "",
+      targetTime: "O(n)",
+      reason: "Trains safe indexing for i-1 and empty/one-character strings.",
+      writeup: "List the loop range and test n=0, n=1, and repeated characters."
+    },
+    {
+      title: "Minimum in Rotated Sorted Array",
+      source: "LeetCode-style pattern mining: binary search trap",
+      difficulty: "Medium",
+      focus: "sorted-array interval reasoning",
+      url: "https://leetcode.com/problems/find-minimum-in-rotated-sorted-array/",
+      targetTime: "O(log n)",
+      reason: "A controlled extension where the learner must explain which sorted half can be discarded.",
+      writeup: "Keep this as enrichment: name the invariant before coding."
+    }
+  ];
+}
+
+function dsaArraysStringsBinarySearchReviewQuestions() {
+  const metadata = {
+    "dsa-ch3-q1": { kind: "single concept", targetConcept: "scan-invariant", prereqsUsed: ["array-indexing"], difficulty: 1, gateWeight: "high", expectedFirstStep: "Identify the processed prefix.", commonMistake: "Describing the final answer but not the invariant.", answerCheck: "maxSoFar is maximum of processed prefix." },
+    "dsa-ch3-q2": { kind: "single concept", targetConcept: "suffix-state", prereqsUsed: ["scan-invariant"], difficulty: 2, gateWeight: "medium", expectedFirstStep: "Build from right to left.", commonMistake: "Using prefix information for a suffix question.", answerCheck: "suffixMax[1]=5." },
+    "dsa-ch3-q3": { kind: "single concept", targetConcept: "binary-search-boundary", prereqsUsed: ["binary-search-invariant"], difficulty: 2, gateWeight: "high", expectedFirstStep: "Decide whether mid remains a candidate.", commonMistake: "Discarding mid when it may be first occurrence.", answerCheck: "Use high=mid." },
+    "dsa-ch3-q4": { kind: "single concept", targetConcept: "sorted-array", prereqsUsed: ["array-indexing"], difficulty: 1, gateWeight: "high", expectedFirstStep: "Use sortedness to compare ranges.", commonMistake: "Moving a pointer without discard proof.", answerCheck: "Old right can be discarded when sum is too large." },
+    "dsa-ch3-q5": { kind: "single concept", targetConcept: "string-scan", prereqsUsed: ["array-indexing"], difficulty: 1, gateWeight: "high", expectedFirstStep: "Check valid index range.", commonMistake: "Accessing s[-1] or s[n].", answerCheck: "Start at i=1 for s[i-1]." },
+    "dsa-ch3-q6": { kind: "mixed: two concepts", targetConcept: "two-pointer", prereqsUsed: ["scan-invariant"], difficulty: 2, gateWeight: "high", expectedFirstStep: "Use sortedness to justify pointer move.", commonMistake: "Moving both pointers at once without proof.", answerCheck: "Increment left when sum is too small." },
+    "dsa-ch3-q7": { kind: "mixed: two concepts", targetConcept: "prefix-state", prereqsUsed: ["scan-invariant"], difficulty: 2, gateWeight: "high", expectedFirstStep: "Use prefix[r]-prefix[l].", commonMistake: "Using inclusive endpoint with half-open prefix.", answerCheck: "Range sum is 7." },
+    "dsa-ch3-q8": { kind: "mixed: two concepts", targetConcept: "sorted-array", prereqsUsed: ["array-indexing"], difficulty: 2, gateWeight: "high", expectedFirstStep: "Preserve the candidate interval.", commonMistake: "Forgetting target may be absent.", answerCheck: "Insertion index is 3." },
+    "dsa-ch3-q9": { kind: "mixed: three concepts", targetConcept: "duplicates-not-found", prereqsUsed: ["scan-invariant", "suffix-state"], difficulty: 3, gateWeight: "high", expectedFirstStep: "Separate duplicate handling from ordinary equality.", commonMistake: "Returning on first equality for first occurrence.", answerCheck: "Continue left on equality." },
+    "dsa-ch3-q10": { kind: "mixed: three concepts", targetConcept: "binary-search-boundary", prereqsUsed: ["array-indexing", "sorted-array"], difficulty: 3, gateWeight: "high", expectedFirstStep: "Trace low/high/mid exactly.", commonMistake: "Mixing closed and half-open updates.", answerCheck: "Final lower-bound index is 2." }
+  };
+  return [
+    {
+      id: "dsa-ch3-q1",
+      prompt: "During a left-to-right maximum scan, what is the best invariant for maxSoFar after processing A[0..i]?",
+      tags: ["scan-invariant", "array-indexing"],
+      options: [
+        { id: "a", text: "maxSoFar is the maximum of the processed prefix A[0..i]" },
+        { id: "b", text: "maxSoFar is always A[i+1]" },
+        { id: "c", text: "maxSoFar is the minimum of the unprocessed suffix" },
+        { id: "d", text: "maxSoFar is the array length" }
+      ],
+      answer: "a"
+    },
+    {
+      id: "dsa-ch3-q2",
+      prompt: "For A=[2,1,5,3], suffixMax[i] is max(A[i..n-1]). What is suffixMax[1]?",
+      tags: ["suffix-state", "scan-invariant"],
+      options: [
+        { id: "a", text: "1" },
+        { id: "b", text: "3" },
+        { id: "c", text: "5" },
+        { id: "d", text: "11" }
+      ],
+      answer: "c"
+    },
+    {
+      id: "dsa-ch3-q3",
+      prompt: "In a half-open lower-bound search, A[mid] >= target. Which update keeps mid as a possible first valid index?",
+      tags: ["binary-search-boundary", "binary-search-invariant"],
+      options: [
+        { id: "a", text: "low = mid + 1" },
+        { id: "b", text: "high = mid" },
+        { id: "c", text: "high = mid - 1" },
+        { id: "d", text: "return -1 immediately" }
+      ],
+      answer: "b"
+    },
+    {
+      id: "dsa-ch3-q4",
+      prompt: "In sorted two-sum, A[left]+A[right] is too large. Which move is justified?",
+      tags: ["sorted-array", "two-pointer"],
+      options: [
+        { id: "a", text: "Increment left because the sum is too large" },
+        { id: "b", text: "Decrement right because smaller right values may reduce the sum" },
+        { id: "c", text: "Move both pointers inward every time" },
+        { id: "d", text: "Stop because no answer can exist" }
+      ],
+      answer: "b"
+    },
+    {
+      id: "dsa-ch3-q5",
+      prompt: "To compare s[i] with s[i-1] safely, what loop range should be used?",
+      tags: ["string-scan", "array-indexing"],
+      options: [
+        { id: "a", text: "i=0..n-1" },
+        { id: "b", text: "i=1..n-1" },
+        { id: "c", text: "i=0..n" },
+        { id: "d", text: "i=n..1 only" }
+      ],
+      answer: "b"
+    },
+    {
+      id: "dsa-ch3-q6",
+      prompt: "A=[1,2,4,7,11], target=9. In two-sum, left=0 and right=3 gives sum 8. What should happen?",
+      tags: ["scan-invariant", "two-pointer"],
+      options: [
+        { id: "a", text: "Increment left, because the sum is too small" },
+        { id: "b", text: "Decrement right, because the sum is too small" },
+        { id: "c", text: "Return not found immediately" },
+        { id: "d", text: "Move both pointers outward" }
+      ],
+      answer: "a"
+    },
+    {
+      id: "dsa-ch3-q7",
+      prompt: "A=[3,1,4,2], prefix=[0,3,4,8,10] with half-open convention. What is sum A[1..4)?",
+      tags: ["scan-invariant", "prefix-state"],
+      options: [
+        { id: "a", text: "4" },
+        { id: "b", text: "6" },
+        { id: "c", text: "7" },
+        { id: "d", text: "10" }
+      ],
+      answer: "c"
+    },
+    {
+      id: "dsa-ch3-q8",
+      prompt: "In sorted A=[1,3,5,7], what insertion index should lowerBound(A,4) return?",
+      tags: ["array-indexing", "sorted-array"],
+      options: [
+        { id: "a", text: "1" },
+        { id: "b", text: "2" },
+        { id: "c", text: "3" },
+        { id: "d", text: "-1" }
+      ],
+      answer: "b"
+    },
+    {
+      id: "dsa-ch3-q9",
+      prompt: "For A=[1,3,3,3,8], target=3, why is ordinary binary search equality not enough for first occurrence?",
+      tags: ["scan-invariant", "suffix-state", "duplicates-not-found"],
+      options: [
+        { id: "a", text: "Because equality proves the target is absent" },
+        { id: "b", text: "Because an equal middle value may not be the leftmost equal value" },
+        { id: "c", text: "Because sorted arrays cannot contain duplicates" },
+        { id: "d", text: "Because binary search becomes Theta(n^2)" }
+      ],
+      answer: "b"
+    },
+    {
+      id: "dsa-ch3-q10",
+      prompt: "Trace lowerBound([1,2,4,4,9],4). What final index is returned?",
+      tags: ["array-indexing", "sorted-array", "binary-search-boundary"],
+      options: [
+        { id: "a", text: "1" },
+        { id: "b", text: "2" },
+        { id: "c", text: "3" },
+        { id: "d", text: "5" }
+      ],
+      answer: "b"
+    }
+  ].map((question) => ({
+    ...question,
+    ...(metadata[question.id] || { kind: question.tags.length === 1 ? "single concept" : question.tags.length === 2 ? "mixed: two concepts" : "mixed: three concepts", targetConcept: question.tags[0], prereqsUsed: question.tags.slice(1), difficulty: question.tags.length, gateWeight: "medium" })
+  }));
+}
+
 function conditionalProbabilityReviewQuestions() {
   const metadata = {
     "cp-review-1": { targetConcept: "conditional-denominator", prereqsUsed: ["conditional-probability"], difficulty: 1, gateWeight: "high" },
@@ -13836,6 +14373,98 @@ function dsaChaptersOneTwoProgressionGateConceptGraph() {
         label: "Stack space",
         prereqs: ["call-stack-trace"],
         repairMaterial: "Review DSA Chapter 2.6 and count maximum unfinished calls separately from total runtime.",
+        gateWeight: "high"
+      }
+    }
+  };
+}
+
+function dsaArraysStringsBinarySearchConceptGraph() {
+  return {
+    chapterId: "gate-da-dsa-arrays-strings-binary-search",
+    chapterTitle: "DSA Chapter 3: Arrays, Strings, and Binary Search",
+    gateWeight: "high",
+    fallbackConcepts: ["array-indexing", "scan-invariant", "two-pointer", "binary-search-invariant", "binary-search-boundary"],
+    fallbackDifficultyMix: [1, 2, 2, 3],
+    fallbackInstruction: "Retest safe indexing and scan invariants first, then add two-pointer and binary-search boundary cases.",
+    stableNextAction: "Next: move to linked lists, stacks, and queues after array/string boundaries and binary-search invariants are stable.",
+    nodes: {
+      "loop-count": {
+        label: "Loop count",
+        prereqs: [],
+        repairMaterial: "Review DSA Chapter 1.3 and count array/string loop iterations before reasoning about state.",
+        gateWeight: "high"
+      },
+      "logarithmic-growth": {
+        label: "Logarithmic growth",
+        prereqs: ["loop-count"],
+        repairMaterial: "Review DSA Chapter 1.4 and trace repeated halving before binary search.",
+        gateWeight: "high"
+      },
+      "array-indexing": {
+        label: "Array indexing",
+        prereqs: ["loop-count"],
+        repairMaterial: "Review DSA Chapter 3.1 and test empty, one-element, first-index, and last-index accesses.",
+        gateWeight: "high"
+      },
+      "scan-invariant": {
+        label: "Scan invariant",
+        prereqs: ["array-indexing"],
+        repairMaterial: "Review DSA Chapter 3.1 and write what the processed prefix proves after each iteration.",
+        gateWeight: "high"
+      },
+      "prefix-state": {
+        label: "Prefix state",
+        prereqs: ["scan-invariant"],
+        repairMaterial: "Review DSA Chapter 3.2 and use prefix[r]-prefix[l] with half-open intervals.",
+        gateWeight: "high"
+      },
+      "suffix-state": {
+        label: "Suffix state",
+        prereqs: ["scan-invariant"],
+        repairMaterial: "Review DSA Chapter 3.2 and build one suffix array from right to left by hand.",
+        gateWeight: "medium"
+      },
+      "string-scan": {
+        label: "String scan",
+        prereqs: ["array-indexing"],
+        repairMaterial: "Review DSA Chapter 3.3 and write safe loop ranges for s[i-1] and s[i+1] comparisons.",
+        gateWeight: "high"
+      },
+      "two-pointer": {
+        label: "Two-pointer reasoning",
+        prereqs: ["array-indexing", "scan-invariant"],
+        repairMaterial: "Review DSA Chapter 3.4 and state why each pointer move discards impossible pairs.",
+        gateWeight: "high"
+      },
+      "sorted-array": {
+        label: "Sorted-array reasoning",
+        prereqs: ["array-indexing"],
+        repairMaterial: "Review DSA Chapter 3.4 and Chapter 3.5 and explain which side sortedness discards.",
+        gateWeight: "high"
+      },
+      "binary-search-invariant": {
+        label: "Binary search invariant",
+        prereqs: ["sorted-array", "logarithmic-growth"],
+        repairMaterial: "Review DSA Chapter 3.5 and trace low/high/mid while stating the candidate interval invariant.",
+        gateWeight: "high"
+      },
+      "binary-search-boundary": {
+        label: "Binary search boundary",
+        prereqs: ["binary-search-invariant"],
+        repairMaterial: "Review DSA Chapter 3.5 and compare closed and half-open interval updates.",
+        gateWeight: "high"
+      },
+      "duplicates-not-found": {
+        label: "Duplicates and not-found cases",
+        prereqs: ["binary-search-boundary"],
+        repairMaterial: "Review DSA Chapter 3.6 and solve first occurrence, last occurrence, and insertion index traces.",
+        gateWeight: "high"
+      },
+      "edge-case": {
+        label: "Edge case",
+        prereqs: ["array-indexing"],
+        repairMaterial: "Retest empty arrays, one-element arrays, duplicate values, and absent targets before mixed questions.",
         gateWeight: "high"
       }
     }
@@ -20789,6 +21418,7 @@ function conceptGraphForSection(section) {
   if (section?.id === "gate-da-dsa-asymptotic-analysis") return dsaAlgorithmsArraysSearchConceptGraph();
   if (section?.id === "gate-da-dsa-induction-recursion") return dsaInductionRecursionConceptGraph();
   if (section?.id === "gate-da-dsa-chapters-1-2-progression-gate") return dsaChaptersOneTwoProgressionGateConceptGraph();
+  if (section?.id === "gate-da-dsa-arrays-strings-binary-search") return dsaArraysStringsBinarySearchConceptGraph();
   if (section?.id === "gate-da-linear-algebra-vector-spaces-coordinates") return linearAlgebraVectorSpacesConceptGraph();
   if (section?.id === "gate-da-linear-algebra-transformations-matrices") return linearAlgebraTransformationsConceptGraph();
   if (section?.id === "gate-da-linear-algebra-rank-nullity-systems") return linearAlgebraRankNullityConceptGraph();
