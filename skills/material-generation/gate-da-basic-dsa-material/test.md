@@ -23,10 +23,11 @@ Check that the generated material:
 4. Includes end-of-chapter problems covering concept recognition, trace discipline, complexity, invariant/correctness, edge cases, and exam transfer.
 5. Provides question metadata for feedback: source ideas, GATE DA skill, target concept, prerequisites, expected first step, common mistake, and answer check.
 6. Keeps advanced or off-scope source material out of the Basic chapter unless explicitly marked as enrichment.
-7. Shows that the mandatory generation pipeline was followed: skill lookup, source/tool lookup, source extraction, material draft, rubric check, practice generation, solution verification, and submit gate.
-8. Scores at least 25/30 on the deep-learning rubric, with every dimension at least 2 and solution correctness at 3.
-9. Includes runtime complexity, space complexity, invariants, canonical applications, original tricky examples, and learner-facing simulation practice.
+7. Shows that the mandatory two-pass generation pipeline was followed: skill lookup, source/tool lookup, source extraction, Pass 1 content generation, Pass 1 verifier, Pass 2 practice generation, Pass 2 solution verifier, and submit gate.
+8. Verifies Pass 1 content before final practice generation: runtime complexity, space complexity, invariants, canonical applications, original tricky examples, and learner-facing simulation practice must all be present.
+9. Scores at least 25/30 on the deep-learning rubric, with every dimension at least 2 and solution correctness at 3 after Pass 2.
 10. Verifies every generated problem with an independently derived solution, at least one standard case, and at least one edge or trap case when applicable.
+11. Regenerates or revises any failed problem, solution, metadata field, or missing rubric dimension before submission.
 
 Reject the output if:
 
@@ -34,7 +35,9 @@ Reject the output if:
 - a problem has no checkable solution;
 - an objective question has ambiguous answer choices;
 - the chapter teaches implementation mechanics without invariant, complexity, and transfer reasoning;
-- simulation practice is absent.
+- simulation practice is absent;
+- practice problems are generated before the content verifier passes;
+- final material is submitted before the solution verifier passes.
 
 ## Expected Result
 

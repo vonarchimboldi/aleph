@@ -31,16 +31,27 @@ Do not copy source exercises verbatim. Reconstruct new examples and problems tha
 
 ## Mandatory Material Generation Pipeline
 
-Run this workflow whenever generating DSA material, examples, practice problems, review quizzes, or end-of-chapter exercises:
+Run this two-pass workflow whenever generating DSA material, examples, practice problems, review quizzes, or end-of-chapter exercises:
 
 1. Skill lookup: check `skills/skill-index.md`, load this skill, then read `references/source-map.md`.
 2. Source/tool call: consult the relevant source families for the chapter. Use at least one implementation source and one analysis/proof source. Add LeetCode-style pattern mining only for canonical applications and traps; do not copy problem statements or editorials.
 3. Source extraction: record the examples, traces, invariants, misconceptions, canonical applications, and problem patterns that will be adapted.
-4. Material draft: write the chapter around concrete state changes, not generic summaries.
-5. Deep-learning rubric check: score the draft with the rubric below. Revise before writing final problems if any hard gate fails.
-6. Practice generation: generate labelled practice, end-of-chapter problems, and app review metadata.
-7. Solution verification: solve every generated problem independently, test small cases or manual traces, and verify answer uniqueness.
-8. Submit gate: submit only after the rubric and solution-verification checks pass.
+
+Pass 1, content generation:
+
+4. Generate only the teaching content first: concept sections, worked examples, traces, invariants, runtime analysis, space analysis, canonical applications, tricky examples, and simulation prompts.
+5. Run the content verifier before generating the final problem set. Score the draft with the deep-learning rubric below and check the GATE DA coverage checklist.
+6. Regenerate or revise the content until every rubric dimension is at least 2, the total is at least 25/30, and all hard gates pass.
+
+Pass 2, practice and solution generation:
+
+7. Generate labelled practice, end-of-chapter problems, objective review questions, and feedback metadata from the verified content.
+8. Solve every generated problem independently. Verify all solutions with manual traces, edge cases, runtime/space checks, and answer-uniqueness checks for MCQ/MSQ/NAT items.
+9. Run the practice verifier over the full problem set and solution set. Confirm all rubric dimensions are still covered by the combined teaching content plus practice.
+10. Regenerate or revise any failed problem, solution, metadata field, or missing rubric dimension.
+11. Submit only after both passes pass their verifiers.
+
+Do not generate final practice problems before Pass 1 content verification has passed. Do not submit material before Pass 2 solution verification has passed.
 
 ## Generation Workflow
 
@@ -130,6 +141,28 @@ Before accepting generated problems:
 5. For NAT/integer answers, verify that the answer is unique under the stated assumptions.
 6. For short-answer questions, define the minimal acceptable invariant, recurrence, trace state, or explanation.
 7. Regenerate or revise any problem whose solution cannot be checked cleanly.
+
+## Two-Pass Verifiers
+
+Pass 1 content verifier:
+
+- Source use: at least two source families are used, including one implementation source and one analysis/proof source.
+- Originality: examples and explanations adapt ideas without copying source wording.
+- Concept depth: every major concept has a state model or invariant.
+- Analysis: runtime and auxiliary-space costs are derived near the example that creates them.
+- Applications: canonical applications are named and connected to the chapter concept.
+- Tricky cases: edge cases or adversarial examples are included where the concept naturally has traps.
+- Simulation: the learner is asked to manually trace stack frames, variable updates, array bounds, pointer movement, or data-structure state.
+- Rubric: every deep-learning rubric dimension is at least 2 and the total score is at least 25/30.
+
+Pass 2 practice and solution verifier:
+
+- Coverage: problems collectively cover concept recognition, trace discipline, complexity, invariant/correctness, edge cases, exam transfer, and feedback metadata.
+- Solution correctness: every problem has an independently verified solution.
+- Objective validity: every MCQ/MSQ/NAT item has exactly the intended answer under the stated assumptions.
+- Analysis validity: every runtime and space claim follows from the prompt and solution.
+- Trap validity: tricky examples test a real misconception, not a wording ambiguity.
+- Regeneration: failed questions are rewritten, not merely relabelled, then reverified.
 
 ## GATE DA Coverage Checklist
 
