@@ -1,7 +1,7 @@
 const STORAGE_KEY = "learning-studio-data-v2";
 const LEGACY_STORAGE_KEYS = ["learning-studio-data-v1"];
 const SESSION_KEY = "aleph-session";
-const COURSE_PLAN_VERSION = "seeded-user-canonical-workspace-v109";
+const COURSE_PLAN_VERSION = "seeded-user-canonical-workspace-v110";
 const MAX_FEEDBACK_ATTACHMENT_BYTES = 3 * 1024 * 1024;
 const MAX_COMPRESSED_FEEDBACK_BYTES = 2400 * 1024;
 const MAX_FEEDBACK_PDF_PAGES = 6;
@@ -19968,7 +19968,7 @@ function render() {
   document.querySelector("#task-count").textContent = state.tasks.length;
   document.querySelector("#schedule-count").textContent = state.schedule.length;
   document.querySelector("#test-count").textContent = state.tests.length;
-  document.querySelector("#feedback-count").textContent = state.feedback.length;
+  document.querySelector("#feedback-count").textContent = feedbackSurfaceCount();
   document.querySelector("#resource-count").textContent = state.resources.length;
 
   renderProfile();
@@ -19982,7 +19982,7 @@ function render() {
   renderSubjects();
   renderSchedule();
   renderTests();
-  renderList("feedback-list", state.feedback, "feedback");
+  renderFeedback();
   renderList("resources-list", state.resources, "resource");
   renderUpcoming();
   renderActivity();
@@ -20004,6 +20004,343 @@ function renderBuildState() {
   if (updateStatus) {
     updateStatus.textContent = "Offline app-shell caching is disabled for this prototype. If this build label looks old, open the fresh-start page or clear site data.";
   }
+}
+
+function feedbackSurfaceCount() {
+  return state.feedback.length + generatedFeedbackEntries().length;
+}
+
+function renderFeedback() {
+  const container = document.querySelector("#feedback-list");
+  const generatedEntries = generatedFeedbackEntries();
+  const reviewEntries = [
+    ...generatedEntries.filter(isReviewFeedbackEntry),
+    ...quizAttemptFeedbackEntries()
+  ];
+  const reviewGroups = groupFeedbackEntries(
+    reviewEntries,
+    (entry) => entry.subjectTitle
+  );
+  const subjectGroups = groupFeedbackEntries(generatedEntries, (entry) => entry.subjectTitle);
+  const manualNotes = state.feedback || [];
+
+  if (!generatedEntries.length && !manualNotes.length) {
+    container.innerHTML = '<div class="empty">No feedback items yet.</div>';
+    return;
+  }
+
+  container.innerHTML = `
+    <section class="feedback-console">
+      <div class="feedback-console-summary">
+        <article>
+          <span>Generated reports</span>
+          <strong>${generatedEntries.length}</strong>
+        </article>
+        <article>
+          <span>Review quiz reports</span>
+          <strong>${reviewGroups.reduce((total, group) => total + group.entries.length, 0)}</strong>
+        </article>
+        <article>
+          <span>Manual/objective notes</span>
+          <strong>${manualNotes.length}</strong>
+        </article>
+      </div>
+
+      <section class="feedback-section">
+        <div class="feedback-section-title">
+          <div>
+            <h4>Review Quiz Feedback</h4>
+            <p>Each completed review quiz is reduced to the decision points that matter: readiness, first break, recurring mistake type, and next repair.</p>
+          </div>
+          <span class="tag">${reviewGroups.length || 0} subjects</span>
+        </div>
+        ${reviewGroups.length
+          ? reviewGroups.map((group) => feedbackReviewSubjectGroupTemplate(group)).join("")
+          : '<p class="feedback-placeholder">No review quiz feedback has been generated yet.</p>'}
+      </section>
+
+      <section class="feedback-section">
+        <div class="feedback-section-title">
+          <div>
+            <h4>All Generated Feedback</h4>
+            <p>Cross-subject log of generated feedback from submitted psets and review quizzes.</p>
+          </div>
+          <span class="tag">${subjectGroups.length || 0} subjects</span>
+        </div>
+        ${subjectGroups.length
+          ? subjectGroups.map((group) => feedbackSubjectGroupTemplate(group)).join("")
+          : '<p class="feedback-placeholder">No generated feedback has been recorded yet.</p>'}
+      </section>
+
+      <section class="feedback-section">
+        <div class="feedback-section-title">
+          <div>
+            <h4>Manual Notes and Objective Quiz Feedback</h4>
+            <p>Older feedback notes and graph-backed objective quiz attempts remain editable here.</p>
+          </div>
+          <span class="tag">${manualNotes.length} notes</span>
+        </div>
+        ${manualNotes.length
+          ? `<div class="list">${manualNotes.map((item) => itemTemplate(item, "feedback")).join("")}</div>`
+          : '<p class="feedback-placeholder">No manual notes yet.</p>'}
+      </section>
+    </section>
+  `;
+
+  container.querySelectorAll("[data-edit]").forEach((button) => {
+    button.addEventListener("click", () => {
+      const item = manualNotes.find((entry) => entry.id === button.dataset.edit);
+      openForm("feedback", item);
+    });
+  });
+
+  container.querySelectorAll("[data-delete]").forEach((button) => {
+    button.addEventListener("click", () => {
+      const index = manualNotes.findIndex((entry) => entry.id === button.dataset.delete);
+      if (index < 0) return;
+      manualNotes.splice(index, 1);
+      persist();
+      render();
+    });
+  });
+}
+
+function generatedFeedbackEntries() {
+  return platinumMaterialSnapshots()
+    .filter((material) => material.feedbackReady)
+    .map((material) => {
+      const submission = patternSubmission(material.materialId) || {};
+      const feedbackRecord = submission.feedbackRecord || {};
+      return {
+        ...material,
+        submission,
+        feedbackRecord,
+        summary: compactGeneratedFeedbackSummary(material, feedbackRecord)
+      };
+    })
+    .sort((a, b) => (b.feedbackUpdatedAt || "").localeCompare(a.feedbackUpdatedAt || ""));
+}
+
+function quizAttemptFeedbackEntries() {
+  return (state.quizAttempts || [])
+    .filter((attempt) => attempt.feedback)
+    .map((attempt) => ({
+      materialId: attempt.id,
+      subjectId: `quiz-attempt-${slugify(attempt.subject || "review")}`,
+      subjectTitle: attempt.subject || "Review Quizzes",
+      patternId: "objective-review-quiz",
+      patternTitle: "Objective Review Quiz",
+      week: weekFromDate((attempt.date || "").slice(0, 10)),
+      sourceWeek: weekFromDate((attempt.date || "").slice(0, 10)),
+      date: (attempt.date || "").slice(0, 10),
+      materialTitle: attempt.title || "Review quiz attempt",
+      materialUrl: "",
+      archived: false,
+      submitted: true,
+      uploadedAt: attempt.date || "",
+      feedbackReady: true,
+      feedbackUpdatedAt: attempt.date || "",
+      feedbackSummary: attempt.feedback.summary || "",
+      feedbackRecord: null,
+      summary: compactQuizAttemptFeedbackSummary(attempt)
+    }))
+    .sort((a, b) => (b.feedbackUpdatedAt || "").localeCompare(a.feedbackUpdatedAt || ""));
+}
+
+function groupFeedbackEntries(entries, keyFn) {
+  const groups = new Map();
+  entries.forEach((entry) => {
+    const key = keyFn(entry) || "General";
+    if (!groups.has(key)) groups.set(key, []);
+    groups.get(key).push(entry);
+  });
+  return Array.from(groups.entries())
+    .map(([title, groupEntries]) => ({
+      title,
+      entries: groupEntries.sort((a, b) => (b.feedbackUpdatedAt || "").localeCompare(a.feedbackUpdatedAt || ""))
+    }))
+    .sort((a, b) => a.title.localeCompare(b.title));
+}
+
+function isReviewFeedbackEntry(entry) {
+  return /review/i.test(`${entry.materialTitle || ""} ${entry.patternTitle || ""} ${entry.patternId || ""}`)
+    || entry.subjectId === "subject-platinum-review-quizzes";
+}
+
+function feedbackReviewSubjectGroupTemplate(group) {
+  return `
+    <details class="review-feedback-group" ${group.entries.length ? "open" : ""}>
+      <summary>
+        <span>${escapeHtml(group.title)}</span>
+        <span class="tag">${group.entries.length} review ${group.entries.length === 1 ? "report" : "reports"}</span>
+      </summary>
+      <div class="review-feedback-list">
+        ${group.entries.map(reviewFeedbackCardTemplate).join("")}
+      </div>
+    </details>
+  `;
+}
+
+function feedbackSubjectGroupTemplate(group) {
+  return `
+    <details class="subject-feedback-group">
+      <summary>
+        <span>${escapeHtml(group.title)}</span>
+        <span class="tag">${group.entries.length} reports</span>
+      </summary>
+      <div class="feedback-log-list">
+        ${group.entries.map(generatedFeedbackLogTemplate).join("")}
+      </div>
+    </details>
+  `;
+}
+
+function reviewFeedbackCardTemplate(entry) {
+  const summary = entry.summary;
+  const record = entry.feedbackRecord || {};
+  return `
+    <article class="review-feedback-card">
+      <div class="review-feedback-top">
+        <div>
+          <h5>${escapeHtml(entry.materialTitle)}</h5>
+          <p>${formatDate(entry.date)}${entry.feedbackUpdatedAt ? ` - feedback ${formatDate(entry.feedbackUpdatedAt.slice(0, 10))}` : ""}</p>
+        </div>
+        <span class="tag">${escapeHtml(summary.verdict)}</span>
+      </div>
+      <p class="feedback-one-line">${escapeHtml(summary.headline)}</p>
+      <div class="feedback-summary-grid">
+        <div>
+          <strong>Ready skill</strong>
+          <p>${escapeHtml(summary.strength)}</p>
+        </div>
+        <div>
+          <strong>First break</strong>
+          <p>${escapeHtml(summary.firstBreak)}</p>
+        </div>
+        <div>
+          <strong>Recurring pattern</strong>
+          <p>${escapeHtml(summary.recurringPattern)}</p>
+        </div>
+        <div>
+          <strong>Next repair</strong>
+          <p>${escapeHtml(summary.nextRepair)}</p>
+        </div>
+      </div>
+      <details class="feedback-drilldown">
+        <summary>Open full feedback evidence</summary>
+        ${record.studentReport ? generatedFeedbackReportTemplate(record) : generatedFeedbackLogTemplate(entry)}
+      </details>
+    </article>
+  `;
+}
+
+function generatedFeedbackLogTemplate(entry) {
+  const summary = entry.summary;
+  return `
+    <article class="generated-feedback-log">
+      <div class="review-feedback-top">
+        <div>
+          <strong>${escapeHtml(entry.materialTitle)}</strong>
+          <p>${escapeHtml(entry.patternTitle || "Feedback")} - ${formatDate(entry.date)}</p>
+        </div>
+        <span class="tag">${escapeHtml(summary.verdict)}</span>
+      </div>
+      <p>${escapeHtml(summary.headline)}</p>
+      <p><strong>First break:</strong> ${escapeHtml(summary.firstBreak)}</p>
+      <p><strong>Next repair:</strong> ${escapeHtml(summary.nextRepair)}</p>
+    </article>
+  `;
+}
+
+function compactGeneratedFeedbackSummary(material, record = {}) {
+  const report = record.studentReport || {};
+  const narrative = record.narrativeFeedback || {};
+  const errorTypes = (record.errorAnalysis || [])
+    .map((item) => item.errorType || item.likelyPrerequisite || item.observedError)
+    .filter(Boolean);
+  const prereqs = (record.prerequisiteHypotheses || [])
+    .map((item) => item.prerequisite || item.hypothesis)
+    .filter(Boolean);
+  const headline = firstNonEmpty([
+    report.headline,
+    narrative.overall,
+    record.studentSummary,
+    material.feedbackSummary,
+    `${material.materialTitle} feedback is ready.`
+  ]);
+  const strength = firstNonEmpty([
+    firstListItem(record.whatTheyGotRight),
+    firstListItem(report.right),
+    narrative.understood,
+    "No secure skill was identified in the generated report."
+  ]);
+  const firstBreak = firstNonEmpty([
+    record.firstIssue?.explanation,
+    record.firstIssue?.location,
+    record.conceptGap?.description,
+    firstListItem(report.notYet),
+    firstListItem(record.stillNotUnderstood),
+    narrative.missing,
+    "No first break was marked."
+  ]);
+  const recurringPattern = firstNonEmpty([
+    firstListItem(errorTypes),
+    record.conceptGap?.tag,
+    firstListItem(prereqs),
+    firstListItem(report.executionIssues),
+    firstListItem(record.errorsDespiteKnowing),
+    narrative.shaky,
+    "No recurring mistake pattern was marked."
+  ]);
+  const nextRepair = firstNonEmpty([
+    record.nextDrill?.instruction,
+    record.minimalCorrection,
+    firstListItem(report.masteryPlan),
+    narrative.improvementPlan,
+    material.feedbackNextDrill,
+    "Redo the missed questions and write the first failed step before checking the solution."
+  ]);
+  return {
+    headline: truncateText(headline, 220),
+    strength: truncateText(strength, 170),
+    firstBreak: truncateText(firstBreak, 190),
+    recurringPattern: truncateText(recurringPattern, 170),
+    nextRepair: truncateText(nextRepair, 210),
+    verdict: record.verdict || material.feedbackVerdict || (record.score != null ? `${record.score}/10` : "Feedback ready")
+  };
+}
+
+function compactQuizAttemptFeedbackSummary(attempt) {
+  const feedback = attempt.feedback || {};
+  const report = feedback.report || {};
+  const weak = feedback.weak || report.weak || [];
+  const strong = feedback.strong || report.strong || [];
+  const developing = feedback.developing || report.developing || [];
+  const nextAction = report.nextAction || report.nextQuizPlan?.instruction || "Retake a mixed review quiz focused on the weakest concepts.";
+  return {
+    headline: truncateText(`${attempt.score}/${attempt.total} (${attempt.percent}%). ${feedback.summary || "Review quiz feedback is ready."}`, 220),
+    strength: truncateText(firstListItem(strong) || "No strong concept was identified yet.", 170),
+    firstBreak: truncateText(firstListItem(weak) || firstListItem(developing) || "No weak concept was flagged.", 190),
+    recurringPattern: truncateText(firstListItem(developing) || firstListItem(weak) || "No recurring mistake pattern was marked.", 170),
+    nextRepair: truncateText(nextAction, 210),
+    verdict: `${attempt.percent}%`
+  };
+}
+
+function firstNonEmpty(values) {
+  return values.find((value) => typeof value === "string" && value.trim()) || "";
+}
+
+function firstListItem(value) {
+  if (Array.isArray(value)) return value.find((item) => typeof item === "string" && item.trim()) || "";
+  if (typeof value === "string") return value;
+  return "";
+}
+
+function truncateText(text, maxLength = 180) {
+  const normalized = String(text || "").replace(/\s+/g, " ").trim();
+  if (normalized.length <= maxLength) return normalized;
+  return `${normalized.slice(0, maxLength - 1).trim()}...`;
 }
 
 function renderSubjects() {
