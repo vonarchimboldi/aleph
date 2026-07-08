@@ -1,7 +1,7 @@
 const STORAGE_KEY = "learning-studio-data-v2";
 const LEGACY_STORAGE_KEYS = ["learning-studio-data-v1"];
 const SESSION_KEY = "aleph-session";
-const COURSE_PLAN_VERSION = "seeded-user-canonical-workspace-v111";
+const COURSE_PLAN_VERSION = "seeded-user-canonical-workspace-v112";
 const MAX_FEEDBACK_ATTACHMENT_BYTES = 3 * 1024 * 1024;
 const MAX_COMPRESSED_FEEDBACK_BYTES = 2400 * 1024;
 const MAX_FEEDBACK_PDF_PAGES = 6;
@@ -319,14 +319,18 @@ function sectionUnlockState(section, sections = activeGateDaSections()) {
   const previousSection = subjectSections[index - 1];
   const previousTest = state.tests.find((entry) => entry.sectionId === previousSection.id);
   const previousAttempt = latestQuizAttemptForTest(previousTest?.id);
-  const learnerLocked = !previousSection.reviewQuiz || !previousAttempt;
+  const previousGateThreshold = previousSection.progressionGate?.passThreshold || 0;
+  const previousGatePassed = !previousGateThreshold || (previousAttempt?.percent || 0) >= previousGateThreshold;
+  const learnerLocked = !previousSection.reviewQuiz || !previousAttempt || !previousGatePassed;
   return {
     locked: learnerLocked && !canPreviewLockedContent(),
     learnerLocked,
     previewingLocked: learnerLocked && canPreviewLockedContent(),
     previousSection,
     previousTest,
-    previousAttempt
+    previousAttempt,
+    previousGateThreshold,
+    previousGatePassed
   };
 }
 
@@ -2558,7 +2562,7 @@ function buildGateDaBasicPlan(now, accountTypes, sections, user = basicGateDaUse
         startDate: monday,
         endDate: "2026-08-30",
         status: "active",
-        details: `GATE DA Basic plan surfaces: Subjects, Tasks, Schedule, Tests, Feedback, Resources, and Share. Recommended pace: study three subjects in parallel. Every 15 days, Aleph should generate an adaptive cumulative review quiz from prior performance, repeating missed concepts more often, reducing mastered concepts, and keeping high-weight exam topics in rotation. Current material build: Probability Chapters 1-10, Linear Algebra Chapters 1-12 plus a chapterless cumulative past-paper style drill, and DSA Chapters 1-2.${trialNote}`,
+        details: `GATE DA Basic plan surfaces: Subjects, Tasks, Schedule, Tests, Feedback, Resources, and Share. Recommended pace: study three subjects in parallel. Every 15 days, Aleph should generate an adaptive cumulative review quiz from prior performance, repeating missed concepts more often, reducing mastered concepts, and keeping high-weight exam topics in rotation. Current material build: Probability Chapters 1-10, Linear Algebra Chapters 1-12 plus a chapterless cumulative past-paper style drill, and DSA Chapters 1-2 with a progression gate before Chapter 3.${trialNote}`,
         updatedAt: now
       }
     ],
@@ -2892,6 +2896,7 @@ function gateDaBasicSections(updatedAt = new Date().toISOString()) {
 function dsaBasicScheduleItems(now, monday, sunday) {
   const weekTwoMonday = addDays(monday, 7);
   const weekTwoSunday = addDays(sunday, 7);
+  const weekThreeMonday = addDays(monday, 14);
   return [
     {
       id: "schedule-dsa-chapter-1-study",
@@ -2952,12 +2957,23 @@ function dsaBasicScheduleItems(now, monday, sunday) {
       date: weekTwoSunday,
       details: "Take the graph-backed objective review for recursion state, induction, recurrence extraction, recursion trees, tail recursion, and Master Method recognition.",
       updatedAt: now
+    },
+    {
+      id: "schedule-dsa-chapters-1-2-progression-gate",
+      title: "DSA Chapters 1-2: Progression Gate Review",
+      week: 3,
+      subject: "Data Structures and Algorithms",
+      kind: "Review",
+      date: weekThreeMonday,
+      details: "Take the cumulative gate review across asymptotic analysis, loop shapes, recursion state, call traces, recurrence extraction, recursion trees, and stack space before opening Chapter 3.",
+      updatedAt: now
     }
   ];
 }
 
 function dsaBasicTests(now, dsaSections, sunday) {
   const weekTwoSunday = addDays(sunday, 7);
+  const weekThreeMonday = addDays(sunday, 8);
   return [
     {
       id: "test-dsa-chapter-1-objective-review",
@@ -2976,6 +2992,17 @@ function dsaBasicTests(now, dsaSections, sunday) {
       sectionId: dsaSections[1]?.id,
       quizId: "quiz-dsa-chapter-2-objective-review",
       updatedAt: now
+    },
+    {
+      id: "test-dsa-chapters-1-2-progression-gate",
+      title: "DSA Chapters 1-2 Progression Gate",
+      date: weekThreeMonday,
+      details: "Cumulative gate review for Chapters 1-2. Submit this review before progressing to Chapter 3: arrays, strings, and binary search.",
+      sectionId: dsaSections[2]?.id,
+      quizId: "quiz-dsa-chapters-1-2-progression-gate",
+      workflowType: "gate-da-basic-progression-gate",
+      unlocks: ["gate-da-dsa-arrays-strings-binary-search"],
+      updatedAt: now
     }
   ];
 }
@@ -2983,6 +3010,7 @@ function dsaBasicTests(now, dsaSections, sunday) {
 function dsaBasicTasks(now, monday, sunday) {
   const weekTwoMonday = addDays(monday, 7);
   const weekTwoSunday = addDays(sunday, 7);
+  const weekThreeMonday = addDays(monday, 14);
   return [
     {
       id: "task-dsa-chapter-1-read",
@@ -3049,12 +3077,24 @@ function dsaBasicTasks(now, monday, sunday) {
       done: false,
       details: "Submit the Chapter 2 objective quiz so Aleph logs recursion, induction, recurrence, and call-stack gaps.",
       updatedAt: now
+    },
+    {
+      id: "task-dsa-chapters-1-2-progression-gate",
+      week: 3,
+      title: "DSA Ch 1-2: Pass progression gate",
+      type: "Review",
+      date: weekThreeMonday,
+      status: "todo",
+      done: false,
+      details: "Submit the cumulative Chapters 1-2 gate review before moving to Chapter 3 arrays, strings, and binary search.",
+      updatedAt: now
     }
   ];
 }
 
 function dsaBasicFeedback(now, sunday) {
   const weekTwoSunday = addDays(sunday, 7);
+  const weekThreeMonday = addDays(sunday, 8);
   return [
     {
       id: "feedback-dsa-chapter-1",
@@ -3069,12 +3109,20 @@ function dsaBasicFeedback(now, sunday) {
       date: weekTwoSunday,
       details: "Review misses for missing base cases, tracing calls without return values, using weak induction hypotheses, confusing time with recursion-stack space, double-counting recursion-tree levels, and misapplying Master Method cases.",
       updatedAt: now
+    },
+    {
+      id: "feedback-dsa-chapters-1-2-progression-gate",
+      title: "DSA Chapters 1-2 progression gate feedback",
+      date: weekThreeMonday,
+      details: "Review cumulative gate misses for runtime simplification, loop-counting, logarithmic patterns, recursive state, call-stack returns, recurrence extraction, recursion trees, and stack-space reasoning before Chapter 3.",
+      updatedAt: now
     }
   ];
 }
 
 function dsaBasicResources(now, monday) {
   const weekTwoMonday = addDays(monday, 7);
+  const weekThreeMonday = addDays(monday, 14);
   return [
     {
       id: "resource-dsa-algorithms-arrays-search",
@@ -3089,6 +3137,14 @@ function dsaBasicResources(now, monday) {
       title: "DSA Chapter 2: Induction and Recursion",
       date: weekTwoMonday,
       details: "Open Subjects -> Data Structures and Algorithms to study recursive state, induction proofs, stack traces, recurrence extraction, tail recursion, recursion trees, and Master Method exam shapes.",
+      link: "",
+      updatedAt: now
+    },
+    {
+      id: "resource-dsa-chapters-1-2-progression-gate",
+      title: "DSA Chapters 1-2: Progression Gate Review",
+      date: weekThreeMonday,
+      details: "Open Subjects -> Data Structures and Algorithms to take the cumulative Chapters 1-2 gate review. This gate checks readiness for Chapter 3 arrays, strings, and binary search.",
       link: "",
       updatedAt: now
     }
@@ -3481,6 +3537,95 @@ function gateDaDsaSections(updatedAt = new Date().toISOString()) {
         "Recurrences come from number of recursive calls, subproblem sizes, and outside work.",
         "Runtime and recursion-stack space are different measurements.",
         "Tail recursion can often be rewritten as a loop, but stack savings depend on optimization or rewriting."
+      ],
+      updatedAt
+    },
+    {
+      id: "gate-da-dsa-chapters-1-2-progression-gate",
+      exam: "GATE DA",
+      accountTier: "Basic",
+      subject: "Data Structures and Algorithms",
+      chapter: "Progression Gate",
+      section: "2G",
+      title: "Chapters 1-2 Readiness Gate",
+      summary: "Cumulative gate review across asymptotic analysis, loop counting, logarithmic growth, recursion state, call-stack tracing, recurrence extraction, recursion trees, and stack-space reasoning.",
+      sectionPreview: "Before arrays, strings, and binary search, the learner must be able to read short pseudocode, trace state changes, and explain runtime without guessing. This gate checks whether Chapters 1 and 2 are stable enough to support Chapter 3.",
+      previewActivity: "Given a recursive function that scans an array and a loop that halves a search range, identify the changing state, count the number of steps, and state the stack or auxiliary space. If any of those feel unclear, repair the weaker prerequisite before Chapter 3.",
+      progressionGate: {
+        requiredBefore: "gate-da-dsa-arrays-strings-binary-search",
+        passThreshold: 80,
+        policy: "submit-before-next-chapter",
+        remediation: "If the readiness signal is below 80%, repair the top prerequisite breaks before starting Chapter 3."
+      },
+      chapterIntro: [
+        "This is not a new content chapter. It is a gate review for Chapters 1 and 2.",
+        "Chapter 3 will use loops, indices, halving intervals, invariants, and sometimes recursive reasoning. Weakness in runtime analysis or recursive state will make binary search and string/array boundary cases much harder than they need to be.",
+        "The quiz below uses single-topic, two-topic, and three-topic questions. A miss should point to a specific repair action, not just a lower score."
+      ],
+      bookSections: [
+        {
+          number: "G.1",
+          title: "What This Gate Checks",
+          paragraphs: [
+            "The first group checks isolated prerequisites: recursive state, recursion-tree shape, dominant term, call-stack trace, and stack space.",
+            "The second group mixes concepts that often appear together: loop count with dominant term, recurrence extraction with recursion tree, loop count with logarithmic growth, and loop count with nested-loop regions.",
+            "The final group uses three-concept synthesis. These are deliberately closer to GATE DA style because the exam often expects the solver to choose the right model before calculating."
+          ],
+          blocks: [
+            {
+              type: "strategy",
+              title: "Gate rule",
+              body: "Submit this gate before moving to Chapter 3. A strong attempt should show stable runtime reads, stable recursion traces, and no major confusion between total work and stack space."
+            },
+            {
+              type: "warning",
+              title: "Progression warning",
+              body: "If the gate report flags base cases, loop counts, or recurrence extraction as weak, repair those before starting arrays, strings, and binary search."
+            }
+          ]
+        }
+      ],
+      concepts: [
+        { name: "Dominant term", description: "Simplify runtime expressions by keeping the fastest-growing term.", cue: "Drop constants and lower-order terms." },
+        { name: "Loop count", description: "Determine runtime by counting body executions.", cue: "Count before simplifying." },
+        { name: "Nested-loop shape", description: "Recognize rectangular and triangular iteration regions.", cue: "Draw the region if bounds depend on i." },
+        { name: "Logarithmic growth", description: "Repeated halving or doubling creates logarithmic steps.", cue: "List powers of 2 or repeated halves." },
+        { name: "Recursive state", description: "Name what changes between recursive calls.", cue: "State what f(state) means." },
+        { name: "Call-stack trace", description: "Separate the call phase from the return phase.", cue: "Calls go down; values return up." },
+        { name: "Recurrence extraction", description: "Read recursive runtime from calls, subproblem sizes, and outside work.", cue: "Identify a, b, and f(n)." },
+        { name: "Stack space", description: "Maximum unfinished calls, not total calls.", cue: "Use recursion depth." }
+      ],
+      techniques: [
+        { name: "Runtime read", when: "given loops or short pseudocode.", move: "Count executions, simplify dominant growth, then state the tight class." },
+        { name: "Recursive trace", when: "given recursive code.", move: "Write the state invariant, base case, calls, returns, time, and stack space." },
+        { name: "Recurrence tree", when: "given T(n)=aT(n/b)+f(n).", move: "Compute level work and number of levels before using a memorized case." },
+        { name: "Gate repair", when: "a gate question is missed.", move: "Repair the first broken prerequisite, then retest with one mixed question." }
+      ],
+      practiceProblems: [],
+      implementationDrills: [],
+      reviewPrompts: [
+        "Can you distinguish total recursive calls from maximum stack depth?",
+        "Can you explain why T(n)=T(n/2)+1 is logarithmic but T(n)=T(n-1)+1 is linear?",
+        "Can you count a triangular loop without multiplying n by n blindly?",
+        "Can you name the recursive state before tracing code?"
+      ],
+      reviewQuiz: {
+        id: "quiz-dsa-chapters-1-2-progression-gate",
+        title: "DSA Chapters 1-2 Progression Gate",
+        instructions: "Complete this cumulative gate after Chapter 2. The mix is 5 single-topic checks, 4 two-topic mixes, and 3 three-topic synthesis questions. Submit it before moving to Chapter 3.",
+        questions: dsaChaptersOneTwoProgressionGateQuestions()
+      },
+      readingQuestions: [
+        "Which Chapter 1 runtime patterns are still shaky?",
+        "Which Chapter 2 recursion patterns are still shaky?",
+        "What is the first mistake you make when reading short pseudocode?",
+        "What repair topic should come before Chapter 3?"
+      ],
+      chapterSummary: [
+        "This gate checks whether Chapters 1 and 2 are stable enough for arrays, strings, and binary search.",
+        "The quiz samples one-topic, two-topic, and three-topic questions from the DSA concept graph.",
+        "A submitted gate unlocks the next DSA chapter in the current prototype workflow.",
+        "A score below the pass threshold should trigger repair work before Chapter 3."
       ],
       updatedAt
     }
@@ -12872,6 +13017,172 @@ function dsaInductionRecursionReviewQuestions() {
   }));
 }
 
+function dsaChaptersOneTwoProgressionGateQuestions() {
+  const metadata = {
+    "dsa-gate-1": { kind: "single concept", targetConcept: "recursive-state", prereqsUsed: [], difficulty: 1, gateWeight: "high", expectedFirstStep: "Name the changing argument in the recursive call.", commonMistake: "Describing the return expression without identifying state.", answerCheck: "The state is i because it changes from i to i+1." },
+    "dsa-gate-2": { kind: "single concept", targetConcept: "recursion-tree", prereqsUsed: ["recurrence-extraction"], difficulty: 2, gateWeight: "high", expectedFirstStep: "Read work per level and number of levels.", commonMistake: "Using n log n for every divide-and-conquer recurrence.", answerCheck: "2T(n/2)+1 has Theta(n) total nodes." },
+    "dsa-gate-3": { kind: "single concept", targetConcept: "dominant-term", prereqsUsed: ["theta-notation"], difficulty: 1, gateWeight: "high", expectedFirstStep: "Keep the fastest-growing term.", commonMistake: "Keeping constants or lower-order terms.", answerCheck: "Theta(n^2)." },
+    "dsa-gate-4": { kind: "single concept", targetConcept: "call-stack-trace", prereqsUsed: ["base-case"], difficulty: 2, gateWeight: "high", expectedFirstStep: "List calls first, then return values.", commonMistake: "Forgetting the base-case return while unwinding.", answerCheck: "The sum is 6." },
+    "dsa-gate-5": { kind: "single concept", targetConcept: "stack-space", prereqsUsed: ["call-stack-trace"], difficulty: 2, gateWeight: "high", expectedFirstStep: "Count maximum unfinished calls.", commonMistake: "Confusing total calls with stack depth.", answerCheck: "Theta(log n) stack for halving recursion." },
+    "dsa-gate-6": { kind: "mixed: two concepts", targetConcept: "loop-count", prereqsUsed: ["dominant-term"], difficulty: 2, gateWeight: "high", expectedFirstStep: "Count both loops, add, then simplify.", commonMistake: "Multiplying separate loops as if they were nested.", answerCheck: "Theta(n^2)." },
+    "dsa-gate-7": { kind: "mixed: two concepts", targetConcept: "recursion-tree", prereqsUsed: ["recurrence-extraction"], difficulty: 3, gateWeight: "high", expectedFirstStep: "Extract recurrence from code before solving.", commonMistake: "Writing T(n)=T(n/2)+1 despite two recursive calls.", answerCheck: "Theta(n) time." },
+    "dsa-gate-8": { kind: "mixed: two concepts", targetConcept: "logarithmic-growth", prereqsUsed: ["loop-count"], difficulty: 2, gateWeight: "high", expectedFirstStep: "Track powers of 2.", commonMistake: "Calling halving linear because n appears in the condition.", answerCheck: "Theta(log n)." },
+    "dsa-gate-9": { kind: "mixed: two concepts", targetConcept: "nested-loop", prereqsUsed: ["loop-count"], difficulty: 3, gateWeight: "high", expectedFirstStep: "Write the triangular sum.", commonMistake: "Multiplying n by n without reading the inner bound.", answerCheck: "Theta(n^2)." },
+    "dsa-gate-10": { kind: "mixed: three concepts", targetConcept: "base-case", prereqsUsed: ["nested-loop", "call-stack-trace"], difficulty: 3, gateWeight: "high", expectedFirstStep: "Check each state/count claim separately before choosing the pair.", commonMistake: "Accepting n-1 as a base case because it is the last valid index.", answerCheck: "Triangular loop is Theta(n^2), and suffix-sum base is i==n." },
+    "dsa-gate-11": { kind: "mixed: three concepts", targetConcept: "recurrence", prereqsUsed: ["dominant-term", "call-stack-trace"], difficulty: 3, gateWeight: "high", expectedFirstStep: "Count recursive calls and outside work.", commonMistake: "Treating two uses of a saved value as two recursive calls.", answerCheck: "T(k)=T(k/2)+Theta(1)." },
+    "dsa-gate-12": { kind: "mixed: three concepts", targetConcept: "recurrence-extraction", prereqsUsed: ["call-stack-trace", "stack-space"], difficulty: 3, gateWeight: "high", expectedFirstStep: "Separate time recurrence from maximum depth.", commonMistake: "Reporting Theta(n) stack because total work is Theta(n).", answerCheck: "Time Theta(n); stack Theta(log n)." }
+  };
+  return [
+    {
+      id: "dsa-gate-1",
+      prompt: "In suffixSum(A,i), the recursive call is suffixSum(A,i+1). What is the changing recursive state?",
+      tags: ["recursive-state"],
+      options: [
+        { id: "a", text: "The array A, because the array is copied each time" },
+        { id: "b", text: "The index i, because it moves toward the base case" },
+        { id: "c", text: "The final answer, because it is known before recursion starts" },
+        { id: "d", text: "The constant 1, because i increases by 1" }
+      ],
+      answer: "b"
+    },
+    {
+      id: "dsa-gate-2",
+      prompt: "What is the tight runtime for T(n)=2T(n/2)+1?",
+      tags: ["recursion-tree", "recurrence-extraction"],
+      options: [
+        { id: "a", text: "Theta(log n)" },
+        { id: "b", text: "Theta(n)" },
+        { id: "c", text: "Theta(n log n)" },
+        { id: "d", text: "Theta(n^2)" }
+      ],
+      answer: "b"
+    },
+    {
+      id: "dsa-gate-3",
+      prompt: "What is the tight asymptotic bound for 8n^2 + 50n log n + 400?",
+      tags: ["dominant-term", "theta-notation"],
+      options: [
+        { id: "a", text: "Theta(1)" },
+        { id: "b", text: "Theta(n log n)" },
+        { id: "c", text: "Theta(n^2)" },
+        { id: "d", text: "Theta(8n^2 + 50n log n + 400)" }
+      ],
+      answer: "c"
+    },
+    {
+      id: "dsa-gate-4",
+      prompt: "suffixSum([1,2,3],0) returns A[i]+suffixSum(A,i+1), with base suffixSum(A,3)=0. What is the final return value?",
+      tags: ["call-stack-trace", "base-case"],
+      options: [
+        { id: "a", text: "0" },
+        { id: "b", text: "3" },
+        { id: "c", text: "6" },
+        { id: "d", text: "9" }
+      ],
+      answer: "c"
+    },
+    {
+      id: "dsa-gate-5",
+      prompt: "A recursive function makes one call on n/2 and does constant work. What is its recursion-stack space?",
+      tags: ["stack-space", "call-stack-trace"],
+      options: [
+        { id: "a", text: "Theta(1)" },
+        { id: "b", text: "Theta(log n)" },
+        { id: "c", text: "Theta(n)" },
+        { id: "d", text: "Theta(n log n)" }
+      ],
+      answer: "b"
+    },
+    {
+      id: "dsa-gate-6",
+      prompt: "First loop: n constant-time steps. Second loop: n^2 constant-time steps. What is the total tight runtime?",
+      tags: ["dominant-term", "loop-count"],
+      options: [
+        { id: "a", text: "Theta(n)" },
+        { id: "b", text: "Theta(n^2)" },
+        { id: "c", text: "Theta(n^3)" },
+        { id: "d", text: "Theta(2^n)" }
+      ],
+      answer: "b"
+    },
+    {
+      id: "dsa-gate-7",
+      prompt: "A recursive function splits an array into two halves, recursively processes both halves, then does one comparison. What is the tight runtime?",
+      tags: ["recurrence-extraction", "recursion-tree"],
+      options: [
+        { id: "a", text: "Theta(log n)" },
+        { id: "b", text: "Theta(n)" },
+        { id: "c", text: "Theta(n log n)" },
+        { id: "d", text: "Theta(n^2)" }
+      ],
+      answer: "b"
+    },
+    {
+      id: "dsa-gate-8",
+      prompt: "i starts at 1 and is doubled until i >= n. What is the tight number of loop iterations?",
+      tags: ["loop-count", "logarithmic-growth"],
+      options: [
+        { id: "a", text: "Theta(1)" },
+        { id: "b", text: "Theta(log n)" },
+        { id: "c", text: "Theta(n)" },
+        { id: "d", text: "Theta(n^2)" }
+      ],
+      answer: "b"
+    },
+    {
+      id: "dsa-gate-9",
+      prompt: "for i=1..n: for j=1..i: do constant work. What is the tight runtime?",
+      tags: ["loop-count", "nested-loop"],
+      options: [
+        { id: "a", text: "Theta(n)" },
+        { id: "b", text: "Theta(n log n)" },
+        { id: "c", text: "Theta(n^2)" },
+        { id: "d", text: "Theta(n^3)" }
+      ],
+      answer: "c"
+    },
+    {
+      id: "dsa-gate-10",
+      prompt: "Which pair of statements is correct? (1) for i=1..n, for j=1..i does constant work. (2) suffixSum(A,i) should stop at the empty suffix.",
+      tags: ["nested-loop", "base-case", "call-stack-trace"],
+      options: [
+        { id: "a", text: "The loop is Theta(n), and suffixSum should stop at i==n-1" },
+        { id: "b", text: "The loop is Theta(n^2), and suffixSum should stop at i==n" },
+        { id: "c", text: "The loop is Theta(log n), and suffixSum should stop at i==0" },
+        { id: "d", text: "The loop is Theta(n^3), and suffixSum has no base case" }
+      ],
+      answer: "b"
+    },
+    {
+      id: "dsa-gate-11",
+      prompt: "power(x,k) computes y=power(x,floor(k/2)) once, then returns y*y or x*y*y. What recurrence describes the time?",
+      tags: ["dominant-term", "recurrence", "call-stack-trace"],
+      options: [
+        { id: "a", text: "T(k)=T(k/2)+Theta(1)" },
+        { id: "b", text: "T(k)=2T(k/2)+Theta(1)" },
+        { id: "c", text: "T(k)=T(k-1)+Theta(k)" },
+        { id: "d", text: "T(k)=Theta(k^2)" }
+      ],
+      answer: "a"
+    },
+    {
+      id: "dsa-gate-12",
+      prompt: "A divide-and-conquer maximum splits into two halves and compares returned maxima. What are time and stack space?",
+      tags: ["call-stack-trace", "recurrence-extraction", "stack-space"],
+      options: [
+        { id: "a", text: "Time Theta(log n), stack Theta(log n)" },
+        { id: "b", text: "Time Theta(n), stack Theta(log n)" },
+        { id: "c", text: "Time Theta(n log n), stack Theta(n)" },
+        { id: "d", text: "Time Theta(n^2), stack Theta(1)" }
+      ],
+      answer: "b"
+    }
+  ].map((question) => ({
+    ...question,
+    ...(metadata[question.id] || { kind: question.tags.length === 1 ? "single concept" : question.tags.length === 2 ? "mixed: two concepts" : "mixed: three concepts", targetConcept: question.tags[0], prereqsUsed: question.tags.slice(1), difficulty: question.tags.length, gateWeight: "medium" })
+  }));
+}
+
 function conditionalProbabilityReviewQuestions() {
   const metadata = {
     "cp-review-1": { targetConcept: "conditional-denominator", prereqsUsed: ["conditional-probability"], difficulty: 1, gateWeight: "high" },
@@ -13430,6 +13741,101 @@ function dsaInductionRecursionConceptGraph() {
         label: "Recursive growth comparison",
         prereqs: ["recurrence-extraction"],
         repairMaterial: "Compare T(n)=T(n-1)+1, T(n)=T(n/2)+1, T(n)=2T(n/2)+1, and T(n)=2T(n/2)+n.",
+        gateWeight: "high"
+      }
+    }
+  };
+}
+
+function dsaChaptersOneTwoProgressionGateConceptGraph() {
+  return {
+    chapterId: "gate-da-dsa-chapters-1-2-progression-gate",
+    chapterTitle: "DSA Chapters 1-2 Progression Gate",
+    gateWeight: "high",
+    passThreshold: 80,
+    progressionGate: true,
+    unlocks: ["gate-da-dsa-arrays-strings-binary-search"],
+    fallbackConcepts: ["dominant-term", "loop-count", "recursive-state", "recurrence-extraction", "stack-space"],
+    fallbackDifficultyMix: [1, 2, 2, 3, 3],
+    fallbackInstruction: "Repair the weakest Chapter 1 or Chapter 2 prerequisite, then retake a mixed gate review before Chapter 3.",
+    stableNextAction: "Next: unlock Chapter 3 only after this gate is submitted; if below 80%, repair the top prerequisite break first.",
+    nodes: {
+      "theta-notation": {
+        label: "Theta notation",
+        prereqs: [],
+        repairMaterial: "Review DSA Chapter 1.2 and state tight bounds for five expressions before simplifying loops.",
+        gateWeight: "high"
+      },
+      "dominant-term": {
+        label: "Dominant term",
+        prereqs: ["theta-notation"],
+        repairMaterial: "Review DSA Chapter 1.2 and simplify mixed expressions such as n^2+n log n+1.",
+        gateWeight: "high"
+      },
+      "loop-count": {
+        label: "Loop count",
+        prereqs: ["dominant-term"],
+        repairMaterial: "Review DSA Chapter 1.3 and count body executions before writing asymptotic notation.",
+        gateWeight: "high"
+      },
+      "nested-loop": {
+        label: "Nested loop",
+        prereqs: ["loop-count"],
+        repairMaterial: "Review DSA Chapter 1.4 and distinguish rectangular loops from triangular loops.",
+        gateWeight: "high"
+      },
+      "logarithmic-growth": {
+        label: "Logarithmic growth",
+        prereqs: ["loop-count"],
+        repairMaterial: "Review DSA Chapter 1.4 and trace doubling/halving values until the stopping condition.",
+        gateWeight: "high"
+      },
+      recurrence: {
+        label: "Recurrence",
+        prereqs: ["dominant-term", "logarithmic-growth"],
+        repairMaterial: "Review DSA Chapter 1.5 and identify number of subproblems, subproblem size, and outside work.",
+        gateWeight: "high"
+      },
+      "recursive-state": {
+        label: "Recursive state",
+        prereqs: [],
+        repairMaterial: "Review DSA Chapter 2.1 and write the changing state and invariant for each recursive call.",
+        gateWeight: "high"
+      },
+      "base-case": {
+        label: "Base case",
+        prereqs: ["recursive-state"],
+        repairMaterial: "Review DSA Chapter 2.1 and test empty, one-element, and zero-exponent cases.",
+        gateWeight: "high"
+      },
+      "call-stack-trace": {
+        label: "Call-stack trace",
+        prereqs: ["base-case"],
+        repairMaterial: "Review DSA Chapter 2.2 and write calls downward, then returned values upward.",
+        gateWeight: "high"
+      },
+      "induction-proof": {
+        label: "Induction proof",
+        prereqs: ["recursive-state"],
+        repairMaterial: "Review DSA Chapter 2.3 and write base case, induction hypothesis, and current-step justification.",
+        gateWeight: "medium"
+      },
+      "recurrence-extraction": {
+        label: "Recurrence extraction",
+        prereqs: ["call-stack-trace", "recurrence"],
+        repairMaterial: "Review DSA Chapter 2.4 and count actual recursive calls before solving the recurrence.",
+        gateWeight: "high"
+      },
+      "recursion-tree": {
+        label: "Recursion tree",
+        prereqs: ["recurrence-extraction"],
+        repairMaterial: "Review DSA Chapter 2.5 and compare T(n)=T(n/2)+1, 2T(n/2)+1, and 2T(n/2)+n.",
+        gateWeight: "high"
+      },
+      "stack-space": {
+        label: "Stack space",
+        prereqs: ["call-stack-trace"],
+        repairMaterial: "Review DSA Chapter 2.6 and count maximum unfinished calls separately from total runtime.",
         gateWeight: "high"
       }
     }
@@ -20382,6 +20788,7 @@ function buildQuizFeedbackReport({ answers, quiz, section, conceptScores, strong
 function conceptGraphForSection(section) {
   if (section?.id === "gate-da-dsa-asymptotic-analysis") return dsaAlgorithmsArraysSearchConceptGraph();
   if (section?.id === "gate-da-dsa-induction-recursion") return dsaInductionRecursionConceptGraph();
+  if (section?.id === "gate-da-dsa-chapters-1-2-progression-gate") return dsaChaptersOneTwoProgressionGateConceptGraph();
   if (section?.id === "gate-da-linear-algebra-vector-spaces-coordinates") return linearAlgebraVectorSpacesConceptGraph();
   if (section?.id === "gate-da-linear-algebra-transformations-matrices") return linearAlgebraTransformationsConceptGraph();
   if (section?.id === "gate-da-linear-algebra-rank-nullity-systems") return linearAlgebraRankNullityConceptGraph();
@@ -21136,18 +21543,21 @@ function renderTests() {
 function testTemplate(test) {
   const attempts = state.quizAttempts.filter((attempt) => attempt.testId === test.id);
   const latestAttempt = attempts[attempts.length - 1];
+  const section = activeGateDaSections().find((entry) => entry.id === test.sectionId);
+  const unlockState = section ? sectionUnlockState(section) : null;
+  const quizLocked = Boolean(unlockState?.locked);
   const materialId = test.materialId || test.id;
   const submission = test.materialUrl ? patternSubmission(materialId) : null;
   const feedbackRecord = submission?.feedbackRecord || null;
   const quizAction = test.quizId
-    ? `<button class="primary-btn" data-start-test="${test.id}" type="button">${latestAttempt ? "Retake objective quiz" : "Start objective quiz"}</button>`
+    ? `<button class="${quizLocked ? "ghost-btn" : "primary-btn"}" data-start-test="${test.id}" type="button"${quizLocked ? " disabled" : ""}>${quizLocked ? "Locked objective quiz" : latestAttempt ? "Retake objective quiz" : "Start objective quiz"}</button>`
     : "";
   const materialAction = test.materialUrl
     ? `<a class="primary-btn inline-link" href="${escapeHtml(test.materialUrl)}" target="_blank" rel="noreferrer">Open quiz</a>`
     : "";
   const attemptSummary = latestAttempt
     ? `<p class="muted">Latest logged score: ${latestAttempt.score}/${latestAttempt.total} (${latestAttempt.percent}%). ${escapeHtml(latestAttempt.feedback.summary)}</p>`
-    : test.quizId ? '<p class="muted">No attempt logged yet.</p>' : "";
+    : test.quizId ? `<p class="muted">${quizLocked ? "This quiz unlocks after the prerequisite chapter review is completed." : "No attempt logged yet."}</p>` : "";
   const workflowTag = test.workflowType
     ? `<span class="tag">${escapeHtml(test.workflowType === "cross-subject-spaced-review" ? "All-subject spaced review" : test.workflowType)}</span>`
     : "";
@@ -21204,6 +21614,15 @@ function activeQuizTemplate(testId) {
   const section = activeGateDaSections().find((entry) => entry.id === test?.sectionId);
   const quiz = section?.reviewQuiz;
   if (!test || !quiz) return "";
+  const unlockState = sectionUnlockState(section);
+  if (unlockState.locked) {
+    return `
+      <article class="item" id="active-quiz-card">
+        <h4>${escapeHtml(quiz.title)}</h4>
+        <p>This quiz is locked until the prerequisite chapter review is completed.</p>
+      </article>
+    `;
+  }
 
   return `
     <form class="quiz-form" id="active-quiz-card" data-quiz-form data-test-id="${test.id}">
@@ -22454,11 +22873,15 @@ function chapterCardTemplate(section, sections = activeGateDaSections()) {
   const latestAttempt = latestQuizAttemptForTest(test?.id);
   const unlockState = sectionUnlockState(section, sections);
   const lockMessage = unlockState.previewingLocked
-    ? unlockState.previousSection.reviewQuiz
+    ? unlockState.previousGateThreshold && unlockState.previousAttempt
+      ? `Designer preview: learners are locked until they score at least ${unlockState.previousGateThreshold}% on ${unlockState.previousSection.chapter}: ${unlockState.previousSection.title}.`
+      : unlockState.previousSection.reviewQuiz
       ? `Designer preview: learners are locked until they submit ${unlockState.previousSection.chapter}: ${unlockState.previousSection.title} review quiz.`
       : `Designer preview: learners are locked until ${unlockState.previousSection.chapter}: ${unlockState.previousSection.title} review quiz is added and submitted.`
     : unlockState.locked
-    ? unlockState.previousSection.reviewQuiz
+    ? unlockState.previousGateThreshold && unlockState.previousAttempt
+      ? `Locked until you score at least ${unlockState.previousGateThreshold}% on ${unlockState.previousSection.chapter}: ${unlockState.previousSection.title}.`
+      : unlockState.previousSection.reviewQuiz
       ? `Locked until you submit ${unlockState.previousSection.chapter}: ${unlockState.previousSection.title} review quiz.`
       : `Locked until ${unlockState.previousSection.chapter}: ${unlockState.previousSection.title} review quiz is added and submitted.`
     : latestAttempt
