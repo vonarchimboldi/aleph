@@ -1,7 +1,7 @@
 const STORAGE_KEY = "learning-studio-data-v2";
 const LEGACY_STORAGE_KEYS = ["learning-studio-data-v1"];
 const SESSION_KEY = "aleph-session";
-const COURSE_PLAN_VERSION = "seeded-user-canonical-workspace-v114";
+const COURSE_PLAN_VERSION = "seeded-user-canonical-workspace-v115";
 const MAX_FEEDBACK_ATTACHMENT_BYTES = 3 * 1024 * 1024;
 const MAX_COMPRESSED_FEEDBACK_BYTES = 2400 * 1024;
 const MAX_FEEDBACK_PDF_PAGES = 6;
@@ -2562,7 +2562,7 @@ function buildGateDaBasicPlan(now, accountTypes, sections, user = basicGateDaUse
         startDate: monday,
         endDate: "2026-08-30",
         status: "active",
-        details: `GATE DA Basic plan surfaces: Subjects, Tasks, Schedule, Tests, Feedback, Resources, and Share. Recommended pace: study three subjects in parallel. Every 15 days, Aleph should generate an adaptive cumulative review quiz from prior performance, repeating missed concepts more often, reducing mastered concepts, and keeping high-weight exam topics in rotation. Current material build: Probability Chapters 1-10, Linear Algebra Chapters 1-12 plus a chapterless cumulative past-paper style drill, and DSA Chapters 1-4 with a progression gate before Chapter 3.${trialNote}`,
+        details: `GATE DA Basic plan surfaces: Subjects, Tasks, Schedule, Tests, Feedback, Resources, and Share. Recommended pace: study three subjects in parallel. Every 15 days, Aleph should generate an adaptive cumulative review quiz from prior performance, repeating missed concepts more often, reducing mastered concepts, and keeping high-weight exam topics in rotation. Current material build: Probability Chapters 1-10, Linear Algebra Chapters 1-12 plus a chapterless cumulative past-paper style drill, and DSA Chapters 1-5 with a progression gate before Chapter 3.${trialNote}`,
         updatedAt: now
       }
     ],
@@ -2900,6 +2900,8 @@ function dsaBasicScheduleItems(now, monday, sunday) {
   const weekThreeSunday = addDays(sunday, 14);
   const weekFourMonday = addDays(monday, 21);
   const weekFourSunday = addDays(sunday, 21);
+  const weekFiveMonday = addDays(monday, 28);
+  const weekFiveSunday = addDays(sunday, 28);
   return [
     {
       id: "schedule-dsa-chapter-1-study",
@@ -3030,6 +3032,36 @@ function dsaBasicScheduleItems(now, monday, sunday) {
       date: weekFourSunday,
       details: "Take the graph-backed objective review for linked-list invariants, pointer updates, stack/queue semantics, array-backed tradeoffs, and amortized resizing.",
       updatedAt: now
+    },
+    {
+      id: "schedule-dsa-chapter-5-study",
+      title: "DSA Chapter 5: Trees",
+      week: 5,
+      subject: "Data Structures and Algorithms",
+      kind: "Study",
+      date: weekFiveMonday,
+      details: "Study tree nodes, root/leaf/depth/height language, recursive tree invariants, traversals, BST ordering, search paths, heap shape/order properties, and height-driven complexity.",
+      updatedAt: now
+    },
+    {
+      id: "schedule-dsa-chapter-5-practice",
+      title: "DSA Chapter 5: Labelled Practice",
+      week: 5,
+      subject: "Data Structures and Algorithms",
+      kind: "Practice",
+      date: addDays(weekFiveMonday, 2),
+      details: "Solve traversal, height, BST, heap, and recursive invariant exercises before opening worked solutions.",
+      updatedAt: now
+    },
+    {
+      id: "schedule-dsa-chapter-5-review",
+      title: "DSA Chapter 5: Objective Review",
+      week: 5,
+      subject: "Data Structures and Algorithms",
+      kind: "Review",
+      date: weekFiveSunday,
+      details: "Take the graph-backed objective review for tree vocabulary, recursive traversals, height complexity, BST search, and heap invariants.",
+      updatedAt: now
     }
   ];
 }
@@ -3039,6 +3071,7 @@ function dsaBasicTests(now, dsaSections, sunday) {
   const weekThreeMonday = addDays(sunday, 8);
   const weekThreeSunday = addDays(sunday, 14);
   const weekFourSunday = addDays(sunday, 21);
+  const weekFiveSunday = addDays(sunday, 28);
   return [
     {
       id: "test-dsa-chapter-1-objective-review",
@@ -3086,6 +3119,15 @@ function dsaBasicTests(now, dsaSections, sunday) {
       sectionId: dsaSections[4]?.id,
       quizId: "quiz-dsa-chapter-4-objective-review",
       updatedAt: now
+    },
+    {
+      id: "test-dsa-chapter-5-objective-review",
+      title: "DSA Chapter 5 Objective Review",
+      date: weekFiveSunday,
+      details: "Objective review for tree vocabulary, height and depth, recursive traversals, BST ordering/search paths, heap shape/order properties, and heap array indexing.",
+      sectionId: dsaSections[5]?.id,
+      quizId: "quiz-dsa-chapter-5-objective-review",
+      updatedAt: now
     }
   ];
 }
@@ -3097,6 +3139,8 @@ function dsaBasicTasks(now, monday, sunday) {
   const weekThreeSunday = addDays(sunday, 14);
   const weekFourMonday = addDays(monday, 21);
   const weekFourSunday = addDays(sunday, 21);
+  const weekFiveMonday = addDays(monday, 28);
+  const weekFiveSunday = addDays(sunday, 28);
   return [
     {
       id: "task-dsa-chapter-1-read",
@@ -3240,6 +3284,39 @@ function dsaBasicTasks(now, monday, sunday) {
       done: false,
       details: "Submit the Chapter 4 objective quiz so Aleph logs pointer, sentinel, stack, queue, and tradeoff gaps.",
       updatedAt: now
+    },
+    {
+      id: "task-dsa-chapter-5-read",
+      week: 5,
+      title: "DSA Ch 5: Read trees",
+      type: "Study",
+      date: weekFiveMonday,
+      status: "todo",
+      done: false,
+      details: "Open Subjects -> Data Structures and Algorithms -> Chapter 5 and study tree vocabulary, traversals, BSTs, heaps, and height complexity.",
+      updatedAt: now
+    },
+    {
+      id: "task-dsa-chapter-5-practice",
+      week: 5,
+      title: "DSA Ch 5: Solve tree practice",
+      type: "Practice",
+      date: addDays(weekFiveMonday, 2),
+      status: "todo",
+      done: false,
+      details: "Attempt the labelled traversal, height, BST, and heap practice problems before opening worked solutions.",
+      updatedAt: now
+    },
+    {
+      id: "task-dsa-chapter-5-review",
+      week: 5,
+      title: "DSA Ch 5: Take objective review",
+      type: "Review",
+      date: weekFiveSunday,
+      status: "todo",
+      done: false,
+      details: "Submit the Chapter 5 objective quiz so Aleph logs traversal, height, BST, and heap gaps.",
+      updatedAt: now
     }
   ];
 }
@@ -3249,6 +3326,7 @@ function dsaBasicFeedback(now, sunday) {
   const weekThreeMonday = addDays(sunday, 8);
   const weekThreeSunday = addDays(sunday, 14);
   const weekFourSunday = addDays(sunday, 21);
+  const weekFiveSunday = addDays(sunday, 28);
   return [
     {
       id: "feedback-dsa-chapter-1",
@@ -3284,6 +3362,13 @@ function dsaBasicFeedback(now, sunday) {
       date: weekFourSunday,
       details: "Review misses for broken head/tail invariants, pointer update order, null edge cases, sentinel misunderstanding, stack-versus-queue confusion, wrong operation complexity, and amortized resize misconceptions.",
       updatedAt: now
+    },
+    {
+      id: "feedback-dsa-chapter-5",
+      title: "DSA Chapter 5 feedback focus",
+      date: weekFiveSunday,
+      details: "Review misses for confusing depth and height, traversal order mistakes, weak recursive tree base cases, invalid BST branch choices, assuming all BSTs are balanced, mixing heap shape with heap order, and wrong heap child-index calculations.",
+      updatedAt: now
     }
   ];
 }
@@ -3292,6 +3377,7 @@ function dsaBasicResources(now, monday) {
   const weekTwoMonday = addDays(monday, 7);
   const weekThreeMonday = addDays(monday, 14);
   const weekFourMonday = addDays(monday, 21);
+  const weekFiveMonday = addDays(monday, 28);
   return [
     {
       id: "resource-dsa-algorithms-arrays-search",
@@ -3330,6 +3416,14 @@ function dsaBasicResources(now, monday) {
       title: "DSA Chapter 4: Linked Lists, Stacks, and Queues",
       date: weekFourMonday,
       details: "Open Subjects -> Data Structures and Algorithms to study linked-node diagrams, head/tail invariants, sentinel nodes, pointer updates, stack LIFO, queue FIFO, and array-versus-linked tradeoffs.",
+      link: "",
+      updatedAt: now
+    },
+    {
+      id: "resource-dsa-trees",
+      title: "DSA Chapter 5: Trees",
+      date: weekFiveMonday,
+      details: "Open Subjects -> Data Structures and Algorithms to study tree nodes, height/depth, recursive traversals, BST ordering and search, heap shape/order, and height-based complexity.",
       link: "",
       updatedAt: now
     }
@@ -4199,6 +4293,189 @@ function gateDaDsaSections(updatedAt = new Date().toISOString()) {
         "Linked lists make local splicing cheap but do not give O(1) indexing.",
         "Array-backed stacks and circular queues can have amortized O(1) end operations.",
         "Most linked-list bugs are stale pointers, lost nodes, or broken empty-case updates."
+      ],
+      updatedAt
+    },
+    {
+      id: "gate-da-dsa-trees",
+      exam: "GATE DA",
+      accountTier: "Basic",
+      subject: "Data Structures and Algorithms",
+      chapter: "Chapter 5",
+      section: "5",
+      title: "Trees",
+      summary: "Tree nodes, root/leaf/depth/height language, recursive tree invariants, preorder/inorder/postorder/level-order traversals, BST ordering and search paths, heap shape/order properties, and height-driven complexity.",
+      sectionPreview: "A tree is a linked structure where each node can branch to children. The exam skill is to keep the recursive invariant clear: solve the root, then solve the left and right subtrees in the required order.",
+      previewActivity: "For root 8 with left child 3 and right child 10, add 1 and 6 under 3. Write preorder, inorder, and postorder. Which traversal becomes sorted if the tree is a BST?",
+      chapterIntro: [
+        "Chapter 5 extends linked-node reasoning into branching state. A tree node stores a value and child pointers; the root is the entry point, and leaves are nodes with no children.",
+        "Most tree algorithms are recursive. The invariant is not just what one node contains, but what the whole subtree rooted at that node means.",
+        "For GATE DA, expect compact tasks: traversal orders, height and depth calculations, BST branch choices, worst-case versus balanced complexity, and heap property checks."
+      ],
+      bookSections: [
+        {
+          number: "5.1",
+          title: "Tree Vocabulary and Shape",
+          paragraphs: [
+            "A rooted tree has one root node. Every other node has exactly one parent, and may have zero or more children.",
+            "A leaf has no children. The depth of a node is the number of edges from the root to that node. The height of a node is the number of edges on the longest downward path from that node to a leaf.",
+            "Shape matters because many costs are proportional to height. A chain-shaped tree with n nodes has height n-1, while a balanced binary tree has height about log n."
+          ],
+          blocks: [
+            {
+              type: "principle",
+              title: "Height drives search cost",
+              body: "When an operation follows one root-to-leaf path, its time is O(h), where h is the tree height. Only balanced trees make that O(log n)."
+            },
+            {
+              type: "example",
+              title: "Example 5.1: depth and height",
+              body: "If 8 is the root, 3 and 10 are children of 8, and 1 is a child of 3, then depth(1)=2. Node 3 has height 1 if its deepest child is one edge away."
+            }
+          ]
+        },
+        {
+          number: "5.2",
+          title: "Recursive Tree Invariants",
+          paragraphs: [
+            "A tree algorithm usually receives a pointer to the root of a subtree. The recursive invariant states what the answer means for that subtree.",
+            "The empty subtree is the base case. For height, the empty height convention must be stated before calculating; this chapter uses height(empty) = -1 and height(leaf) = 0.",
+            "The recursive step combines the current node with answers from child subtrees."
+          ],
+          blocks: [
+            {
+              type: "example",
+              title: "Example 5.2: height recurrence",
+              body: "height(node) = 1 + max(height(node.left), height(node.right)). With height(null)=-1, a leaf has height 1+max(-1,-1)=0."
+            },
+            {
+              type: "warning",
+              title: "Convention trap",
+              body: "Some books count height in nodes instead of edges. In an exam, use the convention stated in the question. If none is stated, say your convention before computing."
+            }
+          ]
+        },
+        {
+          number: "5.3",
+          title: "Depth-First Traversals",
+          paragraphs: [
+            "Preorder visits root, then left subtree, then right subtree. Inorder visits left subtree, root, then right subtree. Postorder visits left subtree, right subtree, then root.",
+            "Traversal questions are recursion-trace questions. Write the visit order at the exact moment the algorithm records a node.",
+            "For a binary search tree, inorder traversal returns keys in sorted order if the BST order invariant is correct."
+          ],
+          blocks: [
+            {
+              type: "simulation",
+              title: "Simulation practice",
+              body: "For root 4 with left 2, right 7, and children 1 and 3 under 2, preorder is 4,2,1,3,7; inorder is 1,2,3,4,7; postorder is 1,3,2,7,4."
+            }
+          ]
+        },
+        {
+          number: "5.4",
+          title: "Level-Order Traversal",
+          paragraphs: [
+            "Level-order traversal visits nodes breadth-first: root, then all nodes at depth 1, then all nodes at depth 2, and so on.",
+            "It uses a queue. Enqueue the root, then repeatedly dequeue one node, visit it, and enqueue its children from left to right.",
+            "The queue invariant is: before each step, the queue stores the next nodes to visit in level-order sequence."
+          ],
+          blocks: [
+            {
+              type: "example",
+              title: "Example 5.3: queue trace",
+              body: "For root A with children B,C and B with child D, the queue trace visits A, then B,C, then D. The final level-order sequence is A,B,C,D."
+            }
+          ]
+        },
+        {
+          number: "5.5",
+          title: "Binary Search Trees",
+          paragraphs: [
+            "A binary search tree stores ordered keys. For every node, all keys in the left subtree are smaller than the node key, and all keys in the right subtree are larger, assuming no duplicates.",
+            "Search compares the target with the current node and follows exactly one branch. Correctness comes from the BST order invariant: the discarded subtree cannot contain the target.",
+            "The search cost is O(h). It is O(log n) in a balanced tree, but O(n) in a chain-shaped tree."
+          ],
+          blocks: [
+            {
+              type: "example",
+              title: "Example 5.4: search path",
+              body: "In a BST with root 8, left child 3, right child 10, and 6 as the right child of 3, searching for 6 follows 8 -> 3 -> 6."
+            },
+            {
+              type: "warning",
+              title: "Balanced-tree trap",
+              body: "BST does not automatically mean balanced. A sorted insertion order can create a chain, making search Theta(n)."
+            }
+          ]
+        },
+        {
+          number: "5.6",
+          title: "Heaps and Priority Queues",
+          paragraphs: [
+            "A binary heap is a complete binary tree: every level is full except possibly the last, and the last level fills from left to right.",
+            "A min-heap has the heap-order property: every parent key is at most its children. This guarantees the minimum is at the root, but it does not make the entire array sorted.",
+            "Array-backed heaps use index arithmetic. With 0-based indexing, children of i are 2i+1 and 2i+2, and the parent of i is floor((i-1)/2)."
+          ],
+          blocks: [
+            {
+              type: "strategy",
+              title: "Heap check routine",
+              body: "Check shape first, then order. A tree can satisfy heap order but fail shape, or satisfy shape but violate parent-child order."
+            }
+          ]
+        }
+      ],
+      concepts: [
+        { name: "Tree node", description: "A value plus child pointers.", cue: "Name root, parent, child, and leaf before tracing." },
+        { name: "Depth and height", description: "Depth counts edges down from root; height counts longest path down to a leaf.", cue: "State the edge/node convention first." },
+        { name: "Recursive tree invariant", description: "A function on a node solves the subtree rooted at that node.", cue: "Write the empty-subtree base case." },
+        { name: "Depth-first traversals", description: "Preorder, inorder, and postorder differ by when the root is visited.", cue: "Root position decides the traversal name." },
+        { name: "Level-order traversal", description: "Breadth-first traversal using a queue.", cue: "Trace queue front to back." },
+        { name: "BST order invariant", description: "Left subtree keys are smaller; right subtree keys are larger.", cue: "Use the invariant to discard one branch." },
+        { name: "BST height complexity", description: "Search follows one path, so cost is O(h).", cue: "Balanced gives O(log n); a chain gives O(n)." },
+        { name: "Heap shape property", description: "Complete tree shape, filled left to right.", cue: "Check shape before checking order." },
+        { name: "Heap order property", description: "Parent is no larger than children in a min-heap.", cue: "Heap root is min, not a sorted sequence." },
+        { name: "Heap array index", description: "0-based heap children of i are 2i+1 and 2i+2.", cue: "Use index formulas, not pointer intuition." }
+      ],
+      techniques: [
+        { name: "Subtree invariant", when: "writing or reading recursive tree pseudocode.", move: "State what the function returns for the subtree rooted at node." },
+        { name: "Traversal trace", when: "asked for preorder, inorder, or postorder.", move: "Record the root before, between, or after recursive calls." },
+        { name: "Queue trace", when: "asked for level-order traversal.", move: "Maintain the FIFO queue of next nodes to visit." },
+        { name: "BST branch discard", when: "searching in a BST.", move: "Compare target with node and prove the other subtree cannot contain it." },
+        { name: "Heap two-property check", when: "validating a heap.", move: "Check complete shape and parent-child order separately." },
+        { name: "Height cost read", when: "an operation follows one branch.", move: "Write O(h), then substitute h=log n only if balance is guaranteed." }
+      ],
+      practiceProblems: dsaTreesProblems(),
+      implementationDrills: dsaTreesImplementationDrills(),
+      reviewPrompts: [
+        "What is the empty-subtree base case for this recursive tree function?",
+        "Where is the root visited in preorder, inorder, and postorder?",
+        "What is the queue state during level-order traversal?",
+        "Which BST branch is discarded after each comparison, and why?",
+        "What is the height of the tree, and does the problem guarantee balance?",
+        "Does the heap candidate satisfy shape, order, both, or neither?"
+      ],
+      reviewQuiz: {
+        id: "quiz-dsa-chapter-5-objective-review",
+        title: "DSA Chapter 5 Objective Review",
+        instructions: "Complete this after studying tree vocabulary, recursive tree invariants, traversals, BST order/search, heap shape/order, and height-based complexity. The sampled mix is 5 single-topic checks, 3 two-topic mixes, and 2 three-topic synthesis questions, with one regenerated heap item to cover a high-weight omitted concept.",
+        questions: dsaTreesReviewQuestions()
+      },
+      readingQuestions: [
+        "What is the difference between depth and height?",
+        "What is the recursive invariant for a height function?",
+        "How do preorder, inorder, and postorder differ?",
+        "Why does level-order traversal use a queue?",
+        "Why is BST search O(h), not always O(log n)?",
+        "What two properties must a binary heap satisfy?"
+      ],
+      chapterSummary: [
+        "Tree algorithms reason about subtrees, not just individual nodes.",
+        "Depth is measured from the root; height is measured down to the deepest leaf.",
+        "Preorder, inorder, and postorder are root-position rules inside a recursive trace.",
+        "Level-order traversal is a queue-based breadth-first trace.",
+        "BST search follows one path and is O(h), which is O(log n) only when height is logarithmic.",
+        "A heap needs both complete shape and parent-child order; heap arrays are not sorted arrays."
       ],
       updatedAt
     }
@@ -14276,6 +14553,292 @@ function dsaLinkedListsStacksQueuesReviewQuestions() {
   }));
 }
 
+function dsaTreesProblems() {
+  return [
+    {
+      title: "Exercise 1: Depth and Height",
+      prompt: "A tree has root 8, children 3 and 10, and node 3 has children 1 and 6. Using edge-count height, find depth(6), height(3), and height(8).",
+      solution: "depth(6)=2 because the path from root is 8 -> 3 -> 6 with two edges. height(3)=1 because its deepest child is one edge below it. height(8)=2 because the longest root-to-leaf path has two edges.",
+      tags: ["root-leaf-depth", "height-complexity"]
+    },
+    {
+      title: "Exercise 2: Traversal Trace",
+      prompt: "For root 4 with left child 2, right child 7, and children 1 and 3 under 2, write preorder, inorder, and postorder.",
+      solution: "Preorder visits root-left-right: 4,2,1,3,7. Inorder visits left-root-right: 1,2,3,4,7. Postorder visits left-right-root: 1,3,2,7,4.",
+      tags: ["preorder-traversal", "inorder-traversal", "postorder-traversal"]
+    },
+    {
+      title: "Exercise 3: Height Recurrence",
+      prompt: "Using height(null)=-1, explain why height(leaf)=0 and write the recurrence for height(node).",
+      solution: "height(node)=1+max(height(node.left), height(node.right)). For a leaf, both children are null, so height(leaf)=1+max(-1,-1)=0. The recurrence solves the subtree rooted at node.",
+      tags: ["recursive-tree-invariant", "height-complexity"]
+    },
+    {
+      title: "Exercise 4: BST Search Path",
+      prompt: "In a BST with root 8, left child 3, right child 10, and 6 as right child of 3, search for 6. Give the path and the discarded branches.",
+      solution: "Compare 6 with 8: since 6<8, discard the right subtree rooted at 10. Compare 6 with 3: since 6>3, discard 3's left subtree. Then visit 6. Path is 8 -> 3 -> 6.",
+      tags: ["bst-order-invariant", "bst-search-path"]
+    },
+    {
+      title: "Exercise 5: BST Worst Case",
+      prompt: "Insert 1,2,3,4,5 into an empty unbalanced BST. What is the height, and what is the worst-case search time?",
+      solution: "The inserts form a right chain of five nodes. With edge-count height, height=4. A search may follow all five nodes, so the worst-case time is Theta(n), not Theta(log n).",
+      tags: ["bst-order-invariant", "height-complexity", "bst-search-path"]
+    },
+    {
+      title: "Exercise 6: Level-Order Queue",
+      prompt: "For root A with children B,C and B with child D, trace the level-order traversal sequence.",
+      solution: "Start queue [A]. Visit A, enqueue B,C. Visit B, enqueue D, queue [C,D]. Visit C, queue [D]. Visit D. Sequence is A,B,C,D.",
+      tags: ["level-order-traversal", "queue-fifo"]
+    },
+    {
+      title: "Exercise 7: Heap Property Check",
+      prompt: "Is array [2,5,3,9,7,8] a valid 0-based min-heap? Check parent-child order.",
+      solution: "Index 0 has children 1 and 2: 2<=5 and 2<=3. Index 1 has children 3 and 4: 5<=9 and 5<=7. Index 2 has child 5: 3<=8. The complete array shape is valid, and all parent-child checks pass, so it is a min-heap.",
+      tags: ["heap-shape-property", "heap-order-property", "heap-array-index"]
+    },
+    {
+      title: "Exercise 8: Heap Is Not Sorted",
+      prompt: "A min-heap array starts [1,4,2,9,7,3]. Why does this not imply the whole array is sorted?",
+      solution: "Heap order only compares each parent with its children. It does not compare siblings or nodes in different subtrees. Here 4 appears before 2, so the array is not sorted, even though parent-child order may hold.",
+      tags: ["heap-order-property", "heap-array-index"]
+    },
+    {
+      title: "Exercise 9: Child Index Calculation",
+      prompt: "In a 0-based heap array, what are the children of index 4 and the parent of index 10?",
+      solution: "Children of i are 2i+1 and 2i+2, so children of 4 are 9 and 10. Parent of i is floor((i-1)/2), so parent of 10 is floor(9/2)=4.",
+      tags: ["heap-array-index", "array-indexing"]
+    },
+    {
+      title: "Exercise 10: Traversal and BST Recognition",
+      prompt: "A binary tree has inorder traversal 1,2,3,4,7. Does that alone prove the tree is a BST? Explain the invariant needed.",
+      solution: "Sorted inorder is strong evidence for a BST when keys are distinct and the traversal came from the actual left-root-right structure, but the defining invariant is local at every node: all left-subtree keys are smaller and all right-subtree keys are larger. The explanation should cite that invariant, not only the list.",
+      tags: ["inorder-traversal", "bst-order-invariant"]
+    }
+  ];
+}
+
+function dsaTreesImplementationDrills() {
+  return [
+    {
+      title: "Recursive Tree Height",
+      source: "Original GATE-style recursive trace drill",
+      difficulty: "Easy",
+      focus: "subtree invariant and base case",
+      url: "",
+      targetTime: "O(n) time, O(h) recursion stack",
+      reason: "Forces the learner to define height convention and combine child answers.",
+      writeup: "Trace height on an empty tree, a leaf, a chain, and a balanced three-level tree."
+    },
+    {
+      title: "Traversal Generator",
+      source: "CS 61B-style tree traversal practice",
+      difficulty: "Easy",
+      focus: "preorder, inorder, postorder",
+      url: "https://sp25.datastructur.es/",
+      targetTime: "O(n) time, O(h) recursion stack",
+      reason: "Turns traversal definitions into exact visit-time discipline.",
+      writeup: "Record when the root is output relative to recursive calls."
+    },
+    {
+      title: "Level-Order Queue Trace",
+      source: "Original queue-to-tree transfer drill",
+      difficulty: "Medium",
+      focus: "breadth-first queue invariant",
+      url: "",
+      targetTime: "O(n) time, O(w) queue space where w is maximum width",
+      reason: "Connects Chapter 4 queue semantics to tree traversal.",
+      writeup: "Write the queue before and after each visited node."
+    },
+    {
+      title: "BST Search and Insert",
+      source: "Open Data Structures-style ordered tree drill",
+      difficulty: "Medium",
+      focus: "BST order invariant and height cost",
+      url: "https://opendatastructures.org/",
+      targetTime: "O(h) per search or insert",
+      reason: "Tests branch discard correctness and the balanced-versus-chain complexity trap.",
+      writeup: "Give the comparison path and state the discarded subtree at each step."
+    },
+    {
+      title: "Binary Heap Checker",
+      source: "MIT/Open Data Structures-style priority queue analysis drill",
+      difficulty: "Medium",
+      focus: "heap shape, heap order, and array indexes",
+      url: "https://ocw.mit.edu/courses/6-006-introduction-to-algorithms-spring-2020/",
+      targetTime: "O(n) heap validation, O(log n) per sift path",
+      reason: "Separates complete-tree shape from min-heap or max-heap order.",
+      writeup: "Check all parent-child index pairs and explain why heap order does not sort the array."
+    }
+  ];
+}
+
+function dsaTreesReviewQuestions() {
+  const metadata = {
+    "dsa-ch5-q1": { kind: "single concept", targetConcept: "bst-order-invariant", prereqsUsed: [], difficulty: 1, gateWeight: "high", expectedFirstStep: "State the left-subtree and right-subtree key rule.", commonMistake: "Checking only the immediate children or only sorted-looking shape.", answerCheck: "Every left-subtree key is smaller and every right-subtree key is larger." },
+    "dsa-ch5-q2": { kind: "single concept", targetConcept: "root-leaf-depth", prereqsUsed: ["tree-node"], difficulty: 1, gateWeight: "high", expectedFirstStep: "Count edges from the root to the target node.", commonMistake: "Counting nodes instead of edges without stating a convention.", answerCheck: "Depth is two edges." },
+    "dsa-ch5-q3": { kind: "single concept", targetConcept: "height-complexity", prereqsUsed: ["root-leaf-depth"], difficulty: 1, gateWeight: "high", expectedFirstStep: "Relate one-path operations to tree height.", commonMistake: "Assuming every tree has logarithmic height.", answerCheck: "Search is O(h), worst-case O(n)." },
+    "dsa-ch5-q4": { kind: "single concept", targetConcept: "bst-search-path", prereqsUsed: ["bst-order-invariant"], difficulty: 1, gateWeight: "high", expectedFirstStep: "Compare target with current key and choose the only possible branch.", commonMistake: "Searching both branches like an ordinary binary tree.", answerCheck: "Path follows 8 -> 3 -> 6." },
+    "dsa-ch5-q5": { kind: "single concept", targetConcept: "recursive-tree-invariant", prereqsUsed: ["base-case"], difficulty: 2, gateWeight: "high", expectedFirstStep: "Define what the function returns for the subtree rooted at node.", commonMistake: "Writing a recurrence without an empty-subtree base case.", answerCheck: "height(null)=-1 and height(leaf)=0 under edge-count convention." },
+    "dsa-ch5-q6": { kind: "mixed: two concepts", targetConcept: "bst-search-path", prereqsUsed: ["bst-order-invariant"], difficulty: 2, gateWeight: "high", expectedFirstStep: "Use the BST invariant to discard the impossible subtree.", commonMistake: "Discarding the wrong side after comparison.", answerCheck: "If target is smaller than root, discard the right subtree." },
+    "dsa-ch5-q7": { kind: "mixed: two concepts", targetConcept: "height-complexity", prereqsUsed: ["root-leaf-depth"], difficulty: 2, gateWeight: "high", expectedFirstStep: "Find height and substitute it into O(h).", commonMistake: "Calling a chain balanced.", answerCheck: "A five-node chain has height four and Theta(n) worst-case search." },
+    "dsa-ch5-q8": { kind: "mixed: two concepts", targetConcept: "root-leaf-depth", prereqsUsed: ["tree-node"], difficulty: 2, gateWeight: "high", expectedFirstStep: "Identify parent/child edges and count the root-to-node path.", commonMistake: "Treating sibling distance as depth.", answerCheck: "Node 6 is child of 3, so depth is two." },
+    "dsa-ch5-q9": { kind: "mixed: three concepts", targetConcept: "level-order-traversal", prereqsUsed: ["tree-node", "queue-fifo"], difficulty: 3, gateWeight: "high", expectedFirstStep: "Use a FIFO queue and enqueue children left to right.", commonMistake: "Using stack-like depth-first order.", answerCheck: "Level-order is A,B,C,D." },
+    "dsa-ch5-q10": { kind: "mixed: three concepts", targetConcept: "bst-order-invariant", prereqsUsed: ["inorder-traversal", "postorder-traversal"], difficulty: 3, gateWeight: "high", expectedFirstStep: "Use inorder's left-root-right rule and the BST invariant.", commonMistake: "Confusing postorder with sorted order.", answerCheck: "Inorder of a BST is sorted." },
+    "dsa-ch5-q11": { kind: "mixed: three concepts", targetConcept: "heap-order-property", prereqsUsed: ["heap-shape-property", "heap-array-index"], difficulty: 3, gateWeight: "high", expectedFirstStep: "Check complete shape, then parent-child order by index.", commonMistake: "Expecting the heap array to be fully sorted.", answerCheck: "A valid min-heap has parent <= children, not a sorted array." },
+    "dsa-ch5-q12": { kind: "mixed: two concepts", targetConcept: "heap-array-index", prereqsUsed: ["array-indexing", "heap-shape-property"], difficulty: 2, gateWeight: "medium", expectedFirstStep: "Apply 0-based child and parent formulas.", commonMistake: "Using 1-based formulas on a 0-based heap.", answerCheck: "Children of 4 are 9 and 10; parent of 10 is 4." }
+  };
+  return [
+    {
+      id: "dsa-ch5-q1",
+      prompt: "Which statement is the BST order invariant for distinct keys?",
+      tags: ["bst-order-invariant"],
+      options: [
+        { id: "a", text: "Every left-subtree key is smaller than the node, and every right-subtree key is larger" },
+        { id: "b", text: "Every node has exactly two children" },
+        { id: "c", text: "The tree is always balanced" },
+        { id: "d", text: "The array representation is sorted" }
+      ],
+      answer: "a"
+    },
+    {
+      id: "dsa-ch5-q2",
+      prompt: "Root 8 has child 3, and 3 has child 6. What is depth(6), counting edges from the root?",
+      tags: ["root-leaf-depth", "tree-node"],
+      options: [
+        { id: "a", text: "0" },
+        { id: "b", text: "1" },
+        { id: "c", text: "2" },
+        { id: "d", text: "3" }
+      ],
+      answer: "c"
+    },
+    {
+      id: "dsa-ch5-q3",
+      prompt: "A BST search follows one root-to-leaf path in a tree of height h. What is the search time before assuming balance?",
+      tags: ["height-complexity", "root-leaf-depth"],
+      options: [
+        { id: "a", text: "O(1)" },
+        { id: "b", text: "O(log n) always" },
+        { id: "c", text: "O(h)" },
+        { id: "d", text: "O(n^2)" }
+      ],
+      answer: "c"
+    },
+    {
+      id: "dsa-ch5-q4",
+      prompt: "In a BST with root 8, left child 3, right child 10, and 6 as right child of 3, what is the search path for 6?",
+      tags: ["bst-search-path", "bst-order-invariant"],
+      options: [
+        { id: "a", text: "8 -> 10 -> 6" },
+        { id: "b", text: "8 -> 3 -> 6" },
+        { id: "c", text: "3 -> 8 -> 6" },
+        { id: "d", text: "6 -> 3 -> 8" }
+      ],
+      answer: "b"
+    },
+    {
+      id: "dsa-ch5-q5",
+      prompt: "Using height(null)=-1 and edge-count height, what is height(leaf)?",
+      tags: ["recursive-tree-invariant", "height-complexity"],
+      options: [
+        { id: "a", text: "-1" },
+        { id: "b", text: "0" },
+        { id: "c", text: "1" },
+        { id: "d", text: "2" }
+      ],
+      answer: "b"
+    },
+    {
+      id: "dsa-ch5-q6",
+      prompt: "During BST search at key 8, target 5 is smaller than 8. Which subtree can be discarded?",
+      tags: ["bst-order-invariant", "bst-search-path"],
+      options: [
+        { id: "a", text: "The right subtree of 8" },
+        { id: "b", text: "The left subtree of 8" },
+        { id: "c", text: "Both subtrees" },
+        { id: "d", text: "No subtree can ever be discarded in a BST" }
+      ],
+      answer: "a"
+    },
+    {
+      id: "dsa-ch5-q7",
+      prompt: "An unbalanced BST is a chain of 5 nodes. With edge-count height, what is its height and worst-case search time?",
+      tags: ["root-leaf-depth", "height-complexity"],
+      options: [
+        { id: "a", text: "height 1, O(log n)" },
+        { id: "b", text: "height 4, Theta(n)" },
+        { id: "c", text: "height 5, O(1)" },
+        { id: "d", text: "height log n, Theta(log n)" }
+      ],
+      answer: "b"
+    },
+    {
+      id: "dsa-ch5-q8",
+      prompt: "In root 8 with child 3 and grandchild 6 under 3, which relation explains why depth(6)=2?",
+      tags: ["tree-node", "root-leaf-depth"],
+      options: [
+        { id: "a", text: "6 is the root" },
+        { id: "b", text: "6 is two parent-child edges below the root" },
+        { id: "c", text: "6 has two children" },
+        { id: "d", text: "6 is a sibling of 8" }
+      ],
+      answer: "b"
+    },
+    {
+      id: "dsa-ch5-q9",
+      prompt: "For root A with children B,C and B with child D, what is the level-order traversal?",
+      tags: ["tree-node", "postorder-traversal", "level-order-traversal"],
+      options: [
+        { id: "a", text: "A,B,C,D" },
+        { id: "b", text: "D,B,C,A" },
+        { id: "c", text: "B,D,A,C" },
+        { id: "d", text: "A,B,D,C" }
+      ],
+      answer: "a"
+    },
+    {
+      id: "dsa-ch5-q10",
+      prompt: "Which traversal of a BST with distinct keys lists the keys in sorted order?",
+      tags: ["inorder-traversal", "postorder-traversal", "bst-order-invariant"],
+      options: [
+        { id: "a", text: "Preorder" },
+        { id: "b", text: "Inorder" },
+        { id: "c", text: "Postorder" },
+        { id: "d", text: "Level-order" }
+      ],
+      answer: "b"
+    },
+    {
+      id: "dsa-ch5-q11",
+      prompt: "Which statement correctly describes a 0-based min-heap array?",
+      tags: ["heap-shape-property", "heap-order-property", "heap-array-index"],
+      options: [
+        { id: "a", text: "It must be fully sorted from left to right" },
+        { id: "b", text: "It must have complete shape and each parent must be <= its children" },
+        { id: "c", text: "It may have holes in any level as long as the root is smallest" },
+        { id: "d", text: "Children of i are i+1 and i+2" }
+      ],
+      answer: "b"
+    },
+    {
+      id: "dsa-ch5-q12",
+      prompt: "In a 0-based heap array, what are the children of index 4 and the parent of index 10?",
+      tags: ["heap-array-index", "array-indexing", "heap-shape-property"],
+      options: [
+        { id: "a", text: "children 8,9; parent 5" },
+        { id: "b", text: "children 9,10; parent 4" },
+        { id: "c", text: "children 10,11; parent 3" },
+        { id: "d", text: "children 5,6; parent 9" }
+      ],
+      answer: "b"
+    }
+  ].map((question) => ({
+    ...question,
+    ...(metadata[question.id] || { kind: question.tags.length === 1 ? "single concept" : question.tags.length === 2 ? "mixed: two concepts" : "mixed: three concepts", targetConcept: question.tags[0], prereqsUsed: question.tags.slice(1), difficulty: question.tags.length, gateWeight: "medium" })
+  }));
+}
+
 function conditionalProbabilityReviewQuestions() {
   const metadata = {
     "cp-review-1": { targetConcept: "conditional-denominator", prereqsUsed: ["conditional-probability"], difficulty: 1, gateWeight: "high" },
@@ -15108,6 +15671,116 @@ function dsaLinkedListsStacksQueuesConceptGraph() {
         prereqs: ["stack-lifo", "queue-fifo"],
         repairMaterial: "Retest stack LIFO versus queue FIFO with three operation traces.",
         gateWeight: "high"
+      }
+    }
+  };
+}
+
+function dsaTreesConceptGraph() {
+  return {
+    chapterId: "gate-da-dsa-trees",
+    chapterTitle: "DSA Chapter 5: Trees",
+    gateWeight: "high",
+    fallbackConcepts: ["tree-node", "root-leaf-depth", "recursive-tree-invariant", "bst-order-invariant", "height-complexity"],
+    fallbackDifficultyMix: [1, 2, 2, 3],
+    fallbackInstruction: "Retest tree vocabulary and recursive subtree invariants first, then add traversal traces, BST search paths, and heap property checks.",
+    stableNextAction: "Next: move to set and map data structures after traversal order, BST order, heap properties, and height complexity are stable.",
+    nodes: {
+      "array-indexing": {
+        label: "Array indexing",
+        prereqs: [],
+        repairMaterial: "Review DSA Chapter 3.1 and use 0-based index arithmetic carefully before heap-array questions.",
+        gateWeight: "high"
+      },
+      "queue-fifo": {
+        label: "Queue FIFO",
+        prereqs: [],
+        repairMaterial: "Review DSA Chapter 4.6 and trace front-to-back queue state before level-order traversal.",
+        gateWeight: "high"
+      },
+      "base-case": {
+        label: "Base case",
+        prereqs: [],
+        repairMaterial: "Review DSA Chapter 2.1 and state the empty-subtree return value before writing a tree recurrence.",
+        gateWeight: "high"
+      },
+      "tree-node": {
+        label: "Tree node",
+        prereqs: [],
+        repairMaterial: "Review DSA Chapter 5.1 and label root, parent, child, leaf, and subtree on three small trees.",
+        gateWeight: "high"
+      },
+      "root-leaf-depth": {
+        label: "Root, leaf, and depth",
+        prereqs: ["tree-node"],
+        repairMaterial: "Review DSA Chapter 5.1 and count edge distance from root to each node in a five-node tree.",
+        gateWeight: "high"
+      },
+      "height-complexity": {
+        label: "Height complexity",
+        prereqs: ["root-leaf-depth"],
+        repairMaterial: "Review DSA Chapter 5.1 and compare the height of a chain with the height of a balanced binary tree.",
+        gateWeight: "high"
+      },
+      "recursive-tree-invariant": {
+        label: "Recursive tree invariant",
+        prereqs: ["tree-node", "base-case"],
+        repairMaterial: "Review DSA Chapter 5.2 and write what a function returns for the subtree rooted at node.",
+        gateWeight: "high"
+      },
+      "preorder-traversal": {
+        label: "Preorder traversal",
+        prereqs: ["recursive-tree-invariant"],
+        repairMaterial: "Review DSA Chapter 5.3 and trace root-left-right on three small trees.",
+        gateWeight: "high"
+      },
+      "inorder-traversal": {
+        label: "Inorder traversal",
+        prereqs: ["recursive-tree-invariant"],
+        repairMaterial: "Review DSA Chapter 5.3 and trace left-root-right, then compare with sorted BST output.",
+        gateWeight: "high"
+      },
+      "postorder-traversal": {
+        label: "Postorder traversal",
+        prereqs: ["recursive-tree-invariant"],
+        repairMaterial: "Review DSA Chapter 5.3 and trace left-right-root, especially where the root is output last.",
+        gateWeight: "medium"
+      },
+      "level-order-traversal": {
+        label: "Level-order traversal",
+        prereqs: ["queue-fifo", "tree-node"],
+        repairMaterial: "Review DSA Chapter 5.4 and write the queue state before each visit.",
+        gateWeight: "medium"
+      },
+      "bst-order-invariant": {
+        label: "BST order invariant",
+        prereqs: ["tree-node", "inorder-traversal"],
+        repairMaterial: "Review DSA Chapter 5.5 and check every subtree, not just each immediate child.",
+        gateWeight: "high"
+      },
+      "bst-search-path": {
+        label: "BST search path",
+        prereqs: ["bst-order-invariant", "height-complexity"],
+        repairMaterial: "Review DSA Chapter 5.5 and write each comparison plus the discarded subtree.",
+        gateWeight: "high"
+      },
+      "heap-shape-property": {
+        label: "Heap shape property",
+        prereqs: ["tree-node"],
+        repairMaterial: "Review DSA Chapter 5.6 and identify whether a tree is complete and filled left to right.",
+        gateWeight: "medium"
+      },
+      "heap-order-property": {
+        label: "Heap order property",
+        prereqs: ["heap-shape-property"],
+        repairMaterial: "Review DSA Chapter 5.6 and check parent-child comparisons without expecting a sorted array.",
+        gateWeight: "high"
+      },
+      "heap-array-index": {
+        label: "Heap array index",
+        prereqs: ["array-indexing", "heap-shape-property"],
+        repairMaterial: "Review DSA Chapter 5.6 and practice 0-based children 2i+1, 2i+2 and parent floor((i-1)/2).",
+        gateWeight: "medium"
       }
     }
   };
@@ -22062,6 +22735,7 @@ function conceptGraphForSection(section) {
   if (section?.id === "gate-da-dsa-chapters-1-2-progression-gate") return dsaChaptersOneTwoProgressionGateConceptGraph();
   if (section?.id === "gate-da-dsa-arrays-strings-binary-search") return dsaArraysStringsBinarySearchConceptGraph();
   if (section?.id === "gate-da-dsa-linked-lists-stacks-queues") return dsaLinkedListsStacksQueuesConceptGraph();
+  if (section?.id === "gate-da-dsa-trees") return dsaTreesConceptGraph();
   if (section?.id === "gate-da-linear-algebra-vector-spaces-coordinates") return linearAlgebraVectorSpacesConceptGraph();
   if (section?.id === "gate-da-linear-algebra-transformations-matrices") return linearAlgebraTransformationsConceptGraph();
   if (section?.id === "gate-da-linear-algebra-rank-nullity-systems") return linearAlgebraRankNullityConceptGraph();
