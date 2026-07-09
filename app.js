@@ -1,7 +1,7 @@
 const STORAGE_KEY = "learning-studio-data-v2";
 const LEGACY_STORAGE_KEYS = ["learning-studio-data-v1"];
 const SESSION_KEY = "aleph-session";
-const COURSE_PLAN_VERSION = "seeded-user-canonical-workspace-v113";
+const COURSE_PLAN_VERSION = "seeded-user-canonical-workspace-v114";
 const MAX_FEEDBACK_ATTACHMENT_BYTES = 3 * 1024 * 1024;
 const MAX_COMPRESSED_FEEDBACK_BYTES = 2400 * 1024;
 const MAX_FEEDBACK_PDF_PAGES = 6;
@@ -2562,7 +2562,7 @@ function buildGateDaBasicPlan(now, accountTypes, sections, user = basicGateDaUse
         startDate: monday,
         endDate: "2026-08-30",
         status: "active",
-        details: `GATE DA Basic plan surfaces: Subjects, Tasks, Schedule, Tests, Feedback, Resources, and Share. Recommended pace: study three subjects in parallel. Every 15 days, Aleph should generate an adaptive cumulative review quiz from prior performance, repeating missed concepts more often, reducing mastered concepts, and keeping high-weight exam topics in rotation. Current material build: Probability Chapters 1-10, Linear Algebra Chapters 1-12 plus a chapterless cumulative past-paper style drill, and DSA Chapters 1-3 with a progression gate before Chapter 3.${trialNote}`,
+        details: `GATE DA Basic plan surfaces: Subjects, Tasks, Schedule, Tests, Feedback, Resources, and Share. Recommended pace: study three subjects in parallel. Every 15 days, Aleph should generate an adaptive cumulative review quiz from prior performance, repeating missed concepts more often, reducing mastered concepts, and keeping high-weight exam topics in rotation. Current material build: Probability Chapters 1-10, Linear Algebra Chapters 1-12 plus a chapterless cumulative past-paper style drill, and DSA Chapters 1-4 with a progression gate before Chapter 3.${trialNote}`,
         updatedAt: now
       }
     ],
@@ -2898,6 +2898,8 @@ function dsaBasicScheduleItems(now, monday, sunday) {
   const weekTwoSunday = addDays(sunday, 7);
   const weekThreeMonday = addDays(monday, 14);
   const weekThreeSunday = addDays(sunday, 14);
+  const weekFourMonday = addDays(monday, 21);
+  const weekFourSunday = addDays(sunday, 21);
   return [
     {
       id: "schedule-dsa-chapter-1-study",
@@ -2998,6 +3000,36 @@ function dsaBasicScheduleItems(now, monday, sunday) {
       date: weekThreeSunday,
       details: "Take the graph-backed objective review for scan invariants, prefix/suffix state, string scans, two pointers, sorted arrays, and binary search boundaries.",
       updatedAt: now
+    },
+    {
+      id: "schedule-dsa-chapter-4-study",
+      title: "DSA Chapter 4: Linked Lists, Stacks, and Queues",
+      week: 4,
+      subject: "Data Structures and Algorithms",
+      kind: "Study",
+      date: weekFourMonday,
+      details: "Study linked-node diagrams, head/tail invariants, sentinel nodes, insertion/deletion pointer updates, stack LIFO semantics, queue FIFO semantics, and array-versus-linked tradeoffs.",
+      updatedAt: now
+    },
+    {
+      id: "schedule-dsa-chapter-4-practice",
+      title: "DSA Chapter 4: Labelled Practice",
+      week: 4,
+      subject: "Data Structures and Algorithms",
+      kind: "Practice",
+      date: addDays(weekFourMonday, 2),
+      details: "Solve pointer-trace, sentinel, stack, queue, and amortized resizing exercises before opening worked solutions.",
+      updatedAt: now
+    },
+    {
+      id: "schedule-dsa-chapter-4-review",
+      title: "DSA Chapter 4: Objective Review",
+      week: 4,
+      subject: "Data Structures and Algorithms",
+      kind: "Review",
+      date: weekFourSunday,
+      details: "Take the graph-backed objective review for linked-list invariants, pointer updates, stack/queue semantics, array-backed tradeoffs, and amortized resizing.",
+      updatedAt: now
     }
   ];
 }
@@ -3006,6 +3038,7 @@ function dsaBasicTests(now, dsaSections, sunday) {
   const weekTwoSunday = addDays(sunday, 7);
   const weekThreeMonday = addDays(sunday, 8);
   const weekThreeSunday = addDays(sunday, 14);
+  const weekFourSunday = addDays(sunday, 21);
   return [
     {
       id: "test-dsa-chapter-1-objective-review",
@@ -3044,6 +3077,15 @@ function dsaBasicTests(now, dsaSections, sunday) {
       sectionId: dsaSections[3]?.id,
       quizId: "quiz-dsa-chapter-3-objective-review",
       updatedAt: now
+    },
+    {
+      id: "test-dsa-chapter-4-objective-review",
+      title: "DSA Chapter 4 Objective Review",
+      date: weekFourSunday,
+      details: "Objective review for linked nodes, head/tail invariants, sentinel nodes, pointer updates, stack LIFO, queue FIFO, array-versus-linked tradeoffs, and amortized resizing.",
+      sectionId: dsaSections[4]?.id,
+      quizId: "quiz-dsa-chapter-4-objective-review",
+      updatedAt: now
     }
   ];
 }
@@ -3053,6 +3095,8 @@ function dsaBasicTasks(now, monday, sunday) {
   const weekTwoSunday = addDays(sunday, 7);
   const weekThreeMonday = addDays(monday, 14);
   const weekThreeSunday = addDays(sunday, 14);
+  const weekFourMonday = addDays(monday, 21);
+  const weekFourSunday = addDays(sunday, 21);
   return [
     {
       id: "task-dsa-chapter-1-read",
@@ -3163,6 +3207,39 @@ function dsaBasicTasks(now, monday, sunday) {
       done: false,
       details: "Submit the Chapter 3 objective quiz so Aleph logs array, string, two-pointer, and binary-search boundary gaps.",
       updatedAt: now
+    },
+    {
+      id: "task-dsa-chapter-4-read",
+      week: 4,
+      title: "DSA Ch 4: Read linked lists, stacks, and queues",
+      type: "Study",
+      date: weekFourMonday,
+      status: "todo",
+      done: false,
+      details: "Open Subjects -> Data Structures and Algorithms -> Chapter 4 and study linked-node invariants, pointer updates, sentinels, stacks, queues, and tradeoffs.",
+      updatedAt: now
+    },
+    {
+      id: "task-dsa-chapter-4-practice",
+      week: 4,
+      title: "DSA Ch 4: Solve pointer/state practice",
+      type: "Practice",
+      date: addDays(weekFourMonday, 2),
+      status: "todo",
+      done: false,
+      details: "Attempt the labelled linked-list, stack, queue, and amortized queue practice problems before opening worked solutions.",
+      updatedAt: now
+    },
+    {
+      id: "task-dsa-chapter-4-review",
+      week: 4,
+      title: "DSA Ch 4: Take objective review",
+      type: "Review",
+      date: weekFourSunday,
+      status: "todo",
+      done: false,
+      details: "Submit the Chapter 4 objective quiz so Aleph logs pointer, sentinel, stack, queue, and tradeoff gaps.",
+      updatedAt: now
     }
   ];
 }
@@ -3171,6 +3248,7 @@ function dsaBasicFeedback(now, sunday) {
   const weekTwoSunday = addDays(sunday, 7);
   const weekThreeMonday = addDays(sunday, 8);
   const weekThreeSunday = addDays(sunday, 14);
+  const weekFourSunday = addDays(sunday, 21);
   return [
     {
       id: "feedback-dsa-chapter-1",
@@ -3199,6 +3277,13 @@ function dsaBasicFeedback(now, sunday) {
       date: weekThreeSunday,
       details: "Review misses for off-by-one indexing, weak scan invariants, prefix/suffix state confusion, wrong pointer movement, invalid sorted-array assumptions, binary-search termination errors, duplicate handling, and not-found cases.",
       updatedAt: now
+    },
+    {
+      id: "feedback-dsa-chapter-4",
+      title: "DSA Chapter 4 feedback focus",
+      date: weekFourSunday,
+      details: "Review misses for broken head/tail invariants, pointer update order, null edge cases, sentinel misunderstanding, stack-versus-queue confusion, wrong operation complexity, and amortized resize misconceptions.",
+      updatedAt: now
     }
   ];
 }
@@ -3206,6 +3291,7 @@ function dsaBasicFeedback(now, sunday) {
 function dsaBasicResources(now, monday) {
   const weekTwoMonday = addDays(monday, 7);
   const weekThreeMonday = addDays(monday, 14);
+  const weekFourMonday = addDays(monday, 21);
   return [
     {
       id: "resource-dsa-algorithms-arrays-search",
@@ -3236,6 +3322,14 @@ function dsaBasicResources(now, monday) {
       title: "DSA Chapter 3: Arrays, Strings, and Binary Search",
       date: addDays(weekThreeMonday, 1),
       details: "Open Subjects -> Data Structures and Algorithms to study array/string scans, prefix/suffix state, two-pointer reasoning, sorted arrays, binary search invariants, and boundary-case discipline.",
+      link: "",
+      updatedAt: now
+    },
+    {
+      id: "resource-dsa-linked-lists-stacks-queues",
+      title: "DSA Chapter 4: Linked Lists, Stacks, and Queues",
+      date: weekFourMonday,
+      details: "Open Subjects -> Data Structures and Algorithms to study linked-node diagrams, head/tail invariants, sentinel nodes, pointer updates, stack LIFO, queue FIFO, and array-versus-linked tradeoffs.",
       link: "",
       updatedAt: now
     }
@@ -3903,6 +3997,208 @@ function gateDaDsaSections(updatedAt = new Date().toISOString()) {
         "Two-pointer methods require a proof that discarded pairs cannot work.",
         "Binary search is about preserving a search-interval invariant.",
         "Duplicates and not-found cases must be specified before tracing."
+      ],
+      updatedAt
+    },
+    {
+      id: "gate-da-dsa-linked-lists-stacks-queues",
+      exam: "GATE DA",
+      accountTier: "Basic",
+      subject: "Data Structures and Algorithms",
+      chapter: "Chapter 4",
+      section: "4",
+      title: "Linked Lists, Stacks, and Queues",
+      summary: "Linked-node state, head/tail invariants, sentinel nodes, insertion and deletion pointer updates, stack LIFO semantics, queue FIFO semantics, array-backed tradeoffs, and amortized resizing.",
+      sectionPreview: "Arrays store values next to each other. Linked structures store values inside nodes, and each node points to the next node. That one change shifts the exam skill from index arithmetic to pointer/state invariants.",
+      previewActivity: "Draw a linked list with nodes 2 -> 5 -> 9. Insert 7 after 5. Which pointer must change? Now delete 5. Which pointer changes, and what happens if 5 is the head?",
+      chapterIntro: [
+        "Chapter 4 moves from indexed sequences to linked state. The same invariant habit remains: name what head points to, what tail points to, what size means, and which nodes are reachable.",
+        "Stacks and queues are not hard because of syntax. They are hard when the operation semantics are confused: stack is last-in first-out, queue is first-in first-out.",
+        "For GATE DA, expect short traces: push/pop/enqueue/dequeue sequences, pointer updates, empty-list edge cases, and operation-complexity comparisons between arrays and linked lists."
+      ],
+      bookSections: [
+        {
+          number: "4.1",
+          title: "Nodes and Reachability",
+          paragraphs: [
+            "A linked list is built from nodes. Each node stores a value and at least one pointer to another node. In a singly linked list, each node points to the next node.",
+            "The head pointer identifies the first real node. Starting at head and repeatedly following next should visit exactly the list elements in order.",
+            "This reachability invariant is the linked-list version of an array boundary invariant. If a pointer update breaks it, nodes may become lost or cycles may appear."
+          ],
+          blocks: [
+            {
+              type: "principle",
+              title: "Reachability invariant",
+              body: "Every real element should be reachable from head by following next pointers exactly once."
+            },
+            {
+              type: "example",
+              title: "Example 4.1: insert after a node",
+              body: "For 2 -> 5 -> 9, to insert 7 after 5, set new.next to 9 first, then set 5.next to new. The result is 2 -> 5 -> 7 -> 9."
+            }
+          ]
+        },
+        {
+          number: "4.2",
+          title: "Head, Tail, and Size Invariants",
+          paragraphs: [
+            "A list implementation often stores head, tail, and size. The invariant should say what each field means.",
+            "If size is 0, head and tail should both represent the empty list. If size is positive, head points to the first node and tail points to the last node.",
+            "Keeping tail makes adding at the end O(1). Without tail, adding at the end of a singly linked list requires scanning from head, which is Theta(n)."
+          ],
+          blocks: [
+            {
+              type: "example",
+              title: "Example 4.2: enqueue with tail",
+              body: "For queue front 4 -> 6 and tail at 6, enqueue 8 by setting tail.next=8 and then tail=8. The front remains 4."
+            },
+            {
+              type: "warning",
+              title: "Empty-list trap",
+              body: "When adding the first node, both head and tail must point to it. Updating only tail leaves the list unreachable from head."
+            }
+          ]
+        },
+        {
+          number: "4.3",
+          title: "Sentinel Nodes",
+          paragraphs: [
+            "A sentinel node is a dummy node that is not a real list element. It exists to simplify edge cases.",
+            "With a front sentinel, insertion and deletion near the front can update sentinel.next instead of treating the head as a special case.",
+            "The invariant changes: sentinel is always present, and sentinel.next points to the first real node or null if the list is empty."
+          ],
+          blocks: [
+            {
+              type: "principle",
+              title: "Sentinel invariant",
+              body: "The sentinel is not data. It is a stable pointer anchor that makes empty and front operations look like ordinary pointer updates."
+            },
+            {
+              type: "example",
+              title: "Example 4.3: remove first with sentinel",
+              body: "If sentinel.next points to node 4 and node 4.next points to node 6, removing first sets sentinel.next to node 6. No separate head variable update is needed."
+            }
+          ]
+        },
+        {
+          number: "4.4",
+          title: "Singly and Doubly Linked Lists",
+          paragraphs: [
+            "A singly linked list supports forward movement. A doubly linked list stores both next and prev, so it supports local movement in both directions.",
+            "The extra prev pointer costs space, but it can make deletion of a known node O(1) because the previous node is directly available.",
+            "Pointer-update order matters. When inserting into a doubly linked list, both neighboring nodes and the new node must agree about next and prev."
+          ],
+          blocks: [
+            {
+              type: "simulation",
+              title: "Simulation practice",
+              body: "For A <-> B <-> D, insert C between B and D. Write C.prev=B, C.next=D, B.next=C, D.prev=C. Then check the forward and backward traversals."
+            }
+          ]
+        },
+        {
+          number: "4.5",
+          title: "Stacks",
+          paragraphs: [
+            "A stack follows LIFO: last in, first out. The usual operations are push, pop, and peek.",
+            "A linked-list stack can push and pop at the head in O(1) time. The head is the top of the stack.",
+            "A stack trace should list the sequence from top to bottom after each operation. Most mistakes come from reversing LIFO into FIFO."
+          ],
+          blocks: [
+            {
+              type: "example",
+              title: "Example 4.4: stack trace",
+              body: "Start empty. push 2 gives top [2]. push 5 gives top [5,2]. pop returns 5 and leaves [2]. push 7 gives [7,2]."
+            }
+          ]
+        },
+        {
+          number: "4.6",
+          title: "Queues and Deques",
+          paragraphs: [
+            "A queue follows FIFO: first in, first out. Enqueue adds at the back; dequeue removes from the front.",
+            "A linked-list queue should keep front/head and back/tail pointers so both enqueue and dequeue are O(1), except for careful empty-case updates.",
+            "A deque allows adding and removing at both ends. Array-backed deques often use circular indexing; resizing gives amortized constant time when capacity is doubled."
+          ],
+          blocks: [
+            {
+              type: "example",
+              title: "Example 4.5: queue trace",
+              body: "Start empty. enqueue A, enqueue B, dequeue returns A, enqueue C, dequeue returns B. The queue now has C."
+            },
+            {
+              type: "warning",
+              title: "Tail cleanup trap",
+              body: "When dequeue removes the last element, both head and tail must move to the empty-list state. Leaving tail at the removed node creates a stale pointer."
+            }
+          ]
+        },
+        {
+          number: "4.7",
+          title: "Array-Backed Versus Linked-Backed Structures",
+          paragraphs: [
+            "Arrays give O(1) indexing and good locality, but inserting at the front can require shifting many elements. Linked lists give O(1) insertion or deletion when the relevant node is known, but finding a position can take Theta(n).",
+            "Array-backed stacks are simple: push and pop at the end are amortized O(1). Array-backed queues need circular indexing to avoid shifting on every dequeue.",
+            "The exam move is to separate operation semantics from implementation cost: what operation is being performed, where is it performed, and what state must be updated?"
+          ],
+          blocks: [
+            {
+              type: "strategy",
+              title: "Operation-cost routine",
+              body: "Name the structure, name the operation, identify the touched end or node, then state whether traversal, shifting, or resizing is required."
+            }
+          ]
+        }
+      ],
+      concepts: [
+        { name: "Linked node", description: "A value plus pointer fields such as next and possibly prev.", cue: "Draw boxes and arrows before writing updates." },
+        { name: "Head invariant", description: "Head identifies the first real node or the empty-list state.", cue: "Ask what is reachable from head." },
+        { name: "Tail invariant", description: "Tail identifies the last real node when the structure is nonempty.", cue: "Update tail when the last node changes." },
+        { name: "Sentinel node", description: "A dummy node used as a stable pointer anchor.", cue: "The sentinel is not data." },
+        { name: "Pointer update", description: "Insertion and deletion are local rewiring operations.", cue: "Preserve the old next pointer before overwriting it." },
+        { name: "Stack LIFO", description: "The most recently pushed item is popped first.", cue: "Trace top to bottom." },
+        { name: "Queue FIFO", description: "The earliest enqueued item is dequeued first.", cue: "Trace front to back." },
+        { name: "Array versus linked tradeoff", description: "Arrays support indexing; linked nodes support local splicing.", cue: "Ask whether traversal, shifting, or resizing is needed." },
+        { name: "Amortized resizing", description: "Occasional expensive resizes can average to constant time per operation.", cue: "Separate one operation from a long sequence." }
+      ],
+      techniques: [
+        { name: "Pointer diagram", when: "given linked-list insertion or deletion.", move: "Draw before and after arrows, then update pointers without losing reachability." },
+        { name: "Invariant check", when: "head, tail, sentinel, or size changes.", move: "Check empty, one-node, and many-node cases." },
+        { name: "Operation semantics trace", when: "given stack or queue operations.", move: "Write the structure after each operation and return values separately." },
+        { name: "Cost classification", when: "comparing array-backed and linked-backed structures.", move: "Identify traversal, shifting, resizing, and pointer updates." },
+        { name: "Amortized read", when: "array capacity doubles.", move: "Treat occasional resizing as spread over many cheap operations." }
+      ],
+      practiceProblems: dsaLinkedListsStacksQueuesProblems(),
+      implementationDrills: dsaLinkedListsStacksQueuesImplementationDrills(),
+      reviewPrompts: [
+        "What is reachable from head after each pointer update?",
+        "When must tail change?",
+        "How does a sentinel remove a special case?",
+        "What is returned by each pop or dequeue in an operation trace?",
+        "When is linked-list insertion O(1), and when is it Theta(n)?",
+        "Why can an array-backed stack have amortized O(1) push?"
+      ],
+      reviewQuiz: {
+        id: "quiz-dsa-chapter-4-objective-review",
+        title: "DSA Chapter 4 Objective Review",
+        instructions: "Complete this after studying linked lists, stacks, queues, sentinels, operation semantics, pointer updates, and array-versus-linked tradeoffs. The sampled mix is 5 single-topic checks, 3 two-topic mixes, and 2 three-topic synthesis questions.",
+        questions: dsaLinkedListsStacksQueuesReviewQuestions()
+      },
+      readingQuestions: [
+        "What does the head pointer mean in an empty list?",
+        "What must be true about tail after enqueue and after removing the last element?",
+        "Why does a sentinel node simplify front operations?",
+        "What is the difference between stack LIFO and queue FIFO?",
+        "Which operations are O(1) for linked lists only when the node is already known?",
+        "Why is circular indexing useful for array-backed queues?"
+      ],
+      chapterSummary: [
+        "Linked structures are governed by reachability and pointer invariants.",
+        "Head, tail, size, and sentinel fields must be checked in empty, one-node, and many-node cases.",
+        "Stacks are LIFO; queues are FIFO.",
+        "Linked lists make local splicing cheap but do not give O(1) indexing.",
+        "Array-backed stacks and circular queues can have amortized O(1) end operations.",
+        "Most linked-list bugs are stale pointers, lost nodes, or broken empty-case updates."
       ],
       updatedAt
     }
@@ -13720,6 +14016,266 @@ function dsaArraysStringsBinarySearchReviewQuestions() {
   }));
 }
 
+function dsaLinkedListsStacksQueuesProblems() {
+  return [
+    {
+      title: "Exercise 1: Insert After a Node",
+      prompt: "A singly linked list is 2 -> 5 -> 9. Insert 7 after 5. State the pointer updates in a safe order.",
+      solution: "Let node be 5 and new be 7. First set new.next = node.next, so new.next points to 9. Then set node.next = new. The list becomes 2 -> 5 -> 7 -> 9. Time O(1) if node 5 is already known; finding node 5 from head is Theta(n).",
+      tags: ["linked-node", "insert-delete", "head-invariant"]
+    },
+    {
+      title: "Exercise 2: Delete After a Node",
+      prompt: "A list is 4 -> 6 -> 8 -> 10. Given a pointer to 6, delete the node after 6.",
+      solution: "The node after 6 is 8. Set 6.next = 8.next, so 6.next points to 10. The list becomes 4 -> 6 -> 10. Time O(1) if the pointer to 6 is known.",
+      tags: ["linked-node", "insert-delete"]
+    },
+    {
+      title: "Exercise 3: Tail Update",
+      prompt: "A queue is front 3 -> 4 with tail at 4. Enqueue 9. What changes?",
+      solution: "Create node 9. Set tail.next = 9, then set tail = 9. The front/head remains 3. Queue order is 3 -> 4 -> 9. Time O(1).",
+      tags: ["tail-invariant", "queue-fifo"]
+    },
+    {
+      title: "Exercise 4: Removing the Last Queue Element",
+      prompt: "A queue has one node X, so head and tail both point to X. Dequeue once. What should head and tail be?",
+      solution: "Dequeue returns X. After removing the last node, the queue is empty, so both head and tail should move to the empty state, usually null or sentinel-based empty. Leaving tail at X is a stale pointer bug.",
+      tags: ["head-invariant", "tail-invariant", "queue-fifo"]
+    },
+    {
+      title: "Exercise 5: Sentinel Meaning",
+      prompt: "In a front-sentinel linked list, sentinel.next is null. What does that mean, and is sentinel a data element?",
+      solution: "The list has no real elements. The sentinel is not data; it is a stable dummy node whose next pointer leads to the first real node or null. This makes front operations uniform.",
+      tags: ["sentinel-node", "head-invariant"]
+    },
+    {
+      title: "Exercise 6: Stack Trace",
+      prompt: "Starting empty, perform push 2, push 5, pop, push 7, pop. What values are popped and what remains?",
+      solution: "push 2 gives [2]. push 5 gives top [5,2]. pop returns 5 and leaves [2]. push 7 gives [7,2]. pop returns 7 and leaves [2]. Popped values are 5 then 7.",
+      tags: ["stack-lifo", "operation-semantics"]
+    },
+    {
+      title: "Exercise 7: Queue Trace",
+      prompt: "Starting empty, perform enqueue A, enqueue B, dequeue, enqueue C, dequeue. What values are dequeued and what remains?",
+      solution: "enqueue A gives [A]. enqueue B gives [A,B]. dequeue returns A and leaves [B]. enqueue C gives [B,C]. dequeue returns B and leaves [C]. Dequeued values are A then B.",
+      tags: ["queue-fifo", "operation-semantics"]
+    },
+    {
+      title: "Exercise 8: Singly Versus Doubly",
+      prompt: "Why can deleting a known node from a doubly linked list be O(1), while deleting that same known node from a singly linked list may not be O(1)?",
+      solution: "A doubly linked node stores prev, so the previous node is directly available and can be rewired. In a singly linked list, if only the node to delete is known, the previous node may require a scan from head, which is Theta(n).",
+      tags: ["singly-vs-doubly", "insert-delete"]
+    },
+    {
+      title: "Exercise 9: Array Versus Linked Tradeoff",
+      prompt: "Which is better for O(1) random access by index: an array-backed list or a linked list? Which is better for O(1) insertion after a known node?",
+      solution: "Array-backed lists give O(1) random access by index. Linked lists give O(1) insertion after a known node by pointer rewiring. Arrays may need shifting for middle insertion; linked lists may need traversal to find a position.",
+      tags: ["array-vs-linked", "linked-node"]
+    },
+    {
+      title: "Exercise 10: Amortized Push",
+      prompt: "An array-backed stack doubles capacity when full. Why is push amortized O(1) even though a resizing push costs Theta(n)?",
+      solution: "Most pushes write one item at the end in O(1). A resizing push copies n items, but resizing happens only after many cheap pushes. Spread over the sequence, the average cost per push is O(1).",
+      tags: ["array-vs-linked", "amortized-resize"]
+    }
+  ];
+}
+
+function dsaLinkedListsStacksQueuesImplementationDrills() {
+  return [
+    {
+      title: "Singly Linked List Insert/Delete",
+      source: "Original GATE-style pointer drill",
+      difficulty: "Easy",
+      focus: "safe pointer update order",
+      url: "",
+      targetTime: "O(1) with known node, Theta(n) if search is needed",
+      reason: "Forces pointer diagrams and reachability checks.",
+      writeup: "Draw before and after arrows for empty, one-node, and many-node cases."
+    },
+    {
+      title: "Sentinel Linked List",
+      source: "CS 61B-style sentinel pattern",
+      difficulty: "Medium",
+      focus: "front-operation edge cases",
+      url: "https://sp25.datastructur.es/",
+      targetTime: "O(1) front insert/remove",
+      reason: "Sentinels convert head special cases into uniform pointer rewrites.",
+      writeup: "Explain why the sentinel is not data and test empty-list removal."
+    },
+    {
+      title: "Linked Stack",
+      source: "Original GATE-style implementation drill",
+      difficulty: "Easy",
+      focus: "LIFO operation semantics",
+      url: "",
+      targetTime: "O(1) push and pop",
+      reason: "Maps stack operations directly to head insertion/removal.",
+      writeup: "After every operation, write top-to-bottom order and the returned value."
+    },
+    {
+      title: "Linked Queue",
+      source: "Original GATE-style implementation drill",
+      difficulty: "Easy",
+      focus: "head/tail invariants",
+      url: "",
+      targetTime: "O(1) enqueue and dequeue",
+      reason: "Trains head/tail consistency, especially when the last element is removed.",
+      writeup: "Test empty enqueue, many-element enqueue, normal dequeue, and last-element dequeue."
+    },
+    {
+      title: "Array Circular Queue",
+      source: "Open Data Structures-style array queue",
+      difficulty: "Medium",
+      focus: "array-backed queue tradeoff",
+      url: "https://opendatastructures.org/",
+      targetTime: "Amortized O(1) enqueue/dequeue",
+      reason: "Connects queue semantics to circular indexing and amortized resizing.",
+      writeup: "Track front index, size, and capacity through wraparound and resize."
+    }
+  ];
+}
+
+function dsaLinkedListsStacksQueuesReviewQuestions() {
+  const metadata = {
+    "dsa-ch4-q1": { kind: "single concept", targetConcept: "tail-invariant", prereqsUsed: ["queue-fifo"], difficulty: 1, gateWeight: "high", expectedFirstStep: "Identify what tail must point to after the operation.", commonMistake: "Updating the next pointer but not tail.", answerCheck: "Tail points to the newly enqueued node." },
+    "dsa-ch4-q2": { kind: "single concept", targetConcept: "head-invariant", prereqsUsed: ["linked-node"], difficulty: 1, gateWeight: "high", expectedFirstStep: "Ask what is reachable from head.", commonMistake: "Leaving head at a removed node.", answerCheck: "Head points to first real node or empty state." },
+    "dsa-ch4-q3": { kind: "single concept", targetConcept: "array-vs-linked", prereqsUsed: ["array-indexing"], difficulty: 1, gateWeight: "high", expectedFirstStep: "Separate indexing from local insertion.", commonMistake: "Assuming linked lists have O(1) indexing.", answerCheck: "Arrays give O(1) index access." },
+    "dsa-ch4-q4": { kind: "single concept", targetConcept: "singly-vs-doubly", prereqsUsed: ["linked-node"], difficulty: 2, gateWeight: "medium", expectedFirstStep: "Check whether prev is available.", commonMistake: "Forgetting singly linked lists cannot move backward.", answerCheck: "Doubly linked list has prev pointer." },
+    "dsa-ch4-q5": { kind: "single concept", targetConcept: "queue-fifo", prereqsUsed: [], difficulty: 1, gateWeight: "high", expectedFirstStep: "Trace front to back.", commonMistake: "Using stack LIFO order.", answerCheck: "A is dequeued before B." },
+    "dsa-ch4-q6": { kind: "mixed: two concepts", targetConcept: "queue-fifo", prereqsUsed: ["tail-invariant"], difficulty: 2, gateWeight: "high", expectedFirstStep: "Update tail and preserve front.", commonMistake: "Moving head during enqueue.", answerCheck: "Front unchanged, tail moves to new node." },
+    "dsa-ch4-q7": { kind: "mixed: two concepts", targetConcept: "amortized-resize", prereqsUsed: ["array-vs-linked"], difficulty: 2, gateWeight: "high", expectedFirstStep: "Distinguish one costly resize from sequence average.", commonMistake: "Calling every push Theta(n).", answerCheck: "Amortized O(1)." },
+    "dsa-ch4-q8": { kind: "mixed: two concepts", targetConcept: "insert-delete", prereqsUsed: ["linked-node"], difficulty: 2, gateWeight: "high", expectedFirstStep: "Save the old next pointer before overwriting.", commonMistake: "Losing the suffix by assigning node.next first.", answerCheck: "new.next=node.next, then node.next=new." },
+    "dsa-ch4-q9": { kind: "mixed: three concepts", targetConcept: "sentinel-node", prereqsUsed: ["head-invariant", "array-vs-linked"], difficulty: 3, gateWeight: "high", expectedFirstStep: "State sentinel invariant and compare to array front operations.", commonMistake: "Treating sentinel as a real data node.", answerCheck: "Sentinel is dummy; sentinel.next is first real node." },
+    "dsa-ch4-q10": { kind: "mixed: three concepts", targetConcept: "queue-fifo", prereqsUsed: ["array-vs-linked", "amortized-resize"], difficulty: 3, gateWeight: "high", expectedFirstStep: "Trace FIFO order and array capacity behavior separately.", commonMistake: "Confusing circular queue wraparound with stack pop order.", answerCheck: "FIFO order preserved; resize cost amortized." }
+  };
+  return [
+    {
+      id: "dsa-ch4-q1",
+      prompt: "A linked queue has front 3 -> 4 and tail at 4. After enqueue 9, where should tail point?",
+      tags: ["tail-invariant", "queue-fifo"],
+      options: [
+        { id: "a", text: "To 3" },
+        { id: "b", text: "To 4" },
+        { id: "c", text: "To 9" },
+        { id: "d", text: "To null while the queue is nonempty" }
+      ],
+      answer: "c"
+    },
+    {
+      id: "dsa-ch4-q2",
+      prompt: "In a nonempty singly linked list, what should head identify?",
+      tags: ["head-invariant", "linked-node"],
+      options: [
+        { id: "a", text: "The first real node" },
+        { id: "b", text: "The last real node only" },
+        { id: "c", text: "A random middle node" },
+        { id: "d", text: "The list size" }
+      ],
+      answer: "a"
+    },
+    {
+      id: "dsa-ch4-q3",
+      prompt: "Which structure supports O(1) random access by index most directly?",
+      tags: ["array-vs-linked", "array-indexing"],
+      options: [
+        { id: "a", text: "Array-backed list" },
+        { id: "b", text: "Singly linked list without extra indexing" },
+        { id: "c", text: "Stack" },
+        { id: "d", text: "Queue" }
+      ],
+      answer: "a"
+    },
+    {
+      id: "dsa-ch4-q4",
+      prompt: "What extra pointer does a doubly linked list usually store compared with a singly linked list?",
+      tags: ["singly-vs-doubly", "linked-node"],
+      options: [
+        { id: "a", text: "prev" },
+        { id: "b", text: "height" },
+        { id: "c", text: "hash" },
+        { id: "d", text: "capacity" }
+      ],
+      answer: "a"
+    },
+    {
+      id: "dsa-ch4-q5",
+      prompt: "Starting empty, enqueue A, enqueue B, then dequeue once. What is returned?",
+      tags: ["queue-fifo"],
+      options: [
+        { id: "a", text: "A" },
+        { id: "b", text: "B" },
+        { id: "c", text: "Both A and B" },
+        { id: "d", text: "Nothing, because queues cannot dequeue" }
+      ],
+      answer: "a"
+    },
+    {
+      id: "dsa-ch4-q6",
+      prompt: "For a linked queue, which pair of updates is correct when enqueueing into a nonempty queue?",
+      tags: ["tail-invariant", "queue-fifo"],
+      options: [
+        { id: "a", text: "head = newNode; tail unchanged" },
+        { id: "b", text: "tail.next = newNode; tail = newNode" },
+        { id: "c", text: "head.next = null; tail unchanged" },
+        { id: "d", text: "tail = head; head = null" }
+      ],
+      answer: "b"
+    },
+    {
+      id: "dsa-ch4-q7",
+      prompt: "An array-backed stack doubles capacity when full. What is the amortized cost of push over a long sequence?",
+      tags: ["array-vs-linked", "amortized-resize"],
+      options: [
+        { id: "a", text: "O(1)" },
+        { id: "b", text: "Theta(log n)" },
+        { id: "c", text: "Theta(n) for every push" },
+        { id: "d", text: "Theta(n^2)" }
+      ],
+      answer: "a"
+    },
+    {
+      id: "dsa-ch4-q8",
+      prompt: "To insert newNode after node in a singly linked list, which safe pointer order preserves the old suffix?",
+      tags: ["linked-node", "insert-delete"],
+      options: [
+        { id: "a", text: "newNode.next = node.next; node.next = newNode" },
+        { id: "b", text: "node.next = newNode; newNode.next = node.next" },
+        { id: "c", text: "node = newNode; newNode = node.next" },
+        { id: "d", text: "head = null; tail = null" }
+      ],
+      answer: "a"
+    },
+    {
+      id: "dsa-ch4-q9",
+      prompt: "In a front-sentinel linked list, which statement is correct?",
+      tags: ["head-invariant", "sentinel-node", "array-vs-linked"],
+      options: [
+        { id: "a", text: "The sentinel is a real data node counted in size" },
+        { id: "b", text: "sentinel.next points to the first real node or null if empty" },
+        { id: "c", text: "A sentinel gives O(1) random access by index" },
+        { id: "d", text: "A sentinel removes the need for any pointers" }
+      ],
+      answer: "b"
+    },
+    {
+      id: "dsa-ch4-q10",
+      prompt: "An array-backed circular queue preserves FIFO order and doubles capacity when full. Which statement is correct?",
+      tags: ["queue-fifo", "array-vs-linked", "amortized-resize"],
+      options: [
+        { id: "a", text: "Dequeue returns the most recently enqueued item" },
+        { id: "b", text: "Wraparound changes FIFO into LIFO" },
+        { id: "c", text: "Enqueue/dequeue can be amortized O(1) while preserving FIFO" },
+        { id: "d", text: "Every enqueue must shift all elements left" }
+      ],
+      answer: "c"
+    }
+  ].map((question) => ({
+    ...question,
+    ...(metadata[question.id] || { kind: question.tags.length === 1 ? "single concept" : question.tags.length === 2 ? "mixed: two concepts" : "mixed: three concepts", targetConcept: question.tags[0], prereqsUsed: question.tags.slice(1), difficulty: question.tags.length, gateWeight: "medium" })
+  }));
+}
+
 function conditionalProbabilityReviewQuestions() {
   const metadata = {
     "cp-review-1": { targetConcept: "conditional-denominator", prereqsUsed: ["conditional-probability"], difficulty: 1, gateWeight: "high" },
@@ -14465,6 +15021,92 @@ function dsaArraysStringsBinarySearchConceptGraph() {
         label: "Edge case",
         prereqs: ["array-indexing"],
         repairMaterial: "Retest empty arrays, one-element arrays, duplicate values, and absent targets before mixed questions.",
+        gateWeight: "high"
+      }
+    }
+  };
+}
+
+function dsaLinkedListsStacksQueuesConceptGraph() {
+  return {
+    chapterId: "gate-da-dsa-linked-lists-stacks-queues",
+    chapterTitle: "DSA Chapter 4: Linked Lists, Stacks, and Queues",
+    gateWeight: "high",
+    fallbackConcepts: ["linked-node", "head-invariant", "tail-invariant", "stack-lifo", "queue-fifo"],
+    fallbackDifficultyMix: [1, 2, 2, 3],
+    fallbackInstruction: "Retest node diagrams and head/tail invariants first, then add stack/queue operation traces.",
+    stableNextAction: "Next: move to trees after linked-list pointer updates and stack/queue semantics are stable.",
+    nodes: {
+      "array-indexing": {
+        label: "Array indexing",
+        prereqs: [],
+        repairMaterial: "Review DSA Chapter 3.1 and distinguish indexed access from pointer traversal.",
+        gateWeight: "high"
+      },
+      "linked-node": {
+        label: "Linked node",
+        prereqs: [],
+        repairMaterial: "Review DSA Chapter 4.1 and draw value/next boxes for three-node lists.",
+        gateWeight: "high"
+      },
+      "head-invariant": {
+        label: "Head invariant",
+        prereqs: ["linked-node"],
+        repairMaterial: "Review DSA Chapter 4.2 and state what is reachable from head after every update.",
+        gateWeight: "high"
+      },
+      "tail-invariant": {
+        label: "Tail invariant",
+        prereqs: ["head-invariant"],
+        repairMaterial: "Review DSA Chapter 4.2 and test enqueue plus last-element dequeue.",
+        gateWeight: "high"
+      },
+      "sentinel-node": {
+        label: "Sentinel node",
+        prereqs: ["head-invariant"],
+        repairMaterial: "Review DSA Chapter 4.3 and state that sentinel is not data; sentinel.next is first real node or null.",
+        gateWeight: "high"
+      },
+      "insert-delete": {
+        label: "Insert/delete pointer update",
+        prereqs: ["linked-node", "head-invariant"],
+        repairMaterial: "Review DSA Chapter 4.1 and write pointer updates in safe order.",
+        gateWeight: "high"
+      },
+      "singly-vs-doubly": {
+        label: "Singly versus doubly linked list",
+        prereqs: ["linked-node"],
+        repairMaterial: "Review DSA Chapter 4.4 and compare next-only with prev-plus-next local rewiring.",
+        gateWeight: "medium"
+      },
+      "stack-lifo": {
+        label: "Stack LIFO",
+        prereqs: ["linked-node"],
+        repairMaterial: "Review DSA Chapter 4.5 and trace stack top-to-bottom after push/pop.",
+        gateWeight: "high"
+      },
+      "queue-fifo": {
+        label: "Queue FIFO",
+        prereqs: ["head-invariant", "tail-invariant"],
+        repairMaterial: "Review DSA Chapter 4.6 and trace front-to-back after enqueue/dequeue.",
+        gateWeight: "high"
+      },
+      "array-vs-linked": {
+        label: "Array versus linked tradeoff",
+        prereqs: ["array-indexing", "linked-node"],
+        repairMaterial: "Review DSA Chapter 4.7 and separate indexing, traversal, shifting, resizing, and pointer update costs.",
+        gateWeight: "high"
+      },
+      "amortized-resize": {
+        label: "Amortized resize",
+        prereqs: ["array-vs-linked"],
+        repairMaterial: "Review DSA Chapter 4.7 and compare one costly resize with average cost over many pushes.",
+        gateWeight: "medium"
+      },
+      "operation-semantics": {
+        label: "Operation semantics",
+        prereqs: ["stack-lifo", "queue-fifo"],
+        repairMaterial: "Retest stack LIFO versus queue FIFO with three operation traces.",
         gateWeight: "high"
       }
     }
@@ -21419,6 +22061,7 @@ function conceptGraphForSection(section) {
   if (section?.id === "gate-da-dsa-induction-recursion") return dsaInductionRecursionConceptGraph();
   if (section?.id === "gate-da-dsa-chapters-1-2-progression-gate") return dsaChaptersOneTwoProgressionGateConceptGraph();
   if (section?.id === "gate-da-dsa-arrays-strings-binary-search") return dsaArraysStringsBinarySearchConceptGraph();
+  if (section?.id === "gate-da-dsa-linked-lists-stacks-queues") return dsaLinkedListsStacksQueuesConceptGraph();
   if (section?.id === "gate-da-linear-algebra-vector-spaces-coordinates") return linearAlgebraVectorSpacesConceptGraph();
   if (section?.id === "gate-da-linear-algebra-transformations-matrices") return linearAlgebraTransformationsConceptGraph();
   if (section?.id === "gate-da-linear-algebra-rank-nullity-systems") return linearAlgebraRankNullityConceptGraph();
