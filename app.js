@@ -1,7 +1,7 @@
 const STORAGE_KEY = "learning-studio-data-v2";
 const LEGACY_STORAGE_KEYS = ["learning-studio-data-v1"];
 const SESSION_KEY = "aleph-session";
-const COURSE_PLAN_VERSION = "seeded-user-canonical-workspace-v116";
+const COURSE_PLAN_VERSION = "seeded-user-canonical-workspace-v117";
 const MAX_FEEDBACK_ATTACHMENT_BYTES = 3 * 1024 * 1024;
 const MAX_COMPRESSED_FEEDBACK_BYTES = 2400 * 1024;
 const MAX_FEEDBACK_PDF_PAGES = 6;
@@ -2562,7 +2562,7 @@ function buildGateDaBasicPlan(now, accountTypes, sections, user = basicGateDaUse
         startDate: monday,
         endDate: "2026-08-30",
         status: "active",
-        details: `GATE DA Basic plan surfaces: Subjects, Tasks, Schedule, Tests, Feedback, Resources, and Share. Recommended pace: study three subjects in parallel. Every 15 days, Aleph should generate an adaptive cumulative review quiz from prior performance, repeating missed concepts more often, reducing mastered concepts, and keeping high-weight exam topics in rotation. Current material build: Probability Chapters 1-10, Linear Algebra Chapters 1-12 plus a chapterless cumulative past-paper style drill, and DSA Chapters 1-6 with a progression gate before Chapter 3.${trialNote}`,
+        details: `GATE DA Basic plan surfaces: Subjects, Tasks, Schedule, Tests, Feedback, Resources, and Share. Recommended pace: study three subjects in parallel. Every 15 days, Aleph should generate an adaptive cumulative review quiz from prior performance, repeating missed concepts more often, reducing mastered concepts, and keeping high-weight exam topics in rotation. Current material build: Probability Chapters 1-10, Linear Algebra Chapters 1-12 plus a chapterless cumulative past-paper style drill, and DSA Chapters 1-7 with a progression gate before Chapter 3.${trialNote}`,
         updatedAt: now
       }
     ],
@@ -2904,6 +2904,8 @@ function dsaBasicScheduleItems(now, monday, sunday) {
   const weekFiveSunday = addDays(sunday, 28);
   const weekSixMonday = addDays(monday, 35);
   const weekSixSunday = addDays(sunday, 35);
+  const weekSevenMonday = addDays(monday, 42);
+  const weekSevenSunday = addDays(sunday, 42);
   return [
     {
       id: "schedule-dsa-chapter-1-study",
@@ -3094,6 +3096,36 @@ function dsaBasicScheduleItems(now, monday, sunday) {
       date: weekSixSunday,
       details: "Take the graph-backed objective review for sets/maps, hash tables, collision handling, load factor, ordered maps, and complexity tradeoffs.",
       updatedAt: now
+    },
+    {
+      id: "schedule-dsa-chapter-7-study",
+      title: "DSA Chapter 7: Graph Representation and Traversal",
+      week: 7,
+      subject: "Data Structures and Algorithms",
+      kind: "Study",
+      date: weekSevenMonday,
+      details: "Study graph vocabulary, directed versus undirected edges, degree counting, adjacency lists and matrices, BFS queue traces, DFS recursion/stack traces, visited invariants, connected components, and traversal complexity.",
+      updatedAt: now
+    },
+    {
+      id: "schedule-dsa-chapter-7-practice",
+      title: "DSA Chapter 7: Labelled Practice",
+      week: 7,
+      subject: "Data Structures and Algorithms",
+      kind: "Practice",
+      date: addDays(weekSevenMonday, 2),
+      details: "Solve representation, degree, BFS, DFS, connected-component, and traversal-complexity exercises before opening worked solutions.",
+      updatedAt: now
+    },
+    {
+      id: "schedule-dsa-chapter-7-review",
+      title: "DSA Chapter 7: Objective Review",
+      week: 7,
+      subject: "Data Structures and Algorithms",
+      kind: "Review",
+      date: weekSevenSunday,
+      details: "Take the graph-backed objective review for graph representation, BFS/DFS traces, visited invariants, connected components, and complexity.",
+      updatedAt: now
     }
   ];
 }
@@ -3105,6 +3137,7 @@ function dsaBasicTests(now, dsaSections, sunday) {
   const weekFourSunday = addDays(sunday, 21);
   const weekFiveSunday = addDays(sunday, 28);
   const weekSixSunday = addDays(sunday, 35);
+  const weekSevenSunday = addDays(sunday, 42);
   return [
     {
       id: "test-dsa-chapter-1-objective-review",
@@ -3170,6 +3203,15 @@ function dsaBasicTests(now, dsaSections, sunday) {
       sectionId: dsaSections[6]?.id,
       quizId: "quiz-dsa-chapter-6-objective-review",
       updatedAt: now
+    },
+    {
+      id: "test-dsa-chapter-7-objective-review",
+      title: "DSA Chapter 7 Objective Review",
+      date: weekSevenSunday,
+      details: "Objective review for graph vocabulary, adjacency list/matrix representation, directed and undirected degree, BFS and DFS traces, visited invariants, connected components, and traversal complexity.",
+      sectionId: dsaSections[7]?.id,
+      quizId: "quiz-dsa-chapter-7-objective-review",
+      updatedAt: now
     }
   ];
 }
@@ -3185,6 +3227,8 @@ function dsaBasicTasks(now, monday, sunday) {
   const weekFiveSunday = addDays(sunday, 28);
   const weekSixMonday = addDays(monday, 35);
   const weekSixSunday = addDays(sunday, 35);
+  const weekSevenMonday = addDays(monday, 42);
+  const weekSevenSunday = addDays(sunday, 42);
   return [
     {
       id: "task-dsa-chapter-1-read",
@@ -3394,6 +3438,39 @@ function dsaBasicTasks(now, monday, sunday) {
       done: false,
       details: "Submit the Chapter 6 objective quiz so Aleph logs set/map, hashing, collision, load-factor, and ordered-map gaps.",
       updatedAt: now
+    },
+    {
+      id: "task-dsa-chapter-7-read",
+      week: 7,
+      title: "DSA Ch 7: Read graph representation and traversal",
+      type: "Study",
+      date: weekSevenMonday,
+      status: "todo",
+      done: false,
+      details: "Open Subjects -> Data Structures and Algorithms -> Chapter 7 and study graph vocabulary, representations, BFS, DFS, connected components, and traversal complexity.",
+      updatedAt: now
+    },
+    {
+      id: "task-dsa-chapter-7-practice",
+      week: 7,
+      title: "DSA Ch 7: Solve graph traversal practice",
+      type: "Practice",
+      date: addDays(weekSevenMonday, 2),
+      status: "todo",
+      done: false,
+      details: "Attempt the labelled graph representation, BFS/DFS, connected-component, and complexity practice problems before opening worked solutions.",
+      updatedAt: now
+    },
+    {
+      id: "task-dsa-chapter-7-review",
+      week: 7,
+      title: "DSA Ch 7: Take objective review",
+      type: "Review",
+      date: weekSevenSunday,
+      status: "todo",
+      done: false,
+      details: "Submit the Chapter 7 objective quiz so Aleph logs graph representation, BFS, DFS, visited-invariant, component, and complexity gaps.",
+      updatedAt: now
     }
   ];
 }
@@ -3405,6 +3482,7 @@ function dsaBasicFeedback(now, sunday) {
   const weekFourSunday = addDays(sunday, 21);
   const weekFiveSunday = addDays(sunday, 28);
   const weekSixSunday = addDays(sunday, 35);
+  const weekSevenSunday = addDays(sunday, 42);
   return [
     {
       id: "feedback-dsa-chapter-1",
@@ -3454,6 +3532,13 @@ function dsaBasicFeedback(now, sunday) {
       date: weekSixSunday,
       details: "Review misses for confusing sets with maps, losing key uniqueness, using the wrong hash index, ignoring collisions, misreading load factor, assuming hashing is always worst-case O(1), forgetting rehash amortization, and choosing ordered maps when no order operation is needed.",
       updatedAt: now
+    },
+    {
+      id: "feedback-dsa-chapter-7",
+      title: "DSA Chapter 7 feedback focus",
+      date: weekSevenSunday,
+      details: "Review misses for mixing directed and undirected edges, wrong degree counts, choosing the wrong graph representation, marking visited too late, using stack order for BFS, missing DFS backtracking, double-counting connected components, and misstating O(V+E) versus O(V^2).",
+      updatedAt: now
     }
   ];
 }
@@ -3464,6 +3549,7 @@ function dsaBasicResources(now, monday) {
   const weekFourMonday = addDays(monday, 21);
   const weekFiveMonday = addDays(monday, 28);
   const weekSixMonday = addDays(monday, 35);
+  const weekSevenMonday = addDays(monday, 42);
   return [
     {
       id: "resource-dsa-algorithms-arrays-search",
@@ -3518,6 +3604,14 @@ function dsaBasicResources(now, monday) {
       title: "DSA Chapter 6: Set and Map Data Structures",
       date: weekSixMonday,
       details: "Open Subjects -> Data Structures and Algorithms to study dictionary ADTs, sets, maps, hashing, collision handling, load factors, ordered maps, and operation tradeoffs.",
+      link: "",
+      updatedAt: now
+    },
+    {
+      id: "resource-dsa-graph-representation-traversal",
+      title: "DSA Chapter 7: Graph Representation and Traversal",
+      date: weekSevenMonday,
+      details: "Open Subjects -> Data Structures and Algorithms to study graph representation, directed and undirected degree, BFS and DFS visited invariants, connected components, and traversal complexity.",
       link: "",
       updatedAt: now
     }
@@ -4748,6 +4842,179 @@ function gateDaDsaSections(updatedAt = new Date().toISOString()) {
         "Collisions require a policy such as chaining or probing.",
         "Hash tables give expected and amortized O(1) operations under assumptions, but worst-case behavior can be Theta(n).",
         "Ordered maps trade expected constant lookup for sorted-key operations with O(log n) balanced-tree behavior."
+      ],
+      updatedAt
+    },
+    {
+      id: "gate-da-dsa-graph-representation-traversal",
+      exam: "GATE DA",
+      accountTier: "Basic",
+      subject: "Data Structures and Algorithms",
+      chapter: "Chapter 7",
+      section: "7",
+      title: "Graph Representation and Traversal",
+      summary: "Graph vocabulary, directed and undirected edges, degree counting, adjacency lists and matrices, representation tradeoffs, BFS queue traces, DFS recursion/stack traces, visited invariants, connected components, and traversal complexity.",
+      sectionPreview: "Graphs model relationships: roads between cities, prerequisites between courses, links between pages, or dependencies between tasks. The key skill is to represent neighbors clearly and visit each vertex without getting trapped in cycles.",
+      previewActivity: "Vertices A,B,C,D have undirected edges AB, AC, BD, CD. Build the adjacency list. Starting BFS at A and scanning neighbors alphabetically, what is the queue after visiting A? Which vertices are at distance 1?",
+      chapterIntro: [
+        "Chapter 7 turns tree traversal into general graph traversal. Unlike a tree, a graph can have cycles and multiple ways to reach the same vertex.",
+        "That is why the visited invariant matters: once a vertex is discovered, do not rediscover it forever.",
+        "For GATE DA, expect compact tasks: build adjacency lists or matrices, count degrees, trace BFS or DFS, identify connected components, and choose O(V+E) or O(V^2) based on representation."
+      ],
+      bookSections: [
+        {
+          number: "7.1",
+          title: "Graph Vocabulary",
+          paragraphs: [
+            "A graph has vertices and edges. An edge connects two vertices.",
+            "In an undirected graph, edge AB can be used from A to B and from B to A. In a directed graph, edge A -> B has a direction.",
+            "A path is a sequence of vertices connected by edges. A cycle is a path that returns to a previously visited vertex."
+          ],
+          blocks: [
+            {
+              type: "principle",
+              title: "Directed edge rule",
+              body: "In a directed graph, A -> B is not the same as B -> A. Check direction before adding neighbors or counting degree."
+            },
+            {
+              type: "example",
+              title: "Example 7.1: degree",
+              body: "In an undirected graph with edges AB, AC, BC, degree(A)=2. In a directed graph, count indegree and outdegree separately."
+            }
+          ]
+        },
+        {
+          number: "7.2",
+          title: "Adjacency Lists",
+          paragraphs: [
+            "An adjacency list stores, for each vertex, the list of neighbors reachable by one edge.",
+            "For an undirected edge AB, add B to A's list and A to B's list. For a directed edge A -> B, add B only to A's list.",
+            "Adjacency lists are space efficient for sparse graphs: O(V+E) space."
+          ],
+          blocks: [
+            {
+              type: "example",
+              title: "Example 7.2: build a list",
+              body: "For undirected edges AB, AC, BD, the lists are A:[B,C], B:[A,D], C:[A], D:[B]."
+            }
+          ]
+        },
+        {
+          number: "7.3",
+          title: "Adjacency Matrices",
+          paragraphs: [
+            "An adjacency matrix uses a V by V table. Entry M[u][v] says whether edge u -> v exists.",
+            "Adjacency matrices make edge-existence checks O(1), but they use O(V^2) space even when the graph has few edges.",
+            "For undirected graphs, the matrix is symmetric. For directed graphs, it does not need to be symmetric."
+          ],
+          blocks: [
+            {
+              type: "warning",
+              title: "Sparse graph trap",
+              body: "If V is large and E is small, an adjacency matrix may waste space and force O(V) neighbor scans per vertex."
+            }
+          ]
+        },
+        {
+          number: "7.4",
+          title: "BFS: Breadth-First Search",
+          paragraphs: [
+            "BFS visits vertices by distance from the start vertex. It uses a queue.",
+            "The visited invariant is: when a vertex is enqueued, it is already marked visited. This prevents duplicate enqueues through different edges.",
+            "In an unweighted graph, BFS distance levels give shortest path length in number of edges from the start."
+          ],
+          blocks: [
+            {
+              type: "simulation",
+              title: "Simulation practice",
+              body: "For A:[B,C], B:[A,D], C:[A,D], D:[B,C], BFS from A enqueues B,C, then discovers D from B. Visit order with alphabetical neighbors is A,B,C,D."
+            }
+          ]
+        },
+        {
+          number: "7.5",
+          title: "DFS: Depth-First Search",
+          paragraphs: [
+            "DFS explores one path as far as possible before backtracking. It can be written recursively or with an explicit stack.",
+            "The visited invariant is the same: mark a vertex when it is discovered, before exploring its neighbors.",
+            "DFS is useful for reachability and connected components because one DFS from a start vertex visits exactly the vertices reachable from that start."
+          ],
+          blocks: [
+            {
+              type: "example",
+              title: "Example 7.3: recursive DFS",
+              body: "Starting at A in A:[B,C], B:[A,D], C:[A], D:[B], recursive DFS with alphabetical neighbors visits A,B,D, then backtracks to A and visits C."
+            }
+          ]
+        },
+        {
+          number: "7.6",
+          title: "Connected Components and Complexity",
+          paragraphs: [
+            "In an undirected graph, a connected component is a maximal group of vertices that can all reach each other.",
+            "To find all components, scan all vertices. Whenever you find an unvisited vertex, start BFS or DFS and mark that whole component.",
+            "With adjacency lists, BFS and DFS take O(V+E) time because each vertex is discovered once and each edge is scanned a constant number of times. With adjacency matrices, scanning all possible neighbors can cost O(V^2)."
+          ],
+          blocks: [
+            {
+              type: "strategy",
+              title: "Traversal cost routine",
+              body: "Name the representation first. Adjacency list traversal is O(V+E). Adjacency matrix traversal is usually O(V^2) because each row scan checks all possible neighbors."
+            }
+          ]
+        }
+      ],
+      concepts: [
+        { name: "Graph vocabulary", description: "Vertices, edges, paths, cycles, and reachability.", cue: "Name vertices and edges before tracing." },
+        { name: "Directed versus undirected", description: "Directed edges have orientation; undirected edges work both ways.", cue: "Add one neighbor entry for directed, two for undirected." },
+        { name: "Degree counting", description: "Undirected degree counts incident edges; directed graphs have indegree and outdegree.", cue: "Separate incoming from outgoing arrows." },
+        { name: "Adjacency list", description: "Stores each vertex's neighbors.", cue: "Good for sparse graphs and O(V+E) traversal." },
+        { name: "Adjacency matrix", description: "Stores edge existence in a V by V table.", cue: "O(1) edge check, O(V^2) space." },
+        { name: "Visited invariant", description: "A discovered vertex should not be discovered again.", cue: "Mark visited when enqueueing or first entering." },
+        { name: "BFS queue", description: "BFS uses FIFO order to visit increasing distance layers.", cue: "Trace queue front to back." },
+        { name: "DFS stack", description: "DFS uses recursion or a stack to go deep before backtracking.", cue: "Trace call stack or explicit stack." },
+        { name: "Connected component", description: "A maximal reachable group in an undirected graph.", cue: "Start a new traversal only from unvisited vertices." },
+        { name: "Traversal complexity", description: "Adjacency lists give O(V+E); matrices often give O(V^2).", cue: "Representation decides the scan cost." }
+      ],
+      techniques: [
+        { name: "Representation build", when: "given an edge list.", move: "Create adjacency entries carefully, respecting directed versus undirected edges." },
+        { name: "Matrix/list tradeoff", when: "choosing a representation.", move: "Compare O(1) edge check and O(V^2) space with O(V+E) sparse storage." },
+        { name: "BFS trace", when: "asked for BFS order or distances.", move: "Mark on enqueue, then maintain a FIFO queue." },
+        { name: "DFS trace", when: "asked for reachability or DFS order.", move: "Mark on discovery and follow one neighbor path before backtracking." },
+        { name: "Component scan", when: "finding connected components.", move: "Loop over all vertices and start traversal only at unvisited vertices." },
+        { name: "Complexity read", when: "asked for traversal runtime.", move: "Use O(V+E) for adjacency lists and O(V^2) for adjacency matrices." }
+      ],
+      practiceProblems: dsaGraphRepresentationTraversalProblems(),
+      implementationDrills: dsaGraphRepresentationTraversalImplementationDrills(),
+      reviewPrompts: [
+        "Is each edge directed or undirected?",
+        "What are the adjacency lists and matrix entries?",
+        "When exactly is a vertex marked visited in BFS or DFS?",
+        "What is the queue state after each BFS step?",
+        "What vertices are reached by one DFS from the start?",
+        "Does the representation make traversal O(V+E) or O(V^2)?"
+      ],
+      reviewQuiz: {
+        id: "quiz-dsa-chapter-7-objective-review",
+        title: "DSA Chapter 7 Objective Review",
+        instructions: "Complete this after studying graph vocabulary, adjacency lists and matrices, directed and undirected degree, BFS, DFS, visited invariants, connected components, and traversal complexity. The sampled mix is 5 single-topic checks, 3 two-topic mixes, and 2 three-topic synthesis questions, with extra DFS and adjacency-list complexity checks for GATE coverage.",
+        questions: dsaGraphRepresentationTraversalReviewQuestions()
+      },
+      readingQuestions: [
+        "How does an undirected edge change an adjacency list compared with a directed edge?",
+        "When is an adjacency matrix better than an adjacency list?",
+        "Why should BFS mark a vertex visited when it is enqueued?",
+        "Why does BFS give shortest edge-count distances in an unweighted graph?",
+        "How does DFS backtracking differ from BFS layer order?",
+        "Why is adjacency-list traversal O(V+E)?"
+      ],
+      chapterSummary: [
+        "Graphs store relationships through vertices and edges.",
+        "Directed edges and undirected edges change neighbor lists and degree counts.",
+        "Adjacency lists are compact for sparse graphs; adjacency matrices make edge checks direct but cost O(V^2) space.",
+        "BFS uses a queue and visits increasing distance layers.",
+        "DFS uses recursion or a stack and explores deeply before backtracking.",
+        "Visited marking prevents cycles from causing repeated work; representation determines traversal complexity."
       ],
       updatedAt
     }
@@ -15397,6 +15664,292 @@ function dsaSetsMapsReviewQuestions() {
   }));
 }
 
+function dsaGraphRepresentationTraversalProblems() {
+  return [
+    {
+      title: "Exercise 1: Build an Undirected Adjacency List",
+      prompt: "Vertices are A,B,C,D. Undirected edges are AB, AC, BD, CD. Write the adjacency list with neighbors in alphabetical order.",
+      solution: "For each undirected edge, add both directions. A:[B,C], B:[A,D], C:[A,D], D:[B,C].",
+      tags: ["graph-vocabulary", "directed-undirected", "adjacency-list"]
+    },
+    {
+      title: "Exercise 2: Directed Degree Count",
+      prompt: "Directed edges are A->B, A->C, C->A, D->C. Find indegree and outdegree of A and C.",
+      solution: "A has outgoing edges to B and C, so outdegree(A)=2. A has incoming edge C->A, so indegree(A)=1. C has outgoing edge C->A, so outdegree(C)=1. C has incoming edges A->C and D->C, so indegree(C)=2.",
+      tags: ["directed-undirected", "degree-counting"]
+    },
+    {
+      title: "Exercise 3: Adjacency Matrix Entries",
+      prompt: "For directed edges A->B and C->A, using vertex order A,B,C, which matrix entries are 1?",
+      solution: "M[A][B]=1 for A->B and M[C][A]=1 for C->A. In index order A=0,B=1,C=2, those are M[0][1]=1 and M[2][0]=1. The reverse entries are not automatically 1 because the graph is directed.",
+      tags: ["adjacency-matrix", "directed-undirected"]
+    },
+    {
+      title: "Exercise 4: Representation Tradeoff",
+      prompt: "A graph has V=1000 vertices and E=1200 undirected edges. Which representation is usually better for traversal memory: adjacency list or matrix? Why?",
+      solution: "Adjacency list is usually better because space is O(V+E), around the size of vertices plus edge entries. An adjacency matrix uses O(V^2)=1,000,000 entries, which is wasteful for this sparse graph.",
+      tags: ["adjacency-list", "adjacency-matrix", "representation-tradeoff"]
+    },
+    {
+      title: "Exercise 5: BFS Queue Trace",
+      prompt: "Graph lists: A:[B,C], B:[A,D], C:[A,D], D:[B,C]. Run BFS from A with alphabetical neighbor order. Give visit order and distances.",
+      solution: "Start A visited, queue [A], dist(A)=0. Visit A, enqueue B,C with distance 1. Visit B, enqueue D with distance 2. Visit C, D already discovered. Visit D. Order A,B,C,D. Distances: A:0, B:1, C:1, D:2.",
+      tags: ["bfs-queue", "bfs-distance", "visited-invariant"]
+    },
+    {
+      title: "Exercise 6: DFS Recursion Trace",
+      prompt: "Graph lists: A:[B,C], B:[A,D], C:[A], D:[B]. Run recursive DFS from A with alphabetical neighbor order. Give first-discovery order.",
+      solution: "Discover A, then B, then D. D has only B already visited, so backtrack to B then A. Next unvisited neighbor of A is C, so discover C. Order A,B,D,C.",
+      tags: ["dfs-stack", "visited-invariant"]
+    },
+    {
+      title: "Exercise 7: Connected Components",
+      prompt: "Undirected graph vertices A,B,C,D,E with edges AB and CD. How many connected components are there, and what are they?",
+      solution: "Components are {A,B}, {C,D}, and {E}. There are 3 components. E is isolated, so it is a component by itself.",
+      tags: ["connected-components", "visited-invariant"]
+    },
+    {
+      title: "Exercise 8: Visited Timing",
+      prompt: "In BFS, why should a vertex be marked visited when it is enqueued rather than when it is dequeued?",
+      solution: "Marking on enqueue prevents the same vertex from being enqueued multiple times through different neighbors. If marking waits until dequeue, parallel paths can add duplicate queue entries and create extra work.",
+      tags: ["visited-invariant", "bfs-queue"]
+    },
+    {
+      title: "Exercise 9: Traversal Complexity",
+      prompt: "A graph with V vertices and E edges is stored as adjacency lists. Why does BFS or DFS take O(V+E)?",
+      solution: "Each vertex is discovered at most once because of visited marking. Each adjacency-list entry is scanned a constant number of times. Thus total work is proportional to vertices plus edge entries, O(V+E).",
+      tags: ["adjacency-list", "visited-invariant", "traversal-complexity"]
+    },
+    {
+      title: "Exercise 10: Matrix Scan Cost",
+      prompt: "A graph is stored as an adjacency matrix. Why can traversal cost O(V^2) even if E is small?",
+      solution: "To find neighbors of a vertex in a matrix, the algorithm scans that vertex's entire row of V possible neighbors. Across V vertices, this can scan V rows of length V, giving O(V^2) checks even when few edges exist.",
+      tags: ["adjacency-matrix", "matrix-complexity"]
+    }
+  ];
+}
+
+function dsaGraphRepresentationTraversalImplementationDrills() {
+  return [
+    {
+      title: "Edge List to Adjacency List",
+      source: "Original GATE-style representation drill",
+      difficulty: "Easy",
+      focus: "directed versus undirected neighbor entries",
+      url: "",
+      targetTime: "O(V+E) construction",
+      reason: "Representation mistakes poison every later traversal trace.",
+      writeup: "Build both directed and undirected versions from the same edge list and compare entries."
+    },
+    {
+      title: "Adjacency Matrix Builder",
+      source: "Open Data Structures-style graph representation drill",
+      difficulty: "Easy",
+      focus: "matrix entries and symmetry",
+      url: "https://opendatastructures.org/",
+      targetTime: "O(V^2) initialization, O(1) edge check",
+      reason: "Trains exact row/column interpretation and directed-edge asymmetry.",
+      writeup: "Use a fixed vertex order and mark only the entries implied by the edges."
+    },
+    {
+      title: "BFS Queue and Distance Trace",
+      source: "CS 61B-style traversal trace",
+      difficulty: "Medium",
+      focus: "FIFO queue, visited-on-enqueue, distance levels",
+      url: "https://sp25.datastructur.es/",
+      targetTime: "O(V+E) with adjacency lists",
+      reason: "BFS errors usually come from marking visited too late or using stack-like order.",
+      writeup: "Show queue, visited set, and distance map after each dequeue."
+    },
+    {
+      title: "DFS Recursion and Components",
+      source: "MIT/Erickson-style reachability reasoning",
+      difficulty: "Medium",
+      focus: "recursive stack, backtracking, connected components",
+      url: "https://ocw.mit.edu/courses/6-006-introduction-to-algorithms-spring-2020/",
+      targetTime: "O(V+E) with adjacency lists",
+      reason: "Connects traversal order to the invariant that one DFS marks one reachable region.",
+      writeup: "Trace discovery order and component id for every vertex."
+    },
+    {
+      title: "Representation Complexity Comparator",
+      source: "Original GATE-style tradeoff drill",
+      difficulty: "Medium",
+      focus: "O(V+E), O(V^2), O(1) edge checks",
+      url: "",
+      targetTime: "Constant-time classification after reading V, E, and operation type",
+      reason: "Forces representation-aware complexity instead of memorized traversal costs.",
+      writeup: "For sparse and dense examples, choose list or matrix and justify time and space."
+    }
+  ];
+}
+
+function dsaGraphRepresentationTraversalReviewQuestions() {
+  const metadata = {
+    "dsa-ch7-q1": { kind: "single concept", targetConcept: "bfs-queue", prereqsUsed: ["visited-invariant"], difficulty: 1, gateWeight: "high", expectedFirstStep: "Use FIFO order and mark neighbors when enqueued.", commonMistake: "Using DFS stack order or marking visited too late.", answerCheck: "BFS from A visits A,B,C,D with given lists." },
+    "dsa-ch7-q2": { kind: "single concept", targetConcept: "matrix-complexity", prereqsUsed: ["adjacency-matrix"], difficulty: 2, gateWeight: "medium", expectedFirstStep: "Count row scans in a V by V matrix.", commonMistake: "Claiming O(V+E) for matrix traversal without checking representation.", answerCheck: "Matrix traversal can be O(V^2)." },
+    "dsa-ch7-q3": { kind: "single concept", targetConcept: "connected-components", prereqsUsed: ["visited-invariant"], difficulty: 1, gateWeight: "high", expectedFirstStep: "Start a new traversal only from an unvisited vertex.", commonMistake: "Forgetting isolated vertices are components.", answerCheck: "AB, CD, and E give 3 components." },
+    "dsa-ch7-q4": { kind: "single concept", targetConcept: "graph-vocabulary", prereqsUsed: [], difficulty: 1, gateWeight: "high", expectedFirstStep: "Identify vertices and edges.", commonMistake: "Treating a path or cycle as a vertex.", answerCheck: "A graph has vertices and edges." },
+    "dsa-ch7-q5": { kind: "single concept", targetConcept: "representation-tradeoff", prereqsUsed: ["adjacency-list", "adjacency-matrix"], difficulty: 2, gateWeight: "high", expectedFirstStep: "Compare graph density and operation need.", commonMistake: "Always choosing a matrix.", answerCheck: "Sparse traversal favors adjacency lists." },
+    "dsa-ch7-q6": { kind: "mixed: two concepts", targetConcept: "representation-tradeoff", prereqsUsed: ["adjacency-matrix"], difficulty: 2, gateWeight: "high", expectedFirstStep: "Use matrix O(1) edge check versus O(V^2) space.", commonMistake: "Ignoring memory cost.", answerCheck: "Matrix is best for frequent edge-existence checks on dense graphs." },
+    "dsa-ch7-q7": { kind: "mixed: two concepts", targetConcept: "bfs-queue", prereqsUsed: ["visited-invariant"], difficulty: 2, gateWeight: "high", expectedFirstStep: "Mark discovered vertices as visited before enqueue duplicates can occur.", commonMistake: "Marking only on dequeue.", answerCheck: "Visited-on-enqueue prevents duplicate queue entries." },
+    "dsa-ch7-q8": { kind: "mixed: two concepts", targetConcept: "matrix-complexity", prereqsUsed: ["adjacency-matrix"], difficulty: 2, gateWeight: "high", expectedFirstStep: "Scan possible neighbors in each matrix row.", commonMistake: "Counting only actual edges.", answerCheck: "V rows times V columns gives O(V^2)." },
+    "dsa-ch7-q9": { kind: "mixed: three concepts", targetConcept: "matrix-complexity", prereqsUsed: ["graph-vocabulary", "adjacency-matrix"], difficulty: 3, gateWeight: "high", expectedFirstStep: "Map vertices to matrix rows/columns and count full row scans.", commonMistake: "Using adjacency-list complexity on a matrix.", answerCheck: "Traversal checks every possible vertex neighbor." },
+    "dsa-ch7-q10": { kind: "mixed: three concepts", targetConcept: "degree-counting", prereqsUsed: ["graph-vocabulary", "adjacency-list"], difficulty: 3, gateWeight: "high", expectedFirstStep: "For undirected graphs, each edge contributes to both endpoint lists.", commonMistake: "Counting each undirected edge only once in total degree.", answerCheck: "Sum of degrees is 2E." },
+    "dsa-ch7-q11": { kind: "mixed: two concepts", targetConcept: "dfs-stack", prereqsUsed: ["visited-invariant"], difficulty: 2, gateWeight: "high", expectedFirstStep: "Follow one recursive path before backtracking.", commonMistake: "Tracing DFS as BFS layers.", answerCheck: "DFS order is A,B,D,C for the given neighbor order." },
+    "dsa-ch7-q12": { kind: "mixed: two concepts", targetConcept: "traversal-complexity", prereqsUsed: ["adjacency-list", "visited-invariant"], difficulty: 2, gateWeight: "high", expectedFirstStep: "Count each vertex discovery and each adjacency entry scan once.", commonMistake: "Multiplying V by E.", answerCheck: "Adjacency-list BFS/DFS is O(V+E)." }
+  };
+  return [
+    {
+      id: "dsa-ch7-q1",
+      prompt: "Graph lists are A:[B,C], B:[A,D], C:[A,D], D:[B,C]. BFS starts at A with alphabetical neighbors. What is the visit order?",
+      tags: ["bfs-queue", "visited-invariant"],
+      options: [
+        { id: "a", text: "A,B,C,D" },
+        { id: "b", text: "A,B,D,C" },
+        { id: "c", text: "D,C,B,A" },
+        { id: "d", text: "A,D,B,C" }
+      ],
+      answer: "a"
+    },
+    {
+      id: "dsa-ch7-q2",
+      prompt: "A graph is stored as an adjacency matrix. Why can traversal take O(V^2)?",
+      tags: ["matrix-complexity", "adjacency-matrix"],
+      options: [
+        { id: "a", text: "Each matrix row may scan all V possible neighbors" },
+        { id: "b", text: "BFS never uses a queue" },
+        { id: "c", text: "There are no vertices in a matrix" },
+        { id: "d", text: "Each edge is scanned exactly zero times" }
+      ],
+      answer: "a"
+    },
+    {
+      id: "dsa-ch7-q3",
+      prompt: "Undirected graph vertices A,B,C,D,E have edges AB and CD. How many connected components are there?",
+      tags: ["connected-components", "visited-invariant"],
+      options: [
+        { id: "a", text: "1" },
+        { id: "b", text: "2" },
+        { id: "c", text: "3" },
+        { id: "d", text: "5" }
+      ],
+      answer: "c"
+    },
+    {
+      id: "dsa-ch7-q4",
+      prompt: "What are the two basic object types in a graph?",
+      tags: ["graph-vocabulary"],
+      options: [
+        { id: "a", text: "Vertices and edges" },
+        { id: "b", text: "Stacks and queues" },
+        { id: "c", text: "Keys and values only" },
+        { id: "d", text: "Rows and columns only" }
+      ],
+      answer: "a"
+    },
+    {
+      id: "dsa-ch7-q5",
+      prompt: "For a sparse graph where traversal is the main operation, which representation is usually more space efficient?",
+      tags: ["representation-tradeoff", "adjacency-list", "adjacency-matrix"],
+      options: [
+        { id: "a", text: "Adjacency list" },
+        { id: "b", text: "Adjacency matrix always" },
+        { id: "c", text: "A heap array" },
+        { id: "d", text: "A stack with no edges" }
+      ],
+      answer: "a"
+    },
+    {
+      id: "dsa-ch7-q6",
+      prompt: "Which advantage is specific to an adjacency matrix?",
+      tags: ["adjacency-matrix", "representation-tradeoff"],
+      options: [
+        { id: "a", text: "O(1) edge-existence check M[u][v]" },
+        { id: "b", text: "Always O(V+E) space" },
+        { id: "c", text: "No need to store vertices" },
+        { id: "d", text: "BFS becomes impossible" }
+      ],
+      answer: "a"
+    },
+    {
+      id: "dsa-ch7-q7",
+      prompt: "In BFS, when should a newly discovered vertex be marked visited to avoid duplicate enqueues?",
+      tags: ["visited-invariant", "bfs-queue"],
+      options: [
+        { id: "a", text: "When it is enqueued" },
+        { id: "b", text: "Only after the entire BFS finishes" },
+        { id: "c", text: "Never" },
+        { id: "d", text: "Only when it is discovered for the third time" }
+      ],
+      answer: "a"
+    },
+    {
+      id: "dsa-ch7-q8",
+      prompt: "Using an adjacency matrix, how many possible neighbors may need checking for one vertex?",
+      tags: ["adjacency-matrix", "matrix-complexity"],
+      options: [
+        { id: "a", text: "1 always" },
+        { id: "b", text: "V" },
+        { id: "c", text: "E^2 always" },
+        { id: "d", text: "0 always" }
+      ],
+      answer: "b"
+    },
+    {
+      id: "dsa-ch7-q9",
+      prompt: "A traversal over an adjacency matrix visits every vertex and scans each vertex row. What is the runtime in terms of V?",
+      tags: ["graph-vocabulary", "adjacency-matrix", "matrix-complexity"],
+      options: [
+        { id: "a", text: "O(1)" },
+        { id: "b", text: "O(log V)" },
+        { id: "c", text: "O(V^2)" },
+        { id: "d", text: "O(E) regardless of matrix size" }
+      ],
+      answer: "c"
+    },
+    {
+      id: "dsa-ch7-q10",
+      prompt: "In an undirected graph with E edges, what is the sum of all vertex degrees?",
+      tags: ["graph-vocabulary", "degree-counting", "adjacency-list"],
+      options: [
+        { id: "a", text: "E" },
+        { id: "b", text: "2E" },
+        { id: "c", text: "V" },
+        { id: "d", text: "V^2" }
+      ],
+      answer: "b"
+    },
+    {
+      id: "dsa-ch7-q11",
+      prompt: "Graph lists are A:[B,C], B:[A,D], C:[A], D:[B]. Recursive DFS starts at A with alphabetical neighbors. What is first-discovery order?",
+      tags: ["dfs-stack", "visited-invariant"],
+      options: [
+        { id: "a", text: "A,B,D,C" },
+        { id: "b", text: "A,B,C,D" },
+        { id: "c", text: "D,B,C,A" },
+        { id: "d", text: "A,C,D,B" }
+      ],
+      answer: "a"
+    },
+    {
+      id: "dsa-ch7-q12",
+      prompt: "With adjacency lists and correct visited marking, what is the standard time for BFS or DFS?",
+      tags: ["adjacency-list", "visited-invariant", "traversal-complexity"],
+      options: [
+        { id: "a", text: "O(V+E)" },
+        { id: "b", text: "O(V^3)" },
+        { id: "c", text: "O(1) for every graph" },
+        { id: "d", text: "O(E^2) always" }
+      ],
+      answer: "a"
+    }
+  ].map((question) => ({
+    ...question,
+    ...(metadata[question.id] || { kind: question.tags.length === 1 ? "single concept" : question.tags.length === 2 ? "mixed: two concepts" : "mixed: three concepts", targetConcept: question.tags[0], prereqsUsed: question.tags.slice(1), difficulty: question.tags.length, gateWeight: "medium" })
+  }));
+}
+
 function conditionalProbabilityReviewQuestions() {
   const metadata = {
     "cp-review-1": { targetConcept: "conditional-denominator", prereqsUsed: ["conditional-probability"], difficulty: 1, gateWeight: "high" },
@@ -16461,6 +17014,122 @@ function dsaSetsMapsConceptGraph() {
         prereqs: ["load-factor", "bst-map-complexity"],
         repairMaterial: "Review DSA Chapter 6.6 and choose hash table for equality lookup or ordered map for sorted/range operations.",
         gateWeight: "high"
+      }
+    }
+  };
+}
+
+function dsaGraphRepresentationTraversalConceptGraph() {
+  return {
+    chapterId: "gate-da-dsa-graph-representation-traversal",
+    chapterTitle: "DSA Chapter 7: Graph Representation and Traversal",
+    gateWeight: "high",
+    fallbackConcepts: ["graph-vocabulary", "directed-undirected", "adjacency-list", "visited-invariant", "bfs-queue"],
+    fallbackDifficultyMix: [1, 2, 2, 3],
+    fallbackInstruction: "Retest graph vocabulary and representation building first, then add BFS/DFS visited traces, connected components, and complexity reads.",
+    stableNextAction: "Next: move to graph algorithms after graph representation, BFS, DFS, visited invariants, connected components, and traversal complexity are stable.",
+    nodes: {
+      "array-indexing": {
+        label: "Array indexing",
+        prereqs: [],
+        repairMaterial: "Review DSA Chapter 3.1 and use fixed vertex order when reading matrix row and column indexes.",
+        gateWeight: "high"
+      },
+      "queue-fifo": {
+        label: "Queue FIFO",
+        prereqs: [],
+        repairMaterial: "Review DSA Chapter 4.6 and trace front-to-back queue state before retrying BFS.",
+        gateWeight: "high"
+      },
+      "set-vs-map": {
+        label: "Set versus map",
+        prereqs: [],
+        repairMaterial: "Review DSA Chapter 6.1 and use a visited set for discovered vertices.",
+        gateWeight: "high"
+      },
+      "recursive-tree-invariant": {
+        label: "Recursive tree invariant",
+        prereqs: [],
+        repairMaterial: "Review DSA Chapter 5.2 and treat recursive DFS as solving reachability from the current vertex.",
+        gateWeight: "high"
+      },
+      "graph-vocabulary": {
+        label: "Graph vocabulary",
+        prereqs: [],
+        repairMaterial: "Review DSA Chapter 7.1 and label vertices, edges, paths, cycles, and reachability on three small graphs.",
+        gateWeight: "high"
+      },
+      "directed-undirected": {
+        label: "Directed versus undirected",
+        prereqs: ["graph-vocabulary"],
+        repairMaterial: "Review DSA Chapter 7.1 and build both directed and undirected neighbor lists from the same edge list.",
+        gateWeight: "high"
+      },
+      "degree-counting": {
+        label: "Degree counting",
+        prereqs: ["directed-undirected"],
+        repairMaterial: "Review DSA Chapter 7.1 and compute undirected degree, indegree, and outdegree separately.",
+        gateWeight: "high"
+      },
+      "adjacency-list": {
+        label: "Adjacency list",
+        prereqs: ["graph-vocabulary", "array-indexing"],
+        repairMaterial: "Review DSA Chapter 7.2 and write one sorted neighbor list per vertex.",
+        gateWeight: "high"
+      },
+      "adjacency-matrix": {
+        label: "Adjacency matrix",
+        prereqs: ["graph-vocabulary", "array-indexing"],
+        repairMaterial: "Review DSA Chapter 7.3 and mark M[u][v] using a fixed vertex order.",
+        gateWeight: "high"
+      },
+      "representation-tradeoff": {
+        label: "Representation tradeoff",
+        prereqs: ["adjacency-list", "adjacency-matrix"],
+        repairMaterial: "Review DSA Chapter 7.2-7.3 and compare sparse traversal, dense graphs, edge checks, and space.",
+        gateWeight: "high"
+      },
+      "visited-invariant": {
+        label: "Visited invariant",
+        prereqs: ["set-vs-map"],
+        repairMaterial: "Review DSA Chapter 7.4 and mark vertices visited when discovered, not after repeated rediscovery.",
+        gateWeight: "high"
+      },
+      "bfs-queue": {
+        label: "BFS queue trace",
+        prereqs: ["queue-fifo", "visited-invariant"],
+        repairMaterial: "Review DSA Chapter 7.4 and write queue, visited set, and parent/distance after each dequeue.",
+        gateWeight: "high"
+      },
+      "bfs-distance": {
+        label: "BFS distance levels",
+        prereqs: ["bfs-queue"],
+        repairMaterial: "Review DSA Chapter 7.4 and group vertices by distance from the start in an unweighted graph.",
+        gateWeight: "high"
+      },
+      "dfs-stack": {
+        label: "DFS stack recursion",
+        prereqs: ["recursive-tree-invariant", "visited-invariant"],
+        repairMaterial: "Review DSA Chapter 7.5 and trace recursive calls plus backtracking order.",
+        gateWeight: "high"
+      },
+      "connected-components": {
+        label: "Connected components",
+        prereqs: ["visited-invariant", "dfs-stack"],
+        repairMaterial: "Review DSA Chapter 7.6 and start a new DFS/BFS only from unvisited vertices.",
+        gateWeight: "high"
+      },
+      "traversal-complexity": {
+        label: "Traversal complexity",
+        prereqs: ["adjacency-list", "visited-invariant"],
+        repairMaterial: "Review DSA Chapter 7.6 and explain why each vertex and adjacency-list entry is scanned O(1) times.",
+        gateWeight: "high"
+      },
+      "matrix-complexity": {
+        label: "Matrix traversal complexity",
+        prereqs: ["adjacency-matrix"],
+        repairMaterial: "Review DSA Chapter 7.3 and count V possible-neighbor checks per row.",
+        gateWeight: "medium"
       }
     }
   };
@@ -23417,6 +24086,7 @@ function conceptGraphForSection(section) {
   if (section?.id === "gate-da-dsa-linked-lists-stacks-queues") return dsaLinkedListsStacksQueuesConceptGraph();
   if (section?.id === "gate-da-dsa-trees") return dsaTreesConceptGraph();
   if (section?.id === "gate-da-dsa-sets-maps") return dsaSetsMapsConceptGraph();
+  if (section?.id === "gate-da-dsa-graph-representation-traversal") return dsaGraphRepresentationTraversalConceptGraph();
   if (section?.id === "gate-da-linear-algebra-vector-spaces-coordinates") return linearAlgebraVectorSpacesConceptGraph();
   if (section?.id === "gate-da-linear-algebra-transformations-matrices") return linearAlgebraTransformationsConceptGraph();
   if (section?.id === "gate-da-linear-algebra-rank-nullity-systems") return linearAlgebraRankNullityConceptGraph();
