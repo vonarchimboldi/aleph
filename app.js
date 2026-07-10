@@ -1,7 +1,7 @@
 const STORAGE_KEY = "learning-studio-data-v2";
 const LEGACY_STORAGE_KEYS = ["learning-studio-data-v1"];
 const SESSION_KEY = "aleph-session";
-const COURSE_PLAN_VERSION = "seeded-user-canonical-workspace-v115";
+const COURSE_PLAN_VERSION = "seeded-user-canonical-workspace-v116";
 const MAX_FEEDBACK_ATTACHMENT_BYTES = 3 * 1024 * 1024;
 const MAX_COMPRESSED_FEEDBACK_BYTES = 2400 * 1024;
 const MAX_FEEDBACK_PDF_PAGES = 6;
@@ -2562,7 +2562,7 @@ function buildGateDaBasicPlan(now, accountTypes, sections, user = basicGateDaUse
         startDate: monday,
         endDate: "2026-08-30",
         status: "active",
-        details: `GATE DA Basic plan surfaces: Subjects, Tasks, Schedule, Tests, Feedback, Resources, and Share. Recommended pace: study three subjects in parallel. Every 15 days, Aleph should generate an adaptive cumulative review quiz from prior performance, repeating missed concepts more often, reducing mastered concepts, and keeping high-weight exam topics in rotation. Current material build: Probability Chapters 1-10, Linear Algebra Chapters 1-12 plus a chapterless cumulative past-paper style drill, and DSA Chapters 1-5 with a progression gate before Chapter 3.${trialNote}`,
+        details: `GATE DA Basic plan surfaces: Subjects, Tasks, Schedule, Tests, Feedback, Resources, and Share. Recommended pace: study three subjects in parallel. Every 15 days, Aleph should generate an adaptive cumulative review quiz from prior performance, repeating missed concepts more often, reducing mastered concepts, and keeping high-weight exam topics in rotation. Current material build: Probability Chapters 1-10, Linear Algebra Chapters 1-12 plus a chapterless cumulative past-paper style drill, and DSA Chapters 1-6 with a progression gate before Chapter 3.${trialNote}`,
         updatedAt: now
       }
     ],
@@ -2902,6 +2902,8 @@ function dsaBasicScheduleItems(now, monday, sunday) {
   const weekFourSunday = addDays(sunday, 21);
   const weekFiveMonday = addDays(monday, 28);
   const weekFiveSunday = addDays(sunday, 28);
+  const weekSixMonday = addDays(monday, 35);
+  const weekSixSunday = addDays(sunday, 35);
   return [
     {
       id: "schedule-dsa-chapter-1-study",
@@ -3062,6 +3064,36 @@ function dsaBasicScheduleItems(now, monday, sunday) {
       date: weekFiveSunday,
       details: "Take the graph-backed objective review for tree vocabulary, recursive traversals, height complexity, BST search, and heap invariants.",
       updatedAt: now
+    },
+    {
+      id: "schedule-dsa-chapter-6-study",
+      title: "DSA Chapter 6: Set and Map Data Structures",
+      week: 6,
+      subject: "Data Structures and Algorithms",
+      kind: "Study",
+      date: weekSixMonday,
+      details: "Study dictionary ADTs, set-versus-map semantics, key-value invariants, hash functions, hash indexes, collisions, chaining, open addressing, load factor, rehashing, ordered maps, and operation tradeoffs.",
+      updatedAt: now
+    },
+    {
+      id: "schedule-dsa-chapter-6-practice",
+      title: "DSA Chapter 6: Labelled Practice",
+      week: 6,
+      subject: "Data Structures and Algorithms",
+      kind: "Practice",
+      date: addDays(weekSixMonday, 2),
+      details: "Solve dictionary, hash-table, collision, load-factor, ordered-map, and tradeoff exercises before opening worked solutions.",
+      updatedAt: now
+    },
+    {
+      id: "schedule-dsa-chapter-6-review",
+      title: "DSA Chapter 6: Objective Review",
+      week: 6,
+      subject: "Data Structures and Algorithms",
+      kind: "Review",
+      date: weekSixSunday,
+      details: "Take the graph-backed objective review for sets/maps, hash tables, collision handling, load factor, ordered maps, and complexity tradeoffs.",
+      updatedAt: now
     }
   ];
 }
@@ -3072,6 +3104,7 @@ function dsaBasicTests(now, dsaSections, sunday) {
   const weekThreeSunday = addDays(sunday, 14);
   const weekFourSunday = addDays(sunday, 21);
   const weekFiveSunday = addDays(sunday, 28);
+  const weekSixSunday = addDays(sunday, 35);
   return [
     {
       id: "test-dsa-chapter-1-objective-review",
@@ -3128,6 +3161,15 @@ function dsaBasicTests(now, dsaSections, sunday) {
       sectionId: dsaSections[5]?.id,
       quizId: "quiz-dsa-chapter-5-objective-review",
       updatedAt: now
+    },
+    {
+      id: "test-dsa-chapter-6-objective-review",
+      title: "DSA Chapter 6 Objective Review",
+      date: weekSixSunday,
+      details: "Objective review for dictionary ADTs, sets and maps, key-value invariants, hashing, collisions, load factor, rehashing, ordered maps, and operation-complexity tradeoffs.",
+      sectionId: dsaSections[6]?.id,
+      quizId: "quiz-dsa-chapter-6-objective-review",
+      updatedAt: now
     }
   ];
 }
@@ -3141,6 +3183,8 @@ function dsaBasicTasks(now, monday, sunday) {
   const weekFourSunday = addDays(sunday, 21);
   const weekFiveMonday = addDays(monday, 28);
   const weekFiveSunday = addDays(sunday, 28);
+  const weekSixMonday = addDays(monday, 35);
+  const weekSixSunday = addDays(sunday, 35);
   return [
     {
       id: "task-dsa-chapter-1-read",
@@ -3317,6 +3361,39 @@ function dsaBasicTasks(now, monday, sunday) {
       done: false,
       details: "Submit the Chapter 5 objective quiz so Aleph logs traversal, height, BST, and heap gaps.",
       updatedAt: now
+    },
+    {
+      id: "task-dsa-chapter-6-read",
+      week: 6,
+      title: "DSA Ch 6: Read sets and maps",
+      type: "Study",
+      date: weekSixMonday,
+      status: "todo",
+      done: false,
+      details: "Open Subjects -> Data Structures and Algorithms -> Chapter 6 and study dictionary ADTs, hash tables, collisions, load factor, ordered maps, and tradeoffs.",
+      updatedAt: now
+    },
+    {
+      id: "task-dsa-chapter-6-practice",
+      week: 6,
+      title: "DSA Ch 6: Solve set/map practice",
+      type: "Practice",
+      date: addDays(weekSixMonday, 2),
+      status: "todo",
+      done: false,
+      details: "Attempt the labelled dictionary, hashing, collision, load-factor, and ordered-map practice problems before opening worked solutions.",
+      updatedAt: now
+    },
+    {
+      id: "task-dsa-chapter-6-review",
+      week: 6,
+      title: "DSA Ch 6: Take objective review",
+      type: "Review",
+      date: weekSixSunday,
+      status: "todo",
+      done: false,
+      details: "Submit the Chapter 6 objective quiz so Aleph logs set/map, hashing, collision, load-factor, and ordered-map gaps.",
+      updatedAt: now
     }
   ];
 }
@@ -3327,6 +3404,7 @@ function dsaBasicFeedback(now, sunday) {
   const weekThreeSunday = addDays(sunday, 14);
   const weekFourSunday = addDays(sunday, 21);
   const weekFiveSunday = addDays(sunday, 28);
+  const weekSixSunday = addDays(sunday, 35);
   return [
     {
       id: "feedback-dsa-chapter-1",
@@ -3369,6 +3447,13 @@ function dsaBasicFeedback(now, sunday) {
       date: weekFiveSunday,
       details: "Review misses for confusing depth and height, traversal order mistakes, weak recursive tree base cases, invalid BST branch choices, assuming all BSTs are balanced, mixing heap shape with heap order, and wrong heap child-index calculations.",
       updatedAt: now
+    },
+    {
+      id: "feedback-dsa-chapter-6",
+      title: "DSA Chapter 6 feedback focus",
+      date: weekSixSunday,
+      details: "Review misses for confusing sets with maps, losing key uniqueness, using the wrong hash index, ignoring collisions, misreading load factor, assuming hashing is always worst-case O(1), forgetting rehash amortization, and choosing ordered maps when no order operation is needed.",
+      updatedAt: now
     }
   ];
 }
@@ -3378,6 +3463,7 @@ function dsaBasicResources(now, monday) {
   const weekThreeMonday = addDays(monday, 14);
   const weekFourMonday = addDays(monday, 21);
   const weekFiveMonday = addDays(monday, 28);
+  const weekSixMonday = addDays(monday, 35);
   return [
     {
       id: "resource-dsa-algorithms-arrays-search",
@@ -3424,6 +3510,14 @@ function dsaBasicResources(now, monday) {
       title: "DSA Chapter 5: Trees",
       date: weekFiveMonday,
       details: "Open Subjects -> Data Structures and Algorithms to study tree nodes, height/depth, recursive traversals, BST ordering and search, heap shape/order, and height-based complexity.",
+      link: "",
+      updatedAt: now
+    },
+    {
+      id: "resource-dsa-sets-maps",
+      title: "DSA Chapter 6: Set and Map Data Structures",
+      date: weekSixMonday,
+      details: "Open Subjects -> Data Structures and Algorithms to study dictionary ADTs, sets, maps, hashing, collision handling, load factors, ordered maps, and operation tradeoffs.",
       link: "",
       updatedAt: now
     }
@@ -4476,6 +4570,184 @@ function gateDaDsaSections(updatedAt = new Date().toISOString()) {
         "Level-order traversal is a queue-based breadth-first trace.",
         "BST search follows one path and is O(h), which is O(log n) only when height is logarithmic.",
         "A heap needs both complete shape and parent-child order; heap arrays are not sorted arrays."
+      ],
+      updatedAt
+    },
+    {
+      id: "gate-da-dsa-sets-maps",
+      exam: "GATE DA",
+      accountTier: "Basic",
+      subject: "Data Structures and Algorithms",
+      chapter: "Chapter 6",
+      section: "6",
+      title: "Set and Map Data Structures",
+      summary: "Dictionary ADTs, set-versus-map semantics, key uniqueness, hash functions, hash indexes, collisions, separate chaining, open addressing, load factor, amortized rehashing, ordered maps, and operation-complexity tradeoffs.",
+      sectionPreview: "Sets and maps are about lookup by key. A set asks whether a key is present; a map stores a value for each key. The implementation choice decides whether lookup is expected constant time, height-based, or order-aware.",
+      previewActivity: "Store scores for Ada, Bo, and Chen. Is this a set or a map? If the table has 5 buckets and h(Ada)=17, what bucket does Ada use? What if Bo also maps to the same bucket?",
+      chapterIntro: [
+        "Chapter 6 moves from individual structures to abstract operations: insert, delete, search, contains, get, and put.",
+        "A dictionary maps keys to records. A set is the key-only version; a map is the key-to-value version. The invariant is that each key appears at most once.",
+        "For GATE DA, expect short traces: computing a hash index, handling collisions, computing load factor, comparing hash tables with BST-backed ordered maps, and identifying when worst-case guarantees differ from expected behavior."
+      ],
+      bookSections: [
+        {
+          number: "6.1",
+          title: "Dictionary ADTs, Sets, and Maps",
+          paragraphs: [
+            "A dictionary ADT supports operations such as search, insert, and delete by key.",
+            "A set stores keys only. The question is: is key x present? A map stores key-value pairs. The question is: what value is associated with key x?",
+            "The key invariant is uniqueness: there should not be two different entries with the same key. Updating an existing key changes its value; it does not create a duplicate key."
+          ],
+          blocks: [
+            {
+              type: "principle",
+              title: "Key uniqueness invariant",
+              body: "At any time, a dictionary has at most one record for a given key."
+            },
+            {
+              type: "example",
+              title: "Example 6.1: set versus map",
+              body: "A collection of registered roll numbers is a set. A table from roll number to marks is a map. Both use keys; only the map stores associated values."
+            }
+          ]
+        },
+        {
+          number: "6.2",
+          title: "Hash Functions and Hash Indexes",
+          paragraphs: [
+            "A hash table stores keys in an array of buckets. A hash function turns a key into an integer, and the table index is usually hash(key) mod tableSize.",
+            "The hash index must be inside the array. If tableSize is m, valid indexes are 0 through m-1.",
+            "A good hash function spreads typical keys across buckets. The exam will usually give you the hash value or a small formula, then ask for the bucket."
+          ],
+          blocks: [
+            {
+              type: "example",
+              title: "Example 6.2: hash index",
+              body: "If h(42)=42 and the table has m=10 buckets, the index is 42 mod 10 = 2."
+            },
+            {
+              type: "warning",
+              title: "Modulo trap",
+              body: "Do not use h(key) directly as an array index unless it is already in range. Apply mod m when the table has m buckets."
+            }
+          ]
+        },
+        {
+          number: "6.3",
+          title: "Collisions and Separate Chaining",
+          paragraphs: [
+            "A collision happens when two distinct keys map to the same bucket.",
+            "Separate chaining handles collisions by storing a small list at each bucket. To search, compute the bucket and then scan that bucket's chain.",
+            "With a good hash function and controlled load factor, expected chain length is small. In the worst case, all keys can land in one bucket, making search Theta(n)."
+          ],
+          blocks: [
+            {
+              type: "simulation",
+              title: "Simulation practice",
+              body: "With m=5 and h(k)=k mod 5, insert 12, 7, 18. Buckets: 12 -> 2, 7 -> 2, 18 -> 3. Bucket 2 has chain [12,7]."
+            }
+          ]
+        },
+        {
+          number: "6.4",
+          title: "Open Addressing",
+          paragraphs: [
+            "Open addressing keeps all keys inside the main array. When a bucket is occupied, the table probes another bucket.",
+            "Linear probing checks the next bucket, then the next, wrapping around the table if needed.",
+            "Open addressing is sensitive to deleted slots and high load factor. For this Basic chapter, focus on the probe sequence and on why the table cannot be too full."
+          ],
+          blocks: [
+            {
+              type: "example",
+              title: "Example 6.3: linear probing",
+              body: "With m=7, h(k)=k mod 7, insert 10,17,24. All hash to 3. Linear probing places 10 at 3, 17 at 4, and 24 at 5."
+            }
+          ]
+        },
+        {
+          number: "6.5",
+          title: "Load Factor and Rehashing",
+          paragraphs: [
+            "The load factor is alpha = numberOfKeys / numberOfBuckets.",
+            "As alpha grows, collisions and probe lengths tend to grow. Many hash tables resize and rehash when alpha crosses a threshold.",
+            "A rehash costs Theta(n) at that moment because all keys must be placed into the new table. Over many insertions, resizing by a constant factor gives amortized O(1) expected insertion, assuming hashing behaves well."
+          ],
+          blocks: [
+            {
+              type: "example",
+              title: "Example 6.4: load factor",
+              body: "If 8 keys are stored in 10 buckets, alpha = 8/10 = 0.8. If the threshold is 0.75, insertions should trigger resizing before or at this point depending on the policy."
+            }
+          ]
+        },
+        {
+          number: "6.6",
+          title: "Ordered Maps and BST-Backed Maps",
+          paragraphs: [
+            "A hash table is good for equality lookup, but it does not naturally keep keys sorted.",
+            "An ordered map supports order-aware operations such as minimum, maximum, predecessor, successor, and range queries.",
+            "A BST-backed map uses the BST order invariant from Chapter 5. Operations take O(h), where h is tree height. Balanced ordered maps give O(log n), while an unbalanced BST can degrade to Theta(n)."
+          ],
+          blocks: [
+            {
+              type: "strategy",
+              title: "Choosing a dictionary",
+              body: "Use hashing for expected-fast equality lookup. Use an ordered map when sorted iteration, min/max, predecessor/successor, or range queries matter."
+            }
+          ]
+        }
+      ],
+      concepts: [
+        { name: "Dictionary ADT", description: "Search, insert, and delete records by key.", cue: "Name the operation before naming the implementation." },
+        { name: "Set versus map", description: "A set stores keys; a map stores key-value pairs.", cue: "Ask whether values are attached to keys." },
+        { name: "Key-value invariant", description: "Each key appears at most once.", cue: "A second put updates, not duplicates." },
+        { name: "Hash function", description: "Turns a key into an integer used for table placement.", cue: "Hash first, then reduce to table index." },
+        { name: "Hash index", description: "Usually hash(key) mod tableSize.", cue: "Valid indexes are 0 through m-1." },
+        { name: "Collision", description: "Two distinct keys choose the same bucket.", cue: "Collision is normal; the table needs a policy." },
+        { name: "Separate chaining", description: "Each bucket stores a list of colliding keys.", cue: "Compute bucket, then scan that chain." },
+        { name: "Open addressing", description: "Collisions are handled by probing other array slots.", cue: "Trace the probe sequence." },
+        { name: "Load factor", description: "alpha = keys / buckets.", cue: "High alpha means more collision pressure." },
+        { name: "Ordered map", description: "A dictionary that supports sorted-key operations.", cue: "Use order only when the operation asks for it." }
+      ],
+      techniques: [
+        { name: "ADT first", when: "reading a set/map problem.", move: "Identify contains, get, put, delete, min, successor, or range before choosing a structure." },
+        { name: "Hash index trace", when: "given a hash function and table size.", move: "Compute h(key), reduce modulo m, and check collision policy." },
+        { name: "Collision trace", when: "multiple keys share a bucket.", move: "For chaining, update the bucket list; for probing, write the probe sequence." },
+        { name: "Load-factor check", when: "a resize threshold appears.", move: "Compute keys divided by buckets before and after insertion." },
+        { name: "Complexity qualifier", when: "stating hash-table time.", move: "Say expected O(1) under good hashing and controlled load; say worst-case Theta(n)." },
+        { name: "Ordered-map choice", when: "the problem asks for sorted/range/predecessor operations.", move: "Prefer a balanced BST-style map over a plain hash table." }
+      ],
+      practiceProblems: dsaSetsMapsProblems(),
+      implementationDrills: dsaSetsMapsImplementationDrills(),
+      reviewPrompts: [
+        "Is the problem asking for set membership or a key-value lookup?",
+        "What bucket does the key hash to after applying modulo table size?",
+        "If two keys collide, does the implementation chain or probe?",
+        "What is the load factor after this insertion?",
+        "Is the claimed O(1) hash-table time expected, amortized, or worst-case?",
+        "Does the operation require sorted order, predecessor/successor, or a range query?"
+      ],
+      reviewQuiz: {
+        id: "quiz-dsa-chapter-6-objective-review",
+        title: "DSA Chapter 6 Objective Review",
+        instructions: "Complete this after studying dictionary ADTs, sets, maps, hash indexes, collisions, separate chaining, open addressing, load factor, rehashing, ordered maps, and operation tradeoffs. The sampled mix is 5 single-topic checks, 3 two-topic mixes, and 2 three-topic synthesis questions, with extra hash-index/collision checks for GATE coverage.",
+        questions: dsaSetsMapsReviewQuestions()
+      },
+      readingQuestions: [
+        "What is the dictionary ADT operation being requested?",
+        "What is the difference between a set and a map?",
+        "Why can two different keys land in the same hash bucket?",
+        "How do separate chaining and open addressing handle a collision differently?",
+        "What does load factor measure?",
+        "When is an ordered map a better choice than a hash table?"
+      ],
+      chapterSummary: [
+        "Sets and maps are dictionary ADTs organized around keys.",
+        "A map stores one value per key; inserting an existing key updates its value.",
+        "A hash index is computed by reducing a hash value into the table's bucket range.",
+        "Collisions require a policy such as chaining or probing.",
+        "Hash tables give expected and amortized O(1) operations under assumptions, but worst-case behavior can be Theta(n).",
+        "Ordered maps trade expected constant lookup for sorted-key operations with O(log n) balanced-tree behavior."
       ],
       updatedAt
     }
@@ -14839,6 +15111,292 @@ function dsaTreesReviewQuestions() {
   }));
 }
 
+function dsaSetsMapsProblems() {
+  return [
+    {
+      title: "Exercise 1: Set or Map",
+      prompt: "Classify each structure as a set or a map: registered roll numbers; roll number to marks; distinct words in a document; word to frequency.",
+      solution: "Registered roll numbers is a set because only membership matters. Roll number to marks is a map. Distinct words is a set. Word to frequency is a map because each word key stores a count value.",
+      tags: ["dictionary-adt", "set-vs-map", "key-value-invariant"]
+    },
+    {
+      title: "Exercise 2: Updating an Existing Key",
+      prompt: "A map has {Ada: 12, Bo: 9}. Perform put(Ada, 15). What is the resulting map, and why is there no second Ada entry?",
+      solution: "The resulting map is {Ada: 15, Bo: 9}. A map has at most one value per key, so put on an existing key updates the associated value instead of inserting a duplicate key.",
+      tags: ["key-value-invariant", "set-vs-map"]
+    },
+    {
+      title: "Exercise 3: Hash Index",
+      prompt: "A hash table has m=7 buckets and h(k)=3k+1. What bucket does key 9 use?",
+      solution: "h(9)=3*9+1=28. The bucket is 28 mod 7 = 0. The index is 0, which is in the valid range 0 through 6.",
+      tags: ["hash-function", "hash-index", "array-indexing"]
+    },
+    {
+      title: "Exercise 4: Separate Chaining Trace",
+      prompt: "With m=5 and h(k)=k mod 5, insert 12, 7, 18, 22 using separate chaining. Give the nonempty buckets.",
+      solution: "12 maps to 2, 7 maps to 2, 18 maps to 3, and 22 maps to 2. Bucket 2 has chain [12,7,22] in insertion order; bucket 3 has [18].",
+      tags: ["collision", "separate-chaining", "hash-index"]
+    },
+    {
+      title: "Exercise 5: Linear Probing Trace",
+      prompt: "With m=7 and h(k)=k mod 7, insert 10, 17, 24 using linear probing. Give the final occupied indexes.",
+      solution: "10 maps to 3, so place it at 3. 17 maps to 3 but 3 is occupied, so place it at 4. 24 maps to 3, probes 4, then places at 5. Final: index 3 has 10, index 4 has 17, index 5 has 24.",
+      tags: ["collision", "open-addressing", "hash-index"]
+    },
+    {
+      title: "Exercise 6: Load Factor",
+      prompt: "A table has 12 keys and 16 buckets. What is the load factor? If the resize threshold is 0.75, is the table at the threshold?",
+      solution: "alpha = 12/16 = 0.75. It is exactly at the 0.75 threshold. Depending on policy, the next insertion or reaching the threshold may trigger rehashing.",
+      tags: ["load-factor", "operation-tradeoff"]
+    },
+    {
+      title: "Exercise 7: Rehash Cost",
+      prompt: "Why can one hash-table insertion cost Theta(n), even though insert is usually described as expected amortized O(1)?",
+      solution: "An insertion that triggers resize must allocate a larger table and reinsert existing keys, which costs Theta(n). This happens only occasionally when resizing by a constant factor, so over many inserts the expected amortized cost remains O(1) under good hashing.",
+      tags: ["amortized-rehash", "load-factor", "amortized-resize"]
+    },
+    {
+      title: "Exercise 8: Worst-Case Hashing",
+      prompt: "A chained hash table has n keys, but all keys hash to the same bucket. What is the worst-case search time in that table?",
+      solution: "Search first computes the bucket, then scans the chain. If all n keys are in one chain, worst-case search is Theta(n). This is why hash-table O(1) claims need expected/good-hashing assumptions.",
+      tags: ["collision", "separate-chaining", "operation-tradeoff"]
+    },
+    {
+      title: "Exercise 9: Ordered Map Choice",
+      prompt: "You need to support get(key), insert(key,value), and predecessor(key). Should you prefer a plain hash table or an ordered map? Explain.",
+      solution: "Prefer an ordered map because predecessor is an order-aware operation. A balanced BST-backed ordered map can support get, insert, and predecessor in O(log n), while a plain hash table does not naturally maintain sorted-key order.",
+      tags: ["ordered-map", "bst-map-complexity", "operation-tradeoff"]
+    },
+    {
+      title: "Exercise 10: Complexity Tradeoff",
+      prompt: "Compare expected lookup in a well-sized hash table with lookup in a balanced BST-backed map and in an unbalanced BST chain.",
+      solution: "A well-sized hash table gives expected O(1) lookup. A balanced BST-backed map gives O(log n). An unbalanced BST chain gives Theta(n). The correct choice depends on whether order operations or worst-case guarantees are required.",
+      tags: ["operation-tradeoff", "load-factor", "bst-map-complexity"]
+    }
+  ];
+}
+
+function dsaSetsMapsImplementationDrills() {
+  return [
+    {
+      title: "Set and Map Operation Classifier",
+      source: "Original GATE-style ADT drill",
+      difficulty: "Easy",
+      focus: "dictionary ADT semantics",
+      url: "",
+      targetTime: "O(1) to classify each operation after identifying key/value use",
+      reason: "Forces ADT-first thinking before implementation choice.",
+      writeup: "Classify contains, get, put, delete, min, successor, and range as set/map/order operations."
+    },
+    {
+      title: "Chained Hash Table Trace",
+      source: "CS 61B-style HashMaps trace",
+      difficulty: "Easy",
+      focus: "hash index and separate chaining",
+      url: "https://sp25.datastructur.es/",
+      targetTime: "Expected O(1) search at low load, Theta(n) worst-case",
+      reason: "Trains bucket computation, collision recognition, and chain scan cost.",
+      writeup: "Show the bucket array after each insertion and identify the longest chain."
+    },
+    {
+      title: "Linear Probing Trace",
+      source: "Original open-addressing trace drill",
+      difficulty: "Medium",
+      focus: "probe sequence and occupied slots",
+      url: "",
+      targetTime: "Expected O(1) when load is controlled; probe length grows as table fills",
+      reason: "Makes collision handling visible without relying on library behavior.",
+      writeup: "Write every probed index and explain where wraparound would occur."
+    },
+    {
+      title: "Load Factor and Rehash Trigger",
+      source: "Open Data Structures-style hash table analysis",
+      difficulty: "Medium",
+      focus: "load factor, resizing, amortized cost",
+      url: "https://opendatastructures.org/",
+      targetTime: "Theta(n) for a rehashing insertion, amortized expected O(1) over many insertions",
+      reason: "Separates one expensive resize from the average cost over a sequence.",
+      writeup: "Compute alpha before and after insertion, then state whether resize triggers."
+    },
+    {
+      title: "Ordered Map Selection",
+      source: "MIT/CS 61B-style dictionary comparison",
+      difficulty: "Medium",
+      focus: "hash table versus balanced BST-backed map",
+      url: "https://ocw.mit.edu/courses/6-006-introduction-to-algorithms-spring-2020/",
+      targetTime: "Expected O(1) hash lookup versus O(log n) balanced ordered-map operations",
+      reason: "Connects operation requirements to implementation tradeoffs.",
+      writeup: "For each workload, name whether equality lookup or sorted/range behavior is the deciding requirement."
+    }
+  ];
+}
+
+function dsaSetsMapsReviewQuestions() {
+  const metadata = {
+    "dsa-ch6-q1": { kind: "single concept", targetConcept: "key-value-invariant", prereqsUsed: ["set-vs-map"], difficulty: 1, gateWeight: "high", expectedFirstStep: "Ask whether an existing key is being inserted again.", commonMistake: "Creating duplicate keys in a map.", answerCheck: "Existing key is updated, not duplicated." },
+    "dsa-ch6-q2": { kind: "single concept", targetConcept: "dictionary-adt", prereqsUsed: [], difficulty: 1, gateWeight: "high", expectedFirstStep: "Name the ADT operation: search, insert, delete, get, put, or contains.", commonMistake: "Choosing an implementation before identifying the operation.", answerCheck: "Dictionary stores records by key." },
+    "dsa-ch6-q3": { kind: "single concept", targetConcept: "amortized-rehash", prereqsUsed: ["load-factor"], difficulty: 2, gateWeight: "medium", expectedFirstStep: "Separate a resizing insertion from the average over many insertions.", commonMistake: "Calling every insertion Theta(n).", answerCheck: "One rehash is Theta(n), amortized expected insertion can be O(1)." },
+    "dsa-ch6-q4": { kind: "single concept", targetConcept: "operation-tradeoff", prereqsUsed: ["load-factor", "bst-map-complexity"], difficulty: 2, gateWeight: "high", expectedFirstStep: "Identify whether order operations are required.", commonMistake: "Using a hash table for predecessor or range queries.", answerCheck: "Ordered map supports sorted-key operations." },
+    "dsa-ch6-q5": { kind: "single concept", targetConcept: "separate-chaining", prereqsUsed: ["collision"], difficulty: 1, gateWeight: "high", expectedFirstStep: "Compute the bucket and append/search inside that bucket's chain.", commonMistake: "Overwriting the existing colliding key.", answerCheck: "Colliding keys share a bucket list." },
+    "dsa-ch6-q6": { kind: "mixed: two concepts", targetConcept: "ordered-map", prereqsUsed: ["dictionary-adt"], difficulty: 2, gateWeight: "high", expectedFirstStep: "Check whether the dictionary operation needs key order.", commonMistake: "Treating all dictionaries as hash tables.", answerCheck: "Predecessor requires ordered map behavior." },
+    "dsa-ch6-q7": { kind: "mixed: two concepts", targetConcept: "operation-tradeoff", prereqsUsed: ["load-factor"], difficulty: 2, gateWeight: "high", expectedFirstStep: "Compute load factor and connect high load to collision pressure.", commonMistake: "Ignoring table size when assessing hash-table performance.", answerCheck: "alpha = keys / buckets." },
+    "dsa-ch6-q8": { kind: "mixed: two concepts", targetConcept: "key-value-invariant", prereqsUsed: ["set-vs-map"], difficulty: 2, gateWeight: "high", expectedFirstStep: "Determine whether values are attached to keys.", commonMistake: "Calling a key-value table a set.", answerCheck: "Roll number to marks is a map." },
+    "dsa-ch6-q9": { kind: "mixed: three concepts", targetConcept: "separate-chaining", prereqsUsed: ["collision", "ordered-map"], difficulty: 3, gateWeight: "high", expectedFirstStep: "Distinguish collision handling from sorted-order support.", commonMistake: "Assuming chains are ordered maps.", answerCheck: "Chaining resolves collisions but does not imply sorted-key operations." },
+    "dsa-ch6-q10": { kind: "mixed: three concepts", targetConcept: "bst-map-complexity", prereqsUsed: ["set-vs-map", "ordered-map"], difficulty: 3, gateWeight: "high", expectedFirstStep: "Use the BST-backed ordered-map height cost.", commonMistake: "Claiming O(1) because it is a map.", answerCheck: "Balanced ordered map operations are O(log n)." },
+    "dsa-ch6-q11": { kind: "mixed: two concepts", targetConcept: "hash-index", prereqsUsed: ["hash-function", "array-indexing"], difficulty: 2, gateWeight: "high", expectedFirstStep: "Compute h(key) and reduce modulo table size.", commonMistake: "Using the raw hash value as the array index.", answerCheck: "Index is 0 for h(9)=28 with m=7." },
+    "dsa-ch6-q12": { kind: "mixed: two concepts", targetConcept: "open-addressing", prereqsUsed: ["collision", "array-indexing"], difficulty: 2, gateWeight: "medium", expectedFirstStep: "Trace the probe sequence after the initial collision.", commonMistake: "Putting multiple keys in one slot under open addressing.", answerCheck: "10,17,24 occupy 3,4,5 with linear probing." }
+  };
+  return [
+    {
+      id: "dsa-ch6-q1",
+      prompt: "A map has {Ada: 12, Bo: 9}. After put(Ada, 15), what should happen?",
+      tags: ["key-value-invariant", "set-vs-map"],
+      options: [
+        { id: "a", text: "A second Ada entry is inserted" },
+        { id: "b", text: "Ada's value is updated to 15" },
+        { id: "c", text: "Bo is deleted" },
+        { id: "d", text: "The map becomes a set" }
+      ],
+      answer: "b"
+    },
+    {
+      id: "dsa-ch6-q2",
+      prompt: "Which description best matches a dictionary ADT?",
+      tags: ["dictionary-adt"],
+      options: [
+        { id: "a", text: "A structure that stores records by key and supports search/insert/delete by key" },
+        { id: "b", text: "Only a sorted array" },
+        { id: "c", text: "Only a binary heap" },
+        { id: "d", text: "A traversal order for trees" }
+      ],
+      answer: "a"
+    },
+    {
+      id: "dsa-ch6-q3",
+      prompt: "Why can hash-table insertion be expected amortized O(1) even though a rehashing insertion costs Theta(n)?",
+      tags: ["amortized-rehash", "load-factor"],
+      options: [
+        { id: "a", text: "Rehashing happens on every insertion" },
+        { id: "b", text: "Rehashing never moves existing keys" },
+        { id: "c", text: "Occasional resize costs are spread over many insertions under controlled load" },
+        { id: "d", text: "Hash tables are always worst-case O(1)" }
+      ],
+      answer: "c"
+    },
+    {
+      id: "dsa-ch6-q4",
+      prompt: "A workload needs predecessor(key) and range queries. Which dictionary implementation is the better fit?",
+      tags: ["operation-tradeoff", "ordered-map"],
+      options: [
+        { id: "a", text: "Plain hash table only" },
+        { id: "b", text: "Ordered map such as a balanced BST-backed map" },
+        { id: "c", text: "Unordered set with no values" },
+        { id: "d", text: "Stack" }
+      ],
+      answer: "b"
+    },
+    {
+      id: "dsa-ch6-q5",
+      prompt: "In separate chaining, two distinct keys map to the same bucket. What happens?",
+      tags: ["separate-chaining", "collision"],
+      options: [
+        { id: "a", text: "The old key must be overwritten" },
+        { id: "b", text: "Both keys are stored in that bucket's chain" },
+        { id: "c", text: "The table becomes sorted" },
+        { id: "d", text: "The keys are ignored" }
+      ],
+      answer: "b"
+    },
+    {
+      id: "dsa-ch6-q6",
+      prompt: "Which operation shows that an ordinary dictionary is being used as an ordered map?",
+      tags: ["dictionary-adt", "ordered-map"],
+      options: [
+        { id: "a", text: "get(key)" },
+        { id: "b", text: "put(key,value)" },
+        { id: "c", text: "predecessor(key)" },
+        { id: "d", text: "contains(key)" }
+      ],
+      answer: "c"
+    },
+    {
+      id: "dsa-ch6-q7",
+      prompt: "A hash table has 12 keys and 16 buckets. What is its load factor?",
+      tags: ["load-factor", "operation-tradeoff"],
+      options: [
+        { id: "a", text: "0.25" },
+        { id: "b", text: "0.5" },
+        { id: "c", text: "0.75" },
+        { id: "d", text: "1.33" }
+      ],
+      answer: "c"
+    },
+    {
+      id: "dsa-ch6-q8",
+      prompt: "Which example is a map rather than a set?",
+      tags: ["set-vs-map", "key-value-invariant"],
+      options: [
+        { id: "a", text: "Distinct roll numbers" },
+        { id: "b", text: "Roll number to marks" },
+        { id: "c", text: "Distinct words only" },
+        { id: "d", text: "Visited vertices only" }
+      ],
+      answer: "b"
+    },
+    {
+      id: "dsa-ch6-q9",
+      prompt: "A chained hash table stores colliding keys in bucket lists. Which statement is correct?",
+      tags: ["collision", "separate-chaining", "ordered-map"],
+      options: [
+        { id: "a", text: "Chaining resolves collisions but does not by itself support sorted predecessor queries" },
+        { id: "b", text: "Every chain is automatically a balanced BST" },
+        { id: "c", text: "Collisions cannot happen in chained hashing" },
+        { id: "d", text: "Chaining makes the hash table array sorted" }
+      ],
+      answer: "a"
+    },
+    {
+      id: "dsa-ch6-q10",
+      prompt: "For a balanced BST-backed map, what is the typical time for search/insert/delete by key?",
+      tags: ["set-vs-map", "ordered-map", "bst-map-complexity"],
+      options: [
+        { id: "a", text: "O(1) worst-case" },
+        { id: "b", text: "O(log n)" },
+        { id: "c", text: "Theta(n^2)" },
+        { id: "d", text: "Undefined because maps cannot be trees" }
+      ],
+      answer: "b"
+    },
+    {
+      id: "dsa-ch6-q11",
+      prompt: "A hash table has m=7 buckets and h(k)=3k+1. What bucket does key 9 use?",
+      tags: ["hash-function", "hash-index", "array-indexing"],
+      options: [
+        { id: "a", text: "0" },
+        { id: "b", text: "1" },
+        { id: "c", text: "7" },
+        { id: "d", text: "28" }
+      ],
+      answer: "a"
+    },
+    {
+      id: "dsa-ch6-q12",
+      prompt: "With m=7, h(k)=k mod 7, and linear probing, where do 10, 17, and 24 land when inserted in that order?",
+      tags: ["collision", "open-addressing", "hash-index"],
+      options: [
+        { id: "a", text: "All at bucket 3" },
+        { id: "b", text: "10 at 3, 17 at 4, 24 at 5" },
+        { id: "c", text: "10 at 3, 17 at 3, 24 at 3" },
+        { id: "d", text: "10 at 4, 17 at 5, 24 at 6" }
+      ],
+      answer: "b"
+    }
+  ].map((question) => ({
+    ...question,
+    ...(metadata[question.id] || { kind: question.tags.length === 1 ? "single concept" : question.tags.length === 2 ? "mixed: two concepts" : "mixed: three concepts", targetConcept: question.tags[0], prereqsUsed: question.tags.slice(1), difficulty: question.tags.length, gateWeight: "medium" })
+  }));
+}
+
 function conditionalProbabilityReviewQuestions() {
   const metadata = {
     "cp-review-1": { targetConcept: "conditional-denominator", prereqsUsed: ["conditional-probability"], difficulty: 1, gateWeight: "high" },
@@ -15781,6 +16339,128 @@ function dsaTreesConceptGraph() {
         prereqs: ["array-indexing", "heap-shape-property"],
         repairMaterial: "Review DSA Chapter 5.6 and practice 0-based children 2i+1, 2i+2 and parent floor((i-1)/2).",
         gateWeight: "medium"
+      }
+    }
+  };
+}
+
+function dsaSetsMapsConceptGraph() {
+  return {
+    chapterId: "gate-da-dsa-sets-maps",
+    chapterTitle: "DSA Chapter 6: Set and Map Data Structures",
+    gateWeight: "high",
+    fallbackConcepts: ["dictionary-adt", "set-vs-map", "hash-index", "collision", "load-factor"],
+    fallbackDifficultyMix: [1, 2, 2, 3],
+    fallbackInstruction: "Retest dictionary semantics first, then add hash-index computations, collision traces, load-factor checks, and ordered-map tradeoff questions.",
+    stableNextAction: "Next: move to graph representation and traversal after set/map semantics, hashing, collision handling, load factor, and ordered-map tradeoffs are stable.",
+    nodes: {
+      "array-indexing": {
+        label: "Array indexing",
+        prereqs: [],
+        repairMaterial: "Review DSA Chapter 3.1 and use valid bucket indexes 0 through m-1.",
+        gateWeight: "high"
+      },
+      "linked-node": {
+        label: "Linked node",
+        prereqs: [],
+        repairMaterial: "Review DSA Chapter 4.1 and trace how a bucket chain stores multiple colliding keys.",
+        gateWeight: "medium"
+      },
+      "amortized-resize": {
+        label: "Amortized resize",
+        prereqs: [],
+        repairMaterial: "Review DSA Chapter 4.7 and separate one costly resize from average cost over many operations.",
+        gateWeight: "medium"
+      },
+      "bst-order-invariant": {
+        label: "BST order invariant",
+        prereqs: [],
+        repairMaterial: "Review DSA Chapter 5.5 and state why ordered maps can support predecessor and range queries.",
+        gateWeight: "high"
+      },
+      "height-complexity": {
+        label: "Height complexity",
+        prereqs: [],
+        repairMaterial: "Review DSA Chapter 5.1 and state O(h), O(log n) balanced, and Theta(n) chain cases.",
+        gateWeight: "high"
+      },
+      "dictionary-adt": {
+        label: "Dictionary ADT",
+        prereqs: [],
+        repairMaterial: "Review DSA Chapter 6.1 and classify contains, get, put, delete, min, predecessor, and range.",
+        gateWeight: "high"
+      },
+      "set-vs-map": {
+        label: "Set versus map",
+        prereqs: ["dictionary-adt"],
+        repairMaterial: "Review DSA Chapter 6.1 and separate key-only membership from key-to-value lookup.",
+        gateWeight: "high"
+      },
+      "key-value-invariant": {
+        label: "Key-value invariant",
+        prereqs: ["set-vs-map"],
+        repairMaterial: "Review DSA Chapter 6.1 and practice updates where inserting an existing key replaces the value.",
+        gateWeight: "high"
+      },
+      "hash-function": {
+        label: "Hash function",
+        prereqs: ["array-indexing"],
+        repairMaterial: "Review DSA Chapter 6.2 and compute h(key) before reducing to a bucket.",
+        gateWeight: "high"
+      },
+      "hash-index": {
+        label: "Hash table index",
+        prereqs: ["hash-function", "array-indexing"],
+        repairMaterial: "Review DSA Chapter 6.2 and calculate hash(key) mod tableSize for five small keys.",
+        gateWeight: "high"
+      },
+      collision: {
+        label: "Collision",
+        prereqs: ["hash-index"],
+        repairMaterial: "Review DSA Chapter 6.3 and identify when two distinct keys choose the same bucket.",
+        gateWeight: "high"
+      },
+      "separate-chaining": {
+        label: "Separate chaining",
+        prereqs: ["collision", "linked-node"],
+        repairMaterial: "Review DSA Chapter 6.3 and draw bucket lists after each insertion.",
+        gateWeight: "high"
+      },
+      "open-addressing": {
+        label: "Open addressing",
+        prereqs: ["collision", "array-indexing"],
+        repairMaterial: "Review DSA Chapter 6.4 and trace linear probing indexes until an empty slot appears.",
+        gateWeight: "medium"
+      },
+      "load-factor": {
+        label: "Load factor",
+        prereqs: ["hash-index"],
+        repairMaterial: "Review DSA Chapter 6.5 and compute alpha = keys / buckets before and after insertion.",
+        gateWeight: "high"
+      },
+      "amortized-rehash": {
+        label: "Amortized rehash",
+        prereqs: ["load-factor", "amortized-resize"],
+        repairMaterial: "Review DSA Chapter 6.5 and compare one Theta(n) rehash with amortized expected O(1) insertion.",
+        gateWeight: "medium"
+      },
+      "ordered-map": {
+        label: "Ordered map",
+        prereqs: ["bst-order-invariant", "dictionary-adt"],
+        repairMaterial: "Review DSA Chapter 6.6 and list operations that require sorted key order.",
+        gateWeight: "high"
+      },
+      "bst-map-complexity": {
+        label: "BST map complexity",
+        prereqs: ["ordered-map", "height-complexity"],
+        repairMaterial: "Review DSA Chapter 6.6 and state balanced O(log n) versus unbalanced Theta(n).",
+        gateWeight: "high"
+      },
+      "operation-tradeoff": {
+        label: "Operation tradeoff",
+        prereqs: ["load-factor", "bst-map-complexity"],
+        repairMaterial: "Review DSA Chapter 6.6 and choose hash table for equality lookup or ordered map for sorted/range operations.",
+        gateWeight: "high"
       }
     }
   };
@@ -22736,6 +23416,7 @@ function conceptGraphForSection(section) {
   if (section?.id === "gate-da-dsa-arrays-strings-binary-search") return dsaArraysStringsBinarySearchConceptGraph();
   if (section?.id === "gate-da-dsa-linked-lists-stacks-queues") return dsaLinkedListsStacksQueuesConceptGraph();
   if (section?.id === "gate-da-dsa-trees") return dsaTreesConceptGraph();
+  if (section?.id === "gate-da-dsa-sets-maps") return dsaSetsMapsConceptGraph();
   if (section?.id === "gate-da-linear-algebra-vector-spaces-coordinates") return linearAlgebraVectorSpacesConceptGraph();
   if (section?.id === "gate-da-linear-algebra-transformations-matrices") return linearAlgebraTransformationsConceptGraph();
   if (section?.id === "gate-da-linear-algebra-rank-nullity-systems") return linearAlgebraRankNullityConceptGraph();
