@@ -1,7 +1,7 @@
 const STORAGE_KEY = "learning-studio-data-v2";
 const LEGACY_STORAGE_KEYS = ["learning-studio-data-v1"];
 const SESSION_KEY = "aleph-session";
-const COURSE_PLAN_VERSION = "seeded-user-canonical-workspace-v117";
+const COURSE_PLAN_VERSION = "seeded-user-canonical-workspace-v118";
 const MAX_FEEDBACK_ATTACHMENT_BYTES = 3 * 1024 * 1024;
 const MAX_COMPRESSED_FEEDBACK_BYTES = 2400 * 1024;
 const MAX_FEEDBACK_PDF_PAGES = 6;
@@ -2562,7 +2562,7 @@ function buildGateDaBasicPlan(now, accountTypes, sections, user = basicGateDaUse
         startDate: monday,
         endDate: "2026-08-30",
         status: "active",
-        details: `GATE DA Basic plan surfaces: Subjects, Tasks, Schedule, Tests, Feedback, Resources, and Share. Recommended pace: study three subjects in parallel. Every 15 days, Aleph should generate an adaptive cumulative review quiz from prior performance, repeating missed concepts more often, reducing mastered concepts, and keeping high-weight exam topics in rotation. Current material build: Probability Chapters 1-10, Linear Algebra Chapters 1-12 plus a chapterless cumulative past-paper style drill, and DSA Chapters 1-7 with a progression gate before Chapter 3.${trialNote}`,
+        details: `GATE DA Basic plan surfaces: Subjects, Tasks, Schedule, Tests, Feedback, Resources, and Share. Recommended pace: study three subjects in parallel. Every 15 days, Aleph should generate an adaptive cumulative review quiz from prior performance, repeating missed concepts more often, reducing mastered concepts, and keeping high-weight exam topics in rotation. Current material build: Probability Chapters 1-10, Linear Algebra Chapters 1-12 plus a chapterless cumulative past-paper style drill, and DSA Chapters 1-8 with a progression gate before Chapter 3.${trialNote}`,
         updatedAt: now
       }
     ],
@@ -2906,6 +2906,8 @@ function dsaBasicScheduleItems(now, monday, sunday) {
   const weekSixSunday = addDays(sunday, 35);
   const weekSevenMonday = addDays(monday, 42);
   const weekSevenSunday = addDays(sunday, 42);
+  const weekEightMonday = addDays(monday, 49);
+  const weekEightSunday = addDays(sunday, 49);
   return [
     {
       id: "schedule-dsa-chapter-1-study",
@@ -3126,6 +3128,36 @@ function dsaBasicScheduleItems(now, monday, sunday) {
       date: weekSevenSunday,
       details: "Take the graph-backed objective review for graph representation, BFS/DFS traces, visited invariants, connected components, and complexity.",
       updatedAt: now
+    },
+    {
+      id: "schedule-dsa-chapter-8-study",
+      title: "DSA Chapter 8: Graph Algorithms",
+      week: 8,
+      subject: "Data Structures and Algorithms",
+      kind: "Study",
+      date: weekEightMonday,
+      details: "Study BFS shortest paths in unweighted graphs, parent trees, weighted graphs, Dijkstra relaxation/finalization, DAG topological ordering, Kahn's algorithm, and MST cut/cycle intuition.",
+      updatedAt: now
+    },
+    {
+      id: "schedule-dsa-chapter-8-practice",
+      title: "DSA Chapter 8: Labelled Practice",
+      week: 8,
+      subject: "Data Structures and Algorithms",
+      kind: "Practice",
+      date: addDays(weekEightMonday, 2),
+      details: "Solve BFS shortest-path, Dijkstra trace, topological-order, and MST intuition exercises before opening worked solutions.",
+      updatedAt: now
+    },
+    {
+      id: "schedule-dsa-chapter-8-review",
+      title: "DSA Chapter 8: Objective Review",
+      week: 8,
+      subject: "Data Structures and Algorithms",
+      kind: "Review",
+      date: weekEightSunday,
+      details: "Take the graph-backed objective review for shortest paths, Dijkstra, topological ordering, MST intuition, and algorithm-choice diagnostics.",
+      updatedAt: now
     }
   ];
 }
@@ -3138,6 +3170,7 @@ function dsaBasicTests(now, dsaSections, sunday) {
   const weekFiveSunday = addDays(sunday, 28);
   const weekSixSunday = addDays(sunday, 35);
   const weekSevenSunday = addDays(sunday, 42);
+  const weekEightSunday = addDays(sunday, 49);
   return [
     {
       id: "test-dsa-chapter-1-objective-review",
@@ -3212,6 +3245,15 @@ function dsaBasicTests(now, dsaSections, sunday) {
       sectionId: dsaSections[7]?.id,
       quizId: "quiz-dsa-chapter-7-objective-review",
       updatedAt: now
+    },
+    {
+      id: "test-dsa-chapter-8-objective-review",
+      title: "DSA Chapter 8 Objective Review",
+      date: weekEightSunday,
+      details: "Objective review for unweighted shortest paths, BFS parent trees, weighted graphs, Dijkstra traces, topological ordering, Kahn's algorithm, MST intuition, and graph-algorithm choice.",
+      sectionId: dsaSections[8]?.id,
+      quizId: "quiz-dsa-chapter-8-objective-review",
+      updatedAt: now
     }
   ];
 }
@@ -3229,6 +3271,8 @@ function dsaBasicTasks(now, monday, sunday) {
   const weekSixSunday = addDays(sunday, 35);
   const weekSevenMonday = addDays(monday, 42);
   const weekSevenSunday = addDays(sunday, 42);
+  const weekEightMonday = addDays(monday, 49);
+  const weekEightSunday = addDays(sunday, 49);
   return [
     {
       id: "task-dsa-chapter-1-read",
@@ -3471,6 +3515,39 @@ function dsaBasicTasks(now, monday, sunday) {
       done: false,
       details: "Submit the Chapter 7 objective quiz so Aleph logs graph representation, BFS, DFS, visited-invariant, component, and complexity gaps.",
       updatedAt: now
+    },
+    {
+      id: "task-dsa-chapter-8-read",
+      week: 8,
+      title: "DSA Ch 8: Read graph algorithms",
+      type: "Study",
+      date: weekEightMonday,
+      status: "todo",
+      done: false,
+      details: "Open Subjects -> Data Structures and Algorithms -> Chapter 8 and study BFS shortest paths, Dijkstra, topological ordering, and MST intuition.",
+      updatedAt: now
+    },
+    {
+      id: "task-dsa-chapter-8-practice",
+      week: 8,
+      title: "DSA Ch 8: Solve graph algorithm practice",
+      type: "Practice",
+      date: addDays(weekEightMonday, 2),
+      status: "todo",
+      done: false,
+      details: "Attempt the labelled BFS shortest-path, Dijkstra, topological-order, and MST-intuition practice problems before opening worked solutions.",
+      updatedAt: now
+    },
+    {
+      id: "task-dsa-chapter-8-review",
+      week: 8,
+      title: "DSA Ch 8: Take objective review",
+      type: "Review",
+      date: weekEightSunday,
+      status: "todo",
+      done: false,
+      details: "Submit the Chapter 8 objective quiz so Aleph logs shortest-path, Dijkstra, topological-order, MST, and algorithm-choice gaps.",
+      updatedAt: now
     }
   ];
 }
@@ -3483,6 +3560,7 @@ function dsaBasicFeedback(now, sunday) {
   const weekFiveSunday = addDays(sunday, 28);
   const weekSixSunday = addDays(sunday, 35);
   const weekSevenSunday = addDays(sunday, 42);
+  const weekEightSunday = addDays(sunday, 49);
   return [
     {
       id: "feedback-dsa-chapter-1",
@@ -3539,6 +3617,13 @@ function dsaBasicFeedback(now, sunday) {
       date: weekSevenSunday,
       details: "Review misses for mixing directed and undirected edges, wrong degree counts, choosing the wrong graph representation, marking visited too late, using stack order for BFS, missing DFS backtracking, double-counting connected components, and misstating O(V+E) versus O(V^2).",
       updatedAt: now
+    },
+    {
+      id: "feedback-dsa-chapter-8",
+      title: "DSA Chapter 8 feedback focus",
+      date: weekEightSunday,
+      details: "Review misses for using Dijkstra on negative weights, confusing BFS edge-count distance with weighted distance, relaxing edges in the wrong direction, finalizing Dijkstra vertices too early, accepting cyclic topological orders, misusing indegree queues, and applying MST ideas to directed shortest-path questions.",
+      updatedAt: now
     }
   ];
 }
@@ -3550,6 +3635,7 @@ function dsaBasicResources(now, monday) {
   const weekFiveMonday = addDays(monday, 28);
   const weekSixMonday = addDays(monday, 35);
   const weekSevenMonday = addDays(monday, 42);
+  const weekEightMonday = addDays(monday, 49);
   return [
     {
       id: "resource-dsa-algorithms-arrays-search",
@@ -3612,6 +3698,14 @@ function dsaBasicResources(now, monday) {
       title: "DSA Chapter 7: Graph Representation and Traversal",
       date: weekSevenMonday,
       details: "Open Subjects -> Data Structures and Algorithms to study graph representation, directed and undirected degree, BFS and DFS visited invariants, connected components, and traversal complexity.",
+      link: "",
+      updatedAt: now
+    },
+    {
+      id: "resource-dsa-graph-algorithms",
+      title: "DSA Chapter 8: Graph Algorithms",
+      date: weekEightMonday,
+      details: "Open Subjects -> Data Structures and Algorithms to study BFS shortest paths, Dijkstra traces, topological ordering, Kahn's algorithm, MST cut/cycle intuition, and graph-algorithm choice.",
       link: "",
       updatedAt: now
     }
@@ -5015,6 +5109,179 @@ function gateDaDsaSections(updatedAt = new Date().toISOString()) {
         "BFS uses a queue and visits increasing distance layers.",
         "DFS uses recursion or a stack and explores deeply before backtracking.",
         "Visited marking prevents cycles from causing repeated work; representation determines traversal complexity."
+      ],
+      updatedAt
+    },
+    {
+      id: "gate-da-dsa-graph-algorithms",
+      exam: "GATE DA",
+      accountTier: "Basic",
+      subject: "Data Structures and Algorithms",
+      chapter: "Chapter 8",
+      section: "8",
+      title: "Graph Algorithms",
+      summary: "BFS shortest paths in unweighted graphs, BFS parent trees, weighted graph assumptions, Dijkstra frontier/relaxation/finalization traces, DAG topological order, Kahn's zero-indegree queue, MST cut and cycle intuition, and choosing the right graph algorithm.",
+      sectionPreview: "Chapter 7 taught how to represent and traverse graphs. Chapter 8 asks what the traversal is for: shortest paths, dependency order, or connecting everything cheaply.",
+      previewActivity: "Given unweighted edges S-A, S-B, A-C, B-C, run BFS from S. What are the distances and parents? Now give edge S-A weight 10 and S-B weight 1. Why is plain BFS no longer enough for weighted distance?",
+      chapterIntro: [
+        "Graph algorithms are chosen by the question's goal. If every edge has the same cost, BFS gives shortest paths by number of edges.",
+        "If edges have nonnegative weights, Dijkstra uses a priority frontier and edge relaxation to find shortest weighted paths.",
+        "If a directed graph describes prerequisites, topological order processes each task after its prerequisites. If an undirected weighted graph asks for a cheapest way to connect all vertices, MST intuition applies."
+      ],
+      bookSections: [
+        {
+          number: "8.1",
+          title: "BFS Shortest Paths in Unweighted Graphs",
+          paragraphs: [
+            "In an unweighted graph, every edge has equal cost. BFS discovers vertices in increasing number of edges from the start.",
+            "The distance invariant is: when a vertex is first discovered by BFS, its distance is the shortest edge-count distance from the source.",
+            "A parent pointer records which vertex first discovered a node. The parent pointers form a BFS tree of shortest paths."
+          ],
+          blocks: [
+            {
+              type: "example",
+              title: "Example 8.1: BFS parents",
+              body: "For S:[A,B], A:[S,C], B:[S,C], C:[A,B], BFS from S discovers A and B at distance 1. If A is scanned before B, C gets parent A and distance 2."
+            }
+          ]
+        },
+        {
+          number: "8.2",
+          title: "Weighted Graphs and Relaxation",
+          paragraphs: [
+            "A weighted graph gives each edge a cost. The shortest path minimizes total edge weight, not number of edges.",
+            "Relaxing edge u -> v checks whether dist[u] + weight(u,v) improves the current dist[v].",
+            "Relaxation is the basic update behind Dijkstra and many later shortest-path algorithms."
+          ],
+          blocks: [
+            {
+              type: "principle",
+              title: "Relaxation rule",
+              body: "If dist[u] + w(u,v) < dist[v], set dist[v] to that smaller value and set parent[v] = u."
+            },
+            {
+              type: "warning",
+              title: "BFS trap",
+              body: "BFS is shortest by edge count, not by total weight. A one-edge path of weight 10 can be worse than a two-edge path of weights 1 and 1."
+            }
+          ]
+        },
+        {
+          number: "8.3",
+          title: "Dijkstra's Algorithm",
+          paragraphs: [
+            "Dijkstra solves single-source shortest paths when all edge weights are nonnegative.",
+            "It keeps a frontier ordered by tentative distance. Each step finalizes the unfinalized vertex with the smallest tentative distance, then relaxes its outgoing edges.",
+            "The nonnegative-weight assumption is what makes finalization safe: once the smallest tentative vertex is chosen, no later path can make it smaller."
+          ],
+          blocks: [
+            {
+              type: "simulation",
+              title: "Simulation practice",
+              body: "If S->A has weight 4, S->B has weight 1, and B->A has weight 2, start with dist(S)=0. Relax from S: A=4, B=1. Finalize B next, relax B->A, and improve A to 3."
+            }
+          ]
+        },
+        {
+          number: "8.4",
+          title: "Topological Ordering of DAGs",
+          paragraphs: [
+            "A DAG is a directed acyclic graph. A topological order lists vertices so every directed edge u -> v places u before v.",
+            "Topological order is useful for prerequisites and dependency scheduling.",
+            "Kahn's algorithm repeatedly takes a zero-indegree vertex, outputs it, removes its outgoing edges, and updates indegrees. If no zero-indegree vertex exists before all vertices are output, the graph has a cycle."
+          ],
+          blocks: [
+            {
+              type: "example",
+              title: "Example 8.2: zero-indegree queue",
+              body: "For edges A->C, B->C, C->D, initial zero-indegree vertices are A and B. Output A and B in either order, then C becomes zero-indegree, then D."
+            }
+          ]
+        },
+        {
+          number: "8.5",
+          title: "Minimum Spanning Tree Intuition",
+          paragraphs: [
+            "For an undirected weighted graph, a spanning tree connects all vertices without cycles.",
+            "A minimum spanning tree has minimum total edge weight among all spanning trees.",
+            "The cut intuition says the lightest edge crossing a cut is safe to add. The cycle intuition says the heaviest edge on a cycle is not needed in an MST if there is a cheaper way around."
+          ],
+          blocks: [
+            {
+              type: "strategy",
+              title: "MST versus shortest path",
+              body: "MST connects all vertices cheaply overall. Shortest path finds a cheapest route from a source to a target or all targets. Do not swap these goals."
+            }
+          ]
+        },
+        {
+          number: "8.6",
+          title: "Choosing the Algorithm",
+          paragraphs: [
+            "Start by asking the goal: shortest path, dependency order, or cheapest connection.",
+            "If the graph is unweighted and the goal is shortest path, use BFS. If weighted with nonnegative weights, use Dijkstra. If prerequisite order on a DAG, use topological ordering. If connecting all vertices in an undirected weighted graph, use MST ideas.",
+            "The representation from Chapter 7 still matters. Most exam traces use adjacency lists; complexity arguments usually include V and E."
+          ],
+          blocks: [
+            {
+              type: "checkpoint",
+              title: "Algorithm-choice checkpoint",
+              body: "Unweighted shortest path -> BFS. Nonnegative weighted shortest path -> Dijkstra. DAG prerequisites -> topological order. Cheapest connected undirected network -> MST."
+            }
+          ]
+        }
+      ],
+      concepts: [
+        { name: "Unweighted shortest path", description: "Shortest path by number of edges.", cue: "Use BFS distance levels." },
+        { name: "BFS parent tree", description: "Parent pointers record first discovery and reconstruct shortest edge-count paths.", cue: "Parent is set when a vertex is first discovered." },
+        { name: "Weighted graph", description: "Edges carry costs.", cue: "Total path cost is sum of edge weights." },
+        { name: "Relaxation", description: "Try to improve dist[v] through edge u -> v.", cue: "Compare dist[u] + weight with dist[v]." },
+        { name: "Dijkstra frontier", description: "Priority queue of tentative distances.", cue: "Finalize the smallest tentative distance." },
+        { name: "Nonnegative weights", description: "Dijkstra requires no negative edge weights.", cue: "Negative weights break finalization safety." },
+        { name: "DAG", description: "Directed graph with no directed cycle.", cue: "Topological order exists only for DAGs." },
+        { name: "Topological order", description: "Every edge u -> v places u before v.", cue: "Use zero indegree vertices first." },
+        { name: "MST intuition", description: "Connect all vertices with minimum total edge weight.", cue: "MST is not a shortest path tree." },
+        { name: "Algorithm choice", description: "Choose by goal and assumptions.", cue: "Unweighted, weighted, DAG, or connect-all?" }
+      ],
+      techniques: [
+        { name: "BFS shortest-path trace", when: "the graph is unweighted.", move: "Track queue, distance, and parent at first discovery." },
+        { name: "Relaxation table", when: "edges have weights.", move: "Maintain dist and parent; update only when a smaller distance is found." },
+        { name: "Dijkstra finalization", when: "weights are nonnegative.", move: "Pick smallest tentative unfinalized vertex and then relax outgoing edges." },
+        { name: "Topological queue", when: "the graph is a DAG or prerequisite graph.", move: "Track indegrees and process zero-indegree vertices." },
+        { name: "MST safety check", when: "connecting all vertices cheaply.", move: "Use cut/cycle intuition and avoid confusing MST with source shortest paths." },
+        { name: "Goal-first algorithm choice", when: "a graph problem statement is mixed.", move: "Identify goal, edge weights, direction, and cycle assumptions before naming an algorithm." }
+      ],
+      practiceProblems: dsaGraphAlgorithmsProblems(),
+      implementationDrills: dsaGraphAlgorithmsImplementationDrills(),
+      reviewPrompts: [
+        "Is the graph unweighted or weighted?",
+        "Is the goal shortest path, topological order, or connecting all vertices?",
+        "What are the BFS distance and parent updates?",
+        "Which edge relaxation improves a tentative distance?",
+        "Which vertex is finalized next in Dijkstra, and why is that safe?",
+        "Which vertices currently have zero indegree in Kahn's algorithm?"
+      ],
+      reviewQuiz: {
+        id: "quiz-dsa-chapter-8-objective-review",
+        title: "DSA Chapter 8 Objective Review",
+        instructions: "Complete this after studying BFS shortest paths, weighted graph relaxation, Dijkstra frontier/finalization, topological ordering, Kahn's algorithm, MST cut/cycle intuition, and graph-algorithm choice. The sampled mix is 5 single-topic checks, 3 two-topic mixes, and 2 three-topic synthesis questions, with an extra relaxation check for GATE coverage.",
+        questions: dsaGraphAlgorithmsReviewQuestions()
+      },
+      readingQuestions: [
+        "Why does BFS give shortest paths only in unweighted graphs?",
+        "What does relaxing an edge mean?",
+        "Why does Dijkstra require nonnegative weights?",
+        "What does topological order require for every directed edge?",
+        "How does Kahn's algorithm use indegree?",
+        "How is MST different from shortest path?"
+      ],
+      chapterSummary: [
+        "BFS gives shortest edge-count paths in unweighted graphs.",
+        "Weighted shortest paths need relaxation of tentative distances.",
+        "Dijkstra finalizes the smallest tentative distance and needs nonnegative weights.",
+        "Topological order schedules DAG vertices so prerequisites come first.",
+        "MST connects all vertices cheaply overall, not from one source to each target.",
+        "Graph algorithm choice starts with the goal and assumptions, not with memorizing names."
       ],
       updatedAt
     }
@@ -15950,6 +16217,292 @@ function dsaGraphRepresentationTraversalReviewQuestions() {
   }));
 }
 
+function dsaGraphAlgorithmsProblems() {
+  return [
+    {
+      title: "Exercise 1: BFS Shortest Paths",
+      prompt: "Unweighted graph lists: S:[A,B], A:[S,C], B:[S,C], C:[A,B,D], D:[C]. Run BFS from S. Give distances and one valid parent tree using alphabetical neighbor order.",
+      solution: "Start S at distance 0. Discover A and B at distance 1 with parent S. Scan A before B, discover C at distance 2 with parent A. Scan C, discover D at distance 3 with parent C. Distances: S:0, A:1, B:1, C:2, D:3. Parents: A<-S, B<-S, C<-A, D<-C.",
+      tags: ["unweighted-shortest-path", "bfs-parent-tree", "bfs-distance"]
+    },
+    {
+      title: "Exercise 2: BFS Weighted Trap",
+      prompt: "There are edges S-A weight 10, S-B weight 1, and B-A weight 1. Why does BFS by edge count not solve weighted shortest path from S to A?",
+      solution: "BFS sees S-A as one edge and would prefer it by edge count. But the weighted path S-B-A has total cost 2, which is less than 10. Weighted shortest path minimizes total weight, not number of edges.",
+      tags: ["weighted-graph", "unweighted-shortest-path", "algorithm-choice"]
+    },
+    {
+      title: "Exercise 3: Relaxation",
+      prompt: "Current distances are dist[S]=0, dist[A]=4, dist[B]=1. Edge B->A has weight 2. Relax B->A. What changes?",
+      solution: "Check dist[B]+2 = 1+2 = 3, which is less than current dist[A]=4. Update dist[A]=3 and parent[A]=B.",
+      tags: ["dijkstra-relaxation", "weighted-graph"]
+    },
+    {
+      title: "Exercise 4: Dijkstra Trace",
+      prompt: "Graph edges: S->A(4), S->B(1), B->A(2), A->C(1), B->C(7). Run Dijkstra from S until all vertices are finalized.",
+      solution: "Initialize S=0, others infinity. Finalize S; relax A=4, B=1. Finalize B; relax A=min(4,3)=3 and C=8. Finalize A; relax C=min(8,4)=4. Finalize C. Final distances: S:0, B:1, A:3, C:4.",
+      tags: ["dijkstra-frontier", "dijkstra-relaxation", "dijkstra-finalization"]
+    },
+    {
+      title: "Exercise 5: Negative Weight Assumption",
+      prompt: "Why is Dijkstra not safe when negative edge weights are allowed?",
+      solution: "Dijkstra finalizes a vertex when it has the smallest tentative distance, assuming no future path through unfinalized vertices can reduce it. Negative edges can later reduce a finalized distance, breaking that invariant.",
+      tags: ["nonnegative-weight", "dijkstra-finalization"]
+    },
+    {
+      title: "Exercise 6: Topological Order Check",
+      prompt: "Edges are A->C, B->C, C->D. Which of these is a valid topological order: A,B,C,D or C,A,B,D?",
+      solution: "A,B,C,D is valid because A and B both appear before C, and C appears before D. C,A,B,D is invalid because C appears before its prerequisites A and B.",
+      tags: ["dag", "topological-order"]
+    },
+    {
+      title: "Exercise 7: Kahn Queue Trace",
+      prompt: "For edges A->C, B->C, C->D, run Kahn's algorithm using alphabetical order among zero-indegree vertices.",
+      solution: "Initial indegrees: A=0, B=0, C=2, D=1. Queue [A,B]. Output A, reduce C to 1. Output B, reduce C to 0, enqueue C. Output C, reduce D to 0, enqueue D. Output D. Order A,B,C,D.",
+      tags: ["topological-queue", "topological-order", "degree-counting"]
+    },
+    {
+      title: "Exercise 8: Cycle in Topological Sort",
+      prompt: "Directed edges are A->B, B->C, C->A. Why is there no topological ordering?",
+      solution: "The graph has a directed cycle. Every vertex in the cycle depends on another vertex in the same cycle, so no vertex can consistently appear before all of its outgoing dependents. Kahn's algorithm would find no zero-indegree start after considering the cycle.",
+      tags: ["dag", "topological-order"]
+    },
+    {
+      title: "Exercise 9: MST Cut Intuition",
+      prompt: "An undirected weighted graph has a cut separating {A} from {B,C,D}. Crossing edges are A-B(2), A-C(5), A-D(7). Which edge is safe by the cut intuition?",
+      solution: "A-B with weight 2 is the lightest edge crossing the cut, so it is safe to include in some MST by the cut intuition.",
+      tags: ["mst-cut-intuition", "weighted-graph"]
+    },
+    {
+      title: "Exercise 10: Algorithm Choice",
+      prompt: "Choose the right algorithm idea: unweighted shortest path; nonnegative weighted shortest path; prerequisite ordering in a DAG; cheapest undirected network connecting all vertices.",
+      solution: "Unweighted shortest path -> BFS. Nonnegative weighted shortest path -> Dijkstra. Prerequisite ordering in a DAG -> topological ordering. Cheapest undirected network connecting all vertices -> MST intuition/algorithm.",
+      tags: ["algorithm-choice", "unweighted-shortest-path", "dijkstra-relaxation", "topological-order", "mst-cut-intuition"]
+    }
+  ];
+}
+
+function dsaGraphAlgorithmsImplementationDrills() {
+  return [
+    {
+      title: "BFS Shortest Path Parent Tree",
+      source: "CS 61B-style graph traversal trace",
+      difficulty: "Easy",
+      focus: "distance levels and parent pointers",
+      url: "https://sp25.datastructur.es/",
+      targetTime: "O(V+E) with adjacency lists",
+      reason: "Trains the exact invariant that first discovery gives shortest edge-count distance.",
+      writeup: "Trace queue, distance, and parent after every dequeue."
+    },
+    {
+      title: "Dijkstra Relaxation Table",
+      source: "MIT/Open Data Structures-style shortest-path trace",
+      difficulty: "Medium",
+      focus: "tentative distances, priority frontier, finalization",
+      url: "https://ocw.mit.edu/courses/6-006-introduction-to-algorithms-spring-2020/",
+      targetTime: "O((V+E) log V) with a binary heap style frontier",
+      reason: "Makes relaxation and finalization visible enough for exam traces.",
+      writeup: "Maintain finalized set, frontier, distance table, and parent table at each step."
+    },
+    {
+      title: "Negative-Weight Rejection",
+      source: "Original GATE-style assumption check",
+      difficulty: "Medium",
+      focus: "Dijkstra preconditions",
+      url: "",
+      targetTime: "O(1) to reject after spotting a negative edge",
+      reason: "Prevents applying Dijkstra outside its assumptions.",
+      writeup: "Circle every negative edge and explain which finalization guarantee fails."
+    },
+    {
+      title: "Kahn Topological Sort Trace",
+      source: "MIT/Erickson-style DAG ordering drill",
+      difficulty: "Medium",
+      focus: "zero indegree queue and cycle detection",
+      url: "https://jeffe.cs.illinois.edu/teaching/algorithms/",
+      targetTime: "O(V+E) with adjacency lists and indegree counts",
+      reason: "Topological-order mistakes usually come from updating indegrees incorrectly.",
+      writeup: "Track queue, output order, and indegrees after each removed vertex."
+    },
+    {
+      title: "MST Versus Shortest Path Classifier",
+      source: "Original GATE-style algorithm-choice drill",
+      difficulty: "Medium",
+      focus: "goal-first algorithm choice",
+      url: "",
+      targetTime: "Constant-time classification after reading goal and assumptions",
+      reason: "Separates connect-all minimum total cost from source-to-target distance.",
+      writeup: "For each prompt, mark whether the goal is route, schedule, or connect-all."
+    }
+  ];
+}
+
+function dsaGraphAlgorithmsReviewQuestions() {
+  const metadata = {
+    "dsa-ch8-q1": { kind: "single concept", targetConcept: "topological-queue", prereqsUsed: ["topological-order"], difficulty: 1, gateWeight: "medium", expectedFirstStep: "Compute indegrees and enqueue zero-indegree vertices.", commonMistake: "Starting from arbitrary vertices with nonzero indegree.", answerCheck: "Initial queue contains zero-indegree vertices." },
+    "dsa-ch8-q2": { kind: "single concept", targetConcept: "topological-order", prereqsUsed: ["dag"], difficulty: 1, gateWeight: "high", expectedFirstStep: "Check every edge u->v has u before v.", commonMistake: "Allowing a dependent before its prerequisite.", answerCheck: "A,B,C,D is valid for A->C,B->C,C->D." },
+    "dsa-ch8-q3": { kind: "single concept", targetConcept: "bfs-parent-tree", prereqsUsed: ["bfs-queue"], difficulty: 1, gateWeight: "high", expectedFirstStep: "Set parent at first discovery in BFS.", commonMistake: "Changing parent after a later equal-distance discovery.", answerCheck: "C parent is A if A discovers C first." },
+    "dsa-ch8-q4": { kind: "single concept", targetConcept: "mst-cut-intuition", prereqsUsed: ["weighted-graph"], difficulty: 2, gateWeight: "medium", expectedFirstStep: "Find the lightest edge crossing the cut.", commonMistake: "Choosing a globally shortest path edge instead of cut edge.", answerCheck: "A-B(2) is safe across the cut." },
+    "dsa-ch8-q5": { kind: "single concept", targetConcept: "dijkstra-finalization", prereqsUsed: ["nonnegative-weight"], difficulty: 2, gateWeight: "high", expectedFirstStep: "Pick the unfinalized vertex with smallest tentative distance.", commonMistake: "Finalizing by edge count or insertion order.", answerCheck: "B with distance 1 finalizes before A with distance 4." },
+    "dsa-ch8-q6": { kind: "mixed: two concepts", targetConcept: "dijkstra-frontier", prereqsUsed: ["weighted-graph"], difficulty: 2, gateWeight: "high", expectedFirstStep: "Use tentative weighted distance as frontier priority.", commonMistake: "Using BFS FIFO queue for weighted graph.", answerCheck: "Priority frontier chooses smallest tentative distance." },
+    "dsa-ch8-q7": { kind: "mixed: two concepts", targetConcept: "algorithm-choice", prereqsUsed: ["unweighted-shortest-path"], difficulty: 2, gateWeight: "high", expectedFirstStep: "Check whether all edges have equal cost.", commonMistake: "Using Dijkstra when BFS is enough or BFS when weights differ.", answerCheck: "Unweighted shortest path uses BFS." },
+    "dsa-ch8-q8": { kind: "mixed: two concepts", targetConcept: "topological-queue", prereqsUsed: ["topological-order"], difficulty: 2, gateWeight: "high", expectedFirstStep: "Remove zero-indegree vertices and reduce outgoing neighbors.", commonMistake: "Not decrementing indegree after output.", answerCheck: "C becomes zero after both A and B are output." },
+    "dsa-ch8-q9": { kind: "mixed: three concepts", targetConcept: "algorithm-choice", prereqsUsed: ["nonnegative-weight", "mst-cut-intuition"], difficulty: 3, gateWeight: "high", expectedFirstStep: "Identify whether the goal is shortest path or connect-all.", commonMistake: "Using MST for source shortest paths.", answerCheck: "Dijkstra for nonnegative shortest path; MST for connect-all." },
+    "dsa-ch8-q10": { kind: "mixed: three concepts", targetConcept: "algorithm-choice", prereqsUsed: ["dijkstra-finalization", "topological-order"], difficulty: 3, gateWeight: "high", expectedFirstStep: "Match graph assumptions to algorithm goal.", commonMistake: "Using topological order on non-DAG shortest-path prompt.", answerCheck: "Dijkstra, topological order, BFS, MST each match different goals." },
+    "dsa-ch8-q11": { kind: "mixed: two concepts", targetConcept: "dijkstra-relaxation", prereqsUsed: ["weighted-graph"], difficulty: 2, gateWeight: "high", expectedFirstStep: "Compare dist[u]+w(u,v) with current dist[v].", commonMistake: "Adding edge weight to dist[v] instead of dist[u].", answerCheck: "dist[A] improves from 4 to 3 via B." },
+    "dsa-ch8-q12": { kind: "mixed: two concepts", targetConcept: "nonnegative-weight", prereqsUsed: ["dijkstra-finalization"], difficulty: 2, gateWeight: "high", expectedFirstStep: "Check edge weights before applying Dijkstra.", commonMistake: "Ignoring a negative edge.", answerCheck: "Negative weights break finalization safety." }
+  };
+  return [
+    {
+      id: "dsa-ch8-q1",
+      prompt: "In Kahn's topological sort, which vertices enter the initial queue?",
+      tags: ["topological-queue", "topological-order"],
+      options: [
+        { id: "a", text: "Vertices with zero indegree" },
+        { id: "b", text: "Vertices with maximum outdegree only" },
+        { id: "c", text: "Only sink vertices" },
+        { id: "d", text: "All vertices in reverse alphabetical order" }
+      ],
+      answer: "a"
+    },
+    {
+      id: "dsa-ch8-q2",
+      prompt: "Edges are A->C, B->C, C->D. Which order is valid topological order?",
+      tags: ["topological-order", "dag"],
+      options: [
+        { id: "a", text: "C,A,B,D" },
+        { id: "b", text: "A,B,C,D" },
+        { id: "c", text: "D,C,B,A" },
+        { id: "d", text: "A,D,C,B" }
+      ],
+      answer: "b"
+    },
+    {
+      id: "dsa-ch8-q3",
+      prompt: "In BFS from S, A is scanned before B and both connect to C. If A first discovers C, what is parent[C]?",
+      tags: ["bfs-parent-tree", "bfs-queue"],
+      options: [
+        { id: "a", text: "S" },
+        { id: "b", text: "A" },
+        { id: "c", text: "B" },
+        { id: "d", text: "C" }
+      ],
+      answer: "b"
+    },
+    {
+      id: "dsa-ch8-q4",
+      prompt: "Across cut {A} | {B,C,D}, crossing edge weights are A-B(2), A-C(5), A-D(7). Which edge is safe by MST cut intuition?",
+      tags: ["mst-cut-intuition", "weighted-graph"],
+      options: [
+        { id: "a", text: "A-B" },
+        { id: "b", text: "A-C" },
+        { id: "c", text: "A-D" },
+        { id: "d", text: "No lightest crossing edge can be safe" }
+      ],
+      answer: "a"
+    },
+    {
+      id: "dsa-ch8-q5",
+      prompt: "After relaxing from S, Dijkstra tentative distances are A=4 and B=1. Which vertex finalizes next?",
+      tags: ["dijkstra-finalization", "dijkstra-frontier"],
+      options: [
+        { id: "a", text: "A" },
+        { id: "b", text: "B" },
+        { id: "c", text: "Both at once" },
+        { id: "d", text: "Neither because Dijkstra never finalizes vertices" }
+      ],
+      answer: "b"
+    },
+    {
+      id: "dsa-ch8-q6",
+      prompt: "What priority does Dijkstra's frontier use?",
+      tags: ["weighted-graph", "dijkstra-frontier"],
+      options: [
+        { id: "a", text: "Smallest tentative distance" },
+        { id: "b", text: "Largest vertex label" },
+        { id: "c", text: "FIFO insertion order only" },
+        { id: "d", text: "Smallest indegree" }
+      ],
+      answer: "a"
+    },
+    {
+      id: "dsa-ch8-q7",
+      prompt: "For shortest paths in an unweighted graph, which algorithm is the Basic-plan choice?",
+      tags: ["unweighted-shortest-path", "algorithm-choice"],
+      options: [
+        { id: "a", text: "BFS" },
+        { id: "b", text: "MST cut rule" },
+        { id: "c", text: "Topological sort always" },
+        { id: "d", text: "Hash table rehashing" }
+      ],
+      answer: "a"
+    },
+    {
+      id: "dsa-ch8-q8",
+      prompt: "For edges A->C, B->C, C->D, after outputting A and B in Kahn's algorithm, what happens to C?",
+      tags: ["topological-order", "topological-queue"],
+      options: [
+        { id: "a", text: "Its indegree becomes zero and it can be enqueued" },
+        { id: "b", text: "It must be deleted permanently" },
+        { id: "c", text: "It remains indegree 2" },
+        { id: "d", text: "It creates an undirected edge" }
+      ],
+      answer: "a"
+    },
+    {
+      id: "dsa-ch8-q9",
+      prompt: "Which pairing is correct?",
+      tags: ["nonnegative-weight", "mst-cut-intuition", "algorithm-choice"],
+      options: [
+        { id: "a", text: "Dijkstra: nonnegative weighted shortest paths; MST: connect all vertices cheaply" },
+        { id: "b", text: "Dijkstra: topological ordering; MST: source shortest paths only" },
+        { id: "c", text: "BFS: negative weighted shortest paths; MST: directed prerequisites" },
+        { id: "d", text: "Kahn: minimum spanning tree by edge weights" }
+      ],
+      answer: "a"
+    },
+    {
+      id: "dsa-ch8-q10",
+      prompt: "A directed acyclic prerequisite graph asks for a valid course order. Which algorithm idea fits?",
+      tags: ["dijkstra-finalization", "topological-order", "algorithm-choice"],
+      options: [
+        { id: "a", text: "Topological ordering" },
+        { id: "b", text: "Dijkstra finalization" },
+        { id: "c", text: "MST cycle rule" },
+        { id: "d", text: "Binary search lower bound" }
+      ],
+      answer: "a"
+    },
+    {
+      id: "dsa-ch8-q11",
+      prompt: "Distances are dist[B]=1 and dist[A]=4. Edge B->A has weight 2. What happens when relaxing B->A?",
+      tags: ["dijkstra-relaxation", "weighted-graph"],
+      options: [
+        { id: "a", text: "dist[A] improves to 3" },
+        { id: "b", text: "dist[B] becomes 6" },
+        { id: "c", text: "dist[A] stays 4 because 2 is ignored" },
+        { id: "d", text: "A is removed from the graph" }
+      ],
+      answer: "a"
+    },
+    {
+      id: "dsa-ch8-q12",
+      prompt: "Which condition is required for Dijkstra's usual finalization argument?",
+      tags: ["nonnegative-weight", "dijkstra-finalization"],
+      options: [
+        { id: "a", text: "All edge weights are nonnegative" },
+        { id: "b", text: "The graph must be unweighted only" },
+        { id: "c", text: "Every edge must be negative" },
+        { id: "d", text: "The graph must be a tree with no weights" }
+      ],
+      answer: "a"
+    }
+  ].map((question) => ({
+    ...question,
+    ...(metadata[question.id] || { kind: question.tags.length === 1 ? "single concept" : question.tags.length === 2 ? "mixed: two concepts" : "mixed: three concepts", targetConcept: question.tags[0], prereqsUsed: question.tags.slice(1), difficulty: question.tags.length, gateWeight: "medium" })
+  }));
+}
+
 function conditionalProbabilityReviewQuestions() {
   const metadata = {
     "cp-review-1": { targetConcept: "conditional-denominator", prereqsUsed: ["conditional-probability"], difficulty: 1, gateWeight: "high" },
@@ -17130,6 +17683,140 @@ function dsaGraphRepresentationTraversalConceptGraph() {
         prereqs: ["adjacency-matrix"],
         repairMaterial: "Review DSA Chapter 7.3 and count V possible-neighbor checks per row.",
         gateWeight: "medium"
+      }
+    }
+  };
+}
+
+function dsaGraphAlgorithmsConceptGraph() {
+  return {
+    chapterId: "gate-da-dsa-graph-algorithms",
+    chapterTitle: "DSA Chapter 8: Graph Algorithms",
+    gateWeight: "high",
+    fallbackConcepts: ["unweighted-shortest-path", "weighted-graph", "dijkstra-relaxation", "topological-order", "algorithm-choice"],
+    fallbackDifficultyMix: [1, 2, 2, 3],
+    fallbackInstruction: "Retest graph-goal recognition first, then add BFS parent traces, relaxation tables, Dijkstra finalization, topological queues, and MST versus shortest-path choices.",
+    stableNextAction: "Next: move to sorting and selection after shortest-path, topological-order, MST-intuition, and graph-algorithm choice are stable.",
+    nodes: {
+      "bfs-distance": {
+        label: "BFS distance levels",
+        prereqs: [],
+        repairMaterial: "Review DSA Chapter 7.4 and group vertices by BFS distance from the source.",
+        gateWeight: "high"
+      },
+      "bfs-queue": {
+        label: "BFS queue trace",
+        prereqs: [],
+        repairMaterial: "Review DSA Chapter 7.4 and trace queue, visited set, distance, and parent together.",
+        gateWeight: "high"
+      },
+      "visited-invariant": {
+        label: "Visited invariant",
+        prereqs: [],
+        repairMaterial: "Review DSA Chapter 7.4 and mark vertices when discovered to prevent duplicate work.",
+        gateWeight: "high"
+      },
+      "heap-order-property": {
+        label: "Heap order property",
+        prereqs: [],
+        repairMaterial: "Review DSA Chapter 5.6 and connect priority queues to smallest tentative distances.",
+        gateWeight: "medium"
+      },
+      "directed-undirected": {
+        label: "Directed versus undirected",
+        prereqs: [],
+        repairMaterial: "Review DSA Chapter 7.1 and check whether an edge has direction before applying DAG or MST ideas.",
+        gateWeight: "high"
+      },
+      "degree-counting": {
+        label: "Degree counting",
+        prereqs: ["directed-undirected"],
+        repairMaterial: "Review DSA Chapter 7.1 and compute indegrees for Kahn's algorithm.",
+        gateWeight: "high"
+      },
+      "unweighted-shortest-path": {
+        label: "Unweighted shortest path",
+        prereqs: ["bfs-distance"],
+        repairMaterial: "Review DSA Chapter 8.1 and solve two BFS distance/parent traces.",
+        gateWeight: "high"
+      },
+      "bfs-parent-tree": {
+        label: "BFS parent tree",
+        prereqs: ["bfs-queue", "visited-invariant"],
+        repairMaterial: "Review DSA Chapter 8.1 and set parent only at first discovery.",
+        gateWeight: "high"
+      },
+      "weighted-graph": {
+        label: "Weighted graph",
+        prereqs: [],
+        repairMaterial: "Review DSA Chapter 8.2 and distinguish edge count from total edge-weight cost.",
+        gateWeight: "high"
+      },
+      "nonnegative-weight": {
+        label: "Nonnegative weight assumption",
+        prereqs: ["weighted-graph"],
+        repairMaterial: "Review DSA Chapter 8.3 and explain why negative edges can break Dijkstra finalization.",
+        gateWeight: "high"
+      },
+      "dijkstra-frontier": {
+        label: "Dijkstra frontier",
+        prereqs: ["heap-order-property", "weighted-graph"],
+        repairMaterial: "Review DSA Chapter 8.3 and choose the unfinalized vertex with smallest tentative distance.",
+        gateWeight: "high"
+      },
+      "dijkstra-relaxation": {
+        label: "Dijkstra relaxation",
+        prereqs: ["dijkstra-frontier"],
+        repairMaterial: "Review DSA Chapter 8.2 and practice dist[u] + w(u,v) < dist[v] updates.",
+        gateWeight: "high"
+      },
+      "dijkstra-finalization": {
+        label: "Dijkstra finalization",
+        prereqs: ["dijkstra-relaxation", "nonnegative-weight"],
+        repairMaterial: "Review DSA Chapter 8.3 and trace finalized set, frontier, and distance table.",
+        gateWeight: "high"
+      },
+      dag: {
+        label: "DAG",
+        prereqs: ["directed-undirected"],
+        repairMaterial: "Review DSA Chapter 8.4 and identify directed cycles before trying topological order.",
+        gateWeight: "high"
+      },
+      "topological-order": {
+        label: "Topological order",
+        prereqs: ["dag", "degree-counting"],
+        repairMaterial: "Review DSA Chapter 8.4 and verify every edge u->v places u before v.",
+        gateWeight: "high"
+      },
+      "topological-queue": {
+        label: "Kahn zero-indegree queue",
+        prereqs: ["topological-order", "queue-fifo"],
+        repairMaterial: "Review DSA Chapter 8.4 and update indegrees after each output vertex.",
+        gateWeight: "medium"
+      },
+      "queue-fifo": {
+        label: "Queue FIFO",
+        prereqs: [],
+        repairMaterial: "Review DSA Chapter 4.6 and trace queue order for BFS and Kahn's algorithm.",
+        gateWeight: "medium"
+      },
+      "mst-cut-intuition": {
+        label: "MST cut intuition",
+        prereqs: ["weighted-graph"],
+        repairMaterial: "Review DSA Chapter 8.5 and choose the lightest edge crossing a cut.",
+        gateWeight: "medium"
+      },
+      "mst-cycle-intuition": {
+        label: "MST cycle intuition",
+        prereqs: ["weighted-graph"],
+        repairMaterial: "Review DSA Chapter 8.5 and identify the heaviest edge on a cycle as unnecessary when cheaper alternatives exist.",
+        gateWeight: "medium"
+      },
+      "algorithm-choice": {
+        label: "Graph algorithm choice",
+        prereqs: ["unweighted-shortest-path", "dijkstra-relaxation", "topological-order", "mst-cut-intuition"],
+        repairMaterial: "Review DSA Chapter 8.6 and classify prompts as unweighted shortest path, weighted shortest path, DAG scheduling, or connect-all MST.",
+        gateWeight: "high"
       }
     }
   };
@@ -24087,6 +24774,7 @@ function conceptGraphForSection(section) {
   if (section?.id === "gate-da-dsa-trees") return dsaTreesConceptGraph();
   if (section?.id === "gate-da-dsa-sets-maps") return dsaSetsMapsConceptGraph();
   if (section?.id === "gate-da-dsa-graph-representation-traversal") return dsaGraphRepresentationTraversalConceptGraph();
+  if (section?.id === "gate-da-dsa-graph-algorithms") return dsaGraphAlgorithmsConceptGraph();
   if (section?.id === "gate-da-linear-algebra-vector-spaces-coordinates") return linearAlgebraVectorSpacesConceptGraph();
   if (section?.id === "gate-da-linear-algebra-transformations-matrices") return linearAlgebraTransformationsConceptGraph();
   if (section?.id === "gate-da-linear-algebra-rank-nullity-systems") return linearAlgebraRankNullityConceptGraph();
