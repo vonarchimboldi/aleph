@@ -1,7 +1,7 @@
 const STORAGE_KEY = "learning-studio-data-v2";
 const LEGACY_STORAGE_KEYS = ["learning-studio-data-v1"];
 const SESSION_KEY = "aleph-session";
-const COURSE_PLAN_VERSION = "seeded-user-canonical-workspace-v120";
+const COURSE_PLAN_VERSION = "seeded-user-canonical-workspace-v121";
 const MAX_FEEDBACK_ATTACHMENT_BYTES = 3 * 1024 * 1024;
 const MAX_COMPRESSED_FEEDBACK_BYTES = 2400 * 1024;
 const MAX_FEEDBACK_PDF_PAGES = 6;
@@ -18,6 +18,8 @@ let selectedSectionId = null;
 let selectedPatternMaterialId = null;
 let activeTestId = null;
 let platinumProgressSyncTimer = null;
+let cachedPlatinumProgressSnapshot = null;
+let cachedPlatinumProgressFetchedAt = "";
 const pendingUploadFiles = new Map();
 ensureCoursePlan();
 enforceSeededUserWorkspace();
@@ -30,6 +32,7 @@ const views = {
   schedule: document.querySelector("#schedule-view"),
   tests: document.querySelector("#tests-view"),
   feedback: document.querySelector("#feedback-view"),
+  "platinum-users": document.querySelector("#platinum-users-view"),
   resources: document.querySelector("#resources-view"),
   settings: document.querySelector("#settings-view")
 };
@@ -42,6 +45,7 @@ const titles = {
   schedule: "Schedule",
   tests: "Tests",
   feedback: "Feedback",
+  "platinum-users": "Platinum Users",
   resources: "Resources",
   settings: "Share and Updates"
 };
@@ -78,6 +82,7 @@ document.querySelector("#logout-btn").addEventListener("click", logout);
 document.querySelector("#export-btn").addEventListener("click", exportData);
 document.querySelector("#import-input").addEventListener("change", importData);
 document.querySelector("#week-select").addEventListener("change", renderTaskList);
+document.querySelector("#refresh-platinum-users-btn")?.addEventListener("click", () => renderPlatinumUsersDashboard({ refresh: true }));
 document.querySelector("#login-form").addEventListener("submit", login);
 document.querySelector("#signup-form").addEventListener("submit", signup);
 document.querySelector("#password-change-form").addEventListener("submit", changePassword);
@@ -338,6 +343,12 @@ function canPreviewLockedContent(user = state.user) {
   const canonicalUser = normalizeSeededUser(user || {});
   const role = canonicalUser.role || "learner";
   return Boolean(canonicalUser.canPreviewLockedContent || ["admin", "course-designer", "reviewer"].includes(role));
+}
+
+function canViewPlatinumUsers(user = state.user) {
+  const canonicalUser = normalizeSeededUser(user || {});
+  const role = canonicalUser.role || "learner";
+  return Boolean(canonicalUser.canViewPlatinumUsers || ["admin", "course-designer", "reviewer"].includes(role));
 }
 
 function latestQuizAttemptForTest(testId) {
@@ -25003,6 +25014,10 @@ function enforceSeededUserWorkspace() {
 }
 
 function showView(name) {
+  if (!views[name]) return;
+  if (name === "platinum-users" && !canViewPlatinumUsers()) {
+    name = "dashboard";
+  }
   Object.values(views).forEach((view) => view.classList.remove("active"));
   views[name].classList.add("active");
   document.querySelector("#view-title").textContent = titles[name];
@@ -25014,6 +25029,7 @@ function showView(name) {
     selectedSectionId = null;
     selectedPatternMaterialId = null;
   }
+  if (name === "platinum-users") renderPlatinumUsersDashboard();
 }
 
 function login(event) {
@@ -25724,6 +25740,7 @@ function render() {
     ? "Open a subject to read its textbook chapters and practice sets."
     : "Open a subject to work through Priyanka's pattern workspaces and weekly material.";
   renderBuildState();
+  updateRoleNavigation();
   document.querySelector("#learner-subtitle").textContent = `Learner: ${state.user.name}`;
   document.querySelector("#subject-count").textContent = subjects.length;
   document.querySelector("#task-count").textContent = state.tasks.length;
@@ -25753,6 +25770,7 @@ function render() {
   normalizeTaskStatuses();
   renderTaskList();
   renderCurrentTasks();
+  if (views["platinum-users"]?.classList.contains("active")) renderPlatinumUsersDashboard();
 }
 
 function renderBuildState() {
@@ -25769,6 +25787,343 @@ function renderBuildState() {
 
 function feedbackSurfaceCount() {
   return state.feedback.length + generatedFeedbackEntries().length;
+}
+
+function updateRoleNavigation() {
+  const platinumUsersButton = document.querySelector('[data-view="platinum-users"]');
+  if (!platinumUsersButton) return;
+  const allowed = canViewPlatinumUsers();
+  platinumUsersButton.classList.toggle("hidden", !allowed);
+  if (!allowed && views["platinum-users"]?.classList.contains("active")) {
+    showView("dashboard");
+  }
+}
+
+function currentPlatinumOwnerSnapshot() {
+  if (!isPlatinumPrototypeUser(state.user)) return null;
+  return buildPlatinumProgressSnapshot();
+}
+
+function platinumOwnerFeedbackItems(snapshot) {
+  const latest = snapshot?.feedback?.latest || [];
+  const consolidated = snapshot?.feedback?.consolidated?.feedbackItems || [];
+  const combined = [...latest, ...consolidated];
+  const seen = new Set();
+  return combined
+    .filter(Boolean)
+    .filter((item) => {
+      const key = item.materialId || `${item.materialTitle || ""}-${item.feedbackUpdatedAt || ""}`;
+      if (seen.has(key)) return false;
+      seen.add(key);
+      return true;
+    })
+    .sort((a, b) => (b.feedbackUpdatedAt || b.uploadedAt || "").localeCompare(a.feedbackUpdatedAt || a.uploadedAt || ""));
+}
+
+function localPlatinumReviewScores() {
+  return [
+    ...(state.quizAttempts || [])
+      .filter((attempt) => /review|quiz/i.test(`${attempt.title || ""} ${attempt.subject || ""}`))
+      .map((attempt) => ({
+        title: attempt.title || "Review quiz",
+        subject: attempt.subject || "Review",
+        date: (attempt.date || "").slice(0, 10),
+        scoreLabel: Number.isFinite(attempt.percent) ? `${attempt.percent}%` : "Recorded",
+        detail: attempt.feedback?.summary || `${attempt.correct ?? "-"} correct out of ${attempt.total ?? "-"}`
+      })),
+    ...quizAttemptFeedbackEntries().map((entry) => ({
+      title: entry.materialTitle || "Review quiz feedback",
+      subject: entry.subjectTitle || "Review",
+      date: entry.feedbackUpdatedAt || entry.date || "",
+      scoreLabel: entry.feedbackScore === null || entry.feedbackScore === undefined ? "Feedback" : `${entry.feedbackScore}`,
+      detail: entry.feedbackSummary || entry.summary?.oneLine || ""
+    }))
+  ].sort((a, b) => (b.date || "").localeCompare(a.date || ""));
+}
+
+function platinumReviewScoresFromFeedback(snapshot) {
+  return platinumOwnerFeedbackItems(snapshot)
+    .filter(isReviewFeedbackEntry)
+    .map((item) => ({
+      title: item.materialTitle || "Review quiz",
+      subject: item.subjectTitle || item.patternTitle || "Review",
+      date: item.feedbackUpdatedAt || item.uploadedAt || item.date || "",
+      scoreLabel: item.feedbackScore === null || item.feedbackScore === undefined ? (item.feedbackVerdict || "Feedback") : `${item.feedbackScore}`,
+      detail: item.feedbackSummary || item.feedbackVerdict || item.feedbackNextDrill || ""
+    }))
+    .sort((a, b) => (b.date || "").localeCompare(a.date || ""));
+}
+
+function platinumOwnerRecordFromSnapshot(snapshot, sourceLabel, options = {}) {
+  const pace = snapshot?.pace || {};
+  const feedbackItems = platinumOwnerFeedbackItems(snapshot);
+  const reviewScores = options.reviewScores || platinumReviewScoresFromFeedback(snapshot);
+  const latestFeedback = feedbackItems.slice(0, 4);
+  const user = snapshot?.user || {};
+  const overdueTasks = snapshot?.tasks?.due?.filter((task) => task.dueState === "overdue" && task.status !== "completed") || [];
+  const overdueMaterials = snapshot?.materials?.due?.filter((material) => !material.submitted && material.date && material.date < (snapshot.today || todayDateString())) || [];
+  const dueTodayMaterials = snapshot?.materials?.due?.filter((material) => !material.submitted && material.date === (snapshot.today || todayDateString())) || [];
+  return {
+    id: user.id || user.email || user.name || sourceLabel,
+    name: user.displayName || user.name || "Platinum learner",
+    email: user.email || "",
+    accountTypeId: user.accountTypeId || snapshot?.accountTypeId || "gate-da-platinum",
+    sourceLabel,
+    syncedAt: snapshot?.storedAt || snapshot?.syncedAt || cachedPlatinumProgressFetchedAt || "",
+    pace: {
+      statusLabel: pace.statusLabel || "No pace snapshot",
+      completionRate: pace.completionRate ?? 0,
+      currentWeek: pace.currentWeek || snapshot?.currentWeek || "-",
+      expectedCount: pace.expectedCount ?? 0,
+      completedExpectedCount: pace.completedExpectedCount ?? 0,
+      overdueCount: pace.overdueCount ?? overdueTasks.length,
+      dueTodayCount: pace.dueTodayCount ?? 0,
+      upcomingCount: pace.upcomingCount ?? 0,
+      overdueMaterialCount: pace.overdueMaterialCount ?? overdueMaterials.length,
+      dueTodayMaterialCount: pace.dueTodayMaterialCount ?? dueTodayMaterials.length,
+      dueMaterialCount: pace.dueMaterialCount ?? 0,
+      submittedDueMaterialCount: pace.submittedDueMaterialCount ?? 0
+    },
+    overdueTasks: overdueTasks.slice(0, 4),
+    overdueMaterials: overdueMaterials.slice(0, 4),
+    latestFeedback,
+    reviewScores: reviewScores.slice(0, 5),
+    feedbackCount: feedbackItems.length,
+    reviewScoreCount: reviewScores.length
+  };
+}
+
+function mergePlatinumOwnerRecords(records) {
+  const merged = new Map();
+  records.filter(Boolean).forEach((record) => {
+    const key = record.id || record.email || record.name;
+    if (!merged.has(key)) {
+      merged.set(key, record);
+      return;
+    }
+    const existing = merged.get(key);
+    merged.set(key, {
+      ...existing,
+      ...record,
+      sourceLabel: [existing.sourceLabel, record.sourceLabel].filter(Boolean).join(" + "),
+      latestFeedback: record.latestFeedback.length ? record.latestFeedback : existing.latestFeedback,
+      reviewScores: record.reviewScores.length ? record.reviewScores : existing.reviewScores
+    });
+  });
+  return Array.from(merged.values()).sort((a, b) => b.pace.overdueCount - a.pace.overdueCount || a.name.localeCompare(b.name));
+}
+
+function platinumOwnerDashboardRecords() {
+  const localSnapshot = currentPlatinumOwnerSnapshot();
+  return mergePlatinumOwnerRecords([
+    localSnapshot
+      ? platinumOwnerRecordFromSnapshot(localSnapshot, "Current browser", { reviewScores: localPlatinumReviewScores() })
+      : null,
+    cachedPlatinumProgressSnapshot
+      ? platinumOwnerRecordFromSnapshot(cachedPlatinumProgressSnapshot, "Synced Platinum snapshot")
+      : null
+  ]);
+}
+
+async function fetchPlatinumProgressSnapshot() {
+  const response = await fetch("/api/platinum-progress", { cache: "no-store" });
+  if (!response.ok) throw new Error(`Progress endpoint returned ${response.status}`);
+  const payload = await response.json();
+  cachedPlatinumProgressSnapshot = payload.snapshot || null;
+  cachedPlatinumProgressFetchedAt = new Date().toISOString();
+  return cachedPlatinumProgressSnapshot;
+}
+
+function renderPlatinumUsersDashboard(options = {}) {
+  const container = document.querySelector("#platinum-users-dashboard");
+  if (!container) return;
+  if (!canViewPlatinumUsers()) {
+    container.innerHTML = '<div class="empty">This dashboard is available to reviewer and admin accounts.</div>';
+    return;
+  }
+
+  const records = platinumOwnerDashboardRecords();
+  container.innerHTML = platinumUsersDashboardTemplate(records, {
+    loading: options.loading,
+    error: options.error || "",
+    syncedAt: cachedPlatinumProgressFetchedAt
+  });
+
+  if (!options.refresh && cachedPlatinumProgressSnapshot) return;
+  fetchPlatinumProgressSnapshot()
+    .then(() => {
+      const latestRecords = platinumOwnerDashboardRecords();
+      container.innerHTML = platinumUsersDashboardTemplate(latestRecords, {
+        syncedAt: cachedPlatinumProgressFetchedAt
+      });
+    })
+    .catch((error) => {
+      container.innerHTML = platinumUsersDashboardTemplate(platinumOwnerDashboardRecords(), {
+        error: error.message || "Could not load synced Platinum snapshot.",
+        syncedAt: cachedPlatinumProgressFetchedAt
+      });
+    });
+}
+
+function platinumUsersDashboardTemplate(records, meta = {}) {
+  if (!records.length) {
+    return `
+      <div class="owner-dashboard">
+        <p class="platinum-user-note">No Platinum learner snapshot is available yet. Open a Platinum learner workspace once or sync progress to populate this view.</p>
+        ${meta.error ? `<p class="feedback-warning">${escapeHtml(meta.error)}</p>` : ""}
+      </div>
+    `;
+  }
+
+  const totals = records.reduce((acc, record) => {
+    acc.completed += record.pace.completedExpectedCount;
+    acc.expected += record.pace.expectedCount;
+    acc.overdue += record.pace.overdueCount;
+    acc.materialOverdue += record.pace.overdueMaterialCount;
+    acc.feedback += record.feedbackCount;
+    acc.reviewScores += record.reviewScoreCount;
+    return acc;
+  }, { completed: 0, expected: 0, overdue: 0, materialOverdue: 0, feedback: 0, reviewScores: 0 });
+  const completionRate = totals.expected ? Math.round((totals.completed / totals.expected) * 100) : 0;
+
+  return `
+    <div class="owner-dashboard">
+      <div class="owner-summary-grid">
+        ${ownerSummaryMetricTemplate("Platinum users", records.length)}
+        ${ownerSummaryMetricTemplate("Completion", `${completionRate}%`)}
+        ${ownerSummaryMetricTemplate("Overdue work", totals.overdue)}
+        ${ownerSummaryMetricTemplate("Overdue submissions", totals.materialOverdue)}
+        ${ownerSummaryMetricTemplate("Feedback reports", totals.feedback)}
+        ${ownerSummaryMetricTemplate("Review quiz records", totals.reviewScores)}
+      </div>
+      ${meta.error ? `<p class="feedback-warning">${escapeHtml(meta.error)} Showing available local data.</p>` : ""}
+      <p class="platinum-user-note">Current data source: local browser state plus the latest synced Platinum progress snapshot${meta.syncedAt ? ` fetched ${formatDateTimeLabel(meta.syncedAt)}` : ""}. Multi-user backend storage can feed this same view as more Platinum learners are added.</p>
+      <div class="platinum-user-grid">
+        ${records.map(platinumUserCardTemplate).join("")}
+      </div>
+    </div>
+  `;
+}
+
+function ownerSummaryMetricTemplate(label, value) {
+  return `
+    <article class="owner-summary-metric">
+      <span>${escapeHtml(label)}</span>
+      <strong>${escapeHtml(value)}</strong>
+    </article>
+  `;
+}
+
+function platinumUserCardTemplate(record) {
+  const overdueClass = record.pace.overdueCount ? "critical" : "";
+  return `
+    <article class="platinum-user-card">
+      <div class="platinum-user-top">
+        <div>
+          <h4>${escapeHtml(record.name)}</h4>
+          <p>${escapeHtml(record.email || record.accountTypeId)}${record.syncedAt ? ` - synced ${formatDateTimeLabel(record.syncedAt)}` : ""}</p>
+        </div>
+        <span class="tag ${overdueClass}">${escapeHtml(record.pace.statusLabel)}</span>
+      </div>
+      <div class="platinum-user-metrics">
+        ${platinumUserMetricTemplate("Week", record.pace.currentWeek)}
+        ${platinumUserMetricTemplate("Done / due", `${record.pace.completedExpectedCount}/${record.pace.expectedCount}`)}
+        ${platinumUserMetricTemplate("Completion", `${record.pace.completionRate}%`)}
+        ${platinumUserMetricTemplate("Overdue", record.pace.overdueCount)}
+        ${platinumUserMetricTemplate("Due today", record.pace.dueTodayCount)}
+        ${platinumUserMetricTemplate("Submissions", `${record.pace.submittedDueMaterialCount}/${record.pace.dueMaterialCount}`)}
+      </div>
+      <div class="platinum-user-detail-grid">
+        ${platinumUserListTemplate("Overdue Tasks", record.overdueTasks, platinumTaskOwnerRowTemplate)}
+        ${platinumUserListTemplate("Overdue Submissions", record.overdueMaterials, platinumMaterialOwnerRowTemplate)}
+        ${platinumUserListTemplate("Latest Feedback", record.latestFeedback, platinumFeedbackOwnerRowTemplate)}
+      </div>
+      <div class="platinum-user-list">
+        <h5>Review Quiz Scores</h5>
+        <div class="platinum-user-list-grid">
+          ${record.reviewScores.length
+            ? record.reviewScores.map(platinumReviewScoreOwnerRowTemplate).join("")
+            : '<p class="platinum-user-note">No review quiz score or feedback record yet.</p>'}
+        </div>
+      </div>
+    </article>
+  `;
+}
+
+function platinumUserMetricTemplate(label, value) {
+  return `
+    <div class="platinum-user-metric">
+      <span>${escapeHtml(label)}</span>
+      <strong>${escapeHtml(value)}</strong>
+    </div>
+  `;
+}
+
+function platinumUserListTemplate(title, items, rowTemplate) {
+  return `
+    <div class="platinum-user-list">
+      <h5>${escapeHtml(title)}</h5>
+      <div class="platinum-user-list-grid">
+        ${items.length ? items.map(rowTemplate).join("") : '<p class="platinum-user-note">Nothing flagged.</p>'}
+      </div>
+    </div>
+  `;
+}
+
+function platinumTaskOwnerRowTemplate(task) {
+  return `
+    <div class="platinum-user-row">
+      <div>
+        <strong>${escapeHtml(task.title || "Task")}</strong>
+        <p>${task.dueDate ? formatDate(task.dueDate) : "No due date"}${task.scheduleTitle ? ` - ${escapeHtml(task.scheduleTitle)}` : ""}</p>
+      </div>
+      <span class="tag warning">${escapeHtml(task.status || task.dueLabel || "open")}</span>
+    </div>
+  `;
+}
+
+function platinumMaterialOwnerRowTemplate(material) {
+  return `
+    <div class="platinum-user-row">
+      <div>
+        <strong>${escapeHtml(material.materialTitle || "Material")}</strong>
+        <p>${material.date ? formatDate(material.date) : "No due date"} - ${escapeHtml(material.subjectTitle || material.patternTitle || "Platinum material")}</p>
+      </div>
+      <span class="tag critical">missing</span>
+    </div>
+  `;
+}
+
+function platinumFeedbackOwnerRowTemplate(item) {
+  const label = item.feedbackScore === null || item.feedbackScore === undefined ? (item.feedbackVerdict || "feedback") : `score ${item.feedbackScore}`;
+  return `
+    <div class="platinum-user-row">
+      <div>
+        <strong>${escapeHtml(item.materialTitle || "Feedback report")}</strong>
+        <p>${escapeHtml(item.feedbackSummary || item.feedbackNextDrill || item.feedbackConceptGap || "Generated feedback is ready.")}</p>
+      </div>
+      <span class="tag">${escapeHtml(label)}</span>
+    </div>
+  `;
+}
+
+function platinumReviewScoreOwnerRowTemplate(score) {
+  return `
+    <div class="platinum-user-row">
+      <div>
+        <strong>${escapeHtml(score.title || "Review quiz")}</strong>
+        <p>${escapeHtml(score.subject || "Review")}${score.date ? ` - ${formatDate(score.date.slice(0, 10))}` : ""}${score.detail ? ` - ${escapeHtml(score.detail)}` : ""}</p>
+      </div>
+      <span class="tag">${escapeHtml(score.scoreLabel || "recorded")}</span>
+    </div>
+  `;
+}
+
+function formatDateTimeLabel(value) {
+  if (!value) return "";
+  const parsed = new Date(value);
+  if (Number.isNaN(parsed.getTime())) return escapeHtml(value);
+  return parsed.toLocaleString(undefined, { month: "short", day: "numeric", hour: "numeric", minute: "2-digit" });
 }
 
 function renderFeedback() {

@@ -184,6 +184,7 @@
         <button class="nav-item" data-view="schedule">Schedule</button>
         <button class="nav-item" data-view="tests">Tests</button>
         <button class="nav-item" data-view="feedback">Feedback</button>
+        <button class="nav-item hidden" data-view="platinum-users">Platinum Users</button>
         <button class="nav-item" data-view="resources">Resources</button>
         <button class="nav-item" data-view="settings">Share</button>
       </nav>
@@ -305,6 +306,19 @@
             <div class="list" id="activity-list"></div>
           </section>
         </div>
+      </section>
+
+      <section class="view" id="platinum-users-view">
+        <section class="panel">
+          <div class="panel-header content-header">
+            <div>
+              <h3>Platinum Users</h3>
+              <p class="muted">Owner view for Platinum learner pace, overdue work, feedback status, and review quiz scores.</p>
+            </div>
+            <button class="ghost-btn" id="refresh-platinum-users-btn" type="button">Refresh</button>
+          </div>
+          <div id="platinum-users-dashboard"></div>
+        </section>
       </section>
 
       <section class="view" id="plans-view">

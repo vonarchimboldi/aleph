@@ -446,6 +446,133 @@ textarea {
   margin: 4px 0 0;
 }
 
+.owner-dashboard {
+  display: grid;
+  gap: 18px;
+}
+
+.owner-summary-grid,
+.platinum-user-metrics,
+.platinum-user-detail-grid,
+.platinum-user-list-grid {
+  display: grid;
+  gap: 12px;
+}
+
+.owner-summary-grid {
+  grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+}
+
+.owner-summary-metric,
+.platinum-user-metric {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 14px;
+}
+
+.owner-summary-metric {
+  background: #fbfcfb;
+}
+
+.owner-summary-metric span,
+.platinum-user-metric span {
+  color: var(--muted);
+  display: block;
+  font-size: 12px;
+  font-weight: 700;
+  margin-bottom: 5px;
+  text-transform: uppercase;
+}
+
+.owner-summary-metric strong,
+.platinum-user-metric strong {
+  display: block;
+  font-size: 26px;
+  line-height: 1.1;
+}
+
+.platinum-user-grid {
+  display: grid;
+  gap: 14px;
+}
+
+.platinum-user-card {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--surface);
+  display: grid;
+  gap: 14px;
+  padding: 16px;
+}
+
+.platinum-user-top,
+.platinum-user-row {
+  align-items: flex-start;
+  display: flex;
+  gap: 12px;
+  justify-content: space-between;
+}
+
+.platinum-user-top h4,
+.platinum-user-top p,
+.platinum-user-row p {
+  margin: 0;
+}
+
+.platinum-user-top p,
+.platinum-user-row p {
+  color: var(--muted);
+  line-height: 1.4;
+}
+
+.platinum-user-metrics {
+  grid-template-columns: repeat(auto-fit, minmax(135px, 1fr));
+}
+
+.platinum-user-detail-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.platinum-user-list {
+  border-top: 1px solid var(--line);
+  display: grid;
+  gap: 10px;
+  padding-top: 12px;
+}
+
+.platinum-user-list h5 {
+  font-size: 14px;
+  margin: 0;
+}
+
+.platinum-user-row {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 10px;
+}
+
+.platinum-user-row strong {
+  display: block;
+  font-size: 14px;
+  margin-bottom: 3px;
+}
+
+.platinum-user-note {
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+.tag.warning {
+  background: #fff4df;
+  color: #8a4f00;
+}
+
+.tag.critical {
+  background: #ffe8e3;
+  color: #9e2f17;
+}
+
 .two-column {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -2884,6 +3011,8 @@ a {
   .problem-heading,
   .board-header,
   .week-schedule-header,
+  .platinum-user-top,
+  .platinum-user-row,
   .pace-summary,
   .task-alert-list article,
   .schedule-row {
@@ -2892,6 +3021,10 @@ a {
   }
 
   .pace-summary {
+    grid-template-columns: 1fr;
+  }
+
+  .platinum-user-detail-grid {
     grid-template-columns: 1fr;
   }
 
