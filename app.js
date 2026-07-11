@@ -1,7 +1,7 @@
 const STORAGE_KEY = "learning-studio-data-v2";
 const LEGACY_STORAGE_KEYS = ["learning-studio-data-v1"];
 const SESSION_KEY = "aleph-session";
-const COURSE_PLAN_VERSION = "seeded-user-canonical-workspace-v118";
+const COURSE_PLAN_VERSION = "seeded-user-canonical-workspace-v119";
 const MAX_FEEDBACK_ATTACHMENT_BYTES = 3 * 1024 * 1024;
 const MAX_COMPRESSED_FEEDBACK_BYTES = 2400 * 1024;
 const MAX_FEEDBACK_PDF_PAGES = 6;
@@ -2562,7 +2562,7 @@ function buildGateDaBasicPlan(now, accountTypes, sections, user = basicGateDaUse
         startDate: monday,
         endDate: "2026-08-30",
         status: "active",
-        details: `GATE DA Basic plan surfaces: Subjects, Tasks, Schedule, Tests, Feedback, Resources, and Share. Recommended pace: study three subjects in parallel. Every 15 days, Aleph should generate an adaptive cumulative review quiz from prior performance, repeating missed concepts more often, reducing mastered concepts, and keeping high-weight exam topics in rotation. Current material build: Probability Chapters 1-10, Linear Algebra Chapters 1-12 plus a chapterless cumulative past-paper style drill, and DSA Chapters 1-8 with a progression gate before Chapter 3.${trialNote}`,
+        details: `GATE DA Basic plan surfaces: Subjects, Tasks, Schedule, Tests, Feedback, Resources, and Share. Recommended pace: study three subjects in parallel. Every 15 days, Aleph should generate an adaptive cumulative review quiz from prior performance, repeating missed concepts more often, reducing mastered concepts, and keeping high-weight exam topics in rotation. Current material build: Probability Chapters 1-10, Linear Algebra Chapters 1-12 plus a chapterless cumulative past-paper style drill, and DSA Chapters 1-9 with a progression gate before Chapter 3.${trialNote}`,
         updatedAt: now
       }
     ],
@@ -2908,6 +2908,8 @@ function dsaBasicScheduleItems(now, monday, sunday) {
   const weekSevenSunday = addDays(sunday, 42);
   const weekEightMonday = addDays(monday, 49);
   const weekEightSunday = addDays(sunday, 49);
+  const weekNineMonday = addDays(monday, 56);
+  const weekNineSunday = addDays(sunday, 56);
   return [
     {
       id: "schedule-dsa-chapter-1-study",
@@ -3158,6 +3160,36 @@ function dsaBasicScheduleItems(now, monday, sunday) {
       date: weekEightSunday,
       details: "Take the graph-backed objective review for shortest paths, Dijkstra, topological ordering, MST intuition, and algorithm-choice diagnostics.",
       updatedAt: now
+    },
+    {
+      id: "schedule-dsa-chapter-9-study",
+      title: "DSA Chapter 9: Sorting and Selection",
+      week: 9,
+      subject: "Data Structures and Algorithms",
+      kind: "Study",
+      date: weekNineMonday,
+      details: "Study comparison sorting lower bounds, insertion/merge/quick/heap sort traces, stability and in-place tradeoffs, partition invariants, and quickselect for kth order statistics.",
+      updatedAt: now
+    },
+    {
+      id: "schedule-dsa-chapter-9-practice",
+      title: "DSA Chapter 9: Labelled Practice",
+      week: 9,
+      subject: "Data Structures and Algorithms",
+      kind: "Practice",
+      date: addDays(weekNineMonday, 2),
+      details: "Solve insertion-sort, merge-sort, partition, heap-sort, stability, and selection exercises before opening worked solutions.",
+      updatedAt: now
+    },
+    {
+      id: "schedule-dsa-chapter-9-review",
+      title: "DSA Chapter 9: Objective Review",
+      week: 9,
+      subject: "Data Structures and Algorithms",
+      kind: "Review",
+      date: weekNineSunday,
+      details: "Take the graph-backed objective review for sorting invariants, lower bounds, runtime/space tradeoffs, partition traces, and kth-selection diagnostics.",
+      updatedAt: now
     }
   ];
 }
@@ -3171,6 +3203,7 @@ function dsaBasicTests(now, dsaSections, sunday) {
   const weekSixSunday = addDays(sunday, 35);
   const weekSevenSunday = addDays(sunday, 42);
   const weekEightSunday = addDays(sunday, 49);
+  const weekNineSunday = addDays(sunday, 56);
   return [
     {
       id: "test-dsa-chapter-1-objective-review",
@@ -3254,6 +3287,15 @@ function dsaBasicTests(now, dsaSections, sunday) {
       sectionId: dsaSections[8]?.id,
       quizId: "quiz-dsa-chapter-8-objective-review",
       updatedAt: now
+    },
+    {
+      id: "test-dsa-chapter-9-objective-review",
+      title: "DSA Chapter 9 Objective Review",
+      date: weekNineSunday,
+      details: "Objective review for insertion-sort invariants, comparison lower bounds, merge-sort recurrence, quicksort partition, heap-sort extraction, stability, in-place space, and kth selection.",
+      sectionId: dsaSections[9]?.id,
+      quizId: "quiz-dsa-chapter-9-objective-review",
+      updatedAt: now
     }
   ];
 }
@@ -3273,6 +3315,8 @@ function dsaBasicTasks(now, monday, sunday) {
   const weekSevenSunday = addDays(sunday, 42);
   const weekEightMonday = addDays(monday, 49);
   const weekEightSunday = addDays(sunday, 49);
+  const weekNineMonday = addDays(monday, 56);
+  const weekNineSunday = addDays(sunday, 56);
   return [
     {
       id: "task-dsa-chapter-1-read",
@@ -3548,6 +3592,39 @@ function dsaBasicTasks(now, monday, sunday) {
       done: false,
       details: "Submit the Chapter 8 objective quiz so Aleph logs shortest-path, Dijkstra, topological-order, MST, and algorithm-choice gaps.",
       updatedAt: now
+    },
+    {
+      id: "task-dsa-chapter-9-read",
+      week: 9,
+      title: "DSA Ch 9: Read sorting and selection",
+      type: "Study",
+      date: weekNineMonday,
+      status: "todo",
+      done: false,
+      details: "Open Subjects -> Data Structures and Algorithms -> Chapter 9 and study sorting invariants, comparison lower bounds, stability, in-place space, partitions, heaps, and kth selection.",
+      updatedAt: now
+    },
+    {
+      id: "task-dsa-chapter-9-practice",
+      week: 9,
+      title: "DSA Ch 9: Solve sorting practice",
+      type: "Practice",
+      date: addDays(weekNineMonday, 2),
+      status: "todo",
+      done: false,
+      details: "Attempt the labelled insertion-sort, merge-sort, quicksort, heap-sort, stability, and selection practice problems before opening worked solutions.",
+      updatedAt: now
+    },
+    {
+      id: "task-dsa-chapter-9-review",
+      week: 9,
+      title: "DSA Ch 9: Take objective review",
+      type: "Review",
+      date: weekNineSunday,
+      status: "todo",
+      done: false,
+      details: "Submit the Chapter 9 objective quiz so Aleph logs sorting-invariant, complexity, partition, stability, space, and selection gaps.",
+      updatedAt: now
     }
   ];
 }
@@ -3561,6 +3638,7 @@ function dsaBasicFeedback(now, sunday) {
   const weekSixSunday = addDays(sunday, 35);
   const weekSevenSunday = addDays(sunday, 42);
   const weekEightSunday = addDays(sunday, 49);
+  const weekNineSunday = addDays(sunday, 56);
   return [
     {
       id: "feedback-dsa-chapter-1",
@@ -3624,6 +3702,13 @@ function dsaBasicFeedback(now, sunday) {
       date: weekEightSunday,
       details: "Review misses for using Dijkstra on negative weights, confusing BFS edge-count distance with weighted distance, relaxing edges in the wrong direction, finalizing Dijkstra vertices too early, accepting cyclic topological orders, misusing indegree queues, and applying MST ideas to directed shortest-path questions.",
       updatedAt: now
+    },
+    {
+      id: "feedback-dsa-chapter-9",
+      title: "DSA Chapter 9 feedback focus",
+      date: weekNineSunday,
+      details: "Review misses for weak sorted-prefix invariants, confusing stable with in-place, applying comparison lower bounds to non-comparison sorts, losing merge pointers, breaking partition invariants, using worst-case quicksort as average-case, miscounting heap extraction cost, and discarding the wrong side in quickselect.",
+      updatedAt: now
     }
   ];
 }
@@ -3636,6 +3721,7 @@ function dsaBasicResources(now, monday) {
   const weekSixMonday = addDays(monday, 35);
   const weekSevenMonday = addDays(monday, 42);
   const weekEightMonday = addDays(monday, 49);
+  const weekNineMonday = addDays(monday, 56);
   return [
     {
       id: "resource-dsa-algorithms-arrays-search",
@@ -3706,6 +3792,14 @@ function dsaBasicResources(now, monday) {
       title: "DSA Chapter 8: Graph Algorithms",
       date: weekEightMonday,
       details: "Open Subjects -> Data Structures and Algorithms to study BFS shortest paths, Dijkstra traces, topological ordering, Kahn's algorithm, MST cut/cycle intuition, and graph-algorithm choice.",
+      link: "",
+      updatedAt: now
+    },
+    {
+      id: "resource-dsa-sorting-selection",
+      title: "DSA Chapter 9: Sorting and Selection",
+      date: weekNineMonday,
+      details: "Open Subjects -> Data Structures and Algorithms to study comparison sorting lower bounds, insertion/merge/quick/heap sort traces, stability and in-place tradeoffs, partition invariants, and quickselect.",
       link: "",
       updatedAt: now
     }
@@ -5282,6 +5376,174 @@ function gateDaDsaSections(updatedAt = new Date().toISOString()) {
         "Topological order schedules DAG vertices so prerequisites come first.",
         "MST connects all vertices cheaply overall, not from one source to each target.",
         "Graph algorithm choice starts with the goal and assumptions, not with memorizing names."
+      ],
+      updatedAt
+    },
+    {
+      id: "gate-da-dsa-sorting-selection",
+      exam: "GATE DA",
+      accountTier: "Basic",
+      subject: "Data Structures and Algorithms",
+      chapter: "Chapter 9",
+      section: "9",
+      title: "Sorting and Selection",
+      summary: "Comparison sorting lower bounds, insertion-sort sorted-prefix invariants, merge-sort recurrence and merge traces, quicksort partition invariants and pivot traps, heap-sort extraction, stability versus in-place tradeoffs, and quickselect for kth order statistics.",
+      sectionPreview: "Sorting questions are rarely about writing a full sorter. They test whether you can trace a small array, name the invariant, choose the right runtime, and recognize when selection needs only one side of a partition.",
+      previewActivity: "Array [4, 1, 3, 1] is sorted by key only. If the two 1s carry labels 1a and 1b, what does a stable sort preserve? Now partition [7, 2, 5, 1, 6] around pivot 5. Which side can contain the 2nd smallest element?",
+      chapterIntro: [
+        "A sorting algorithm keeps a promise while it rearranges data. Insertion sort promises a sorted prefix; merge sort promises two sorted halves before merging; quicksort promises a partition around a pivot; heap sort promises the root is the current extreme.",
+        "GATE-style questions compress this into traces, invariants, and tradeoffs. You may be asked for the next array state, the recurrence, the auxiliary space, or whether stability is preserved.",
+        "Selection uses sorting ideas without fully sorting. After partitioning around a pivot, only the side that can contain the kth element still matters."
+      ],
+      bookSections: [
+        {
+          number: "9.1",
+          title: "The Comparison Model and Lower Bound",
+          paragraphs: [
+            "A comparison sort learns order only by comparing pairs of keys. Its execution can be viewed as a decision tree whose leaves must distinguish all n! possible input orders.",
+            "Because a binary decision tree with height h has at most 2^h leaves, any comparison sort needs height at least log2(n!), which is Omega(n log n).",
+            "This lower bound applies to comparison sorts such as insertion sort, merge sort, quicksort, and heap sort. It does not automatically apply to counting sort or radix sort because they use more than pairwise comparisons."
+          ],
+          blocks: [
+            {
+              type: "principle",
+              title: "Lower-bound checkpoint",
+              body: "If the question says comparison sorting, expect Omega(n log n) in the worst case. If it gives bounded integer keys, first check whether a non-comparison method is being allowed."
+            }
+          ]
+        },
+        {
+          number: "9.2",
+          title: "Insertion Sort: Sorted Prefix",
+          paragraphs: [
+            "Insertion sort scans left to right. Before inserting A[i], the prefix A[0..i-1] is sorted.",
+            "The inner loop shifts larger elements one step right until the correct position for the key opens.",
+            "Best case is Theta(n) when the array is already sorted; worst case is Theta(n^2) when many elements must shift. It is in-place and can be stable if equal keys are not moved past each other."
+          ],
+          blocks: [
+            {
+              type: "simulation",
+              title: "Simulation practice",
+              body: "For [5, 2, 4, 2], after inserting index 1 the array is [2, 5, 4, 2]. After inserting index 2 it is [2, 4, 5, 2]. Stability depends on not shifting equal keys past the new key."
+            }
+          ]
+        },
+        {
+          number: "9.3",
+          title: "Merge Sort: Split, Sort, Merge",
+          paragraphs: [
+            "Merge sort divides the array into two halves, recursively sorts each half, and merges the two sorted halves.",
+            "The recurrence T(n)=2T(n/2)+Theta(n) solves to Theta(n log n). The merge step uses two pointers and copies the smaller current element.",
+            "Standard merge sort is stable when ties are taken from the left half first. It usually uses Theta(n) auxiliary array space for merging."
+          ],
+          blocks: [
+            {
+              type: "example",
+              title: "Example 9.1: merge pointers",
+              body: "Merging [1,4,7] and [1,3,8] should output the left 1 before the right 1 if stability is required, then 3, 4, 7, 8 by comparing current heads."
+            }
+          ]
+        },
+        {
+          number: "9.4",
+          title: "Quicksort: Partition Around a Pivot",
+          paragraphs: [
+            "Quicksort chooses a pivot, partitions the array so smaller elements are on one side and larger elements on the other, then recursively sorts the two sides.",
+            "The partition invariant tracks three regions: processed elements less than pivot, processed elements at least pivot, and unknown elements. Losing this invariant causes off-by-one and duplicate-key bugs.",
+            "With balanced partitions, quicksort runs in expected Theta(n log n). With consistently terrible pivots, such as always choosing the smallest item, the recurrence becomes T(n)=T(n-1)+Theta(n), which is Theta(n^2)."
+          ],
+          blocks: [
+            {
+              type: "warning",
+              title: "Pivot trap",
+              body: "Do not call quicksort always Theta(n log n). The average or expected case can be Theta(n log n), but a deterministic bad pivot rule can make the worst case Theta(n^2)."
+            }
+          ]
+        },
+        {
+          number: "9.5",
+          title: "Heap Sort and Tradeoffs",
+          paragraphs: [
+            "Heap sort builds a heap, repeatedly swaps the root with the last active element, shrinks the heap, and restores heap order.",
+            "Each extraction costs O(log n), and there are n extractions, so the sorting phase is O(n log n). With the array used as the heap, heap sort is in-place up to O(1) extra storage.",
+            "Heap sort is not stable by default. Merge sort is stable but uses auxiliary space; quicksort is often fast in practice but has pivot-sensitive worst cases; insertion sort is useful for small or nearly sorted arrays."
+          ],
+          blocks: [
+            {
+              type: "strategy",
+              title: "Tradeoff checkpoint",
+              body: "Need stable? Think merge sort or careful insertion sort. Need in-place O(1) auxiliary space with worst-case O(n log n)? Heap sort is the standard Basic-plan answer."
+            }
+          ]
+        },
+        {
+          number: "9.6",
+          title: "Selection and kth Order Statistics",
+          paragraphs: [
+            "The kth order statistic is the kth smallest element. Sorting first works but costs O(n log n).",
+            "Quickselect partitions around a pivot and recurses only into the side that can contain the kth element.",
+            "If the pivot finishes at index p, then k=p is done, k<p searches the left side, and k>p searches the right side. The important invariant is that partition tells us how many elements are definitely smaller than the pivot."
+          ],
+          blocks: [
+            {
+              type: "checkpoint",
+              title: "Selection checkpoint",
+              body: "After partition, never recurse into both sides for selection. Recurse only into the side containing the desired rank."
+            }
+          ]
+        }
+      ],
+      concepts: [
+        { name: "Comparison lower bound", description: "Any comparison sort needs Omega(n log n) comparisons in the worst case.", cue: "Decision tree must distinguish n! orders." },
+        { name: "Insertion sort invariant", description: "The prefix before the current index is sorted.", cue: "Insert the key into the sorted prefix." },
+        { name: "Merge sort recurrence", description: "Two half-size recursive sorts plus linear merge.", cue: "T(n)=2T(n/2)+Theta(n)." },
+        { name: "Merge step", description: "Two sorted lists are merged by comparing current heads.", cue: "Take from the left on ties for stability." },
+        { name: "Quicksort partition", description: "Rearrange around a pivot while maintaining processed regions.", cue: "Know which region is less than pivot." },
+        { name: "Pivot choice", description: "Pivot balance controls quicksort recursion depth.", cue: "Bad pivots give T(n)=T(n-1)+Theta(n)." },
+        { name: "Heap sort extraction", description: "Repeatedly remove the heap root and restore heap order.", cue: "n extractions times O(log n)." },
+        { name: "Stability", description: "Equal keys keep their original relative order.", cue: "Label duplicate keys to test it." },
+        { name: "In-place space", description: "Auxiliary storage is O(1) or small, excluding the input array.", cue: "Merge sort usually needs O(n) extra array space." },
+        { name: "Selection and kth", description: "Find kth smallest without fully sorting.", cue: "Partition and recurse into one side." }
+      ],
+      techniques: [
+        { name: "Sorted-prefix trace", when: "tracing insertion sort.", move: "Write the sorted prefix after each outer-loop insertion." },
+        { name: "Merge pointer trace", when: "merging sorted halves.", move: "Track left pointer, right pointer, output, and tie-handling." },
+        { name: "Partition invariant", when: "tracing quicksort or quickselect.", move: "Mark less-than-pivot, greater/equal, unknown, and pivot regions." },
+        { name: "Recurrence read", when: "asked for sorting runtime.", move: "Map split count and combine cost to T(n)." },
+        { name: "Tradeoff table", when: "choosing a sorting algorithm.", move: "Compare stable, in-place, best/worst/average runtime, and auxiliary space." },
+        { name: "Rank discard", when: "selecting kth.", move: "Use pivot final rank to discard the side that cannot contain kth." }
+      ],
+      practiceProblems: dsaSortingSelectionProblems(),
+      implementationDrills: dsaSortingSelectionImplementationDrills(),
+      reviewPrompts: [
+        "What invariant is preserved after this sorting step?",
+        "Which part of the array is sorted, partitioned, unknown, or heap-ordered?",
+        "What recurrence describes the algorithm?",
+        "Is the algorithm stable, in-place, both, or neither?",
+        "Which pivot choices create balanced versus worst-case recursion?",
+        "After partition, which side can still contain the kth element?"
+      ],
+      reviewQuiz: {
+        id: "quiz-dsa-chapter-9-objective-review",
+        title: "DSA Chapter 9 Objective Review",
+        instructions: "Complete this after studying comparison lower bounds, insertion-sort invariants, merge-sort recurrence and merge traces, quicksort partition, heap-sort extraction, stability, in-place space, and selection by partition. The sampled mix is 5 single-topic checks, 4 two-topic mixes, and 3 three-topic synthesis questions.",
+        questions: dsaSortingSelectionReviewQuestions()
+      },
+      readingQuestions: [
+        "Why does comparison sorting have an Omega(n log n) lower bound?",
+        "What exactly is sorted during insertion sort after each outer iteration?",
+        "Why does merge sort use Theta(n log n) time and usually Theta(n) extra space?",
+        "What partition invariant does quicksort need?",
+        "How do stability and in-place storage differ?",
+        "Why can quickselect ignore one side after partition?"
+      ],
+      chapterSummary: [
+        "Comparison sorting has a worst-case Omega(n log n) lower bound.",
+        "Insertion sort maintains a sorted prefix and is efficient on nearly sorted arrays.",
+        "Merge sort uses T(n)=2T(n/2)+Theta(n), is stable with careful merging, and usually needs Theta(n) auxiliary space.",
+        "Quicksort depends on partition invariants and pivot quality; bad pivots can make it Theta(n^2).",
+        "Heap sort gives worst-case O(n log n) and in-place array storage, but is not stable by default.",
+        "Quickselect uses partition rank to search only one side for the kth order statistic."
       ],
       updatedAt
     }
@@ -16503,6 +16765,292 @@ function dsaGraphAlgorithmsReviewQuestions() {
   }));
 }
 
+function dsaSortingSelectionProblems() {
+  return [
+    {
+      title: "Exercise 1: Insertion Sort Trace",
+      prompt: "Run insertion sort on [5, 2, 4, 2]. Show the array after each outer-loop insertion. Assume equal keys are not shifted past the key being inserted.",
+      solution: "Insert 2 into [5] to get [2,5,4,2]. Insert 4 into [2,5] to get [2,4,5,2]. Insert the last 2 into [2,4,5]; do not shift the equal first 2, shift 5 and 4, giving [2,2,4,5].",
+      tags: ["insertion-sort-invariant", "stability", "array-scan"]
+    },
+    {
+      title: "Exercise 2: Sorted-Prefix Invariant",
+      prompt: "State the insertion-sort invariant after the outer loop has finished index i.",
+      solution: "After finishing index i, the prefix A[0..i] is sorted and contains exactly the same multiset of elements that originally appeared in A[0..i]. The suffix A[i+1..] is not promised to be sorted.",
+      tags: ["insertion-sort-invariant", "sorted-array-invariant"]
+    },
+    {
+      title: "Exercise 3: Merge Pointer Trace",
+      prompt: "Merge sorted lists L=[1a,4,7] and R=[1b,3,8] stably. Write the output order.",
+      solution: "Compare 1a and 1b; for stability take 1a first because it came from the left half. Then take 1b, 3, 4, 7, 8. Output: [1a,1b,3,4,7,8].",
+      tags: ["merge-step", "stability", "sorted-array-invariant"]
+    },
+    {
+      title: "Exercise 4: Merge Sort Recurrence",
+      prompt: "A sorting algorithm sorts two halves recursively and merges in linear time. Write and solve the recurrence.",
+      solution: "The recurrence is T(n)=2T(n/2)+Theta(n). By the Master Method or recursion-tree levels, there are log n levels and Theta(n) work per level, so T(n)=Theta(n log n).",
+      tags: ["merge-sort-recurrence", "recurrence-extraction"]
+    },
+    {
+      title: "Exercise 5: Quicksort Partition",
+      prompt: "Partition [7,2,5,1,6] around pivot 5 so elements less than 5 are before the pivot and elements greater than or equal to 5 are after it. Give one valid final partitioned array and pivot index.",
+      solution: "One valid partition is [2,1,5,7,6]. The pivot 5 is at index 2, with two elements smaller than it on the left and all larger elements on the right.",
+      tags: ["quicksort-partition", "pivot-choice"]
+    },
+    {
+      title: "Exercise 6: Bad Pivot Runtime",
+      prompt: "Quicksort always chooses the smallest element as pivot on an already sorted array. What recurrence and worst-case runtime result?",
+      solution: "The pivot creates one empty side and one side of size n-1, plus linear partition work. The recurrence is T(n)=T(n-1)+Theta(n), which solves to Theta(n^2).",
+      tags: ["pivot-choice", "quicksort-partition"]
+    },
+    {
+      title: "Exercise 7: Heap Sort Extraction Cost",
+      prompt: "Why is heap-sort extraction O(n log n) after the heap is built?",
+      solution: "There are n root removals or swaps into final position. Each removal restores heap order by moving down O(log n) levels. Thus extraction costs O(n log n).",
+      tags: ["heap-sort-extraction", "heap-order-property"]
+    },
+    {
+      title: "Exercise 8: Stability Versus In-Place",
+      prompt: "Classify standard merge sort, heap sort, and insertion sort by stability and auxiliary space in the Basic-plan model.",
+      solution: "Merge sort is stable if ties choose left first, but usually uses Theta(n) auxiliary space. Heap sort is in-place with O(1) auxiliary space but not stable by default. Insertion sort is in-place and can be stable if equal keys are not shifted past each other.",
+      tags: ["stability", "in-place-space", "algorithm-choice"]
+    },
+    {
+      title: "Exercise 9: Comparison Lower Bound",
+      prompt: "Why can no comparison sort guarantee o(n log n) worst-case time?",
+      solution: "A comparison sort must distinguish n! possible input orders using yes/no comparison outcomes. A binary decision tree with height h has at most 2^h leaves, so 2^h >= n!, giving h >= log2(n!) = Omega(n log n).",
+      tags: ["comparison-lower-bound", "decision-tree"]
+    },
+    {
+      title: "Exercise 10: Quickselect Rank Discard",
+      prompt: "After partitioning, pivot 5 ends at index 2 in zero-based order. If we want the 4th smallest element, which side do we search next?",
+      solution: "The 4th smallest has zero-based rank 3. Since 3 > pivot index 2, search only the right side. The left side and pivot cannot contain rank 3.",
+      tags: ["selection-kth", "partition-discard", "quicksort-partition"]
+    }
+  ];
+}
+
+function dsaSortingSelectionImplementationDrills() {
+  return [
+    {
+      title: "Insertion Sort Sorted Prefix",
+      source: "CS 61B-style sorting trace",
+      difficulty: "Easy",
+      focus: "sorted-prefix invariant, duplicate stability",
+      url: "https://sp25.datastructur.es/",
+      targetTime: "Best Theta(n), worst Theta(n^2), O(1) auxiliary space",
+      reason: "Makes the invariant visible and catches equality-case mistakes.",
+      writeup: "Trace the prefix after every outer-loop insertion and label duplicate keys."
+    },
+    {
+      title: "Merge Sort Recurrence and Merge",
+      source: "MIT/Open Data Structures-style divide-and-conquer analysis",
+      difficulty: "Medium",
+      focus: "T(n)=2T(n/2)+Theta(n), stable merge",
+      url: "https://ocw.mit.edu/courses/6-006-introduction-to-algorithms-spring-2020/",
+      targetTime: "Theta(n log n), usually Theta(n) auxiliary space",
+      reason: "Connects a concrete merge trace to the recurrence that GATE asks for.",
+      writeup: "Write split tree levels, merge work per level, and pointer states during merge."
+    },
+    {
+      title: "Quicksort Partition Invariant",
+      source: "MIT/Erickson-style partition and correctness drill",
+      difficulty: "Medium",
+      focus: "pivot position, processed regions, worst-case recurrence",
+      url: "https://jeffe.cs.illinois.edu/teaching/algorithms/",
+      targetTime: "Expected Theta(n log n), worst Theta(n^2)",
+      reason: "Most quicksort errors are invariant, pivot, or duplicate-region errors.",
+      writeup: "Mark less-than, greater/equal, unknown, and pivot regions after each swap."
+    },
+    {
+      title: "Heap Sort Tradeoff Trace",
+      source: "Open Data Structures-style heap implementation analysis",
+      difficulty: "Medium",
+      focus: "heap-order restoration and in-place extraction",
+      url: "https://opendatastructures.org/",
+      targetTime: "O(n log n), O(1) auxiliary space after array heapification",
+      reason: "Separates heap sort's space guarantee from stability claims.",
+      writeup: "Trace root swap, active heap shrink, and bubble-down comparisons."
+    },
+    {
+      title: "Quickselect Rank Discard",
+      source: "LeetCode-style pattern mining rewritten for GATE selection",
+      difficulty: "Medium",
+      focus: "kth order statistic, one-side recursion",
+      url: "https://leetcode.com/problemset/",
+      targetTime: "Expected linear time with balanced/random pivots; worst Theta(n^2)",
+      reason: "Tests whether the learner avoids fully sorting or recursing into both sides.",
+      writeup: "After each partition, compare desired rank with pivot rank and discard one side."
+    }
+  ];
+}
+
+function dsaSortingSelectionReviewQuestions() {
+  const metadata = {
+    "dsa-ch9-q1": { kind: "single concept", targetConcept: "insertion-sort-invariant", prereqsUsed: ["array-scan"], difficulty: 1, gateWeight: "high", expectedFirstStep: "Identify the sorted prefix after the insertion step.", commonMistake: "Claiming the entire array is sorted too early.", answerCheck: "After processing index i, prefix A[0..i] is sorted." },
+    "dsa-ch9-q2": { kind: "single concept", targetConcept: "selection-kth", prereqsUsed: ["partition-discard"], difficulty: 2, gateWeight: "high", expectedFirstStep: "Convert kth smallest to zero-based rank and compare with pivot index.", commonMistake: "Searching both partition sides.", answerCheck: "Rank 3 with pivot index 2 searches right side." },
+    "dsa-ch9-q3": { kind: "single concept", targetConcept: "in-place-space", prereqsUsed: [], difficulty: 1, gateWeight: "high", expectedFirstStep: "Classify auxiliary storage, not input storage.", commonMistake: "Calling merge sort in-place because it returns sorted output.", answerCheck: "Heap sort is in-place by the Basic-plan model." },
+    "dsa-ch9-q4": { kind: "single concept", targetConcept: "partition-discard", prereqsUsed: ["quicksort-partition"], difficulty: 2, gateWeight: "high", expectedFirstStep: "Use pivot final rank to eliminate impossible ranks.", commonMistake: "Discarding the side containing k.", answerCheck: "If k is left of pivot rank, search left only." },
+    "dsa-ch9-q5": { kind: "single concept", targetConcept: "pivot-choice", prereqsUsed: [], difficulty: 2, gateWeight: "high", expectedFirstStep: "Recognize unbalanced partitions.", commonMistake: "Assuming quicksort is always Theta(n log n).", answerCheck: "Consistently smallest pivot gives Theta(n^2)." },
+    "dsa-ch9-q6": { kind: "mixed: two concepts", targetConcept: "algorithm-choice", prereqsUsed: ["heap-sort-extraction"], difficulty: 2, gateWeight: "high", expectedFirstStep: "Match worst-case O(n log n) and O(1) auxiliary space.", commonMistake: "Choosing merge sort despite O(n) auxiliary space.", answerCheck: "Heap sort fits in-place worst-case O(n log n)." },
+    "dsa-ch9-q7": { kind: "mixed: two concepts", targetConcept: "quicksort-partition", prereqsUsed: ["partition-discard"], difficulty: 2, gateWeight: "high", expectedFirstStep: "Count elements smaller than the pivot after partition.", commonMistake: "Using pivot value instead of pivot rank.", answerCheck: "Pivot index determines rank." },
+    "dsa-ch9-q8": { kind: "mixed: two concepts", targetConcept: "selection-kth", prereqsUsed: ["partition-discard"], difficulty: 2, gateWeight: "high", expectedFirstStep: "Use rank comparison after partition.", commonMistake: "Fully sorting before answering a rank-discard question.", answerCheck: "Search one side only." },
+    "dsa-ch9-q9": { kind: "mixed: two concepts", targetConcept: "insertion-sort-invariant", prereqsUsed: ["array-scan"], difficulty: 2, gateWeight: "high", expectedFirstStep: "Perform one key insertion and preserve prefix sortedness.", commonMistake: "Swapping nonadjacent items without shifting.", answerCheck: "[2,4,5,3] after inserting 4 into [2,5,4,3]." },
+    "dsa-ch9-q10": { kind: "mixed: three concepts", targetConcept: "comparison-lower-bound", prereqsUsed: ["decision-tree", "in-place-space"], difficulty: 3, gateWeight: "high", expectedFirstStep: "Check whether the algorithm is comparison-based before applying the lower bound.", commonMistake: "Applying Omega(n log n) to all possible sorting models.", answerCheck: "The lower bound is for comparison sorting." },
+    "dsa-ch9-q11": { kind: "mixed: three concepts", targetConcept: "merge-step", prereqsUsed: ["sorted-array-invariant", "quicksort-partition"], difficulty: 3, gateWeight: "high", expectedFirstStep: "Distinguish merging sorted halves from partitioning around a pivot.", commonMistake: "Expecting merge output to place a pivot at final rank.", answerCheck: "Merge compares current heads of two sorted lists." },
+    "dsa-ch9-q12": { kind: "mixed: three concepts", targetConcept: "algorithm-choice", prereqsUsed: ["decision-tree", "quicksort-partition"], difficulty: 3, gateWeight: "high", expectedFirstStep: "Separate lower-bound, average-case, and worst-case claims.", commonMistake: "Saying quicksort beats comparison lower bound in the worst case.", answerCheck: "Randomized quicksort expected Theta(n log n), worst-case Theta(n^2); comparison lower bound remains Omega(n log n)." }
+  };
+  return [
+    {
+      id: "dsa-ch9-q1",
+      prompt: "In insertion sort, after the outer loop finishes index i, what is guaranteed?",
+      tags: ["insertion-sort-invariant", "array-scan"],
+      options: [
+        { id: "a", text: "A[0..i] is sorted and contains the original prefix elements" },
+        { id: "b", text: "The whole array is always sorted" },
+        { id: "c", text: "Only A[i] is known to be the maximum of the whole array" },
+        { id: "d", text: "No prefix property is maintained" }
+      ],
+      answer: "a"
+    },
+    {
+      id: "dsa-ch9-q2",
+      prompt: "After partition, the pivot is at zero-based index 2. For the 4th smallest element, which side should quickselect search?",
+      tags: ["selection-kth", "partition-discard"],
+      options: [
+        { id: "a", text: "Left side" },
+        { id: "b", text: "Right side" },
+        { id: "c", text: "Both sides" },
+        { id: "d", text: "Neither; the pivot is the answer" }
+      ],
+      answer: "b"
+    },
+    {
+      id: "dsa-ch9-q3",
+      prompt: "Which standard comparison sort is in-place with O(1) auxiliary space in the Basic-plan model but not stable by default?",
+      tags: ["in-place-space"],
+      options: [
+        { id: "a", text: "Heap sort" },
+        { id: "b", text: "Standard merge sort" },
+        { id: "c", text: "Counting sort" },
+        { id: "d", text: "Stable external merge" }
+      ],
+      answer: "a"
+    },
+    {
+      id: "dsa-ch9-q4",
+      prompt: "A partition places the pivot at rank 6, and we need rank 3. What should selection do next?",
+      tags: ["partition-discard", "quicksort-partition"],
+      options: [
+        { id: "a", text: "Search only the left side" },
+        { id: "b", text: "Search only the right side" },
+        { id: "c", text: "Sort both sides completely" },
+        { id: "d", text: "Return the pivot" }
+      ],
+      answer: "a"
+    },
+    {
+      id: "dsa-ch9-q5",
+      prompt: "Quicksort always chooses the smallest element as pivot. What worst-case recurrence shape appears?",
+      tags: ["pivot-choice"],
+      options: [
+        { id: "a", text: "T(n)=T(n-1)+Theta(n)" },
+        { id: "b", text: "T(n)=2T(n/2)+Theta(1)" },
+        { id: "c", text: "T(n)=Theta(1)" },
+        { id: "d", text: "T(n)=T(n/2)+Theta(log n)" }
+      ],
+      answer: "a"
+    },
+    {
+      id: "dsa-ch9-q6",
+      prompt: "You need worst-case O(n log n) comparison sorting and O(1) auxiliary space; stability is not required. Which standard choice fits best?",
+      tags: ["heap-sort-extraction", "algorithm-choice"],
+      options: [
+        { id: "a", text: "Heap sort" },
+        { id: "b", text: "Standard merge sort" },
+        { id: "c", text: "Insertion sort on arbitrary input" },
+        { id: "d", text: "A full graph BFS" }
+      ],
+      answer: "a"
+    },
+    {
+      id: "dsa-ch9-q7",
+      prompt: "A partition of [7,2,5,1,6] around pivot 5 produces [2,1,5,7,6]. What is the pivot's zero-based index?",
+      tags: ["quicksort-partition", "partition-discard"],
+      options: [
+        { id: "a", text: "0" },
+        { id: "b", text: "1" },
+        { id: "c", text: "2" },
+        { id: "d", text: "4" }
+      ],
+      answer: "c"
+    },
+    {
+      id: "dsa-ch9-q8",
+      prompt: "Quickselect partitions and finds the pivot rank is greater than the desired rank. What is the correct next move?",
+      tags: ["selection-kth", "partition-discard"],
+      options: [
+        { id: "a", text: "Recurse only on the left side" },
+        { id: "b", text: "Recurse only on the right side" },
+        { id: "c", text: "Recurse on both sides" },
+        { id: "d", text: "Ignore the rank comparison" }
+      ],
+      answer: "a"
+    },
+    {
+      id: "dsa-ch9-q9",
+      prompt: "Insertion sort has [2,5,4,3] before inserting the key 4 at index 2. What is the array after that insertion?",
+      tags: ["insertion-sort-invariant", "array-scan"],
+      options: [
+        { id: "a", text: "[2,4,5,3]" },
+        { id: "b", text: "[4,2,5,3]" },
+        { id: "c", text: "[2,5,3,4]" },
+        { id: "d", text: "[2,5,4,3]" }
+      ],
+      answer: "a"
+    },
+    {
+      id: "dsa-ch9-q10",
+      prompt: "Which statement about the Omega(n log n) sorting lower bound is correct?",
+      tags: ["comparison-lower-bound", "decision-tree", "in-place-space"],
+      options: [
+        { id: "a", text: "It applies to worst-case comparison sorting because the decision tree must distinguish n! orders" },
+        { id: "b", text: "It proves every integer sorting algorithm must compare keys pairwise" },
+        { id: "c", text: "It depends on whether the algorithm is in-place" },
+        { id: "d", text: "It says insertion sort is always Theta(n log n)" }
+      ],
+      answer: "a"
+    },
+    {
+      id: "dsa-ch9-q11",
+      prompt: "Which action belongs to the merge step of merge sort rather than quicksort partition?",
+      tags: ["merge-step", "sorted-array-invariant", "quicksort-partition"],
+      options: [
+        { id: "a", text: "Compare current heads of two sorted halves and append the smaller" },
+        { id: "b", text: "Place all elements less than a pivot before it" },
+        { id: "c", text: "Choose a pivot and recurse around its final rank" },
+        { id: "d", text: "Discard one side for kth selection" }
+      ],
+      answer: "a"
+    },
+    {
+      id: "dsa-ch9-q12",
+      prompt: "Which combined statement is accurate?",
+      tags: ["decision-tree", "quicksort-partition", "algorithm-choice"],
+      options: [
+        { id: "a", text: "Comparison sorting has an Omega(n log n) worst-case lower bound; quicksort can still have Theta(n^2) worst case with bad pivots" },
+        { id: "b", text: "Quicksort always beats the comparison lower bound in the worst case" },
+        { id: "c", text: "Partitioning removes the need for any comparisons" },
+        { id: "d", text: "Decision trees apply only to graph algorithms" }
+      ],
+      answer: "a"
+    }
+  ].map((question) => ({
+    ...question,
+    ...(metadata[question.id] || { kind: question.tags.length === 1 ? "single concept" : question.tags.length === 2 ? "mixed: two concepts" : "mixed: three concepts", targetConcept: question.tags[0], prereqsUsed: question.tags.slice(1), difficulty: question.tags.length, gateWeight: "medium" })
+  }));
+}
+
 function conditionalProbabilityReviewQuestions() {
   const metadata = {
     "cp-review-1": { targetConcept: "conditional-denominator", prereqsUsed: ["conditional-probability"], difficulty: 1, gateWeight: "high" },
@@ -17816,6 +18364,122 @@ function dsaGraphAlgorithmsConceptGraph() {
         label: "Graph algorithm choice",
         prereqs: ["unweighted-shortest-path", "dijkstra-relaxation", "topological-order", "mst-cut-intuition"],
         repairMaterial: "Review DSA Chapter 8.6 and classify prompts as unweighted shortest path, weighted shortest path, DAG scheduling, or connect-all MST.",
+        gateWeight: "high"
+      }
+    }
+  };
+}
+
+function dsaSortingSelectionConceptGraph() {
+  return {
+    chapterId: "gate-da-dsa-sorting-selection",
+    chapterTitle: "DSA Chapter 9: Sorting and Selection",
+    gateWeight: "high",
+    fallbackConcepts: ["insertion-sort-invariant", "merge-sort-recurrence", "quicksort-partition", "stability", "selection-kth"],
+    fallbackDifficultyMix: [1, 2, 2, 3],
+    fallbackInstruction: "Retest sorting invariants first, then add recurrence reads, partition traces, stability/space tradeoffs, and rank-discard selection.",
+    stableNextAction: "Next: move to divide and conquer after sorting invariants, lower-bound reasoning, partition traces, and selection rank logic are stable.",
+    nodes: {
+      "array-scan": {
+        label: "Array scan",
+        prereqs: [],
+        repairMaterial: "Review DSA Chapter 3.1 and trace index movement through a small array.",
+        gateWeight: "medium"
+      },
+      "sorted-array-invariant": {
+        label: "Sorted array invariant",
+        prereqs: [],
+        repairMaterial: "Review DSA Chapter 3.5 and state what sorted order allows you to discard or merge.",
+        gateWeight: "medium"
+      },
+      "recurrence-extraction": {
+        label: "Recurrence extraction",
+        prereqs: [],
+        repairMaterial: "Review DSA Chapter 2.4 and translate recursive calls plus combine work into T(n).",
+        gateWeight: "high"
+      },
+      "heap-order-property": {
+        label: "Heap order property",
+        prereqs: [],
+        repairMaterial: "Review DSA Chapter 5.6 and identify why the root is the current extreme element.",
+        gateWeight: "medium"
+      },
+      "decision-tree": {
+        label: "Decision-tree model",
+        prereqs: [],
+        repairMaterial: "Review DSA Chapter 9.1 and draw two comparison branches before counting leaves.",
+        gateWeight: "medium"
+      },
+      "comparison-lower-bound": {
+        label: "Comparison sorting lower bound",
+        prereqs: ["decision-tree"],
+        repairMaterial: "Review DSA Chapter 9.1 and explain why n! input orders require Omega(log n!) comparisons.",
+        gateWeight: "high"
+      },
+      "insertion-sort-invariant": {
+        label: "Insertion sort invariant",
+        prereqs: ["array-scan", "sorted-array-invariant"],
+        repairMaterial: "Review DSA Chapter 9.2 and write the sorted prefix after each insertion.",
+        gateWeight: "high"
+      },
+      "merge-step": {
+        label: "Merge step",
+        prereqs: ["sorted-array-invariant"],
+        repairMaterial: "Review DSA Chapter 9.3 and trace left pointer, right pointer, output, and tie handling.",
+        gateWeight: "high"
+      },
+      "merge-sort-recurrence": {
+        label: "Merge sort recurrence",
+        prereqs: ["recurrence-extraction", "merge-step"],
+        repairMaterial: "Review DSA Chapter 9.3 and derive T(n)=2T(n/2)+Theta(n) from split plus merge work.",
+        gateWeight: "high"
+      },
+      "pivot-choice": {
+        label: "Pivot choice",
+        prereqs: [],
+        repairMaterial: "Review DSA Chapter 9.4 and compare balanced pivot splits with smallest-element pivots.",
+        gateWeight: "high"
+      },
+      "quicksort-partition": {
+        label: "Quicksort partition invariant",
+        prereqs: ["pivot-choice", "array-scan"],
+        repairMaterial: "Review DSA Chapter 9.4 and label less-than-pivot, greater/equal, unknown, and pivot regions.",
+        gateWeight: "high"
+      },
+      "heap-sort-extraction": {
+        label: "Heap sort extraction",
+        prereqs: ["heap-order-property"],
+        repairMaterial: "Review DSA Chapter 9.5 and trace root swap, heap shrink, and bubble-down restoration.",
+        gateWeight: "medium"
+      },
+      stability: {
+        label: "Stability",
+        prereqs: [],
+        repairMaterial: "Review DSA Chapter 9.5 and label equal keys by original order before sorting.",
+        gateWeight: "high"
+      },
+      "in-place-space": {
+        label: "In-place and auxiliary space",
+        prereqs: [],
+        repairMaterial: "Review DSA Chapter 9.5 and separate input storage from extra arrays, recursion stack, and heap storage.",
+        gateWeight: "high"
+      },
+      "partition-discard": {
+        label: "Partition discard reasoning",
+        prereqs: ["quicksort-partition"],
+        repairMaterial: "Review DSA Chapter 9.6 and compare desired rank with pivot final rank.",
+        gateWeight: "high"
+      },
+      "selection-kth": {
+        label: "Selection and kth order statistic",
+        prereqs: ["partition-discard"],
+        repairMaterial: "Review DSA Chapter 9.6 and solve three rank-discard traces without fully sorting.",
+        gateWeight: "high"
+      },
+      "algorithm-choice": {
+        label: "Sorting algorithm choice",
+        prereqs: ["stability", "in-place-space", "merge-sort-recurrence", "quicksort-partition", "heap-sort-extraction"],
+        repairMaterial: "Review DSA Chapter 9.5 and classify prompts by stable, in-place, worst-case, average-case, and nearly-sorted requirements.",
         gateWeight: "high"
       }
     }
@@ -24775,6 +25439,7 @@ function conceptGraphForSection(section) {
   if (section?.id === "gate-da-dsa-sets-maps") return dsaSetsMapsConceptGraph();
   if (section?.id === "gate-da-dsa-graph-representation-traversal") return dsaGraphRepresentationTraversalConceptGraph();
   if (section?.id === "gate-da-dsa-graph-algorithms") return dsaGraphAlgorithmsConceptGraph();
+  if (section?.id === "gate-da-dsa-sorting-selection") return dsaSortingSelectionConceptGraph();
   if (section?.id === "gate-da-linear-algebra-vector-spaces-coordinates") return linearAlgebraVectorSpacesConceptGraph();
   if (section?.id === "gate-da-linear-algebra-transformations-matrices") return linearAlgebraTransformationsConceptGraph();
   if (section?.id === "gate-da-linear-algebra-rank-nullity-systems") return linearAlgebraRankNullityConceptGraph();
