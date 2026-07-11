@@ -1,7 +1,7 @@
 const STORAGE_KEY = "learning-studio-data-v2";
 const LEGACY_STORAGE_KEYS = ["learning-studio-data-v1"];
 const SESSION_KEY = "aleph-session";
-const COURSE_PLAN_VERSION = "seeded-user-canonical-workspace-v119";
+const COURSE_PLAN_VERSION = "seeded-user-canonical-workspace-v120";
 const MAX_FEEDBACK_ATTACHMENT_BYTES = 3 * 1024 * 1024;
 const MAX_COMPRESSED_FEEDBACK_BYTES = 2400 * 1024;
 const MAX_FEEDBACK_PDF_PAGES = 6;
@@ -662,10 +662,12 @@ function buildPriyankaPlatinumPlan(now, accountTypes, sections, user = defaultUs
     });
   }
 
-  const cmiReview = cmiDiscreteDsaReviewQuiz(now, startDate);
-  schedule.push(cmiReview.schedule);
-  tasks.push(cmiReview.task);
-  tests.push(cmiReview.test);
+  const cmiReviews = cmiDiscreteDsaReviewQuizzes(now, startDate);
+  cmiReviews.forEach((cmiReview) => {
+    schedule.push(cmiReview.schedule);
+    tasks.push(cmiReview.task);
+    tests.push(cmiReview.test);
+  });
 
   return {
     subjects,
@@ -24620,25 +24622,49 @@ function subjectWeeklyReviewDetails(plan, milestone, week) {
   return `Sunday subject review workflow for ${plan.label} Week ${week}. Generate a subject-local quiz covering this week's material only. Focus: ${milestone.focus}. Inputs should include completed tasks, uploaded-solution feedback, correction notes, and prerequisite gaps. Content generation is pending; this item reserves the workflow and placement in the subject section.`;
 }
 
-function cmiDiscreteDsaReviewQuiz(now, startDate) {
-  const week = 1;
-  const date = addDays(startDate, 6);
-  const materialUrl = "psets/week-02/july-05-cmi-msds-review-quiz.html";
-  const materialId = `review-platinum-${PRIYANKA_PLATINUM_REBASE_ID}-week-1-cmi-dm-dsa`;
+function cmiDiscreteDsaReviewQuizzes(now, startDate) {
+  return [
+    cmiDiscreteDsaReviewQuiz(now, startDate, {
+      week: 1,
+      titleDate: "July 5",
+      dateOffset: 6,
+      materialUrl: "psets/week-02/july-05-cmi-msds-review-quiz.html",
+      scopeDetails: [
+        "Discrete Math groups: counting/binomial/permutations, relations/state machines, proofs/induction/pigeonhole/inclusion-exclusion.",
+        "DSA groups: lists/stacks/queues, complexity/arrays/search, recursion/strings/sorting."
+      ]
+    }),
+    cmiDiscreteDsaReviewQuiz(now, startDate, {
+      week: 2,
+      titleDate: "July 12",
+      dateOffset: 13,
+      materialUrl: "psets/week-02/july-12-cmi-msds-dm-dsa-review-quiz.html",
+      scopeDetails: [
+        "Discrete Math groups: counting/casework, relations/functions/state, proofs/induction/inclusion-exclusion.",
+        "DSA groups: complexity/arrays/search, recursion/strings/sorting, lists/stacks/queues."
+      ]
+    })
+  ];
+}
+
+function cmiDiscreteDsaReviewQuiz(now, startDate, config) {
+  const week = config.week;
+  const date = addDays(startDate, config.dateOffset);
+  const materialUrl = config.materialUrl;
+  const materialId = `review-platinum-${PRIYANKA_PLATINUM_REBASE_ID}-week-${week}-cmi-dm-dsa`;
   const details = [
     "Two-hour CMI-level review quiz for covered Platinum Discrete Math and DSA only.",
     "Format: 30 questions, 15 MCQ and 15 short answer, five each across six covered topic groups.",
-    "Discrete Math groups: counting/binomial/permutations, relations/state machines, proofs/induction/pigeonhole/inclusion-exclusion.",
-    "DSA groups: lists/stacks/queues, complexity/arrays/search, recursion/strings/sorting.",
+    ...config.scopeDetails,
     "Worked explanations remain locked until submission; post-submission feedback should tag first error, misconception, and repair drill by topic."
   ].join(" ");
-  const scheduleId = `schedule-platinum-${PRIYANKA_PLATINUM_REBASE_ID}-week-1-cmi-dm-dsa-review`;
-  const taskId = `task-platinum-${PRIYANKA_PLATINUM_REBASE_ID}-week-1-cmi-dm-dsa-review`;
-  const testId = `test-platinum-${PRIYANKA_PLATINUM_REBASE_ID}-week-1-cmi-dm-dsa-review`;
+  const scheduleId = `schedule-platinum-${PRIYANKA_PLATINUM_REBASE_ID}-week-${week}-cmi-dm-dsa-review`;
+  const taskId = `task-platinum-${PRIYANKA_PLATINUM_REBASE_ID}-week-${week}-cmi-dm-dsa-review`;
+  const testId = `test-platinum-${PRIYANKA_PLATINUM_REBASE_ID}-week-${week}-cmi-dm-dsa-review`;
   return {
     schedule: {
       id: scheduleId,
-      title: "Week 1: CMI-level Discrete Math and DSA review quiz",
+      title: `Week ${week}: CMI-level Discrete Math and DSA review quiz`,
       week,
       subject: "Discrete Math + DSA",
       kind: "Review quiz",
@@ -24650,7 +24676,7 @@ function cmiDiscreteDsaReviewQuiz(now, startDate) {
     task: {
       id: taskId,
       week,
-      title: "DM/DSA W1: Take CMI-level 30-question review quiz",
+      title: `DM/DSA W${week}: Take CMI-level 30-question review quiz`,
       type: "Review quiz",
       date,
       scheduleId,
@@ -24661,7 +24687,7 @@ function cmiDiscreteDsaReviewQuiz(now, startDate) {
     },
     test: {
       id: testId,
-      title: "Week 1: CMI-level Discrete Math and DSA review quiz",
+      title: `Week ${week}: CMI-level Discrete Math and DSA review quiz`,
       date,
       details,
       materialUrl,
@@ -24700,7 +24726,7 @@ function cmiDmDsaReviewFeedbackWorkflow() {
   return {
     id: "feedback-workflow-cmi-dm-dsa-review-v1",
     title: "Structured Feedback: CMI-Level Discrete Math and DSA Review",
-    promptUse: "Use this after reading the submitted July 5 review quiz. Grade visible uploaded work across 30 questions, classify errors by topic and mistake type, and recommend targeted repair work.",
+    promptUse: "Use this after reading the submitted CMI-level Discrete Math and DSA review quiz. Grade visible uploaded work across 30 questions, classify errors by topic and mistake type, and recommend targeted repair work.",
     studentSummaryHint: "Summarize readiness across Discrete Math and DSA at CMI-style difficulty, naming the first blocking skill and the highest-priority repair.",
     rubric: [
       { criterion: "Coverage and evidence", points: 1, cue: "Identify which of the 30 questions were attempted, missing, unreadable, or only partially visible." },

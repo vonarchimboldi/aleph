@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>July 12 Review Quiz - CMI-Level Discrete Math and DSA</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" />
+  <link rel="stylesheet" href="/psets/material-page.css" />
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+  <script defer src="/psets/material-page.js"></script>
+  <script id="quiz-metadata" type="application/json">
+{
+  "id": "cmi-dm-dsa-review-2026-07-12",
+  "title": "July 12 CMI-Level Discrete Math and DSA Review Quiz",
+  "durationMinutes": 120,
+  "questionCount": 30,
+  "examTarget": "CMI-MSDS",
+  "cmiRubricVersion": "cmi-msds-review-rubric-v1",
+  "mcqPolicy": "multi-select-all-correct-no-partial-credit",
+  "unlockPolicy": "solutions-after-submission",
+  "coveredScope": [
+    "Discrete Math W1: proof foundations, predicates, sets, basic counting, pigeonhole, induction",
+    "Discrete Math W2: casework, strong induction, inclusion-exclusion, independence, conditioning",
+    "DSA W1: algorithmic abstraction, complexity analysis, arrays, search",
+    "DSA W2: iteration, recursion, induction, strings, basic sorting"
+  ],
+  "wholeQuizRubric": {
+    "scopeFidelity": 2,
+    "topicBalance": 2,
+    "cmiFormFidelity": 2,
+    "diagnosticValue": 2,
+    "timeRealism": 2,
+    "pass": true
+  },
+  "feedbackWorkflow": {
+    "errorAnalysis": true,
+    "submissionFields": ["selectedOptions", "shortAnswers", "scratchWork", "confidence"],
+    "diagnosticTags": ["overcount", "missed-case", "invalid-proof-step", "wrong-invariant", "off-by-one", "recurrence-misread", "data-structure-confusion", "converse-error", "edge-case-boundary"],
+    "postSubmissionOutputs": ["topicScore", "firstErrorPerTopic", "repairDrills", "nextWeekPriority"]
+  },
+  "questions": [
+    {"id":"q01","topic":"dm-counting-casework","type":"mcq","source_block":"Discrete Math W1-W2: CMU 21-228 counting/casework; MIT 6.1200J Lectures 1-3","target_skill":"choose ordered/unordered count under a restriction","estimated_minutes":3,"primary_trap":"treating position choice and letter choice as independent after fixing A","expected_first_step":"Choose the position of A, then fill remaining positions without repetition.","mistake_tags":["ordered-vs-unordered","missed-case"],"cmi_dimensions":{"subject_coverage":2,"skills_required":2,"techniques_required":2,"analysis_level":2,"speed":2,"reasoning_kind":2},"cmi_pass":true},
+    {"id":"q02","topic":"dm-counting-casework","type":"mcq","source_block":"Discrete Math W1-W2: basic counting, complement counting","target_skill":"use complement count for at least one repeated digit","estimated_minutes":3,"primary_trap":"counting exactly one repeat instead of at least one repeat","expected_first_step":"Count all strings, then subtract all-distinct strings.","mistake_tags":["complement-counting","exactly-vs-at-least"],"cmi_dimensions":{"subject_coverage":2,"skills_required":2,"techniques_required":2,"analysis_level":2,"speed":2,"reasoning_kind":2},"cmi_pass":true},
+    {"id":"q03","topic":"dm-counting-casework","type":"short-answer","source_block":"Discrete Math W2: inclusion-exclusion and casework","target_skill":"write and justify the inclusion-exclusion expression","estimated_minutes":5,"primary_trap":"missing the triple intersection correction","expected_first_step":"Write |A union B union C| with pairwise subtraction and triple addition.","mistake_tags":["inclusion-exclusion","missed-case"],"cmi_dimensions":{"subject_coverage":2,"skills_required":2,"techniques_required":2,"analysis_level":2,"speed":2,"reasoning_kind":2},"cmi_pass":true},
+    {"id":"q04","topic":"dm-counting-casework","type":"short-answer","source_block":"Discrete Math W2: casework, independence, conditioning","target_skill":"partition by first coin result and condition correctly","estimated_minutes":5,"primary_trap":"assuming independence after conditioning on an event that changes the sample space","expected_first_step":"Name the conditioned sample space before calculating.","mistake_tags":["conditioning","sample-space"],"cmi_dimensions":{"subject_coverage":2,"skills_required":2,"techniques_required":2,"analysis_level":2,"speed":2,"reasoning_kind":2},"cmi_pass":true},
+    {"id":"q05","topic":"dm-counting-casework","type":"short-answer","source_block":"Discrete Math W1-W2: pigeonhole and extremal counting","target_skill":"find a sharp guarantee threshold","estimated_minutes":5,"primary_trap":"giving the number of boxes rather than boxes plus one","expected_first_step":"Identify pigeons as chosen numbers and boxes as residue classes.","mistake_tags":["pigeonhole-threshold","off-by-one"],"cmi_dimensions":{"subject_coverage":2,"skills_required":2,"techniques_required":2,"analysis_level":2,"speed":2,"reasoning_kind":2},"cmi_pass":true},
+    {"id":"q06","topic":"dm-relations-functions-state","type":"mcq","source_block":"Discrete Math W1-W2: sets, functions, relations, predicates","target_skill":"check injective/surjective statements with finite sets","estimated_minutes":3,"primary_trap":"confusing one-to-one with onto when domain and codomain sizes differ","expected_first_step":"Compare domain/codomain sizes and definitions.","mistake_tags":["function-property","converse-error"],"cmi_dimensions":{"subject_coverage":2,"skills_required":2,"techniques_required":2,"analysis_level":2,"speed":2,"reasoning_kind":2},"cmi_pass":true},
+    {"id":"q07","topic":"dm-relations-functions-state","type":"mcq","source_block":"Discrete Math W1-W2: relation properties and counterexamples","target_skill":"select all relation properties that hold","estimated_minutes":4,"primary_trap":"testing only one example for transitivity","expected_first_step":"Check reflexive, symmetric, antisymmetric, and transitive from definitions.","mistake_tags":["relation-property","counterexample"],"cmi_dimensions":{"subject_coverage":2,"skills_required":2,"techniques_required":2,"analysis_level":2,"speed":2,"reasoning_kind":2},"cmi_pass":true},
+    {"id":"q08","topic":"dm-relations-functions-state","type":"mcq","source_block":"Discrete Math W1-W2: predicates and logic equivalence","target_skill":"negate a quantified statement correctly","estimated_minutes":3,"primary_trap":"negating the predicate but not swapping the quantifier","expected_first_step":"Change exists to forall and negate the inner implication/condition.","mistake_tags":["logic-negation","quantifier"],"cmi_dimensions":{"subject_coverage":2,"skills_required":2,"techniques_required":2,"analysis_level":2,"speed":2,"reasoning_kind":2},"cmi_pass":true},
+    {"id":"q09","topic":"dm-relations-functions-state","type":"short-answer","source_block":"Discrete Math W1-W2: state machines and invariants","target_skill":"trace a two-state transition and identify periodicity","estimated_minutes":5,"primary_trap":"counting transitions from state 1 instead of state 0","expected_first_step":"Write the first three states to find the period.","mistake_tags":["state-trace","off-by-one"],"cmi_dimensions":{"subject_coverage":2,"skills_required":2,"techniques_required":2,"analysis_level":2,"speed":2,"reasoning_kind":2},"cmi_pass":true},
+    {"id":"q10","topic":"dm-relations-functions-state","type":"short-answer","source_block":"Discrete Math W1-W2: relations as sets of ordered pairs","target_skill":"compose finite relations exactly","estimated_minutes":5,"primary_trap":"reversing composition order","expected_first_step":"Find middle elements b that connect aRb and bSc.","mistake_tags":["relation-composition","order-confusion"],"cmi_dimensions":{"subject_coverage":2,"skills_required":2,"techniques_required":2,"analysis_level":2,"speed":2,"reasoning_kind":2},"cmi_pass":true},
+    {"id":"q11","topic":"dm-proofs-induction-ie","type":"mcq","source_block":"Discrete Math W1-W2: induction and strong induction","target_skill":"choose sufficient base cases and induction hypothesis","estimated_minutes":3,"primary_trap":"using ordinary induction where two previous cases are needed","expected_first_step":"Identify which earlier statements are used in the transition.","mistake_tags":["induction-hypothesis","base-case"],"cmi_dimensions":{"subject_coverage":2,"skills_required":2,"techniques_required":2,"analysis_level":2,"speed":2,"reasoning_kind":2},"cmi_pass":true},
+    {"id":"q12","topic":"dm-proofs-induction-ie","type":"mcq","source_block":"Discrete Math W1-W2: proof by counterexample and implication","target_skill":"detect false converse statements","estimated_minutes":3,"primary_trap":"assuming a true implication has a true converse","expected_first_step":"Try a counterexample before proving.","mistake_tags":["converse-error","counterexample"],"cmi_dimensions":{"subject_coverage":2,"skills_required":2,"techniques_required":2,"analysis_level":2,"speed":2,"reasoning_kind":2},"cmi_pass":true},
+    {"id":"q13","topic":"dm-proofs-induction-ie","type":"short-answer","source_block":"Discrete Math W2: inclusion-exclusion","target_skill":"derive the correct count for exactly two sets","estimated_minutes":5,"primary_trap":"counting all elements in at least two sets instead of exactly two","expected_first_step":"Subtract three times the triple intersection from pairwise-intersection sum.","mistake_tags":["exactly-vs-at-least","inclusion-exclusion"],"cmi_dimensions":{"subject_coverage":2,"skills_required":2,"techniques_required":2,"analysis_level":2,"speed":2,"reasoning_kind":2},"cmi_pass":true},
+    {"id":"q14","topic":"dm-proofs-induction-ie","type":"short-answer","source_block":"Discrete Math W1-W2: induction and divisibility","target_skill":"write a concise induction proof","estimated_minutes":6,"primary_trap":"proving only examples, not the induction step","expected_first_step":"State P(n), base case, and transform the n+1 expression using P(n).","mistake_tags":["invalid-proof-step","induction"],"cmi_dimensions":{"subject_coverage":2,"skills_required":2,"techniques_required":2,"analysis_level":2,"speed":2,"reasoning_kind":2},"cmi_pass":true},
+    {"id":"q15","topic":"dm-proofs-induction-ie","type":"short-answer","source_block":"Discrete Math W1-W2: proof/counterexample, parity","target_skill":"give a counterexample or proof based on parity cases","estimated_minutes":5,"primary_trap":"checking only even n","expected_first_step":"Split n by parity or find a single counterexample.","mistake_tags":["case-coverage","counterexample"],"cmi_dimensions":{"subject_coverage":2,"skills_required":2,"techniques_required":2,"analysis_level":2,"speed":2,"reasoning_kind":2},"cmi_pass":true},
+    {"id":"q16","topic":"dsa-complexity-arrays-search","type":"mcq","source_block":"DSA W1: Aho/Ullman FOCS algorithms, Cartesian arrays/search","target_skill":"trace loop bounds and exact iteration count","estimated_minutes":3,"primary_trap":"confusing < with <=","expected_first_step":"List the first few i values and stopping condition.","mistake_tags":["loop-count","boundary"],"cmi_dimensions":{"subject_coverage":2,"skills_required":2,"techniques_required":2,"analysis_level":2,"speed":2,"reasoning_kind":2},"cmi_pass":true},
+    {"id":"q17","topic":"dsa-complexity-arrays-search","type":"mcq","source_block":"DSA W1: arrays, binary search, complexity","target_skill":"identify binary-search invariant and not-found behavior","estimated_minutes":4,"primary_trap":"using stale mid after updating bounds","expected_first_step":"Track low, high, mid for each iteration.","mistake_tags":["binary-search","wrong-invariant"],"cmi_dimensions":{"subject_coverage":2,"skills_required":2,"techniques_required":2,"analysis_level":2,"speed":2,"reasoning_kind":2},"cmi_pass":true},
+    {"id":"q18","topic":"dsa-complexity-arrays-search","type":"mcq","source_block":"DSA W1: array search and operation counts","target_skill":"choose all true statements about worst/average comparisons","estimated_minutes":4,"primary_trap":"mixing worst case and successful average case","expected_first_step":"Separate successful search, unsuccessful search, and worst case.","mistake_tags":["complexity-case","operation-count"],"cmi_dimensions":{"subject_coverage":2,"skills_required":2,"techniques_required":2,"analysis_level":2,"speed":2,"reasoning_kind":2},"cmi_pass":true},
+    {"id":"q19","topic":"dsa-complexity-arrays-search","type":"short-answer","source_block":"DSA W1: prefix accumulation and invariants","target_skill":"state and use a prefix-sum loop invariant","estimated_minutes":5,"primary_trap":"stating the final postcondition instead of an invariant at index i","expected_first_step":"Define what s equals after processing first i entries.","mistake_tags":["wrong-invariant","array-scan"],"cmi_dimensions":{"subject_coverage":2,"skills_required":2,"techniques_required":2,"analysis_level":2,"speed":2,"reasoning_kind":2},"cmi_pass":true},
+    {"id":"q20","topic":"dsa-complexity-arrays-search","type":"short-answer","source_block":"DSA W1: sorted arrays and two-pointer search","target_skill":"justify pointer movement with sorted-order invariant","estimated_minutes":6,"primary_trap":"moving both pointers or the wrong pointer","expected_first_step":"Compare A[left]+A[right] with target and use sorted order.","mistake_tags":["two-pointer","wrong-invariant"],"cmi_dimensions":{"subject_coverage":2,"skills_required":2,"techniques_required":2,"analysis_level":2,"speed":2,"reasoning_kind":2},"cmi_pass":true},
+    {"id":"q21","topic":"dsa-recursion-strings-sorting","type":"mcq","source_block":"DSA W2: recursion and base cases","target_skill":"trace recursive calls and returns","estimated_minutes":3,"primary_trap":"counting calls but not return values","expected_first_step":"Expand the recurrence down to the base case.","mistake_tags":["recursion-trace","base-case"],"cmi_dimensions":{"subject_coverage":2,"skills_required":2,"techniques_required":2,"analysis_level":2,"speed":2,"reasoning_kind":2},"cmi_pass":true},
+    {"id":"q22","topic":"dsa-recursion-strings-sorting","type":"mcq","source_block":"DSA W2: string scans and loops","target_skill":"trace code-as-written with index bounds","estimated_minutes":3,"primary_trap":"assuming the intended behavior rather than reading the condition","expected_first_step":"List inspected indices and character comparisons.","mistake_tags":["string-scan","boundary"],"cmi_dimensions":{"subject_coverage":2,"skills_required":2,"techniques_required":2,"analysis_level":2,"speed":2,"reasoning_kind":2},"cmi_pass":true},
+    {"id":"q23","topic":"dsa-recursion-strings-sorting","type":"short-answer","source_block":"DSA W2: basic sorting, stability, recurrence","target_skill":"separate sorting runtime, stability, and extra space","estimated_minutes":5,"primary_trap":"calling every O(n log n) sort stable or in-place","expected_first_step":"Separate runtime, stability, and extra space.","mistake_tags":["sorting-stability","space-complexity"],"cmi_dimensions":{"subject_coverage":2,"skills_required":2,"techniques_required":2,"analysis_level":2,"speed":2,"reasoning_kind":2},"cmi_pass":true},
+    {"id":"q24","topic":"dsa-recursion-strings-sorting","type":"short-answer","source_block":"DSA W2: recursion and recurrence solving","target_skill":"form recurrence from recursive procedure","estimated_minutes":5,"primary_trap":"forgetting nonrecursive linear work","expected_first_step":"Count recursive calls and combine work separately.","mistake_tags":["recurrence-misread","complexity"],"cmi_dimensions":{"subject_coverage":2,"skills_required":2,"techniques_required":2,"analysis_level":2,"speed":2,"reasoning_kind":2},"cmi_pass":true},
+    {"id":"q25","topic":"dsa-recursion-strings-sorting","type":"short-answer","source_block":"DSA W2: sorting, stability, counterexample","target_skill":"show stability or instability with labelled equal keys","estimated_minutes":5,"primary_trap":"using equal numeric keys without labels","expected_first_step":"Label equal keys by original order.","mistake_tags":["sorting-stability","counterexample"],"cmi_dimensions":{"subject_coverage":2,"skills_required":2,"techniques_required":2,"analysis_level":2,"speed":2,"reasoning_kind":2},"cmi_pass":true},
+    {"id":"q26","topic":"dsa-lists-stacks-queues","type":"mcq","source_block":"DSA W1-W2: Cartesian/Aho-Ullman abstraction, stacks/queues from covered review scope","target_skill":"trace LIFO/FIFO operations exactly","estimated_minutes":3,"primary_trap":"treating queue like stack","expected_first_step":"Write container contents after each operation.","mistake_tags":["data-structure-confusion","state-trace"],"cmi_dimensions":{"subject_coverage":2,"skills_required":2,"techniques_required":2,"analysis_level":2,"speed":2,"reasoning_kind":2},"cmi_pass":true},
+    {"id":"q27","topic":"dsa-lists-stacks-queues","type":"mcq","source_block":"DSA W1-W2: list/queue representation invariants","target_skill":"identify safe pointer/order update","estimated_minutes":3,"primary_trap":"overwriting the only pointer to the rest of the list","expected_first_step":"Preserve the old next pointer before redirecting.","mistake_tags":["pointer-order","representation-invariant"],"cmi_dimensions":{"subject_coverage":2,"skills_required":2,"techniques_required":2,"analysis_level":2,"speed":2,"reasoning_kind":2},"cmi_pass":true},
+    {"id":"q28","topic":"dsa-lists-stacks-queues","type":"mcq","source_block":"DSA W1-W2: queue/circular buffer edge cases","target_skill":"apply modular indexing","estimated_minutes":3,"primary_trap":"returning array length as an index","expected_first_step":"Compute (index+1) mod capacity.","mistake_tags":["off-by-one","modular-index"],"cmi_dimensions":{"subject_coverage":2,"skills_required":2,"techniques_required":2,"analysis_level":2,"speed":2,"reasoning_kind":2},"cmi_pass":true},
+    {"id":"q29","topic":"dsa-lists-stacks-queues","type":"short-answer","source_block":"DSA W1-W2: stack/queue invariants","target_skill":"state a representation invariant for a two-stack queue","estimated_minutes":5,"primary_trap":"describing operations but not the invariant","expected_first_step":"State which stack holds newest items and which holds dequeue-ready items.","mistake_tags":["wrong-invariant","queue-behavior"],"cmi_dimensions":{"subject_coverage":2,"skills_required":2,"techniques_required":2,"analysis_level":2,"speed":2,"reasoning_kind":2},"cmi_pass":true},
+    {"id":"q30","topic":"dsa-lists-stacks-queues","type":"short-answer","source_block":"DSA W1-W2: linked representation edge cases","target_skill":"identify deletion edge cases and pointer updates","estimated_minutes":5,"primary_trap":"forgetting head/tail or one-node list","expected_first_step":"Name the node position and affected external pointer.","mistake_tags":["edge-case-boundary","pointer-order"],"cmi_dimensions":{"subject_coverage":2,"skills_required":2,"techniques_required":2,"analysis_level":2,"speed":2,"reasoning_kind":2},"cmi_pass":true}
+  ]
+}
+  </script>
+</head>
+<body>
+  <main class="wrap">
+    <section class="hero">
+      <h1>July 12: CMI-Level Discrete Math and DSA Review Quiz</h1>
+      <p class="sub">
+        Two-hour review quiz with 30 questions: 15 multi-select MCQ and 15 short answer. Scope is only covered Platinum Discrete Math and DSA material from Weeks 1-2, calibrated to CMI MS DS reasoning style.
+      </p>
+      <div class="meta">
+        <span class="chip">Discrete Math W1-W2</span>
+        <span class="chip">DSA W1-W2</span>
+        <span class="chip">120 minutes</span>
+        <span class="chip">30 questions</span>
+        <span class="chip">15 MCQ</span>
+        <span class="chip">15 short answer</span>
+      </div>
+      <p class="math-fallback">Math rendering did not load from the CDN. Refresh once, or use a network that allows KaTeX CDN files.</p>
+    </section>
+
+    <section class="panel accent">
+      <h2>Instructions</h2>
+      <div class="grid">
+        <ul>
+          <li>Use about 45 minutes for MCQs, 75 minutes for short answers and checking.</li>
+          <li>For MCQs, select all correct options and no incorrect options. Some questions have more than one correct option.</li>
+          <li>For short answers, write the setup, invariant or counted object, and final answer.</li>
+        </ul>
+        <ul>
+          <li>Do not consult notes while attempting the quiz.</li>
+          <li>Mark the first step where you feel uncertain.</li>
+          <li>Worked explanations remain locked until your submission is recorded in Aleph.</li>
+        </ul>
+      </div>
+    </section>
+
+    <div class="section-label">Topic 1 - Discrete Math: Counting and Casework</div>
+
+    <article class="problem" id="q01">
+      <div class="problem-head"><div class="problem-title">1. Required letter in a string</div><div class="tags"><span class="tag concept">MCQ</span><span class="tag">Counting</span></div></div>
+      <p>Four-letter strings are formed from \(A,B,C,D,E\), with no repeated letter. Which expressions count strings that contain \(A\)? Select all correct options.</p>
+      <ol type="A"><li>\(4\cdot 4\cdot 3\cdot 2\)</li><li>\(5\cdot4\cdot3\cdot2-4\cdot3\cdot2\cdot1\)</li><li>\(\binom{5}{4}\)</li><li>\(4!\)</li></ol>
+    </article>
+
+    <article class="problem" id="q02">
+      <div class="problem-head"><div class="problem-title">2. At least one repeat</div><div class="tags"><span class="tag concept">MCQ</span><span class="tag">Complement</span></div></div>
+      <p>How many length-3 strings over digits \(\{0,1,2,3,4\}\) have at least one repeated digit? Select all correct options.</p>
+      <ol type="A"><li>\(5^3-5\cdot4\cdot3\)</li><li>\(125-60\)</li><li>\(5\cdot\binom{3}{2}\cdot4\)</li><li>\(5^3\)</li></ol>
+    </article>
+
+    <article class="problem" id="q03">
+      <div class="problem-head"><div class="problem-title">3. Inclusion-exclusion form</div><div class="tags"><span class="tag concept">Short answer</span><span class="tag">Inclusion-exclusion</span></div></div>
+      <p>For finite sets \(A,B,C\), write a formula for \(|A\cup B\cup C|\). In one sentence, explain why the triple intersection is added back.</p>
+      <p class="response-line">Answer space:</p>
+    </article>
+
+    <article class="problem" id="q04">
+      <div class="problem-head"><div class="problem-title">4. Conditional sample space</div><div class="tags"><span class="tag concept">Short answer</span><span class="tag">Conditioning</span></div></div>
+      <p>Consider all binary strings of length \(3\), excluding \(000\). What fraction of the remaining strings start with \(1\)? State the restricted sample space or an equivalent count.</p>
+      <p class="response-line">Answer space:</p>
+    </article>
+
+    <article class="problem" id="q05">
+      <div class="problem-head"><div class="problem-title">5. Pigeonhole with residues</div><div class="tags"><span class="tag concept">Short answer</span><span class="tag">Pigeonhole</span></div></div>
+      <p>What is the smallest number of integers that must be chosen to guarantee that two of them have the same remainder modulo \(9\)? Explain the boxes.</p>
+      <p class="response-line">Answer space:</p>
+    </article>
+
+    <div class="section-label">Topic 2 - Discrete Math: Relations, Functions, State</div>
+
+    <article class="problem" id="q06">
+      <div class="problem-head"><div class="problem-title">6. Function properties</div><div class="tags"><span class="tag concept">MCQ</span><span class="tag">Functions</span></div></div>
+      <p>Let \(f:\{1,2,3\}\to\{a,b,c,d\}\). Which statements are necessarily true? Select all correct options.</p>
+      <ol type="A"><li>\(f\) cannot be surjective.</li><li>\(f\) may be injective.</li><li>\(f\) must be injective.</li><li>\(f\) may be surjective.</li></ol>
+    </article>
+
+    <article class="problem" id="q07">
+      <div class="problem-head"><div class="problem-title">7. Relation properties</div><div class="tags"><span class="tag concept">MCQ</span><span class="tag">Relations</span></div></div>
+      <p>On \(\{1,2,3\}\), define \(aRb\) if \(a\le b\). Which properties hold? Select all correct options.</p>
+      <ol type="A"><li>Reflexive</li><li>Symmetric</li><li>Antisymmetric</li><li>Transitive</li></ol>
+    </article>
+
+    <article class="problem" id="q08">
+      <div class="problem-head"><div class="problem-title">8. Negating a predicate</div><div class="tags"><span class="tag concept">MCQ</span><span class="tag">Logic</span></div></div>
+      <p>Which is logically equivalent to the negation of “There exists an integer \(n\) such that \(n^2\) is odd and \(n\) is even”?</p>
+      <ol type="A"><li>For every integer \(n\), \(n^2\) is even or \(n\) is odd.</li><li>For every integer \(n\), \(n^2\) is odd and \(n\) is even.</li><li>There exists an integer \(n\) such that \(n^2\) is even and \(n\) is odd.</li><li>For every integer \(n\), \(n^2\) is not odd and \(n\) is not even.</li></ol>
+    </article>
+
+    <article class="problem" id="q09">
+      <div class="problem-head"><div class="problem-title">9. State-machine period</div><div class="tags"><span class="tag concept">Short answer</span><span class="tag">State trace</span></div></div>
+      <p>A machine has states \(0,1,2,3\). Each input \(a\) sends state \(s\) to \(s+2\pmod 4\). Starting at \(0\), what state is reached after reading \(a^{17}\)? Show the period.</p>
+      <p class="response-line">Answer space:</p>
+    </article>
+
+    <article class="problem" id="q10">
+      <div class="problem-head"><div class="problem-title">10. Compose two relations</div><div class="tags"><span class="tag concept">Short answer</span><span class="tag">Composition</span></div></div>
+      <p>On \(\{1,2,3,4\}\), let \(R=\{(1,2),(2,4),(3,2)\}\) and \(S=\{(2,3),(4,1)\}\). Find \(S\circ R\), where \((a,c)\in S\circ R\) if some \(b\) has \((a,b)\in R\) and \((b,c)\in S\).</p>
+      <p class="response-line">Answer space:</p>
+    </article>
+
+    <div class="section-label">Topic 3 - Discrete Math: Proofs, Induction, Inclusion-Exclusion</div>
+
+    <article class="problem" id="q11">
+      <div class="problem-head"><div class="problem-title">11. Induction setup</div><div class="tags"><span class="tag concept">MCQ</span><span class="tag">Strong induction</span></div></div>
+      <p>A proof of \(P(n)\) for \(n\ge2\) uses both \(P(n-1)\) and \(P(n-2)\). Which setup is sufficient? Select all correct options.</p>
+      <ol type="A"><li>Prove base cases \(P(0)\), \(P(1)\), then use strong induction.</li><li>Prove only \(P(1)\), then use ordinary induction no matter what.</li><li>Use strong induction and include enough base cases to cover the first transition.</li><li>No base case is needed if the formula looks obvious.</li></ol>
+    </article>
+
+    <article class="problem" id="q12">
+      <div class="problem-head"><div class="problem-title">12. Converse trap</div><div class="tags"><span class="tag concept">MCQ</span><span class="tag">Counterexample</span></div></div>
+      <p>Which statements are true for all integers \(n\)? Select all correct options.</p>
+      <ol type="A"><li>If \(n\) is even, then \(n^2\) is even.</li><li>If \(n^2\) is even, then \(n\) is even.</li><li>If \(n\) is divisible by 4, then \(n\) is even.</li><li>If \(n\) is even, then \(n\) is divisible by 4.</li></ol>
+    </article>
+
+    <article class="problem" id="q13">
+      <div class="problem-head"><div class="problem-title">13. Exactly two sets</div><div class="tags"><span class="tag concept">Short answer</span><span class="tag">Inclusion-exclusion</span></div></div>
+      <p>Let \(x_{AB}=|A\cap B|\), \(x_{AC}=|A\cap C|\), \(x_{BC}=|B\cap C|\), and \(t=|A\cap B\cap C|\). Give a formula for the number of elements in exactly two of the three sets, and justify the coefficient of \(t\).</p>
+      <p class="response-line">Answer space:</p>
+    </article>
+
+    <article class="problem" id="q14">
+      <div class="problem-head"><div class="problem-title">14. Divisibility induction</div><div class="tags"><span class="tag concept">Short answer</span><span class="tag">Induction</span></div></div>
+      <p>Prove by induction that \(5\mid(6^n-1)\) for all integers \(n\ge1\). Keep the proof to the base case, hypothesis, and transition.</p>
+      <p class="response-line">Answer space:</p>
+    </article>
+
+    <article class="problem" id="q15">
+      <div class="problem-head"><div class="problem-title">15. Parity claim</div><div class="tags"><span class="tag concept">Short answer</span><span class="tag">Proof or counterexample</span></div></div>
+      <p>Decide whether the claim is true: “For every integer \(n\), \(n^2+n\) is even.” Give a proof or counterexample.</p>
+      <p class="response-line">Answer space:</p>
+    </article>
+
+    <div class="section-label">Topic 4 - DSA: Complexity, Arrays, Search</div>
+
+    <article class="problem" id="q16">
+      <div class="problem-head"><div class="problem-title">16. Boundary loop count</div><div class="tags"><span class="tag concept">MCQ</span><span class="tag">Loop count</span></div></div>
+      <p>A loop runs with \(i=0,1,2,\ldots\) while \(i^2 < n\). For \(n=26\), how many iterations occur?</p>
+      <ol type="A"><li>5</li><li>6</li><li>\(\lfloor\sqrt{26}\rfloor\)</li><li>26</li></ol>
+    </article>
+
+    <article class="problem" id="q17">
+      <div class="problem-head"><div class="problem-title">17. Binary-search trace</div><div class="tags"><span class="tag concept">MCQ</span><span class="tag">Search</span></div></div>
+      <p>Binary search on \([2,5,8,11,14,17,20]\) looks for \(13\), using low/high inclusive and mid \(=\lfloor(low+high)/2\rfloor\). Which middle values are compared?</p>
+      <ol type="A"><li>11, 17, 14</li><li>11, 14</li><li>8, 14, 17</li><li>14, 11</li></ol>
+    </article>
+
+    <article class="problem" id="q18">
+      <div class="problem-head"><div class="problem-title">18. Search comparisons</div><div class="tags"><span class="tag concept">MCQ</span><span class="tag">Operation count</span></div></div>
+      <p>For ordinary linear search in an array of \(n\) distinct elements, with a successful target equally likely at any position, which statements are true? Select all correct options.</p>
+      <ol type="A"><li>Worst-case successful comparisons: \(n\)</li><li>Average successful comparisons: \((n+1)/2\)</li><li>Unsuccessful comparisons: \(1\)</li><li>Worst-case successful comparisons: \(\lceil\log_2 n\rceil\)</li></ol>
+    </article>
+
+    <article class="problem" id="q19">
+      <div class="problem-head"><div class="problem-title">19. Prefix-sum invariant</div><div class="tags"><span class="tag concept">Short answer</span><span class="tag">Invariant</span></div></div>
+      <p>A loop initializes \(s=0\), then for \(i=0\) to \(n-1\), sets \(s=s+A[i]\). State a loop invariant after the body has run for indices \(0,\ldots,i\).</p>
+      <p class="response-line">Answer space:</p>
+    </article>
+
+    <article class="problem" id="q20">
+      <div class="problem-head"><div class="problem-title">20. Two-pointer correctness</div><div class="tags"><span class="tag concept">Short answer</span><span class="tag">Sorted array</span></div></div>
+      <p>For a sorted increasing array, the two-pointer method checks \(A[l]+A[r]\) against target \(T\). Explain why, if the sum is less than \(T\), moving \(l\) right is safe.</p>
+      <p class="response-line">Answer space:</p>
+    </article>
+
+    <div class="section-label">Topic 5 - DSA: Recursion, Strings, Sorting</div>
+
+    <article class="problem" id="q21">
+      <div class="problem-head"><div class="problem-title">21. Recursion return value</div><div class="tags"><span class="tag concept">MCQ</span><span class="tag">Recursion</span></div></div>
+      <p>Let \(F(0)=0\), and for \(n>0\), \(F(n)=F(n-1)+2n-1\). What is \(F(4)\)?</p>
+      <ol type="A"><li>16</li><li>10</li><li>8</li><li>7</li></ol>
+    </article>
+
+    <article class="problem" id="q22">
+      <div class="problem-head"><div class="problem-title">22. Code-as-written string scan</div><div class="tags"><span class="tag concept">MCQ</span><span class="tag">String scan</span></div></div>
+      <p>A loop checks characters at indices \(0,2,4,\ldots\) of the string \(s=\text{"abacaba"}\) and counts how many are \(a\). What count does it return?</p>
+      <ol type="A"><li>4</li><li>3</li><li>7</li><li>2</li></ol>
+    </article>
+
+    <article class="problem" id="q23">
+      <div class="problem-head"><div class="problem-title">23. Sorting tradeoffs</div><div class="tags"><span class="tag concept">Short answer</span><span class="tag">Sorting</span></div></div>
+      <p>State one difference between insertion sort and merge sort in terms of stability, recurrence/runtime, or extra space. Include one sentence explaining why your statement is true.</p>
+      <p class="response-line">Answer space:</p>
+    </article>
+
+    <article class="problem" id="q24">
+      <div class="problem-head"><div class="problem-title">24. Recurrence from procedure</div><div class="tags"><span class="tag concept">Short answer</span><span class="tag">Recurrence</span></div></div>
+      <p>A recursive procedure makes two calls on inputs of size \(n/2\), then scans the whole input once. Write the recurrence and give the \(\Theta\)-bound.</p>
+      <p class="response-line">Answer space:</p>
+    </article>
+
+    <article class="problem" id="q25">
+      <div class="problem-head"><div class="problem-title">25. Stability example</div><div class="tags"><span class="tag concept">Short answer</span><span class="tag">Counterexample</span></div></div>
+      <p>The records \((A,2),(B,1),(C,2)\) are sorted by the numeric key only. What output order among \(A\) and \(C\) must a stable sort preserve? Why should the equal keys be labelled?</p>
+      <p class="response-line">Answer space:</p>
+    </article>
+
+    <div class="section-label">Topic 6 - DSA: Lists, Stacks, Queues</div>
+
+    <article class="problem" id="q26">
+      <div class="problem-head"><div class="problem-title">26. Stack and queue trace</div><div class="tags"><span class="tag concept">MCQ</span><span class="tag">Trace</span></div></div>
+      <p>A stack receives push 1, push 2, pop, push 3. A queue receives enqueue 1, enqueue 2, dequeue, enqueue 3. Which pair is correct?</p>
+      <ol type="A"><li>Stack top is 3; queue front is 2.</li><li>Stack top is 1; queue front is 3.</li><li>Stack top is 2; queue front is 1.</li><li>Stack top is 3; queue front is 3.</li></ol>
+    </article>
+
+    <article class="problem" id="q27">
+      <div class="problem-head"><div class="problem-title">27. Safe list insertion</div><div class="tags"><span class="tag concept">MCQ</span><span class="tag">Pointer order</span></div></div>
+      <p>To insert node \(N\) after node \(P\) in a singly linked list, which update order preserves the old suffix?</p>
+      <ol type="A"><li>\(N.next=P.next\), then \(P.next=N\)</li><li>\(P.next=N\), then \(N.next=P.next\)</li><li>\(P.next=P.next.next\), then \(N.next=P\)</li><li>\(N.next=null\), then \(P.next=null\)</li></ol>
+    </article>
+
+    <article class="problem" id="q28">
+      <div class="problem-head"><div class="problem-title">28. Circular buffer index</div><div class="tags"><span class="tag concept">MCQ</span><span class="tag">Modulo</span></div></div>
+      <p>A circular queue has capacity \(6\). If the rear index is \(5\), what is the next rear index after one enqueue, using zero-based indexing?</p>
+      <ol type="A"><li>0</li><li>5</li><li>6</li><li>1</li></ol>
+    </article>
+
+    <article class="problem" id="q29">
+      <div class="problem-head"><div class="problem-title">29. Two-stack queue invariant</div><div class="tags"><span class="tag concept">Short answer</span><span class="tag">Queue invariant</span></div></div>
+      <p>A queue is implemented with an input stack and an output stack. State the invariant that makes dequeue correct, and explain when elements are moved from input to output.</p>
+      <p class="response-line">Answer space:</p>
+    </article>
+
+    <article class="problem" id="q30">
+      <div class="problem-head"><div class="problem-title">30. Deletion edge cases</div><div class="tags"><span class="tag concept">Short answer</span><span class="tag">Linked list</span></div></div>
+      <p>When deleting a node from a singly linked list, name two edge cases and state which pointer or external reference must be updated in each.</p>
+      <p class="response-line">Answer space:</p>
+    </article>
+
+    <section class="panel">
+      <h2>Submission and Feedback</h2>
+      <p>Submit selected options, short-answer work, and scratch-work photos through the Aleph Tests upload panel. Feedback should classify each miss by topic, first failed step, mistake type, and repair drill. Worked explanations are withheld until the submission is recorded.</p>
+    </section>
+  </main>
+</body>
+</html>
