@@ -1,7 +1,7 @@
 const STORAGE_KEY = "learning-studio-data-v2";
 const LEGACY_STORAGE_KEYS = ["learning-studio-data-v1"];
 const SESSION_KEY = "aleph-session";
-const COURSE_PLAN_VERSION = "seeded-user-canonical-workspace-v123";
+const COURSE_PLAN_VERSION = "seeded-user-canonical-workspace-v124";
 const MAX_FEEDBACK_ATTACHMENT_BYTES = 3 * 1024 * 1024;
 const MAX_COMPRESSED_FEEDBACK_BYTES = 2400 * 1024;
 const MAX_FEEDBACK_PDF_PAGES = 6;
@@ -2927,6 +2927,8 @@ function dsaBasicScheduleItems(now, monday, sunday) {
   const weekElevenSunday = addDays(sunday, 70);
   const weekTwelveMonday = addDays(monday, 77);
   const weekTwelveSunday = addDays(sunday, 77);
+  const weekThirteenMonday = addDays(monday, 84);
+  const weekThirteenSunday = addDays(sunday, 84);
   return [
     {
       id: "schedule-dsa-chapter-1-study",
@@ -3267,6 +3269,36 @@ function dsaBasicScheduleItems(now, monday, sunday) {
       date: weekTwelveSunday,
       details: "Take the graph-backed objective review for DP state design, recurrence transitions, table order, memoization/tabulation, 0/1 knapsack, edit distance, reconstruction, and greedy-versus-DP decisions.",
       updatedAt: now
+    },
+    {
+      id: "schedule-dsa-chapter-13-study",
+      title: "DSA Chapter 13: Problem-Solving Patterns and Mixed Review",
+      week: 13,
+      subject: "Data Structures and Algorithms",
+      kind: "Study",
+      date: weekThirteenMonday,
+      details: "Study mixed DSA pattern recognition, invariant selection, complexity synthesis, edge-case audits, data-structure choice, graph-algorithm choice, greedy-versus-DP decisions, proof sketches, and timed exam triage.",
+      updatedAt: now
+    },
+    {
+      id: "schedule-dsa-chapter-13-practice",
+      title: "DSA Chapter 13: Labelled Practice",
+      week: 13,
+      subject: "Data Structures and Algorithms",
+      kind: "Practice",
+      date: addDays(weekThirteenMonday, 2),
+      details: "Solve mixed-recognition, trace, invariant, debugging, algorithm-choice, complexity, proof-sketch, and exam-triage exercises before opening worked solutions.",
+      updatedAt: now
+    },
+    {
+      id: "schedule-dsa-chapter-13-review",
+      title: "DSA Chapter 13: Objective Review",
+      week: 13,
+      subject: "Data Structures and Algorithms",
+      kind: "Review",
+      date: weekThirteenSunday,
+      details: "Take the graph-backed final DSA mixed review across data structures, sorting, graphs, greedy methods, dynamic programming, invariants, edge cases, and complexity reasoning.",
+      updatedAt: now
     }
   ];
 }
@@ -3283,6 +3315,7 @@ function dsaBasicTests(now, dsaSections, sunday) {
   const weekNineSunday = addDays(sunday, 56);
   const weekElevenSunday = addDays(sunday, 70);
   const weekTwelveSunday = addDays(sunday, 77);
+  const weekThirteenSunday = addDays(sunday, 84);
   return [
     {
       id: "test-dsa-chapter-1-objective-review",
@@ -3393,6 +3426,15 @@ function dsaBasicTests(now, dsaSections, sunday) {
       sectionId: dsaSections.find((section) => section.id === "gate-da-dsa-dynamic-programming")?.id,
       quizId: "quiz-dsa-chapter-12-objective-review",
       updatedAt: now
+    },
+    {
+      id: "test-dsa-chapter-13-objective-review",
+      title: "DSA Chapter 13 Objective Review",
+      date: weekThirteenSunday,
+      details: "Final Basic DSA mixed objective review for pattern recognition, invariants, complexity synthesis, edge-case debugging, data-structure choice, graph-algorithm choice, greedy versus DP, and proof sketches.",
+      sectionId: dsaSections.find((section) => section.id === "gate-da-dsa-problem-solving-patterns-mixed-review")?.id,
+      quizId: "quiz-dsa-chapter-13-objective-review",
+      updatedAt: now
     }
   ];
 }
@@ -3418,6 +3460,8 @@ function dsaBasicTasks(now, monday, sunday) {
   const weekElevenSunday = addDays(sunday, 70);
   const weekTwelveMonday = addDays(monday, 77);
   const weekTwelveSunday = addDays(sunday, 77);
+  const weekThirteenMonday = addDays(monday, 84);
+  const weekThirteenSunday = addDays(sunday, 84);
   return [
     {
       id: "task-dsa-chapter-1-read",
@@ -3792,6 +3836,39 @@ function dsaBasicTasks(now, monday, sunday) {
       done: false,
       details: "Submit the Chapter 12 objective quiz so Aleph logs state, recurrence, base-case, table-order, memoization, knapsack, edit-distance, and reconstruction gaps.",
       updatedAt: now
+    },
+    {
+      id: "task-dsa-chapter-13-read",
+      week: 13,
+      title: "DSA Ch 13: Read mixed problem-solving patterns",
+      type: "Study",
+      date: weekThirteenMonday,
+      status: "todo",
+      done: false,
+      details: "Open Subjects -> Data Structures and Algorithms -> Chapter 13 and study mixed DSA pattern recognition, invariants, debugging, complexity, algorithm choice, proof sketches, and timed exam triage.",
+      updatedAt: now
+    },
+    {
+      id: "task-dsa-chapter-13-practice",
+      week: 13,
+      title: "DSA Ch 13: Solve mixed review practice",
+      type: "Practice",
+      date: addDays(weekThirteenMonday, 2),
+      status: "todo",
+      done: false,
+      details: "Attempt the labelled final mixed DSA practice problems before opening worked solutions.",
+      updatedAt: now
+    },
+    {
+      id: "task-dsa-chapter-13-review",
+      week: 13,
+      title: "DSA Ch 13: Take final objective review",
+      type: "Review",
+      date: weekThirteenSunday,
+      status: "todo",
+      done: false,
+      details: "Submit the final Basic DSA objective quiz so Aleph logs mixed pattern, invariant, complexity, debugging, graph-choice, greedy/DP, and proof gaps.",
+      updatedAt: now
     }
   ];
 }
@@ -3808,6 +3885,7 @@ function dsaBasicFeedback(now, sunday) {
   const weekNineSunday = addDays(sunday, 56);
   const weekElevenSunday = addDays(sunday, 70);
   const weekTwelveSunday = addDays(sunday, 77);
+  const weekThirteenSunday = addDays(sunday, 84);
   return [
     {
       id: "feedback-dsa-chapter-1",
@@ -3892,6 +3970,13 @@ function dsaBasicFeedback(now, sunday) {
       date: weekTwelveSunday,
       details: "Review misses for vague DP states, missing base cases, wrong recurrence dependencies, invalid table order, confusing memoization with tabulation, using greedy for 0/1 knapsack, off-by-one DP indexes, and reconstruction mistakes.",
       updatedAt: now
+    },
+    {
+      id: "feedback-dsa-chapter-13",
+      title: "DSA Chapter 13 feedback focus",
+      date: weekThirteenSunday,
+      details: "Review misses for choosing the wrong algorithm family, weak invariants, incomplete traces, ignoring edge cases, wrong complexity comparisons, confusing graph objectives, using greedy where DP is needed, and writing vague proof sketches.",
+      updatedAt: now
     }
   ];
 }
@@ -3907,6 +3992,7 @@ function dsaBasicResources(now, monday) {
   const weekNineMonday = addDays(monday, 56);
   const weekElevenMonday = addDays(monday, 70);
   const weekTwelveMonday = addDays(monday, 77);
+  const weekThirteenMonday = addDays(monday, 84);
   return [
     {
       id: "resource-dsa-algorithms-arrays-search",
@@ -4001,6 +4087,14 @@ function dsaBasicResources(now, monday) {
       title: "DSA Chapter 12: Dynamic Programming",
       date: weekTwelveMonday,
       details: "Open Subjects -> Data Structures and Algorithms to study DP state design, recurrences, base cases, memoization, tabulation, table order, space optimization, 0/1 knapsack, LIS, edit distance, and reconstruction.",
+      link: "",
+      updatedAt: now
+    },
+    {
+      id: "resource-dsa-problem-solving-patterns-mixed-review",
+      title: "DSA Chapter 13: Problem-Solving Patterns and Mixed Review",
+      date: weekThirteenMonday,
+      details: "Open Subjects -> Data Structures and Algorithms to study final mixed DSA pattern recognition, invariants, traces, edge cases, data-structure and algorithm choice, complexity synthesis, and proof sketches.",
       link: "",
       updatedAt: now
     }
@@ -6082,6 +6176,176 @@ function gateDaDsaSections(updatedAt = new Date().toISOString()) {
         "0/1 knapsack uses skip/take transitions over item prefix and capacity.",
         "LIS and edit distance show how different state meanings create different table shapes.",
         "Space optimization is valid only when dependencies allow older states to be discarded."
+      ],
+      updatedAt
+    },
+    {
+      id: "gate-da-dsa-problem-solving-patterns-mixed-review",
+      exam: "GATE DA",
+      accountTier: "Basic",
+      subject: "Data Structures and Algorithms",
+      chapter: "Chapter 13",
+      section: "13",
+      title: "Problem-Solving Patterns and Mixed Review",
+      summary: "Final mixed DSA review across pattern recognition, invariant selection, complexity synthesis, edge-case debugging, data-structure choice, graph-algorithm choice, greedy-versus-DP decisions, recurrence reads, proof sketches, and timed exam triage.",
+      sectionPreview: "The final chapter is about choosing the right tool before calculating. A mixed DSA question usually hides the chapter label; your job is to identify the pattern, state the invariant, trace carefully, and check the edge case.",
+      previewActivity: "A prompt says: find whether two values in a sorted array sum to x, but duplicates and not-found cases matter. Which pattern is this, what invariant do the two pointers maintain, and what edge case should you test first?",
+      chapterIntro: [
+        "Until now, each chapter named the tool. Mixed exam questions do not. They give a short prompt or pseudocode and expect you to infer the data structure, algorithm family, invariant, and runtime.",
+        "The first move is classification. Ask whether the problem is about order, membership, connectivity, shortest path, optimal choice, repeated subproblems, or rank.",
+        "The second move is verification. Once you choose a pattern, state its invariant and run a small trace with a boundary case before committing to an answer."
+      ],
+      bookSections: [
+        {
+          number: "13.1",
+          title: "Pattern Recognition Under Time Pressure",
+          paragraphs: [
+            "Pattern recognition is not guessing a chapter name. It is matching the goal, constraints, and operations to a known method.",
+            "Sorted input often suggests binary search or two pointers. Frequent membership suggests a set or map. Unweighted shortest paths suggest BFS. Weighted nonnegative shortest paths suggest Dijkstra. Repeated optimal choices with overlapping states suggest DP.",
+            "If two patterns seem possible, compare their invariants and constraints. For example, greedy needs a safe local choice; DP needs a state that remembers enough history."
+          ],
+          blocks: [
+            {
+              type: "strategy",
+              title: "Classification checklist",
+              body: "Goal, input promise, operation needed, invariant, complexity target. Do not calculate before these five items are clear."
+            }
+          ]
+        },
+        {
+          number: "13.2",
+          title: "Invariant Selection",
+          paragraphs: [
+            "An invariant is the promise that stays true after every step. The right invariant explains both correctness and termination.",
+            "For binary search, the answer remains inside the active interval if it exists. For BFS, discovered distances are nondecreasing by layers. For DP, every filled cell already has all dependencies available.",
+            "When debugging, ask exactly where the invariant first breaks. This is faster than rereading the whole algorithm."
+          ],
+          blocks: [
+            {
+              type: "example",
+              title: "Example 13.1: two-pointer invariant",
+              body: "In a sorted two-sum scan, all pairs using indices outside the active [left,right] window have already been ruled out. If the sum is too small, every pair with the old left is too small, so left can move right."
+            }
+          ]
+        },
+        {
+          number: "13.3",
+          title: "Complexity Synthesis",
+          paragraphs: [
+            "Mixed questions often combine phases: sort then scan, build a map then query, run BFS from one source, or fill a DP table.",
+            "Add phase costs and keep the dominant term. Sorting plus linear scan is O(n log n), not O(n). Building a hash map and scanning can be expected O(n), but the worst case depends on hashing assumptions.",
+            "For recursive or DP code, count states and work per state. For graph code, decide whether the representation is an adjacency list or matrix before writing O(V+E) or O(V^2)."
+          ],
+          blocks: [
+            {
+              type: "checkpoint",
+              title: "Complexity checkpoint",
+              body: "Name the representation and the phases. Then write the cost of each phase before simplifying."
+            }
+          ]
+        },
+        {
+          number: "13.4",
+          title: "Edge-Case Audit and Mixed Debugging",
+          paragraphs: [
+            "Most wrong exam answers fail on a small boundary case: empty input, one element, duplicate values, equality at a boundary, disconnected graph, zero capacity, or not-found search.",
+            "A compact audit asks: what is the smallest input, what happens on equality, what happens when the answer is absent, and what happens when there are duplicates?",
+            "In pseudocode debugging, trace variables after each update and check whether the invariant still holds."
+          ],
+          blocks: [
+            {
+              type: "simulation",
+              title: "Debug trace",
+              body: "For binary search duplicates, if mid may still be the first occurrence, high=mid preserves the candidate. high=mid-1 can incorrectly discard the answer."
+            }
+          ]
+        },
+        {
+          number: "13.5",
+          title: "Choosing Data Structures and Graph Algorithms",
+          paragraphs: [
+            "Choose data structures by operations: membership, frequency, ordered predecessor/successor, priority access, FIFO layer expansion, or LIFO backtracking.",
+            "Choose graph algorithms by objective and edge assumptions. BFS solves unweighted shortest paths. Dijkstra solves nonnegative weighted shortest paths. Topological order needs a DAG. MST connects all vertices with minimum total edge cost.",
+            "Do not mix objectives. MST is not shortest path; DFS order is not BFS distance; a hash map does not preserve sorted order."
+          ],
+          blocks: [
+            {
+              type: "warning",
+              title: "Objective mismatch",
+              body: "If the question asks distance from a source, think shortest path. If it asks cheapest way to connect all vertices, think MST."
+            }
+          ]
+        },
+        {
+          number: "13.6",
+          title: "Proof Sketches and Exam Triage",
+          paragraphs: [
+            "A one-minute proof sketch usually names the invariant, says why initialization holds, says why one step preserves it, and says why termination gives the answer.",
+            "For greedy, use an exchange or cut-property statement. For DP, use the state meaning and recurrence dependencies. For graph traversal, use queue/stack or visited invariants.",
+            "Triage matters: first classify, then trace one small case, then answer. If a computation is long, look for a structural shortcut or eliminate wrong options by violated constraints."
+          ],
+          blocks: [
+            {
+              type: "strategy",
+              title: "Timed answer loop",
+              body: "Classify -> state invariant -> trace boundary case -> compute complexity -> answer. This keeps mixed questions from becoming unstructured."
+            }
+          ]
+        }
+      ],
+      concepts: [
+        { name: "Algorithm pattern recognition", description: "Match the goal and constraints to a known method.", cue: "Sorted? membership? graph distance? overlapping states?" },
+        { name: "Invariant selection", description: "Choose the promise that explains correctness.", cue: "What remains true after each update?" },
+        { name: "Complexity synthesis", description: "Combine phase costs and representation costs.", cue: "Sort plus scan, states times work, V+E or V^2." },
+        { name: "Edge-case audit", description: "Test boundary inputs before trusting an answer.", cue: "Empty, one, duplicates, equality, absent answer." },
+        { name: "Data-structure choice", description: "Choose storage by required operations.", cue: "Set, map, heap, queue, stack, tree." },
+        { name: "Graph algorithm choice", description: "Match graph objective and assumptions.", cue: "BFS, Dijkstra, topological order, MST." },
+        { name: "Greedy versus DP", description: "Separate safe local choice from repeated-state optimization.", cue: "Exchange proof or state recurrence?" },
+        { name: "Recurrence and recursion read", description: "Extract subproblem count, size, and outside work.", cue: "T(n), recursion tree, stack depth." },
+        { name: "Simulation discipline", description: "Trace variable/state changes exactly.", cue: "Write every update, then check invariant." },
+        { name: "Correctness proof sketch", description: "Give a concise invariant, exchange, cut, or DP proof.", cue: "Initialize, preserve, terminate." }
+      ],
+      techniques: [
+        { name: "Five-item classification", when: "reading any mixed prompt.", move: "Identify goal, input promise, operation, invariant, and complexity target." },
+        { name: "Representation first", when: "analyzing graph or table code.", move: "Name adjacency list/matrix or table dimensions before cost." },
+        { name: "Boundary trace", when: "checking an algorithm.", move: "Trace empty/one/duplicate/equality/not-found before the normal case." },
+        { name: "Phase-cost sum", when: "computing runtime.", move: "Write each phase cost, then keep the dominant term." },
+        { name: "Objective split", when: "choosing graph or optimization algorithm.", move: "Separate shortest path, connect-all, feasible order, local-safe choice, and repeated-state optimization." },
+        { name: "Proof skeleton", when: "asked why an algorithm is correct.", move: "State invariant, initialization, preservation, and termination implication." }
+      ],
+      practiceProblems: dsaProblemSolvingPatternsProblems(),
+      implementationDrills: dsaProblemSolvingPatternsImplementationDrills(),
+      reviewPrompts: [
+        "What family of algorithm is this prompt pointing to?",
+        "What invariant makes the chosen method correct?",
+        "Which representation or data structure controls the runtime?",
+        "What boundary case could break the answer?",
+        "Does the graph prompt ask for source distance, connectivity, order, or total connection cost?",
+        "Does the optimization prompt need greedy proof or DP state?"
+      ],
+      reviewQuiz: {
+        id: "quiz-dsa-chapter-13-objective-review",
+        title: "DSA Chapter 13 Objective Review",
+        instructions: "Complete this final mixed review after studying Basic DSA pattern recognition, invariants, edge cases, data-structure choice, graph choice, greedy versus DP, complexity synthesis, and proof sketches. The sampled mix is 5 single-topic checks, 4 two-topic mixes, and 3 three-topic synthesis questions.",
+        questions: dsaProblemSolvingPatternsReviewQuestions()
+      },
+      readingQuestions: [
+        "What clues distinguish binary search, two pointers, hashing, graph traversal, greedy, and DP?",
+        "How do you choose the right invariant for a mixed problem?",
+        "Why must representation be known before graph complexity?",
+        "Which edge cases should be checked for every search or scan?",
+        "How do you distinguish MST from shortest path under exam pressure?",
+        "What is the shortest useful proof sketch for an invariant-based algorithm?"
+      ],
+      chapterSummary: [
+        "Mixed DSA questions require classification before calculation.",
+        "The right invariant explains both correctness and safe updates.",
+        "Runtime comes from phases, representations, states, and work per state.",
+        "Boundary cases expose most bugs in search, scans, DP tables, and graph traversal.",
+        "Data structures should be chosen by operations, not by habit.",
+        "Graph algorithms are chosen by objective and edge assumptions.",
+        "Greedy needs a safety proof; DP needs a state and recurrence.",
+        "A timed answer loop keeps final-review problems structured."
       ],
       updatedAt
     }
@@ -18029,6 +18293,160 @@ function dsaDynamicProgrammingReviewQuestions() {
   }));
 }
 
+function dsaProblemSolvingPatternsProblems() {
+  return [
+    {
+      title: "Exercise 1: Classify the Pattern",
+      prompt: "A sorted array must be checked for whether two values sum to x. Name the likely pattern, invariant, and runtime.",
+      solution: "Use two pointers. The invariant is that all pairs using indices outside the active [left,right] window have been ruled out. If the sum is too small move left right; if too large move right left. Runtime is O(n), space O(1).",
+      tags: ["pattern-recognition", "invariant-selection", "complexity-synthesis"]
+    },
+    {
+      title: "Exercise 2: Complexity Synthesis",
+      prompt: "An algorithm sorts n values, then does one linear scan with a hash set lookup per item. What expected runtime should be reported?",
+      solution: "Sorting costs O(n log n). The scan with expected O(1) hash lookups costs O(n). The total expected runtime is O(n log n), dominated by sorting.",
+      tags: ["complexity-synthesis", "data-structure-choice"]
+    },
+    {
+      title: "Exercise 3: Graph Objective Choice",
+      prompt: "A graph is unweighted and the question asks for the fewest edges from source s to every vertex. Which algorithm and invariant fit?",
+      solution: "Use BFS. The queue processes vertices in nondecreasing distance layers, and the first time a vertex is discovered gives its shortest unweighted distance from s.",
+      tags: ["graph-choice", "invariant-selection"]
+    },
+    {
+      title: "Exercise 4: MST Versus Shortest Path",
+      prompt: "The prompt asks for the cheapest way to connect all vertices in an undirected weighted graph. Should you use Dijkstra or MST logic?",
+      solution: "Use MST logic because the objective is minimum total connection cost across all vertices. Dijkstra solves shortest paths from a source, which is a different objective.",
+      tags: ["graph-choice", "pattern-recognition"]
+    },
+    {
+      title: "Exercise 5: Greedy or DP",
+      prompt: "You have indivisible items with values and weights and capacity W. The prompt asks for maximum value. What family should you use and why?",
+      solution: "Use 0/1 knapsack DP in general. Ratio greedy can fail because an indivisible high-ratio item can block a better combination. DP state should track item prefix and remaining capacity.",
+      tags: ["greedy-dp-choice", "pattern-recognition"]
+    },
+    {
+      title: "Exercise 6: Edge-Case Audit",
+      prompt: "A binary-search variant for first occurrence sets high=mid-1 whenever A[mid]>=target. What duplicate case can break it?",
+      solution: "For A=[2,2] and target 2, mid may be 0 or 1 depending on implementation. If mid is a valid candidate, high=mid-1 can discard it before recording the answer. The safer invariant for first occurrence keeps mid as a candidate with high=mid or stores answer before moving.",
+      tags: ["edge-case-audit", "mixed-debugging", "invariant-selection"]
+    },
+    {
+      title: "Exercise 7: Recurrence Read",
+      prompt: "A recursive algorithm solves two subproblems of size n/2 and does linear combine work. Write the recurrence and solve it.",
+      solution: "The recurrence is T(n)=2T(n/2)+Theta(n). The recursion tree has Theta(log n) levels and Theta(n) work per level, so T(n)=Theta(n log n).",
+      tags: ["recurrence-read", "complexity-synthesis"]
+    },
+    {
+      title: "Exercise 8: Data-Structure Choice",
+      prompt: "A stream of keys needs frequent insert, membership test, and frequency count, but no sorted-order queries. Which data structure is the Basic-plan choice?",
+      solution: "Use a hash map from key to count. Expected insert/update/membership is O(1). A balanced tree is useful if sorted order or predecessor/successor is required, which this prompt does not need.",
+      tags: ["data-structure-choice", "complexity-synthesis"]
+    },
+    {
+      title: "Exercise 9: Proof Sketch",
+      prompt: "Give a short correctness proof sketch for BFS shortest paths in an unweighted graph.",
+      solution: "Invariant: vertices are dequeued in nondecreasing distance from the source. The source starts at distance 0. When processing a vertex at distance d, undiscovered neighbors are assigned d+1 and enqueued after all current-layer vertices. Therefore the first discovery of each vertex is by a shortest edge-count path.",
+      tags: ["proof-sketch", "graph-choice", "invariant-selection"]
+    },
+    {
+      title: "Exercise 10: Timed Triage",
+      prompt: "A mixed question includes sorted input, a not-found case, duplicate values, and asks for the first index satisfying a predicate. What should your first three moves be?",
+      solution: "Classify it as a binary-search boundary problem. State the active-interval invariant and whether mid remains a candidate. Trace a duplicate/equality case before choosing high=mid or high=mid-1.",
+      tags: ["exam-triage", "edge-case-audit", "pattern-recognition"]
+    }
+  ];
+}
+
+function dsaProblemSolvingPatternsImplementationDrills() {
+  return [
+    {
+      title: "Mixed Search Triage",
+      source: "MIT/CS61B-style exam trace",
+      difficulty: "Medium",
+      focus: "binary search versus two pointers, invariant selection, duplicate edge cases",
+      url: "https://sp25.datastructur.es/",
+      targetTime: "O(log n) for boundary search or O(n) for two pointers after classification",
+      reason: "Final-review prompts often hide the search pattern behind sorted input and boundary language.",
+      writeup: "Classify the sorted-input goal, state the active-set invariant, and trace equality on duplicate values."
+    },
+    {
+      title: "Graph Objective Classifier",
+      source: "MIT/Open Data Structures graph algorithm routing",
+      difficulty: "Medium",
+      focus: "BFS, Dijkstra, topological order, MST objective separation",
+      url: "https://ocw.mit.edu/courses/6-006-introduction-to-algorithms-spring-2020/",
+      targetTime: "Depends on representation: O(V+E), O(E log V), or O(V^2)",
+      reason: "Most mixed graph mistakes come from choosing the right algorithm for the wrong objective.",
+      writeup: "For each prompt, name the objective and edge assumptions before naming an algorithm."
+    },
+    {
+      title: "Greedy-DP Separator",
+      source: "Jeff Erickson-style proof/counterexample discipline",
+      difficulty: "Medium",
+      focus: "exchange proof, counterexample, DP state design",
+      url: "https://jeffe.cs.illinois.edu/teaching/algorithms/",
+      targetTime: "Constant-time classification plus recurrence or proof sketch",
+      reason: "The final chapter needs quick rejection of tempting but unsafe greedy rules.",
+      writeup: "Try to state an exchange proof; if it fails, write the DP state or a counterexample."
+    },
+    {
+      title: "Phase-Cost Audit",
+      source: "MIT performance-analysis style",
+      difficulty: "Easy",
+      focus: "sort+scan, build+query, states*work, representation cost",
+      url: "https://ocw.mit.edu/courses/6-006-introduction-to-algorithms-spring-2020/",
+      targetTime: "Dominant-term simplification after explicit phase costs",
+      reason: "GATE DA commonly tests composite runtimes from short pseudocode.",
+      writeup: "Write each phase on its own line, then simplify only after all assumptions are visible."
+    },
+    {
+      title: "One-Minute Proof Sketch",
+      source: "Erickson-style invariant and induction practice",
+      difficulty: "Medium",
+      focus: "initialization, preservation, termination, exchange/cut/DP proof shape",
+      url: "https://jeffe.cs.illinois.edu/teaching/algorithms/",
+      targetTime: "3-4 sentence proof under timed conditions",
+      reason: "This turns conceptual understanding into short-answer exam performance.",
+      writeup: "Choose proof family, write invariant or state, prove one step, and connect termination to the answer."
+    }
+  ];
+}
+
+function dsaProblemSolvingPatternsReviewQuestions() {
+  const metadata = {
+    "dsa-ch13-q1": { kind: "single concept", targetConcept: "invariant-selection", prereqsUsed: ["pattern-recognition"], difficulty: 2, gateWeight: "high", expectedFirstStep: "Name the active set or state promise before tracing.", commonMistake: "Moving pointers or bounds without saying what remains possible.", answerCheck: "Two-pointer invariant rules out pairs outside the active window." },
+    "dsa-ch13-q2": { kind: "single concept", targetConcept: "mixed-debugging", prereqsUsed: ["edge-case-audit"], difficulty: 2, gateWeight: "high", expectedFirstStep: "Test duplicate/equality boundary case.", commonMistake: "Only tracing a happy path.", answerCheck: "First-occurrence binary search must preserve candidate mid or record it." },
+    "dsa-ch13-q3": { kind: "single concept", targetConcept: "complexity-synthesis", prereqsUsed: ["pattern-recognition"], difficulty: 2, gateWeight: "high", expectedFirstStep: "List phase costs before simplifying.", commonMistake: "Ignoring sorting or representation cost.", answerCheck: "Sort plus scan is O(n log n)." },
+    "dsa-ch13-q4": { kind: "single concept", targetConcept: "greedy-dp-choice", prereqsUsed: ["pattern-recognition"], difficulty: 2, gateWeight: "high", expectedFirstStep: "Check for safe local choice versus state recurrence.", commonMistake: "Using greedy ratio for indivisible choices.", answerCheck: "0/1 knapsack generally needs DP." },
+    "dsa-ch13-q5": { kind: "single concept", targetConcept: "graph-choice", prereqsUsed: ["pattern-recognition"], difficulty: 2, gateWeight: "high", expectedFirstStep: "Identify graph objective and edge weights.", commonMistake: "Using MST for source shortest paths.", answerCheck: "Unweighted source shortest path uses BFS." },
+    "dsa-ch13-q6": { kind: "mixed: two concepts", targetConcept: "data-structure-choice", prereqsUsed: ["complexity-synthesis"], difficulty: 2, gateWeight: "high", expectedFirstStep: "Match required operations to storage.", commonMistake: "Choosing an ordered tree when no order operation is needed.", answerCheck: "Hash map fits membership and counts without order." },
+    "dsa-ch13-q7": { kind: "mixed: two concepts", targetConcept: "mixed-debugging", prereqsUsed: ["edge-case-audit"], difficulty: 3, gateWeight: "high", expectedFirstStep: "Trace the smallest failing input.", commonMistake: "Assuming equality branch is harmless.", answerCheck: "Duplicate boundary can expose the bug." },
+    "dsa-ch13-q8": { kind: "mixed: two concepts", targetConcept: "greedy-dp-choice", prereqsUsed: ["pattern-recognition"], difficulty: 2, gateWeight: "high", expectedFirstStep: "Look for exchange proof or DP state.", commonMistake: "Mistaking optimal substructure for greedy correctness.", answerCheck: "DP state is needed when local choice blocks future combinations." },
+    "dsa-ch13-q9": { kind: "mixed: two concepts", targetConcept: "graph-choice", prereqsUsed: ["pattern-recognition"], difficulty: 2, gateWeight: "high", expectedFirstStep: "Separate shortest path, ordering, and connect-all objectives.", commonMistake: "Using BFS on weighted shortest-path prompt.", answerCheck: "Nonnegative weighted shortest paths use Dijkstra." },
+    "dsa-ch13-q10": { kind: "mixed: three concepts", targetConcept: "proof-sketch", prereqsUsed: ["invariant-selection", "greedy-dp-choice"], difficulty: 3, gateWeight: "high", expectedFirstStep: "Pick proof family before writing details.", commonMistake: "Writing intuition without invariant, exchange, or state.", answerCheck: "Proof sketch must name invariant/exchange/state and preservation." },
+    "dsa-ch13-q11": { kind: "mixed: three concepts", targetConcept: "graph-choice", prereqsUsed: ["pattern-recognition", "data-structure-choice"], difficulty: 3, gateWeight: "high", expectedFirstStep: "Read objective and representation together.", commonMistake: "Reporting O(V+E) for adjacency matrix scan.", answerCheck: "Representation changes traversal cost." },
+    "dsa-ch13-q12": { kind: "mixed: three concepts", targetConcept: "mixed-debugging", prereqsUsed: ["pattern-recognition", "edge-case-audit"], difficulty: 3, gateWeight: "high", expectedFirstStep: "Classify pattern then test boundary case.", commonMistake: "Debugging line-by-line without knowing intended invariant.", answerCheck: "Invariant plus boundary trace identifies the bad update." }
+  };
+  return [
+    { id: "dsa-ch13-q1", prompt: "For sorted two-sum with two pointers, what is the useful invariant?", tags: ["invariant-selection", "pattern-recognition"], options: [{ id: "a", text: "Pairs outside the active window have already been ruled out" }, { id: "b", text: "The array is unsorted after each step" }, { id: "c", text: "Both pointers must always move together" }, { id: "d", text: "The middle element is always the answer" }], answer: "a" },
+    { id: "dsa-ch13-q2", prompt: "Which test case is best for debugging first-occurrence binary search?", tags: ["mixed-debugging", "edge-case-audit"], options: [{ id: "a", text: "A duplicate target at the boundary" }, { id: "b", text: "Only a random large array" }, { id: "c", text: "A graph with negative edge" }, { id: "d", text: "A heap extraction trace" }], answer: "a" },
+    { id: "dsa-ch13-q3", prompt: "An algorithm sorts n items and then scans once. What dominant runtime should be reported?", tags: ["complexity-synthesis"], options: [{ id: "a", text: "O(n log n)" }, { id: "b", text: "O(n)" }, { id: "c", text: "O(log n)" }, { id: "d", text: "O(1)" }], answer: "a" },
+    { id: "dsa-ch13-q4", prompt: "Indivisible items, values, weights, and capacity W usually point to which method?", tags: ["greedy-dp-choice"], options: [{ id: "a", text: "0/1 knapsack DP" }, { id: "b", text: "Fractional ratio greedy" }, { id: "c", text: "BFS" }, { id: "d", text: "Heap sort" }], answer: "a" },
+    { id: "dsa-ch13-q5", prompt: "An unweighted graph asks for fewest edges from source s. Which algorithm matches?", tags: ["graph-choice"], options: [{ id: "a", text: "BFS" }, { id: "b", text: "MST" }, { id: "c", text: "Heap sort" }, { id: "d", text: "Insertion sort" }], answer: "a" },
+    { id: "dsa-ch13-q6", prompt: "You need insert, membership test, and frequency count, but no sorted order. What data structure fits best on expected time?", tags: ["complexity-synthesis", "data-structure-choice"], options: [{ id: "a", text: "Hash map" }, { id: "b", text: "Stack only" }, { id: "c", text: "Queue only" }, { id: "d", text: "Adjacency matrix" }], answer: "a" },
+    { id: "dsa-ch13-q7", prompt: "A boundary-search bug appears only when A[mid] equals target. What is the strongest debugging move?", tags: ["edge-case-audit", "mixed-debugging"], options: [{ id: "a", text: "Trace a duplicate/equality case and check whether mid remains a candidate" }, { id: "b", text: "Ignore equality and test only absent targets" }, { id: "c", text: "Switch to MST" }, { id: "d", text: "Sort the already sorted array again" }], answer: "a" },
+    { id: "dsa-ch13-q8", prompt: "Which clue separates DP from greedy in an optimization prompt?", tags: ["pattern-recognition", "greedy-dp-choice"], options: [{ id: "a", text: "A local choice can block better future combinations and a state is needed" }, { id: "b", text: "The input has numbers" }, { id: "c", text: "The answer is boolean" }, { id: "d", text: "There is a loop" }], answer: "a" },
+    { id: "dsa-ch13-q9", prompt: "A directed graph has nonnegative edge weights and asks for shortest distances from one source. Which method is the Basic-plan choice?", tags: ["pattern-recognition", "graph-choice"], options: [{ id: "a", text: "Dijkstra" }, { id: "b", text: "Kruskal MST" }, { id: "c", text: "Insertion sort" }, { id: "d", text: "0/1 knapsack" }], answer: "a" },
+    { id: "dsa-ch13-q10", prompt: "Which proof-sketch structure is appropriate for a loop algorithm?", tags: ["invariant-selection", "greedy-dp-choice", "proof-sketch"], options: [{ id: "a", text: "State invariant, show initialization, preservation, and termination implication" }, { id: "b", text: "List only the final answer" }, { id: "c", text: "Say greedy feels right" }, { id: "d", text: "Avoid edge cases" }], answer: "a" },
+    { id: "dsa-ch13-q11", prompt: "BFS is run on an adjacency matrix. What representation fact changes the traversal cost?", tags: ["pattern-recognition", "data-structure-choice", "graph-choice"], options: [{ id: "a", text: "Each vertex row scan checks all V possible neighbors" }, { id: "b", text: "Only actual edges are scanned" }, { id: "c", text: "The graph becomes a heap" }, { id: "d", text: "BFS becomes O(log V)" }], answer: "a" },
+    { id: "dsa-ch13-q12", prompt: "A mixed prompt hides a wrong pointer update. What should you do first?", tags: ["pattern-recognition", "edge-case-audit", "mixed-debugging"], options: [{ id: "a", text: "Identify the intended invariant, then trace the smallest boundary case" }, { id: "b", text: "Guess the chapter from variable names" }, { id: "c", text: "Ignore the input constraints" }, { id: "d", text: "Compute only the average case" }], answer: "a" }
+  ].map((question) => ({
+    ...question,
+    ...(metadata[question.id] || { kind: question.tags.length === 1 ? "single concept" : question.tags.length === 2 ? "mixed: two concepts" : "mixed: three concepts", targetConcept: question.tags[0], prereqsUsed: question.tags.slice(1), difficulty: question.tags.length, gateWeight: "medium" })
+  }));
+}
+
 function conditionalProbabilityReviewQuestions() {
   const metadata = {
     "cp-review-1": { targetConcept: "conditional-denominator", prereqsUsed: ["conditional-probability"], difficulty: 1, gateWeight: "high" },
@@ -19637,6 +20055,92 @@ function dsaDynamicProgrammingConceptGraph() {
         prereqs: ["dp-state"],
         repairMaterial: "Review DSA Chapter 12.2 and count states times work per state.",
         gateWeight: "high"
+      }
+    }
+  };
+}
+
+function dsaProblemSolvingPatternsConceptGraph() {
+  return {
+    chapterId: "gate-da-dsa-problem-solving-patterns-mixed-review",
+    chapterTitle: "DSA Chapter 13: Problem-Solving Patterns and Mixed Review",
+    gateWeight: "high",
+    fallbackConcepts: ["pattern-recognition", "invariant-selection", "complexity-synthesis", "edge-case-audit", "graph-choice"],
+    fallbackDifficultyMix: [1, 2, 2, 3],
+    fallbackInstruction: "Retest pattern recognition first, then add invariant selection, boundary traces, complexity synthesis, graph-choice routing, and greedy-versus-DP classification.",
+    stableNextAction: "Next: move to cumulative GATE DA Basic mixed DSA drills across all chapters.",
+    nodes: {
+      "pattern-recognition": {
+        label: "Algorithm pattern recognition",
+        prereqs: [],
+        repairMaterial: "Review DSA Chapter 13.1 and classify prompts by goal, input promise, operation, invariant, and complexity target.",
+        gateWeight: "high"
+      },
+      "invariant-selection": {
+        label: "Invariant selection",
+        prereqs: ["pattern-recognition"],
+        repairMaterial: "Review DSA Chapter 13.2 and state the active-window, visited, table, or heap invariant before tracing.",
+        gateWeight: "high"
+      },
+      "complexity-synthesis": {
+        label: "Complexity synthesis",
+        prereqs: ["pattern-recognition"],
+        repairMaterial: "Review DSA Chapter 13.3 and write each phase cost before simplifying.",
+        gateWeight: "high"
+      },
+      "edge-case-audit": {
+        label: "Edge-case audit",
+        prereqs: ["invariant-selection"],
+        repairMaterial: "Review DSA Chapter 13.4 and test empty, one-element, duplicate, equality, and not-found cases.",
+        gateWeight: "high"
+      },
+      "data-structure-choice": {
+        label: "Data-structure choice",
+        prereqs: ["complexity-synthesis"],
+        repairMaterial: "Review DSA Chapter 13.5 and match operations to set, map, heap, queue, stack, tree, or graph representation.",
+        gateWeight: "high"
+      },
+      "graph-choice": {
+        label: "Graph algorithm choice",
+        prereqs: ["pattern-recognition"],
+        repairMaterial: "Review DSA Chapter 13.5 and separate BFS, Dijkstra, topological ordering, and MST by objective.",
+        gateWeight: "high"
+      },
+      "greedy-dp-choice": {
+        label: "Greedy versus DP choice",
+        prereqs: ["pattern-recognition"],
+        repairMaterial: "Review DSA Chapter 11.1 and Chapter 12.1; decide whether the problem needs an exchange proof or a DP state.",
+        gateWeight: "high"
+      },
+      "recurrence-read": {
+        label: "Recurrence and recursion read",
+        prereqs: ["complexity-synthesis"],
+        repairMaterial: "Review DSA Chapter 2.4 and Chapter 9.3; extract subproblem count, size, combine work, and stack depth.",
+        gateWeight: "high"
+      },
+      "simulation-discipline": {
+        label: "Simulation discipline",
+        prereqs: ["invariant-selection"],
+        repairMaterial: "Review DSA Chapter 13.4 and trace every state update on the smallest useful input.",
+        gateWeight: "high"
+      },
+      "proof-sketch": {
+        label: "Correctness proof sketch",
+        prereqs: ["invariant-selection"],
+        repairMaterial: "Review DSA Chapter 13.6 and write initialization, preservation, and termination implication.",
+        gateWeight: "medium"
+      },
+      "mixed-debugging": {
+        label: "Mixed debugging",
+        prereqs: ["edge-case-audit", "simulation-discipline"],
+        repairMaterial: "Review DSA Chapter 13.4 and identify the first update where the intended invariant breaks.",
+        gateWeight: "high"
+      },
+      "exam-triage": {
+        label: "Timed exam triage",
+        prereqs: ["pattern-recognition"],
+        repairMaterial: "Review DSA Chapter 13.6 and practice classify -> invariant -> boundary trace -> complexity -> answer.",
+        gateWeight: "medium"
       }
     }
   };
@@ -26627,6 +27131,7 @@ function conceptGraphForSection(section) {
   if (section?.id === "gate-da-dsa-sorting-selection") return dsaSortingSelectionConceptGraph();
   if (section?.id === "gate-da-dsa-greedy-methods") return dsaGreedyMethodsConceptGraph();
   if (section?.id === "gate-da-dsa-dynamic-programming") return dsaDynamicProgrammingConceptGraph();
+  if (section?.id === "gate-da-dsa-problem-solving-patterns-mixed-review") return dsaProblemSolvingPatternsConceptGraph();
   if (section?.id === "gate-da-linear-algebra-vector-spaces-coordinates") return linearAlgebraVectorSpacesConceptGraph();
   if (section?.id === "gate-da-linear-algebra-transformations-matrices") return linearAlgebraTransformationsConceptGraph();
   if (section?.id === "gate-da-linear-algebra-rank-nullity-systems") return linearAlgebraRankNullityConceptGraph();
