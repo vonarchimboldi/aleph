@@ -1,7 +1,7 @@
 const STORAGE_KEY = "learning-studio-data-v2";
 const LEGACY_STORAGE_KEYS = ["learning-studio-data-v1"];
 const SESSION_KEY = "aleph-session";
-const COURSE_PLAN_VERSION = "seeded-user-canonical-workspace-v121";
+const COURSE_PLAN_VERSION = "seeded-user-canonical-workspace-v122";
 const MAX_FEEDBACK_ATTACHMENT_BYTES = 3 * 1024 * 1024;
 const MAX_COMPRESSED_FEEDBACK_BYTES = 2400 * 1024;
 const MAX_FEEDBACK_PDF_PAGES = 6;
@@ -2923,6 +2923,8 @@ function dsaBasicScheduleItems(now, monday, sunday) {
   const weekEightSunday = addDays(sunday, 49);
   const weekNineMonday = addDays(monday, 56);
   const weekNineSunday = addDays(sunday, 56);
+  const weekElevenMonday = addDays(monday, 70);
+  const weekElevenSunday = addDays(sunday, 70);
   return [
     {
       id: "schedule-dsa-chapter-1-study",
@@ -3203,6 +3205,36 @@ function dsaBasicScheduleItems(now, monday, sunday) {
       date: weekNineSunday,
       details: "Take the graph-backed objective review for sorting invariants, lower bounds, runtime/space tradeoffs, partition traces, and kth-selection diagnostics.",
       updatedAt: now
+    },
+    {
+      id: "schedule-dsa-chapter-11-study",
+      title: "DSA Chapter 11: Greedy Methods",
+      week: 11,
+      subject: "Data Structures and Algorithms",
+      kind: "Study",
+      date: weekElevenMonday,
+      details: "Study greedy-choice property, exchange arguments, interval scheduling by earliest finish time, fractional knapsack ratio choices, Huffman-style combining, MST safe edges, and counterexamples where greedy fails.",
+      updatedAt: now
+    },
+    {
+      id: "schedule-dsa-chapter-11-practice",
+      title: "DSA Chapter 11: Labelled Practice",
+      week: 11,
+      subject: "Data Structures and Algorithms",
+      kind: "Practice",
+      date: addDays(weekElevenMonday, 2),
+      details: "Solve greedy trace, exchange-argument, counterexample, priority-queue, interval-scheduling, fractional-knapsack, and MST cut-property exercises before opening worked solutions.",
+      updatedAt: now
+    },
+    {
+      id: "schedule-dsa-chapter-11-review",
+      title: "DSA Chapter 11: Objective Review",
+      week: 11,
+      subject: "Data Structures and Algorithms",
+      kind: "Review",
+      date: weekElevenSunday,
+      details: "Take the graph-backed objective review for greedy-choice property, exchange arguments, counterexamples, priority queues, Huffman-style combining, fractional knapsack, and MST safe-edge reasoning.",
+      updatedAt: now
     }
   ];
 }
@@ -3217,6 +3249,7 @@ function dsaBasicTests(now, dsaSections, sunday) {
   const weekSevenSunday = addDays(sunday, 42);
   const weekEightSunday = addDays(sunday, 49);
   const weekNineSunday = addDays(sunday, 56);
+  const weekElevenSunday = addDays(sunday, 70);
   return [
     {
       id: "test-dsa-chapter-1-objective-review",
@@ -3309,6 +3342,15 @@ function dsaBasicTests(now, dsaSections, sunday) {
       sectionId: dsaSections[9]?.id,
       quizId: "quiz-dsa-chapter-9-objective-review",
       updatedAt: now
+    },
+    {
+      id: "test-dsa-chapter-11-objective-review",
+      title: "DSA Chapter 11 Objective Review",
+      date: weekElevenSunday,
+      details: "Objective review for greedy-choice property, exchange arguments, interval scheduling, counterexamples, fractional knapsack, Huffman-style combining, priority queues, and MST safe edges.",
+      sectionId: dsaSections.find((section) => section.id === "gate-da-dsa-greedy-methods")?.id,
+      quizId: "quiz-dsa-chapter-11-objective-review",
+      updatedAt: now
     }
   ];
 }
@@ -3330,6 +3372,8 @@ function dsaBasicTasks(now, monday, sunday) {
   const weekEightSunday = addDays(sunday, 49);
   const weekNineMonday = addDays(monday, 56);
   const weekNineSunday = addDays(sunday, 56);
+  const weekElevenMonday = addDays(monday, 70);
+  const weekElevenSunday = addDays(sunday, 70);
   return [
     {
       id: "task-dsa-chapter-1-read",
@@ -3638,6 +3682,39 @@ function dsaBasicTasks(now, monday, sunday) {
       done: false,
       details: "Submit the Chapter 9 objective quiz so Aleph logs sorting-invariant, complexity, partition, stability, space, and selection gaps.",
       updatedAt: now
+    },
+    {
+      id: "task-dsa-chapter-11-read",
+      week: 11,
+      title: "DSA Ch 11: Read greedy methods",
+      type: "Study",
+      date: weekElevenMonday,
+      status: "todo",
+      done: false,
+      details: "Open Subjects -> Data Structures and Algorithms -> Chapter 11 and study greedy-choice property, exchange arguments, interval scheduling, counterexamples, fractional knapsack, Huffman-style combining, and MST safe edges.",
+      updatedAt: now
+    },
+    {
+      id: "task-dsa-chapter-11-practice",
+      week: 11,
+      title: "DSA Ch 11: Solve greedy practice",
+      type: "Practice",
+      date: addDays(weekElevenMonday, 2),
+      status: "todo",
+      done: false,
+      details: "Attempt the labelled greedy-methods practice problems before opening worked solutions.",
+      updatedAt: now
+    },
+    {
+      id: "task-dsa-chapter-11-review",
+      week: 11,
+      title: "DSA Ch 11: Take objective review",
+      type: "Review",
+      date: weekElevenSunday,
+      status: "todo",
+      done: false,
+      details: "Submit the Chapter 11 objective quiz so Aleph logs greedy-choice, exchange-argument, counterexample, priority-queue, ratio-choice, and safe-edge gaps.",
+      updatedAt: now
     }
   ];
 }
@@ -3652,6 +3729,7 @@ function dsaBasicFeedback(now, sunday) {
   const weekSevenSunday = addDays(sunday, 42);
   const weekEightSunday = addDays(sunday, 49);
   const weekNineSunday = addDays(sunday, 56);
+  const weekElevenSunday = addDays(sunday, 70);
   return [
     {
       id: "feedback-dsa-chapter-1",
@@ -3722,6 +3800,13 @@ function dsaBasicFeedback(now, sunday) {
       date: weekNineSunday,
       details: "Review misses for weak sorted-prefix invariants, confusing stable with in-place, applying comparison lower bounds to non-comparison sorts, losing merge pointers, breaking partition invariants, using worst-case quicksort as average-case, miscounting heap extraction cost, and discarding the wrong side in quickselect.",
       updatedAt: now
+    },
+    {
+      id: "feedback-dsa-chapter-11",
+      title: "DSA Chapter 11 feedback focus",
+      date: weekElevenSunday,
+      details: "Review misses for trusting local choices without a proof, writing vague exchange arguments, choosing the wrong interval order, using 0/1 knapsack ratio greedily, combining Huffman weights in the wrong order, confusing MST cut safety with shortest paths, and missing counterexamples.",
+      updatedAt: now
     }
   ];
 }
@@ -3735,6 +3820,7 @@ function dsaBasicResources(now, monday) {
   const weekSevenMonday = addDays(monday, 42);
   const weekEightMonday = addDays(monday, 49);
   const weekNineMonday = addDays(monday, 56);
+  const weekElevenMonday = addDays(monday, 70);
   return [
     {
       id: "resource-dsa-algorithms-arrays-search",
@@ -3813,6 +3899,14 @@ function dsaBasicResources(now, monday) {
       title: "DSA Chapter 9: Sorting and Selection",
       date: weekNineMonday,
       details: "Open Subjects -> Data Structures and Algorithms to study comparison sorting lower bounds, insertion/merge/quick/heap sort traces, stability and in-place tradeoffs, partition invariants, and quickselect.",
+      link: "",
+      updatedAt: now
+    },
+    {
+      id: "resource-dsa-greedy-methods",
+      title: "DSA Chapter 11: Greedy Methods",
+      date: weekElevenMonday,
+      details: "Open Subjects -> Data Structures and Algorithms to study greedy-choice property, exchange arguments, interval scheduling, fractional knapsack, Huffman-style combining, MST safe edges, priority queues, and greedy counterexamples.",
       link: "",
       updatedAt: now
     }
@@ -5557,6 +5651,173 @@ function gateDaDsaSections(updatedAt = new Date().toISOString()) {
         "Quicksort depends on partition invariants and pivot quality; bad pivots can make it Theta(n^2).",
         "Heap sort gives worst-case O(n log n) and in-place array storage, but is not stable by default.",
         "Quickselect uses partition rank to search only one side for the kth order statistic."
+      ],
+      updatedAt
+    },
+    {
+      id: "gate-da-dsa-greedy-methods",
+      exam: "GATE DA",
+      accountTier: "Basic",
+      subject: "Data Structures and Algorithms",
+      chapter: "Chapter 11",
+      section: "11",
+      title: "Greedy Methods",
+      summary: "Greedy-choice property, exchange arguments, interval scheduling by earliest finish time, ratio-based fractional knapsack, Huffman-style priority-queue combining, MST safe edges, and counterexamples where local choices fail.",
+      sectionPreview: "Greedy methods are not just 'pick the best-looking thing'. A GATE-style greedy question asks which local choice is safe, what invariant it preserves, and when a tempting local rule fails.",
+      previewActivity: "Activities are (1,4), (2,3), (3,5), (4,7). If you want the maximum number of non-overlapping activities, which activity should a safe greedy rule pick first: earliest start, shortest duration, or earliest finish?",
+      chapterIntro: [
+        "A greedy algorithm commits to one local choice, then never revisits it. This is powerful only when that local choice can be proved safe.",
+        "For Basic DSA, the proof usually has one of two shapes: an exchange argument or a cut/safe-edge argument. Both say that some optimal solution can be transformed to include the greedy choice without becoming worse.",
+        "The danger is overgeneralizing. Many optimization problems look greedy but need dynamic programming because a locally attractive choice blocks a better future."
+      ],
+      bookSections: [
+        {
+          number: "11.1",
+          title: "What Makes a Greedy Choice Safe",
+          paragraphs: [
+            "A greedy-choice property means there exists an optimal solution that begins with the choice made by the greedy rule.",
+            "The invariant is not 'the partial solution looks good'. The invariant is: the partial solution can still be extended to some optimal solution under the problem's rules.",
+            "A correctness proof must name the local rule, state the invariant, and explain why replacing an optimal solution's first conflicting choice with the greedy choice does not hurt the objective."
+          ],
+          blocks: [
+            {
+              type: "principle",
+              title: "Greedy proof checkpoint",
+              body: "Before trusting a greedy rule, ask: what optimal solution can be exchanged to include this choice, and what measure is preserved?"
+            }
+          ]
+        },
+        {
+          number: "11.2",
+          title: "Interval Scheduling: Earliest Finish Wins",
+          paragraphs: [
+            "In interval scheduling, each activity has a start and finish time. The goal is to choose as many non-overlapping activities as possible.",
+            "The safe rule is to choose the compatible activity with earliest finish time. Finishing early leaves the largest remaining time window.",
+            "Earliest start and shortest duration are tempting but wrong. They can choose an interval that blocks many later intervals even though another interval finishing sooner would be safer."
+          ],
+          blocks: [
+            {
+              type: "simulation",
+              title: "Simulation practice",
+              body: "Sort intervals by finish time, scan left to right, and accept an interval only when its start is at least the finish of the last accepted interval. Track lastFinish after every accepted interval."
+            }
+          ]
+        },
+        {
+          number: "11.3",
+          title: "Exchange Arguments",
+          paragraphs: [
+            "An exchange argument starts with an arbitrary optimal solution O. If O already contains the greedy choice, there is nothing to prove.",
+            "If O does not contain it, replace the first conflicting choice in O with the greedy choice and show the result is still feasible and has the same or better value.",
+            "For interval scheduling, replace O's first activity with the earliest-finishing activity. The replacement finishes no later, so it cannot block the rest of O."
+          ],
+          blocks: [
+            {
+              type: "example",
+              title: "Example 11.1: interval exchange",
+              body: "If O starts with interval x ending at time 6 and greedy chooses g ending at time 4, then replacing x by g leaves every later interval in O still compatible because g ends earlier."
+            }
+          ]
+        },
+        {
+          number: "11.4",
+          title: "Ratio Greedy and Fractional Knapsack",
+          paragraphs: [
+            "Fractional knapsack allows taking part of an item. Sorting by value/weight ratio is safe because every unit of capacity should be filled by the highest remaining value density.",
+            "This rule does not solve 0/1 knapsack. When items cannot be split, taking the best ratio item can consume capacity needed for a better combination.",
+            "The exam trap is to check whether fractions are allowed before applying ratio greedy."
+          ],
+          blocks: [
+            {
+              type: "warning",
+              title: "0/1 knapsack trap",
+              body: "Capacity 10 with items (value,weight) A=(60,6), B=(50,5), C=(50,5). Ratio greedy picks A first, but B+C gives value 100, so 0/1 knapsack is not solved by ratio greedy."
+            }
+          ]
+        },
+        {
+          number: "11.5",
+          title: "Priority Queues and Huffman-Style Combining",
+          paragraphs: [
+            "Some greedy algorithms repeatedly need the smallest or largest remaining item. A priority queue keeps that operation efficient.",
+            "In Huffman-style combining, repeatedly remove the two smallest weights, combine them, and insert the sum back. With n weights, this performs n-1 combines.",
+            "The runtime is O(n log n) with a binary heap priority queue after heap construction, because each combine uses two deletes and one insert."
+          ],
+          blocks: [
+            {
+              type: "simulation",
+              title: "Combine trace",
+              body: "Weights [2,3,7,9] combine 2+3=5, then 5+7=12, then 9+12=21. The total merge cost is 5+12+21=38."
+            }
+          ]
+        },
+        {
+          number: "11.6",
+          title: "MST Safe Edges and Cut Reasoning",
+          paragraphs: [
+            "In a minimum spanning tree problem, a cut separates vertices into two nonempty sides. The lightest edge crossing a cut is safe to add to some MST.",
+            "This is the proof idea behind Kruskal and Prim. Kruskal repeatedly adds the next lightest edge that does not form a cycle. Prim grows one tree by repeatedly adding the cheapest edge leaving the current tree.",
+            "Do not confuse MST with shortest paths. MST minimizes total connection cost across all vertices; shortest paths minimize distance from a source to targets."
+          ],
+          blocks: [
+            {
+              type: "checkpoint",
+              title: "Safe-edge checkpoint",
+              body: "Ask what cut the edge crosses. If it is the lightest crossing edge for that cut, it is safe for MST reasoning, but it says nothing about source shortest paths."
+            }
+          ]
+        }
+      ],
+      concepts: [
+        { name: "Greedy-choice property", description: "A local choice can be part of some optimal solution.", cue: "Can an optimal solution be made to start with this choice?" },
+        { name: "Exchange argument", description: "Replace a choice in an optimal solution with the greedy choice without making the solution worse.", cue: "Swap first conflicting choice." },
+        { name: "Interval finish time", description: "Earliest finish time is safe for maximum compatible intervals.", cue: "Finish early leaves more room." },
+        { name: "Counterexample discipline", description: "A single small instance can disprove a greedy rule.", cue: "Test earliest start, shortest duration, or best ratio on a trap." },
+        { name: "Fractional knapsack", description: "Value/weight ratio is safe only when fractions are allowed.", cue: "Check split allowed versus 0/1." },
+        { name: "Priority queue discipline", description: "Repeated min/max selection needs a priority queue for efficient greedy steps.", cue: "delete-min and insert after combine." },
+        { name: "Huffman-style combine", description: "Repeatedly combine the two smallest weights.", cue: "Two delete-min operations, one insert." },
+        { name: "MST safe edge", description: "The lightest edge crossing a cut is safe for a minimum spanning tree.", cue: "Cut property, not shortest path." }
+      ],
+      techniques: [
+        { name: "Rule-before-proof", when: "solving a greedy prompt.", move: "State the local rule, then state the invariant or exchange proof." },
+        { name: "Finish-time scan", when: "selecting maximum non-overlapping intervals.", move: "Sort by finish time and update lastFinish only when accepting." },
+        { name: "Counterexample search", when: "a greedy rule is suspicious.", move: "Try three or four items where the local best blocks two compatible later choices." },
+        { name: "Ratio check", when: "knapsack appears.", move: "Ask whether items are splittable before using value/weight ratio." },
+        { name: "Priority-queue trace", when: "repeatedly choosing smallest/largest.", move: "Write heap contents after each delete-min/delete-max and insert." },
+        { name: "Cut-property read", when: "MST safety is asked.", move: "Identify the cut and the lightest crossing edge before choosing." }
+      ],
+      practiceProblems: dsaGreedyMethodsProblems(),
+      implementationDrills: dsaGreedyMethodsImplementationDrills(),
+      reviewPrompts: [
+        "What local choice is the greedy algorithm making?",
+        "What invariant says the partial solution can still be extended optimally?",
+        "What exchange shows the greedy choice is safe?",
+        "Can you build a three-item or four-interval counterexample to the tempting rule?",
+        "Does this problem allow fractional choices or require 0/1 choices?",
+        "Is the graph question asking for MST total connection cost or source shortest paths?"
+      ],
+      reviewQuiz: {
+        id: "quiz-dsa-chapter-11-objective-review",
+        title: "DSA Chapter 11 Objective Review",
+        instructions: "Complete this after studying greedy-choice property, exchange arguments, interval scheduling, counterexamples, fractional knapsack, Huffman-style combining, priority queues, and MST safe-edge reasoning. The sampled mix is 5 single-topic checks, 4 two-topic mixes, and 3 three-topic synthesis questions.",
+        questions: dsaGreedyMethodsReviewQuestions()
+      },
+      readingQuestions: [
+        "What must be true before a local greedy choice is safe?",
+        "How does an exchange argument prove earliest-finish interval scheduling?",
+        "Why does value/weight ratio solve fractional knapsack but not 0/1 knapsack?",
+        "Why does Huffman-style combining use a priority queue?",
+        "What does the MST cut property prove, and what does it not prove?",
+        "How do you disprove an incorrect greedy rule quickly?"
+      ],
+      chapterSummary: [
+        "Greedy algorithms are correct only when a local choice can be proved safe.",
+        "Exchange arguments transform an optimal solution to include the greedy choice.",
+        "Earliest finish time is the safe greedy rule for maximum compatible intervals.",
+        "Fractional knapsack uses value/weight ratio; 0/1 knapsack generally needs dynamic programming.",
+        "Priority queues support repeated min/max greedy choices such as Huffman-style combining.",
+        "MST cut-property reasoning is about total connection cost, not source shortest paths.",
+        "Counterexamples are part of greedy mastery: a small failed instance is enough to reject a rule."
       ],
       updatedAt
     }
@@ -17064,6 +17325,292 @@ function dsaSortingSelectionReviewQuestions() {
   }));
 }
 
+function dsaGreedyMethodsProblems() {
+  return [
+    {
+      title: "Exercise 1: Finish-Time Interval Trace",
+      prompt: "Activities are A=(1,4), B=(2,3), C=(3,5), D=(4,7), E=(5,6). Run the earliest-finish greedy algorithm and list the accepted activities.",
+      solution: "Sort by finish time: B(2,3), A(1,4), C(3,5), E(5,6), D(4,7). Accept B first, so lastFinish=3. A overlaps B, skip it. Accept C because 3>=3, lastFinish=5. Accept E because 5>=5, lastFinish=6. D starts at 4, skip it. Accepted activities are B, C, E.",
+      tags: ["interval-finish-time", "greedy-choice-property", "simulation"]
+    },
+    {
+      title: "Exercise 2: Exchange Argument Skeleton",
+      prompt: "Write the two-sentence exchange argument for why earliest-finish interval scheduling is safe.",
+      solution: "Let O be an optimal compatible set and let x be its first activity. If greedy chooses g with the earliest finish time, then finish(g) <= finish(x). Replacing x by g keeps the rest of O compatible and preserves the number of activities, so some optimal solution begins with g.",
+      tags: ["exchange-argument", "interval-finish-time", "correctness"]
+    },
+    {
+      title: "Exercise 3: Bad Greedy Rule Counterexample",
+      prompt: "Give a counterexample showing that earliest start time does not maximize the number of compatible activities.",
+      solution: "Intervals (1,10), (2,3), (3,4), (4,5) work. Earliest start chooses (1,10) and gets one activity. Earliest finish chooses (2,3), (3,4), (4,5) and gets three.",
+      tags: ["counterexample-greedy", "interval-finish-time"]
+    },
+    {
+      title: "Exercise 4: Fractional Knapsack Trace",
+      prompt: "Capacity is 10. Items are A=(value 60, weight 6), B=(50,5), C=(30,3). Fractions are allowed. What value does ratio greedy take?",
+      solution: "Ratios are A=10, B=10, C=10. Any order fills capacity with value 10 per unit, so total value is 100. For example take A weight 6 and B weight 4, value 60+40=100.",
+      tags: ["fractional-knapsack", "greedy-choice-property"]
+    },
+    {
+      title: "Exercise 5: 0/1 Knapsack Trap",
+      prompt: "Capacity is 10. Items are A=(60,6), B=(50,5), C=(50,5), and fractions are not allowed. Show why choosing the best value/weight ratio greedily can fail.",
+      solution: "All ratios are 10 in this version, so choose a sharper trap: A=(60,6), B=(49,5), C=(49,5). Ratio greedy takes A first with value 60 and cannot add B or C. The better 0/1 solution takes B+C with value 98.",
+      tags: ["counterexample-greedy", "fractional-knapsack", "greedy-vs-dp"]
+    },
+    {
+      title: "Exercise 6: Huffman-Style Combine Cost",
+      prompt: "Weights are [2,3,7,9]. Repeatedly combine the two smallest weights. List the combine costs and total cost.",
+      solution: "Combine 2+3=5, heap becomes [5,7,9]. Combine 5+7=12, heap becomes [9,12]. Combine 9+12=21. Total cost is 5+12+21=38.",
+      tags: ["huffman-combine", "priority-queue"]
+    },
+    {
+      title: "Exercise 7: Priority Queue Runtime",
+      prompt: "A greedy algorithm performs n-1 rounds; each round does two delete-min operations and one insert in a binary heap. What is the asymptotic runtime after heap construction?",
+      solution: "Each heap operation costs O(log n), and there are O(n) operations total. The post-build runtime is O(n log n).",
+      tags: ["priority-queue", "runtime-complexity"]
+    },
+    {
+      title: "Exercise 8: MST Safe Edge",
+      prompt: "A cut separates S={A,B} from T={C,D}. Crossing edges are A-C weight 5, B-C weight 2, B-D weight 7. Which edge is safe by the cut property?",
+      solution: "B-C is the lightest edge crossing the cut, so it is safe to add to some MST.",
+      tags: ["mst-safe-edge", "cut-property"]
+    },
+    {
+      title: "Exercise 9: MST Is Not Shortest Path",
+      prompt: "Explain why choosing MST edges does not necessarily give shortest paths from a source.",
+      solution: "An MST minimizes total cost to connect all vertices. It does not minimize the distance from a chosen source to every target. A tree with small total edge weight can still route one source-target pair through many edges.",
+      tags: ["mst-safe-edge", "greedy-vs-dp", "algorithm-choice"]
+    },
+    {
+      title: "Exercise 10: Greedy or DP",
+      prompt: "For each problem, say Greedy or Usually DP: fractional knapsack, 0/1 knapsack, interval scheduling for maximum number of activities, longest increasing subsequence.",
+      solution: "Fractional knapsack is greedy by ratio. 0/1 knapsack usually needs DP. Interval scheduling for maximum count is greedy by earliest finish. Longest increasing subsequence is usually DP or a binary-search optimized DP, not a simple local greedy rule.",
+      tags: ["greedy-vs-dp", "counterexample-greedy", "algorithm-choice"]
+    }
+  ];
+}
+
+function dsaGreedyMethodsImplementationDrills() {
+  return [
+    {
+      title: "Earliest-Finish Activity Selection",
+      source: "MIT/Erickson-style greedy exchange proof",
+      difficulty: "Easy",
+      focus: "finish-time ordering, compatible interval scan, exchange argument",
+      url: "https://ocw.mit.edu/courses/6-006-introduction-to-algorithms-spring-2020/",
+      targetTime: "O(n log n) to sort plus O(n) scan, O(1) auxiliary state after sorting",
+      reason: "This is the cleanest Basic-plan greedy proof and tests trace plus correctness.",
+      writeup: "Sort intervals by finish time, trace lastFinish, then write the replacement argument for the first interval."
+    },
+    {
+      title: "Counterexample Builder",
+      source: "Jeff Erickson-style proof discipline",
+      difficulty: "Medium",
+      focus: "rejecting earliest-start, shortest-duration, and ratio traps",
+      url: "https://jeffe.cs.illinois.edu/teaching/algorithms/",
+      targetTime: "Constant-size examples under timed exam conditions",
+      reason: "GATE-style questions often ask whether a proposed greedy rule is always correct.",
+      writeup: "Construct three or four objects where the locally attractive choice blocks two later compatible choices."
+    },
+    {
+      title: "Fractional Versus 0/1 Knapsack",
+      source: "MIT algorithms paradigm plus LeetCode-style trap mining",
+      difficulty: "Medium",
+      focus: "value-density choice, splittable versus unsplittable items",
+      url: "https://ocw.mit.edu/courses/6-006-introduction-to-algorithms-spring-2020/",
+      targetTime: "O(n log n) sort by ratio for fractional; DP needed for 0/1 in general",
+      reason: "The same surface story has two different algorithmic answers depending on the constraint.",
+      writeup: "Compute ratios, fill capacity, then produce a small 0/1 counterexample."
+    },
+    {
+      title: "Huffman-Style Priority Queue Trace",
+      source: "Open Data Structures-style heap operation analysis",
+      difficulty: "Medium",
+      focus: "delete-min, insert, total combine cost",
+      url: "https://opendatastructures.org/",
+      targetTime: "O(n log n) with binary heap operations",
+      reason: "Connects greedy repeated-choice structure to heap operation costs.",
+      writeup: "After each combine, rewrite the priority queue contents and running cost."
+    },
+    {
+      title: "MST Cut-Property Check",
+      source: "MIT/CS61B graph algorithms practice",
+      difficulty: "Medium",
+      focus: "safe edge, cut crossing, MST versus shortest path",
+      url: "https://sp25.datastructur.es/",
+      targetTime: "O(E log V) style algorithms when implemented with sorting or priority queues",
+      reason: "Prevents confusing total connection cost with source-target distance.",
+      writeup: "Name the cut, list crossing edges, choose the lightest, then state what the guarantee does and does not imply."
+    }
+  ];
+}
+
+function dsaGreedyMethodsReviewQuestions() {
+  const metadata = {
+    "dsa-ch11-q1": { kind: "single concept", targetConcept: "exchange-argument", prereqsUsed: ["greedy-choice-property"], difficulty: 2, gateWeight: "high", expectedFirstStep: "Start with an optimal solution and compare its first conflicting choice with the greedy choice.", commonMistake: "Saying greedy is correct because it looks best locally.", answerCheck: "Exchange replaces the conflicting choice without hurting feasibility or objective." },
+    "dsa-ch11-q2": { kind: "single concept", targetConcept: "greedy-vs-dp", prereqsUsed: ["counterexample-greedy"], difficulty: 2, gateWeight: "high", expectedFirstStep: "Check whether local choice has a proof or a counterexample.", commonMistake: "Using ratio greedy for every knapsack prompt.", answerCheck: "0/1 knapsack is not solved by simple ratio greedy in general." },
+    "dsa-ch11-q3": { kind: "single concept", targetConcept: "greedy-choice-property", prereqsUsed: [], difficulty: 1, gateWeight: "high", expectedFirstStep: "State what a safe local choice must guarantee.", commonMistake: "Confusing greedy-choice property with optimal substructure alone.", answerCheck: "Some optimal solution can include the greedy choice." },
+    "dsa-ch11-q4": { kind: "single concept", targetConcept: "huffman-combine", prereqsUsed: ["priority-queue"], difficulty: 2, gateWeight: "medium", expectedFirstStep: "Remove the two smallest weights first.", commonMistake: "Combining the two largest weights.", answerCheck: "Combine 2+3 before using 7 or 9." },
+    "dsa-ch11-q5": { kind: "single concept", targetConcept: "cut-property", prereqsUsed: [], difficulty: 1, gateWeight: "medium", expectedFirstStep: "List edges crossing the cut.", commonMistake: "Choosing a light edge not crossing the stated cut.", answerCheck: "The lightest crossing edge is safe for MST." },
+    "dsa-ch11-q6": { kind: "mixed: two concepts", targetConcept: "counterexample-greedy", prereqsUsed: ["greedy-choice-property"], difficulty: 2, gateWeight: "high", expectedFirstStep: "Test the proposed rule on a small trap instance.", commonMistake: "Accepting earliest start for interval scheduling.", answerCheck: "A long early interval can block several short compatible intervals." },
+    "dsa-ch11-q7": { kind: "mixed: two concepts", targetConcept: "mst-safe-edge", prereqsUsed: ["cut-property"], difficulty: 2, gateWeight: "high", expectedFirstStep: "Find the lightest edge crossing the given cut.", commonMistake: "Using source distance or path length instead of crossing-edge weight.", answerCheck: "MST safety follows from cut property." },
+    "dsa-ch11-q8": { kind: "mixed: two concepts", targetConcept: "fractional-knapsack", prereqsUsed: ["greedy-choice-property"], difficulty: 2, gateWeight: "high", expectedFirstStep: "Check that fractions are allowed, then sort by value/weight ratio.", commonMistake: "Applying the same rule to 0/1 knapsack.", answerCheck: "Ratio greedy is safe for fractional items." },
+    "dsa-ch11-q9": { kind: "mixed: two concepts", targetConcept: "huffman-combine", prereqsUsed: ["priority-queue"], difficulty: 2, gateWeight: "medium", expectedFirstStep: "Trace delete-min, delete-min, insert-sum.", commonMistake: "Forgetting to insert the combined weight before the next round.", answerCheck: "Total combine cost for [2,3,7,9] is 38." },
+    "dsa-ch11-q10": { kind: "mixed: three concepts", targetConcept: "huffman-combine", prereqsUsed: ["greedy-choice-property", "priority-queue"], difficulty: 3, gateWeight: "high", expectedFirstStep: "Recognize repeated smallest-choice greedy and count heap operations.", commonMistake: "Reporting O(n) because there are n combines while ignoring heap cost.", answerCheck: "O(n log n) with binary heap operations." },
+    "dsa-ch11-q11": { kind: "mixed: three concepts", targetConcept: "counterexample-greedy", prereqsUsed: ["greedy-choice-property", "cut-property"], difficulty: 3, gateWeight: "high", expectedFirstStep: "Separate proven safe rules from merely tempting local rules.", commonMistake: "Treating any light edge rule as a cut-property rule.", answerCheck: "MST needs lightest crossing a cut; arbitrary local light edge claims can fail." },
+    "dsa-ch11-q12": { kind: "mixed: three concepts", targetConcept: "priority-queue", prereqsUsed: ["huffman-combine", "counterexample-greedy"], difficulty: 3, gateWeight: "high", expectedFirstStep: "Trace the queue before judging the rule.", commonMistake: "Combining in input order because it is simpler to simulate.", answerCheck: "Priority queue must expose the current two smallest weights each round." }
+  };
+  return [
+    {
+      id: "dsa-ch11-q1",
+      prompt: "What is the main purpose of an exchange argument in a greedy proof?",
+      tags: ["exchange-argument", "greedy-choice-property"],
+      options: [
+        { id: "a", text: "To show an optimal solution can be transformed to include the greedy choice without getting worse" },
+        { id: "b", text: "To compare every pair of input elements" },
+        { id: "c", text: "To prove the algorithm uses no memory" },
+        { id: "d", text: "To avoid stating a local rule" }
+      ],
+      answer: "a"
+    },
+    {
+      id: "dsa-ch11-q2",
+      prompt: "Which problem is not solved in general by simple value/weight ratio greedy?",
+      tags: ["greedy-vs-dp", "counterexample-greedy"],
+      options: [
+        { id: "a", text: "0/1 knapsack" },
+        { id: "b", text: "Fractional knapsack" },
+        { id: "c", text: "Choosing the next smallest weight in Huffman-style combining" },
+        { id: "d", text: "Earliest-finish interval scheduling" }
+      ],
+      answer: "a"
+    },
+    {
+      id: "dsa-ch11-q3",
+      prompt: "What does the greedy-choice property assert?",
+      tags: ["greedy-choice-property"],
+      options: [
+        { id: "a", text: "Some optimal solution contains the greedy choice" },
+        { id: "b", text: "Every local maximum is globally optimal" },
+        { id: "c", text: "The algorithm never needs a proof" },
+        { id: "d", text: "The input must already be sorted" }
+      ],
+      answer: "a"
+    },
+    {
+      id: "dsa-ch11-q4",
+      prompt: "For Huffman-style combining with weights [2,3,7,9], which two weights combine first?",
+      tags: ["huffman-combine", "priority-queue"],
+      options: [
+        { id: "a", text: "2 and 3" },
+        { id: "b", text: "7 and 9" },
+        { id: "c", text: "2 and 9" },
+        { id: "d", text: "3 and 7" }
+      ],
+      answer: "a"
+    },
+    {
+      id: "dsa-ch11-q5",
+      prompt: "In MST cut reasoning, which edge is safe to add?",
+      tags: ["cut-property"],
+      options: [
+        { id: "a", text: "The lightest edge crossing the cut" },
+        { id: "b", text: "The shortest path edge from a fixed source" },
+        { id: "c", text: "Any edge inside one side of the cut" },
+        { id: "d", text: "The heaviest crossing edge" }
+      ],
+      answer: "a"
+    },
+    {
+      id: "dsa-ch11-q6",
+      prompt: "Intervals are (1,10), (2,3), (3,4), (4,5). Which proposed greedy rule fails to maximize the number of compatible intervals?",
+      tags: ["greedy-choice-property", "counterexample-greedy"],
+      options: [
+        { id: "a", text: "Earliest start time" },
+        { id: "b", text: "Earliest finish time" },
+        { id: "c", text: "Accept if start is at least last accepted finish" },
+        { id: "d", text: "Sort by finish time then scan" }
+      ],
+      answer: "a"
+    },
+    {
+      id: "dsa-ch11-q7",
+      prompt: "A cut has crossing edges of weights 5, 2, and 7. What does the MST cut property say?",
+      tags: ["mst-safe-edge", "cut-property"],
+      options: [
+        { id: "a", text: "The edge of weight 2 is safe for some MST" },
+        { id: "b", text: "The edge of weight 7 must be in every shortest path tree" },
+        { id: "c", text: "All crossing edges are equally safe" },
+        { id: "d", text: "No crossing edge can be in an MST" }
+      ],
+      answer: "a"
+    },
+    {
+      id: "dsa-ch11-q8",
+      prompt: "Fractions are allowed in knapsack. What is the first ordering key for the standard greedy algorithm?",
+      tags: ["greedy-choice-property", "fractional-knapsack"],
+      options: [
+        { id: "a", text: "Value divided by weight" },
+        { id: "b", text: "Smallest item id" },
+        { id: "c", text: "Largest weight only" },
+        { id: "d", text: "Earliest finish time" }
+      ],
+      answer: "a"
+    },
+    {
+      id: "dsa-ch11-q9",
+      prompt: "Using Huffman-style combining on [2,3,7,9], what is the total combine cost?",
+      tags: ["huffman-combine", "priority-queue"],
+      options: [
+        { id: "a", text: "38" },
+        { id: "b", text: "21" },
+        { id: "c", text: "14" },
+        { id: "d", text: "42" }
+      ],
+      answer: "a"
+    },
+    {
+      id: "dsa-ch11-q10",
+      prompt: "A Huffman-style algorithm uses a binary heap and performs O(n) delete-min/insert operations. What runtime follows after heap construction?",
+      tags: ["greedy-choice-property", "huffman-combine", "priority-queue"],
+      options: [
+        { id: "a", text: "O(n log n)" },
+        { id: "b", text: "O(log n)" },
+        { id: "c", text: "O(n^2 log n)" },
+        { id: "d", text: "O(1)" }
+      ],
+      answer: "a"
+    },
+    {
+      id: "dsa-ch11-q11",
+      prompt: "Which combined statement is accurate?",
+      tags: ["greedy-choice-property", "counterexample-greedy", "cut-property"],
+      options: [
+        { id: "a", text: "A greedy rule needs a proof such as exchange or cut safety; a small counterexample rejects an unproven local rule" },
+        { id: "b", text: "Every light edge in a graph is safe for MST" },
+        { id: "c", text: "A local rule is correct if it works on one example" },
+        { id: "d", text: "Counterexamples are irrelevant to greedy algorithms" }
+      ],
+      answer: "a"
+    },
+    {
+      id: "dsa-ch11-q12",
+      prompt: "A combine algorithm processes weights in input order instead of repeatedly taking the two smallest. Which diagnosis is best?",
+      tags: ["counterexample-greedy", "huffman-combine", "priority-queue"],
+      options: [
+        { id: "a", text: "It breaks the priority-queue discipline required by the Huffman-style greedy rule" },
+        { id: "b", text: "It is always equivalent because addition is commutative" },
+        { id: "c", text: "It proves greedy choice property automatically" },
+        { id: "d", text: "It is an MST cut-property proof" }
+      ],
+      answer: "a"
+    }
+  ].map((question) => ({
+    ...question,
+    ...(metadata[question.id] || { kind: question.tags.length === 1 ? "single concept" : question.tags.length === 2 ? "mixed: two concepts" : "mixed: three concepts", targetConcept: question.tags[0], prereqsUsed: question.tags.slice(1), difficulty: question.tags.length, gateWeight: "medium" })
+  }));
+}
+
 function conditionalProbabilityReviewQuestions() {
   const metadata = {
     "cp-review-1": { targetConcept: "conditional-denominator", prereqsUsed: ["conditional-probability"], difficulty: 1, gateWeight: "high" },
@@ -18493,6 +19040,92 @@ function dsaSortingSelectionConceptGraph() {
         label: "Sorting algorithm choice",
         prereqs: ["stability", "in-place-space", "merge-sort-recurrence", "quicksort-partition", "heap-sort-extraction"],
         repairMaterial: "Review DSA Chapter 9.5 and classify prompts by stable, in-place, worst-case, average-case, and nearly-sorted requirements.",
+        gateWeight: "high"
+      }
+    }
+  };
+}
+
+function dsaGreedyMethodsConceptGraph() {
+  return {
+    chapterId: "gate-da-dsa-greedy-methods",
+    chapterTitle: "DSA Chapter 11: Greedy Methods",
+    gateWeight: "high",
+    fallbackConcepts: ["greedy-choice-property", "exchange-argument", "interval-finish-time", "counterexample-greedy", "mst-safe-edge"],
+    fallbackDifficultyMix: [1, 2, 2, 3],
+    fallbackInstruction: "Retest greedy-choice property first, then add exchange arguments, counterexamples, priority-queue traces, fractional-versus-0/1 distinctions, and MST cut-property checks.",
+    stableNextAction: "Next: move to Dynamic Programming after greedy-choice proofs, counterexamples, and safe-edge reasoning are stable.",
+    nodes: {
+      "greedy-choice-property": {
+        label: "Greedy-choice property",
+        prereqs: [],
+        repairMaterial: "Review DSA Chapter 11.1 and state what makes a local choice safe before applying a greedy rule.",
+        gateWeight: "high"
+      },
+      "exchange-argument": {
+        label: "Exchange argument",
+        prereqs: ["greedy-choice-property"],
+        repairMaterial: "Review DSA Chapter 11.3 and write the optimal-solution replacement proof for one interval example.",
+        gateWeight: "high"
+      },
+      "interval-finish-time": {
+        label: "Earliest-finish interval scheduling",
+        prereqs: ["greedy-choice-property", "exchange-argument"],
+        repairMaterial: "Review DSA Chapter 11.2 and trace lastFinish while scanning intervals sorted by finish time.",
+        gateWeight: "high"
+      },
+      "counterexample-greedy": {
+        label: "Greedy counterexample",
+        prereqs: ["greedy-choice-property"],
+        repairMaterial: "Review DSA Chapter 11.2 and 11.4, then build a four-interval or three-item counterexample to a tempting greedy rule.",
+        gateWeight: "high"
+      },
+      "fractional-knapsack": {
+        label: "Fractional knapsack ratio choice",
+        prereqs: ["greedy-choice-property"],
+        repairMaterial: "Review DSA Chapter 11.4 and separate fractional knapsack from 0/1 knapsack before using value/weight ratios.",
+        gateWeight: "high"
+      },
+      "priority-queue": {
+        label: "Priority queue discipline",
+        prereqs: [],
+        repairMaterial: "Review DSA Chapter 5.6 and DSA Chapter 11.5, then trace delete-min and insert operations on four weights.",
+        gateWeight: "medium"
+      },
+      "huffman-combine": {
+        label: "Huffman-style combine",
+        prereqs: ["priority-queue", "greedy-choice-property"],
+        repairMaterial: "Review DSA Chapter 11.5 and repeatedly combine the two smallest weights while tracking total cost.",
+        gateWeight: "medium"
+      },
+      "cut-property": {
+        label: "Cut property",
+        prereqs: [],
+        repairMaterial: "Review DSA Chapter 11.6 and list only edges crossing a named cut before choosing a safe edge.",
+        gateWeight: "medium"
+      },
+      "mst-safe-edge": {
+        label: "MST safe edge",
+        prereqs: ["cut-property"],
+        repairMaterial: "Review DSA Chapter 11.6 and explain why the lightest crossing edge is MST-safe but not a shortest-path guarantee.",
+        gateWeight: "high"
+      },
+      "greedy-vs-dp": {
+        label: "Greedy versus DP choice",
+        prereqs: ["counterexample-greedy", "fractional-knapsack"],
+        repairMaterial: "Review DSA Chapter 11.4 and classify fractional knapsack, 0/1 knapsack, interval scheduling, and LIS by algorithmic paradigm.",
+        gateWeight: "high"
+      },
+      "runtime-complexity": {
+        label: "Greedy runtime complexity",
+        prereqs: ["priority-queue"],
+        repairMaterial: "Review DSA Chapter 11.5 and count sorting, scanning, delete-min, and insert operations separately.",
+        gateWeight: "high"
+      },
+      "algorithm-choice": {
+        label: "Greedy algorithm choice",
+        prereqs: ["greedy-choice-property", "counterexample-greedy", "mst-safe-edge", "greedy-vs-dp"],
+        repairMaterial: "Review DSA Chapter 11 summary and identify whether the prompt asks for interval count, splittable capacity, total connection cost, or source distance.",
         gateWeight: "high"
       }
     }
@@ -25482,6 +26115,7 @@ function conceptGraphForSection(section) {
   if (section?.id === "gate-da-dsa-graph-representation-traversal") return dsaGraphRepresentationTraversalConceptGraph();
   if (section?.id === "gate-da-dsa-graph-algorithms") return dsaGraphAlgorithmsConceptGraph();
   if (section?.id === "gate-da-dsa-sorting-selection") return dsaSortingSelectionConceptGraph();
+  if (section?.id === "gate-da-dsa-greedy-methods") return dsaGreedyMethodsConceptGraph();
   if (section?.id === "gate-da-linear-algebra-vector-spaces-coordinates") return linearAlgebraVectorSpacesConceptGraph();
   if (section?.id === "gate-da-linear-algebra-transformations-matrices") return linearAlgebraTransformationsConceptGraph();
   if (section?.id === "gate-da-linear-algebra-rank-nullity-systems") return linearAlgebraRankNullityConceptGraph();
