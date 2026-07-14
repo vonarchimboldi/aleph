@@ -1,7 +1,7 @@
 const STORAGE_KEY = "learning-studio-data-v2";
 const LEGACY_STORAGE_KEYS = ["learning-studio-data-v1"];
 const SESSION_KEY = "aleph-session";
-const COURSE_PLAN_VERSION = "seeded-user-canonical-workspace-v122";
+const COURSE_PLAN_VERSION = "seeded-user-canonical-workspace-v123";
 const MAX_FEEDBACK_ATTACHMENT_BYTES = 3 * 1024 * 1024;
 const MAX_COMPRESSED_FEEDBACK_BYTES = 2400 * 1024;
 const MAX_FEEDBACK_PDF_PAGES = 6;
@@ -2925,6 +2925,8 @@ function dsaBasicScheduleItems(now, monday, sunday) {
   const weekNineSunday = addDays(sunday, 56);
   const weekElevenMonday = addDays(monday, 70);
   const weekElevenSunday = addDays(sunday, 70);
+  const weekTwelveMonday = addDays(monday, 77);
+  const weekTwelveSunday = addDays(sunday, 77);
   return [
     {
       id: "schedule-dsa-chapter-1-study",
@@ -3235,6 +3237,36 @@ function dsaBasicScheduleItems(now, monday, sunday) {
       date: weekElevenSunday,
       details: "Take the graph-backed objective review for greedy-choice property, exchange arguments, counterexamples, priority queues, Huffman-style combining, fractional knapsack, and MST safe-edge reasoning.",
       updatedAt: now
+    },
+    {
+      id: "schedule-dsa-chapter-12-study",
+      title: "DSA Chapter 12: Dynamic Programming",
+      week: 12,
+      subject: "Data Structures and Algorithms",
+      kind: "Study",
+      date: weekTwelveMonday,
+      details: "Study DP state definition, optimal substructure, recurrences, base cases, memoization versus tabulation, table fill order, space optimization, 0/1 knapsack, LIS, edit distance, and reconstruction.",
+      updatedAt: now
+    },
+    {
+      id: "schedule-dsa-chapter-12-practice",
+      title: "DSA Chapter 12: Labelled Practice",
+      week: 12,
+      subject: "Data Structures and Algorithms",
+      kind: "Practice",
+      date: addDays(weekTwelveMonday, 2),
+      details: "Solve DP state, recurrence, base-case, table-order, knapsack, LIS, edit-distance, space-optimization, and reconstruction exercises before opening worked solutions.",
+      updatedAt: now
+    },
+    {
+      id: "schedule-dsa-chapter-12-review",
+      title: "DSA Chapter 12: Objective Review",
+      week: 12,
+      subject: "Data Structures and Algorithms",
+      kind: "Review",
+      date: weekTwelveSunday,
+      details: "Take the graph-backed objective review for DP state design, recurrence transitions, table order, memoization/tabulation, 0/1 knapsack, edit distance, reconstruction, and greedy-versus-DP decisions.",
+      updatedAt: now
     }
   ];
 }
@@ -3250,6 +3282,7 @@ function dsaBasicTests(now, dsaSections, sunday) {
   const weekEightSunday = addDays(sunday, 49);
   const weekNineSunday = addDays(sunday, 56);
   const weekElevenSunday = addDays(sunday, 70);
+  const weekTwelveSunday = addDays(sunday, 77);
   return [
     {
       id: "test-dsa-chapter-1-objective-review",
@@ -3351,6 +3384,15 @@ function dsaBasicTests(now, dsaSections, sunday) {
       sectionId: dsaSections.find((section) => section.id === "gate-da-dsa-greedy-methods")?.id,
       quizId: "quiz-dsa-chapter-11-objective-review",
       updatedAt: now
+    },
+    {
+      id: "test-dsa-chapter-12-objective-review",
+      title: "DSA Chapter 12 Objective Review",
+      date: weekTwelveSunday,
+      details: "Objective review for DP state, optimal substructure, recurrence transitions, base cases, table fill order, memoization versus tabulation, 0/1 knapsack, edit distance, and reconstruction.",
+      sectionId: dsaSections.find((section) => section.id === "gate-da-dsa-dynamic-programming")?.id,
+      quizId: "quiz-dsa-chapter-12-objective-review",
+      updatedAt: now
     }
   ];
 }
@@ -3374,6 +3416,8 @@ function dsaBasicTasks(now, monday, sunday) {
   const weekNineSunday = addDays(sunday, 56);
   const weekElevenMonday = addDays(monday, 70);
   const weekElevenSunday = addDays(sunday, 70);
+  const weekTwelveMonday = addDays(monday, 77);
+  const weekTwelveSunday = addDays(sunday, 77);
   return [
     {
       id: "task-dsa-chapter-1-read",
@@ -3715,6 +3759,39 @@ function dsaBasicTasks(now, monday, sunday) {
       done: false,
       details: "Submit the Chapter 11 objective quiz so Aleph logs greedy-choice, exchange-argument, counterexample, priority-queue, ratio-choice, and safe-edge gaps.",
       updatedAt: now
+    },
+    {
+      id: "task-dsa-chapter-12-read",
+      week: 12,
+      title: "DSA Ch 12: Read dynamic programming",
+      type: "Study",
+      date: weekTwelveMonday,
+      status: "todo",
+      done: false,
+      details: "Open Subjects -> Data Structures and Algorithms -> Chapter 12 and study DP state definition, recurrence transitions, base cases, table order, memoization, tabulation, knapsack, LIS, edit distance, and reconstruction.",
+      updatedAt: now
+    },
+    {
+      id: "task-dsa-chapter-12-practice",
+      week: 12,
+      title: "DSA Ch 12: Solve DP practice",
+      type: "Practice",
+      date: addDays(weekTwelveMonday, 2),
+      status: "todo",
+      done: false,
+      details: "Attempt the labelled dynamic-programming practice problems before opening worked solutions.",
+      updatedAt: now
+    },
+    {
+      id: "task-dsa-chapter-12-review",
+      week: 12,
+      title: "DSA Ch 12: Take objective review",
+      type: "Review",
+      date: weekTwelveSunday,
+      status: "todo",
+      done: false,
+      details: "Submit the Chapter 12 objective quiz so Aleph logs state, recurrence, base-case, table-order, memoization, knapsack, edit-distance, and reconstruction gaps.",
+      updatedAt: now
     }
   ];
 }
@@ -3730,6 +3807,7 @@ function dsaBasicFeedback(now, sunday) {
   const weekEightSunday = addDays(sunday, 49);
   const weekNineSunday = addDays(sunday, 56);
   const weekElevenSunday = addDays(sunday, 70);
+  const weekTwelveSunday = addDays(sunday, 77);
   return [
     {
       id: "feedback-dsa-chapter-1",
@@ -3807,6 +3885,13 @@ function dsaBasicFeedback(now, sunday) {
       date: weekElevenSunday,
       details: "Review misses for trusting local choices without a proof, writing vague exchange arguments, choosing the wrong interval order, using 0/1 knapsack ratio greedily, combining Huffman weights in the wrong order, confusing MST cut safety with shortest paths, and missing counterexamples.",
       updatedAt: now
+    },
+    {
+      id: "feedback-dsa-chapter-12",
+      title: "DSA Chapter 12 feedback focus",
+      date: weekTwelveSunday,
+      details: "Review misses for vague DP states, missing base cases, wrong recurrence dependencies, invalid table order, confusing memoization with tabulation, using greedy for 0/1 knapsack, off-by-one DP indexes, and reconstruction mistakes.",
+      updatedAt: now
     }
   ];
 }
@@ -3821,6 +3906,7 @@ function dsaBasicResources(now, monday) {
   const weekEightMonday = addDays(monday, 49);
   const weekNineMonday = addDays(monday, 56);
   const weekElevenMonday = addDays(monday, 70);
+  const weekTwelveMonday = addDays(monday, 77);
   return [
     {
       id: "resource-dsa-algorithms-arrays-search",
@@ -3907,6 +3993,14 @@ function dsaBasicResources(now, monday) {
       title: "DSA Chapter 11: Greedy Methods",
       date: weekElevenMonday,
       details: "Open Subjects -> Data Structures and Algorithms to study greedy-choice property, exchange arguments, interval scheduling, fractional knapsack, Huffman-style combining, MST safe edges, priority queues, and greedy counterexamples.",
+      link: "",
+      updatedAt: now
+    },
+    {
+      id: "resource-dsa-dynamic-programming",
+      title: "DSA Chapter 12: Dynamic Programming",
+      date: weekTwelveMonday,
+      details: "Open Subjects -> Data Structures and Algorithms to study DP state design, recurrences, base cases, memoization, tabulation, table order, space optimization, 0/1 knapsack, LIS, edit distance, and reconstruction.",
       link: "",
       updatedAt: now
     }
@@ -5818,6 +5912,176 @@ function gateDaDsaSections(updatedAt = new Date().toISOString()) {
         "Priority queues support repeated min/max greedy choices such as Huffman-style combining.",
         "MST cut-property reasoning is about total connection cost, not source shortest paths.",
         "Counterexamples are part of greedy mastery: a small failed instance is enough to reject a rule."
+      ],
+      updatedAt
+    },
+    {
+      id: "gate-da-dsa-dynamic-programming",
+      exam: "GATE DA",
+      accountTier: "Basic",
+      subject: "Data Structures and Algorithms",
+      chapter: "Chapter 12",
+      section: "12",
+      title: "Dynamic Programming",
+      summary: "DP state definition, optimal substructure, recurrence transitions, base cases, memoization versus tabulation, table fill order, rolling-array space optimization, 0/1 knapsack, LIS, edit distance, and reconstruction.",
+      sectionPreview: "Dynamic programming questions test whether you can name the state, write the recurrence, fill the table in a valid order, and avoid greedy shortcuts when the future depends on earlier choices.",
+      previewActivity: "For array [3, 1, 2, 5], let dp[i] be the length of the longest increasing subsequence ending at i. What values do you get for dp[0], dp[1], dp[2], dp[3]?",
+      chapterIntro: [
+        "Dynamic programming is controlled reuse of subproblem answers. Instead of recomputing the same recursive cases, we store them and build larger answers from smaller ones.",
+        "A good DP solution starts with a precise state. If the state is vague, the recurrence will either miss information or include too much information.",
+        "GATE-style DP questions usually ask for a recurrence, a table trace, a fill order, a complexity, or a quick diagnosis: greedy, recursion, memoization, or tabulation?"
+      ],
+      bookSections: [
+        {
+          number: "12.1",
+          title: "State, Meaning, and Base Cases",
+          paragraphs: [
+            "A DP state is a named subproblem. It must say exactly what part of the input is being considered and what answer is stored.",
+            "For example, dp[i] can mean 'best answer using prefix A[0..i]' or 'best answer ending exactly at i'. These are different states and produce different recurrences.",
+            "Base cases anchor the smallest subproblems. Missing or wrong base cases create off-by-one errors even when the recurrence idea is correct."
+          ],
+          blocks: [
+            {
+              type: "principle",
+              title: "State checkpoint",
+              body: "Before writing a recurrence, say the sentence: dp[...] means _____. If that sentence is ambiguous, stop and fix the state."
+            }
+          ]
+        },
+        {
+          number: "12.2",
+          title: "From Recursion to Memoization",
+          paragraphs: [
+            "Many DP recurrences begin as recursive choices. If the same state appears many times in the recursion tree, memoization stores the answer after the first computation.",
+            "Top-down memoization keeps the recursive shape and adds a table or map. Each state is solved once, so runtime becomes number of states times work per state.",
+            "The space cost includes the memo table plus recursion stack depth. This matters when comparing top-down and bottom-up versions."
+          ],
+          blocks: [
+            {
+              type: "simulation",
+              title: "Repeated-state trace",
+              body: "In Fibonacci, F(5) calls F(4) and F(3); F(4) also calls F(3). Memoization stores F(3) once and reuses it."
+            }
+          ]
+        },
+        {
+          number: "12.3",
+          title: "Tabulation and Fill Order",
+          paragraphs: [
+            "Bottom-up tabulation fills a table from base cases toward larger states. The fill order must ensure every dependency is already known.",
+            "If dp[i] depends on dp[i-1] and dp[i-2], fill i from small to large. If dp[i][w] depends on dp[i-1][w] and dp[i-1][w-weight], fill rows by item.",
+            "A wrong fill order is a common exam trap. The recurrence may be correct but impossible to evaluate in the proposed order."
+          ],
+          blocks: [
+            {
+              type: "checkpoint",
+              title: "Dependency checkpoint",
+              body: "Draw arrows from each state to the states it reads. A valid table order fills arrow targets before the current cell."
+            }
+          ]
+        },
+        {
+          number: "12.4",
+          title: "0/1 Knapsack DP",
+          paragraphs: [
+            "In 0/1 knapsack, each item is either taken or not taken. Ratio greedy can fail, so DP records enough information to remember both item prefix and remaining capacity.",
+            "Let dp[i][w] be the maximum value using the first i items with capacity w. If item i is too heavy, skip it. Otherwise choose max(skip, take).",
+            "The standard recurrence is dp[i][w]=max(dp[i-1][w], value_i + dp[i-1][w-weight_i]) when the item fits. Runtime is O(nW), and table space is O(nW), reducible to O(W) with careful one-dimensional updates."
+          ],
+          blocks: [
+            {
+              type: "warning",
+              title: "One-dimensional trap",
+              body: "For 0/1 knapsack with a one-dimensional table, update capacities downward. Upward updates can reuse the same item more than once."
+            }
+          ]
+        },
+        {
+          number: "12.5",
+          title: "LIS and Edit Distance Patterns",
+          paragraphs: [
+            "For LIS, one useful state is dp[i] = length of the longest increasing subsequence ending exactly at i. Then dp[i] checks earlier j with A[j] < A[i].",
+            "For edit distance, dp[i][j] stores the minimum edits to convert the first i characters of one string into the first j characters of another. Insert, delete, and replace create the neighboring transitions.",
+            "These examples show a key DP habit: choose state dimensions that capture exactly the information needed for the next decision."
+          ],
+          blocks: [
+            {
+              type: "example",
+              title: "Example 12.1: LIS trace",
+              body: "For [3,1,2,5], dp values ending at each index are [1,1,2,3]. The 5 can extend the subsequence ending at 2."
+            }
+          ]
+        },
+        {
+          number: "12.6",
+          title: "Reconstruction and Space Optimization",
+          paragraphs: [
+            "Sometimes the DP value is not enough; the question asks which items or choices produce that value. Reconstruction stores parent pointers or retraces decisions from the filled table.",
+            "Space optimization is possible when a row depends only on a small number of previous rows. Fibonacci needs two values; 0/1 knapsack can use one row if capacities move downward.",
+            "Do not optimize space before the recurrence is stable. First make the state and dependencies correct, then compress storage only when dependencies allow it."
+          ],
+          blocks: [
+            {
+              type: "strategy",
+              title: "Reconstruction checkpoint",
+              body: "To reconstruct, compare the chosen cell with the candidate predecessor cells. If the value came from taking an item, record it and move to the predecessor state."
+            }
+          ]
+        }
+      ],
+      concepts: [
+        { name: "DP state definition", description: "The exact subproblem stored in one table cell.", cue: "Say what dp indices mean." },
+        { name: "Optimal substructure", description: "An optimal answer is built from optimal answers to smaller states.", cue: "Can the best answer reuse best subanswers?" },
+        { name: "Recurrence transition", description: "The formula that combines smaller states into the current state.", cue: "Skip/take, match/mismatch, extend/not extend." },
+        { name: "Base cases", description: "Smallest states that anchor the table.", cue: "Empty prefix, zero capacity, length one." },
+        { name: "Table fill order", description: "A valid order where dependencies are already available.", cue: "Fill arrows before the current cell." },
+        { name: "Memoization versus tabulation", description: "Top-down caching versus bottom-up table filling.", cue: "Same states, different control flow." },
+        { name: "Space optimization", description: "Reduce storage when only recent states are needed.", cue: "Rows, rolling arrays, downward capacity update." },
+        { name: "0/1 knapsack DP", description: "Track item prefix and capacity because items cannot be split.", cue: "max(skip,take)." },
+        { name: "LIS DP", description: "Track best increasing subsequence ending at each index.", cue: "Look back at smaller previous values." },
+        { name: "Edit distance DP", description: "Track prefix-to-prefix conversion cost.", cue: "insert, delete, replace." },
+        { name: "Reconstruction", description: "Recover choices by tracing parent decisions through the table.", cue: "Which predecessor produced this value?" }
+      ],
+      techniques: [
+        { name: "State sentence", when: "starting any DP problem.", move: "Write 'dp[...] means ...' before the recurrence." },
+        { name: "Choice split", when: "building a recurrence.", move: "List mutually exclusive choices such as skip/take or match/mismatch." },
+        { name: "Dependency arrows", when: "checking table order.", move: "Draw which cells the current cell reads." },
+        { name: "State-count runtime", when: "analyzing DP.", move: "Multiply number of states by work per state." },
+        { name: "Rolling-row check", when: "optimizing space.", move: "Verify the recurrence only reads previous rows or earlier scalar states." },
+        { name: "Backtrace", when: "recovering a solution.", move: "Move from final cell to the predecessor that explains its value." }
+      ],
+      practiceProblems: dsaDynamicProgrammingProblems(),
+      implementationDrills: dsaDynamicProgrammingImplementationDrills(),
+      reviewPrompts: [
+        "What does each DP state mean?",
+        "Which smaller states does this recurrence read?",
+        "What are the base cases?",
+        "What order fills the table without reading uncomputed cells?",
+        "How many states exist, and how much work happens per state?",
+        "Can space be reduced without changing the recurrence result?"
+      ],
+      reviewQuiz: {
+        id: "quiz-dsa-chapter-12-objective-review",
+        title: "DSA Chapter 12 Objective Review",
+        instructions: "Complete this after studying DP state definition, optimal substructure, recurrence transitions, base cases, table order, memoization versus tabulation, 0/1 knapsack, edit distance, and reconstruction. The sampled mix is 5 single-topic checks, 4 two-topic mixes, and 3 three-topic synthesis questions.",
+        questions: dsaDynamicProgrammingReviewQuestions()
+      },
+      readingQuestions: [
+        "Why is a precise state definition the first step in DP?",
+        "How do base cases prevent off-by-one errors?",
+        "How do memoization and tabulation solve the same subproblems differently?",
+        "Why does 0/1 knapsack need item-prefix and capacity state?",
+        "How does table fill order follow from recurrence dependencies?",
+        "When is rolling-array space optimization valid?"
+      ],
+      chapterSummary: [
+        "Dynamic programming stores repeated subproblem answers and builds larger answers from smaller states.",
+        "A precise state sentence controls the recurrence, base cases, table order, and reconstruction.",
+        "Runtime is usually number of states times work per state.",
+        "Memoization is top-down caching; tabulation is bottom-up filling.",
+        "0/1 knapsack uses skip/take transitions over item prefix and capacity.",
+        "LIS and edit distance show how different state meanings create different table shapes.",
+        "Space optimization is valid only when dependencies allow older states to be discarded."
       ],
       updatedAt
     }
@@ -17611,6 +17875,160 @@ function dsaGreedyMethodsReviewQuestions() {
   }));
 }
 
+function dsaDynamicProgrammingProblems() {
+  return [
+    {
+      title: "Exercise 1: State Sentence",
+      prompt: "For LIS on array A, compare these states: dp[i] = best LIS length using A[0..i] and dp[i] = best LIS length ending exactly at i. Which one makes the transition dp[i]=1+max(dp[j]) over j<i and A[j]<A[i] valid?",
+      solution: "The transition is valid for 'ending exactly at i'. It extends a previous subsequence that ends at j with A[j]<A[i]. The prefix-best state would need a max with dp[i-1] and does not necessarily end at i.",
+      tags: ["dp-state", "lis-dp", "recurrence-transition"]
+    },
+    {
+      title: "Exercise 2: LIS Table Trace",
+      prompt: "Compute dp values for A=[3,1,2,5] where dp[i] is the LIS length ending exactly at i.",
+      solution: "dp[0]=1 for [3]. dp[1]=1 because 1 extends nothing before it. dp[2]=2 because 1<2 gives [1,2]. dp[3]=3 because 1<2<5 or 3<5 gives max previous dp 2. The values are [1,1,2,3].",
+      tags: ["lis-dp", "table-order", "simulation"]
+    },
+    {
+      title: "Exercise 3: Base Cases",
+      prompt: "For edit distance dp[i][j] from the first i characters of X to the first j characters of Y, what are dp[0][j] and dp[i][0]?",
+      solution: "dp[0][j]=j because converting empty X to j characters of Y needs j insertions. dp[i][0]=i because converting i characters of X to empty Y needs i deletions.",
+      tags: ["edit-distance", "base-case"]
+    },
+    {
+      title: "Exercise 4: 0/1 Knapsack Recurrence",
+      prompt: "Let dp[i][w] be the maximum value using the first i items with capacity w. Item i has value v and weight wt. Write the recurrence when wt<=w.",
+      solution: "dp[i][w]=max(dp[i-1][w], v + dp[i-1][w-wt]). The first term skips item i; the second takes item i and then uses remaining capacity with earlier items only.",
+      tags: ["zero-one-knapsack", "recurrence-transition"]
+    },
+    {
+      title: "Exercise 5: Table Order",
+      prompt: "In 0/1 knapsack dp[i][w] reads dp[i-1][w] and dp[i-1][w-wt]. Which row order is valid?",
+      solution: "Fill item rows from i=0 upward. Each row i depends only on row i-1, so the previous row must already be complete for every capacity w.",
+      tags: ["zero-one-knapsack", "table-order"]
+    },
+    {
+      title: "Exercise 6: One-Dimensional Knapsack Trap",
+      prompt: "Why must a one-dimensional 0/1 knapsack update capacities downward for each item?",
+      solution: "Downward updates ensure dp[w-wt] still refers to the previous item set, so the current item is used at most once. Upward updates can let dp[w] use an updated dp[w-wt] from the same item, turning the recurrence into an unbounded-knapsack behavior.",
+      tags: ["space-optimization", "zero-one-knapsack", "table-order"]
+    },
+    {
+      title: "Exercise 7: Memoization Runtime",
+      prompt: "A top-down DP has states (i,w) where 0<=i<=n and 0<=w<=W. Each state does O(1) work besides recursive calls. What runtime and table space result?",
+      solution: "There are (n+1)(W+1)=Theta(nW) states. Each is computed once with O(1) local work, so runtime is O(nW). The memo table space is O(nW), plus recursion stack space depending on call depth.",
+      tags: ["memo-vs-tabulation", "runtime-complexity", "dp-state"]
+    },
+    {
+      title: "Exercise 8: Greedy Versus DP",
+      prompt: "Why does 0/1 knapsack generally need DP while fractional knapsack is solved by ratio greedy?",
+      solution: "Fractional knapsack can exchange capacity unit by unit, so the best value density is safe. In 0/1 knapsack, an item is indivisible; taking one high-ratio item can block a better combination, so DP must track item choices and capacity.",
+      tags: ["greedy-vs-dp", "zero-one-knapsack", "optimal-substructure"]
+    },
+    {
+      title: "Exercise 9: Edit Distance Transition",
+      prompt: "If X[i-1] != Y[j-1], what three predecessor states does edit distance compare?",
+      solution: "It compares replace from dp[i-1][j-1], delete from dp[i-1][j], and insert from dp[i][j-1], then adds 1 to the minimum.",
+      tags: ["edit-distance", "recurrence-transition"]
+    },
+    {
+      title: "Exercise 10: Reconstruction",
+      prompt: "In knapsack reconstruction, dp[i][w] equals dp[i-1][w]. What does that say about item i in one optimal solution?",
+      solution: "It says there exists an optimal solution for state (i,w) that skips item i. Move to state (i-1,w). If the take value were strictly better, reconstruction would record item i and move to (i-1,w-weight_i).",
+      tags: ["reconstruction", "zero-one-knapsack", "optimal-substructure"]
+    }
+  ];
+}
+
+function dsaDynamicProgrammingImplementationDrills() {
+  return [
+    {
+      title: "LIS Ending-State Trace",
+      source: "MIT/Erickson-style DP recurrence design",
+      difficulty: "Medium",
+      focus: "state meaning, transition, O(n^2) table trace",
+      url: "https://ocw.mit.edu/courses/6-006-introduction-to-algorithms-spring-2020/",
+      targetTime: "O(n^2) time, O(n) table space",
+      reason: "Forces a precise state sentence and catches prefix-best versus ending-at-i confusion.",
+      writeup: "Write dp[i] as ending exactly at i, trace all earlier j, and take the maximum table value."
+    },
+    {
+      title: "0/1 Knapsack Table",
+      source: "MIT/Open Data Structures-style table analysis",
+      difficulty: "Medium",
+      focus: "skip/take recurrence, item-prefix state, capacity dimension",
+      url: "https://opendatastructures.org/",
+      targetTime: "O(nW) time, O(nW) table space or O(W) optimized",
+      reason: "It separates DP from the ratio-greedy trap introduced in Chapter 11.",
+      writeup: "Fill a small item-by-capacity table and explain each skip/take choice."
+    },
+    {
+      title: "Edit Distance Prefix Table",
+      source: "Jeff Erickson-style recurrence and boundary cases",
+      difficulty: "Medium",
+      focus: "two-dimensional state, base row/column, insert/delete/replace",
+      url: "https://jeffe.cs.illinois.edu/teaching/algorithms/",
+      targetTime: "O(mn) time and O(mn) table space, reducible by rows for distance only",
+      reason: "Builds boundary-case discipline and table-order reasoning.",
+      writeup: "Fill the first row and column, then compute three interior cells by comparing predecessor states."
+    },
+    {
+      title: "Memoized Recursion Audit",
+      source: "Stanford CS106X-style recursion plus caching",
+      difficulty: "Easy",
+      focus: "top-down memoization, repeated states, recursion stack",
+      url: "https://web.stanford.edu/class/cs106x/",
+      targetTime: "Number of reachable states times work per state",
+      reason: "Connects Chapter 2 recursion to DP without hiding stack-space costs.",
+      writeup: "Draw repeated calls first, then mark which states become memo hits."
+    },
+    {
+      title: "Space Optimization Check",
+      source: "CS61B-style implementation edge-case audit",
+      difficulty: "Medium",
+      focus: "rolling rows, downward capacity update, dependency direction",
+      url: "https://sp25.datastructur.es/",
+      targetTime: "Same asymptotic time; lower auxiliary storage only when dependencies allow it",
+      reason: "Prevents accidental reuse of current-row values and wrong one-dimensional updates.",
+      writeup: "For every optimized update, name which old cell the new cell must read."
+    }
+  ];
+}
+
+function dsaDynamicProgrammingReviewQuestions() {
+  const metadata = {
+    "dsa-ch12-q1": { kind: "single concept", targetConcept: "greedy-vs-dp", prereqsUsed: ["optimal-substructure"], difficulty: 2, gateWeight: "high", expectedFirstStep: "Check whether local choice can block a better future combination.", commonMistake: "Using ratio greedy for 0/1 knapsack.", answerCheck: "0/1 knapsack generally needs DP." },
+    "dsa-ch12-q2": { kind: "single concept", targetConcept: "base-case", prereqsUsed: ["dp-state"], difficulty: 1, gateWeight: "high", expectedFirstStep: "Interpret empty prefix or zero capacity state.", commonMistake: "Leaving first row/column undefined.", answerCheck: "Edit-distance empty-prefix bases are insertion/deletion counts." },
+    "dsa-ch12-q3": { kind: "single concept", targetConcept: "zero-one-knapsack", prereqsUsed: ["recurrence-transition"], difficulty: 2, gateWeight: "high", expectedFirstStep: "Separate skip and take choices.", commonMistake: "Using current row for the take branch.", answerCheck: "Take reads dp[i-1][w-weight]." },
+    "dsa-ch12-q4": { kind: "single concept", targetConcept: "memo-vs-tabulation", prereqsUsed: ["recurrence-transition"], difficulty: 1, gateWeight: "medium", expectedFirstStep: "Identify top-down cache versus bottom-up fill.", commonMistake: "Saying memoization changes the recurrence.", answerCheck: "Both solve the same states with different control flow." },
+    "dsa-ch12-q5": { kind: "single concept", targetConcept: "table-order", prereqsUsed: ["recurrence-transition"], difficulty: 2, gateWeight: "high", expectedFirstStep: "Inspect which states the current cell reads.", commonMistake: "Filling a cell before its dependencies.", answerCheck: "Dependencies must already be computed." },
+    "dsa-ch12-q6": { kind: "mixed: two concepts", targetConcept: "greedy-vs-dp", prereqsUsed: ["optimal-substructure"], difficulty: 2, gateWeight: "high", expectedFirstStep: "Compare fractional and indivisible choices.", commonMistake: "Assuming optimal substructure alone implies greedy.", answerCheck: "DP can be needed even with optimal substructure." },
+    "dsa-ch12-q7": { kind: "mixed: two concepts", targetConcept: "zero-one-knapsack", prereqsUsed: ["table-order"], difficulty: 2, gateWeight: "high", expectedFirstStep: "Use previous item row before current row.", commonMistake: "Updating 1D capacities upward.", answerCheck: "Downward update prevents reusing the same item." },
+    "dsa-ch12-q8": { kind: "mixed: two concepts", targetConcept: "recurrence-transition", prereqsUsed: ["dp-state"], difficulty: 2, gateWeight: "high", expectedFirstStep: "Use the exact state sentence to choose predecessor states.", commonMistake: "Writing a recurrence for a different state meaning.", answerCheck: "LIS ending-at-i checks earlier smaller values." },
+    "dsa-ch12-q9": { kind: "mixed: two concepts", targetConcept: "edit-distance", prereqsUsed: ["recurrence-transition", "base-case"], difficulty: 2, gateWeight: "medium", expectedFirstStep: "Compare insert, delete, and replace predecessor cells.", commonMistake: "Forgetting the diagonal replace/match case.", answerCheck: "Mismatch uses min of three predecessors plus 1." },
+    "dsa-ch12-q10": { kind: "mixed: three concepts", targetConcept: "reconstruction", prereqsUsed: ["dp-state", "optimal-substructure"], difficulty: 3, gateWeight: "medium", expectedFirstStep: "Compare final cell to predecessor choices.", commonMistake: "Reporting only value when choices are requested.", answerCheck: "Backtrace follows the predecessor that produced the value." },
+    "dsa-ch12-q11": { kind: "mixed: three concepts", targetConcept: "memo-vs-tabulation", prereqsUsed: ["dp-state", "recurrence-transition"], difficulty: 3, gateWeight: "high", expectedFirstStep: "Count reachable states and work per state.", commonMistake: "Counting recursion calls without memo hits.", answerCheck: "Memoized runtime is states times local work." },
+    "dsa-ch12-q12": { kind: "mixed: three concepts", targetConcept: "zero-one-knapsack", prereqsUsed: ["recurrence-transition", "memo-vs-tabulation"], difficulty: 3, gateWeight: "high", expectedFirstStep: "Match skip/take recurrence to table or memo implementation.", commonMistake: "Treating top-down and bottom-up as different mathematical recurrences.", answerCheck: "Same recurrence; implementation order differs." }
+  };
+  return [
+    { id: "dsa-ch12-q1", prompt: "Which problem generally requires DP rather than simple ratio greedy?", tags: ["greedy-vs-dp", "optimal-substructure"], options: [{ id: "a", text: "0/1 knapsack" }, { id: "b", text: "Fractional knapsack" }, { id: "c", text: "Choosing earliest finish interval" }, { id: "d", text: "Taking two smallest Huffman weights" }], answer: "a" },
+    { id: "dsa-ch12-q2", prompt: "For edit distance dp[i][j], what is dp[0][j]?", tags: ["base-case", "dp-state"], options: [{ id: "a", text: "j" }, { id: "b", text: "0 for every j" }, { id: "c", text: "i+j" }, { id: "d", text: "undefined" }], answer: "a" },
+    { id: "dsa-ch12-q3", prompt: "In 0/1 knapsack, item i fits capacity w. Which take term is correct?", tags: ["zero-one-knapsack", "recurrence-transition"], options: [{ id: "a", text: "value_i + dp[i-1][w-weight_i]" }, { id: "b", text: "value_i + dp[i][w-weight_i]" }, { id: "c", text: "dp[i-1][w] + weight_i" }, { id: "d", text: "dp[i][w] + value_i" }], answer: "a" },
+    { id: "dsa-ch12-q4", prompt: "Which statement best distinguishes memoization from tabulation?", tags: ["memo-vs-tabulation", "recurrence-transition"], options: [{ id: "a", text: "Memoization is top-down caching; tabulation fills bottom-up" }, { id: "b", text: "Memoization has no table" }, { id: "c", text: "Tabulation cannot use base cases" }, { id: "d", text: "They require different recurrence meanings" }], answer: "a" },
+    { id: "dsa-ch12-q5", prompt: "A DP cell reads dp[i-1][j] and dp[i][j-1]. What must a valid fill order ensure?", tags: ["table-order", "recurrence-transition"], options: [{ id: "a", text: "Both predecessor cells are filled before dp[i][j]" }, { id: "b", text: "dp[i][j] is filled before its predecessors" }, { id: "c", text: "The table is filled in random order" }, { id: "d", text: "No base cases are needed" }], answer: "a" },
+    { id: "dsa-ch12-q6", prompt: "Why does optimal substructure alone not justify greedy for 0/1 knapsack?", tags: ["optimal-substructure", "greedy-vs-dp"], options: [{ id: "a", text: "A locally best item can block a better future combination" }, { id: "b", text: "0/1 knapsack has no subproblems" }, { id: "c", text: "Weights are never relevant" }, { id: "d", text: "DP cannot handle capacity" }], answer: "a" },
+    { id: "dsa-ch12-q7", prompt: "When optimizing 0/1 knapsack to one capacity array, why update w downward?", tags: ["table-order", "zero-one-knapsack"], options: [{ id: "a", text: "To prevent the current item from being reused in the same row" }, { id: "b", text: "To sort items by value" }, { id: "c", text: "To turn it into fractional knapsack" }, { id: "d", text: "To remove base cases" }], answer: "a" },
+    { id: "dsa-ch12-q8", prompt: "For LIS with dp[i] = LIS length ending exactly at i, which predecessors can extend to i?", tags: ["dp-state", "recurrence-transition", "lis-dp"], options: [{ id: "a", text: "j<i with A[j] < A[i]" }, { id: "b", text: "j>i with A[j] < A[i]" }, { id: "c", text: "all j regardless of value" }, { id: "d", text: "only j=i" }], answer: "a" },
+    { id: "dsa-ch12-q9", prompt: "For edit distance when the last characters differ, what transition is used?", tags: ["recurrence-transition", "edit-distance", "base-case"], options: [{ id: "a", text: "1 + min(replace, delete, insert predecessors)" }, { id: "b", text: "Only copy the diagonal value" }, { id: "c", text: "Always add 2" }, { id: "d", text: "Ignore prefixes" }], answer: "a" },
+    { id: "dsa-ch12-q10", prompt: "A knapsack table value equals the skip predecessor dp[i-1][w]. During reconstruction, what is a valid move?", tags: ["dp-state", "optimal-substructure", "reconstruction"], options: [{ id: "a", text: "Skip item i and move to state (i-1,w)" }, { id: "b", text: "Take item i no matter its weight" }, { id: "c", text: "Move to larger capacity" }, { id: "d", text: "Restart the table" }], answer: "a" },
+    { id: "dsa-ch12-q11", prompt: "A memoized DP has O(nW) reachable states and O(1) work per state. What runtime should be reported?", tags: ["dp-state", "recurrence-transition", "memo-vs-tabulation"], options: [{ id: "a", text: "O(nW)" }, { id: "b", text: "O(2^n)" }, { id: "c", text: "O(log W)" }, { id: "d", text: "O(1)" }], answer: "a" },
+    { id: "dsa-ch12-q12", prompt: "Which statement about top-down and bottom-up 0/1 knapsack is accurate?", tags: ["recurrence-transition", "memo-vs-tabulation", "zero-one-knapsack"], options: [{ id: "a", text: "They can use the same skip/take recurrence while evaluating states in different orders" }, { id: "b", text: "Top-down must use ratio greedy" }, { id: "c", text: "Bottom-up cannot reconstruct choices" }, { id: "d", text: "They have unrelated state meanings" }], answer: "a" }
+  ].map((question) => ({
+    ...question,
+    ...(metadata[question.id] || { kind: question.tags.length === 1 ? "single concept" : question.tags.length === 2 ? "mixed: two concepts" : "mixed: three concepts", targetConcept: question.tags[0], prereqsUsed: question.tags.slice(1), difficulty: question.tags.length, gateWeight: "medium" })
+  }));
+}
+
 function conditionalProbabilityReviewQuestions() {
   const metadata = {
     "cp-review-1": { targetConcept: "conditional-denominator", prereqsUsed: ["conditional-probability"], difficulty: 1, gateWeight: "high" },
@@ -19126,6 +19544,98 @@ function dsaGreedyMethodsConceptGraph() {
         label: "Greedy algorithm choice",
         prereqs: ["greedy-choice-property", "counterexample-greedy", "mst-safe-edge", "greedy-vs-dp"],
         repairMaterial: "Review DSA Chapter 11 summary and identify whether the prompt asks for interval count, splittable capacity, total connection cost, or source distance.",
+        gateWeight: "high"
+      }
+    }
+  };
+}
+
+function dsaDynamicProgrammingConceptGraph() {
+  return {
+    chapterId: "gate-da-dsa-dynamic-programming",
+    chapterTitle: "DSA Chapter 12: Dynamic Programming",
+    gateWeight: "high",
+    fallbackConcepts: ["dp-state", "recurrence-transition", "base-case", "table-order", "zero-one-knapsack"],
+    fallbackDifficultyMix: [1, 2, 2, 3],
+    fallbackInstruction: "Retest state definition first, then add base cases, recurrence transitions, table order, knapsack, edit distance, and reconstruction.",
+    stableNextAction: "Next: move to mixed DSA problem-solving patterns after DP state, recurrence, table-order, and reconstruction skills are stable.",
+    nodes: {
+      "dp-state": {
+        label: "DP state definition",
+        prereqs: [],
+        repairMaterial: "Review DSA Chapter 12.1 and write the exact sentence for what each dp cell stores.",
+        gateWeight: "high"
+      },
+      "optimal-substructure": {
+        label: "Optimal substructure",
+        prereqs: ["dp-state"],
+        repairMaterial: "Review DSA Chapter 12.1 and explain how the best answer is built from best smaller answers.",
+        gateWeight: "high"
+      },
+      "recurrence-transition": {
+        label: "DP recurrence transition",
+        prereqs: ["dp-state", "optimal-substructure"],
+        repairMaterial: "Review DSA Chapter 12.3 and list the predecessor states before writing a formula.",
+        gateWeight: "high"
+      },
+      "base-case": {
+        label: "Base cases",
+        prereqs: ["dp-state"],
+        repairMaterial: "Review DSA Chapter 12.1 and fill empty-prefix, zero-capacity, or length-one cases before interior cells.",
+        gateWeight: "high"
+      },
+      "table-order": {
+        label: "Table fill order",
+        prereqs: ["recurrence-transition"],
+        repairMaterial: "Review DSA Chapter 12.3 and draw dependency arrows to decide the fill order.",
+        gateWeight: "high"
+      },
+      "memo-vs-tabulation": {
+        label: "Memoization versus tabulation",
+        prereqs: ["recurrence-transition"],
+        repairMaterial: "Review DSA Chapter 12.2 and compare top-down caching with bottom-up table filling for the same recurrence.",
+        gateWeight: "medium"
+      },
+      "space-optimization": {
+        label: "Space optimization",
+        prereqs: ["table-order"],
+        repairMaterial: "Review DSA Chapter 12.6 and identify exactly which previous rows or cells are still needed.",
+        gateWeight: "medium"
+      },
+      "zero-one-knapsack": {
+        label: "0/1 knapsack DP",
+        prereqs: ["recurrence-transition", "table-order"],
+        repairMaterial: "Review DSA Chapter 12.4 and write skip/take transitions using item prefix and capacity.",
+        gateWeight: "high"
+      },
+      "lis-dp": {
+        label: "LIS DP",
+        prereqs: ["recurrence-transition"],
+        repairMaterial: "Review DSA Chapter 12.5 and compute dp[i] as LIS ending exactly at i on a four-element array.",
+        gateWeight: "high"
+      },
+      "edit-distance": {
+        label: "Edit distance DP",
+        prereqs: ["recurrence-transition", "base-case"],
+        repairMaterial: "Review DSA Chapter 12.5 and fill the first row/column plus one mismatch cell.",
+        gateWeight: "medium"
+      },
+      reconstruction: {
+        label: "Solution reconstruction",
+        prereqs: ["table-order", "optimal-substructure"],
+        repairMaterial: "Review DSA Chapter 12.6 and backtrace a final cell by comparing skip/take or predecessor choices.",
+        gateWeight: "medium"
+      },
+      "greedy-vs-dp": {
+        label: "Greedy versus DP",
+        prereqs: ["optimal-substructure"],
+        repairMaterial: "Review DSA Chapter 11.4 and DSA Chapter 12.4, then contrast fractional and 0/1 knapsack.",
+        gateWeight: "high"
+      },
+      "runtime-complexity": {
+        label: "DP runtime complexity",
+        prereqs: ["dp-state"],
+        repairMaterial: "Review DSA Chapter 12.2 and count states times work per state.",
         gateWeight: "high"
       }
     }
@@ -26116,6 +26626,7 @@ function conceptGraphForSection(section) {
   if (section?.id === "gate-da-dsa-graph-algorithms") return dsaGraphAlgorithmsConceptGraph();
   if (section?.id === "gate-da-dsa-sorting-selection") return dsaSortingSelectionConceptGraph();
   if (section?.id === "gate-da-dsa-greedy-methods") return dsaGreedyMethodsConceptGraph();
+  if (section?.id === "gate-da-dsa-dynamic-programming") return dsaDynamicProgrammingConceptGraph();
   if (section?.id === "gate-da-linear-algebra-vector-spaces-coordinates") return linearAlgebraVectorSpacesConceptGraph();
   if (section?.id === "gate-da-linear-algebra-transformations-matrices") return linearAlgebraTransformationsConceptGraph();
   if (section?.id === "gate-da-linear-algebra-rank-nullity-systems") return linearAlgebraRankNullityConceptGraph();
