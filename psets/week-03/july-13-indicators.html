@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>July 13 Pset - Method of Indicators</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" />
+  <link rel="stylesheet" href="/psets/material-page.css" />
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+  <script defer src="/psets/material-page.js"></script>
+</head>
+<body>
+  <main class="wrap">
+    <section class="hero">
+      <h1>July 13 Pset: Method of Indicators</h1>
+      <p class="sub">Week 3 indicator practice for Priyanka's Platinum PSB cycle. The goal is to choose the counted object, define yes/no variables, and handle pair terms without assuming independence.</p>
+      <div class="meta">
+        <span class="chip">Probability and Statistics</span>
+        <span class="chip">Monday</span>
+        <span class="chip">5 concept builders</span>
+        <span class="chip">3 integration problems</span>
+        <span class="chip">2 ISI-style problems</span>
+        <span class="chip">Solutions included</span>
+      </div>
+      <p class="math-fallback">Math rendering did not load from the CDN. Refresh once, or use a network that allows KaTeX CDN files.</p>
+    </section>
+
+    <section class="panel accent">
+      <h2>Core Pattern</h2>
+      <p>When a problem asks for the expected number of objects with a property, write the count as a sum of indicators.</p>
+      <div class="formula">\[X=\sum_i I_i,\qquad I_i=\mathbf{1}_{A_i},\qquad E[X]=\sum_i P(A_i).\]</div>
+      <p>For variance, expand pair terms and classify whether two indicator events overlap, exclude each other, or can occur together.</p>
+    </section>
+
+    <section class="panel">
+      <h2>Setup Checklist</h2>
+      <div class="grid">
+        <ul>
+          <li>Name the object being counted.</li>
+          <li>Choose one indicator for one atomic object.</li>
+          <li>Use symmetry only after checking all indicators have the same probability.</li>
+        </ul>
+        <ul>
+          <li>For \(X^2\), separate identical and distinct pairs.</li>
+          <li>For \(X(X-1)\), count ordered distinct pairs.</li>
+          <li>Write one correction note for every missed setup.</li>
+        </ul>
+      </div>
+    </section>
+
+    <div class="section-label">Problems 1-5 - Concept Builders</div>
+
+    <article class="problem">
+      <div class="problem-head"><div class="problem-title">1. Marked successes in eight trials</div><div class="tags"><span class="tag concept">Concept</span><span class="tag">Linearity</span></div></div>
+      <p>Eight independent trials each succeed with probability \(p\). Let \(X\) be the number of successes in positions \(2,4,6,8\). Write \(X\) as a sum of indicators and compute \(E[X]\).</p>
+      <details><summary>Solution</summary><p>Let \(I_j=1\) if trial \(j\) succeeds, for \(j\in\{2,4,6,8\}\). Then \(X=I_2+I_4+I_6+I_8\), so \(E[X]=4p\).</p></details>
+    </article>
+
+    <article class="problem">
+      <div class="problem-head"><div class="problem-title">2. Fixed colours on labelled cards</div><div class="tags"><span class="tag concept">Concept</span><span class="tag">Symmetry</span></div></div>
+      <p>A random permutation of \(n\) labelled cards is placed into \(n\) labelled slots. Let \(X\) be the number of cards in their original slots. Find \(E[X]\).</p>
+      <details><summary>Solution</summary><p>Let \(I_i=1\) if card \(i\) lands in slot \(i\). Then \(P(I_i=1)=1/n\). Therefore \(E[X]=\sum_{i=1}^n 1/n=1\).</p></details>
+    </article>
+
+    <article class="problem">
+      <div class="problem-head"><div class="problem-title">3. Nonempty rooms after choices</div><div class="tags"><span class="tag concept">Concept</span><span class="tag">Occupancy</span></div></div>
+      <p>\(m\) students independently choose one of \(r\) rooms uniformly. Let \(X\) be the number of nonempty rooms. Compute \(E[X]\).</p>
+      <details><summary>Solution</summary><p>Let \(I_j=1\) if room \(j\) is nonempty. One room is empty with probability \((1-1/r)^m\), so \(P(I_j=1)=1-(1-1/r)^m\). Hence \(E[X]=r[1-(1-1/r)^m]\).</p></details>
+    </article>
+
+    <article class="problem">
+      <div class="problem-head"><div class="problem-title">4. Adjacent equal coin pairs</div><div class="tags"><span class="tag concept">Concept</span><span class="tag">Dependence</span></div></div>
+      <p>A fair coin is tossed \(n\) times. Let \(X\) be the number of adjacent pairs with equal outcomes. Compute \(E[X]\).</p>
+      <details><summary>Solution</summary><p>For \(1\le i\le n-1\), let \(I_i=1\) if tosses \(i\) and \(i+1\) match. \(P(I_i=1)=1/2\). Thus \(E[X]=(n-1)/2\). The adjacent indicators are dependent, but linearity still works.</p></details>
+    </article>
+
+    <article class="problem">
+      <div class="problem-head"><div class="problem-title">5. Exactly one occupied box</div><div class="tags"><span class="tag concept">Concept</span><span class="tag">Index set</span></div></div>
+      <p>\(n\) balls are independently thrown into \(n\) labelled boxes. Let \(X\) be the number of boxes containing exactly one ball. Compute \(E[X]\).</p>
+      <details><summary>Solution</summary><p>Let \(I_j=1\) if box \(j\) has exactly one ball. For a fixed box, choose the ball that lands there and force all other balls away: \(P(I_j=1)=n(1/n)(1-1/n)^{n-1}\). Hence \(E[X]=n(1-1/n)^{n-1}\).</p></details>
+    </article>
+
+    <div class="section-label">Problems 6-8 - Integration Problems</div>
+
+    <article class="problem">
+      <div class="problem-head"><div class="problem-title">6. Variance of fixed points with pair terms</div><div class="tags"><span class="tag integration">Integration</span><span class="tag">Variance</span></div></div>
+      <p>For a random permutation of \(n\ge2\) objects, let \(X\) be the number of fixed points. Compute \(E[X(X-1)]\) and \(\operatorname{Var}(X)\).</p>
+      <details><summary>Solution</summary><p>Let \(I_i=1\) if \(i\) is fixed. For \(i\ne j\), \(P(I_iI_j=1)=1/[n(n-1)]\). Thus \(E[X(X-1)]=n(n-1)/[n(n-1)]=1\). Since \(E[X]=1\), \(E[X^2]=E[X(X-1)]+E[X]=2\), so \(\operatorname{Var}(X)=1\).</p></details>
+    </article>
+
+    <article class="problem">
+      <div class="problem-head"><div class="problem-title">7. Random subset intersections</div><div class="tags"><span class="tag integration">Integration</span><span class="tag">Exchangeability</span></div></div>
+      <p>A subset \(A\) of size \(a\) and a subset \(B\) of size \(b\) are chosen uniformly from \(\{1,\ldots,n\}\), independently. Let \(X=|A\cap B|\). Compute \(E[X]\).</p>
+      <details><summary>Solution</summary><p>Let \(I_i=1\) if element \(i\) lies in both \(A\) and \(B\). Then \(P(i\in A)=a/n\), \(P(i\in B)=b/n\), and the choices are independent across the two sets. Hence \(P(I_i=1)=ab/n^2\), so \(E[X]=ab/n\).</p></details>
+    </article>
+
+    <article class="problem">
+      <div class="problem-head"><div class="problem-title">8. Conditioning on a random number of visitors</div><div class="tags"><span class="tag integration">Integration</span><span class="tag">Tower</span></div></div>
+      <p>Given \(N\), each of \(N\) visitors independently buys a ticket with probability \(p\). Let \(X\) be the number of ticket buyers. Show that \(E[X]=pE[N]\).</p>
+      <details><summary>Solution</summary><p>Condition on \(N\). Given \(N\), \(X\) is binomial with mean \(pN\). Therefore \(E[X\mid N]=pN\), and by the tower property \(E[X]=E[pN]=pE[N]\).</p></details>
+    </article>
+
+    <div class="section-label">Problems 9-10 - ISI-Style Challenge</div>
+
+    <article class="problem">
+      <div class="problem-head"><div class="problem-title">9. Inversions in a shuffled ranking</div><div class="tags"><span class="tag challenge">ISI-style</span><span class="tag">Pairs</span></div></div>
+      <p>A uniformly random permutation of \(1,\ldots,n\) is chosen. Let \(X\) be the number of inversions. Compute \(E[X]\).</p>
+      <details><summary>Solution</summary><p>For each pair \(i<j\), let \(I_{ij}=1\) if the two values are inverted. By symmetry, \(P(I_{ij}=1)=1/2\). There are \(\binom n2\) pairs, so \(E[X]=\binom n2/2=n(n-1)/4\).</p></details>
+    </article>
+
+    <article class="problem">
+      <div class="problem-head"><div class="problem-title">10. Empty boxes with a second moment</div><div class="tags"><span class="tag challenge">ISI-style</span><span class="tag">Occupancy</span></div></div>
+      <p>\(n\ge2\) balls are independently placed into \(n\) labelled boxes. Let \(X\) be the number of empty boxes. Compute \(E[X]\) and \(E[X(X-1)]\).</p>
+      <details><summary>Solution</summary><p>Let \(I_j=1\) if box \(j\) is empty. \(E[X]=n(1-1/n)^n\). For ordered \(j\ne k\), both boxes are empty with probability \((1-2/n)^n\). Therefore \(E[X(X-1)]=n(n-1)(1-2/n)^n\).</p></details>
+    </article>
+
+    <section class="panel">
+      <h2>Answer Summary</h2>
+      <ol>
+        <li>\(4p\)</li><li>\(1\)</li><li>\(r[1-(1-1/r)^m]\)</li><li>\((n-1)/2\)</li><li>\(n(1-1/n)^{n-1}\)</li>
+        <li>\(E[X(X-1)]=1,\operatorname{Var}(X)=1\)</li><li>\(ab/n\)</li><li>\(pE[N]\)</li><li>\(n(n-1)/4\)</li><li>\(n(1-1/n)^n,\ n(n-1)(1-2/n)^n\)</li>
+      </ol>
+    </section>
+  </main>
+</body>
+</html>

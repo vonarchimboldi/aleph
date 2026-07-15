@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>July 14 Pset - Conditional Expectation and Tower Property</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" />
+  <link rel="stylesheet" href="/psets/material-page.css" />
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+  <script defer src="/psets/material-page.js"></script>
+</head>
+<body>
+  <main class="wrap">
+    <section class="hero">
+      <h1>July 14 Pset: Conditional Expectation and Tower Property</h1>
+      <p class="sub">Week 3 practice for choosing the conditioning variable before calculating. Each problem should start with the sentence: condition on the variable that makes the inside problem simpler.</p>
+      <div class="meta"><span class="chip">Probability and Statistics</span><span class="chip">Tuesday</span><span class="chip">5 concept builders</span><span class="chip">3 applications</span><span class="chip">2 hidden-pattern problems</span><span class="chip">Solutions included</span></div>
+      <p class="math-fallback">Math rendering did not load from the CDN. Refresh once, or use a network that allows KaTeX CDN files.</p>
+    </section>
+    <section class="panel accent">
+      <h2>Core Pattern</h2>
+      <p>Compute the inner average after information is known, then average that result.</p>
+      <div class="formula">\[E[X]=E[E[X\mid Y]],\qquad \operatorname{Var}(X)=E[\operatorname{Var}(X\mid Y)]+\operatorname{Var}(E[X\mid Y]).\]</div>
+    </section>
+    <section class="panel"><h2>Setup Checklist</h2><div class="grid"><ul><li>Name the conditioning variable.</li><li>Write \(E[X\mid Y=y]\) before averaging.</li><li>Keep \(E[X\mid Y]\) random until the outer expectation.</li></ul><ul><li>Use total variance when the question asks for spread.</li><li>Check conditional support.</li><li>Use random-sum formulas only after stating the conditioning step.</li></ul></div></section>
+
+    <div class="section-label">Problems 1-5 - Concept Builders</div>
+    <article class="problem"><div class="problem-head"><div class="problem-title">1. Reward after a chosen box</div><div class="tags"><span class="tag concept">Concept</span><span class="tag">Tower</span></div></div><p>A box \(Y\) is A with probability \(1/4\) and B with probability \(3/4\). The mean reward is 12 from A and 4 from B. Compute \(E[X]\).</p><details><summary>Solution</summary><p>Condition on \(Y\). \(E[X\mid Y=A]=12\) and \(E[X\mid Y=B]=4\). Thus \(E[X]=(1/4)12+(3/4)4=6\).</p></details></article>
+    <article class="problem"><div class="problem-head"><div class="problem-title">2. Conditional mean from a table</div><div class="tags"><span class="tag concept">Concept</span><span class="tag">Grouped average</span></div></div><p>\(Y\) equals 0 or 1 with probabilities \(1/2,1/2\). Given \(Y=0\), \(E[X\mid Y=0]=3\). Given \(Y=1\), \(E[X\mid Y=1]=9\). Find \(E[E[X\mid Y]]\).</p><details><summary>Solution</summary><p>The random variable \(E[X\mid Y]\) equals 3 or 9 with equal probability. Its expectation is \((3+9)/2=6\), which equals \(E[X]\).</p></details></article>
+    <article class="problem"><div class="problem-head"><div class="problem-title">3. Random number of Bernoulli trials</div><div class="tags"><span class="tag concept">Concept</span><span class="tag">Random sum</span></div></div><p>Given \(N\), let \(X\mid N\sim\operatorname{Binomial}(N,p)\). If \(E[N]=10\), compute \(E[X]\).</p><details><summary>Solution</summary><p>Given \(N\), \(E[X\mid N]=Np\). Therefore \(E[X]=E[Np]=10p\).</p></details></article>
+    <article class="problem"><div class="problem-head"><div class="problem-title">4. Total variance with two groups</div><div class="tags"><span class="tag concept">Concept</span><span class="tag">Variance</span></div></div><p>\(Y\) is 0 or 1 with equal probability. \(E[X\mid Y=0]=0\), \(E[X\mid Y=1]=6\), and \(\operatorname{Var}(X\mid Y)=2\) for both groups. Compute \(\operatorname{Var}(X)\).</p><details><summary>Solution</summary><p>\(E[\operatorname{Var}(X\mid Y)]=2\). The conditional mean is 0 or 6 with equal probability, so its variance is 9. Hence \(\operatorname{Var}(X)=11\).</p></details></article>
+    <article class="problem"><div class="problem-head"><div class="problem-title">5. Conditional support for a uniform point</div><div class="tags"><span class="tag concept">Concept</span><span class="tag">Support</span></div></div><p>Choose \(Y\sim\operatorname{Uniform}(0,1)\). Given \(Y=y\), choose \(X\sim\operatorname{Uniform}(0,y)\). Compute \(E[X]\).</p><details><summary>Solution</summary><p>Given \(Y=y\), \(E[X\mid Y=y]=y/2\). Therefore \(E[X]=E[Y/2]=1/4\).</p></details></article>
+
+    <div class="section-label">Problems 6-8 - Application Problems</div>
+    <article class="problem"><div class="problem-head"><div class="problem-title">6. First die controls the second reward</div><div class="tags"><span class="tag integration">Application</span><span class="tag">Conditioning choice</span></div></div><p>Roll a fair die \(Y\). Then roll \(Y\) fair coins and let \(X\) be the number of heads. Compute \(E[X]\) and \(\operatorname{Var}(X)\).</p><details><summary>Solution</summary><p>Given \(Y\), \(X\sim\operatorname{Binomial}(Y,1/2)\). \(E[X\mid Y]=Y/2\), so \(E[X]=E[Y]/2=7/4\). Also \(E[\operatorname{Var}(X\mid Y)]=E[Y/4]=7/8\), and \(\operatorname{Var}(E[X\mid Y])=\operatorname{Var}(Y/2)=35/48\). Total variance is \(77/48\).</p></details></article>
+    <article class="problem"><div class="problem-head"><div class="problem-title">7. Draws until a red card count</div><div class="tags"><span class="tag integration">Application</span><span class="tag">Hypergeometric</span></div></div><p>A random hand size \(N\) has mean 5. Given \(N\), \(N\) cards are drawn from a large balanced deck with red probability \(1/2\). Let \(X\) be red cards. Approximate \(E[X]\) using conditioning.</p><details><summary>Solution</summary><p>Given \(N\), the conditional mean is \(N/2\). Therefore \(E[X]=E[N/2]=5/2\). The calculation uses only the conditional mean, not the full distribution of \(N\).</p></details></article>
+    <article class="problem"><div class="problem-head"><div class="problem-title">8. Mixed machine defect rate</div><div class="tags"><span class="tag integration">Application</span><span class="tag">Mixture</span></div></div><p>A part comes from machine A with probability \(0.7\) and B with probability \(0.3\). Defect probabilities are \(0.02\) and \(0.08\). Compute the defect probability.</p><details><summary>Solution</summary><p>Let \(Y\) be the machine and \(X\) the defect indicator. \(E[X\mid Y=A]=0.02\), \(E[X\mid Y=B]=0.08\). Thus \(P(\text{defect})=E[X]=0.7(0.02)+0.3(0.08)=0.038\).</p></details></article>
+
+    <div class="section-label">Problems 9-10 - Hidden-Pattern Challenge</div>
+    <article class="problem"><div class="problem-head"><div class="problem-title">9. Random interval length</div><div class="tags"><span class="tag challenge">Hidden</span><span class="tag">Tower</span></div></div><p>Choose \(L\sim\operatorname{Uniform}(0,1)\). Given \(L\), throw \(n\) iid uniform points on \([0,1]\). Let \(X\) be the number falling in an interval of length \(L\). Compute \(E[X]\).</p><details><summary>Solution</summary><p>Given \(L\), \(X\sim\operatorname{Binomial}(n,L)\), so \(E[X\mid L]=nL\). Hence \(E[X]=nE[L]=n/2\).</p></details></article>
+    <article class="problem"><div class="problem-head"><div class="problem-title">10. Compound Poisson ticket total</div><div class="tags"><span class="tag challenge">Hidden</span><span class="tag">Random sum</span></div></div><p>\(N\sim\operatorname{Poisson}(\lambda)\). Given \(N\), rewards \(Z_1,\ldots,Z_N\) are iid with mean \(\mu\). Let \(S=\sum_{i=1}^N Z_i\). Compute \(E[S]\).</p><details><summary>Solution</summary><p>Given \(N\), \(E[S\mid N]=N\mu\). Therefore \(E[S]=E[N\mu]=\lambda\mu\).</p></details></article>
+
+    <section class="panel"><h2>Answer Summary</h2><ol><li>6</li><li>6</li><li>\(10p\)</li><li>11</li><li>\(1/4\)</li><li>\(E[X]=7/4,\operatorname{Var}(X)=77/48\)</li><li>\(5/2\)</li><li>0.038</li><li>\(n/2\)</li><li>\(\lambda\mu\)</li></ol></section>
+  </main>
+</body>
+</html>
