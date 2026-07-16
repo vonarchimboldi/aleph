@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>June 29 Competition Math - Identities and Factoring Tricks</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" />
+  <link rel="stylesheet" href="/psets/material-page.css" />
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+  <script defer src="/psets/material-page.js"></script>
+</head>
+<body>
+  <main class="wrap">
+    <section class="hero">
+      <h1>June 29: Identities and Factoring Tricks</h1>
+      <p class="sub">A one-hour Competition Math session on algebra transformations. The target habit is to recognize the shape before expanding: difference of powers, Sophie Germain, Simon's Favorite Factoring Trick, and telescoping products.</p>
+      <div class="meta"><span class="chip">Competition Math</span><span class="chip">Source Week 2</span><span class="chip">Algebra foundations</span><span class="chip">10 problems</span><span class="chip">Solutions included</span></div>
+      <p class="math-fallback">Math rendering did not load from the CDN. Refresh once, or use a network that allows KaTeX CDN files.</p>
+    </section>
+
+    <section class="panel accent">
+      <h2>Core Pattern</h2>
+      <p>Contest algebra often asks you to make an expression factorable before doing arithmetic. Look for a missing term, a hidden square, or a product that can telescope.</p>
+      <div class="formula">\[a^4+4b^4=(a^2-2ab+2b^2)(a^2+2ab+2b^2),\qquad xy+x+y=(x+1)(y+1)-1.\]</div>
+    </section>
+
+    <section class="panel">
+      <h2>One-Hour Workflow</h2>
+      <div class="grid"><ul><li>Spend 8 minutes reading the identities.</li><li>Spend 30 minutes on Problems 1-6.</li><li>Spend 15 minutes on Problems 7-10.</li></ul><ul><li>Name the factor pattern before calculating.</li><li>Try adding and subtracting a useful term.</li><li>Journal each trigger phrase and transformation.</li></ul></div>
+    </section>
+
+    <div class="section-label">Problems 1-5 - Concept Builders</div>
+    <article class="problem"><div class="problem-head"><div class="problem-title">1. Difference of Cubes Trigger</div><div class="tags"><span class="tag concept">Concept</span><span class="tag">Cubes</span></div></div><p>Factor \(x^3-27\).</p><details><summary>Solution</summary><p>Use \(a^3-b^3=(a-b)(a^2+ab+b^2)\). Here \(a=x\) and \(b=3\), so \(x^3-27=(x-3)(x^2+3x+9)\).</p></details></article>
+    <article class="problem"><div class="problem-head"><div class="problem-title">2. Sum of Cubes Trigger</div><div class="tags"><span class="tag concept">Concept</span><span class="tag">Cubes</span></div></div><p>Factor \(8y^3+1\).</p><details><summary>Solution</summary><p>Use \(a^3+b^3=(a+b)(a^2-ab+b^2)\). With \(a=2y\) and \(b=1\), the factorization is \((2y+1)(4y^2-2y+1)\).</p></details></article>
+    <article class="problem"><div class="problem-head"><div class="problem-title">3. Sophie Germain Warmup</div><div class="tags"><span class="tag concept">Concept</span><span class="tag">Sophie Germain</span></div></div><p>Factor \(x^4+4\).</p><details><summary>Solution</summary><p>Recognize Sophie Germain with \(a=x\), \(b=1\). Then \(x^4+4=(x^2-2x+2)(x^2+2x+2)\).</p></details></article>
+    <article class="problem"><div class="problem-head"><div class="problem-title">4. SFFT Setup</div><div class="tags"><span class="tag concept">Concept</span><span class="tag">Simon trick</span></div></div><p>Rewrite \(xy+x+y=14\) as a product equation.</p><details><summary>Solution</summary><p>Add 1 to both sides. Since \(xy+x+y+1=(x+1)(y+1)\), we get \((x+1)(y+1)=15\).</p></details></article>
+    <article class="problem"><div class="problem-head"><div class="problem-title">5. Telescoping Ratio</div><div class="tags"><span class="tag concept">Concept</span><span class="tag">Telescoping</span></div></div><p>Simplify \(\frac{2}{1}\cdot\frac{3}{2}\cdot\frac{4}{3}\cdot\frac{5}{4}\).</p><details><summary>Solution</summary><p>Each denominator cancels the previous numerator. The product becomes \(5/1=5\). The useful cue is adjacent factors that share numerator and denominator terms.</p></details></article>
+
+    <div class="section-label">Problems 6-8 - Pattern Integration</div>
+    <article class="problem"><div class="problem-head"><div class="problem-title">6. Integer Solutions by SFFT</div><div class="tags"><span class="tag integration">Integration</span><span class="tag">Integer factors</span></div></div><p>Find all positive integer pairs \((x,y)\) satisfying \(xy+2x+3y=23\).</p><details><summary>Solution</summary><p>Multiply the constant corrections: \(xy+2x+3y+6=29\), so \((x+3)(y+2)=29\). Since 29 is prime, positive possibilities give \(x+3=29,y+2=1\) or \(x+3=1,y+2=29\), neither has both \(x,y\) positive. Therefore there are no positive integer pairs.</p></details></article>
+    <article class="problem"><div class="problem-head"><div class="problem-title">7. Hidden Sophie Germain</div><div class="tags"><span class="tag integration">Integration</span><span class="tag">Add subtract</span></div></div><p>Factor \(x^4+4y^4\).</p><details><summary>Solution</summary><p>Use Sophie Germain directly with \(a=x\) and \(b=y\). The factorization is \(x^4+4y^4=(x^2-2xy+2y^2)(x^2+2xy+2y^2)\).</p></details></article>
+    <article class="problem"><div class="problem-head"><div class="problem-title">8. Difference of Fourth Powers</div><div class="tags"><span class="tag integration">Integration</span><span class="tag">Power difference</span></div></div><p>Factor \(a^4-b^4\) completely over integers.</p><details><summary>Solution</summary><p>First use difference of squares: \(a^4-b^4=(a^2-b^2)(a^2+b^2)\). Then factor again: \((a-b)(a+b)(a^2+b^2)\).</p></details></article>
+
+    <div class="section-label">Problems 9-10 - Challenge Problems</div>
+    <article class="problem"><div class="problem-head"><div class="problem-title">9. AIME-Style Factor Count</div><div class="tags"><span class="tag challenge">Challenge</span><span class="tag">SFFT</span></div></div><p>How many positive integer pairs \((x,y)\) satisfy \(xy+x+y=35\)?</p><details><summary>Solution</summary><p>Add 1 to get \((x+1)(y+1)=36\). Positive \(x,y\) require both factors at least 2. The positive divisors of 36 are \(1,2,3,4,6,9,12,18,36\). Excluding factor 1 leaves 7 ordered divisor choices for \(x+1\), so there are 7 ordered pairs.</p></details></article>
+    <article class="problem"><div class="problem-head"><div class="problem-title">10. Telescoping Product Challenge</div><div class="tags"><span class="tag challenge">Challenge</span><span class="tag">Telescoping</span></div></div><p>Simplify \(\prod_{k=2}^{10}\frac{k^2-1}{k^2}\).</p><details><summary>Solution</summary><p>Factor each term: \(\frac{k^2-1}{k^2}=\frac{(k-1)(k+1)}{k^2}=\frac{k-1}{k}\cdot\frac{k+1}{k}\). The product becomes \((1/2)(2/3)\cdots(9/10)\cdot(3/2)(4/3)\cdots(11/10)=\frac{1}{10}\cdot\frac{11}{2}=\frac{11}{20}\).</p></details></article>
+
+    <section class="panel"><h2>Answer Summary</h2><ol><li>\((x-3)(x^2+3x+9)\)</li><li>\((2y+1)(4y^2-2y+1)\)</li><li>\((x^2-2x+2)(x^2+2x+2)\)</li><li>\((x+1)(y+1)=15\)</li><li>5</li><li>No positive pairs</li><li>\((x^2-2xy+2y^2)(x^2+2xy+2y^2)\)</li><li>\((a-b)(a+b)(a^2+b^2)\)</li><li>7</li><li>\(11/20\)</li></ol></section>
+  </main>
+</body>
+</html>

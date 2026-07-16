@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>July 6 Competition Math - Sequences and Recurrences</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" />
+  <link rel="stylesheet" href="/psets/material-page.css" />
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+  <script defer src="/psets/material-page.js"></script>
+</head>
+<body>
+  <main class="wrap">
+    <section class="hero">
+      <h1>July 6: Sequences and Recurrences</h1>
+      <p class="sub">A one-hour Competition Math session on recurrence structure. The target habit is to compute a few terms, identify whether the recurrence is arithmetic, geometric, linear, or telescoping, and then prove the pattern.</p>
+      <div class="meta"><span class="chip">Competition Math</span><span class="chip">Source Week 3</span><span class="chip">Algebra foundations</span><span class="chip">10 problems</span><span class="chip">Solutions included</span></div>
+      <p class="math-fallback">Math rendering did not load from the CDN. Refresh once, or use a network that allows KaTeX CDN files.</p>
+    </section>
+
+    <section class="panel accent">
+      <h2>Core Pattern</h2>
+      <p>For a recurrence, first decide what kind of step transforms one term into the next. Linear recurrences use characteristic equations; telescoping recurrences collapse after summing differences.</p>
+      <div class="formula">\[a_{n+2}=pa_{n+1}+qa_n\quad\Longrightarrow\quad r^2=pr+q.\]</div>
+    </section>
+
+    <section class="panel">
+      <h2>One-Hour Workflow</h2>
+      <div class="grid"><ul><li>Spend 8 minutes classifying recurrence types.</li><li>Spend 30 minutes on Problems 1-6.</li><li>Spend 15 minutes on Problems 7-10.</li></ul><ul><li>Write the first five terms before guessing.</li><li>For linear recurrences, try the characteristic equation.</li><li>For sums of differences, look for telescoping.</li></ul></div>
+    </section>
+
+    <div class="section-label">Problems 1-5 - Concept Builders</div>
+    <article class="problem"><div class="problem-head"><div class="problem-title">1. Arithmetic Recurrence Check</div><div class="tags"><span class="tag concept">Concept</span><span class="tag">Arithmetic</span></div></div><p>If \(a_1=7\) and \(a_{n+1}=a_n+4\), find \(a_{20}\).</p><details><summary>Solution</summary><p>This is arithmetic with common difference 4. The formula is \(a_n=7+4(n-1)\). Hence \(a_{20}=7+76=83\).</p></details></article>
+    <article class="problem"><div class="problem-head"><div class="problem-title">2. Geometric Recurrence Check</div><div class="tags"><span class="tag concept">Concept</span><span class="tag">Geometric</span></div></div><p>If \(b_1=3\) and \(b_{n+1}=2b_n\), find \(b_8\).</p><details><summary>Solution</summary><p>Each step multiplies by 2, so \(b_n=3\cdot2^{n-1}\). Therefore \(b_8=3\cdot2^7=384\).</p></details></article>
+    <article class="problem"><div class="problem-head"><div class="problem-title">3. Telescoping Difference</div><div class="tags"><span class="tag concept">Concept</span><span class="tag">Telescoping</span></div></div><p>Suppose \(a_1=5\) and \(a_{n+1}-a_n=2n\). Find \(a_6\).</p><details><summary>Solution</summary><p>Sum the differences from \(n=1\) to 5: \(a_6-a_1=2(1+2+3+4+5)=30\). Thus \(a_6=35\).</p></details></article>
+    <article class="problem"><div class="problem-head"><div class="problem-title">4. Fibonacci-Style First Terms</div><div class="tags"><span class="tag concept">Concept</span><span class="tag">Second order</span></div></div><p>Let \(c_1=1\), \(c_2=3\), and \(c_{n+2}=c_{n+1}+c_n\). Find \(c_6\).</p><details><summary>Solution</summary><p>Compute terms: \(c_3=4\), \(c_4=7\), \(c_5=11\), and \(c_6=18\).</p></details></article>
+    <article class="problem"><div class="problem-head"><div class="problem-title">5. Characteristic Root Warmup</div><div class="tags"><span class="tag concept">Concept</span><span class="tag">Characteristic</span></div></div><p>For \(a_{n+2}=3a_{n+1}-2a_n\), write the characteristic equation and factor it.</p><details><summary>Solution</summary><p>Try \(a_n=r^n\). Then \(r^{n+2}=3r^{n+1}-2r^n\), so \(r^2-3r+2=0\). This factors as \((r-1)(r-2)=0\).</p></details></article>
+
+    <div class="section-label">Problems 6-8 - Pattern Integration</div>
+    <article class="problem"><div class="problem-head"><div class="problem-title">6. Solve a Two-Root Recurrence</div><div class="tags"><span class="tag integration">Integration</span><span class="tag">Linear recurrence</span></div></div><p>Let \(a_0=1\), \(a_1=2\), and \(a_{n+2}=3a_{n+1}-2a_n\). Find a formula for \(a_n\).</p><details><summary>Solution</summary><p>The characteristic roots are 1 and 2, so \(a_n=A+B2^n\). From \(a_0=1\), \(A+B=1\). From \(a_1=2\), \(A+2B=2\). Thus \(B=1\), \(A=0\), and \(a_n=2^n\).</p></details></article>
+    <article class="problem"><div class="problem-head"><div class="problem-title">7. Telescoping Reciprocal Difference</div><div class="tags"><span class="tag integration">Integration</span><span class="tag">Partial fractions</span></div></div><p>Compute \(\sum_{k=1}^{n}\frac{1}{k(k+1)}\).</p><details><summary>Solution</summary><p>Decompose \(\frac{1}{k(k+1)}=\frac1k-\frac1{k+1}\). The sum telescopes to \(1-\frac1{n+1}=\frac{n}{n+1}\).</p></details></article>
+    <article class="problem"><div class="problem-head"><div class="problem-title">8. Recurrence With Constant Term</div><div class="tags"><span class="tag integration">Integration</span><span class="tag">Shift</span></div></div><p>Let \(a_1=1\) and \(a_{n+1}=2a_n+3\). Compute \(a_4\).</p><details><summary>Solution</summary><p>Compute carefully: \(a_2=2(1)+3=5\), \(a_3=2(5)+3=13\), and \(a_4=2(13)+3=29\). The constant term means this is not purely geometric.</p></details></article>
+
+    <div class="section-label">Problems 9-10 - Challenge Problems</div>
+    <article class="problem"><div class="problem-head"><div class="problem-title">9. AIME-Style Recurrence Value</div><div class="tags"><span class="tag challenge">Challenge</span><span class="tag">Fast iteration</span></div></div><p>A sequence satisfies \(x_0=0\) and \(x_{n+1}=x_n+2n+1\). Find \(x_{20}\).</p><details><summary>Solution</summary><p>The difference \(x_{n+1}-x_n=2n+1\). Sum from \(n=0\) to 19: \(x_{20}=\sum_{n=0}^{19}(2n+1)\). This is the sum of the first 20 odd numbers, so \(x_{20}=20^2=400\).</p></details></article>
+    <article class="problem"><div class="problem-head"><div class="problem-title">10. Recurrence Recognition Challenge</div><div class="tags"><span class="tag challenge">Challenge</span><span class="tag">Characteristic</span></div></div><p>Let \(a_0=2\), \(a_1=5\), and \(a_{n+2}=4a_{n+1}-4a_n\). Find \(a_3\) and state why the characteristic equation has a repeated root.</p><details><summary>Solution</summary><p>First compute directly: \(a_2=4(5)-4(2)=12\), and \(a_3=4(12)-4(5)=28\). The characteristic equation is \(r^2-4r+4=0=(r-2)^2\), so the root 2 is repeated.</p></details></article>
+
+    <section class="panel"><h2>Answer Summary</h2><ol><li>83</li><li>384</li><li>35</li><li>18</li><li>\((r-1)(r-2)=0\)</li><li>\(2^n\)</li><li>\(n/(n+1)\)</li><li>29</li><li>400</li><li>\(a_3=28\), repeated root 2</li></ol></section>
+  </main>
+</body>
+</html>

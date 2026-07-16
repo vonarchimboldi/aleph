@@ -35,6 +35,36 @@ Score each graph-backed Basic Probability review quiz out of 100.
 
 Recommended gate: quiz score at least 75, average quiz score at least 80.
 
+## Platinum Probability/Statistics PSB Prep Material
+
+Use this rubric for Priyanka's Platinum Probability and Statistics weekly PSB cycle. This is stricter than the generic page check because the weekly prep must train recurring exam patterns, not just present valid problems.
+
+| Dimension | Points | What Good Looks Like |
+| --- | ---: | --- |
+| Weekly rotation and plan wiring | 15 | The active Platinum plan points to the correct Monday-Saturday source week, all six PSB topics have published material URLs, and Sunday has a subject-local review quiz. |
+| Six-topic subject coverage | 15 | The week covers indicators, conditional expectation/tower, order statistics, MLE/estimation, UMP/NP tests, and regression/OLS exactly once in the daily cycle. |
+| Daily pset structure | 15 | Each daily pset has 10 problems, complete worked solutions, 5 concept builders, 3 integration/application problems, and 2 hidden-pattern or ISI-style challenge problems. |
+| PSB skill requirements | 20 | Each topic page explicitly trains its required moves: setup, recognition cue, prerequisite basics, method execution, and one hard or hidden transfer case. |
+| Difficulty and exam calibration | 15 | Problems start from mechanics but end in compact ISI/PSB-style reasoning; the learner must identify the pattern before calculating. |
+| Feedback readiness | 10 | Problems expose tags, common failure points, correction-note prompts, and workflow metadata sufficient for post-submission diagnosis. |
+| Sunday review integrity | 10 | The weekly review contains one question per PSB topic, solutions remain locked until submission, and the weekly PSB feedback workflow is attached. |
+
+Hard failures:
+
+- Any daily PSB topic is missing from the active plan.
+- A daily pset has fewer than 10 problems or lacks worked solutions.
+- A Sunday review exposes solution details before submission.
+- A topic page omits the core setup skill for that pattern.
+
+Run:
+
+```bash
+node scripts/verify-platinum-psb-material.mjs
+node scripts/judge-material-quality.mjs
+```
+
+The PSB verifier is deterministic. It checks the currently wired Platinum source Week 3 material and should be extended when the active PSB source week advances.
+
 ## Current Judge
 
 Run:

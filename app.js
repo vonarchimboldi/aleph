@@ -25674,30 +25674,41 @@ function probabilityStatsMaterialStatus(sourceWeek, topic) {
 
 function competitionMathMaterialWorkspaces(completedWeeks = 0) {
   const weekOneStart = PRIYANKA_PLATINUM_START_DATE;
-  const sourceWeek = completedWeeks + 1;
-  const milestone = competitionMathMilestones()[completedWeeks] || competitionMathMilestones()[0];
-  const hasPublishedWeekMaterial = sourceWeek === 1;
+  const weeks = [0, 1].map((offset) => {
+    const sourceWeek = completedWeeks + offset + 1;
+    const milestone = competitionMathMilestones()[sourceWeek - 1] || competitionMathMilestones()[0];
+    const date = addDays(weekOneStart, offset * 7);
+    const materialUrl = competitionMathMaterialUrl(sourceWeek);
+    return {
+      id: `cm-${PRIYANKA_PLATINUM_REBASE_ID}-w${offset + 1}-src${sourceWeek}-algebra`,
+      week: offset + 1,
+      sourceWeek,
+      date,
+      materialTitle: `${formatMaterialTitleDate(date)}: ${milestone.focus}`,
+      materialUrl,
+      expectedWork: `One-hour session: ${milestone.practice} Technique journal: ${milestone.journal}`,
+      status: materialUrl ? "Published" : "Pending",
+      feedbackWorkflow: competitionMathFeedbackWorkflow(milestone)
+    };
+  });
   return [
     {
       id: "competition-algebra-foundations",
       title: "Algebra Foundations",
-      day: "Week 1",
-      focus: milestone.focus,
-      weeks: [
-        {
-          id: `cm-${PRIYANKA_PLATINUM_REBASE_ID}-w1-src${sourceWeek}-algebra`,
-          week: 1,
-          sourceWeek,
-          date: weekOneStart,
-          materialTitle: `${formatMaterialTitleDate(weekOneStart)}: ${milestone.focus}`,
-          materialUrl: hasPublishedWeekMaterial ? "psets/week-01/june-01-competition-math-vietas-polynomials.html" : "",
-          expectedWork: `One-hour session: ${milestone.practice} Technique journal: ${milestone.journal}`,
-          status: hasPublishedWeekMaterial ? "Published" : "Pending",
-          feedbackWorkflow: competitionMathFeedbackWorkflow(milestone)
-        }
-      ]
+      day: "Weeks 1-2",
+      focus: weeks.map((week) => week.materialTitle.replace(/^[^:]+: /, "")).join(" | "),
+      weeks
     }
   ];
+}
+
+function competitionMathMaterialUrl(sourceWeek) {
+  const urls = {
+    1: "psets/week-01/june-01-competition-math-vietas-polynomials.html",
+    2: "psets/week-02/june-29-competition-math-identities-factoring.html",
+    3: "psets/week-03/july-06-competition-math-sequences-recurrences.html"
+  };
+  return urls[sourceWeek] || "";
 }
 
 function baseFeedbackWorkflow(overrides = {}) {

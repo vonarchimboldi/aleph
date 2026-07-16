@@ -3,6 +3,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import process from "node:process";
+import { spawnSync } from "node:child_process";
 
 const root = process.cwd();
 const psetsDir = path.join(root, "psets");
@@ -69,6 +70,9 @@ function addCriterion(parts, label, earned, max, evidence) {
 function scorePset(file) {
   const relative = path.relative(root, file);
   const content = fs.readFileSync(file, "utf8");
+  if (/"unlockPolicy"\s*:\s*"solutions-after-submission"/.test(content)) {
+    return scoreLockedSubmissionQuiz(file, content);
+  }
   const problems = extractProblemBlocks(content);
   const titles = problems.map(extractTitle);
   const statements = problems.map(extractFirstParagraph);
@@ -140,6 +144,80 @@ function scorePset(file) {
   addCriterion(parts, "Feedback readiness", feedback, 15, `${problemTags}/${problems.length} problems have visible tags`);
 
   return summarizeScore(relative, "pset", parts);
+}
+
+function scoreLockedSubmissionQuiz(file, content) {
+  const relative = path.relative(root, file);
+  const problems = extractProblemBlocks(content);
+  const rendered = content.replace(/<script\b[\s\S]*?<\/script>/gi, "");
+  const metadataMatch = content.match(/<script id="quiz-metadata" type="application\/json">([\s\S]*?)<\/script>/);
+  let metadata = null;
+  try {
+    metadata = metadataMatch ? JSON.parse(metadataMatch[1]) : null;
+  } catch {
+    metadata = null;
+  }
+  const parts = [];
+
+  let structure = 0;
+  [
+    'class="wrap"',
+    'class="hero"',
+    'href="/psets/material-page.css"',
+    'src="/psets/material-page.js"',
+    "katex.min.css",
+    "math-fallback"
+  ].forEach((snippet) => {
+    if (content.includes(snippet)) structure += 1.5;
+  });
+  if (metadata) structure += 3;
+  if (metadata?.unlockPolicy === "solutions-after-submission") structure += 2;
+  if (!/<details\b/i.test(rendered) && !/<summary\b/i.test(rendered)) structure += 1;
+  if (problems.length > 0) structure += 5;
+  addCriterion(parts, "Locked quiz workflow", structure, 20, `${problems.length} questions, unlock policy ${metadata?.unlockPolicy || "missing"}`);
+
+  const questions = metadata?.questions || [];
+  const topics = questions.length ? questions.map((question) => question.topic).filter(Boolean) : metadata?.topics || [];
+  const topicCounts = new Map();
+  topics.forEach((topic) => topicCounts.set(topic, (topicCounts.get(topic) || 0) + 1));
+  const questionTypes = new Map();
+  questions.forEach((question) => questionTypes.set(question.type, (questionTypes.get(question.type) || 0) + 1));
+  let coverage = 0;
+  if (topics.length && topicCounts.size >= Math.min(6, topics.length)) coverage += 9;
+  if (metadata?.questionCount === problems.length || questions.length === problems.length) coverage += 5;
+  if (!questions.length || [...topicCounts.values()].every((count) => count >= 1)) coverage += 3;
+  if (!questions.length || questionTypes.size >= 2) coverage += 3;
+  addCriterion(parts, "Scope and topic balance", coverage, 20, `${topicCounts.size} topic groups`);
+
+  const text = normalizeText(content).toLowerCase();
+  const diagnosticWords = ["feedback", "workflow", "error", "diagnostic", "confidence", "scratch", "repair", "next"];
+  const diagnosticHits = diagnosticWords.filter((word) => text.includes(word)).length;
+  let diagnostic = 0;
+  if (metadata?.feedbackWorkflow) diagnostic += 8;
+  if (diagnosticHits >= 3) diagnostic += 6;
+  if (problems.every((block) => /<span class="tag/.test(block))) diagnostic += 4;
+  if (/instructions|checklist|core pattern/i.test(content)) diagnostic += 2;
+  addCriterion(parts, "Diagnostic and feedback readiness", diagnostic, 20, `${diagnosticHits} diagnostic words`);
+
+  let examFit = 0;
+  if (/CMI|PSB|ISI|GATE|review quiz/i.test(content)) examFit += 5;
+  if (/durationMinutes|90 minutes|120 minutes|two-hour|90-minute/i.test(content)) examFit += 4;
+  if (/multi-select|short answer|written solution|written review|subpart/i.test(text)) examFit += 5;
+  if (/trap|first step|correction note|pattern/i.test(text)) examFit += 4;
+  if (metadata?.cmiRubricVersion || metadata?.feedbackWorkflow) examFit += 2;
+  addCriterion(parts, "Exam fit and speed pressure", examFit, 20, metadata?.examTarget || metadata?.title || "locked review");
+
+  const hasNoAnswerLanguage = !/(answer key|correct answer|solution<\/summary>|<details\b)/i.test(rendered);
+  const promptWordCounts = problems.map((block) => wordCount(block));
+  let answerability = 0;
+  if (hasNoAnswerLanguage) answerability += 6;
+  if (promptWordCounts.every((count) => count >= 10)) answerability += 5;
+  if (problems.length >= 6) answerability += 4;
+  if (/\\\(|\\\[/.test(content)) answerability += 3;
+  if (!/(^|[^\\])\$/.test(rendered)) answerability += 2;
+  addCriterion(parts, "Answerability without leakage", answerability, 20, `${problems.length} rendered questions`);
+
+  return summarizeScore(relative, "locked review quiz", parts);
 }
 
 function extractFunctionBody(name) {
@@ -318,5 +396,13 @@ if (failures.length || average < minAverageScore) {
   }
   process.exit(1);
 }
+
+const psbVerifier = spawnSync(process.execPath, ["scripts/verify-platinum-psb-material.mjs"], {
+  cwd: root,
+  encoding: "utf8"
+});
+if (psbVerifier.stdout) process.stdout.write(psbVerifier.stdout);
+if (psbVerifier.stderr) process.stderr.write(psbVerifier.stderr);
+if (psbVerifier.status !== 0) process.exit(psbVerifier.status || 1);
 
 console.log("Quality judge passed.");
