@@ -26,6 +26,17 @@ const quizzes = [
       "dsa-recursion-strings-sorting",
       "dsa-lists-stacks-queues"
     ]
+  },
+  {
+    file: "psets/week-03/july-19-cmi-msds-dm-dsa-review-quiz.html",
+    expectedTopics: [
+      "dm-binomial-permutations",
+      "dm-relations-state-machines",
+      "dm-combinations-casework",
+      "dsa-linked-list-invariants",
+      "dsa-stacks-queues-traces",
+      "dsa-implementation-edge-cases"
+    ]
   }
 ];
 

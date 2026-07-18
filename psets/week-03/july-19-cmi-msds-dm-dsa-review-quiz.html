@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>July 19 Review Quiz - CMI-Level Discrete Math and DSA</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" />
+  <link rel="stylesheet" href="/psets/material-page.css" />
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+  <script defer src="/psets/material-page.js"></script>
+  <script id="quiz-metadata" type="application/json">
+{
+  "id": "cmi-dm-dsa-review-2026-07-19",
+  "title": "July 19 CMI-Level Discrete Math and DSA Review Quiz",
+  "durationMinutes": 120,
+  "questionCount": 30,
+  "examTarget": "CMI-MSDS",
+  "cmiRubricVersion": "cmi-msds-review-rubric-v1",
+  "mcqPolicy": "multi-select-all-correct-no-partial-credit",
+  "unlockPolicy": "solutions-after-submission",
+  "coveredScope": [
+    "Discrete Math W3: counting, binomial coefficients, relations, state machines, permutations, combinations",
+    "DSA W3: lists, linked lists, stacks, queues, and implementation invariants"
+  ],
+  "wholeQuizRubric": {
+    "subjectCoverage": 2,
+    "skillsRequired": 2,
+    "techniquesRequired": 2,
+    "analysisLevel": 2,
+    "speed": 2,
+    "reasoningKind": 2,
+    "pass": true
+  },
+  "feedbackWorkflow": {
+    "errorAnalysis": true,
+    "submissionFields": ["selectedOptions", "shortAnswers", "scratchWork", "confidence"],
+    "diagnosticTags": ["overcount", "missed-case", "wrong-relation-property", "state-trace-error", "pointer-order", "wrong-invariant", "container-semantics", "edge-case-boundary", "operation-count"],
+    "postSubmissionOutputs": ["topicScore", "firstErrorPerTopic", "misconceptionSummary", "repairDrills", "nextWeekPriority"]
+  },
+  "questions": [
+    {"id":"q01","topic":"dm-binomial-permutations","type":"mcq","difficulty":"hard","skills":["permutation-counting","constraint-modeling"],"cmiFit":"Requires fast recognition of equivalent counts under a positional restriction.","source_block":"Discrete Math W3: binomial coefficients, permutations, counting techniques","target_skill":"count arrangements with one required symbol","estimated_minutes":3,"primary_trap":"choosing the letters but not ordering them","expected_first_step":"Place the required symbol, then arrange the remaining positions.","mistake_tags":["ordered-vs-unordered","missed-case"],"cmi_dimensions":{"subject_coverage":2,"skills_required":2,"techniques_required":2,"analysis_level":2,"speed":2,"reasoning_kind":2},"cmi_pass":true},
+    {"id":"q02","topic":"dm-binomial-permutations","type":"mcq","difficulty":"medium-hard","skills":["binomial-identities","algebraic-recognition"],"cmiFit":"Tests whether identities are recognized structurally rather than by expansion.","source_block":"Discrete Math W3: binomial coefficients and identities","target_skill":"recognize true binomial identities","estimated_minutes":3,"primary_trap":"accepting dimensionally mismatched identities","expected_first_step":"Check each identity against Pascal, symmetry, or factorial form.","mistake_tags":["identity-misuse","algebra"],"cmi_dimensions":{"subject_coverage":2,"skills_required":2,"techniques_required":2,"analysis_level":2,"speed":2,"reasoning_kind":2},"cmi_pass":true},
+    {"id":"q03","topic":"dm-binomial-permutations","type":"mcq","difficulty":"hard","skills":["coefficient-extraction","case-splitting"],"cmiFit":"Combines coefficient reading with a small case split under time pressure.","source_block":"Discrete Math W3: binomial coefficients and counting","target_skill":"select equivalent coefficient-count expressions","estimated_minutes":4,"primary_trap":"counting powers from the wrong factor","expected_first_step":"List ways the exponents can add to the requested total.","mistake_tags":["case-coverage","coefficient-counting"],"cmi_dimensions":{"subject_coverage":2,"skills_required":2,"techniques_required":2,"analysis_level":2,"speed":2,"reasoning_kind":2},"cmi_pass":true},
+    {"id":"q04","topic":"dm-binomial-permutations","type":"short-answer","difficulty":"medium-hard","skills":["multiset-permutation","division-by-symmetry"],"cmiFit":"CMI-style short count: simple data, but the duplicate letters force exact reasoning.","source_block":"Discrete Math W3: permutations with repeated symbols","target_skill":"count multiset arrangements with one adjacent restriction","estimated_minutes":5,"primary_trap":"forgetting repeated A's or repeated N's","expected_first_step":"Block the adjacent pair and divide by repeated letters.","mistake_tags":["overcount","symmetry-division"],"cmi_dimensions":{"subject_coverage":2,"skills_required":2,"techniques_required":2,"analysis_level":2,"speed":2,"reasoning_kind":2},"cmi_pass":true},
+    {"id":"q05","topic":"dm-binomial-permutations","type":"short-answer","difficulty":"medium-hard","skills":["coefficient-extraction","binomial-expansion"],"cmiFit":"Short computation rewards setup discipline more than arithmetic volume.","source_block":"Discrete Math W3: binomial coefficients and coefficient extraction","target_skill":"extract a coefficient from a product","estimated_minutes":5,"primary_trap":"using only one factor in the product","expected_first_step":"Set exponent pairs whose sum is the target exponent.","mistake_tags":["coefficient-counting","missed-case"],"cmi_dimensions":{"subject_coverage":2,"skills_required":2,"techniques_required":2,"analysis_level":2,"speed":2,"reasoning_kind":2},"cmi_pass":true},
+    {"id":"q06","topic":"dm-relations-state-machines","type":"mcq","difficulty":"hard","skills":["relation-properties","counterexample-search"],"cmiFit":"Requires checking all relation properties from definition, not pattern matching.","source_block":"Discrete Math W3: relations and their properties","target_skill":"classify a finite relation","estimated_minutes":4,"primary_trap":"testing symmetry but skipping transitivity","expected_first_step":"List missing loops and directed pairs before checking properties.","mistake_tags":["wrong-relation-property","counterexample"],"cmi_dimensions":{"subject_coverage":2,"skills_required":2,"techniques_required":2,"analysis_level":2,"speed":2,"reasoning_kind":2},"cmi_pass":true},
+    {"id":"q07","topic":"dm-relations-state-machines","type":"mcq","difficulty":"medium-hard","skills":["equivalence-relations","partition-reasoning"],"cmiFit":"Links equivalence relations to partitions, a common compact exam move.","source_block":"Discrete Math W3: relations and equivalence classes","target_skill":"identify equivalence-relation consequences","estimated_minutes":3,"primary_trap":"thinking classes can overlap partly","expected_first_step":"Use the partition property of equivalence classes.","mistake_tags":["equivalence-class","definition-misread"],"cmi_dimensions":{"subject_coverage":2,"skills_required":2,"techniques_required":2,"analysis_level":2,"speed":2,"reasoning_kind":2},"cmi_pass":true},
+    {"id":"q08","topic":"dm-relations-state-machines","type":"mcq","difficulty":"medium-hard","skills":["state-machine-trace","periodicity"],"cmiFit":"A small machine asks for invariant and period recognition, not rote transition listing.","source_block":"Discrete Math W3: state machines","target_skill":"trace a deterministic transition rule","estimated_minutes":3,"primary_trap":"counting the initial state as a move","expected_first_step":"Write states after moves 0, 1, 2, 3 to detect the cycle.","mistake_tags":["state-trace-error","off-by-one"],"cmi_dimensions":{"subject_coverage":2,"skills_required":2,"techniques_required":2,"analysis_level":2,"speed":2,"reasoning_kind":2},"cmi_pass":true},
+    {"id":"q09","topic":"dm-relations-state-machines","type":"short-answer","difficulty":"hard","skills":["relation-composition","ordered-pair-reasoning"],"cmiFit":"Compact relation composition with order sensitivity matches CMI short-answer style.","source_block":"Discrete Math W3: relations and composition","target_skill":"compose two finite relations exactly","estimated_minutes":5,"primary_trap":"reversing the composition order","expected_first_step":"Match the second coordinate of the first relation to the first coordinate of the second.","mistake_tags":["composition-order","ordered-pair"],"cmi_dimensions":{"subject_coverage":2,"skills_required":2,"techniques_required":2,"analysis_level":2,"speed":2,"reasoning_kind":2},"cmi_pass":true},
+    {"id":"q10","topic":"dm-relations-state-machines","type":"short-answer","difficulty":"medium-hard","skills":["state-invariant","induction-on-steps"],"cmiFit":"Asks for a one-line invariant proof, which is the right level for a timed CMI review.","source_block":"Discrete Math W3: state machines and invariants","target_skill":"prove a reachable-state invariant","estimated_minutes":5,"primary_trap":"checking examples without proving preservation","expected_first_step":"State the quantity preserved by one transition.","mistake_tags":["wrong-invariant","invalid-proof-step"],"cmi_dimensions":{"subject_coverage":2,"skills_required":2,"techniques_required":2,"analysis_level":2,"speed":2,"reasoning_kind":2},"cmi_pass":true},
+    {"id":"q11","topic":"dm-combinations-casework","type":"mcq","difficulty":"medium-hard","skills":["combinations-with-repetition","stars-bars"],"cmiFit":"Tests whether the counted objects are identical or distinct before applying a formula.","source_block":"Discrete Math W3: combinations and counting techniques","target_skill":"recognize stars-and-bars setup","estimated_minutes":3,"primary_trap":"using permutations for identical objects","expected_first_step":"Translate to nonnegative integer solutions.","mistake_tags":["ordered-vs-unordered","modeling"],"cmi_dimensions":{"subject_coverage":2,"skills_required":2,"techniques_required":2,"analysis_level":2,"speed":2,"reasoning_kind":2},"cmi_pass":true},
+    {"id":"q12","topic":"dm-combinations-casework","type":"mcq","difficulty":"hard","skills":["upper-bound-counting","complement-counting"],"cmiFit":"Requires choosing complement or bounded casework quickly.","source_block":"Discrete Math W3: combinations and restricted counts","target_skill":"count bounded selections","estimated_minutes":4,"primary_trap":"subtracting the same upper-bound violation twice without checking overlap","expected_first_step":"Count all nonnegative solutions and subtract violating cases.","mistake_tags":["missed-case","overcount"],"cmi_dimensions":{"subject_coverage":2,"skills_required":2,"techniques_required":2,"analysis_level":2,"speed":2,"reasoning_kind":2},"cmi_pass":true},
+    {"id":"q13","topic":"dm-combinations-casework","type":"mcq","difficulty":"medium-hard","skills":["committee-counting","casework"],"cmiFit":"A direct CMI-speed casework count with a trap around at least/exactly language.","source_block":"Discrete Math W3: combinations and casework","target_skill":"count committees with lower-bound restrictions","estimated_minutes":4,"primary_trap":"counting exactly two when the condition says at least two","expected_first_step":"Split by the number chosen from the restricted group.","mistake_tags":["exactly-vs-at-least","case-coverage"],"cmi_dimensions":{"subject_coverage":2,"skills_required":2,"techniques_required":2,"analysis_level":2,"speed":2,"reasoning_kind":2},"cmi_pass":true},
+    {"id":"q14","topic":"dm-combinations-casework","type":"short-answer","difficulty":"hard","skills":["choose-counted-object","double-counting"],"cmiFit":"Forces a clean choice of what is being counted, which is central to CMI combinatorics.","source_block":"Discrete Math W3: combinations and identities","target_skill":"give a combinatorial proof of an identity","estimated_minutes":6,"primary_trap":"proving by algebra after being asked for a counting proof","expected_first_step":"Describe one set counted by both sides.","mistake_tags":["method-selection","identity-proof"],"cmi_dimensions":{"subject_coverage":2,"skills_required":2,"techniques_required":2,"analysis_level":2,"speed":2,"reasoning_kind":2},"cmi_pass":true},
+    {"id":"q15","topic":"dm-combinations-casework","type":"short-answer","difficulty":"medium-hard","skills":["inclusion-exclusion-light","restricted-combinations"],"cmiFit":"Small bounded count asks for method choice and careful endpoints.","source_block":"Discrete Math W3: combinations and restricted counting","target_skill":"count selections with forbidden equalities","estimated_minutes":5,"primary_trap":"forgetting the forbidden diagonal cases","expected_first_step":"Count all pairs, then remove forbidden pairs or split cleanly.","mistake_tags":["complement-counting","boundary"],"cmi_dimensions":{"subject_coverage":2,"skills_required":2,"techniques_required":2,"analysis_level":2,"speed":2,"reasoning_kind":2},"cmi_pass":true},
+    {"id":"q16","topic":"dsa-linked-list-invariants","type":"mcq","difficulty":"hard","skills":["pointer-update-order","linked-list-invariant"],"cmiFit":"Matches CMI-style implementation reasoning: tiny code fragment, high edge-case load.","source_block":"DSA W3: lists, linked lists, representation invariants","target_skill":"choose safe pointer-update order","estimated_minutes":4,"primary_trap":"losing access to the suffix node","expected_first_step":"Name every pointer that must remain reachable after the first assignment.","mistake_tags":["pointer-order","wrong-invariant"],"cmi_dimensions":{"subject_coverage":2,"skills_required":2,"techniques_required":2,"analysis_level":2,"speed":2,"reasoning_kind":2},"cmi_pass":true},
+    {"id":"q17","topic":"dsa-linked-list-invariants","type":"mcq","difficulty":"medium-hard","skills":["sentinel-node","edge-case-boundary"],"cmiFit":"Tests representation choices and boundary cases in a compact format.","source_block":"DSA W3: linked lists and sentinels","target_skill":"identify what sentinel nodes simplify","estimated_minutes":3,"primary_trap":"claiming sentinels remove all empty-list checks","expected_first_step":"Separate structural simplification from required size checks.","mistake_tags":["edge-case-boundary","implementation-invariant"],"cmi_dimensions":{"subject_coverage":2,"skills_required":2,"techniques_required":2,"analysis_level":2,"speed":2,"reasoning_kind":2},"cmi_pass":true},
+    {"id":"q18","topic":"dsa-linked-list-invariants","type":"short-answer","difficulty":"hard","skills":["linked-list-deletion","edge-case-analysis"],"cmiFit":"Short answer requires exact mutation reasoning rather than naming an operation.","source_block":"DSA W3: list operations and representations","target_skill":"state cases for deleting a node in a singly linked list","estimated_minutes":5,"primary_trap":"forgetting head, tail, or one-node cases","expected_first_step":"List which external pointers can change.","mistake_tags":["edge-case-boundary","pointer-order"],"cmi_dimensions":{"subject_coverage":2,"skills_required":2,"techniques_required":2,"analysis_level":2,"speed":2,"reasoning_kind":2},"cmi_pass":true},
+    {"id":"q19","topic":"dsa-linked-list-invariants","type":"short-answer","difficulty":"medium-hard","skills":["loop-invariant","list-traversal"],"cmiFit":"Asks for an invariant and a stopping condition, the core skill behind list code correctness.","source_block":"DSA W3: linked-list traversal invariants","target_skill":"write a traversal invariant","estimated_minutes":5,"primary_trap":"stating only the final goal","expected_first_step":"Describe the processed prefix and current pointer meaning.","mistake_tags":["wrong-invariant","state-trace-error"],"cmi_dimensions":{"subject_coverage":2,"skills_required":2,"techniques_required":2,"analysis_level":2,"speed":2,"reasoning_kind":2},"cmi_pass":true},
+    {"id":"q20","topic":"dsa-linked-list-invariants","type":"short-answer","difficulty":"hard","skills":["operation-count","representation-tradeoff"],"cmiFit":"Forces comparison between array and linked representations with exact costs.","source_block":"DSA W3: lists and representation costs","target_skill":"compare list-operation running times under two representations","estimated_minutes":5,"primary_trap":"assuming linked lists make every insertion constant time","expected_first_step":"Ask whether the node or only the index is already known.","mistake_tags":["operation-count","assumption-error"],"cmi_dimensions":{"subject_coverage":2,"skills_required":2,"techniques_required":2,"analysis_level":2,"speed":2,"reasoning_kind":2},"cmi_pass":true},
+    {"id":"q21","topic":"dsa-stacks-queues-traces","type":"mcq","difficulty":"medium-hard","skills":["stack-trace","queue-trace"],"cmiFit":"Fast trace with mixed containers catches semantic confusion under time pressure.","source_block":"DSA W3: stacks and queues","target_skill":"trace LIFO and FIFO containers exactly","estimated_minutes":3,"primary_trap":"using the same removal end for both containers","expected_first_step":"Write contents left-to-right after each operation.","mistake_tags":["container-semantics","state-trace-error"],"cmi_dimensions":{"subject_coverage":2,"skills_required":2,"techniques_required":2,"analysis_level":2,"speed":2,"reasoning_kind":2},"cmi_pass":true},
+    {"id":"q22","topic":"dsa-stacks-queues-traces","type":"mcq","difficulty":"hard","skills":["two-stack-queue","amortized-reasoning"],"cmiFit":"Combines trace and aggregate operation count without needing advanced machinery.","source_block":"DSA W3: queues and implementation invariants","target_skill":"reason about a queue implemented by two stacks","estimated_minutes":4,"primary_trap":"moving items back after every dequeue","expected_first_step":"Track input stack, output stack, and transfer only when needed.","mistake_tags":["container-semantics","operation-count"],"cmi_dimensions":{"subject_coverage":2,"skills_required":2,"techniques_required":2,"analysis_level":2,"speed":2,"reasoning_kind":2},"cmi_pass":true},
+    {"id":"q23","topic":"dsa-stacks-queues-traces","type":"short-answer","difficulty":"medium-hard","skills":["circular-buffer","modular-indexing"],"cmiFit":"A compact queue implementation problem with an off-by-one trap.","source_block":"DSA W3: queue arrays and circular buffers","target_skill":"update circular-buffer indices","estimated_minutes":5,"primary_trap":"letting an index become the capacity","expected_first_step":"Apply modulo capacity after each increment.","mistake_tags":["off-by-one","modular-index"],"cmi_dimensions":{"subject_coverage":2,"skills_required":2,"techniques_required":2,"analysis_level":2,"speed":2,"reasoning_kind":2},"cmi_pass":true},
+    {"id":"q24","topic":"dsa-stacks-queues-traces","type":"short-answer","difficulty":"hard","skills":["stack-invariant","matching-delimiters"],"cmiFit":"Uses a canonical stack application but asks for the invariant and failure mode.","source_block":"DSA W3: stack applications and invariants","target_skill":"state the invariant for bracket matching","estimated_minutes":5,"primary_trap":"checking counts instead of nesting order","expected_first_step":"The stack holds unmatched opening symbols in order.","mistake_tags":["wrong-invariant","container-semantics"],"cmi_dimensions":{"subject_coverage":2,"skills_required":2,"techniques_required":2,"analysis_level":2,"speed":2,"reasoning_kind":2},"cmi_pass":true},
+    {"id":"q25","topic":"dsa-stacks-queues-traces","type":"short-answer","difficulty":"medium-hard","skills":["queue-invariant","state-trace"],"cmiFit":"Short trace demands precise front/back convention, a common timed-test trap.","source_block":"DSA W3: queue semantics","target_skill":"trace enqueue and dequeue operations","estimated_minutes":5,"primary_trap":"reading the back of the queue as the front","expected_first_step":"Fix a written convention for front and back before tracing.","mistake_tags":["container-semantics","state-trace-error"],"cmi_dimensions":{"subject_coverage":2,"skills_required":2,"techniques_required":2,"analysis_level":2,"speed":2,"reasoning_kind":2},"cmi_pass":true},
+    {"id":"q26","topic":"dsa-implementation-edge-cases","type":"mcq","difficulty":"hard","skills":["representation-invariant","empty-structure-case"],"cmiFit":"CMI-level code reasoning through a tiny but failure-prone representation state.","source_block":"DSA W3: implementation invariants for lists, stacks, queues","target_skill":"identify violated representation invariant","estimated_minutes":4,"primary_trap":"checking returned value but not internal state","expected_first_step":"Write the invariant relating size, head, tail, and empty structure.","mistake_tags":["wrong-invariant","edge-case-boundary"],"cmi_dimensions":{"subject_coverage":2,"skills_required":2,"techniques_required":2,"analysis_level":2,"speed":2,"reasoning_kind":2},"cmi_pass":true},
+    {"id":"q27","topic":"dsa-implementation-edge-cases","type":"mcq","difficulty":"medium-hard","skills":["api-specification","precondition"],"cmiFit":"Asks for the right contract, not just the implementation, matching CMI reasoning style.","source_block":"DSA W3: data-structure operations and specifications","target_skill":"separate precondition, postcondition, and invariant","estimated_minutes":3,"primary_trap":"treating a caller precondition as a representation invariant","expected_first_step":"Classify each statement by who must make it true.","mistake_tags":["specification-confusion","wrong-invariant"],"cmi_dimensions":{"subject_coverage":2,"skills_required":2,"techniques_required":2,"analysis_level":2,"speed":2,"reasoning_kind":2},"cmi_pass":true},
+    {"id":"q28","topic":"dsa-implementation-edge-cases","type":"short-answer","difficulty":"hard","skills":["edge-case-testing","minimal-counterexample"],"cmiFit":"Requires designing a compact test sequence that exposes a boundary bug.","source_block":"DSA W3: implementation edge cases","target_skill":"construct a failing operation sequence","estimated_minutes":5,"primary_trap":"testing only middle-size structures","expected_first_step":"Try empty, one-item, and transition-to-empty sequences.","mistake_tags":["edge-case-boundary","test-design"],"cmi_dimensions":{"subject_coverage":2,"skills_required":2,"techniques_required":2,"analysis_level":2,"speed":2,"reasoning_kind":2},"cmi_pass":true},
+    {"id":"q29","topic":"dsa-implementation-edge-cases","type":"short-answer","difficulty":"medium-hard","skills":["space-complexity","linked-representation"],"cmiFit":"Ties representation choice to exact space overhead and pointer fields.","source_block":"DSA W3: representation costs","target_skill":"compare space cost of list representations","estimated_minutes":5,"primary_trap":"counting data items but ignoring pointer fields","expected_first_step":"Count payload fields and link fields separately.","mistake_tags":["space-complexity","operation-count"],"cmi_dimensions":{"subject_coverage":2,"skills_required":2,"techniques_required":2,"analysis_level":2,"speed":2,"reasoning_kind":2},"cmi_pass":true},
+    {"id":"q30","topic":"dsa-implementation-edge-cases","type":"short-answer","difficulty":"hard","skills":["correctness-argument","implementation-invariant"],"cmiFit":"Final synthesis asks for proof language around a concrete data-structure operation.","source_block":"DSA W3: implementation invariants and correctness","target_skill":"prove an operation preserves the representation invariant","estimated_minutes":6,"primary_trap":"arguing by examples instead of preservation","expected_first_step":"State the invariant before and after the operation.","mistake_tags":["invalid-proof-step","wrong-invariant"],"cmi_dimensions":{"subject_coverage":2,"skills_required":2,"techniques_required":2,"analysis_level":2,"speed":2,"reasoning_kind":2},"cmi_pass":true}
+  ]
+}
+  </script>
+</head>
+<body>
+  <main class="wrap">
+    <section class="hero">
+      <h1>July 19: CMI-Level Discrete Math and DSA Review Quiz</h1>
+      <p class="sub">
+        Two-hour review quiz with 30 questions: 15 multi-select MCQ and 15 short answer. Scope is Week 3 Platinum Discrete Math and DSA only, calibrated to CMI MS DS reasoning style.
+      </p>
+      <div class="meta">
+        <span class="chip">Discrete Math W3</span>
+        <span class="chip">DSA W3</span>
+        <span class="chip">120 minutes</span>
+        <span class="chip">30 questions</span>
+        <span class="chip">15 MCQ</span>
+        <span class="chip">15 short answer</span>
+      </div>
+      <p class="math-fallback">Math rendering did not load from the CDN. Refresh once, or use a network that allows KaTeX CDN files.</p>
+    </section>
+
+    <section class="panel accent">
+      <h2>Instructions</h2>
+      <div class="grid">
+        <ul>
+          <li>Use about 45 minutes for MCQs, 60 minutes for short answers, and 15 minutes for checking.</li>
+          <li>For MCQs, select all correct options and no incorrect options. Some questions have more than one correct option.</li>
+          <li>For short answers, write the counted object, invariant, state trace, or operation contract before the final result.</li>
+        </ul>
+        <ul>
+          <li>Do not consult notes while attempting the quiz.</li>
+          <li>Mark the first step where you feel uncertain.</li>
+          <li>Worked explanations remain locked until your submission is recorded in Aleph.</li>
+        </ul>
+      </div>
+    </section>
+
+    <div class="section-label">Topic 1 - Discrete Math: Binomial Coefficients and Permutations</div>
+
+    <article class="problem" id="q01">
+      <div class="problem-head"><div class="problem-title">1. Required symbol in an arrangement</div><div class="tags"><span class="tag concept">MCQ</span><span class="tag">Permutations</span></div></div>
+      <p>Five-letter strings are formed from \(A,B,C,D,E,F,G\), with no repeated letter. Which expressions count strings that contain \(A\) and have \(A\) not in the first position? Select all correct options.</p>
+      <ol type="A"><li>\(4\cdot6\cdot5\cdot4\cdot3\)</li><li>\(7\cdot6\cdot5\cdot4\cdot3-6\cdot5\cdot4\cdot3\cdot2\)</li><li>\(\binom{6}{4}\cdot4!\cdot4\)</li><li>\(6\cdot P(6,4)\)</li></ol>
+    </article>
+
+    <article class="problem" id="q02">
+      <div class="problem-head"><div class="problem-title">2. Binomial identities under pressure</div><div class="tags"><span class="tag concept">MCQ</span><span class="tag">Identities</span></div></div>
+      <p>For integers \(n\ge 1\) and valid \(k\), which identities are always true? Select all correct options.</p>
+      <ol type="A"><li>\(\binom{n}{k}=\binom{n}{n-k}\)</li><li>\(\binom{n}{k}=\binom{n-1}{k}+\binom{n-1}{k-1}\)</li><li>\(k\binom{n}{k}=n\binom{n-1}{k-1}\)</li><li>\(\binom{n}{k}=n\binom{n-1}{k}\)</li></ol>
+    </article>
+
+    <article class="problem" id="q03">
+      <div class="problem-head"><div class="problem-title">3. Coefficient count split</div><div class="tags"><span class="tag concept">MCQ</span><span class="tag">Coefficients</span></div></div>
+      <p>Which expressions equal the coefficient of \(x^5\) in \((1+x)^6(1+x^2)^4\)? Select all correct options.</p>
+      <ol type="A"><li>\(\binom{6}{5}+\binom{6}{3}\binom{4}{1}+\binom{6}{1}\binom{4}{2}\)</li><li>\(\sum_{j=0}^{2}\binom{6}{5-2j}\binom{4}{j}\)</li><li>\(\binom{10}{5}\)</li><li>\(\binom{6}{1}\binom{4}{2}+\binom{6}{3}\binom{4}{1}+\binom{6}{5}\binom{4}{0}\)</li></ol>
+    </article>
+
+    <article class="problem" id="q04">
+      <div class="problem-head"><div class="problem-title">4. Adjacent repeated letters</div><div class="tags"><span class="tag concept">Short answer</span><span class="tag">Multiset</span></div></div>
+      <p>How many arrangements of the letters in \(BANANA\) have the two \(N\)'s adjacent? Show the block you are counting.</p>
+      <p class="response-line">Answer space:</p>
+    </article>
+
+    <article class="problem" id="q05">
+      <div class="problem-head"><div class="problem-title">5. Product coefficient</div><div class="tags"><span class="tag concept">Short answer</span><span class="tag">Binomial</span></div></div>
+      <p>Find the coefficient of \(x^4\) in \((1+x)^5(1+x^3)^2\). Write the exponent cases that contribute.</p>
+      <p class="response-line">Answer space:</p>
+    </article>
+
+    <div class="section-label">Topic 2 - Discrete Math: Relations and State Machines</div>
+
+    <article class="problem" id="q06">
+      <div class="problem-head"><div class="problem-title">6. Relation property check</div><div class="tags"><span class="tag concept">MCQ</span><span class="tag">Relations</span></div></div>
+      <p>On \(S=\{1,2,3\}\), let \(R=\{(1,1),(2,2),(3,3),(1,2),(2,1),(2,3),(3,2)\}\). Which properties does \(R\) have? Select all correct options.</p>
+      <ol type="A"><li>Reflexive</li><li>Symmetric</li><li>Antisymmetric</li><li>Transitive</li></ol>
+    </article>
+
+    <article class="problem" id="q07">
+      <div class="problem-head"><div class="problem-title">7. Equivalence classes</div><div class="tags"><span class="tag concept">MCQ</span><span class="tag">Partitions</span></div></div>
+      <p>Let \(R\) be an equivalence relation on a finite set \(S\). Which statements must be true? Select all correct options.</p>
+      <ol type="A"><li>Every element of \(S\) belongs to exactly one equivalence class.</li><li>Two equivalence classes are either identical or disjoint.</li><li>If \(aRb\), then \(a\) and \(b\) have the same equivalence class.</li><li>Every equivalence relation is antisymmetric.</li></ol>
+    </article>
+
+    <article class="problem" id="q08">
+      <div class="problem-head"><div class="problem-title">8. Two-bit machine trace</div><div class="tags"><span class="tag concept">MCQ</span><span class="tag">State machines</span></div></div>
+      <p>A machine has state \((a,b)\in\{0,1\}^2\). One move sends \((a,b)\) to \((b,1-a)\). Starting at \((0,0)\), which states occur after an even number of moves? Select all correct options.</p>
+      <ol type="A"><li>\((0,0)\)</li><li>\((1,1)\)</li><li>\((0,1)\)</li><li>\((1,0)\)</li></ol>
+    </article>
+
+    <article class="problem" id="q09">
+      <div class="problem-head"><div class="problem-title">9. Compose finite relations</div><div class="tags"><span class="tag concept">Short answer</span><span class="tag">Composition</span></div></div>
+      <p>Let \(R=\{(1,2),(2,3),(3,1)\}\) and \(S=\{(1,1),(2,1),(3,2)\}\). Compute \(S\circ R=\{(a,c): aRb \text{ and } bSc\}\).</p>
+      <p class="response-line">Answer space:</p>
+    </article>
+
+    <article class="problem" id="q10">
+      <div class="problem-head"><div class="problem-title">10. Reachable-state invariant</div><div class="tags"><span class="tag concept">Short answer</span><span class="tag">Invariant</span></div></div>
+      <p>A machine starts at \((0,0)\). Each move either adds \(2\) to the first coordinate or adds \(2\) to the second coordinate. Prove briefly that no reachable state has first coordinate plus second coordinate odd.</p>
+      <p class="response-line">Answer space:</p>
+    </article>
+
+    <div class="section-label">Topic 3 - Discrete Math: Combinations and Casework</div>
+
+    <article class="problem" id="q11">
+      <div class="problem-head"><div class="problem-title">11. Identical objects into boxes</div><div class="tags"><span class="tag concept">MCQ</span><span class="tag">Combinations</span></div></div>
+      <p>How many ways are there to put \(8\) identical tokens into \(3\) labelled boxes, allowing empty boxes? Select all correct options.</p>
+      <ol type="A"><li>The number of nonnegative solutions to \(x_1+x_2+x_3=8\)</li><li>\(\binom{10}{2}\)</li><li>\(\binom{8}{3}\)</li><li>\(3^8\)</li></ol>
+    </article>
+
+    <article class="problem" id="q12">
+      <div class="problem-head"><div class="problem-title">12. Upper bound restriction</div><div class="tags"><span class="tag concept">MCQ</span><span class="tag">Bounded count</span></div></div>
+      <p>How many nonnegative integer solutions to \(x_1+x_2+x_3=7\) have \(x_1\le 4\)? Select all correct expressions.</p>
+      <ol type="A"><li>\(\binom{9}{2}-\binom{4}{2}\)</li><li>\(\binom{9}{2}-\binom{2}{2}\)</li><li>\(\sum_{i=0}^{4}(8-i)\)</li><li>\(\binom{7}{2}\)</li></ol>
+    </article>
+
+    <article class="problem" id="q13">
+      <div class="problem-head"><div class="problem-title">13. At least two selected</div><div class="tags"><span class="tag concept">MCQ</span><span class="tag">Committees</span></div></div>
+      <p>A committee of \(5\) is chosen from \(4\) students in group A and \(6\) students in group B. Which expressions count committees containing at least \(2\) students from group A? Select all correct options.</p>
+      <ol type="A"><li>\(\sum_{i=2}^{4}\binom{4}{i}\binom{6}{5-i}\)</li><li>\(\binom{10}{5}-\binom{6}{5}-\binom{4}{1}\binom{6}{4}\)</li><li>\(\binom{4}{2}\binom{6}{3}\)</li><li>\(\binom{10}{5}-\binom{6}{5}\)</li></ol>
+    </article>
+
+    <article class="problem" id="q14">
+      <div class="problem-head"><div class="problem-title">14. Counting proof of an identity</div><div class="tags"><span class="tag concept">Short answer</span><span class="tag">Double counting</span></div></div>
+      <p>Give a combinatorial proof of \(\sum_{k=0}^{n}\binom{n}{k}=2^n\). Your proof must say what object both sides count.</p>
+      <p class="response-line">Answer space:</p>
+    </article>
+
+    <article class="problem" id="q15">
+      <div class="problem-head"><div class="problem-title">15. Forbidden equal pair</div><div class="tags"><span class="tag concept">Short answer</span><span class="tag">Casework</span></div></div>
+      <p>How many ordered pairs \((a,b)\) satisfy \(1\le a\le 6\), \(1\le b\le 6\), and \(a\ne b\)? State whether the order of the pair matters.</p>
+      <p class="response-line">Answer space:</p>
+    </article>
+
+    <div class="section-label">Topic 4 - DSA: Linked-List Invariants</div>
+
+    <article class="problem" id="q16">
+      <div class="problem-head"><div class="problem-title">16. Safe insertion order</div><div class="tags"><span class="tag concept">MCQ</span><span class="tag">Linked lists</span></div></div>
+      <p>A singly linked list has node \(p\), and a new node \(x\) must be inserted immediately after \(p\). Which assignment orders preserve the original suffix? Select all correct options.</p>
+      <ol type="A"><li>\(x.next=p.next;\ p.next=x\)</li><li>\(p.next=x;\ x.next=p.next\)</li><li>\(old=p.next;\ p.next=x;\ x.next=old\)</li><li>\(x.next=x;\ p.next=x\)</li></ol>
+    </article>
+
+    <article class="problem" id="q17">
+      <div class="problem-head"><div class="problem-title">17. Sentinel node effect</div><div class="tags"><span class="tag concept">MCQ</span><span class="tag">Representation</span></div></div>
+      <p>Which statements about using a sentinel head node in a linked list are necessarily true? Select all correct options.</p>
+      <ol type="A"><li>Insertion at the logical front can use the same local pointer pattern as insertion after a node.</li><li>The list can still be empty of data items.</li><li>No operation ever needs a boundary check.</li><li>The sentinel is not a user data item.</li></ol>
+    </article>
+
+    <article class="problem" id="q18">
+      <div class="problem-head"><div class="problem-title">18. Deleting from a singly linked list</div><div class="tags"><span class="tag concept">Short answer</span><span class="tag">Edge cases</span></div></div>
+      <p>List the cases that must be handled when deleting a node from a singly linked list that stores both \(head\) and \(tail\). Mention which external pointer can change in each case.</p>
+      <p class="response-line">Answer space:</p>
+    </article>
+
+    <article class="problem" id="q19">
+      <div class="problem-head"><div class="problem-title">19. Traversal invariant</div><div class="tags"><span class="tag concept">Short answer</span><span class="tag">Invariant</span></div></div>
+      <p>A loop walks pointer \(cur\) through a linked list while counting nodes already seen. State a useful loop invariant involving \(cur\), the count, and the processed prefix.</p>
+      <p class="response-line">Answer space:</p>
+    </article>
+
+    <article class="problem" id="q20">
+      <div class="problem-head"><div class="problem-title">20. Operation cost comparison</div><div class="tags"><span class="tag concept">Short answer</span><span class="tag">Runtime</span></div></div>
+      <p>Compare the time to insert before position \(i\) in an array-backed list and in a singly linked list when only \(i\) is given. Then compare again when a pointer to the previous node is already given.</p>
+      <p class="response-line">Answer space:</p>
+    </article>
+
+    <div class="section-label">Topic 5 - DSA: Stacks, Queues, and Traces</div>
+
+    <article class="problem" id="q21">
+      <div class="problem-head"><div class="problem-title">21. Mixed container trace</div><div class="tags"><span class="tag concept">MCQ</span><span class="tag">Trace</span></div></div>
+      <p>Starting empty, a stack receives \(push(1), push(2), pop(), push(3)\). Starting empty, a queue receives \(enqueue(1), enqueue(2), dequeue(), enqueue(3)\). Which statements are true? Select all correct options.</p>
+      <ol type="A"><li>The stack contains \(1,3\) from bottom to top.</li><li>The queue contains \(2,3\) from front to back.</li><li>The stack pop returns \(1\).</li><li>The queue dequeue returns \(1\).</li></ol>
+    </article>
+
+    <article class="problem" id="q22">
+      <div class="problem-head"><div class="problem-title">22. Two-stack queue</div><div class="tags"><span class="tag concept">MCQ</span><span class="tag">Queue implementation</span></div></div>
+      <p>A queue is implemented with input stack \(I\) and output stack \(O\). Enqueue pushes onto \(I\). Dequeue pops from \(O\), moving all items from \(I\) to \(O\) only when \(O\) is empty. Which statements are true? Select all correct options.</p>
+      <ol type="A"><li>Each item can move from \(I\) to \(O\) at most once.</li><li>The oldest queued item is on top of \(O\) after a transfer.</li><li>After every enqueue, all items must be moved to \(O\).</li><li>A sequence of \(m\) operations has total stack operations \(O(m)\).</li></ol>
+    </article>
+
+    <article class="problem" id="q23">
+      <div class="problem-head"><div class="problem-title">23. Circular buffer indices</div><div class="tags"><span class="tag concept">Short answer</span><span class="tag">Queue array</span></div></div>
+      <p>A circular queue has capacity \(5\), front index \(3\), and size \(2\). If items occupy indices \(3\) and \(4\), what index receives the next enqueue? After that enqueue, what are front and size?</p>
+      <p class="response-line">Answer space:</p>
+    </article>
+
+    <article class="problem" id="q24">
+      <div class="problem-head"><div class="problem-title">24. Bracket stack invariant</div><div class="tags"><span class="tag concept">Short answer</span><span class="tag">Stack invariant</span></div></div>
+      <p>For the usual stack algorithm that checks balanced brackets, state the invariant after reading the first \(i\) characters. Explain why a count of opening and closing brackets is not enough.</p>
+      <p class="response-line">Answer space:</p>
+    </article>
+
+    <article class="problem" id="q25">
+      <div class="problem-head"><div class="problem-title">25. Queue front convention</div><div class="tags"><span class="tag concept">Short answer</span><span class="tag">Trace</span></div></div>
+      <p>A queue starts empty. Run \(enqueue(A), enqueue(B), dequeue(), enqueue(C), enqueue(D), dequeue()\). What is returned by the two dequeues, and what remains from front to back?</p>
+      <p class="response-line">Answer space:</p>
+    </article>
+
+    <div class="section-label">Topic 6 - DSA: Implementation Edge Cases</div>
+
+    <article class="problem" id="q26">
+      <div class="problem-head"><div class="problem-title">26. Empty representation state</div><div class="tags"><span class="tag concept">MCQ</span><span class="tag">Invariant</span></div></div>
+      <p>A linked queue stores \(head\), \(tail\), and \(size\). Which states violate the usual representation invariant? Select all correct options.</p>
+      <ol type="A"><li>\(size=0,\ head=null,\ tail=null\)</li><li>\(size=0,\ head=null,\ tail\ne null\)</li><li>\(size=1,\ head=tail\ne null\)</li><li>\(size=2,\ head=tail\ne null\)</li></ol>
+    </article>
+
+    <article class="problem" id="q27">
+      <div class="problem-head"><div class="problem-title">27. Contract or invariant</div><div class="tags"><span class="tag concept">MCQ</span><span class="tag">Specification</span></div></div>
+      <p>For a stack method \(pop()\), classify which statements are implementation invariants rather than caller preconditions or postconditions. Select all correct options.</p>
+      <ol type="A"><li>The internal array segment \(0\) through \(size-1\) stores the current stack from bottom to top.</li><li>The caller should not call \(pop()\) on an empty stack unless the API specifies an exception.</li><li>After a successful \(pop()\), the returned item was the most recently pushed item still present.</li><li>\(0\le size\le capacity\) always holds for a valid stack object.</li></ol>
+    </article>
+
+    <article class="problem" id="q28">
+      <div class="problem-head"><div class="problem-title">28. Minimal failing sequence</div><div class="tags"><span class="tag concept">Short answer</span><span class="tag">Testing</span></div></div>
+      <p>A buggy linked-queue \(dequeue()\) moves \(head=head.next\) but never changes \(tail\). Give a short operation sequence that exposes the bug, and state the bad final internal state.</p>
+      <p class="response-line">Answer space:</p>
+    </article>
+
+    <article class="problem" id="q29">
+      <div class="problem-head"><div class="problem-title">29. Space overhead of links</div><div class="tags"><span class="tag concept">Short answer</span><span class="tag">Space</span></div></div>
+      <p>A singly linked list node stores one data field and one next pointer. A doubly linked list node stores one data field, one next pointer, and one previous pointer. For \(n\) data items, compare the number of pointer fields stored by the two representations.</p>
+      <p class="response-line">Answer space:</p>
+    </article>
+
+    <article class="problem" id="q30">
+      <div class="problem-head"><div class="problem-title">30. Preservation argument</div><div class="tags"><span class="tag concept">Short answer</span><span class="tag">Correctness</span></div></div>
+      <p>A stack represented by an array maintains the invariant that the top item, when the stack is nonempty, is stored at index \(size-1\). Explain briefly why the usual \(push(x)\) operation preserves this invariant.</p>
+      <p class="response-line">Answer space:</p>
+    </article>
+  </main>
+</body>
+</html>

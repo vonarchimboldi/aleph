@@ -26320,6 +26320,16 @@ function cmiDiscreteDsaReviewQuizzes(now, startDate) {
         "Discrete Math groups: counting/casework, relations/functions/state, proofs/induction/inclusion-exclusion.",
         "DSA groups: complexity/arrays/search, recursion/strings/sorting, lists/stacks/queues."
       ]
+    }),
+    cmiDiscreteDsaReviewQuiz(now, startDate, {
+      week: 3,
+      titleDate: "July 19",
+      dateOffset: 20,
+      materialUrl: "psets/week-03/july-19-cmi-msds-dm-dsa-review-quiz.html",
+      scopeDetails: [
+        "Discrete Math groups: binomial coefficients/permutations, relations/state machines, combinations/casework.",
+        "DSA groups: linked-list invariants, stacks/queues/traces, implementation edge cases."
+      ]
     })
   ];
 }
