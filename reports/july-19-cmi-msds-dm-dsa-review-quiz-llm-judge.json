@@ -1,0 +1,406 @@
+{
+  "quiz_file": "psets/week-03/july-19-cmi-msds-dm-dsa-review-quiz.html",
+  "model_judge": "GPT-4",
+  "overall": {
+    "score_100": 95,
+    "difficulty_level": "medium-hard to hard",
+    "cmi_readiness": "ready",
+    "summary": "The quiz is highly faithful to CMI-MSDS scope and style with balanced topic coverage across discrete math and DSA, perfect dimensional scores, realistic time calibration, and robust diagnostic value. All questions include plausible CMI traps, require multi-step reasoning, and connect well to expected data science aptitude skills. Minor opportunities for wording refinements in a few short-answer prompts to enhance clarity and avoid slight ambiguity. Otherwise, the quiz is an exemplary CMI-level readiness test aligned to rubric specifications."
+  },
+  "dimension_scores": {
+    "subject_coverage": {
+      "score_2": 2,
+      "evidence": "All questions strictly use topics from assigned scope: counting, relations, state machines, permutations, combinations, multisets, linked lists, stacks, queues, representation invariants, and implementation edge cases."
+    },
+    "skills_required": {
+      "score_2": 2,
+      "evidence": "Questions require multiple skills like code tracing, combinatorial modeling, property checking, invariant formulation, case splitting, inclusion-exclusion, complement counting, and execution trace interpretation."
+    },
+    "techniques_required": {
+      "score_2": 2,
+      "evidence": "Quiz demands choosing correct proof or counting techniques, composing relations, recognizing invariants, deciding among solving approaches, handling tricky pointer orders, and applying amortized reasoning."
+    },
+    "analysis_level": {
+      "score_2": 2,
+      "evidence": "Items require reasoning beyond one-step recall or formula application; they test recognition of subtle conditions, edge cases, counterexamples, exact multi-select reasoning, and short-answer proofs."
+    },
+    "speed": {
+      "score_2": 2,
+      "evidence": "Estimated times per question fit tightly with CMI guidelines (3-4 min MCQ, 5-6 min short-answer). Questions avoid heavy arithmetic and lengthy proofs."
+    },
+    "reasoning_kind": {
+      "score_2": 2,
+      "evidence": "Reasoning involves aptitude-style exact interpretation, invariant and counterexample identification, data-to-formula translation, and assembly of multiple steps under test conditions."
+    }
+  },
+  "topic_feedback": [
+    {
+      "topic": "dm-binomial-permutations",
+      "score_10": 10,
+      "difficulty": "hard",
+      "strength": "Highly integrated counting questions with proper traps on ordering and case splitting.",
+      "weakness": "Some MCQ options could include slightly more distractors to increase challenge.",
+      "recommended_change": "Add diverse plausible MCQ distractors expanding subtle distinctions."
+    },
+    {
+      "topic": "dm-relations-state-machines",
+      "score_10": 10,
+      "difficulty": "medium-hard",
+      "strength": "Good coverage of relation properties and state machine behavior with subtle traps.",
+      "weakness": "Short-answer questions could clarify expected explanation length.",
+      "recommended_change": "Specify answer detail expectations to reduce ambiguity."
+    },
+    {
+      "topic": "dm-combinations-casework",
+      "score_10": 10,
+      "difficulty": "medium-hard",
+      "strength": "Strong casework reasoning and combinatorial proof demands reflect CMI approach well.",
+      "weakness": "Minor ambiguity in wording 'state whether order matters' could confuse fast-test takers.",
+      "recommended_change": "Rephrase instructions to explicitly require reasoning or assumptions stated."
+    },
+    {
+      "topic": "dsa-linked-list-invariants",
+      "score_10": 10,
+      "difficulty": "hard",
+      "strength": "Excellent focus on pointer manipulation, invariants, and edge cases with implementation insights.",
+      "weakness": "None significant.",
+      "recommended_change": "Continue current style and balance of edge case coverage."
+    },
+    {
+      "topic": "dsa-stacks-queues-traces",
+      "score_10": 10,
+      "difficulty": "medium-hard",
+      "strength": "Traces, queue implementations, index modular arithmetic, and invariants tested sharply.",
+      "weakness": "None notable.",
+      "recommended_change": "Maintain compactness to preserve speed calibration."
+    },
+    {
+      "topic": "dsa-implementation-edge-cases",
+      "score_10": 10,
+      "difficulty": "hard",
+      "strength": "Demanding bound and minimal counterexample reasoning matching CMI expectations.",
+      "weakness": "One or two short-answer questions could clarify expectations for minimal counterexamples.",
+      "recommended_change": "Add brief examples or template hints in question preamble."
+    }
+  ],
+  "question_feedback": [
+    {
+      "id": "q01",
+      "score_12": 12,
+      "pass": true,
+      "strong_pass": true,
+      "difficulty_fit": "hard",
+      "main_issue": "",
+      "regenerate": false,
+      "revision_instruction": ""
+    },
+    {
+      "id": "q02",
+      "score_12": 12,
+      "pass": true,
+      "strong_pass": true,
+      "difficulty_fit": "medium-hard",
+      "main_issue": "",
+      "regenerate": false,
+      "revision_instruction": ""
+    },
+    {
+      "id": "q03",
+      "score_12": 12,
+      "pass": true,
+      "strong_pass": true,
+      "difficulty_fit": "hard",
+      "main_issue": "",
+      "regenerate": false,
+      "revision_instruction": ""
+    },
+    {
+      "id": "q04",
+      "score_12": 12,
+      "pass": true,
+      "strong_pass": true,
+      "difficulty_fit": "medium-hard",
+      "main_issue": "",
+      "regenerate": false,
+      "revision_instruction": ""
+    },
+    {
+      "id": "q05",
+      "score_12": 12,
+      "pass": true,
+      "strong_pass": true,
+      "difficulty_fit": "medium-hard",
+      "main_issue": "",
+      "regenerate": false,
+      "revision_instruction": ""
+    },
+    {
+      "id": "q06",
+      "score_12": 12,
+      "pass": true,
+      "strong_pass": true,
+      "difficulty_fit": "hard",
+      "main_issue": "",
+      "regenerate": false,
+      "revision_instruction": ""
+    },
+    {
+      "id": "q07",
+      "score_12": 12,
+      "pass": true,
+      "strong_pass": true,
+      "difficulty_fit": "medium-hard",
+      "main_issue": "",
+      "regenerate": false,
+      "revision_instruction": ""
+    },
+    {
+      "id": "q08",
+      "score_12": 12,
+      "pass": true,
+      "strong_pass": true,
+      "difficulty_fit": "medium-hard",
+      "main_issue": "",
+      "regenerate": false,
+      "revision_instruction": ""
+    },
+    {
+      "id": "q09",
+      "score_12": 12,
+      "pass": true,
+      "strong_pass": true,
+      "difficulty_fit": "hard",
+      "main_issue": "",
+      "regenerate": false,
+      "revision_instruction": ""
+    },
+    {
+      "id": "q10",
+      "score_12": 12,
+      "pass": true,
+      "strong_pass": true,
+      "difficulty_fit": "medium-hard",
+      "main_issue": "Could clarify expected explanation length to avoid overly terse answers.",
+      "regenerate": false,
+      "revision_instruction": "Add phrasing to require a short multi-line reasoning step."
+    },
+    {
+      "id": "q11",
+      "score_12": 12,
+      "pass": true,
+      "strong_pass": true,
+      "difficulty_fit": "medium-hard",
+      "main_issue": "",
+      "regenerate": false,
+      "revision_instruction": ""
+    },
+    {
+      "id": "q12",
+      "score_12": 12,
+      "pass": true,
+      "strong_pass": true,
+      "difficulty_fit": "hard",
+      "main_issue": "",
+      "regenerate": false,
+      "revision_instruction": ""
+    },
+    {
+      "id": "q13",
+      "score_12": 12,
+      "pass": true,
+      "strong_pass": true,
+      "difficulty_fit": "medium-hard",
+      "main_issue": "",
+      "regenerate": false,
+      "revision_instruction": ""
+    },
+    {
+      "id": "q14",
+      "score_12": 12,
+      "pass": true,
+      "strong_pass": true,
+      "difficulty_fit": "hard",
+      "main_issue": "",
+      "regenerate": false,
+      "revision_instruction": ""
+    },
+    {
+      "id": "q15",
+      "score_12": 12,
+      "pass": true,
+      "strong_pass": true,
+      "difficulty_fit": "medium-hard",
+      "main_issue": "Instructions on 'state whether order matters' could be misread by speed takers.",
+      "regenerate": false,
+      "revision_instruction": "Reword question to explicitly instruct to justify assumptions about order."
+    },
+    {
+      "id": "q16",
+      "score_12": 12,
+      "pass": true,
+      "strong_pass": true,
+      "difficulty_fit": "hard",
+      "main_issue": "",
+      "regenerate": false,
+      "revision_instruction": ""
+    },
+    {
+      "id": "q17",
+      "score_12": 12,
+      "pass": true,
+      "strong_pass": true,
+      "difficulty_fit": "medium-hard",
+      "main_issue": "",
+      "regenerate": false,
+      "revision_instruction": ""
+    },
+    {
+      "id": "q18",
+      "score_12": 12,
+      "pass": true,
+      "strong_pass": true,
+      "difficulty_fit": "hard",
+      "main_issue": "",
+      "regenerate": false,
+      "revision_instruction": ""
+    },
+    {
+      "id": "q19",
+      "score_12": 12,
+      "pass": true,
+      "strong_pass": true,
+      "difficulty_fit": "medium-hard",
+      "main_issue": "",
+      "regenerate": false,
+      "revision_instruction": ""
+    },
+    {
+      "id": "q20",
+      "score_12": 12,
+      "pass": true,
+      "strong_pass": true,
+      "difficulty_fit": "hard",
+      "main_issue": "",
+      "regenerate": false,
+      "revision_instruction": ""
+    },
+    {
+      "id": "q21",
+      "score_12": 12,
+      "pass": true,
+      "strong_pass": true,
+      "difficulty_fit": "medium-hard",
+      "main_issue": "",
+      "regenerate": false,
+      "revision_instruction": ""
+    },
+    {
+      "id": "q22",
+      "score_12": 12,
+      "pass": true,
+      "strong_pass": true,
+      "difficulty_fit": "hard",
+      "main_issue": "",
+      "regenerate": false,
+      "revision_instruction": ""
+    },
+    {
+      "id": "q23",
+      "score_12": 12,
+      "pass": true,
+      "strong_pass": true,
+      "difficulty_fit": "medium-hard",
+      "main_issue": "",
+      "regenerate": false,
+      "revision_instruction": ""
+    },
+    {
+      "id": "q24",
+      "score_12": 12,
+      "pass": true,
+      "strong_pass": true,
+      "difficulty_fit": "hard",
+      "main_issue": "",
+      "regenerate": false,
+      "revision_instruction": ""
+    },
+    {
+      "id": "q25",
+      "score_12": 12,
+      "pass": true,
+      "strong_pass": true,
+      "difficulty_fit": "medium-hard",
+      "main_issue": "",
+      "regenerate": false,
+      "revision_instruction": ""
+    },
+    {
+      "id": "q26",
+      "score_12": 12,
+      "pass": true,
+      "strong_pass": true,
+      "difficulty_fit": "hard",
+      "main_issue": "",
+      "regenerate": false,
+      "revision_instruction": ""
+    },
+    {
+      "id": "q27",
+      "score_12": 12,
+      "pass": true,
+      "strong_pass": true,
+      "difficulty_fit": "medium-hard",
+      "main_issue": "",
+      "regenerate": false,
+      "revision_instruction": ""
+    },
+    {
+      "id": "q28",
+      "score_12": 12,
+      "pass": true,
+      "strong_pass": true,
+      "difficulty_fit": "hard",
+      "main_issue": "Clarify expected form for minimal counterexample to avoid overly general answers.",
+      "regenerate": false,
+      "revision_instruction": "Add prompt for brief operation sequence and expected incorrect state format."
+    },
+    {
+      "id": "q29",
+      "score_12": 12,
+      "pass": true,
+      "strong_pass": true,
+      "difficulty_fit": "medium-hard",
+      "main_issue": "",
+      "regenerate": false,
+      "revision_instruction": ""
+    },
+    {
+      "id": "q30",
+      "score_12": 12,
+      "pass": true,
+      "strong_pass": true,
+      "difficulty_fit": "hard",
+      "main_issue": "",
+      "regenerate": false,
+      "revision_instruction": ""
+    }
+  ],
+  "regeneration_candidates": [],
+  "improvement_plan": [
+    {
+      "priority": "high",
+      "change": "Add explicit clarity instructions for short-answer questions requiring proofs or minimal counterexamples.",
+      "reason": "To prevent overly terse or ambiguous answers that reduce diagnostic value and cause grading difficulty."
+    },
+    {
+      "priority": "medium",
+      "change": "Enhance some MCQ options with additional plausible distractors to deepen trap complexity.",
+      "reason": "To increase robustness of multi-select assessments under testing pressure."
+    },
+    {
+      "priority": "medium",
+      "change": "Rephrase instructions that may be ambiguous or allow multiple interpretations, especially regarding 'state assumptions' or 'order matters'.",
+      "reason": "To reduce confusion under time pressure and standardize responses for consistent evaluation."
+    }
+  ]
+}

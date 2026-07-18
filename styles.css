@@ -1264,6 +1264,37 @@ textarea {
   min-width: min(100%, 260px);
 }
 
+.review-score-panel {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(88px, 128px) minmax(88px, 128px);
+  gap: 12px;
+  align-items: end;
+  padding: 14px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--panel);
+}
+
+.review-score-panel strong,
+.review-score-panel span {
+  display: block;
+}
+
+.review-score-panel p {
+  margin: 4px 0 0;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.review-score-panel input {
+  width: 100%;
+  min-height: 38px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 7px 9px;
+  font: inherit;
+}
+
 .solution-upload input,
 .feedback-note textarea {
   width: 100%;
@@ -3014,6 +3045,7 @@ a {
   .platinum-user-top,
   .platinum-user-row,
   .pace-summary,
+  .review-score-panel,
   .task-alert-list article,
   .schedule-row {
     align-items: flex-start;
@@ -3021,6 +3053,10 @@ a {
   }
 
   .pace-summary {
+    grid-template-columns: 1fr;
+  }
+
+  .review-score-panel {
     grid-template-columns: 1fr;
   }
 

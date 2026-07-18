@@ -27500,10 +27500,23 @@ function platinumOwnerFeedbackItems(snapshot) {
 }
 
 function localPlatinumReviewScores() {
+  const scoredReviewMaterials = platinumMaterialSnapshots()
+    .filter((material) => isReviewFeedbackEntry(material))
+    .filter((material) => Number.isFinite(material.reviewScore) && Number.isFinite(material.reviewScoreMax))
+    .map((material) => ({
+      materialId: material.materialId,
+      title: material.materialTitle || "Review quiz",
+      subject: material.subjectTitle || material.patternTitle || "Review",
+      date: material.reviewScoreUpdatedAt || material.feedbackUpdatedAt || material.date || "",
+      scoreLabel: reviewScoreLabel(material),
+      detail: material.feedbackSummary || material.feedbackVerdict || "Score recorded; feedback can be generated from the submitted solution."
+    }));
   return [
+    ...scoredReviewMaterials,
     ...(state.quizAttempts || [])
       .filter((attempt) => /review|quiz/i.test(`${attempt.title || ""} ${attempt.subject || ""}`))
       .map((attempt) => ({
+        materialId: attempt.id,
         title: attempt.title || "Review quiz",
         subject: attempt.subject || "Review",
         date: (attempt.date || "").slice(0, 10),
@@ -27511,26 +27524,64 @@ function localPlatinumReviewScores() {
         detail: attempt.feedback?.summary || `${attempt.correct ?? "-"} correct out of ${attempt.total ?? "-"}`
       })),
     ...quizAttemptFeedbackEntries().map((entry) => ({
+      materialId: entry.materialId,
       title: entry.materialTitle || "Review quiz feedback",
       subject: entry.subjectTitle || "Review",
       date: entry.feedbackUpdatedAt || entry.date || "",
       scoreLabel: entry.feedbackScore === null || entry.feedbackScore === undefined ? "Feedback" : `${entry.feedbackScore}`,
       detail: entry.feedbackSummary || entry.summary?.oneLine || ""
     }))
-  ].sort((a, b) => (b.date || "").localeCompare(a.date || ""));
+  ]
+    .filter(dedupeByMaterialAndTitle())
+    .sort((a, b) => (b.date || "").localeCompare(a.date || ""));
 }
 
 function platinumReviewScoresFromFeedback(snapshot) {
-  return platinumOwnerFeedbackItems(snapshot)
+  const materialItems = platinumOwnerMaterialItems(snapshot)
     .filter(isReviewFeedbackEntry)
+    .filter((item) => Number.isFinite(item.reviewScore) && Number.isFinite(item.reviewScoreMax));
+  const feedbackItems = platinumOwnerFeedbackItems(snapshot)
+    .filter(isReviewFeedbackEntry)
+    .filter((item) => !materialItems.some((material) => material.materialId && material.materialId === item.materialId));
+  return [
+    ...materialItems,
+    ...feedbackItems
+  ]
     .map((item) => ({
       title: item.materialTitle || "Review quiz",
       subject: item.subjectTitle || item.patternTitle || "Review",
-      date: item.feedbackUpdatedAt || item.uploadedAt || item.date || "",
-      scoreLabel: item.feedbackScore === null || item.feedbackScore === undefined ? (item.feedbackVerdict || "Feedback") : `${item.feedbackScore}`,
+      date: item.reviewScoreUpdatedAt || item.feedbackUpdatedAt || item.uploadedAt || item.date || "",
+      scoreLabel: Number.isFinite(item.reviewScore) && Number.isFinite(item.reviewScoreMax)
+        ? reviewScoreLabel(item)
+        : item.feedbackScore === null || item.feedbackScore === undefined ? (item.feedbackVerdict || "Feedback") : `${item.feedbackScore}`,
       detail: item.feedbackSummary || item.feedbackVerdict || item.feedbackNextDrill || ""
     }))
     .sort((a, b) => (b.date || "").localeCompare(a.date || ""));
+}
+
+function platinumOwnerMaterialItems(snapshot) {
+  return [
+    ...(snapshot?.materials?.due || []),
+    ...(snapshot?.materials?.upcoming || []),
+    ...(snapshot?.materials?.archivedWithSubmissions || [])
+  ].filter(Boolean);
+}
+
+function reviewScoreLabel(item) {
+  const percent = Number.isFinite(item.reviewScorePercent)
+    ? item.reviewScorePercent
+    : Math.round((item.reviewScore / item.reviewScoreMax) * 100);
+  return `${item.reviewScore}/${item.reviewScoreMax} (${percent}%)`;
+}
+
+function dedupeByMaterialAndTitle() {
+  const seen = new Set();
+  return (item) => {
+    const key = item.materialId || `${item.title || ""}-${item.date || ""}`;
+    if (seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  };
 }
 
 function platinumOwnerRecordFromSnapshot(snapshot, sourceLabel, options = {}) {
@@ -28182,6 +28233,9 @@ function renderSubjects() {
     container.querySelectorAll("[data-save-pattern-feedback]").forEach((button) => {
       button.addEventListener("click", () => savePatternFeedback(button));
     });
+    container.querySelectorAll("[data-review-score], [data-review-score-max]").forEach((input) => {
+      input.addEventListener("change", () => saveReviewQuizScore(input));
+    });
     container.querySelectorAll("[data-open-day-feedback]").forEach((button) => {
       button.addEventListener("click", () => {
         selectedPatternMaterialId = button.dataset.openDayFeedback;
@@ -28249,6 +28303,9 @@ function renderTests() {
   container.querySelectorAll("[data-save-pattern-feedback]").forEach((button) => {
     button.addEventListener("click", () => savePatternFeedback(button));
   });
+  container.querySelectorAll("[data-review-score], [data-review-score-max]").forEach((input) => {
+    input.addEventListener("change", () => saveReviewQuizScore(input));
+  });
 }
 
 function testTemplate(test) {
@@ -28314,6 +28371,7 @@ function reviewQuizSubmissionTemplate(test, submission, feedbackRecord) {
         <span>Optional notes for grader</span>
         <textarea data-solution-text="${escapeHtml(materialId)}" rows="4" placeholder="Add typed answers, scratch-work notes, or context if the upload is handwritten.">${escapeHtml(submission?.solutionText || "")}</textarea>
       </label>
+      ${reviewScoreControlsTemplate(materialId, submission, test.questionCount || 30)}
       <button class="small-btn" data-save-pattern-feedback type="button" ${submission?.fileName ? "" : "disabled"}>${hasFeedback ? "Regenerate AI feedback report" : "Generate AI feedback report"}</button>
       ${feedbackWorkflowTemplate(test.feedbackWorkflow || reviewQuizFeedbackWorkflow(test), feedbackRecord)}
     </section>
@@ -28711,6 +28769,7 @@ function patternMaterialFeedbackPageTemplate(subject, material) {
   const feedbackRecord = submission?.feedbackRecord || {};
   const hasSubmission = Boolean(submission?.fileName);
   const uploadSummary = submissionSummary(submission);
+  const showReviewScore = isReviewMaterial(pattern, week);
   return `
     <article class="subject-reader pattern-workspace feedback-page-workspace">
       <div class="subject-reader-header">
@@ -28747,10 +28806,12 @@ function patternMaterialFeedbackPageTemplate(subject, material) {
               <summary>Optional notes for feedback</summary>
               <textarea data-solution-text="${escapeHtml(week.id)}" rows="5" placeholder="Add any handwritten context that the upload may not capture.">${escapeHtml(submission?.solutionText || "")}</textarea>
             </details>
+            ${showReviewScore ? reviewScoreControlsTemplate(week.id, submission, defaultReviewScoreMax(week)) : ""}
           </section>
           <section class="feedback-context-card">
             <h5>Current Feedback</h5>
             <p>${submission?.feedback ? escapeHtml(submission.feedback) : "No AI feedback generated yet."}</p>
+            ${showReviewScore ? `<p class="fine-print">${escapeHtml(reviewScoreSummary(submission))}</p>` : ""}
             ${submission?.feedbackEmailSentAt ? `<p class="fine-print">Email sent ${formatDate(submission.feedbackEmailSentAt.slice(0, 10))}.</p>` : ""}
           </section>
         </div>
@@ -28851,6 +28912,48 @@ function feedbackWorkflowTemplate(workflow, feedbackRecord) {
       ${feedbackRecord?.studentReport ? generatedFeedbackReportTemplate(feedbackRecord) : '<p class="feedback-placeholder">No feedback generated yet. Upload the learner solution and run the generator.</p>'}
     </section>
   `;
+}
+
+function isReviewMaterial(pattern = {}, week = {}) {
+  return /review|quiz/i.test(`${pattern.title || ""} ${pattern.id || ""} ${week.materialTitle || ""} ${week.id || ""}`);
+}
+
+function defaultReviewScoreMax(week = {}) {
+  if (/cmi|30-question/i.test(`${week.materialTitle || ""} ${week.expectedWork || ""}`)) return 30;
+  if (/6\s+ISI|six-topic|6 questions/i.test(`${week.materialTitle || ""} ${week.expectedWork || ""}`)) return 6;
+  return 100;
+}
+
+function reviewScoreControlsTemplate(materialId, submission = {}, defaultMax = 100) {
+  const score = submission?.reviewScore ?? "";
+  const max = submission?.reviewScoreMax ?? defaultMax;
+  const summary = reviewScoreSummary(submission);
+  return `
+    <section class="review-score-panel">
+      <div>
+        <strong>Review score</strong>
+        <p>${escapeHtml(summary)}</p>
+      </div>
+      <label>
+        <span>Score</span>
+        <input type="number" min="0" step="0.5" inputmode="decimal" data-review-score="${escapeHtml(materialId)}" value="${escapeHtml(score)}">
+      </label>
+      <label>
+        <span>Out of</span>
+        <input type="number" min="1" step="0.5" inputmode="decimal" data-review-score-max="${escapeHtml(materialId)}" value="${escapeHtml(max)}">
+      </label>
+    </section>
+  `;
+}
+
+function reviewScoreSummary(submission = {}) {
+  if (!Number.isFinite(submission?.reviewScore) || !Number.isFinite(submission?.reviewScoreMax)) {
+    return "No review score recorded yet.";
+  }
+  const percent = Number.isFinite(submission.reviewScorePercent)
+    ? submission.reviewScorePercent
+    : Math.round((submission.reviewScore / submission.reviewScoreMax) * 100);
+  return `${submission.reviewScore}/${submission.reviewScoreMax} (${percent}%)${submission.reviewScoreUpdatedAt ? ` recorded ${formatDate(submission.reviewScoreUpdatedAt.slice(0, 10))}` : ""}`;
 }
 
 function generatedFeedbackReportTemplate(record) {
@@ -29012,6 +29115,37 @@ function upsertPatternSubmission(materialId, updates) {
   return entry;
 }
 
+function saveReviewQuizScore(input) {
+  const materialId = input.dataset.reviewScore || input.dataset.reviewScoreMax;
+  if (!materialId) return;
+  const card = input.closest("[data-material-card]") || document;
+  const scoreInput = card.querySelector(`[data-review-score="${CSS.escape(materialId)}"]`);
+  const maxInput = card.querySelector(`[data-review-score-max="${CSS.escape(materialId)}"]`);
+  const score = Number.parseFloat(scoreInput?.value || "");
+  const max = Number.parseFloat(maxInput?.value || "");
+  if (!Number.isFinite(score) && !Number.isFinite(max)) return;
+  if (!Number.isFinite(score) || !Number.isFinite(max) || max <= 0 || score < 0 || score > max) {
+    alert("Enter a valid review score with 0 <= score <= out of.");
+    return;
+  }
+  const reviewScorePercent = Math.round((score / max) * 100);
+  const reviewScoreUpdatedAt = new Date().toISOString();
+  upsertPatternSubmission(materialId, {
+    reviewScore: score,
+    reviewScoreMax: max,
+    reviewScorePercent,
+    reviewScoreUpdatedAt
+  });
+  persist();
+  syncPatternSubmissionRecord(materialId, {
+    reviewScore: score,
+    reviewScoreMax: max,
+    reviewScorePercent,
+    reviewScoreUpdatedAt
+  });
+  render();
+}
+
 function durableSubmissionRecord(materialId, submission, overrides = {}) {
   const material = findPatternMaterialAcrossState(materialId);
   const feedbackRecord = submission?.feedbackRecord || null;
@@ -29040,6 +29174,10 @@ function durableSubmissionRecord(materialId, submission, overrides = {}) {
     feedbackModel: feedbackRecord?.feedbackModel || "",
     feedbackVerdict: feedbackRecord?.verdict || "",
     feedbackScore: feedbackRecord?.score ?? null,
+    reviewScore: submission?.reviewScore ?? null,
+    reviewScoreMax: submission?.reviewScoreMax ?? null,
+    reviewScorePercent: submission?.reviewScorePercent ?? null,
+    reviewScoreUpdatedAt: submission?.reviewScoreUpdatedAt || "",
     ...overrides
   };
 }
@@ -29358,6 +29496,10 @@ function buildSubmissionFeedbackText(submission, optionalNotes = "") {
     `File size: ${submission.fileSizeLabel || "unknown"}`,
     `Uploaded at: ${submission.uploadedAt || "unknown"}`
   ];
+  if (Number.isFinite(submission.reviewScore) && Number.isFinite(submission.reviewScoreMax)) {
+    const percent = submission.reviewScorePercent ?? Math.round((submission.reviewScore / submission.reviewScoreMax) * 100);
+    lines.push(`Recorded review score: ${submission.reviewScore}/${submission.reviewScoreMax} (${percent}%)`);
+  }
   const capturedText = optionalNotes || submission.solutionText || "";
   if (capturedText) {
     lines.push("", "Captured solution text or learner notes:", capturedText.slice(0, 30000));
@@ -31020,6 +31162,10 @@ function platinumMaterialSnapshot(subject, pattern, week, options = {}) {
     feedbackModel: feedbackRecord?.feedbackModel || "",
     feedbackVerdict: feedbackRecord?.verdict || "",
     feedbackScore: feedbackRecord?.score ?? null,
+    reviewScore: submission?.reviewScore ?? null,
+    reviewScoreMax: submission?.reviewScoreMax ?? null,
+    reviewScorePercent: submission?.reviewScorePercent ?? null,
+    reviewScoreUpdatedAt: submission?.reviewScoreUpdatedAt || "",
     feedbackConceptGap: feedbackRecord?.conceptGap?.tag || "",
     feedbackFirstIssue: feedbackRecord?.firstIssue?.location || "",
     feedbackNextDrill: feedbackRecord?.nextDrill?.instruction || "",
