@@ -29380,7 +29380,7 @@ async function savePatternFeedback(button) {
     alert("The uploaded file content is no longer available in this browser session. Upload the PDF/image again, and feedback will start automatically.");
     return;
   }
-  const optionalNotes = card.querySelector(`[data-solution-text="${CSS.escape(materialId)}"]`)?.value.trim() || "";
+  const optionalNotes = materialTextInputValue(materialId, card);
   const solutionText = buildSubmissionFeedbackText(submission, optionalNotes);
   const material = findPatternMaterialAcrossState(materialId);
   const workflow = material?.week?.feedbackWorkflow || defaultFeedbackWorkflow(material?.pattern || {}, material?.week || { id: materialId, materialTitle: "Aleph material" });
@@ -29435,6 +29435,13 @@ async function savePatternFeedback(button) {
     feedbackScore: feedbackRecord?.score ?? null
   });
   render();
+}
+
+function materialTextInputValue(materialId, preferredScope = document) {
+  const selector = `[data-solution-text="${CSS.escape(materialId)}"]`;
+  return preferredScope.querySelector(selector)?.value.trim()
+    || document.querySelector(selector)?.value.trim()
+    || "";
 }
 
 async function parseFeedbackErrorMessage(result) {
