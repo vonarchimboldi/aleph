@@ -27932,6 +27932,7 @@ function formatDateTimeLabel(value) {
 function renderFeedback() {
   const container = document.querySelector("#feedback-list");
   const generatedEntries = generatedFeedbackEntries();
+  const scoreRecords = feedbackScoreRecords(generatedEntries);
   const reviewEntries = [
     ...generatedEntries.filter(isReviewFeedbackEntry),
     ...quizAttemptFeedbackEntries()
@@ -27943,7 +27944,7 @@ function renderFeedback() {
   const subjectGroups = groupFeedbackEntries(generatedEntries, (entry) => entry.subjectTitle);
   const manualNotes = state.feedback || [];
 
-  if (!generatedEntries.length && !manualNotes.length) {
+  if (!generatedEntries.length && !manualNotes.length && !scoreRecords.length) {
     container.innerHTML = '<div class="empty">No feedback items yet.</div>';
     return;
   }
@@ -27964,6 +27965,8 @@ function renderFeedback() {
           <strong>${manualNotes.length}</strong>
         </article>
       </div>
+
+      ${testScoreProgressSectionTemplate(scoreRecords)}
 
       <section class="feedback-section">
         <div class="feedback-section-title">
@@ -28022,6 +28025,249 @@ function renderFeedback() {
       render();
     });
   });
+}
+
+function feedbackScoreRecords(generatedEntries = generatedFeedbackEntries()) {
+  const records = [];
+  const seen = new Set();
+  const addRecord = (record) => {
+    if (!record?.id || seen.has(record.id)) return;
+    seen.add(record.id);
+    records.push(record);
+  };
+
+  platinumMaterialSnapshots()
+    .filter(isReviewFeedbackEntry)
+    .forEach((material) => {
+      const submission = patternSubmission(material.materialId) || {};
+      const feedbackRecord = submission.feedbackRecord || {};
+      const manual = Number.isFinite(submission.reviewScore) && Number.isFinite(submission.reviewScoreMax);
+      const ai = Number.isFinite(feedbackRecord.score) && Number.isFinite(feedbackRecord.maxScore);
+      if (!manual && !ai) return;
+      addRecord({
+        id: material.materialId,
+        title: material.materialTitle || "Review quiz",
+        subject: material.subjectTitle || material.patternTitle || "Review",
+        date: submission.reviewScoreUpdatedAt || material.feedbackUpdatedAt || material.date || "",
+        manualScore: manual ? submission.reviewScore : null,
+        manualMax: manual ? submission.reviewScoreMax : null,
+        aiScore: ai ? feedbackRecord.score : null,
+        aiMax: ai ? feedbackRecord.maxScore : null,
+        feedbackSummary: compactGeneratedFeedbackSummary(material, feedbackRecord),
+        hasFeedback: Boolean(feedbackRecord.studentReport)
+      });
+    });
+
+  generatedEntries
+    .filter(isReviewFeedbackEntry)
+    .forEach((entry) => {
+      const record = entry.feedbackRecord || {};
+      if (!Number.isFinite(record.score) || !Number.isFinite(record.maxScore)) return;
+      addRecord({
+        id: entry.materialId,
+        title: entry.materialTitle || "Review quiz feedback",
+        subject: entry.subjectTitle || entry.patternTitle || "Review",
+        date: entry.feedbackUpdatedAt || entry.date || "",
+        manualScore: null,
+        manualMax: null,
+        aiScore: record.score,
+        aiMax: record.maxScore,
+        feedbackSummary: entry.summary || compactGeneratedFeedbackSummary(entry, record),
+        hasFeedback: Boolean(record.studentReport)
+      });
+    });
+
+  (state.quizAttempts || [])
+    .filter((attempt) => /review|quiz/i.test(`${attempt.title || ""} ${attempt.subject || ""}`))
+    .forEach((attempt) => {
+      const total = Number.isFinite(attempt.total) ? attempt.total : null;
+      const score = Number.isFinite(attempt.score) ? attempt.score : Number.isFinite(attempt.correct) ? attempt.correct : null;
+      const aiScore = Number.isFinite(attempt.feedback?.score) ? attempt.feedback.score : null;
+      const aiMax = Number.isFinite(attempt.feedback?.maxScore) ? attempt.feedback.maxScore : null;
+      if ((!Number.isFinite(score) || !Number.isFinite(total)) && !Number.isFinite(aiScore)) return;
+      addRecord({
+        id: attempt.id,
+        title: attempt.title || "Objective review quiz",
+        subject: attempt.subject || "Review",
+        date: attempt.date || "",
+        manualScore: Number.isFinite(score) && Number.isFinite(total) ? score : null,
+        manualMax: Number.isFinite(score) && Number.isFinite(total) ? total : null,
+        aiScore,
+        aiMax,
+        feedbackSummary: compactQuizAttemptFeedbackSummary(attempt),
+        hasFeedback: Boolean(attempt.feedback)
+      });
+    });
+
+  return records
+    .map((record) => ({
+      ...record,
+      primaryScore: primaryScoreForProgress(record)
+    }))
+    .filter((record) => record.primaryScore)
+    .sort((a, b) => (b.date || "").localeCompare(a.date || ""));
+}
+
+function primaryScoreForProgress(record = {}) {
+  if (Number.isFinite(record.manualScore) && Number.isFinite(record.manualMax) && record.manualMax > 0) {
+    return {
+      label: "Test score",
+      score: record.manualScore,
+      max: record.manualMax,
+      percent: Math.round((record.manualScore / record.manualMax) * 100)
+    };
+  }
+  if (Number.isFinite(record.aiScore) && Number.isFinite(record.aiMax) && record.aiMax > 0) {
+    return {
+      label: "AI graded score",
+      score: record.aiScore,
+      max: record.aiMax,
+      percent: Math.round((record.aiScore / record.aiMax) * 100)
+    };
+  }
+  return null;
+}
+
+function testScoreProgressSectionTemplate(records = []) {
+  const summary = testScoreProgressSummary(records);
+  const subjectRows = testScoreSubjectRows(records);
+  const trend = records.slice().sort((a, b) => (a.date || "").localeCompare(b.date || ""));
+  return `
+    <section class="feedback-section test-score-section">
+      <div class="feedback-section-title">
+        <div>
+          <h4>Test Scores and Progress</h4>
+          <p>Review quiz scores and generated feedback are tracked together so score movement, weak topics, and repair priorities stay visible.</p>
+        </div>
+        <span class="tag">${records.length} scored ${records.length === 1 ? "test" : "tests"}</span>
+      </div>
+      ${records.length ? `
+        <div class="score-progress-summary">
+          <article>
+            <span>Average</span>
+            <strong>${summary.average}%</strong>
+            <p>${summary.count} scored ${summary.count === 1 ? "test" : "tests"}</p>
+          </article>
+          <article>
+            <span>Latest</span>
+            <strong>${summary.latest.percent}%</strong>
+            <p>${escapeHtml(summary.latest.title)}</p>
+          </article>
+          <article>
+            <span>Best</span>
+            <strong>${summary.best.percent}%</strong>
+            <p>${escapeHtml(summary.best.title)}</p>
+          </article>
+          <article>
+            <span>Trend</span>
+            <strong>${escapeHtml(summary.trendLabel)}</strong>
+            <p>${escapeHtml(summary.trendDetail)}</p>
+          </article>
+        </div>
+        <div class="score-trend-strip" aria-label="Test score trend">
+          ${trend.map(scoreTrendPointTemplate).join("")}
+        </div>
+        <div class="score-subject-grid">
+          ${subjectRows.map(scoreSubjectCardTemplate).join("")}
+        </div>
+        <div class="score-history-list">
+          ${records.map(scoreHistoryCardTemplate).join("")}
+        </div>
+      ` : '<p class="feedback-placeholder">No review test scores recorded yet. Enter a manual score or regenerate AI feedback after an upload.</p>'}
+    </section>
+  `;
+}
+
+function testScoreProgressSummary(records = []) {
+  const percents = records.map((record) => record.primaryScore.percent);
+  const average = Math.round(percents.reduce((sum, value) => sum + value, 0) / Math.max(1, percents.length));
+  const sortedChronological = records.slice().sort((a, b) => (a.date || "").localeCompare(b.date || ""));
+  const latest = records[0]?.primaryScore ? { ...records[0].primaryScore, title: records[0].title } : { percent: 0, title: "No score yet" };
+  const bestRecord = records.slice().sort((a, b) => b.primaryScore.percent - a.primaryScore.percent)[0] || records[0];
+  const best = bestRecord ? { ...bestRecord.primaryScore, title: bestRecord.title } : { percent: 0, title: "No score yet" };
+  const first = sortedChronological[0]?.primaryScore?.percent;
+  const last = sortedChronological.at(-1)?.primaryScore?.percent;
+  const delta = Number.isFinite(first) && Number.isFinite(last) ? last - first : 0;
+  return {
+    count: records.length,
+    average,
+    latest,
+    best,
+    trendLabel: delta > 0 ? `+${delta} pts` : delta < 0 ? `${delta} pts` : "Flat",
+    trendDetail: records.length > 1 ? "Latest score compared with earliest scored test." : "Need another scored test for trend."
+  };
+}
+
+function testScoreSubjectRows(records = []) {
+  const groups = groupFeedbackEntries(records, (record) => record.subject);
+  return groups.map((group) => {
+    const percents = group.entries.map((entry) => entry.primaryScore.percent);
+    const latest = group.entries.slice().sort((a, b) => (b.date || "").localeCompare(a.date || ""))[0];
+    return {
+      subject: group.title,
+      count: group.entries.length,
+      average: Math.round(percents.reduce((sum, value) => sum + value, 0) / Math.max(1, percents.length)),
+      latestPercent: latest?.primaryScore?.percent ?? 0,
+      latestTitle: latest?.title || "No latest score"
+    };
+  });
+}
+
+function scoreTrendPointTemplate(record) {
+  const score = record.primaryScore;
+  return `
+    <article class="score-trend-point" title="${escapeHtml(record.title)}: ${score.percent}%">
+      <div class="score-bar-track"><span style="height: ${Math.max(4, Math.min(100, score.percent))}%"></span></div>
+      <strong>${score.percent}%</strong>
+      <p>${record.date ? escapeHtml(formatDate(record.date.slice(0, 10))) : "No date"}</p>
+    </article>
+  `;
+}
+
+function scoreSubjectCardTemplate(row) {
+  return `
+    <article class="score-subject-card">
+      <div>
+        <strong>${escapeHtml(row.subject)}</strong>
+        <p>${row.count} scored ${row.count === 1 ? "test" : "tests"} - latest ${row.latestPercent}%</p>
+      </div>
+      <div class="score-ring" style="--score: ${Math.max(0, Math.min(100, row.average))}%">
+        <span>${row.average}%</span>
+      </div>
+    </article>
+  `;
+}
+
+function scoreHistoryCardTemplate(record) {
+  const score = record.primaryScore;
+  const summary = record.feedbackSummary || {};
+  const manualLine = Number.isFinite(record.manualScore) && Number.isFinite(record.manualMax)
+    ? `<span>Manual: ${escapeHtml(record.manualScore)}/${escapeHtml(record.manualMax)}</span>`
+    : "";
+  const aiLine = Number.isFinite(record.aiScore) && Number.isFinite(record.aiMax)
+    ? `<span>AI: ${escapeHtml(record.aiScore)}/${escapeHtml(record.aiMax)}</span>`
+    : "";
+  return `
+    <article class="score-history-card">
+      <div class="score-history-main">
+        <div>
+          <strong>${escapeHtml(record.title)}</strong>
+          <p>${escapeHtml(record.subject)}${record.date ? ` - ${formatDate(record.date.slice(0, 10))}` : ""}</p>
+          <div class="score-source-row">
+            ${manualLine}
+            ${aiLine}
+            <span>${record.hasFeedback ? "Feedback ready" : "No feedback yet"}</span>
+          </div>
+        </div>
+        <div class="score-badge">
+          <strong>${score.percent}%</strong>
+          <span>${escapeHtml(score.score)}/${escapeHtml(score.max)}</span>
+        </div>
+      </div>
+      <div class="score-progress-track"><span style="width: ${Math.max(0, Math.min(100, score.percent))}%"></span></div>
+      <p>${escapeHtml(summary.headline || summary.nextRepair || "No feedback summary recorded yet.")}</p>
+    </article>
+  `;
 }
 
 function generatedFeedbackEntries() {
