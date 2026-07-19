@@ -26622,8 +26622,34 @@ function prototypeUsers() {
 }
 
 function persist() {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+  persistToLocalStorage();
   schedulePlatinumProgressSync();
+}
+
+function persistToLocalStorage() {
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+  } catch (error) {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(storageSafeState(state)));
+  }
+}
+
+function storageSafeState(sourceState) {
+  return {
+    ...sourceState,
+    patternSubmissions: (sourceState.patternSubmissions || []).map((submission) => ({
+      ...submission,
+      fileDataUrl: "",
+      uploadProcessing: false,
+      feedbackUploadReady: Boolean(submission.solutionText),
+      feedbackBlocked: !submission.solutionText && isPdfOrImageSubmission(submission),
+      storageWarning: submission.solutionText
+        ? submission.storageWarning || ""
+        : submission.fileName
+          ? "The uploaded file was too large for browser persistence. Reupload it before generating AI feedback, or upload text/Markdown."
+          : submission.storageWarning || ""
+    }))
+  };
 }
 
 function schedulePlatinumProgressSync() {
@@ -26645,7 +26671,7 @@ async function syncPlatinumProgressSnapshot() {
     });
     if (result.ok) {
       state.user.lastPlatinumProgressSyncedAt = new Date().toISOString();
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+      persistToLocalStorage();
     }
   } catch {
     // Local-only development and offline sessions can still use browser state.
@@ -29103,7 +29129,7 @@ function submissionSummary(submission) {
   const parts = [`Submitted file: ${submission.fileName}`];
   if (submission.fileSizeLabel) parts.push(submission.fileSizeLabel);
   if (submission.uploadedAt) parts.push(`uploaded ${formatDate(submission.uploadedAt.slice(0, 10))}`);
-  if (submission.uploadProcessing) parts.push("processing upload");
+  if (submission.uploadProcessing && pendingUploadFiles.has(submission.materialId)) parts.push("processing upload");
   if (submission.solutionText) parts.push("text captured");
   else if (submission.fileDataUrl) parts.push("file saved locally");
   else if (submission.feedbackUploadReady && pendingUploadFiles.has(submission.materialId)) parts.push("ready for feedback");
@@ -29275,7 +29301,6 @@ function savePatternSolutionUpload(input) {
       feedbackFiles: [],
       processing: true
     });
-    const canPersistFile = file.size <= 2500000;
     let canSendForFeedback = file.size <= MAX_FEEDBACK_ATTACHMENT_BYTES;
     let feedbackFiles = canSendForFeedback
       ? [{
@@ -29285,7 +29310,7 @@ function savePatternSolutionUpload(input) {
         }]
       : [];
     let storageWarning = canSendForFeedback
-      ? (canPersistFile ? "" : "This file is attached for feedback in the current browser session but is too large for local persistence. Production backend file storage is still needed for durable uploads after refresh.")
+      ? "This file is attached for feedback in the current browser session. Reupload after refresh until durable file storage is added."
       : `This file is too large for direct feedback upload. Use a PDF/image under ${formatFileSize(MAX_FEEDBACK_ATTACHMENT_BYTES)} or upload text/Markdown for automatic parsing.`;
     if (!canSendForFeedback && isPdfSolutionFile(file)) {
       try {
@@ -29307,7 +29332,7 @@ function savePatternSolutionUpload(input) {
     });
     upsertPatternSubmission(materialId, {
       ...baseUpdates,
-      fileDataUrl: canPersistFile ? fileDataUrl : "",
+      fileDataUrl: "",
       storageWarning,
       uploadProcessing: false,
       feedbackUploadReady: canSendForFeedback,
