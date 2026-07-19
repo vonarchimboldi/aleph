@@ -27555,7 +27555,7 @@ function platinumOwnerFeedbackItems(snapshot) {
 function localPlatinumReviewScores() {
   const scoredReviewMaterials = platinumMaterialSnapshots()
     .filter((material) => isReviewFeedbackEntry(material))
-    .filter((material) => Number.isFinite(material.reviewScore) && Number.isFinite(material.reviewScoreMax))
+    .filter((material) => hasReviewOrFeedbackScore(material))
     .map((material) => ({
       materialId: material.materialId,
       title: material.materialTitle || "Review quiz",
@@ -27581,7 +27581,7 @@ function localPlatinumReviewScores() {
       title: entry.materialTitle || "Review quiz feedback",
       subject: entry.subjectTitle || "Review",
       date: entry.feedbackUpdatedAt || entry.date || "",
-      scoreLabel: entry.feedbackScore === null || entry.feedbackScore === undefined ? "Feedback" : `${entry.feedbackScore}`,
+      scoreLabel: reviewScoreLabel(entry),
       detail: entry.feedbackSummary || entry.summary?.oneLine || ""
     }))
   ]
@@ -27592,9 +27592,10 @@ function localPlatinumReviewScores() {
 function platinumReviewScoresFromFeedback(snapshot) {
   const materialItems = platinumOwnerMaterialItems(snapshot)
     .filter(isReviewFeedbackEntry)
-    .filter((item) => Number.isFinite(item.reviewScore) && Number.isFinite(item.reviewScoreMax));
+    .filter((item) => hasReviewOrFeedbackScore(item));
   const feedbackItems = platinumOwnerFeedbackItems(snapshot)
     .filter(isReviewFeedbackEntry)
+    .filter((item) => hasReviewOrFeedbackScore(item))
     .filter((item) => !materialItems.some((material) => material.materialId && material.materialId === item.materialId));
   return [
     ...materialItems,
@@ -27604,9 +27605,7 @@ function platinumReviewScoresFromFeedback(snapshot) {
       title: item.materialTitle || "Review quiz",
       subject: item.subjectTitle || item.patternTitle || "Review",
       date: item.reviewScoreUpdatedAt || item.feedbackUpdatedAt || item.uploadedAt || item.date || "",
-      scoreLabel: Number.isFinite(item.reviewScore) && Number.isFinite(item.reviewScoreMax)
-        ? reviewScoreLabel(item)
-        : item.feedbackScore === null || item.feedbackScore === undefined ? (item.feedbackVerdict || "Feedback") : `${item.feedbackScore}`,
+      scoreLabel: reviewScoreLabel(item),
       detail: item.feedbackSummary || item.feedbackVerdict || item.feedbackNextDrill || ""
     }))
     .sort((a, b) => (b.date || "").localeCompare(a.date || ""));
@@ -27621,10 +27620,20 @@ function platinumOwnerMaterialItems(snapshot) {
 }
 
 function reviewScoreLabel(item) {
+  if (!hasReviewOrFeedbackScore(item)) return item.feedbackVerdict || "Feedback";
+  if (!Number.isFinite(item.reviewScore) || !Number.isFinite(item.reviewScoreMax)) {
+    const maxScore = Number.isFinite(item.feedbackMaxScore) ? item.feedbackMaxScore : 10;
+    return `AI feedback score ${item.feedbackScore}/${maxScore}`;
+  }
   const percent = Number.isFinite(item.reviewScorePercent)
     ? item.reviewScorePercent
     : Math.round((item.reviewScore / item.reviewScoreMax) * 100);
   return `${item.reviewScore}/${item.reviewScoreMax} (${percent}%)`;
+}
+
+function hasReviewOrFeedbackScore(item) {
+  return (Number.isFinite(item?.reviewScore) && Number.isFinite(item?.reviewScoreMax))
+    || Number.isFinite(item?.feedbackScore);
 }
 
 function dedupeByMaterialAndTitle() {
@@ -28040,6 +28049,8 @@ function quizAttemptFeedbackEntries() {
       feedbackReady: true,
       feedbackUpdatedAt: attempt.date || "",
       feedbackSummary: attempt.feedback.summary || "",
+      feedbackScore: attempt.feedback.score ?? null,
+      feedbackMaxScore: attempt.feedback.maxScore ?? null,
       feedbackRecord: null,
       summary: compactQuizAttemptFeedbackSummary(attempt)
     }))
@@ -29015,6 +29026,11 @@ function reviewScoreControlsTemplate(materialId, submission = {}, defaultMax = 1
 
 function reviewScoreSummary(submission = {}) {
   if (!Number.isFinite(submission?.reviewScore) || !Number.isFinite(submission?.reviewScoreMax)) {
+    const feedbackScore = submission?.feedbackRecord?.score;
+    const feedbackMaxScore = submission?.feedbackRecord?.maxScore;
+    if (Number.isFinite(feedbackScore)) {
+      return `AI feedback score ${feedbackScore}/${Number.isFinite(feedbackMaxScore) ? feedbackMaxScore : 10}. Enter the test score above if you want a question-count score.`;
+    }
     return "No review score recorded yet.";
   }
   const percent = Number.isFinite(submission.reviewScorePercent)
@@ -29025,10 +29041,14 @@ function reviewScoreSummary(submission = {}) {
 
 function generatedFeedbackReportTemplate(record) {
   const report = record.studentReport || {};
+  const scoreLine = Number.isFinite(record.score)
+    ? `<p><strong>AI feedback score:</strong> ${escapeHtml(record.score)}/${escapeHtml(Number.isFinite(record.maxScore) ? record.maxScore : 10)}</p>`
+    : "";
   return `
     <section class="feedback-spec generated-feedback-report">
       <div class="feedback-spec-title">${escapeHtml(report.headline || "Generated feedback report")}</div>
       ${feedbackModelTemplate(record)}
+      ${scoreLine}
       ${narrativeFeedbackTemplate(record)}
       ${prerequisiteChecksTemplate(record.prerequisiteChecks)}
       ${questionFeedbackTemplate(record.questionFeedback)}
@@ -29247,6 +29267,7 @@ function durableSubmissionRecord(materialId, submission, overrides = {}) {
     feedbackModel: feedbackRecord?.feedbackModel || "",
     feedbackVerdict: feedbackRecord?.verdict || "",
     feedbackScore: feedbackRecord?.score ?? null,
+    feedbackMaxScore: feedbackRecord?.maxScore ?? null,
     reviewScore: submission?.reviewScore ?? null,
     reviewScoreMax: submission?.reviewScoreMax ?? null,
     reviewScorePercent: submission?.reviewScorePercent ?? null,
@@ -29546,7 +29567,8 @@ async function savePatternFeedback(button) {
     feedbackUpdatedAt: new Date().toISOString(),
     feedbackModel: feedbackRecord?.feedbackModel || "",
     feedbackVerdict: feedbackRecord?.verdict || "",
-    feedbackScore: feedbackRecord?.score ?? null
+    feedbackScore: feedbackRecord?.score ?? null,
+    feedbackMaxScore: feedbackRecord?.maxScore ?? null
   });
   render();
 }
@@ -31287,6 +31309,7 @@ function platinumMaterialSnapshot(subject, pattern, week, options = {}) {
     feedbackModel: feedbackRecord?.feedbackModel || "",
     feedbackVerdict: feedbackRecord?.verdict || "",
     feedbackScore: feedbackRecord?.score ?? null,
+    feedbackMaxScore: feedbackRecord?.maxScore ?? null,
     reviewScore: submission?.reviewScore ?? null,
     reviewScoreMax: submission?.reviewScoreMax ?? null,
     reviewScorePercent: submission?.reviewScorePercent ?? null,
