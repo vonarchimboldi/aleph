@@ -26323,6 +26323,15 @@ function subjectWeeklyReviewWorkflows(plan, startDate) {
 
 function subjectWeeklyReviewDetails(plan, milestone, week) {
   if (plan.dailyProblemSets) return probabilitySundayTestDetails(milestone);
+  if (plan.key === "CM") {
+    return [
+      `Sunday Competition Math review workflow for Week ${week}.`,
+      `Current focus: ${milestone.focus}.`,
+      "Sample from covered Competition Math archive material only, including last-year/algebra-track sources already attached in Aleph.",
+      "Rotate concept families and skill families; do not reuse the same algebra trigger pattern unless feedback shows it is still weak.",
+      `Eligible sources: ${competitionMathReviewArchiveSources().map((source) => source.title).join("; ")}.`
+    ].join(" ");
+  }
   return `Sunday subject review workflow for ${plan.label} Week ${week}. Generate a subject-local quiz covering this week's material only. Focus: ${milestone.focus}. Inputs should include completed tasks, uploaded-solution feedback, correction notes, and prerequisite gaps. Content generation is pending; this item reserves the workflow and placement in the subject section.`;
 }
 
@@ -26483,7 +26492,8 @@ function cmiDmDsaReviewFeedbackWorkflow() {
       "Redo the first missed question in each weak topic with a written first-step explanation.",
       "Complete three near-transfer questions for the highest-priority mistake type.",
       "For DSA misses, write the invariant or state table before calculating.",
-      "For Discrete Math misses, write the counted object and case partition before using formulas."
+      "For Discrete Math misses, write the counted object and case partition before using formulas.",
+      "For Competition Math algebra misses, write the trigger phrase and transformation choice before expanding."
     ]
   };
 }
@@ -26498,7 +26508,27 @@ function spacedReviewDetails(week, milestones, label = "subject") {
 
 function crossSubjectSpacedReviewDetails(week, plans) {
   const covered = plans.map((plan) => spacedReviewDetails(week, plan.milestones, plan.label)).join(" || ");
-  return `Every-other-Sunday all-subject spaced review workflow. Generate one cumulative quiz in the Tests section covering all subjects and all material covered through Week ${week}. Content generation is intentionally pending; when enabled, sample more heavily from missed prerequisites, recent feedback gaps, not-completed tasks, and older concepts due for retrieval. Coverage: ${covered}`;
+  const competitionSources = competitionMathReviewArchiveSources()
+    .map((source) => `${source.title} (${source.url})`)
+    .join("; ");
+  return `Every-other-Sunday all-subject spaced review workflow. Generate one cumulative quiz in the Tests section covering all subjects and all material covered through Week ${week}. Content generation is intentionally pending; when enabled, sample more heavily from missed prerequisites, recent feedback gaps, not-completed tasks, and older concepts due for retrieval. Include covered Competition Math algebra from the attached archive when it is eligible, using transformation-choice and structural-recognition questions rather than routine expansion. Competition Math review sources: ${competitionSources}. Apply the Platinum review variety rubric so the quiz rotates concepts, skill families, reasoning modes, and traps instead of repeating the prior test pattern. Coverage: ${covered}`;
+}
+
+function competitionMathReviewArchiveSources() {
+  return [
+    {
+      title: "Vieta/polynomial structure",
+      url: "psets/week-01/june-01-competition-math-vietas-polynomials.html"
+    },
+    {
+      title: "Identities and factoring tricks",
+      url: "psets/week-02/june-29-competition-math-identities-factoring.html"
+    },
+    {
+      title: "Sequences and recurrences",
+      url: "psets/week-03/july-06-competition-math-sequences-recurrences.html"
+    }
+  ];
 }
 
 function addDays(dateValue, days) {

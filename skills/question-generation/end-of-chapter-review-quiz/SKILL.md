@@ -17,6 +17,7 @@ Use this skill to generate Aleph-style end-of-chapter review quizzes. These quiz
 - Target exam level and subject-specific rubric.
 - Desired length, timing, and format mix.
 - Existing chapter material and practice problems.
+- Previous one or two review quizzes when available, so the topic plan can avoid stale repetition.
 
 ## Methodology
 
@@ -29,9 +30,10 @@ Build the quiz in this order:
    - two-topic questions for common concept interactions;
    - three-topic questions for exam-transfer synthesis.
 4. Generate questions from the topic plan, not from a flat list.
-5. Attach metadata to every question.
-6. Verify every answer and every distractor.
-7. Run the review-quiz verifier before submission.
+5. For Platinum weekly or cumulative reviews, apply `../platinum-review-variety-rubric.md` before finalizing the topic plan.
+6. Attach metadata to every question.
+7. Verify every answer and every distractor.
+8. Run the review-quiz verifier before submission.
 
 ## Topic Mix
 
@@ -59,6 +61,7 @@ Every review quiz must include:
 - at least one complexity or structural shortcut item where relevant;
 - plausible distractors based on common mistakes;
 - at least one mixed item that requires choosing the right concept before calculating.
+- enough concept, skill, reasoning-mode, and trap rotation to avoid repeating the prior review unless feedback evidence justifies the repetition.
 
 Every question must have:
 
@@ -73,6 +76,8 @@ Every question must have:
   "gateWeight": "low|medium|high",
   "expectedFirstStep": "",
   "commonMistake": "",
+  "varietyFamily": "",
+  "reasoningMode": "",
   "answerCheck": ""
 }
 ```
@@ -118,6 +123,7 @@ Reject the quiz if:
 - it samples topics only uniformly without respecting prerequisites or gate weight;
 - it has no mixed two-topic or three-topic items when the chapter has enough concepts;
 - mixed items are just multi-tagged single-concept questions;
+- it repeats the previous review's topic buckets, reasoning modes, first-step patterns, or trap families without a stated diagnostic reason;
 - questions lack feedback metadata;
 - answers are unverified or ambiguous;
 - misses cannot drive targeted repair work.

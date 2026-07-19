@@ -35,6 +35,28 @@ Score each graph-backed Basic Probability review quiz out of 100.
 
 Recommended gate: quiz score at least 75, average quiz score at least 80.
 
+## Platinum Review Quiz Variety
+
+Use this rubric for Platinum Sunday and cumulative review quizzes after mechanical validation. It is designed to prevent review tests from repeatedly using the same topic buckets, first-step moves, and trap patterns.
+
+| Dimension | Points | What Good Looks Like |
+| --- | ---: | --- |
+| Concept rotation | 20 | The quiz compares against prior review tests and deliberately adds newly covered or under-tested concepts instead of repeating the same six groups. |
+| Skill diversity | 20 | Items test multiple skills: recognition, setup choice, tracing, counterexample search, invariant/proof, calculation, and transfer. |
+| Reasoning-mode spread | 15 | MCQ and short-answer sections include different reasoning modes, including all-correct selection, construction, falsification, exact computation, and edge-case analysis. |
+| Trap diversity | 15 | Common mistakes rotate across overcounting, missed cases, converse errors, off-by-one, wrong invariant, algebra execution, and misread conditions. |
+| Eligible subject mix | 15 | Covered Competition Math, Probability/Statistics, DM, and DSA are included or explicitly omitted for a stated reason tied to the review purpose. |
+| Feedback usefulness | 15 | Each item's metadata identifies the skill, expected first step, trap, reasoning mode, and repair mapping. |
+
+Recommended gate: at least 80/100 for ordinary Platinum reviews and at least 85/100 for CMI/ISI/GATE-targeted reviews.
+
+Hard failures:
+
+- The quiz has no prior-review comparison when prior reviews exist.
+- Any eligible subject is omitted without a review-purpose reason.
+- More than half the quiz uses the same skill family or trap family.
+- Competition Math items, when included, test routine expansion instead of transformation choice or structural recognition.
+
 ## Platinum Probability/Statistics PSB Prep Material
 
 Use this rubric for Priyanka's Platinum Probability and Statistics weekly PSB cycle. This is stricter than the generic page check because the weekly prep must train recurring exam patterns, not just present valid problems.

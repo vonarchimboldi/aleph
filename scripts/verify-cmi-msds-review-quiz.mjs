@@ -79,6 +79,7 @@ quizzes.forEach(({ file, expectedTopics }) => {
     if (metadata.questionCount !== 30) fail(`${prefix} question count must be 30.`);
     if (metadata.maxScore !== 75) fail(`${prefix} max score must be 75.`);
     if (!/Q1-Q15.*2 marks.*Q16-Q30.*3 marks.*75 marks/i.test(metadata.scoringPolicy || "")) fail(`${prefix} missing CMI review scoring policy.`);
+    verifyVarietyPlan(metadata, prefix);
     if (metadata.examTarget !== "CMI-MSDS") fail(`${prefix} missing CMI-MSDS exam target metadata.`);
     if (metadata.cmiRubricVersion !== "cmi-msds-review-rubric-v1") fail(`${prefix} missing CMI rubric version metadata.`);
     if (metadata.mcqPolicy !== "multi-select-all-correct-no-partial-credit") fail(`${prefix} MCQ policy must match CMI all-correct/no-partial-credit format.`);
@@ -119,6 +120,45 @@ quizzes.forEach(({ file, expectedTopics }) => {
     if (articleCount !== 30) fail(`${prefix} expected 30 rendered problem articles, found ${articleCount}.`);
   }
 });
+
+function verifyVarietyPlan(metadata, prefix) {
+  if (metadata.varietyRubricVersion !== "platinum-review-variety-rubric-v1") {
+    fail(`${prefix} missing Platinum review variety rubric version.`);
+  }
+  const plan = metadata.varietyPlan;
+  if (!plan) {
+    fail(`${prefix} missing varietyPlan metadata.`);
+    return;
+  }
+  if (!plan.varietyPass) fail(`${prefix} variety plan did not pass.`);
+  if (String(plan.priorQuizComparison || "").length < 50) fail(`${prefix} variety plan must compare against prior review quizzes.`);
+  [
+    ["newConceptFamilies", 4],
+    ["skillFamilies", 6],
+    ["reasoningModes", 5],
+    ["trapFamilies", 6]
+  ].forEach(([field, minCount]) => {
+    if (!Array.isArray(plan[field]) || new Set(plan[field]).size < minCount) {
+      fail(`${prefix} varietyPlan.${field} needs at least ${minCount} distinct entries.`);
+    }
+  });
+  const scores = plan.varietyScores || {};
+  const requiredScores = [
+    "concept_rotation",
+    "skill_diversity",
+    "reasoning_mode_spread",
+    "trap_diversity",
+    "subject_mix",
+    "week_to_week_novelty"
+  ];
+  const total = requiredScores.reduce((sum, key) => sum + (Number.isFinite(scores[key]) ? scores[key] : -99), 0);
+  requiredScores.forEach((key) => {
+    if (!Number.isFinite(scores[key]) || scores[key] < 1 || scores[key] > 2) {
+      fail(`${prefix} invalid variety score for ${key}.`);
+    }
+  });
+  if (total < 10) fail(`${prefix} variety score must be at least 10/12.`);
+}
 
 if (errors.length) {
   console.error("CMI MS DS review quiz verifier failed:");

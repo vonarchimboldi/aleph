@@ -60,14 +60,15 @@ const schema = {
     dimension_scores: {
       type: "object",
       additionalProperties: false,
-      required: ["subject_coverage", "skills_required", "techniques_required", "analysis_level", "speed", "reasoning_kind"],
+      required: ["subject_coverage", "skills_required", "techniques_required", "analysis_level", "speed", "reasoning_kind", "variety_and_rotation"],
       properties: {
         subject_coverage: dimensionSchema(),
         skills_required: dimensionSchema(),
         techniques_required: dimensionSchema(),
         analysis_level: dimensionSchema(),
         speed: dimensionSchema(),
-        reasoning_kind: dimensionSchema()
+        reasoning_kind: dimensionSchema(),
+        variety_and_rotation: dimensionSchema()
       }
     },
     topic_feedback: {
@@ -146,7 +147,7 @@ const response = await fetch("https://api.openai.com/v1/responses", {
         role: "system",
         content: [
           "You are Aleph's independent review-quiz quality judge.",
-          "Evaluate generated Discrete Math and DSA review quiz questions against the supplied CMI MS DS rubric.",
+          "Evaluate generated Platinum review quiz questions against the supplied CMI MS DS rubric and Platinum variety rubric.",
           "Be strict about difficulty, ambiguity, triviality, off-scope drift, answerability, and whether a miss would produce useful feedback.",
           "Do not provide solutions or answer keys.",
           "Return only the requested JSON schema."
@@ -260,10 +261,11 @@ function buildPrompt({ quizFile, metadata, renderedQuestions, rubric }) {
     "Judge tasks:",
     "1. Score every rubric dimension for the whole quiz.",
     "2. Classify the actual difficulty level, not the intended metadata difficulty.",
-    "3. Identify weak questions, ambiguity, trivial formula-recall items, topic imbalance, missing CMI-style traps, and speed problems.",
-    "4. Mark any question that should be regenerated or revised.",
-    "5. Give a concise improvement plan for the generation process.",
-    "6. Do not reveal correct options, answers, or worked solutions."
+    "3. Identify weak questions, ambiguity, trivial formula-recall items, topic imbalance, missing CMI-style traps, speed problems, and repeated topic/skill/trap patterns.",
+    "4. Check whether varietyPlan is concrete enough and whether Competition Math should be added when eligible.",
+    "5. Mark any question that should be regenerated or revised.",
+    "6. Give a concise improvement plan for the generation process.",
+    "7. Do not reveal correct options, answers, or worked solutions."
   ].join("\n");
 }
 

@@ -2,6 +2,8 @@
 
 Use this rubric whenever a Platinum review quiz or question set targets CMI M.Sc. Data Science entrance-exam style. It is based on CMI's official MSc Data Science syllabus and recent official papers from 2021-2025.
 
+For Platinum review quizzes, also apply `platinum-review-variety-rubric.md`. The CMI rubric checks exam fit; the variety rubric checks that the quiz does not repeat the same concepts, first-step moves, and traps across weeks.
+
 Official source anchors:
 
 - Syllabus: https://www.cmi.ac.in/admissions/syllabus/datascience-syllabus.pdf
@@ -30,6 +32,7 @@ For a Discrete Math + DSA review, the acceptable CMI-style scope is:
 
 - Discrete Math: functions, injective/surjective/bijective reasoning, sets, relations, truth tables, logic equivalence, counting, permutations/combinations, pigeonhole, inclusion-exclusion, induction, modular/divisibility reasoning.
 - DSA/programming: array traces, loop behavior, conditionals, binary search/search traces, recursion traces, simple string/list/stack/queue behavior, invariants, edge cases, and operation counts.
+- Competition Math algebra may be included in Platinum cumulative or mixed review only when that material has already been assigned. Acceptable covered sources include Vieta/polynomial structure, identities/factoring tricks, and sequences/recurrences from the Competition Math archive; questions must test algebraic transformation choice, structural recognition, or concise proof rather than routine expansion.
 - Do not include Linear Algebra, calculus, probability, or statistics unless those topics were explicitly assigned in the covered Platinum scope for that quiz.
 
 ## Dimension 2: Skills Required
@@ -146,8 +149,9 @@ Score 0-2 for each quiz-level criterion.
 | CMI form fidelity | Uses ordinary single-answer school quiz format only. | Some CMI-like items, but inconsistent. | Uses multi-select MCQ behavior, short explanations, traps, and compact aptitude style. |
 | Diagnostic value | Misses do not identify the learner's first error. | Broad topic diagnosis only. | Each question maps to a specific skill and mistake class. |
 | Time realism | Too long or too easy for the time. | Mostly feasible. | Fits the stated time limit with realistic checking time. |
+| Variety and rotation | Repeats the prior review's buckets, skills, and traps. | Some novelty, but the quiz still feels template-driven. | Applies `platinum-review-variety-rubric-v1`: rotates concepts, skill families, reasoning modes, traps, and eligible subjects with explicit metadata. |
 
-Whole-quiz pass: at least 8/10 and no 0.
+Whole-quiz pass: at least 10/12 and no 0.
 
 ## Required Metadata For Generated Questions
 
@@ -169,7 +173,9 @@ Whole-quiz pass: at least 8/10 and no 0.
   "estimated_minutes": 0,
   "primary_trap": "",
   "expected_first_step": "",
-  "mistake_tags": []
+  "mistake_tags": [],
+  "variety_family": "",
+  "reasoning_mode": ""
 }
 ```
 
@@ -184,3 +190,4 @@ Regenerate or revise a question if:
 - it has ambiguous wording, multiple unintended answers, or hidden assumptions;
 - an MCQ is not compatible with all-correct/no-incorrect grading;
 - a short-answer item does not ask for enough explanation to classify the mistake.
+- its concept family, reasoning mode, expected first step, or trap family is overused relative to the previous two review quizzes and not justified by recent feedback.

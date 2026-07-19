@@ -66,7 +66,7 @@ Use this sequence when selecting scope:
 
 ## Exam-Level Calibration Rubric
 
-When `exam_target` is CMI or CMI-MSDS, first load the shared rubric at `../cmi-msds-review-rubric.md` and apply its six CMI dimensions in addition to the generic rubric below. The CMI rubric is authoritative for subject coverage, multi-select MCQ format, speed, analysis level, and regeneration rules.
+When `exam_target` is CMI or CMI-MSDS, first load the shared rubric at `../cmi-msds-review-rubric.md` and the variety rubric at `../platinum-review-variety-rubric.md`. Apply the CMI dimensions plus the variety dimensions. The CMI rubric is authoritative for exam fit; the variety rubric is authoritative for concept rotation, skill diversity, trap diversity, and week-to-week novelty.
 
 Use this rubric to decide whether each generated question matches the requested exam level. Score each dimension 0-2.
 
@@ -85,6 +85,7 @@ Pass rule:
 - For ordinary drills: total score at least 10/14 and no 0 in source anchoring or solvability.
 - For CMI/ISI/GATE-style reviews: total score at least 12/14 and no 0 in source anchoring, exam fit, or solvability.
 - Regenerate any question that fails the pass rule before using it in a quiz.
+- Regenerate any question that repeats a previous review's concept family, expected first step, or trap family unless the metadata explains that it targets a recent feedback gap.
 
 ## DSPy/GEPA Readiness
 
@@ -105,6 +106,8 @@ When generating questions for later DSPy or GEPA optimization, emit a structured
   "difficulty": "easy|medium|medium-hard|hard",
   "expected_first_step": "",
   "common_mistake": "",
+  "variety_family": "",
+  "reasoning_mode": "",
   "rubric_scores": {
     "source_anchoring": 0,
     "skill_targeting": 0,
