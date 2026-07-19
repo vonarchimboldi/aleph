@@ -145,7 +145,7 @@ function loadState() {
       schedule: shouldUseCanonicalPlan ? mergedStarter.schedule : parsed.schedule?.length ? parsed.schedule : starter.schedule,
       tests: shouldUseCanonicalPlan ? mergedStarter.tests : parsed.tests || [],
       quizAttempts: parsed.quizAttempts || [],
-      patternSubmissions: parsed.patternSubmissions || [],
+      patternSubmissions: normalizePatternSubmissions(parsed.patternSubmissions || []),
       feedback: shouldUseCanonicalPlan ? mergedStarter.feedback : parsed.feedback || [],
       resources: shouldUseCanonicalPlan ? mergedStarter.resources : parsed.resources || [],
       tasks: shouldUseCanonicalPlan ? mergedStarter.tasks : parsed.tasks || [],
@@ -164,9 +164,36 @@ function initialState() {
   const user = defaultUser();
   return {
     user,
-    patternSubmissions: [],
+    patternSubmissions: normalizePatternSubmissions([]),
     ...buildCoursePlan(user)
   };
+}
+
+function normalizePatternSubmissions(submissions = []) {
+  return submissions.map((submission) => {
+    if (!submission?.fileName) return submission;
+    if (submission.solutionText || submission.fileDataUrl || submission.feedbackRecord || submission.feedback) {
+      return {
+        ...submission,
+        uploadProcessing: false,
+        feedbackUploadReady: Boolean(submission.solutionText || submission.fileDataUrl),
+        feedbackBlocked: false
+      };
+    }
+    if (isPdfOrImageSubmission(submission)) {
+      return {
+        ...submission,
+        uploadProcessing: false,
+        feedbackUploadReady: false,
+        feedbackBlocked: true,
+        storageWarning: "The uploaded file is no longer available in this browser session. Reupload it before generating AI feedback, or upload text/Markdown."
+      };
+    }
+    return {
+      ...submission,
+      uploadProcessing: false
+    };
+  });
 }
 
 function ensureCoursePlan() {
@@ -28384,7 +28411,7 @@ function reviewQuizSubmissionTemplate(test, submission, feedbackRecord) {
   const materialId = test.materialId || test.id;
   const hasFeedback = Boolean(submission?.feedbackUpdatedAt || submission?.feedback);
   const canGenerate = canGenerateFeedbackForSubmission(submission);
-  const feedbackButtonLabel = submission?.uploadProcessing
+  const feedbackButtonLabel = isUploadActivelyProcessing(submission)
     ? "Processing upload..."
     : hasFeedback ? "Regenerate AI feedback report" : "Generate AI feedback report";
   return `
@@ -28850,7 +28877,7 @@ function patternMaterialFeedbackPageTemplate(subject, material) {
           ? `<section class="feedback-editor" data-material-card="${escapeHtml(week.id)}">
               ${feedbackWorkflowTemplate(workflow, feedbackRecord)}
               <div class="feedback-page-actions">
-                <button class="primary-btn" data-save-pattern-feedback type="button" ${canGenerateFeedbackForSubmission(submission) ? "" : "disabled"}>${submission?.uploadProcessing ? "Processing upload..." : "Generate AI feedback report"}</button>
+                <button class="primary-btn" data-save-pattern-feedback type="button" ${canGenerateFeedbackForSubmission(submission) ? "" : "disabled"}>${isUploadActivelyProcessing(submission) ? "Processing upload..." : "Generate AI feedback report"}</button>
               </div>
             </section>`
           : '<section class="feedback-placeholder feedback-page-empty">Upload a solution first. The AI feedback generator will appear here for this day only.</section>'}
@@ -28891,15 +28918,19 @@ function patternWeekTemplate(pattern, week) {
         <textarea data-solution-text="${escapeHtml(week.id)}" rows="4" placeholder="Add any handwritten context that the upload may not capture.">${escapeHtml(submission?.solutionText || "")}</textarea>
       </details>
       ${feedbackWorkflowTemplate(workflow, feedbackRecord)}
-      <button class="small-btn" data-save-pattern-feedback type="button" ${canGenerateFeedbackForSubmission(submission) ? "" : "disabled"}>${submission?.uploadProcessing ? "Processing upload..." : "Generate AI feedback report"}</button>
+      <button class="small-btn" data-save-pattern-feedback type="button" ${canGenerateFeedbackForSubmission(submission) ? "" : "disabled"}>${isUploadActivelyProcessing(submission) ? "Processing upload..." : "Generate AI feedback report"}</button>
     </section>
   `;
 }
 
 function canGenerateFeedbackForSubmission(submission) {
   if (!submission?.fileName) return false;
-  if (submission.uploadProcessing || submission.feedbackBlocked) return false;
+  if (isUploadActivelyProcessing(submission) || submission.feedbackBlocked) return false;
   return Boolean(submission.solutionText || submission.fileDataUrl || pendingUploadFiles.has(submission.materialId));
+}
+
+function isUploadActivelyProcessing(submission) {
+  return Boolean(submission?.uploadProcessing && pendingUploadFiles.has(submission.materialId));
 }
 
 function defaultFeedbackWorkflow(pattern, week) {
@@ -29451,7 +29482,7 @@ async function savePatternFeedback(button) {
     alert("Upload the learner solution before generating feedback.");
     return;
   }
-  if (submission.uploadProcessing) {
+  if (isUploadActivelyProcessing(submission)) {
     alert("Aleph is still processing this upload. Try again when the feedback button is enabled.");
     return;
   }
@@ -31798,7 +31829,7 @@ function importData(event) {
       state.schedule = imported.schedule || [];
       state.tests = imported.tests || [];
       state.quizAttempts = imported.quizAttempts || [];
-      state.patternSubmissions = imported.patternSubmissions || [];
+      state.patternSubmissions = normalizePatternSubmissions(imported.patternSubmissions || []);
       state.feedback = imported.feedback || [];
       state.resources = imported.resources || [];
       state.tasks = imported.tasks || [];
