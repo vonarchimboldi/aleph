@@ -28357,6 +28357,10 @@ function testTemplate(test) {
 function reviewQuizSubmissionTemplate(test, submission, feedbackRecord) {
   const materialId = test.materialId || test.id;
   const hasFeedback = Boolean(submission?.feedbackUpdatedAt || submission?.feedback);
+  const canGenerate = canGenerateFeedbackForSubmission(submission);
+  const feedbackButtonLabel = submission?.uploadProcessing
+    ? "Processing upload..."
+    : hasFeedback ? "Regenerate AI feedback report" : "Generate AI feedback report";
   return `
     <section class="feedback-editor review-upload-panel" data-material-card="${escapeHtml(materialId)}">
       <div class="submission-status">
@@ -28372,7 +28376,7 @@ function reviewQuizSubmissionTemplate(test, submission, feedbackRecord) {
         <textarea data-solution-text="${escapeHtml(materialId)}" rows="4" placeholder="Add typed answers, scratch-work notes, or context if the upload is handwritten.">${escapeHtml(submission?.solutionText || "")}</textarea>
       </label>
       ${reviewScoreControlsTemplate(materialId, submission, test.questionCount || 30)}
-      <button class="small-btn" data-save-pattern-feedback type="button" ${submission?.fileName ? "" : "disabled"}>${hasFeedback ? "Regenerate AI feedback report" : "Generate AI feedback report"}</button>
+      <button class="small-btn" data-save-pattern-feedback type="button" ${canGenerate ? "" : "disabled"}>${feedbackButtonLabel}</button>
       ${feedbackWorkflowTemplate(test.feedbackWorkflow || reviewQuizFeedbackWorkflow(test), feedbackRecord)}
     </section>
   `;
@@ -28820,7 +28824,7 @@ function patternMaterialFeedbackPageTemplate(subject, material) {
           ? `<section class="feedback-editor" data-material-card="${escapeHtml(week.id)}">
               ${feedbackWorkflowTemplate(workflow, feedbackRecord)}
               <div class="feedback-page-actions">
-                <button class="primary-btn" data-save-pattern-feedback type="button">Generate AI feedback report</button>
+                <button class="primary-btn" data-save-pattern-feedback type="button" ${canGenerateFeedbackForSubmission(submission) ? "" : "disabled"}>${submission?.uploadProcessing ? "Processing upload..." : "Generate AI feedback report"}</button>
               </div>
             </section>`
           : '<section class="feedback-placeholder feedback-page-empty">Upload a solution first. The AI feedback generator will appear here for this day only.</section>'}
@@ -28861,9 +28865,15 @@ function patternWeekTemplate(pattern, week) {
         <textarea data-solution-text="${escapeHtml(week.id)}" rows="4" placeholder="Add any handwritten context that the upload may not capture.">${escapeHtml(submission?.solutionText || "")}</textarea>
       </details>
       ${feedbackWorkflowTemplate(workflow, feedbackRecord)}
-      <button class="small-btn" data-save-pattern-feedback type="button">Generate AI feedback report</button>
+      <button class="small-btn" data-save-pattern-feedback type="button" ${canGenerateFeedbackForSubmission(submission) ? "" : "disabled"}>${submission?.uploadProcessing ? "Processing upload..." : "Generate AI feedback report"}</button>
     </section>
   `;
+}
+
+function canGenerateFeedbackForSubmission(submission) {
+  if (!submission?.fileName) return false;
+  if (submission.uploadProcessing || submission.feedbackBlocked) return false;
+  return Boolean(submission.solutionText || submission.fileDataUrl || pendingUploadFiles.has(submission.materialId));
 }
 
 function defaultFeedbackWorkflow(pattern, week) {
@@ -29093,8 +29103,10 @@ function submissionSummary(submission) {
   const parts = [`Submitted file: ${submission.fileName}`];
   if (submission.fileSizeLabel) parts.push(submission.fileSizeLabel);
   if (submission.uploadedAt) parts.push(`uploaded ${formatDate(submission.uploadedAt.slice(0, 10))}`);
+  if (submission.uploadProcessing) parts.push("processing upload");
   if (submission.solutionText) parts.push("text captured");
   else if (submission.fileDataUrl) parts.push("file saved locally");
+  else if (submission.feedbackUploadReady && pendingUploadFiles.has(submission.materialId)) parts.push("ready for feedback");
   else parts.push("replace upload to attach file content");
   return parts.join(" - ");
 }
@@ -29167,6 +29179,10 @@ function durableSubmissionRecord(materialId, submission, overrides = {}) {
     fileType: submission?.fileType || "",
     fileSize: submission?.fileSize ?? null,
     fileSizeLabel: submission?.fileSizeLabel || "",
+    uploadProcessing: Boolean(submission?.uploadProcessing),
+    feedbackUploadReady: Boolean(submission?.feedbackUploadReady),
+    feedbackBlocked: Boolean(submission?.feedbackBlocked),
+    storageWarning: submission?.storageWarning || "",
     submittedAt: submission?.uploadedAt || submission?.updatedAt || new Date().toISOString(),
     feedbackStatus: submission?.feedbackUpdatedAt || submission?.feedback ? "completed" : "not_requested",
     feedbackReady: Boolean(submission?.feedbackUpdatedAt || submission?.feedback),
@@ -29213,20 +29229,37 @@ function savePatternSolutionUpload(input) {
     solutionText: "",
     fileDataUrl: "",
     storageWarning: "",
+    uploadProcessing: true,
+    feedbackUploadReady: false,
+    feedbackBlocked: false,
     uploadedAt: new Date().toISOString()
   };
+  upsertPatternSubmission(materialId, {
+    ...baseUpdates,
+    storageWarning: "Aleph is reading the uploaded file. Feedback will unlock when processing finishes."
+  });
+  finishPatternUpload(materialId, false);
   if (isTextSolutionFile(file)) {
     const reader = new FileReader();
     reader.onload = () => {
       const solutionText = String(reader.result || "").slice(0, 30000);
       upsertPatternSubmission(materialId, {
         ...baseUpdates,
-        solutionText
+        solutionText,
+        storageWarning: "",
+        uploadProcessing: false,
+        feedbackUploadReady: true
       });
       finishPatternUpload(materialId, true);
     };
     reader.onerror = () => {
-      input.disabled = false;
+      upsertPatternSubmission(materialId, {
+        ...baseUpdates,
+        uploadProcessing: false,
+        feedbackBlocked: true,
+        storageWarning: "Could not read this text upload. Try exporting the solution as PDF or plain text and upload again."
+      });
+      finishPatternUpload(materialId, false);
       alert("Could not read this text upload. Try exporting the solution as PDF or plain text and upload again.");
     };
     reader.readAsText(file);
@@ -29235,6 +29268,13 @@ function savePatternSolutionUpload(input) {
   const reader = new FileReader();
   reader.onload = async () => {
     const fileDataUrl = String(reader.result || "");
+    pendingUploadFiles.set(materialId, {
+      fileName: file.name,
+      fileType: file.type || "unknown",
+      fileDataUrl,
+      feedbackFiles: [],
+      processing: true
+    });
     const canPersistFile = file.size <= 2500000;
     let canSendForFeedback = file.size <= MAX_FEEDBACK_ATTACHMENT_BYTES;
     let feedbackFiles = canSendForFeedback
@@ -29262,12 +29302,16 @@ function savePatternSolutionUpload(input) {
       fileName: file.name,
       fileType: file.type || "unknown",
       fileDataUrl,
-      feedbackFiles
+      feedbackFiles,
+      processing: false
     });
     upsertPatternSubmission(materialId, {
       ...baseUpdates,
       fileDataUrl: canPersistFile ? fileDataUrl : "",
-      storageWarning
+      storageWarning,
+      uploadProcessing: false,
+      feedbackUploadReady: canSendForFeedback,
+      feedbackBlocked: !canSendForFeedback
     });
     finishPatternUpload(materialId, canSendForFeedback);
     if (!canSendForFeedback) {
@@ -29275,7 +29319,13 @@ function savePatternSolutionUpload(input) {
     }
   };
   reader.onerror = () => {
-    input.disabled = false;
+    upsertPatternSubmission(materialId, {
+      ...baseUpdates,
+      uploadProcessing: false,
+      feedbackBlocked: true,
+      storageWarning: "Could not read this upload. Try a smaller PDF/image or export the solution as text."
+    });
+    finishPatternUpload(materialId, false);
     alert("Could not read this upload. Try a smaller PDF/image or export the solution as text.");
   };
   reader.readAsDataURL(file);
@@ -29374,6 +29424,14 @@ async function savePatternFeedback(button) {
   const submission = patternSubmission(materialId);
   if (!submission?.fileName) {
     alert("Upload the learner solution before generating feedback.");
+    return;
+  }
+  if (submission.uploadProcessing) {
+    alert("Aleph is still processing this upload. Try again when the feedback button is enabled.");
+    return;
+  }
+  if (submission.feedbackBlocked) {
+    alert(submission.storageWarning || "This upload is not available for automatic feedback. Upload a smaller PDF/image or a text/Markdown answer file.");
     return;
   }
   if (submissionNeedsAttachedContent(materialId, submission)) {
@@ -31162,6 +31220,10 @@ function platinumMaterialSnapshot(subject, pattern, week, options = {}) {
     submitted: Boolean(submission?.uploadedAt || submission?.fileName),
     uploadedAt: submission?.uploadedAt || "",
     fileName: submission?.fileName || "",
+    uploadProcessing: Boolean(submission?.uploadProcessing),
+    feedbackUploadReady: Boolean(submission?.feedbackUploadReady),
+    feedbackBlocked: Boolean(submission?.feedbackBlocked),
+    storageWarning: submission?.storageWarning || "",
     feedbackReady: Boolean(submission?.feedbackUpdatedAt || submission?.feedback),
     feedbackUpdatedAt: submission?.feedbackUpdatedAt || "",
     feedbackSummary: submission?.feedback || "",
