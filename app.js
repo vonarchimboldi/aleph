@@ -26369,6 +26369,7 @@ function cmiDiscreteDsaReviewQuiz(now, startDate, config) {
   const details = [
     "Two-hour CMI-level review quiz for covered Platinum Discrete Math and DSA only.",
     "Format: 30 questions, 15 MCQ and 15 short answer, five each across six covered topic groups.",
+    "Scoring: Q1-Q15 are 2 marks each and Q16-Q30 are 3 marks each, total 75 marks.",
     ...config.scopeDetails,
     "Worked explanations remain locked until submission; post-submission feedback should tag first error, misconception, and repair drill by topic."
   ].join(" ");
@@ -26409,6 +26410,8 @@ function cmiDiscreteDsaReviewQuiz(now, startDate, config) {
       workflowType: "cmi-dm-dsa-review",
       durationMinutes: 120,
       questionCount: 30,
+      reviewScoreMax: 75,
+      scoringPolicy: "Q1-Q15 are 2 marks each; Q16-Q30 are 3 marks each; total 75 marks.",
       unlockPolicy: "solutions-after-submission",
       subjectScope: ["Discrete Math", "Data Structures and Algorithms"],
       feedbackWorkflow: cmiDmDsaReviewFeedbackWorkflow(),
@@ -26440,7 +26443,15 @@ function cmiDmDsaReviewFeedbackWorkflow() {
   return {
     id: "feedback-workflow-cmi-dm-dsa-review-v1",
     title: "Structured Feedback: CMI-Level Discrete Math and DSA Review",
-    promptUse: "Use this after reading the submitted CMI-level Discrete Math and DSA review quiz. Grade visible uploaded work across 30 questions, classify errors by topic and mistake type, and recommend targeted repair work.",
+    maxScore: 75,
+    scoringPolicy: {
+      totalMarks: 75,
+      questions: 30,
+      partA: "Q1-Q15: 2 marks each, 30 marks total.",
+      partB: "Q16-Q30: 3 marks each, 45 marks total.",
+      rule: "Score the submitted work question by question using this split. Award no credit for unreadable or unattempted questions. Award partial credit only when visible reasoning earns it."
+    },
+    promptUse: "Use this after reading the submitted CMI-level Discrete Math and DSA review quiz. Grade visible uploaded work across 30 questions using Q1-Q15 = 2 marks each and Q16-Q30 = 3 marks each, for 75 total marks. Classify errors by topic and mistake type, and recommend targeted repair work.",
     studentSummaryHint: "Summarize readiness across Discrete Math and DSA at CMI-style difficulty, naming the first blocking skill and the highest-priority repair.",
     rubric: [
       { criterion: "Coverage and evidence", points: 1, cue: "Identify which of the 30 questions were attempted, missing, unreadable, or only partially visible." },
@@ -28216,7 +28227,7 @@ function compactGeneratedFeedbackSummary(material, record = {}) {
     firstBreak: truncateText(firstBreak, 190),
     recurringPattern: truncateText(recurringPattern, 170),
     nextRepair: truncateText(nextRepair, 210),
-    verdict: record.verdict || material.feedbackVerdict || (record.score != null ? `${record.score}/10` : "Feedback ready")
+    verdict: record.verdict || material.feedbackVerdict || (record.score != null ? `${record.score}/${feedbackMaxScore(record)}` : "Feedback ready")
   };
 }
 
@@ -28439,7 +28450,7 @@ function reviewQuizSubmissionTemplate(test, submission, feedbackRecord) {
         <span>Optional notes for grader</span>
         <textarea data-solution-text="${escapeHtml(materialId)}" rows="4" placeholder="Add typed answers, scratch-work notes, or context if the upload is handwritten.">${escapeHtml(submission?.solutionText || "")}</textarea>
       </label>
-      ${reviewScoreControlsTemplate(materialId, submission, test.questionCount || 30)}
+      ${reviewScoreControlsTemplate(materialId, submission, test.reviewScoreMax || test.feedbackWorkflow?.maxScore || test.questionCount || 30)}
       <button class="small-btn" data-save-pattern-feedback type="button" ${canGenerate ? "" : "disabled"}>${feedbackButtonLabel}</button>
       ${feedbackWorkflowTemplate(test.feedbackWorkflow || reviewQuizFeedbackWorkflow(test), feedbackRecord)}
     </section>
@@ -28997,7 +29008,8 @@ function isReviewMaterial(pattern = {}, week = {}) {
 }
 
 function defaultReviewScoreMax(week = {}) {
-  if (/cmi|30-question/i.test(`${week.materialTitle || ""} ${week.expectedWork || ""}`)) return 30;
+  if (Number.isFinite(week.feedbackWorkflow?.maxScore)) return week.feedbackWorkflow.maxScore;
+  if (/cmi|30-question/i.test(`${week.materialTitle || ""} ${week.expectedWork || ""}`)) return 75;
   if (/6\s+ISI|six-topic|6 questions/i.test(`${week.materialTitle || ""} ${week.expectedWork || ""}`)) return 6;
   return 100;
 }
@@ -29042,15 +29054,18 @@ function manualReviewScoreSummary(submission = {}) {
 
 function aiFeedbackScoreSummary(submission = {}) {
   const feedbackScore = submission?.feedbackRecord?.score;
-  const feedbackMaxScore = submission?.feedbackRecord?.maxScore;
   if (!Number.isFinite(feedbackScore)) return "Not generated yet. Run AI feedback to produce this.";
-  return `${feedbackScore}/${Number.isFinite(feedbackMaxScore) ? feedbackMaxScore : 10}`;
+  return `${feedbackScore}/${feedbackMaxScore(submission?.feedbackRecord)}`;
+}
+
+function feedbackMaxScore(record = {}) {
+  return Number.isFinite(record?.maxScore) ? record.maxScore : 10;
 }
 
 function generatedFeedbackReportTemplate(record) {
   const report = record.studentReport || {};
   const scoreLine = Number.isFinite(record.score)
-    ? `<p><strong>AI feedback score:</strong> ${escapeHtml(record.score)}/${escapeHtml(Number.isFinite(record.maxScore) ? record.maxScore : 10)}</p>`
+    ? `<p><strong>AI feedback score:</strong> ${escapeHtml(record.score)}/${escapeHtml(feedbackMaxScore(record))}</p>`
     : "";
   return `
     <section class="feedback-spec generated-feedback-report">
@@ -29128,7 +29143,7 @@ function questionFeedbackTemplate(questionFeedback = []) {
         <article class="question-feedback-card">
           <div class="question-feedback-top">
             <strong>Question ${escapeHtml(item.question || "")}</strong>
-            <span class="tag">${escapeHtml(item.status || "reviewed")}</span>
+            <span class="tag">${escapeHtml(questionFeedbackStatusLabel(item))}</span>
           </div>
           <p>${escapeHtml(item.summary || "")}</p>
           <div class="feedback-spec-grid">
@@ -29149,6 +29164,14 @@ function questionFeedbackTemplate(questionFeedback = []) {
       `).join("")}
     </div>
   `;
+}
+
+function questionFeedbackStatusLabel(item = {}) {
+  const status = item.status || "reviewed";
+  if (Number.isFinite(item.marksAwarded) && Number.isFinite(item.maxMarks)) {
+    return `${status} - ${item.marksAwarded}/${item.maxMarks}`;
+  }
+  return status;
 }
 
 function prerequisiteChecksTemplate(checks = []) {
@@ -29797,7 +29820,7 @@ function collectStructuredFeedback(card) {
 
 function summarizeFeedbackRecord(record) {
   const verdict = record.verdict || "yellow";
-  const score = record.score === null || Number.isNaN(record.score) ? "unscored" : `${record.score}/${record.maxScore || 10}`;
+  const score = record.score === null || Number.isNaN(record.score) ? "unscored" : `${record.score}/${feedbackMaxScore(record)}`;
   const gap = record.conceptGap?.tag || "no skill tag";
   const issue = record.firstIssue?.location || "first issue not marked";
   return `${verdict.toUpperCase()} - ${score}. Gap: ${gap}. First issue: ${issue}. ${record.minimalCorrection || "Correction task not recorded."}`;
@@ -29815,7 +29838,7 @@ function formatFeedbackReportText(record) {
     report.headline || "Aleph feedback report",
     "",
     `Verdict: ${(record.verdict || "yellow").toUpperCase()}`,
-    `Score: ${Number.isFinite(record.score) ? `${record.score}/${record.maxScore || 10}` : "unscored"}`,
+    `Score: ${Number.isFinite(record.score) ? `${record.score}/${feedbackMaxScore(record)}` : "unscored"}`,
     record.feedbackModel ? `Model: ${record.feedbackModel}` : "",
     "",
     `Summary: ${record.studentSummary || "No summary generated."}`,

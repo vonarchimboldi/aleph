@@ -77,6 +77,8 @@ quizzes.forEach(({ file, expectedTopics }) => {
   if (metadata) {
     if (metadata.durationMinutes !== 120) fail(`${prefix} duration must be 120 minutes.`);
     if (metadata.questionCount !== 30) fail(`${prefix} question count must be 30.`);
+    if (metadata.maxScore !== 75) fail(`${prefix} max score must be 75.`);
+    if (!/Q1-Q15.*2 marks.*Q16-Q30.*3 marks.*75 marks/i.test(metadata.scoringPolicy || "")) fail(`${prefix} missing CMI review scoring policy.`);
     if (metadata.examTarget !== "CMI-MSDS") fail(`${prefix} missing CMI-MSDS exam target metadata.`);
     if (metadata.cmiRubricVersion !== "cmi-msds-review-rubric-v1") fail(`${prefix} missing CMI rubric version metadata.`);
     if (metadata.mcqPolicy !== "multi-select-all-correct-no-partial-credit") fail(`${prefix} MCQ policy must match CMI all-correct/no-partial-credit format.`);

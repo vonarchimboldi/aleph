@@ -26,8 +26,8 @@ const FEEDBACK_SCHEMA = {
   ],
   properties: {
     verdict: { type: "string", enum: ["green", "yellow", "red"] },
-    score: { type: "number", minimum: 0, maximum: 10 },
-    maxScore: { type: "number", enum: [10] },
+    score: { type: "number", minimum: 0, maximum: 100 },
+    maxScore: { type: "number", minimum: 1, maximum: 100 },
     studentSummary: { type: "string" },
     whatTheyGotRight: { type: "array", items: { type: "string" } },
     stillNotUnderstood: { type: "array", items: { type: "string" } },
@@ -168,10 +168,12 @@ const FEEDBACK_SCHEMA = {
       items: {
         type: "object",
         additionalProperties: false,
-        required: ["question", "status", "summary", "issue", "correction", "skillTag"],
+        required: ["question", "status", "marksAwarded", "maxMarks", "summary", "issue", "correction", "skillTag"],
         properties: {
           question: { type: "string" },
           status: { type: "string", enum: ["correct", "partially correct", "incorrect", "not attempted", "unclear"] },
+          marksAwarded: { type: "number", minimum: 0, maximum: 100 },
+          maxMarks: { type: "number", minimum: 0, maximum: 100 },
           summary: { type: "string" },
           issue: { type: "string" },
           correction: { type: "string" },
@@ -279,6 +281,7 @@ export default async function handler(request, response) {
               "Be specific, concrete, and kind without being vague.",
               "If the submitted solution is too incomplete to evaluate, say that and assign a red verdict.",
               "Produce questionFeedback with one item per visible question or subquestion in the submitted solution. If a question is not visible or not attempted, mark it unclear or not attempted instead of inventing work.",
+              "If workflow.maxScore is supplied, set maxScore exactly to workflow.maxScore and compute score using workflow.scoringPolicy. For CMI DM/DSA review quizzes, Q1-Q15 are 2 marks each and Q16-Q30 are 3 marks each, for 75 total marks. Each questionFeedback item must include marksAwarded and maxMarks under that scheme.",
               "Use the rubric to produce narrativeFeedback as a detailed, human-readable tutor report. Avoid terse bullet-only summaries. Clearly explain what the learner understood, what is shaky, what they can improve, and what is missing.",
               "Return only the requested JSON schema."
             ].join("\n")
@@ -417,7 +420,7 @@ function extractOutputText(result) {
 
 function summarizeFeedback(record) {
   const verdict = record.verdict || "yellow";
-  const score = Number.isFinite(record.score) ? `${record.score}/${record.maxScore || 10}` : "unscored";
+  const score = Number.isFinite(record.score) ? `${record.score}/${Number.isFinite(record.maxScore) ? record.maxScore : 10}` : "unscored";
   const gap = record.conceptGap?.tag || "no skill tag";
   const issue = record.firstIssue?.location || "first issue not marked";
   return `${verdict.toUpperCase()} - ${score}. Gap: ${gap}. First issue: ${issue}. ${record.minimalCorrection || "Correction task not recorded."}`;
