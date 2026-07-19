@@ -29005,12 +29005,14 @@ function defaultReviewScoreMax(week = {}) {
 function reviewScoreControlsTemplate(materialId, submission = {}, defaultMax = 100) {
   const score = submission?.reviewScore ?? "";
   const max = submission?.reviewScoreMax ?? defaultMax;
-  const summary = reviewScoreSummary(submission);
+  const manualSummary = manualReviewScoreSummary(submission);
+  const aiSummary = aiFeedbackScoreSummary(submission);
   return `
     <section class="review-score-panel">
-      <div>
-        <strong>Review score</strong>
-        <p>${escapeHtml(summary)}</p>
+      <div class="review-score-summary">
+        <strong>Review scores</strong>
+        <p><span>Manual test score</span>${escapeHtml(manualSummary)}</p>
+        <p><span>AI feedback score</span>${escapeHtml(aiSummary)}</p>
       </div>
       <label>
         <span>Score</span>
@@ -29025,18 +29027,24 @@ function reviewScoreControlsTemplate(materialId, submission = {}, defaultMax = 1
 }
 
 function reviewScoreSummary(submission = {}) {
+  return `${manualReviewScoreSummary(submission)} ${aiFeedbackScoreSummary(submission)}`;
+}
+
+function manualReviewScoreSummary(submission = {}) {
   if (!Number.isFinite(submission?.reviewScore) || !Number.isFinite(submission?.reviewScoreMax)) {
-    const feedbackScore = submission?.feedbackRecord?.score;
-    const feedbackMaxScore = submission?.feedbackRecord?.maxScore;
-    if (Number.isFinite(feedbackScore)) {
-      return `AI feedback score ${feedbackScore}/${Number.isFinite(feedbackMaxScore) ? feedbackMaxScore : 10}. Enter the test score above if you want a question-count score.`;
-    }
-    return "No review score recorded yet.";
+    return "Not recorded yet. Enter the question-count score here after grading.";
   }
   const percent = Number.isFinite(submission.reviewScorePercent)
     ? submission.reviewScorePercent
     : Math.round((submission.reviewScore / submission.reviewScoreMax) * 100);
   return `${submission.reviewScore}/${submission.reviewScoreMax} (${percent}%)${submission.reviewScoreUpdatedAt ? ` recorded ${formatDate(submission.reviewScoreUpdatedAt.slice(0, 10))}` : ""}`;
+}
+
+function aiFeedbackScoreSummary(submission = {}) {
+  const feedbackScore = submission?.feedbackRecord?.score;
+  const feedbackMaxScore = submission?.feedbackRecord?.maxScore;
+  if (!Number.isFinite(feedbackScore)) return "Not generated yet. Run AI feedback to produce this.";
+  return `${feedbackScore}/${Number.isFinite(feedbackMaxScore) ? feedbackMaxScore : 10}`;
 }
 
 function generatedFeedbackReportTemplate(record) {
