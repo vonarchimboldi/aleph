@@ -1,0 +1,683 @@
+{
+  "status": "dspy_gepa_ready",
+  "note": "This repo does not vendor DSPy or GEPA. The pack below is the optimization dataset: inputs, metric, labels, and candidate prompt deltas for an external DSPy/GEPA run.",
+  "metric": {
+    "name": "psb_material_quality",
+    "passRule": "overall >= 88, every page >= 85, LLM regeneration candidates empty",
+    "dimensions": [
+      "feedback_alignment",
+      "psb_difficulty",
+      "skill_coverage",
+      "repair_bridge_target_synthesis",
+      "solution_quality",
+      "variety"
+    ]
+  },
+  "trainingExamples": [
+    {
+      "input": {
+        "file": "psets/week-04/july-20-indicators.html",
+        "weakPrerequisites": [
+          {
+            "prerequisite": "support-constraint",
+            "priority": "",
+            "confidence": "high",
+            "topics": [
+              "MLE and Estimation"
+            ],
+            "evidence": [
+              "Learner understands likelihood setup and differentiation but has shaky or missing understanding of parameter space boundary conditions and support constraints for MLE."
+            ],
+            "nextDrills": [
+              "Practice solving MLE problems with support-dependent parameters and explicitly mark the allowed parameter intervals before finding optimizers."
+            ]
+          },
+          {
+            "prerequisite": "rao-blackwell",
+            "priority": "",
+            "confidence": "medium",
+            "topics": [
+              "MLE and Estimation"
+            ],
+            "evidence": [
+              "Learner has not yet grasped Rao-Blackwell theorem application and UMVUE improvements."
+            ],
+            "nextDrills": [
+              "Practice solving MLE problems with support-dependent parameters and explicitly mark the allowed parameter intervals before finding optimizers."
+            ]
+          },
+          {
+            "prerequisite": "written-justification",
+            "priority": "",
+            "confidence": "high",
+            "topics": [
+              "Conditional Expectation and Tower Property"
+            ],
+            "evidence": [
+              "Learner understands the mechanics but needs help verbalizing why conditioning simplifies the problem."
+            ],
+            "nextDrills": [
+              "For three problems, write only the conditioning variable and why it helps before solving."
+            ]
+          },
+          {
+            "prerequisite": "support-tracking",
+            "priority": "",
+            "confidence": "medium",
+            "topics": [
+              "Conditional Expectation and Tower Property"
+            ],
+            "evidence": [
+              "Learner may skim over conditional distribution supports and should practice explicating supports to solidify intuition."
+            ],
+            "nextDrills": [
+              "For three problems, write only the conditioning variable and why it helps before solving."
+            ]
+          },
+          {
+            "prerequisite": "pair-products",
+            "priority": "",
+            "confidence": "high",
+            "topics": [
+              "Method of Indicators"
+            ],
+            "evidence": [
+              "Learner understands basic pair-products but struggles with overlapping pair probability interpretation."
+            ],
+            "nextDrills": [
+              "Practice one second-moment problem where you explicitly separate overlapping and non-overlapping indicator pairs to compute E[I_i I_j] and variance correctly."
+            ]
+          },
+          {
+            "prerequisite": "final-interpretation",
+            "priority": "",
+            "confidence": "medium",
+            "topics": [
+              "Method of Indicators"
+            ],
+            "evidence": [
+              "Learner often omits or briefs final step interpretation, leading to partial solution clarity."
+            ],
+            "nextDrills": [
+              "Practice one second-moment problem where you explicitly separate overlapping and non-overlapping indicator pairs to compute E[I_i I_j] and variance correctly."
+            ]
+          }
+        ]
+      },
+      "deterministicScore": 97,
+      "llmScore": 97,
+      "label": "keep"
+    },
+    {
+      "input": {
+        "file": "psets/week-04/july-21-conditional-expectation-tower.html",
+        "weakPrerequisites": [
+          {
+            "prerequisite": "support-constraint",
+            "priority": "",
+            "confidence": "high",
+            "topics": [
+              "MLE and Estimation"
+            ],
+            "evidence": [
+              "Learner understands likelihood setup and differentiation but has shaky or missing understanding of parameter space boundary conditions and support constraints for MLE."
+            ],
+            "nextDrills": [
+              "Practice solving MLE problems with support-dependent parameters and explicitly mark the allowed parameter intervals before finding optimizers."
+            ]
+          },
+          {
+            "prerequisite": "rao-blackwell",
+            "priority": "",
+            "confidence": "medium",
+            "topics": [
+              "MLE and Estimation"
+            ],
+            "evidence": [
+              "Learner has not yet grasped Rao-Blackwell theorem application and UMVUE improvements."
+            ],
+            "nextDrills": [
+              "Practice solving MLE problems with support-dependent parameters and explicitly mark the allowed parameter intervals before finding optimizers."
+            ]
+          },
+          {
+            "prerequisite": "written-justification",
+            "priority": "",
+            "confidence": "high",
+            "topics": [
+              "Conditional Expectation and Tower Property"
+            ],
+            "evidence": [
+              "Learner understands the mechanics but needs help verbalizing why conditioning simplifies the problem."
+            ],
+            "nextDrills": [
+              "For three problems, write only the conditioning variable and why it helps before solving."
+            ]
+          },
+          {
+            "prerequisite": "support-tracking",
+            "priority": "",
+            "confidence": "medium",
+            "topics": [
+              "Conditional Expectation and Tower Property"
+            ],
+            "evidence": [
+              "Learner may skim over conditional distribution supports and should practice explicating supports to solidify intuition."
+            ],
+            "nextDrills": [
+              "For three problems, write only the conditioning variable and why it helps before solving."
+            ]
+          },
+          {
+            "prerequisite": "pair-products",
+            "priority": "",
+            "confidence": "high",
+            "topics": [
+              "Method of Indicators"
+            ],
+            "evidence": [
+              "Learner understands basic pair-products but struggles with overlapping pair probability interpretation."
+            ],
+            "nextDrills": [
+              "Practice one second-moment problem where you explicitly separate overlapping and non-overlapping indicator pairs to compute E[I_i I_j] and variance correctly."
+            ]
+          },
+          {
+            "prerequisite": "final-interpretation",
+            "priority": "",
+            "confidence": "medium",
+            "topics": [
+              "Method of Indicators"
+            ],
+            "evidence": [
+              "Learner often omits or briefs final step interpretation, leading to partial solution clarity."
+            ],
+            "nextDrills": [
+              "Practice one second-moment problem where you explicitly separate overlapping and non-overlapping indicator pairs to compute E[I_i I_j] and variance correctly."
+            ]
+          }
+        ]
+      },
+      "deterministicScore": 90,
+      "llmScore": 90,
+      "label": "keep"
+    },
+    {
+      "input": {
+        "file": "psets/week-04/july-22-order-statistics.html",
+        "weakPrerequisites": [
+          {
+            "prerequisite": "support-constraint",
+            "priority": "",
+            "confidence": "high",
+            "topics": [
+              "MLE and Estimation"
+            ],
+            "evidence": [
+              "Learner understands likelihood setup and differentiation but has shaky or missing understanding of parameter space boundary conditions and support constraints for MLE."
+            ],
+            "nextDrills": [
+              "Practice solving MLE problems with support-dependent parameters and explicitly mark the allowed parameter intervals before finding optimizers."
+            ]
+          },
+          {
+            "prerequisite": "rao-blackwell",
+            "priority": "",
+            "confidence": "medium",
+            "topics": [
+              "MLE and Estimation"
+            ],
+            "evidence": [
+              "Learner has not yet grasped Rao-Blackwell theorem application and UMVUE improvements."
+            ],
+            "nextDrills": [
+              "Practice solving MLE problems with support-dependent parameters and explicitly mark the allowed parameter intervals before finding optimizers."
+            ]
+          },
+          {
+            "prerequisite": "written-justification",
+            "priority": "",
+            "confidence": "high",
+            "topics": [
+              "Conditional Expectation and Tower Property"
+            ],
+            "evidence": [
+              "Learner understands the mechanics but needs help verbalizing why conditioning simplifies the problem."
+            ],
+            "nextDrills": [
+              "For three problems, write only the conditioning variable and why it helps before solving."
+            ]
+          },
+          {
+            "prerequisite": "support-tracking",
+            "priority": "",
+            "confidence": "medium",
+            "topics": [
+              "Conditional Expectation and Tower Property"
+            ],
+            "evidence": [
+              "Learner may skim over conditional distribution supports and should practice explicating supports to solidify intuition."
+            ],
+            "nextDrills": [
+              "For three problems, write only the conditioning variable and why it helps before solving."
+            ]
+          },
+          {
+            "prerequisite": "pair-products",
+            "priority": "",
+            "confidence": "high",
+            "topics": [
+              "Method of Indicators"
+            ],
+            "evidence": [
+              "Learner understands basic pair-products but struggles with overlapping pair probability interpretation."
+            ],
+            "nextDrills": [
+              "Practice one second-moment problem where you explicitly separate overlapping and non-overlapping indicator pairs to compute E[I_i I_j] and variance correctly."
+            ]
+          },
+          {
+            "prerequisite": "final-interpretation",
+            "priority": "",
+            "confidence": "medium",
+            "topics": [
+              "Method of Indicators"
+            ],
+            "evidence": [
+              "Learner often omits or briefs final step interpretation, leading to partial solution clarity."
+            ],
+            "nextDrills": [
+              "Practice one second-moment problem where you explicitly separate overlapping and non-overlapping indicator pairs to compute E[I_i I_j] and variance correctly."
+            ]
+          }
+        ]
+      },
+      "deterministicScore": 98,
+      "llmScore": 98,
+      "label": "keep"
+    },
+    {
+      "input": {
+        "file": "psets/week-04/july-23-mle-estimation.html",
+        "weakPrerequisites": [
+          {
+            "prerequisite": "support-constraint",
+            "priority": "",
+            "confidence": "high",
+            "topics": [
+              "MLE and Estimation"
+            ],
+            "evidence": [
+              "Learner understands likelihood setup and differentiation but has shaky or missing understanding of parameter space boundary conditions and support constraints for MLE."
+            ],
+            "nextDrills": [
+              "Practice solving MLE problems with support-dependent parameters and explicitly mark the allowed parameter intervals before finding optimizers."
+            ]
+          },
+          {
+            "prerequisite": "rao-blackwell",
+            "priority": "",
+            "confidence": "medium",
+            "topics": [
+              "MLE and Estimation"
+            ],
+            "evidence": [
+              "Learner has not yet grasped Rao-Blackwell theorem application and UMVUE improvements."
+            ],
+            "nextDrills": [
+              "Practice solving MLE problems with support-dependent parameters and explicitly mark the allowed parameter intervals before finding optimizers."
+            ]
+          },
+          {
+            "prerequisite": "written-justification",
+            "priority": "",
+            "confidence": "high",
+            "topics": [
+              "Conditional Expectation and Tower Property"
+            ],
+            "evidence": [
+              "Learner understands the mechanics but needs help verbalizing why conditioning simplifies the problem."
+            ],
+            "nextDrills": [
+              "For three problems, write only the conditioning variable and why it helps before solving."
+            ]
+          },
+          {
+            "prerequisite": "support-tracking",
+            "priority": "",
+            "confidence": "medium",
+            "topics": [
+              "Conditional Expectation and Tower Property"
+            ],
+            "evidence": [
+              "Learner may skim over conditional distribution supports and should practice explicating supports to solidify intuition."
+            ],
+            "nextDrills": [
+              "For three problems, write only the conditioning variable and why it helps before solving."
+            ]
+          },
+          {
+            "prerequisite": "pair-products",
+            "priority": "",
+            "confidence": "high",
+            "topics": [
+              "Method of Indicators"
+            ],
+            "evidence": [
+              "Learner understands basic pair-products but struggles with overlapping pair probability interpretation."
+            ],
+            "nextDrills": [
+              "Practice one second-moment problem where you explicitly separate overlapping and non-overlapping indicator pairs to compute E[I_i I_j] and variance correctly."
+            ]
+          },
+          {
+            "prerequisite": "final-interpretation",
+            "priority": "",
+            "confidence": "medium",
+            "topics": [
+              "Method of Indicators"
+            ],
+            "evidence": [
+              "Learner often omits or briefs final step interpretation, leading to partial solution clarity."
+            ],
+            "nextDrills": [
+              "Practice one second-moment problem where you explicitly separate overlapping and non-overlapping indicator pairs to compute E[I_i I_j] and variance correctly."
+            ]
+          }
+        ]
+      },
+      "deterministicScore": 95,
+      "llmScore": 95,
+      "label": "keep"
+    },
+    {
+      "input": {
+        "file": "psets/week-04/july-24-ump-np-tests.html",
+        "weakPrerequisites": [
+          {
+            "prerequisite": "support-constraint",
+            "priority": "",
+            "confidence": "high",
+            "topics": [
+              "MLE and Estimation"
+            ],
+            "evidence": [
+              "Learner understands likelihood setup and differentiation but has shaky or missing understanding of parameter space boundary conditions and support constraints for MLE."
+            ],
+            "nextDrills": [
+              "Practice solving MLE problems with support-dependent parameters and explicitly mark the allowed parameter intervals before finding optimizers."
+            ]
+          },
+          {
+            "prerequisite": "rao-blackwell",
+            "priority": "",
+            "confidence": "medium",
+            "topics": [
+              "MLE and Estimation"
+            ],
+            "evidence": [
+              "Learner has not yet grasped Rao-Blackwell theorem application and UMVUE improvements."
+            ],
+            "nextDrills": [
+              "Practice solving MLE problems with support-dependent parameters and explicitly mark the allowed parameter intervals before finding optimizers."
+            ]
+          },
+          {
+            "prerequisite": "written-justification",
+            "priority": "",
+            "confidence": "high",
+            "topics": [
+              "Conditional Expectation and Tower Property"
+            ],
+            "evidence": [
+              "Learner understands the mechanics but needs help verbalizing why conditioning simplifies the problem."
+            ],
+            "nextDrills": [
+              "For three problems, write only the conditioning variable and why it helps before solving."
+            ]
+          },
+          {
+            "prerequisite": "support-tracking",
+            "priority": "",
+            "confidence": "medium",
+            "topics": [
+              "Conditional Expectation and Tower Property"
+            ],
+            "evidence": [
+              "Learner may skim over conditional distribution supports and should practice explicating supports to solidify intuition."
+            ],
+            "nextDrills": [
+              "For three problems, write only the conditioning variable and why it helps before solving."
+            ]
+          },
+          {
+            "prerequisite": "pair-products",
+            "priority": "",
+            "confidence": "high",
+            "topics": [
+              "Method of Indicators"
+            ],
+            "evidence": [
+              "Learner understands basic pair-products but struggles with overlapping pair probability interpretation."
+            ],
+            "nextDrills": [
+              "Practice one second-moment problem where you explicitly separate overlapping and non-overlapping indicator pairs to compute E[I_i I_j] and variance correctly."
+            ]
+          },
+          {
+            "prerequisite": "final-interpretation",
+            "priority": "",
+            "confidence": "medium",
+            "topics": [
+              "Method of Indicators"
+            ],
+            "evidence": [
+              "Learner often omits or briefs final step interpretation, leading to partial solution clarity."
+            ],
+            "nextDrills": [
+              "Practice one second-moment problem where you explicitly separate overlapping and non-overlapping indicator pairs to compute E[I_i I_j] and variance correctly."
+            ]
+          }
+        ]
+      },
+      "deterministicScore": 92,
+      "llmScore": 92,
+      "label": "keep"
+    },
+    {
+      "input": {
+        "file": "psets/week-04/july-25-regression-ols.html",
+        "weakPrerequisites": [
+          {
+            "prerequisite": "support-constraint",
+            "priority": "",
+            "confidence": "high",
+            "topics": [
+              "MLE and Estimation"
+            ],
+            "evidence": [
+              "Learner understands likelihood setup and differentiation but has shaky or missing understanding of parameter space boundary conditions and support constraints for MLE."
+            ],
+            "nextDrills": [
+              "Practice solving MLE problems with support-dependent parameters and explicitly mark the allowed parameter intervals before finding optimizers."
+            ]
+          },
+          {
+            "prerequisite": "rao-blackwell",
+            "priority": "",
+            "confidence": "medium",
+            "topics": [
+              "MLE and Estimation"
+            ],
+            "evidence": [
+              "Learner has not yet grasped Rao-Blackwell theorem application and UMVUE improvements."
+            ],
+            "nextDrills": [
+              "Practice solving MLE problems with support-dependent parameters and explicitly mark the allowed parameter intervals before finding optimizers."
+            ]
+          },
+          {
+            "prerequisite": "written-justification",
+            "priority": "",
+            "confidence": "high",
+            "topics": [
+              "Conditional Expectation and Tower Property"
+            ],
+            "evidence": [
+              "Learner understands the mechanics but needs help verbalizing why conditioning simplifies the problem."
+            ],
+            "nextDrills": [
+              "For three problems, write only the conditioning variable and why it helps before solving."
+            ]
+          },
+          {
+            "prerequisite": "support-tracking",
+            "priority": "",
+            "confidence": "medium",
+            "topics": [
+              "Conditional Expectation and Tower Property"
+            ],
+            "evidence": [
+              "Learner may skim over conditional distribution supports and should practice explicating supports to solidify intuition."
+            ],
+            "nextDrills": [
+              "For three problems, write only the conditioning variable and why it helps before solving."
+            ]
+          },
+          {
+            "prerequisite": "pair-products",
+            "priority": "",
+            "confidence": "high",
+            "topics": [
+              "Method of Indicators"
+            ],
+            "evidence": [
+              "Learner understands basic pair-products but struggles with overlapping pair probability interpretation."
+            ],
+            "nextDrills": [
+              "Practice one second-moment problem where you explicitly separate overlapping and non-overlapping indicator pairs to compute E[I_i I_j] and variance correctly."
+            ]
+          },
+          {
+            "prerequisite": "final-interpretation",
+            "priority": "",
+            "confidence": "medium",
+            "topics": [
+              "Method of Indicators"
+            ],
+            "evidence": [
+              "Learner often omits or briefs final step interpretation, leading to partial solution clarity."
+            ],
+            "nextDrills": [
+              "Practice one second-moment problem where you explicitly separate overlapping and non-overlapping indicator pairs to compute E[I_i I_j] and variance correctly."
+            ]
+          }
+        ]
+      },
+      "deterministicScore": 92,
+      "llmScore": 92,
+      "label": "keep"
+    },
+    {
+      "input": {
+        "file": "psets/week-04/july-26-psb-review-quiz.html",
+        "weakPrerequisites": [
+          {
+            "prerequisite": "support-constraint",
+            "priority": "",
+            "confidence": "high",
+            "topics": [
+              "MLE and Estimation"
+            ],
+            "evidence": [
+              "Learner understands likelihood setup and differentiation but has shaky or missing understanding of parameter space boundary conditions and support constraints for MLE."
+            ],
+            "nextDrills": [
+              "Practice solving MLE problems with support-dependent parameters and explicitly mark the allowed parameter intervals before finding optimizers."
+            ]
+          },
+          {
+            "prerequisite": "rao-blackwell",
+            "priority": "",
+            "confidence": "medium",
+            "topics": [
+              "MLE and Estimation"
+            ],
+            "evidence": [
+              "Learner has not yet grasped Rao-Blackwell theorem application and UMVUE improvements."
+            ],
+            "nextDrills": [
+              "Practice solving MLE problems with support-dependent parameters and explicitly mark the allowed parameter intervals before finding optimizers."
+            ]
+          },
+          {
+            "prerequisite": "written-justification",
+            "priority": "",
+            "confidence": "high",
+            "topics": [
+              "Conditional Expectation and Tower Property"
+            ],
+            "evidence": [
+              "Learner understands the mechanics but needs help verbalizing why conditioning simplifies the problem."
+            ],
+            "nextDrills": [
+              "For three problems, write only the conditioning variable and why it helps before solving."
+            ]
+          },
+          {
+            "prerequisite": "support-tracking",
+            "priority": "",
+            "confidence": "medium",
+            "topics": [
+              "Conditional Expectation and Tower Property"
+            ],
+            "evidence": [
+              "Learner may skim over conditional distribution supports and should practice explicating supports to solidify intuition."
+            ],
+            "nextDrills": [
+              "For three problems, write only the conditioning variable and why it helps before solving."
+            ]
+          },
+          {
+            "prerequisite": "pair-products",
+            "priority": "",
+            "confidence": "high",
+            "topics": [
+              "Method of Indicators"
+            ],
+            "evidence": [
+              "Learner understands basic pair-products but struggles with overlapping pair probability interpretation."
+            ],
+            "nextDrills": [
+              "Practice one second-moment problem where you explicitly separate overlapping and non-overlapping indicator pairs to compute E[I_i I_j] and variance correctly."
+            ]
+          },
+          {
+            "prerequisite": "final-interpretation",
+            "priority": "",
+            "confidence": "medium",
+            "topics": [
+              "Method of Indicators"
+            ],
+            "evidence": [
+              "Learner often omits or briefs final step interpretation, leading to partial solution clarity."
+            ],
+            "nextDrills": [
+              "Practice one second-moment problem where you explicitly separate overlapping and non-overlapping indicator pairs to compute E[I_i I_j] and variance correctly."
+            ]
+          }
+        ]
+      },
+      "deterministicScore": 91,
+      "llmScore": 91,
+      "label": "keep"
+    }
+  ],
+  "promptCandidates": [
+    {
+      "candidate_prompt_change": "Include more explicit stepwise verbalizations in problem solutions to justify support constraints and conditioning variable selections to enhance learner written justification skills.",
+      "expected_metric_gain": "Improved feedback alignment scores by 2-3 points due to better closure of weak prerequisite feedback on written justification and support tracking.",
+      "training_example_signal": "Feedback shows high confidence in written justification as a weak prerequisite; current solutions focus on computation but less on explicit verbalization justifications."
+    }
+  ]
+}

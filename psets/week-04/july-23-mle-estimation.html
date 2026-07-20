@@ -23,6 +23,12 @@
 
     <section class="panel"><h2>Setup Checklist</h2><div class="grid"><ul><li>Identify the model, parameter, and parameter space.</li><li>Keep support restrictions that involve the parameter.</li><li>Use the log only after writing the likelihood.</li></ul><ul><li>Separate derivative candidates from endpoint candidates.</li><li>Check whether the likelihood is monotone on its allowed set.</li><li>For estimator quality, compute bias before MSE.</li></ul></div></section>
 
+    <section class="panel">
+      <h2>Feedback-Informed Repair Focus</h2>
+      <p>Latest non-empty feedback identifies support-constraint as the main MLE gap, with Rao-Blackwell as a secondary target. The repair block is Problems 1-5, the bridge block is Problems 6-8, the target block is Problem 9, and the cumulative synthesis block is Problem 10. In every support-dependent problem, mark the allowed interval for the parameter, then state whether the maximum is interior, boundary, or a whole interval. Rao-Blackwell and UMVUE note: when a sufficient statistic appears, ask whether conditioning an unbiased estimator on it improves variance.</p>
+      <div class="formula">\[\text{likelihood}\ +\ \text{support}\Rightarrow\text{allowed }\theta\text{ set}\Rightarrow\text{interior/boundary check}\Rightarrow\widehat\theta.\]</div>
+    </section>
+
     <div class="section-label">Problems 1-5 - Concept Builders</div>
 
     <article class="problem"><div class="problem-head"><div class="problem-title">1. Concept: Bernoulli likelihood setup</div><div class="tags"><span class="tag concept">Concept</span><span class="tag">Likelihood</span></div></div><p>\(X_1,\ldots,X_n\) are iid Bernoulli\((p)\), and \(s=\sum X_i\). Write the likelihood and find the MLE of \(p\).</p><details><summary>Solution</summary><p>The likelihood is \(L(p)=p^s(1-p)^{n-s}\), \(0\le p\le1\). Maximizing the log gives \(\widehat p=s/n=\bar X\), with endpoints included when \(s=0\) or \(s=n\).</p></details></article>

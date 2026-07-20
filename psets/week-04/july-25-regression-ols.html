@@ -23,6 +23,12 @@
 
     <section class="panel"><h2>Setup Checklist</h2><div class="grid"><ul><li>For simple regression, compute means first.</li><li>Use slope \(S_{xy}/S_{xx}\) when an intercept is present.</li><li>Find intercept from the mean point.</li></ul><ul><li>For matrix OLS, write the normal equation.</li><li>For residual questions, multiply by \(X^T\).</li><li>For projection questions, identify the column space.</li></ul></div></section>
 
+    <section class="panel">
+      <h2>Feedback-Informed Repair Focus</h2>
+      <p>Earlier feedback repeatedly asked for clearer final interpretation. The repair block is Problems 1-5, the bridge block is Problems 6-8, the target block is Problem 9, and the cumulative synthesis block is Problem 10. In OLS, every algebraic identity should end with a geometric sentence: what is fitted, what is residual, which space is orthogonal to which other space, and whether any dependence or distribution assumption is actually being used.</p>
+      <div class="formula">\[X^Te=0\Rightarrow e\perp\operatorname{col}(X),\qquad Hy\in\operatorname{col}(X),\qquad y=Hy+e.\]</div>
+    </section>
+
     <div class="section-label">Problems 1-5 - Concept Builders</div>
 
     <article class="problem"><div class="problem-head"><div class="problem-title">1. Concept: simple-regression slope from sums</div><div class="tags"><span class="tag concept">Concept</span><span class="tag">Slope</span></div></div><p>In a simple regression with intercept, suppose \(S_{xy}=20\) and \(S_{xx}=5\). Find the OLS slope.</p><details><summary>Solution</summary><p>The slope is \(b_1=S_{xy}/S_{xx}=20/5=4\).</p></details></article>

@@ -23,6 +23,12 @@
 
     <section class="panel"><h2>Setup Checklist</h2><div class="grid"><ul><li>State \(H_0\), \(H_1\), and the statistic.</li><li>Write the likelihood ratio before simplifying inequalities.</li><li>Choose the rejection tail from the ratio direction.</li></ul><ul><li>Calibrate size using the null distribution.</li><li>Compute power using the alternative distribution.</li><li>For UMP, look for monotone likelihood ratio.</li></ul></div></section>
 
+    <section class="panel">
+      <h2>Feedback-Informed Repair Focus</h2>
+      <p>The MLE feedback showed shaky boundary and support justification. The repair block is Problems 1-5, the bridge block is Problems 6-8, the target block is Problem 9, and the cumulative synthesis block is Problem 10. UMP/NP tests use the same discipline: write the null support, alternative support, and likelihood-ratio direction before selecting a tail. If the statistic is discrete, also check whether exact size needs boundary randomization.</p>
+      <div class="formula">\[\frac{L_1}{L_0}\text{ increasing}\Rightarrow\text{right tail},\qquad \frac{L_1}{L_0}\text{ decreasing}\Rightarrow\text{left tail}.\]</div>
+    </section>
+
     <div class="section-label">Problems 1-5 - Concept Builders</div>
 
     <article class="problem"><div class="problem-head"><div class="problem-title">1. Concept: simple Bernoulli likelihood ratio</div><div class="tags"><span class="tag concept">Concept</span><span class="tag">Likelihood ratio</span></div></div><p>One observation \(X\sim\operatorname{Bernoulli}(p)\). Compare \(H_0:p=1/3\) against \(H_1:p=2/3\). Write \(L_1/L_0\) for \(X=0\) and \(X=1\), and identify the rejection value.</p><details><summary>Solution</summary><p>For \(X=1\), \(L_1/L_0=(2/3)/(1/3)=2\). For \(X=0\), \(L_1/L_0=(1/3)/(2/3)=1/2\). The ratio is larger when \(X=1\), so the rejection value is \(X=1\).</p></details></article>

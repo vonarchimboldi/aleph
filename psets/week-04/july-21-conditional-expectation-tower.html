@@ -23,6 +23,12 @@
 
     <section class="panel"><h2>Setup Checklist</h2><div class="grid"><ul><li>Name the variable being conditioned on.</li><li>Write the conditional distribution or conditional mean.</li><li>Check the possible values of the conditioning variable.</li></ul><ul><li>Average the inner answer over the outer distribution.</li><li>For random sums, condition on the number of terms.</li><li>For total variance, compute both pieces separately.</li></ul></div></section>
 
+    <section class="panel">
+      <h2>Feedback-Informed Repair Focus</h2>
+      <p>Latest non-empty feedback says the calculation is strong, but written justification and support-tracking are shaky. The repair block is Problems 1-5, the bridge block is Problems 6-8, the target block is Problem 9, and the cumulative synthesis block is Problem 10. Before solving each problem, write one sentence of the form: "Condition on \(Y\) because it makes \(X\mid Y\) have this familiar distribution on this support."</p>
+      <div class="formula">\[\text{conditioning variable}\rightarrow\text{conditional law/support}\rightarrow\text{inner expectation}\rightarrow\text{outer average}\]</div>
+    </section>
+
     <div class="section-label">Problems 1-5 - Mechanics Builders</div>
 
     <article class="problem"><div class="problem-head"><div class="problem-title">1. Concept mechanic: die then Bernoulli trials</div><div class="tags"><span class="tag concept">Concept</span><span class="tag">Tower</span></div></div><p>Roll a fair die \(N\), then run \(N\) independent Bernoulli\((p)\) trials. Let \(X\) be the number of successes. Compute \(E[X]\).</p><details><summary>Solution</summary><p>Given \(N\), \(E[X\mid N]=Np\). Therefore \(E[X]=pE[N]=p(7/2)\).</p></details></article>

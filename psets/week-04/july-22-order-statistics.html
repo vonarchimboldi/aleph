@@ -23,6 +23,12 @@
 
     <section class="panel"><h2>Setup Checklist</h2><div class="grid"><ul><li>Decide whether the event concerns a minimum, maximum, kth value, or spacing.</li><li>Write the support of the ordered values.</li><li>Use the CDF-count method before differentiating.</li></ul><ul><li>For uniform samples, remember \(U_{(k)}\sim\operatorname{Beta}(k,n+1-k)\).</li><li>For joint laws, include the ordering region.</li><li>Check whether the answer is a probability, density, or expectation.</li></ul></div></section>
 
+    <section class="panel">
+      <h2>Feedback-Informed Repair Focus</h2>
+      <p>The latest non-empty order-statistics feedback asks for short translation drills before solving. The repair block is Problems 1-5, the bridge block is Problems 6-8, the target block is Problem 9, and the cumulative synthesis block is Problem 10. For every threshold event below, first rewrite the ordered-value statement as an original-sample count with support, such as "at least \(k\) observations are \(\le a\)" or "all observations exceed \(a\)".</p>
+      <div class="formula">\[X_{(k)}\le a\Rightarrow N_a=\#\{i:X_i\le a\}\ge k,\qquad X_{(1)}>a\Rightarrow N_a=0.\]</div>
+    </section>
+
     <div class="section-label">Problems 1-5 - Concept Builders</div>
 
     <article class="problem"><div class="problem-head"><div class="problem-title">1. Concept: maximum below a threshold</div><div class="tags"><span class="tag concept">Concept</span><span class="tag">Maximum</span></div></div><p>Let \(X_1,\ldots,X_6\) be iid with CDF \(F\). Express \(P(X_{(6)}\le a)\).</p><details><summary>Solution</summary><p>The maximum is at most \(a\) exactly when all six observations are at most \(a\). Hence \(P(X_{(6)}\le a)=F(a)^6\).</p></details></article>
