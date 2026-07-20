@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>July 20 Pset - Method of Indicators</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" />
+  <link rel="stylesheet" href="/psets/material-page.css" />
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+  <script defer src="/psets/material-page.js"></script>
+</head>
+<body>
+  <main class="wrap">
+    <section class="hero">
+      <h1>July 20 Pset: Method of Indicators</h1>
+      <p class="sub">Week 4 PSB indicator practice. The focus is count decomposition, conditional indicators, symmetry checks, and second-moment pair classification under light time pressure.</p>
+      <div class="meta"><span class="chip">Probability and Statistics</span><span class="chip">Monday</span><span class="chip">5 concept builders</span><span class="chip">3 integration problems</span><span class="chip">2 ISI-style problems</span><span class="chip">Solutions included</span></div>
+      <p class="math-fallback">Math rendering did not load from the CDN. Refresh once, or use a network that allows KaTeX CDN files.</p>
+    </section>
+
+    <section class="panel accent">
+      <h2>Core Pattern</h2>
+      <p>Turn the target count into a sum of indicators, then compute one event probability and multiply by the size of the index set.</p>
+      <div class="formula">\[X=\sum_{\alpha\in A} I_\alpha,\qquad E[X]=\sum_{\alpha\in A}P(I_\alpha=1),\qquad E[X(X-1)]=\sum_{\alpha\ne\beta}P(I_\alpha I_\beta=1).\]</div>
+    </section>
+
+    <section class="panel">
+      <h2>Setup Checklist</h2>
+      <div class="grid">
+        <ul><li>Name the atomic object before naming the indicator.</li><li>Use symmetry only after the same probability applies to every atom.</li><li>For conditioning, compute \(E[X\mid Y]\) first.</li></ul>
+        <ul><li>For variance, classify identical, overlapping, and disjoint pairs.</li><li>For unordered pairs, decide whether \(X(X-1)\) needs ordered pairs.</li><li>Write one sentence explaining why independence is or is not needed.</li></ul>
+      </div>
+    </section>
+
+    <div class="section-label">Problems 1-5 - Concept Builders</div>
+
+    <article class="problem"><div class="problem-head"><div class="problem-title">1. Concept: prime-numbered successful trials</div><div class="tags"><span class="tag concept">Concept</span><span class="tag">Linearity</span></div></div><p>Ten independent trials succeed with probability \(p\). Let \(X\) count successes in positions \(2,3,5,7\). Write \(X\) as a sum of indicators and find \(E[X]\).</p><details><summary>Solution</summary><p>Let \(I_j=1\) when trial \(j\) succeeds for \(j\in\{2,3,5,7\}\). Then \(X=I_2+I_3+I_5+I_7\), so \(E[X]=4p\).</p></details></article>
+
+    <article class="problem"><div class="problem-head"><div class="problem-title">2. Concept: empty cells in a small allocation</div><div class="tags"><span class="tag concept">Concept</span><span class="tag">Occupancy</span></div></div><p>Six balls are independently placed into four labelled boxes. Let \(X\) be the number of empty boxes. Compute \(E[X]\).</p><details><summary>Solution</summary><p>For box \(j\), let \(I_j=1\) if it is empty. A fixed box is missed by all six balls with probability \((3/4)^6\). Hence \(E[X]=4(3/4)^6\).</p></details></article>
+
+    <article class="problem"><div class="problem-head"><div class="problem-title">3. Concept: adjacent rises in a permutation</div><div class="tags"><span class="tag concept">Concept</span><span class="tag">Symmetry</span></div></div><p>A random permutation \(a_1,\ldots,a_n\) of \(1,\ldots,n\) is chosen. Let \(X\) count indices \(i<n\) for which \(a_i<a_{i+1}\). Find \(E[X]\).</p><details><summary>Solution</summary><p>Let \(I_i=1\) if \(a_i<a_{i+1}\). For a fixed adjacent pair, the two relative orders are equally likely, so \(P(I_i=1)=1/2\). Therefore \(E[X]=(n-1)/2\).</p></details></article>
+
+    <article class="problem"><div class="problem-head"><div class="problem-title">4. Concept: selected red cards</div><div class="tags"><span class="tag concept">Concept</span><span class="tag">Hypergeometric</span></div></div><p>A hand of \(k\) cards is drawn from a deck with \(r\) red cards and \(b\) black cards. Let \(X\) be the number of red cards in the hand. Use indicators to compute \(E[X]\).</p><details><summary>Solution</summary><p>Let \(I_j=1\) if red card \(j\) is selected. Since \(P(I_j=1)=k/(r+b)\), \(E[X]=r k/(r+b)\).</p></details></article>
+
+    <article class="problem"><div class="problem-head"><div class="problem-title">5. Concept: exact two visitors at a counter</div><div class="tags"><span class="tag concept">Concept</span><span class="tag">Index set</span></div></div><p>\(m\) visitors independently choose one of \(s\) counters uniformly. Let \(X\) be the number of counters receiving exactly two visitors. Compute \(E[X]\).</p><details><summary>Solution</summary><p>For counter \(j\), let \(I_j=1\) if exactly two visitors choose it. Then \(P(I_j=1)=\binom m2(1/s)^2(1-1/s)^{m-2}\), so \(E[X]=s\binom m2(1/s)^2(1-1/s)^{m-2}\).</p></details></article>
+
+    <div class="section-label">Problems 6-8 - Integration Problems</div>
+
+    <article class="problem"><div class="problem-head"><div class="problem-title">6. Integration: matches after conditioning on a chosen subset</div><div class="tags"><span class="tag integration">Integration</span><span class="tag">Conditioning</span></div></div><p>A random subset \(S\) of size \(k\) is chosen from \(\{1,\ldots,n\}\). Independently, a random permutation \(\pi\) of \(1,\ldots,n\) is chosen. Let \(X\) count elements \(i\in S\) with \(\pi(i)=i\). Find \(E[X\mid S]\) and \(E[X]\).</p><details><summary>Solution</summary><p>Given \(S\), write \(X=\sum_{i\in S}I_i\), where \(I_i=1\) if \(i\) is fixed. Each fixed element has probability \(1/n\), so \(E[X\mid S]=k/n\). Averaging gives \(E[X]=k/n\).</p></details></article>
+
+    <article class="problem"><div class="problem-head"><div class="problem-title">7. Integration: pair moment for adjacent heads</div><div class="tags"><span class="tag integration">Integration</span><span class="tag">Pair terms</span></div></div><p>A fair coin is tossed \(n\ge4\) times. Let \(X\) be the number of adjacent pairs \(HH\). Express \(E[X]\) and describe the two pair types needed for \(E[X(X-1)]\).</p><details><summary>Solution</summary><p>Let \(I_i=1\) for \(HH\) at positions \(i,i+1\). Then \(E[X]=(n-1)/4\). For \(E[X(X-1)]\), ordered distinct pairs are either overlapping, such as \(i\) and \(i+1\), requiring three heads with probability \(1/8\), or disjoint, requiring four heads with probability \(1/16\).</p></details></article>
+
+    <article class="problem"><div class="problem-head"><div class="problem-title">8. Integration: accepted applications under a random pool</div><div class="tags"><span class="tag integration">Integration</span><span class="tag">Tower</span></div></div><p>Given \(N\), each of \(N\) applications is accepted with probability \(q\), independently. \(N\) has mean \(\mu\). Let \(X\) be the number accepted. Compute \(E[X]\) and state the indicator decomposition.</p><details><summary>Solution</summary><p>Given \(N\), write \(X=\sum_{i=1}^N I_i\), with \(E[I_i\mid N]=q\). Thus \(E[X\mid N]=qN\), so \(E[X]=qE[N]=q\mu\).</p></details></article>
+
+    <div class="section-label">Problems 9-10 - ISI-Style Challenge</div>
+
+    <article class="problem"><div class="problem-head"><div class="problem-title">9. ISI-style challenge: isolated occupied boxes</div><div class="tags"><span class="tag challenge">ISI-style</span><span class="tag">Occupancy</span></div></div><p>\(n\) balls are independently placed into \(n\) boxes arranged in a line. Let \(X\) be the number of boxes that contain exactly one ball and whose immediate neighbours, when they exist, are empty. Find \(E[X]\).</p><details><summary>Solution</summary><p>For an interior box, one specified box has exactly one ball and its two neighbours are empty with probability \(n(1/n)(1-3/n)^{n-1}\). There are \(n-2\) interior boxes. Each endpoint has one neighbour, giving probability \(n(1/n)(1-2/n)^{n-1}\). Hence \(E[X]=(n-2)(1-3/n)^{n-1}+2(1-2/n)^{n-1}\).</p></details></article>
+
+    <article class="problem"><div class="problem-head"><div class="problem-title">10. ISI-style challenge: double fixed ordered pairs</div><div class="tags"><span class="tag challenge">ISI-style</span><span class="tag">Second moment</span></div></div><p>For a random permutation of \(n\ge3\), let \(X\) be the number of unordered pairs \(\{i,j\}\) such that both \(i\) and \(j\) are fixed. Compute \(E[X]\).</p><details><summary>Solution</summary><p>For each unordered pair \(\{i,j\}\), let \(I_{ij}=1\) if both are fixed. The probability is \((n-2)!/n!=1/[n(n-1)]\). There are \(\binom n2\) pairs, so \(E[X]=\binom n2/[n(n-1)]=1/2\).</p></details></article>
+
+    <section class="panel"><h2>Answer Summary</h2><ol><li>\(4p\)</li><li>\(4(3/4)^6\)</li><li>\((n-1)/2\)</li><li>\(rk/(r+b)\)</li><li>\(s\binom m2(1/s)^2(1-1/s)^{m-2}\)</li><li>\(E[X\mid S]=k/n,\ E[X]=k/n\)</li><li>\((n-1)/4\), overlapping and disjoint ordered pairs</li><li>\(q\mu\)</li><li>\((n-2)(1-3/n)^{n-1}+2(1-2/n)^{n-1}\)</li><li>\(1/2\)</li></ol></section>
+  </main>
+</body>
+</html>

@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>July 22 Pset - Order Statistics</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" />
+  <link rel="stylesheet" href="/psets/material-page.css" />
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+  <script defer src="/psets/material-page.js"></script>
+</head>
+<body>
+  <main class="wrap">
+    <section class="hero">
+      <h1>July 22 Pset: Order Statistics</h1>
+      <p class="sub">Week 4 PSB order-statistics practice. The emphasis is translating events into binomial counts, using beta laws for uniform samples, and recognizing joint-density regions.</p>
+      <div class="meta"><span class="chip">Probability and Statistics</span><span class="chip">Wednesday</span><span class="chip">5 concept builders</span><span class="chip">3 application problems</span><span class="chip">2 ISI-style problems</span><span class="chip">Solutions included</span></div>
+      <p class="math-fallback">Math rendering did not load from the CDN. Refresh once, or use a network that allows KaTeX CDN files.</p>
+    </section>
+
+    <section class="panel accent"><h2>Core Pattern</h2><p>Turn an order-statistic event into a statement about how many sample values fall below a threshold.</p><div class="formula">\[P(X_{(k)}\le x)=P(\#\{i:X_i\le x\}\ge k)=\sum_{j=k}^n\binom nj F(x)^j(1-F(x))^{n-j}.\]</div></section>
+
+    <section class="panel"><h2>Setup Checklist</h2><div class="grid"><ul><li>Decide whether the event concerns a minimum, maximum, kth value, or spacing.</li><li>Write the support of the ordered values.</li><li>Use the CDF-count method before differentiating.</li></ul><ul><li>For uniform samples, remember \(U_{(k)}\sim\operatorname{Beta}(k,n+1-k)\).</li><li>For joint laws, include the ordering region.</li><li>Check whether the answer is a probability, density, or expectation.</li></ul></div></section>
+
+    <div class="section-label">Problems 1-5 - Concept Builders</div>
+
+    <article class="problem"><div class="problem-head"><div class="problem-title">1. Concept: maximum below a threshold</div><div class="tags"><span class="tag concept">Concept</span><span class="tag">Maximum</span></div></div><p>Let \(X_1,\ldots,X_6\) be iid with CDF \(F\). Express \(P(X_{(6)}\le a)\).</p><details><summary>Solution</summary><p>The maximum is at most \(a\) exactly when all six observations are at most \(a\). Hence \(P(X_{(6)}\le a)=F(a)^6\).</p></details></article>
+
+    <article class="problem"><div class="problem-head"><div class="problem-title">2. Concept: minimum survival probability</div><div class="tags"><span class="tag concept">Concept</span><span class="tag">Minimum</span></div></div><p>For iid observations with CDF \(F\), find \(P(X_{(1)}>a)\) for a sample of size \(n\).</p><details><summary>Solution</summary><p>The minimum exceeds \(a\) when every observation exceeds \(a\). Thus \(P(X_{(1)}>a)=[1-F(a)]^n\).</p></details></article>
+
+    <article class="problem"><div class="problem-head"><div class="problem-title">3. Concept: median event as binomial count</div><div class="tags"><span class="tag concept">Concept</span><span class="tag">Median</span></div></div><p>Five iid observations have CDF \(F\). Express \(P(X_{(3)}\le a)\) as a binomial-count probability.</p><details><summary>Solution</summary><p>At least three observations must be at most \(a\). Therefore \(P(X_{(3)}\le a)=\sum_{j=3}^{5}\binom5jF(a)^j[1-F(a)]^{5-j}\).</p></details></article>
+
+    <article class="problem"><div class="problem-head"><div class="problem-title">4. Concept: beta mean for a uniform order value</div><div class="tags"><span class="tag concept">Concept</span><span class="tag">Beta</span></div></div><p>If \(U_1,\ldots,U_n\) are iid Uniform\((0,1)\), find \(E[U_{(k)}]\).</p><details><summary>Solution</summary><p>\(U_{(k)}\) has beta distribution with parameters \(k\) and \(n+1-k\). Its mean is \(k/(n+1)\).</p></details></article>
+
+    <article class="problem"><div class="problem-head"><div class="problem-title">5. Concept: density of the largest uniform observation</div><div class="tags"><span class="tag concept">Concept</span><span class="tag">Density</span></div></div><p>For \(n\) iid Uniform\((0,1)\) variables, find the density of \(U_{(n)}\).</p><details><summary>Solution</summary><p>The CDF is \(P(U_{(n)}\le u)=u^n\) for \(0<u<1\). Differentiating gives density \(n u^{n-1}\).</p></details></article>
+
+    <div class="section-label">Problems 6-8 - Application Problems</div>
+
+    <article class="problem"><div class="problem-head"><div class="problem-title">6. Application: second-smallest uniform density</div><div class="tags"><span class="tag integration">Application</span><span class="tag">Density</span></div></div><p>For four iid Uniform\((0,1)\) variables, find the density of \(U_{(2)}\).</p><details><summary>Solution</summary><p>The beta parameters are \(2\) and \(3\). Hence \(f_{U_{(2)}}(u)=\frac{4!}{1!2!}u(1-u)^2=12u(1-u)^2\), for \(0<u<1\).</p></details></article>
+
+    <article class="problem"><div class="problem-head"><div class="problem-title">7. Application: joint density of two ordered uniforms</div><div class="tags"><span class="tag integration">Application</span><span class="tag">Joint</span></div></div><p>For \(n=5\) iid Uniform\((0,1)\), write the joint density of \(U_{(2)}=u\) and \(U_{(4)}=v\) for \(0<u<v<1\).</p><details><summary>Solution</summary><p>The general joint density is \(\frac{n!}{(i-1)!(j-i-1)!(n-j)!}u^{i-1}(v-u)^{j-i-1}(1-v)^{n-j}\). With \(n=5,i=2,j=4\), it is \(120u(v-u)(1-v)\).</p></details></article>
+
+    <article class="problem"><div class="problem-head"><div class="problem-title">8. Application: exponential minimum scaling</div><div class="tags"><span class="tag integration">Application</span><span class="tag">Minimum</span></div></div><p>If \(X_1,\ldots,X_n\) are iid Exponential\((\lambda)\), find the distribution of \(X_{(1)}\).</p><details><summary>Solution</summary><p>\(P(X_{(1)}>x)=P(X_1>x,\ldots,X_n>x)=e^{-n\lambda x}\) for \(x\ge0\). Thus \(X_{(1)}\sim\operatorname{Exponential}(n\lambda)\).</p></details></article>
+
+    <div class="section-label">Problems 9-10 - ISI-Style Challenge</div>
+
+    <article class="problem"><div class="problem-head"><div class="problem-title">9. ISI-style challenge: sample range threshold</div><div class="tags"><span class="tag challenge">ISI-style</span><span class="tag">Spacing</span></div></div><p>Let \(U_1,U_2,U_3\) be iid Uniform\((0,1)\). Compute \(P(U_{(3)}-U_{(1)}\le r)\) for \(0\le r\le1\).</p><details><summary>Solution</summary><p>The joint density of \(U_{(1)}=u\) and \(U_{(3)}=v\) is \(6(v-u)\) on \(0<u<v<1\). Integrate over \(v-u\le r\): \(\int_0^{1-r}\int_u^{u+r}6(v-u)\,dv\,du+\int_{1-r}^{1}\int_u^1 6(v-u)\,dv\,du=3r^2-2r^3\).</p></details></article>
+
+    <article class="problem"><div class="problem-head"><div class="problem-title">10. ISI-style challenge: transformed kth order statistic</div><div class="tags"><span class="tag challenge">ISI-style</span><span class="tag">Transformation</span></div></div><p>Let \(X_i\) have CDF \(F(x)=x^2\) on \(0<x<1\). For a sample of size \(5\), express the CDF of \(X_{(2)}\).</p><details><summary>Solution</summary><p>Use the binomial count method with \(F(x)=x^2\). For \(0<x<1\), \(P(X_{(2)}\le x)=\sum_{j=2}^{5}\binom5j x^{2j}(1-x^2)^{5-j}\).</p></details></article>
+
+    <section class="panel"><h2>Answer Summary</h2><ol><li>\(F(a)^6\)</li><li>\([1-F(a)]^n\)</li><li>\(\sum_{j=3}^5\binom5jF(a)^j[1-F(a)]^{5-j}\)</li><li>\(k/(n+1)\)</li><li>\(nu^{n-1}\)</li><li>\(12u(1-u)^2\)</li><li>\(120u(v-u)(1-v)\)</li><li>\(\operatorname{Exponential}(n\lambda)\)</li><li>\(3r^2-2r^3\)</li><li>\(\sum_{j=2}^{5}\binom5j x^{2j}(1-x^2)^{5-j}\)</li></ol></section>
+  </main>
+</body>
+</html>

@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>July 26 Review Quiz - Probability and Statistics PSB Cycle</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" />
+  <link rel="stylesheet" href="/psets/material-page.css" />
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+  <script defer src="/psets/material-page.js"></script>
+  <script id="quiz-metadata" type="application/json">
+{
+  "id": "psb-review-2026-07-26",
+  "title": "July 26 Week 4 PSB Review Quiz",
+  "durationMinutes": 90,
+  "questionCount": 6,
+  "unlockPolicy": "solutions-after-submission",
+  "subjects": ["Probability and Statistics"],
+  "topics": ["method of indicators", "conditional expectation", "order statistics", "MLE and estimation", "UMP/NP tests", "regression and OLS"],
+  "feedbackWorkflow": "feedback-workflow-weekly-psb-review-v1"
+}
+  </script>
+</head>
+<body>
+  <main class="wrap">
+    <section class="hero"><h1>July 26: Week 4 PSB Review Quiz</h1><p class="sub">Six-topic written review for Priyanka's Platinum Probability and Statistics cycle. Use the pattern label first, then write the setup, calculation, justification, and correction trigger.</p><div class="meta"><span class="chip">Probability and Statistics</span><span class="chip">Sunday</span><span class="chip">6 ISI-style questions</span><span class="chip">90 minutes</span><span class="chip">Feedback workflow ready</span><span class="chip">Solutions locked</span></div><p class="math-fallback">Math rendering did not load from the CDN. Refresh once, or use a network that allows KaTeX CDN files.</p></section>
+    <section class="panel accent"><h2>Core Pattern</h2><p>This review tests variety across the six PSB patterns. Do not reuse one template for every question; identify the specific setup cue for each topic.</p><div class="formula">\[\text{topic cue}\rightarrow\text{statistic or event}\rightarrow\text{support/check}\rightarrow\text{answer}\rightarrow\text{repair note}\]</div></section>
+    <section class="panel"><h2>Instructions</h2><div class="grid"><ul><li>Use 90 minutes.</li><li>Attempt all six questions.</li><li>Show the setup before computation.</li></ul><ul><li>Flag every support restriction.</li><li>State size, power, or estimator target when relevant.</li><li>End with one reusable mistake check per question.</li></ul></div></section>
+
+    <div class="section-label">Questions 1-6 - Weekly ISI-Style Review</div>
+    <article class="problem"><div class="problem-head"><div class="problem-title">1. Method of indicators review: isolated singletons</div><div class="tags"><span class="tag concept">Review</span><span class="tag">Method of indicators</span></div></div><p>\(n\) balls are independently placed into \(n\) labelled boxes arranged in a line. Let \(X\) count boxes that contain exactly one ball and have no occupied immediate neighbour. Set up \(X\) using indicators and derive \(E[X]\), separating endpoints from interior boxes.</p></article>
+    <article class="problem"><div class="problem-head"><div class="problem-title">2. Conditional expectation review: random sample maximum</div><div class="tags"><span class="tag concept">Review</span><span class="tag">Conditional expectation</span></div></div><p>Given \(N\sim\operatorname{Poisson}(\lambda)\), take \(N\) iid Uniform\((0,1)\) observations and define \(M=0\) if \(N=0\). Compute \(P(M\le x)\) for \(0\le x\le1\), naming the conditioning variable.</p></article>
+    <article class="problem"><div class="problem-head"><div class="problem-title">3. Order statistics review: transformed second value</div><div class="tags"><span class="tag concept">Review</span><span class="tag">Order statistics</span></div></div><p>\(X_i\) have CDF \(F(x)=x^2\) on \(0<x<1\). For a sample of size \(5\), express \(P(X_{(2)}\le x)\) and state the binomial count behind the expression.</p></article>
+    <article class="problem"><div class="problem-head"><div class="problem-title">4. MLE review: support-dependent estimator bias</div><div class="tags"><span class="tag concept">Review</span><span class="tag">MLE</span></div></div><p>\(X_1,\ldots,X_n\) are iid Uniform\((0,\theta)\). Write the likelihood, find the MLE, and give an unbiased correction based on the MLE.</p></article>
+    <article class="problem"><div class="problem-head"><div class="problem-title">5. UMP review: exponential rate tail direction</div><div class="tags"><span class="tag concept">Review</span><span class="tag">UMP/NP</span></div></div><p>One observation has exponential density \(\lambda e^{-\lambda x}\). For \(H_0:\lambda=\lambda_0\) against \(H_1:\lambda=\lambda_1>\lambda_0\), write the likelihood ratio and identify the most powerful rejection-region shape.</p></article>
+    <article class="problem"><div class="problem-head"><div class="problem-title">6. Regression review: residual projection identity</div><div class="tags"><span class="tag concept">Review</span><span class="tag">Regression and OLS</span></div></div><p>In matrix OLS with full-column-rank \(X\), define \(H=X(X^TX)^{-1}X^T\) and \(e=(I-H)y\). Prove that \(e\) is orthogonal to the fitted vector \(Hy\), then state the squared-length decomposition.</p></article>
+  </main>
+</body>
+</html>

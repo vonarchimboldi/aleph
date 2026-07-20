@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>July 21 Pset - Conditional Expectation and Tower Property</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" />
+  <link rel="stylesheet" href="/psets/material-page.css" />
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+  <script defer src="/psets/material-page.js"></script>
+</head>
+<body>
+  <main class="wrap">
+    <section class="hero">
+      <h1>July 21 Pset: Conditional Expectation and Tower Property</h1>
+      <p class="sub">Week 4 PSB practice on choosing the right conditioning variable, simplifying an inner expectation, and using total expectation or total variance without losing support information.</p>
+      <div class="meta"><span class="chip">Probability and Statistics</span><span class="chip">Tuesday</span><span class="chip">5 mechanics builders</span><span class="chip">3 application problems</span><span class="chip">2 hidden-pattern problems</span><span class="chip">Solutions included</span></div>
+      <p class="math-fallback">Math rendering did not load from the CDN. Refresh once, or use a network that allows KaTeX CDN files.</p>
+    </section>
+
+    <section class="panel accent"><h2>Core Pattern</h2><p>Condition on the variable that makes the remaining random quantity familiar.</p><div class="formula">\[E[X]=E(E[X\mid Y]),\qquad \operatorname{Var}(X)=E(\operatorname{Var}(X\mid Y))+\operatorname{Var}(E[X\mid Y]).\]</div></section>
+
+    <section class="panel"><h2>Setup Checklist</h2><div class="grid"><ul><li>Name the variable being conditioned on.</li><li>Write the conditional distribution or conditional mean.</li><li>Check the possible values of the conditioning variable.</li></ul><ul><li>Average the inner answer over the outer distribution.</li><li>For random sums, condition on the number of terms.</li><li>For total variance, compute both pieces separately.</li></ul></div></section>
+
+    <div class="section-label">Problems 1-5 - Mechanics Builders</div>
+
+    <article class="problem"><div class="problem-head"><div class="problem-title">1. Concept mechanic: die then Bernoulli trials</div><div class="tags"><span class="tag concept">Concept</span><span class="tag">Tower</span></div></div><p>Roll a fair die \(N\), then run \(N\) independent Bernoulli\((p)\) trials. Let \(X\) be the number of successes. Compute \(E[X]\).</p><details><summary>Solution</summary><p>Given \(N\), \(E[X\mid N]=Np\). Therefore \(E[X]=pE[N]=p(7/2)\).</p></details></article>
+
+    <article class="problem"><div class="problem-head"><div class="problem-title">2. Concept mechanic: conditional mean from a two-stage box</div><div class="tags"><span class="tag concept">Concept</span><span class="tag">Conditioning</span></div></div><p>A coin with random success probability \(P\) is chosen, where \(P\) is equally likely to be \(1/4\) or \(3/4\). One toss is made and \(X\) is the success indicator. Find \(E[X]\).</p><details><summary>Solution</summary><p>Condition on \(P\). Since \(E[X\mid P]=P\), \(E[X]=E[P]=(1/4+3/4)/2=1/2\).</p></details></article>
+
+    <article class="problem"><div class="problem-head"><div class="problem-title">3. Concept mechanic: random count with known mean</div><div class="tags"><span class="tag concept">Concept</span><span class="tag">Random sum</span></div></div><p>Given \(N\), \(X_1,\ldots,X_N\) are iid with mean \(5\), independent of \(N\). If \(E[N]=12\), find \(E[\sum_{i=1}^N X_i]\).</p><details><summary>Solution</summary><p>Condition on \(N\). The inner mean is \(E[\sum_{i=1}^N X_i\mid N]=5N\). Averaging gives \(60\).</p></details></article>
+
+    <article class="problem"><div class="problem-head"><div class="problem-title">4. Concept mechanic: total variance with random coin</div><div class="tags"><span class="tag concept">Concept</span><span class="tag">Variance</span></div></div><p>A Bernoulli trial has random probability \(P\), where \(P\) is equally likely to be \(1/3\) or \(2/3\). Let \(X\) be its outcome. Use total variance to compute \(\operatorname{Var}(X)\).</p><details><summary>Solution</summary><p>\(E[X\mid P]=P\) and \(\operatorname{Var}(X\mid P)=P(1-P)\). Thus \(E[\operatorname{Var}(X\mid P)]=2/9\), and \(\operatorname{Var}(E[X\mid P])=\operatorname{Var}(P)=1/36\). Total variance is \(2/9+1/36=1/4\).</p></details></article>
+
+    <article class="problem"><div class="problem-head"><div class="problem-title">5. Concept mechanic: support after observing a count</div><div class="tags"><span class="tag concept">Concept</span><span class="tag">Support</span></div></div><p>A box type \(Y\) is either A or B with equal probability. Type A has \(2\) red and \(2\) blue balls; type B has \(4\) red and \(1\) blue ball. One ball is drawn. Find the probability it is red by conditioning on \(Y\).</p><details><summary>Solution</summary><p>\(P(\text{red}\mid Y=A)=1/2\) and \(P(\text{red}\mid Y=B)=4/5\). Hence \(P(\text{red})=(1/2)(1/2)+(1/2)(4/5)=13/20\).</p></details></article>
+
+    <div class="section-label">Problems 6-8 - Application Problems</div>
+
+    <article class="problem"><div class="problem-head"><div class="problem-title">6. Application: geometric number of inspections</div><div class="tags"><span class="tag integration">Application</span><span class="tag">Random sum</span></div></div><p>A machine is inspected until the first defect is found. The number of inspections \(N\) has geometric distribution with \(P(N=k)=(1-q)^{k-1}q\). Each inspection costs \(C_i\) with mean \(c\), independent of \(N\). Find the expected total cost.</p><details><summary>Solution</summary><p>Condition on \(N\). The conditional expected cost is \(cN\). Since \(E[N]=1/q\), the expected total cost is \(c/q\).</p></details></article>
+
+    <article class="problem"><div class="problem-head"><div class="problem-title">7. Application: posterior box expectation</div><div class="tags"><span class="tag integration">Application</span><span class="tag">Conditional distribution</span></div></div><p>A box is type A with probability \(1/3\) and type B with probability \(2/3\). Type A gives \(X\sim\operatorname{Binomial}(4,1/2)\); type B gives \(X\sim\operatorname{Binomial}(4,3/4)\). Compute \(E[X]\) by conditioning on the box type.</p><details><summary>Solution</summary><p>The conditional means are \(2\) and \(3\). Therefore \(E[X]=(1/3)2+(2/3)3=8/3\).</p></details></article>
+
+    <article class="problem"><div class="problem-head"><div class="problem-title">8. Application: variance of a random sum of indicators</div><div class="tags"><span class="tag integration">Application</span><span class="tag">Total variance</span></div></div><p>Given \(N\), \(X\mid N\sim\operatorname{Binomial}(N,p)\). Suppose \(E[N]=\mu\) and \(\operatorname{Var}(N)=\sigma^2\). Find \(\operatorname{Var}(X)\).</p><details><summary>Solution</summary><p>\(E[X\mid N]=Np\) and \(\operatorname{Var}(X\mid N)=Np(1-p)\). Thus \(\operatorname{Var}(X)=E[Np(1-p)]+\operatorname{Var}(Np)=\mu p(1-p)+p^2\sigma^2\).</p></details></article>
+
+    <div class="section-label">Problems 9-10 - Hidden ISI-Style Challenge</div>
+
+    <article class="problem"><div class="problem-head"><div class="problem-title">9. Hidden ISI-style challenge: random maximum sample size</div><div class="tags"><span class="tag challenge">Hidden</span><span class="tag">Conditioning</span></div></div><p>Given \(N\), take \(N\) iid Uniform\((0,1)\) variables. Let \(M\) be their maximum, with \(M=0\) if \(N=0\). If \(N\sim\operatorname{Poisson}(\lambda)\), compute \(P(M\le x)\) for \(0\le x\le1\).</p><details><summary>Solution</summary><p>Condition on \(N\). Given \(N=n\), \(P(M\le x\mid N=n)=x^n\), including \(n=0\). Therefore \(P(M\le x)=E[x^N]=\exp(\lambda(x-1))\).</p></details></article>
+
+    <article class="problem"><div class="problem-head"><div class="problem-title">10. Hidden ISI-style challenge: conditional expectation through a stopping count</div><div class="tags"><span class="tag challenge">Hidden</span><span class="tag">Tower</span></div></div><p>A coin with head probability \(p\) is tossed until the second head appears. Let \(N\) be the total number of tosses. Compute the expected number of tails observed before the second head.</p><details><summary>Solution</summary><p>The number of tails before the second head is \(N-2\). For a negative-binomial count to get two heads, \(E[N]=2/p\). Hence the expected number of tails is \(2/p-2=2(1-p)/p\).</p></details></article>
+
+    <section class="panel"><h2>Answer Summary</h2><ol><li>\(7p/2\)</li><li>\(1/2\)</li><li>\(60\)</li><li>\(1/4\)</li><li>\(13/20\)</li><li>\(c/q\)</li><li>\(8/3\)</li><li>\(\mu p(1-p)+p^2\sigma^2\)</li><li>\(\exp(\lambda(x-1))\)</li><li>\(2(1-p)/p\)</li></ol></section>
+  </main>
+</body>
+</html>

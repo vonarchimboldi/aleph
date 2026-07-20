@@ -8,38 +8,38 @@ const root = process.cwd();
 const appSource = fs.readFileSync(path.join(root, "app.js"), "utf8");
 const errors = [];
 
-const weekThree = {
-  sourceWeek: 3,
-  reviewUrl: "psets/week-03/july-19-psb-review-quiz.html",
+const activeWeek = {
+  sourceWeek: 4,
+  reviewUrl: "psets/week-04/july-26-psb-review-quiz.html",
   daily: [
     {
       topic: "method of indicators",
-      file: "psets/week-03/july-13-indicators.html",
+      file: "psets/week-04/july-20-indicators.html",
       required: ["indicator", "linearity", "symmetry", "pair", "variance", "conditioning", "ISI-style"]
     },
     {
       topic: "conditional expectation and tower property",
-      file: "psets/week-03/july-14-conditional-expectation-tower.html",
+      file: "psets/week-04/july-21-conditional-expectation-tower.html",
       required: ["condition", "tower", "inner", "variance", "random sum", "support", "hidden"]
     },
     {
       topic: "order statistics",
-      file: "psets/week-03/july-15-order-statistics.html",
+      file: "psets/week-04/july-22-order-statistics.html",
       required: ["maximum", "minimum", "median", "binomial count", "beta", "density", "joint"]
     },
     {
       topic: "MLE and estimation",
-      file: "psets/week-03/july-16-mle-estimation.html",
+      file: "psets/week-04/july-23-mle-estimation.html",
       required: ["likelihood", "log", "parameter", "support", "boundary", "bias", "MLE"]
     },
     {
       topic: "UMP/NP tests",
-      file: "psets/week-03/july-17-ump-np-tests.html",
+      file: "psets/week-04/july-24-ump-np-tests.html",
       required: ["hypotheses", "likelihood ratio", "size", "power", "randomization", "UMP", "monotone"]
     },
     {
       topic: "regression and OLS",
-      file: "psets/week-03/july-18-regression-ols.html",
+      file: "psets/week-04/july-25-regression-ols.html",
       required: ["mean", "slope", "intercept", "residual", "normal equation", "orthogonal", "projection"]
     }
   ]
@@ -132,32 +132,32 @@ function verifyReviewQuiz(file) {
   if (/<details\b/i.test(rendered) || /<summary\b/i.test(rendered)) fail(`${prefix} must not expose solution details before submission.`);
   if (!html.includes('"unlockPolicy": "solutions-after-submission"')) fail(`${prefix} missing locked-solution policy metadata.`);
   if (!html.includes('"feedbackWorkflow": "feedback-workflow-weekly-psb-review-v1"')) fail(`${prefix} missing weekly PSB feedback workflow metadata.`);
-  weekThree.daily.forEach(({ topic }) => {
+  activeWeek.daily.forEach(({ topic }) => {
     const topicHead = topic.split(" ")[0].toLowerCase();
     if (!normalize(html).includes(topicHead)) fail(`${prefix} review quiz missing topic cue for ${topic}.`);
   });
 }
 
 function verifyAppWiring() {
-  weekThree.daily.forEach(({ topic, file }) => {
+  activeWeek.daily.forEach(({ topic, file }) => {
     if (!appSource.includes(`"${topic}": "${file}"`)) {
-      fail(`app.js: source Week ${weekThree.sourceWeek} missing URL for ${topic}.`);
+      fail(`app.js: source Week ${activeWeek.sourceWeek} missing URL for ${topic}.`);
     }
   });
-  if (!appSource.includes(`${weekThree.sourceWeek}: "${weekThree.reviewUrl}"`)) {
-    fail(`app.js: source Week ${weekThree.sourceWeek} missing Sunday PSB review URL.`);
+  if (!appSource.includes(`${activeWeek.sourceWeek}: "${activeWeek.reviewUrl}"`)) {
+    fail(`app.js: source Week ${activeWeek.sourceWeek} missing Sunday PSB review URL.`);
   }
-  if (!appSource.includes("probabilityStatsPatternWorkspaces(2, 2)")) {
-    fail("app.js: Priyanka Platinum Probability/Stats workspace is not advanced to active Week 3.");
+  if (!appSource.includes("probabilityStatsPatternWorkspaces(3, 3)")) {
+    fail("app.js: Priyanka Platinum Probability/Stats workspace is not advanced to active Week 4.");
   }
-  if (!appSource.includes("completedWeeks: 2") || !appSource.includes("startWeekOffset: 2")) {
-    fail("app.js: Probability/Stats plan does not record two completed source weeks and Week 3 offset.");
+  if (!appSource.includes("completedWeeks: 3") || !appSource.includes("startWeekOffset: 3")) {
+    fail("app.js: Probability/Stats plan does not record three completed source weeks and Week 4 offset.");
   }
 }
 
 verifyAppWiring();
-weekThree.daily.forEach(verifyDailyPage);
-verifyReviewQuiz(weekThree.reviewUrl);
+activeWeek.daily.forEach(verifyDailyPage);
+verifyReviewQuiz(activeWeek.reviewUrl);
 
 if (errors.length) {
   console.error("Platinum PSB material verifier failed:");
@@ -165,4 +165,4 @@ if (errors.length) {
   process.exit(1);
 }
 
-console.log("Platinum PSB material verifier passed for source Week 3.");
+console.log("Platinum PSB material verifier passed for source Week 4.");

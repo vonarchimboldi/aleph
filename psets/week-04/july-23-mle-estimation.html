@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>July 23 Pset - MLE and Estimation</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" />
+  <link rel="stylesheet" href="/psets/material-page.css" />
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+  <script defer src="/psets/material-page.js"></script>
+</head>
+<body>
+  <main class="wrap">
+    <section class="hero">
+      <h1>July 23 Pset: MLE and Estimation</h1>
+      <p class="sub">Week 4 basics-first PSB work on likelihood setup, log-likelihood optimization, support-dependent endpoints, boundary checks, bias, and MSE.</p>
+      <div class="meta"><span class="chip">Probability and Statistics</span><span class="chip">Thursday</span><span class="chip">5 concept builders</span><span class="chip">3 integration problems</span><span class="chip">2 ISI-style problems</span><span class="chip">Solutions included</span></div>
+      <p class="math-fallback">Math rendering did not load from the CDN. Refresh once, or use a network that allows KaTeX CDN files.</p>
+    </section>
+
+    <section class="panel accent"><h2>Core Pattern</h2><p>Write the likelihood with its parameter space and support before differentiating.</p><div class="formula">\[L(\theta)=\prod_{i=1}^n f_\theta(x_i),\qquad \ell(\theta)=\log L(\theta),\qquad \widehat\theta=\arg\max_{\theta\in\Theta}L(\theta).\]</div></section>
+
+    <section class="panel"><h2>Setup Checklist</h2><div class="grid"><ul><li>Identify the model, parameter, and parameter space.</li><li>Keep support restrictions that involve the parameter.</li><li>Use the log only after writing the likelihood.</li></ul><ul><li>Separate derivative candidates from endpoint candidates.</li><li>Check whether the likelihood is monotone on its allowed set.</li><li>For estimator quality, compute bias before MSE.</li></ul></div></section>
+
+    <div class="section-label">Problems 1-5 - Concept Builders</div>
+
+    <article class="problem"><div class="problem-head"><div class="problem-title">1. Concept: Bernoulli likelihood setup</div><div class="tags"><span class="tag concept">Concept</span><span class="tag">Likelihood</span></div></div><p>\(X_1,\ldots,X_n\) are iid Bernoulli\((p)\), and \(s=\sum X_i\). Write the likelihood and find the MLE of \(p\).</p><details><summary>Solution</summary><p>The likelihood is \(L(p)=p^s(1-p)^{n-s}\), \(0\le p\le1\). Maximizing the log gives \(\widehat p=s/n=\bar X\), with endpoints included when \(s=0\) or \(s=n\).</p></details></article>
+
+    <article class="problem"><div class="problem-head"><div class="problem-title">2. Concept: exponential rate log-likelihood</div><div class="tags"><span class="tag concept">Concept</span><span class="tag">Log</span></div></div><p>\(X_i\) are iid Exponential\((\lambda)\) with density \(\lambda e^{-\lambda x}\), \(x>0\). Find the MLE of \(\lambda\).</p><details><summary>Solution</summary><p>\(\ell(\lambda)=n\log\lambda-\lambda\sum x_i\). The derivative gives \(n/\lambda-\sum x_i=0\), so \(\widehat\lambda=n/\sum x_i=1/\bar X\).</p></details></article>
+
+    <article class="problem"><div class="problem-head"><div class="problem-title">3. Concept: normal mean with known variance</div><div class="tags"><span class="tag concept">Concept</span><span class="tag">Parameter</span></div></div><p>\(X_i\sim N(\mu,\sigma^2)\) iid with known \(\sigma^2\). Find the MLE of \(\mu\).</p><details><summary>Solution</summary><p>The log-likelihood differs from a constant by \(-\frac{1}{2\sigma^2}\sum (x_i-\mu)^2\). Maximizing it means minimizing the sum of squared deviations, giving \(\widehat\mu=\bar X\).</p></details></article>
+
+    <article class="problem"><div class="problem-head"><div class="problem-title">4. Concept: uniform endpoint support</div><div class="tags"><span class="tag concept">Concept</span><span class="tag">Support</span></div></div><p>\(X_i\) are iid Uniform\((0,\theta)\). Write the likelihood with support and find the MLE.</p><details><summary>Solution</summary><p>The likelihood is \(L(\theta)=\theta^{-n}\mathbf{1}_{\theta\ge x_{(n)}}\). Since \(\theta^{-n}\) decreases as \(\theta\) grows, the MLE is \(\widehat\theta=X_{(n)}\).</p></details></article>
+
+    <article class="problem"><div class="problem-head"><div class="problem-title">5. Concept: bias of the sample mean</div><div class="tags"><span class="tag concept">Concept</span><span class="tag">Bias</span></div></div><p>If \(X_1,\ldots,X_n\) have mean \(\theta\), show that \(\bar X\) is unbiased for \(\theta\).</p><details><summary>Solution</summary><p>By linearity, \(E[\bar X]=(1/n)\sum E[X_i]=(1/n)n\theta=\theta\). The bias is zero.</p></details></article>
+
+    <div class="section-label">Problems 6-8 - Integration Problems</div>
+
+    <article class="problem"><div class="problem-head"><div class="problem-title">6. Integration: Poisson MLE and variance estimate</div><div class="tags"><span class="tag integration">Integration</span><span class="tag">MLE</span></div></div><p>\(X_i\) are iid Poisson\((\lambda)\). Find the MLE of \(\lambda\) and give the plug-in estimate of \(\operatorname{Var}(X_1)\).</p><details><summary>Solution</summary><p>Ignoring constants not involving \(\lambda\), \(\ell(\lambda)=(\sum x_i)\log\lambda-n\lambda\). The MLE is \(\widehat\lambda=\bar X\). Since a Poisson variable has variance \(\lambda\), the plug-in variance estimate is \(\bar X\).</p></details></article>
+
+    <article class="problem"><div class="problem-head"><div class="problem-title">7. Integration: shifted uniform boundary</div><div class="tags"><span class="tag integration">Integration</span><span class="tag">Boundary</span></div></div><p>\(X_i\) are iid Uniform\((\theta,\theta+1)\). Find the set of \(\theta\) values for which the likelihood is positive, then describe the MLE set.</p><details><summary>Solution</summary><p>The support requires \(\theta\le x_i\le\theta+1\) for every \(i\), so \(\theta\le x_{(1)}\) and \(\theta\ge x_{(n)}-1\). On this interval the likelihood equals \(1\), so every \(\theta\in[x_{(n)}-1,x_{(1)}]\) is an MLE.</p></details></article>
+
+    <article class="problem"><div class="problem-head"><div class="problem-title">8. Integration: MSE from bias and variance</div><div class="tags"><span class="tag integration">Integration</span><span class="tag">MSE</span></div></div><p>An estimator \(T\) satisfies \(E[T]=\theta+a\) and \(\operatorname{Var}(T)=v\). Compute its MSE for estimating \(\theta\).</p><details><summary>Solution</summary><p>\(\operatorname{MSE}(T)=\operatorname{Var}(T)+\operatorname{Bias}(T)^2=v+a^2\).</p></details></article>
+
+    <div class="section-label">Problems 9-10 - ISI-Style Challenge</div>
+
+    <article class="problem"><div class="problem-head"><div class="problem-title">9. ISI-style challenge: decreasing density support</div><div class="tags"><span class="tag challenge">ISI-style</span><span class="tag">Support</span></div></div><p>\(X_i\) are iid with density \(f_\theta(x)=\theta x^{\theta-1}\) on \(0<x<1\), \(\theta>0\). Find the MLE of \(\theta\).</p><details><summary>Solution</summary><p>The log-likelihood is \(\ell(\theta)=n\log\theta+(\theta-1)\sum\log x_i\). The derivative is \(n/\theta+\sum\log x_i\). Setting it to zero gives \(\widehat\theta=-n/\sum\log x_i\), which is positive because each \(\log x_i<0\).</p></details></article>
+
+    <article class="problem"><div class="problem-head"><div class="problem-title">10. ISI-style challenge: endpoint estimator bias</div><div class="tags"><span class="tag challenge">ISI-style</span><span class="tag">Bias</span></div></div><p>For iid Uniform\((0,\theta)\), the MLE is \(X_{(n)}\). Find \(E[X_{(n)}]\) and an unbiased estimator based on \(X_{(n)}\).</p><details><summary>Solution</summary><p>\(X_{(n)}/\theta\) has beta distribution with parameters \(n,1\), so \(E[X_{(n)}]=n\theta/(n+1)\). Therefore \((n+1)X_{(n)}/n\) is unbiased for \(\theta\).</p></details></article>
+
+    <section class="panel"><h2>Answer Summary</h2><ol><li>\(\bar X\)</li><li>\(1/\bar X\)</li><li>\(\bar X\)</li><li>\(X_{(n)}\)</li><li>Bias \(0\)</li><li>\(\bar X\), variance estimate \(\bar X\)</li><li>All \(\theta\in[X_{(n)}-1,X_{(1)}]\)</li><li>\(v+a^2\)</li><li>\(-n/\sum\log X_i\)</li><li>\(E[X_{(n)}]=n\theta/(n+1)\), unbiased estimator \((n+1)X_{(n)}/n\)</li></ol></section>
+  </main>
+</body>
+</html>
