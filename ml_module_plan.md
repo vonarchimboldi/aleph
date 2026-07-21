@@ -18,10 +18,11 @@ The course is calibrated from:
 Observed ML question style:
 
 - Small datasets, hand computation, and exact simulation.
-- Decision boundaries, margins, losses, distances, metrics, and parameter counts.
+- Decision boundaries, linear versus nonlinear separability, margins, losses, distances, metrics, and parameter counts.
 - Linear algebra links: PCA eigenvalues, LDA scatter matrices, SVM geometry, ridge shrinkage.
 - Probability links: Naive Bayes, priors/likelihoods/posteriors, misclassification probability.
 - Evaluation links: confusion-matrix metrics, train/test/validation splits, LOOCV.
+- Neural-network links: MLP architecture, activations, forward pass, backpropagation, and gradient descent updates.
 
 ## Chapter Structure
 
@@ -101,31 +102,35 @@ Required GATE-style outcomes:
 
 ### Chapter 4: Classification as Scores, Boundaries, and Margins
 
-Purpose: Introduce classifiers before individual algorithms.
+Purpose: Introduce classifiers before individual algorithms, using linear versus nonlinear decision boundaries as the central diagnostic.
 
 Core questions:
 
 1. What does the classifier output: score, sign, probability, or class label?
 2. What is the decision boundary?
-3. Is the boundary linear or nonlinear?
+3. Is the decision boundary linear or nonlinear?
 4. What does the sign of \(w^Tx+b\) mean?
 5. What is a margin, and how is it different from merely being correctly classified?
-6. What happens to a point exactly on the boundary?
-7. What failure modes matter: non-separability, outliers, class imbalance, bad feature scaling, and ambiguous boundary points?
-8. Which questions require geometric drawing versus algebraic substitution?
-9. How do one-vs-rest or multi-class settings change the output rule?
-10. What is the fastest way to test a candidate classifier on a tiny dataset?
+6. Can a single straight line separate the positive and negative examples?
+7. Why does XOR prove that some datasets are not linearly separable in the original features?
+8. What happens to a point exactly on the boundary?
+9. What failure modes matter: non-separability, outliers, class imbalance, bad feature scaling, and ambiguous boundary points?
+10. Which questions require geometric drawing versus algebraic substitution?
+11. How do one-vs-rest or multi-class settings change the output rule?
+12. What is the fastest way to test a candidate classifier on a tiny dataset?
 
 Required GATE-style outcomes:
 
 - Evaluate a linear classifier on a point.
 - Convert a squared-distance classifier into a linear score.
 - Identify decision boundary and side of boundary.
+- Decide whether a tiny 2D classification dataset is linearly separable.
+- Use XOR as the canonical example where linear classifiers fail without feature transformation or hidden layers.
 - Explain functional and geometric margin at a basic level.
 
 ### Chapter 5: Perceptron and Linear Classifier Updates
 
-Purpose: Teach mistake-driven linear classifier training.
+Purpose: Teach mistake-driven linear classifier training and its dependence on linear separability.
 
 Core questions:
 
@@ -135,20 +140,22 @@ Core questions:
 4. Does the update increase the score of the misclassified point?
 5. How does the update move the decision boundary geometrically?
 6. What is assumed for perceptron convergence?
-7. What failure modes matter: non-separable data, order dependence, and cycling?
-8. Which quantities are old versus new?
-9. How do sign conventions affect the answer?
-10. What single algebraic comparison is GATE likely to ask?
+7. Why does perceptron fail to converge on XOR in the original two features?
+8. What failure modes matter: non-separable data, order dependence, and cycling?
+9. Which quantities are old versus new?
+10. How do sign conventions affect the answer?
+11. What single algebraic comparison is GATE likely to ask?
 
 Required GATE-style outcomes:
 
 - Simulate one perceptron-style update.
 - Prove whether the updated score increases or decreases.
 - Track \(w\), \(b\), and \(f(x)\) after a mistake.
+- Explain why the convergence guarantee needs linear separability.
 
 ### Chapter 6: Logistic Regression
 
-Purpose: Show discriminative probabilistic classification.
+Purpose: Show discriminative probabilistic classification with a linear decision boundary under the standard feature representation.
 
 Core questions:
 
@@ -159,14 +166,16 @@ Core questions:
 5. What loss is used for probabilistic classification?
 6. How is logistic regression different from Naive Bayes?
 7. What does model confidence mean?
-8. What failure modes matter: linear boundary limitation, separability instability, calibration, and threshold choice?
-9. Which GATE questions are likely classification-model identity questions?
-10. What calculations should stay light for Basic: score, probability, decision, and model category?
+8. Why does standard logistic regression fail on XOR without nonlinear features?
+9. What failure modes matter: linear boundary limitation, separability instability, calibration, and threshold choice?
+10. Which GATE questions are likely classification-model identity questions?
+11. What calculations should stay light for Basic: score, probability, decision, and model category?
 
 Required GATE-style outcomes:
 
 - Identify logistic regression as discriminative.
 - Convert a linear score into a classification decision.
+- Recognize when the boundary is linear even though the output is probabilistic.
 - Explain cross-entropy/log-loss at an intuitive and computational level.
 
 ### Chapter 7: Naive Bayes and Generative Classification
@@ -205,16 +214,19 @@ Core questions:
 4. How does changing \(k\) change the decision?
 5. What is the nearest-centroid/prototype rule?
 6. Why can a squared-distance-to-centroid classifier be linear?
-7. What failure modes matter: scaling, high dimension, noisy labels, class imbalance, and ties?
-8. What does the model store: all points, centroids, or medoids?
-9. How do train-time and test-time costs differ?
-10. What diagram or distance table is GATE likely to give?
+7. When can kNN represent a nonlinear decision boundary?
+8. Why can kNN handle XOR-like local structure while a single linear classifier cannot?
+9. What failure modes matter: scaling, high dimension, noisy labels, class imbalance, and ties?
+10. What does the model store: all points, centroids, or medoids?
+11. How do train-time and test-time costs differ?
+12. What diagram or distance table is GATE likely to give?
 
 Required GATE-style outcomes:
 
 - Run kNN by hand on a small diagram.
 - Find the minimum odd \(k\) that changes a label.
 - Expand squared-distance classifier into a linear score.
+- Distinguish local nonlinear boundaries from global linear boundaries.
 - Distinguish nearest neighbor, nearest centroid, and k-medoids.
 
 ### Chapter 9: SVM and Margin-Based Classification
@@ -229,16 +241,19 @@ Core questions:
 4. What is the relationship between \(w\), \(b\), margin, and support vectors?
 5. How does hard-margin SVM differ from perceptron?
 6. How do outliers affect hard-margin SVM?
-7. What does "support vector" mean geometrically?
-8. Which candidate support-vector set is possible?
-9. How do scaling \(w,b\) and geometric margin interact?
-10. What can GATE ask without requiring full quadratic programming?
+7. Why does a linear SVM fail on XOR in the original feature space?
+8. What does a nonlinear feature map or kernel change about the boundary?
+9. What does "support vector" mean geometrically?
+10. Which candidate support-vector set is possible?
+11. How do scaling \(w,b\) and geometric margin interact?
+12. What can GATE ask without requiring full quadratic programming?
 
 Required GATE-style outcomes:
 
 - Identify possible support vectors from a small 2D dataset.
 - Compute or compare margins in simple cases.
 - Check whether a proposed \(w,b\) separates the data.
+- Explain the role of feature transformations/kernels for nonlinear separability at a conceptual level.
 - Explain hard-margin failure modes.
 
 ### Chapter 10: LDA and Scatter-Based Classification
@@ -266,7 +281,7 @@ Required GATE-style outcomes:
 
 ### Chapter 11: Decision Trees
 
-Purpose: Teach tree splits as loss/objective reduction.
+Purpose: Teach tree splits as loss/objective reduction and as axis-aligned nonlinear decision regions.
 
 Core questions:
 
@@ -277,14 +292,16 @@ Core questions:
 5. Which split is selected first?
 6. What happens with categorical versus numerical features?
 7. Why are decision trees greedy?
-8. What failure modes matter: overfitting, unstable splits, high-cardinality bias, and shallow-tree underfitting?
-9. What table summaries reduce calculation time?
-10. What precision does GATE expect for entropy/information-gain NAT questions?
+8. How can a shallow tree solve XOR by combining multiple axis-aligned splits?
+9. What failure modes matter: overfitting, unstable splits, high-cardinality bias, and shallow-tree underfitting?
+10. What table summaries reduce calculation time?
+11. What precision does GATE expect for entropy/information-gain NAT questions?
 
 Required GATE-style outcomes:
 
 - Compute entropy and information gain for a small categorical table.
 - Select the first split of a decision tree.
+- Explain why decision-tree regions can be nonlinear even when each split is simple.
 - Explain overfitting and why pruning/validation matters.
 
 ### Chapter 12: Clustering
@@ -335,6 +352,37 @@ Required GATE-style outcomes:
 - Identify the first principal direction as maximum variance.
 - Link PCA to dimensionality reduction and feature extraction.
 
+### Chapter 14: Multilayer Perceptrons and Neural Networks
+
+Purpose: Cover the GATE DA neural-network requirement through the Data -> Model -> Loss/Objective frame, with MLPs as nonlinear classifiers and regressors.
+
+Core questions:
+
+1. What is the input layer, and how many input features enter the network?
+2. How many hidden layers are present, and how many units are in each hidden layer?
+3. What does each weight matrix and bias vector connect?
+4. Which activation function is used: sigmoid, tanh, ReLU, or linear?
+5. Why do hidden nonlinear activations let an MLP represent XOR-like decision boundaries?
+6. What happens if all activation functions are linear?
+7. What is the output layer for regression, binary classification, and multi-class classification?
+8. What loss/objective is being minimized: squared error, binary cross-entropy, or multi-class cross-entropy?
+9. What quantities are computed in the forward pass?
+10. What error signal is propagated backward during backpropagation?
+11. How does the chain rule determine gradients for earlier layers?
+12. How does gradient descent update weights and biases?
+13. How do learning rate, initialization, saturation, vanishing gradients, and overfitting affect training?
+14. What small hand-computation can GATE reasonably ask: parameter count, one forward pass, one activation output, one gradient-descent update, or architecture recognition?
+
+Required GATE-style outcomes:
+
+- Count parameters in a small fully connected MLP.
+- Compute one forward pass through a tiny network.
+- Identify the role of hidden layers and nonlinear activations.
+- Explain why a purely linear network collapses to a linear model.
+- Explain backpropagation as chain-rule gradient computation.
+- Perform or recognize one gradient-descent weight update.
+- Use XOR to explain why MLPs can solve nonlinear classification problems that single linear classifiers cannot.
+
 ## Build Rules For Each Chapter
 
 Each chapter must include:
@@ -346,13 +394,14 @@ Each chapter must include:
 5. Failure modes and traps.
 6. End-of-chapter problems that mix calculation, recognition, and simulation.
 7. A graph-backed objective review quiz with prerequisite repair feedback.
+8. For classifier chapters, an explicit linear/nonlinear decision-boundary diagnostic, with XOR used wherever it clarifies representational limits.
 
 ## Global Failure-Mode Checklist
 
 Every chapter should train students to ask:
 
 1. Is the data scaled appropriately for a distance, margin, or penalty question?
-2. Is the model linear, distance-based, probabilistic, tree-based, or projection-based?
-3. Is the objective a data-fit loss, a regularized loss, an impurity reduction, a margin maximization, a variance objective, or a within-cluster distance objective?
+2. Is the model linear, nonlinear, distance-based, probabilistic, tree-based, projection-based, or neural-network-based?
+3. Is the objective a data-fit loss, a regularized loss, an impurity reduction, a margin maximization, a variance objective, a within-cluster distance objective, or a neural-network training loss?
 4. Is the question asking about training, validation, testing, prediction, or interpretation?
 5. Is the answer a number, a class label, a model category, a parameter count, a boundary, or a failure-mode diagnosis?
