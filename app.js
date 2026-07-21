@@ -1,7 +1,7 @@
 const STORAGE_KEY = "learning-studio-data-v2";
 const LEGACY_STORAGE_KEYS = ["learning-studio-data-v1"];
 const SESSION_KEY = "aleph-session";
-const COURSE_PLAN_VERSION = "seeded-user-canonical-workspace-v124";
+const COURSE_PLAN_VERSION = "seeded-user-canonical-workspace-v125";
 const MAX_FEEDBACK_ATTACHMENT_BYTES = 3 * 1024 * 1024;
 const MAX_COMPRESSED_FEEDBACK_BYTES = 2400 * 1024;
 const MAX_FEEDBACK_PDF_PAGES = 6;
@@ -836,9 +836,11 @@ function buildGateDaBasicPlan(now, accountTypes, sections, user = basicGateDaUse
   const probabilitySections = sections.filter((section) => section.subject === "Probability");
   const linearAlgebraSections = sections.filter((section) => section.subject === "Linear Algebra");
   const dsaSections = sections.filter((section) => section.subject === "Data Structures and Algorithms");
+  const machineLearningSections = sections.filter((section) => section.subject === "Machine Learning");
   const probabilitySection = probabilitySections[0];
   const conditionalSection = probabilitySections[1];
   const linearAlgebraSection = linearAlgebraSections[0];
+  const machineLearningSection = machineLearningSections[0];
   const monday = "2026-06-01";
   const sunday = addDays(monday, 6);
   const weekTwoMonday = addDays(monday, 7);
@@ -930,6 +932,17 @@ function buildGateDaBasicPlan(now, accountTypes, sections, user = basicGateDaUse
         status: "In progress",
         details: "GATE DA Basic Data Structures and Algorithms starts with Asymptotic Analysis. The first module motivates runtime through concrete programs, then trains loop counting, nested-loop regions, halving loops, recurrence reads, and dominant-term simplification.",
         sectionIds: dsaSections.map((section) => section.id),
+        updatedAt: now
+      },
+      {
+        id: "subject-gate-da-machine-learning",
+        accountTypeId: "gate-da-basic",
+        lessonPlanId,
+        title: "Machine Learning",
+        date: monday,
+        status: "In progress",
+        details: "GATE DA Basic Machine Learning starts with the official Data -> Model -> Loss/Objective frame. Chapter 1 covers datasets, model families, prediction objects, losses, training choices, fixed choices, and failure-mode diagnosis before moving to evaluation and classifiers.",
+        sectionIds: machineLearningSections.map((section) => section.id),
         updatedAt: now
       }
     ],
@@ -1614,7 +1627,37 @@ function buildGateDaBasicPlan(now, accountTypes, sections, user = basicGateDaUse
         details: "Take the cumulative graph-backed objective review for GATE DA Linear Algebra structural recognition.",
         updatedAt: now
       },
-      ...dsaBasicScheduleItems(now, monday, sunday)
+      ...dsaBasicScheduleItems(now, monday, sunday),
+      {
+        id: "schedule-machine-learning-chapter-1-study",
+        title: "ML Chapter 1: Data, Models, and Loss Functions",
+        week: 1,
+        subject: "Machine Learning",
+        kind: "Study",
+        date: monday,
+        details: "Study the Data -> Model -> Loss/Objective frame, dataset types, prediction objects, model families, and failure modes before doing any classifier-specific work.",
+        updatedAt: now
+      },
+      {
+        id: "schedule-machine-learning-chapter-1-practice",
+        title: "ML Chapter 1: Labelled Practice",
+        week: 1,
+        subject: "Machine Learning",
+        kind: "Practice",
+        date: addDays(monday, 2),
+        details: "Solve the labelled practice problems on data/model/loss identification, simple loss calculation, objective choice, and failure-mode diagnosis.",
+        updatedAt: now
+      },
+      {
+        id: "schedule-machine-learning-chapter-1-review",
+        title: "ML Chapter 1: Objective Review",
+        week: 1,
+        subject: "Machine Learning",
+        kind: "Review",
+        date: sunday,
+        details: "Take the graph-backed objective review for dataset type, model family, prediction object, loss/objective, learned versus fixed choices, and GATE-style first-step diagnosis.",
+        updatedAt: now
+      }
     ],
     tests: [
       {
@@ -1824,7 +1867,16 @@ function buildGateDaBasicPlan(now, accountTypes, sections, user = basicGateDaUse
         quizId: "quiz-linear-algebra-cumulative-drill-objective-review",
         updatedAt: now
       },
-      ...dsaBasicTests(now, dsaSections, sunday)
+      ...dsaBasicTests(now, dsaSections, sunday),
+      {
+        id: "test-machine-learning-chapter-1-objective-review",
+        title: "ML Chapter 1 Objective Review",
+        date: sunday,
+        details: "Objective end-of-chapter quiz for the Data -> Model -> Loss/Objective frame, dataset types, prediction objects, model families, loss calculations, learned versus fixed choices, and first failure-mode diagnosis.",
+        sectionId: machineLearningSection?.id,
+        quizId: "quiz-machine-learning-chapter-1-objective-review",
+        updatedAt: now
+      }
     ],
     quizAttempts: [],
     tasks: [
@@ -2576,7 +2628,40 @@ function buildGateDaBasicPlan(now, accountTypes, sections, user = basicGateDaUse
         details: "Submit the cumulative objective quiz so Aleph logs structural recognition gaps across the full Linear Algebra track.",
         updatedAt: now
       },
-      ...dsaBasicTasks(now, monday, sunday)
+      ...dsaBasicTasks(now, monday, sunday),
+      {
+        id: "task-machine-learning-chapter-1-read",
+        week: 1,
+        title: "ML Ch 1: Read data-model-loss frame",
+        type: "Study",
+        date: monday,
+        status: "todo",
+        done: false,
+        details: "Open Subjects -> Machine Learning -> Chapter 1 and study datasets, model families, prediction objects, loss/objective choices, and first failure modes.",
+        updatedAt: now
+      },
+      {
+        id: "task-machine-learning-chapter-1-practice",
+        week: 1,
+        title: "ML Ch 1: Solve labelled practice",
+        type: "Practice",
+        date: addDays(monday, 2),
+        status: "todo",
+        done: false,
+        details: "Attempt the data/model/loss practice problems before opening the worked solutions.",
+        updatedAt: now
+      },
+      {
+        id: "task-machine-learning-chapter-1-review",
+        week: 1,
+        title: "ML Ch 1: Take objective review",
+        type: "Review",
+        date: sunday,
+        status: "todo",
+        done: false,
+        details: "Submit the Chapter 1 objective quiz so the learner record logs ML framing strengths and weaknesses.",
+        updatedAt: now
+      }
     ],
     accountTypes,
     enrollments: [
@@ -2598,11 +2683,11 @@ function buildGateDaBasicPlan(now, accountTypes, sections, user = basicGateDaUse
         userId,
         title: "GATE DA Basic plan",
         type: "exam",
-        subjects: ["Probability", "Linear Algebra", "Data Structures and Algorithms"],
+        subjects: ["Probability", "Linear Algebra", "Data Structures and Algorithms", "Machine Learning"],
         startDate: monday,
         endDate: "2026-08-30",
         status: "active",
-        details: `GATE DA Basic plan surfaces: Subjects, Tasks, Schedule, Tests, Feedback, Resources, and Share. Recommended pace: study three subjects in parallel. Every 15 days, Aleph should generate an adaptive cumulative review quiz from prior performance, repeating missed concepts more often, reducing mastered concepts, and keeping high-weight exam topics in rotation. Current material build: Probability Chapters 1-10, Linear Algebra Chapters 1-12 plus a chapterless cumulative past-paper style drill, and DSA Chapters 1-9 with a progression gate before Chapter 3.${trialNote}`,
+        details: `GATE DA Basic plan surfaces: Subjects, Tasks, Schedule, Tests, Feedback, Resources, and Share. Recommended pace: study Probability, Linear Algebra, DSA, and Machine Learning in parallel. Every 15 days, Aleph should generate an adaptive cumulative review quiz from prior performance, repeating missed concepts more often, reducing mastered concepts, and keeping high-weight exam topics in rotation. Current material build: Probability Chapters 1-10, Linear Algebra Chapters 1-12 plus a chapterless cumulative past-paper style drill, DSA Chapters 1-9 with a progression gate before Chapter 3, and Machine Learning Chapter 1.${trialNote}`,
         updatedAt: now
       }
     ],
@@ -2706,15 +2791,30 @@ function buildGateDaBasicPlan(now, accountTypes, sections, user = basicGateDaUse
         details: "Review misses for failing to name the matrix family, skipping invariant language, expanding when trace/rank/eigenvalue shortcuts apply, misreading MSQ wording, and treating data-science LA prompts as separate from core projection, PSD, SVD, and spectral reasoning.",
         updatedAt: now
       },
-      ...dsaBasicFeedback(now, sunday)
+      ...dsaBasicFeedback(now, sunday),
+      {
+        id: "feedback-machine-learning-chapter-1",
+        title: "Machine Learning Chapter 1 feedback focus",
+        date: sunday,
+        details: "Review misses for failing to identify the data object, confusing model with algorithm, picking a metric before a loss/objective, treating fixed hyperparameters as learned parameters, and skipping failure-mode diagnosis.",
+        updatedAt: now
+      }
     ],
     resources: [
       {
         id: "resource-gate-da-2026-syllabus",
         title: "Official GATE 2026 DA Syllabus",
         date: "2026-06-01",
-        details: "Official GATE DA syllabus. Use the Probability and Statistics and Linear Algebra portions to organize the Basic content build.",
+        details: "Official GATE DA syllabus. Use Probability and Statistics, Linear Algebra, Data Structures and Algorithms, and Machine Learning portions to organize the Basic content build.",
         link: "https://gate2026.iitg.ac.in/doc/GATE2026_Syllabus/DA_2026_Syllabus.pdf",
+        updatedAt: now
+      },
+      {
+        id: "resource-machine-learning-data-model-loss",
+        title: "Machine Learning Chapter 1: Data, Models, and Loss Functions",
+        date: monday,
+        details: "Open Subjects -> Machine Learning to study Chapter 1 and then take the objective review in Tests.",
+        link: "",
         updatedAt: now
       },
       {
@@ -2929,7 +3029,291 @@ function gateDaBasicSections(updatedAt = new Date().toISOString()) {
   return [
     ...gateDaProbabilitySections(updatedAt),
     ...gateDaLinearAlgebraSections(updatedAt),
-    ...gateDaDsaSections(updatedAt)
+    ...gateDaDsaSections(updatedAt),
+    ...gateDaMachineLearningSections(updatedAt)
+  ];
+}
+
+function gateDaMachineLearningSections(updatedAt = new Date().toISOString()) {
+  return [
+    {
+      id: "gate-da-machine-learning-data-models-loss",
+      exam: "GATE DA",
+      accountTier: "Basic",
+      subject: "Machine Learning",
+      chapter: "Chapter 1",
+      section: "1",
+      title: "Data, Models, and Loss Functions",
+      summary: "The first ML habit: identify the data object, choose the prediction object, name the model family, state the loss/objective, and diagnose what can go wrong.",
+      sectionPreview: "Machine Learning is not a bag of algorithms. A GATE DA problem usually gives a tiny dataset, a model rule, and a quantity to compute. Before calculating, decide what the data is, what the model predicts, and what loss or objective says one answer is better than another.",
+      previewActivity: "A tutor records hours studied x and quiz score y for four learners: (1,2), (2,4), (3,6), (4,8). Is this supervised or unsupervised? What is the input? What is the target? What model might fit it? What loss would tell you whether the model is doing well? Try to answer in words before reading.",
+      chapterIntro: [
+        "This chapter establishes the frame used throughout the ML course: Data -> Model -> Loss/Objective -> Training/Fit -> Prediction -> Evaluation -> Failure Modes. If this frame is clear, later chapters become variations rather than disconnected formulas.",
+        "The inspiration from beginner loss-function explanations is useful: a loss function turns wrongness into a number. But for GATE DA, the goal is sharper. You must identify the loss, compute it on small examples, and explain why a model or parameter choice is preferred.",
+        "Do not start an ML problem by asking which formula you remember. Start by asking what the row means, what the target means, what kind of output is needed, what the model is allowed to do, and what the objective rewards or punishes."
+      ],
+      bookSections: [
+        {
+          number: "1.1",
+          title: "The Data Object",
+          paragraphs: [
+            "A dataset is not just a table of numbers. Each row usually represents one example, each column represents a feature, and the target column, if present, tells the correct answer for supervised learning.",
+            "For GATE DA, the data may be a list of points, a feature table, a distance matrix, a confusion matrix, or a small set of labelled examples. The first move is to say what one example is and what information is attached to it.",
+            "If there is no target column, the task is usually unsupervised: clustering, dimensionality reduction, or representation. If a target is present, decide whether it is a number, a class label, or a probability-style label."
+          ],
+          blocks: [
+            {
+              type: "definition",
+              title: "Definition: example, feature, target",
+              body: "An example is one observed case. Features are the input measurements used by the model. A target or label is the value the model is trained to predict in supervised learning."
+            },
+            {
+              type: "example",
+              title: "Example 1.1: study table",
+              body: "If a row is [hours studied, old quiz average, final score], then the first two entries can be features and final score can be the target for a regression task."
+            },
+            {
+              type: "checkpoint",
+              title: "Checkpoint",
+              body: "A table lists coordinates of points but no labels. Is the first question more likely classification, regression, clustering, or PCA?"
+            }
+          ]
+        },
+        {
+          number: "1.2",
+          title: "Prediction Objects",
+          paragraphs: [
+            "The model output must match the task. Regression predicts a real number. Classification predicts a class label or a score that is converted into a class. Clustering predicts a group id. PCA predicts a lower-dimensional representation or reconstruction.",
+            "Many wrong solutions come from using the wrong output type. A model that outputs a real score is not automatically a classifier until a rule converts the score into a class. A model that outputs a cluster id has not learned from target labels.",
+            "Before calculating, write the prediction object in one phrase: number, class, probability, score, cluster, or representation."
+          ],
+          blocks: [
+            {
+              type: "principle",
+              title: "Principle: output must match the question",
+              body: "If the question asks for a price, predict a number. If it asks spam/not spam, predict a class. If it asks for groups without labels, produce cluster assignments."
+            },
+            {
+              type: "example",
+              title: "Example 1.2: score versus label",
+              body: "A linear classifier may compute s = w^Tx + b. The score s becomes a label only after a rule such as predict +1 when s >= 0."
+            }
+          ]
+        },
+        {
+          number: "1.3",
+          title: "The Model Class",
+          paragraphs: [
+            "A model class is the family of rules allowed for prediction. A line, a hyperplane, a tree, a nearest-neighbor rule, a probability table, a projection direction, and a neural network are different model classes.",
+            "The model class is an assumption. A linear model assumes the useful pattern can be represented by a line or hyperplane in the chosen features. kNN assumes nearby examples should behave similarly. A tree assumes repeated feature splits can isolate useful regions.",
+            "GATE questions often test model identity. If the rule uses distances to stored points, think kNN. If it uses priors and likelihoods, think Naive Bayes. If it maximizes margin, think SVM. If it greedily splits by impurity, think decision tree."
+          ],
+          blocks: [
+            {
+              type: "definition",
+              title: "Definition: model class",
+              body: "A model class is the set of prediction rules the learner is allowed to choose from, such as all lines, all depth-2 trees, or all nearest-neighbor rules using Euclidean distance."
+            },
+            {
+              type: "warning",
+              title: "Common trap",
+              body: "The algorithm is the procedure used to find or apply a model. The model is the rule used for prediction after choices have been made."
+            }
+          ]
+        },
+        {
+          number: "1.4",
+          title: "Loss and Objective",
+          paragraphs: [
+            "A loss function measures how wrong a prediction is on one example or across a dataset. Training becomes possible because the loss gives the model a target to reduce.",
+            "For regression, common losses include absolute error |y - yhat| and squared error (y - yhat)^2. Squared error punishes large misses more strongly because the miss is squared. For classification, a simple loss is 0-1 loss: 0 if the predicted label is correct and 1 if it is wrong.",
+            "An objective is the full quantity being optimized. It may be only average loss, or it may include a penalty. Ridge regression, for example, adds an L2 penalty to discourage large weights."
+          ],
+          blocks: [
+            {
+              type: "definition",
+              title: "Definition: loss and objective",
+              body: "Loss measures prediction error. An objective is the quantity the training method tries to minimize or maximize, often average loss plus a penalty or constraint."
+            },
+            {
+              type: "example",
+              title: "Example 1.3: two regression losses",
+              body: "If y = 10 and yhat = 7, then absolute error is 3 and squared error is 9. The same miss is treated differently by different losses."
+            },
+            {
+              type: "checkpoint",
+              title: "Checkpoint",
+              body: "If two points are each 1 unit wrong and one point is 4 units wrong, which loss reacts more strongly to the large miss: MAE or MSE?"
+            }
+          ]
+        },
+        {
+          number: "1.5",
+          title: "Training, Fit, Parameters, and Hyperparameters",
+          paragraphs: [
+            "Training means choosing model parameters from data. In a line yhat = wx + b, the parameters are w and b. In kNN, there may be no fitted weight vector; the training data itself is stored and used at prediction time.",
+            "A hyperparameter is a choice made before or outside the fitting step. The value of k in kNN, the maximum depth of a tree, a regularization strength, and a learning rate are typical hyperparameters.",
+            "GATE often asks whether something is learned or fixed. Do not call every number a parameter. Ask whether the algorithm estimates it from data or whether the user/problem statement sets it."
+          ],
+          blocks: [
+            {
+              type: "principle",
+              title: "Principle: learned versus fixed",
+              body: "Parameters are fitted from data. Hyperparameters are chosen before fitting or supplied by the problem."
+            },
+            {
+              type: "example",
+              title: "Example 1.4: kNN",
+              body: "In 5-nearest neighbors, the value 5 is a hyperparameter. The stored labelled examples are the information used to make predictions."
+            }
+          ]
+        },
+        {
+          number: "1.6",
+          title: "A Tiny GATE-Style Run",
+          paragraphs: [
+            "Suppose the data are (x,y) = (1,2), (2,3), (3,5). Consider two candidate models: A predicts yhat = x + 1, and B predicts yhat = 2x. On the three points, A predicts 2,3,4 and B predicts 2,4,6.",
+            "Using squared loss, model A has losses 0,0,1, so total loss is 1. Model B has losses 0,1,1, so total loss is 2. Under this objective, A is preferred.",
+            "This tiny calculation contains the whole frame: data points, candidate models, predictions, loss values, and a preference induced by the objective."
+          ],
+          blocks: [
+            {
+              type: "strategy",
+              title: "GATE first step",
+              body: "Write a four-column table: x, y, prediction, loss. This prevents mixing actual labels with predicted labels."
+            },
+            {
+              type: "warning",
+              title: "Metric versus loss",
+              body: "A metric evaluates performance after prediction. A loss/objective defines what training tries to optimize. They can match, but they are not automatically the same thing."
+            }
+          ]
+        },
+        {
+          number: "1.7",
+          title: "Failure Modes",
+          paragraphs: [
+            "A model can fail for several different reasons. The data may not contain the relevant features. The model class may be too simple. The loss may punish the wrong kind of error. The training set may not represent the test situation. The learner may confuse a summary statistic with the underlying examples.",
+            "In later classifier chapters, the most important failure question is boundary shape: can a linear boundary separate the classes, or is a nonlinear boundary needed? XOR will be the canonical example where a single linear classifier fails in the original features.",
+            "Chapter 1 does not solve every failure mode. It teaches the habit of naming the failure precisely before changing the model."
+          ],
+          blocks: [
+            {
+              type: "principle",
+              title: "Principle: name the failure",
+              body: "Do not only say the model is bad. Say whether the issue is data representation, model class, loss/objective, training procedure, evaluation split, or interpretation."
+            },
+            {
+              type: "checkpoint",
+              title: "Checkpoint",
+              body: "If house price is predicted only from house area but location is missing, is the first suspected issue data, model, loss, or evaluation?"
+            }
+          ]
+        }
+      ],
+      concepts: [
+        {
+          name: "Data object",
+          description: "The example, features, and target or unlabeled object supplied to the model.",
+          cue: "Ask what one row means before naming an algorithm."
+        },
+        {
+          name: "Task type",
+          description: "Supervised regression/classification, unsupervised clustering/PCA, or evaluation/model-selection.",
+          cue: "Look for labels and the requested output."
+        },
+        {
+          name: "Prediction object",
+          description: "The kind of output: number, class, probability, score, cluster id, or representation.",
+          cue: "Match the output to the question before calculating."
+        },
+        {
+          name: "Model class",
+          description: "The family of prediction rules allowed, such as lines, trees, distance rules, probability tables, or neural networks.",
+          cue: "Ask what shape of rule the model can express."
+        },
+        {
+          name: "Loss/objective",
+          description: "The quantity that defines better or worse predictions during fitting.",
+          cue: "Find what is minimized or maximized."
+        },
+        {
+          name: "Learned versus fixed",
+          description: "Parameters are fitted from data; hyperparameters are chosen outside the fitting step.",
+          cue: "Ask who chose the number: the data or the problem setter."
+        },
+        {
+          name: "Failure mode",
+          description: "The reason a model can perform badly even when arithmetic is correct.",
+          cue: "Name data, model, loss, training, evaluation, or interpretation."
+        }
+      ],
+      techniques: [
+        {
+          name: "Write the data-model-loss line",
+          when: "an ML problem has many words and no obvious first formula.",
+          move: "State the data object, prediction object, model rule, and loss/objective before computing."
+        },
+        {
+          name: "Make a prediction-loss table",
+          when: "candidate models are compared on a tiny dataset.",
+          move: "List actual y, predicted yhat, error, and loss for each example."
+        },
+        {
+          name: "Classify the task",
+          when: "the question asks which model family or method applies.",
+          move: "Check whether labels are present, then decide regression, classification, clustering, PCA, or evaluation."
+        },
+        {
+          name: "Separate parameters from hyperparameters",
+          when: "the question asks what is learned from data.",
+          move: "Mark fitted weights/probabilities/splits as learned and values like k, depth, lambda, and learning rate as fixed choices."
+        },
+        {
+          name: "Diagnose first failure",
+          when: "a model performs poorly or a method is inappropriate.",
+          move: "Choose the most direct failure source: data representation, model class, loss/objective, training, evaluation, or interpretation."
+        }
+      ],
+      practiceProblems: machineLearningDataModelsLossProblems(),
+      reviewPrompts: [
+        "Explain the difference between data, model, and loss using one small example.",
+        "Give one supervised regression task, one supervised classification task, and one unsupervised task.",
+        "Why is a real-valued score not automatically a class label?",
+        "What is the difference between a parameter and a hyperparameter?",
+        "Give a case where squared error and absolute error would prefer different behavior around an outlier.",
+        "A model predicts every training example well but fails on new data. Which part of the frame should you suspect first?",
+        "Why should a GATE ML problem usually start with identifying the prediction object?",
+        "What does it mean for the model class to be too simple?",
+        "Give one example where the data representation is the main problem.",
+        "For a tiny dataset, what columns should appear in a prediction-loss table?"
+      ],
+      reviewQuiz: {
+        id: "quiz-machine-learning-chapter-1-objective-review",
+        title: "ML Chapter 1 Objective Review",
+        instructions: "Complete this after studying the Data -> Model -> Loss/Objective frame. The quiz checks whether you can identify task type, prediction object, model family, objective, learned choices, and first failure mode before later classifier chapters.",
+        questions: machineLearningDataModelsLossReviewQuestions()
+      },
+      readingQuestions: [
+        "What is one example in a dataset?",
+        "How do you decide whether a problem is supervised or unsupervised?",
+        "What kind of output does regression produce?",
+        "What does a loss function measure?",
+        "What is the difference between a model class and a training algorithm?",
+        "Why can changing the loss change which model is preferred?",
+        "Why is XOR a useful future example for testing linear classifiers?"
+      ],
+      chapterSummary: [
+        "Start ML problems by writing Data -> Model -> Loss/Objective.",
+        "A supervised task has targets; an unsupervised task does not.",
+        "Prediction objects include numbers, class labels, probabilities, scores, clusters, and representations.",
+        "A model class limits the shape of rules the learner can use.",
+        "Loss turns wrongness into a number; the objective is what training optimizes.",
+        "Parameters are fitted from data; hyperparameters are chosen outside the fit.",
+        "Failure modes should be named precisely: data, model, loss, training, evaluation, or interpretation."
+      ],
+      updatedAt
+    }
   ];
 }
 
@@ -12931,6 +13315,226 @@ function gateDaProbabilitySections(updatedAt = new Date().toISOString()) {
   ];
 }
 
+function machineLearningDataModelsLossProblems() {
+  return [
+    {
+      label: "Problem 1: Identify the task",
+      concept: "Task type",
+      difficulty: "Concept",
+      technique: "Classify the task",
+      prompt: "A dataset contains rows [age, income, loan_default], where loan_default is 0 or 1. The goal is to predict loan_default for a new applicant. Is this regression, classification, clustering, or PCA?",
+      solution: "This is supervised classification. The target is present in the training data, and the target is a class label: default or no default."
+    },
+    {
+      label: "Problem 2: Name the prediction object",
+      concept: "Prediction object",
+      difficulty: "Concept",
+      technique: "Write the data-model-loss line",
+      prompt: "A model computes s = w^Tx + b for an email. If the rule is predict spam when s >= 0, what is the score and what is the final prediction object?",
+      solution: "The score is the real number s. The final prediction object is a class label, spam or not spam, after applying the threshold rule."
+    },
+    {
+      label: "Problem 3: Compute squared loss",
+      concept: "Loss/objective",
+      difficulty: "Mechanics",
+      technique: "Make a prediction-loss table",
+      prompt: "For one example, the true value is y = 7 and the prediction is yhat = 4. Compute absolute error and squared error.",
+      solution: "The error magnitude is |7 - 4| = 3. Absolute error is 3. Squared error is (7 - 4)^2 = 9."
+    },
+    {
+      label: "Problem 4: Compare two models",
+      concept: "Loss/objective",
+      difficulty: "GATE-style",
+      technique: "Make a prediction-loss table",
+      prompt: "Data are (x,y) = (1,2), (2,3), (3,5). Model A predicts yhat = x + 1. Model B predicts yhat = 2x. Which model has smaller total squared loss?",
+      solution: "A predicts 2, 3, 4, so losses are 0, 0, 1 and total squared loss is 1. B predicts 2, 4, 6, so losses are 0, 1, 1 and total squared loss is 2. Model A is preferred under total squared loss."
+    },
+    {
+      label: "Problem 5: Model class versus algorithm",
+      concept: "Model class",
+      difficulty: "Concept",
+      technique: "Write the data-model-loss line",
+      prompt: "A problem says the prediction rule is yhat = wx + b, and w,b are chosen to minimize average squared error. Which part is the model class and which part is the training objective?",
+      solution: "The model class is the set of lines yhat = wx + b. The training objective is average squared error. The algorithm would be the procedure used to find w and b."
+    },
+    {
+      label: "Problem 6: Learned or fixed",
+      concept: "Learned versus fixed",
+      difficulty: "Application",
+      technique: "Separate parameters from hyperparameters",
+      prompt: "In k-nearest neighbors with k = 5, the dataset is stored and Euclidean distance is used. Which choices are fixed by the user/problem statement, and what information comes from the data?",
+      solution: "The value k = 5 and the distance rule are fixed choices. The stored labelled examples come from the data and are used directly at prediction time."
+    },
+    {
+      label: "Problem 7: Failure diagnosis",
+      concept: "Failure mode",
+      difficulty: "Application",
+      technique: "Diagnose first failure",
+      prompt: "A house-price model uses only floor area as a feature. It performs badly because two houses with the same area have very different prices in different cities. What is the first failure mode?",
+      solution: "The first failure mode is data representation: the feature list is missing location or city information. Changing the loss will not fix missing predictive information."
+    },
+    {
+      label: "Problem 8: Objective with penalty",
+      concept: "Loss/objective",
+      difficulty: "GATE-style",
+      technique: "Write the data-model-loss line",
+      prompt: "A model minimizes average squared error plus lambda times ||w||^2. Is the penalty part a loss on one example, a regularization term, or a prediction object?",
+      solution: "The lambda ||w||^2 term is a regularization term. It is part of the full objective, not the prediction object and not the per-example data loss."
+    }
+  ];
+}
+
+function machineLearningDataModelsLossReviewQuestions() {
+  const metadata = {
+    "ml-dml-review-1": { targetConcept: "task-type", prereqsUsed: ["data-object"], difficulty: 1, gateWeight: "high" },
+    "ml-dml-review-2": { targetConcept: "prediction-object", prereqsUsed: ["task-type"], difficulty: 1, gateWeight: "high" },
+    "ml-dml-review-3": { targetConcept: "loss-objective", prereqsUsed: ["prediction-object"], difficulty: 2, gateWeight: "high" },
+    "ml-dml-review-4": { targetConcept: "model-class", prereqsUsed: ["prediction-object"], difficulty: 1, gateWeight: "high" },
+    "ml-dml-review-5": { targetConcept: "learned-fixed", prereqsUsed: ["model-class"], difficulty: 2, gateWeight: "medium" },
+    "ml-dml-review-6": { targetConcept: "loss-objective", prereqsUsed: ["data-object", "prediction-object"], difficulty: 2, gateWeight: "high" },
+    "ml-dml-review-7": { targetConcept: "failure-mode", prereqsUsed: ["data-object", "model-class"], difficulty: 2, gateWeight: "medium" },
+    "ml-dml-review-8": { targetConcept: "model-class", prereqsUsed: ["task-type"], difficulty: 2, gateWeight: "medium" },
+    "ml-dml-review-9": { targetConcept: "loss-objective", prereqsUsed: ["model-class"], difficulty: 3, gateWeight: "high" },
+    "ml-dml-review-10": { targetConcept: "failure-mode", prereqsUsed: ["model-class", "prediction-object"], difficulty: 3, gateWeight: "medium" }
+  };
+  const questions = [
+    {
+      id: "ml-dml-review-1",
+      kind: "single concept",
+      tags: ["task-type", "data-object"],
+      prompt: "A dataset has feature vectors x_i and no labels y_i. The question asks for two groups of similar examples. Which task type is most appropriate?",
+      options: [
+        { id: "a", text: "Supervised regression" },
+        { id: "b", text: "Supervised classification" },
+        { id: "c", text: "Clustering" },
+        { id: "d", text: "Confusion-matrix evaluation" }
+      ],
+      answer: "c"
+    },
+    {
+      id: "ml-dml-review-2",
+      kind: "single concept",
+      tags: ["prediction-object"],
+      prompt: "Which prediction object is natural for ordinary regression?",
+      options: [
+        { id: "a", text: "A real number" },
+        { id: "b", text: "A cluster id without labels" },
+        { id: "c", text: "A principal component direction only" },
+        { id: "d", text: "A confusion matrix" }
+      ],
+      answer: "a"
+    },
+    {
+      id: "ml-dml-review-3",
+      kind: "single concept",
+      tags: ["loss-objective"],
+      prompt: "For y = 5 and yhat = 2, what is the squared error?",
+      options: [
+        { id: "a", text: "3" },
+        { id: "b", text: "6" },
+        { id: "c", text: "9" },
+        { id: "d", text: "25" }
+      ],
+      answer: "c"
+    },
+    {
+      id: "ml-dml-review-4",
+      kind: "single concept",
+      tags: ["model-class"],
+      prompt: "Which phrase best describes the model class yhat = wx + b?",
+      options: [
+        { id: "a", text: "All one-dimensional linear rules with intercept" },
+        { id: "b", text: "All possible decision trees" },
+        { id: "c", text: "All possible clusters" },
+        { id: "d", text: "The train/test split" }
+      ],
+      answer: "a"
+    },
+    {
+      id: "ml-dml-review-5",
+      kind: "single concept",
+      tags: ["learned-fixed", "model-class"],
+      prompt: "In kNN with k = 7, which item is a hyperparameter?",
+      options: [
+        { id: "a", text: "The value 7" },
+        { id: "b", text: "The true label of a stored example" },
+        { id: "c", text: "The predicted class after voting" },
+        { id: "d", text: "The test point coordinates" }
+      ],
+      answer: "a"
+    },
+    {
+      id: "ml-dml-review-6",
+      kind: "mixed: two concepts",
+      tags: ["loss-objective", "data-object", "prediction-object"],
+      prompt: "Data are (x,y) = (1,1), (2,2), (3,2). A constant model predicts yhat = 2 for every x. What is the total absolute error?",
+      options: [
+        { id: "a", text: "0" },
+        { id: "b", text: "1" },
+        { id: "c", text: "2" },
+        { id: "d", text: "3" }
+      ],
+      answer: "b"
+    },
+    {
+      id: "ml-dml-review-7",
+      kind: "mixed: two concepts",
+      tags: ["failure-mode", "data-object", "model-class"],
+      prompt: "A model fails because an important predictor was never recorded as a feature. Which failure mode is most direct?",
+      options: [
+        { id: "a", text: "Data representation" },
+        { id: "b", text: "Activation saturation" },
+        { id: "c", text: "Too many principal components" },
+        { id: "d", text: "Wrong sign convention only" }
+      ],
+      answer: "a"
+    },
+    {
+      id: "ml-dml-review-8",
+      kind: "mixed: two concepts",
+      tags: ["model-class", "task-type"],
+      prompt: "A rule classifies a new point by majority vote among the nearest stored labelled examples. Which model family is this?",
+      options: [
+        { id: "a", text: "k-nearest neighbors" },
+        { id: "b", text: "Linear regression" },
+        { id: "c", text: "PCA" },
+        { id: "d", text: "Ridge penalty" }
+      ],
+      answer: "a"
+    },
+    {
+      id: "ml-dml-review-9",
+      kind: "mixed: three concepts",
+      tags: ["loss-objective", "model-class", "learned-fixed"],
+      prompt: "The objective is average squared error plus lambda ||w||^2. What is lambda ||w||^2 doing?",
+      options: [
+        { id: "a", text: "It is the predicted label." },
+        { id: "b", text: "It is a regularization penalty in the objective." },
+        { id: "c", text: "It is the input feature vector." },
+        { id: "d", text: "It is a cluster assignment." }
+      ],
+      answer: "b"
+    },
+    {
+      id: "ml-dml-review-10",
+      kind: "mixed: three concepts",
+      tags: ["failure-mode", "model-class", "prediction-object"],
+      prompt: "The XOR pattern cannot be separated by a single straight line in the original two features. Which diagnosis is best?",
+      options: [
+        { id: "a", text: "The target is missing, so it must be unsupervised." },
+        { id: "b", text: "The linear model class is too limited for this boundary." },
+        { id: "c", text: "Squared loss is always invalid." },
+        { id: "d", text: "The examples are not data objects." }
+      ],
+      answer: "b"
+    }
+  ];
+  return questions.map((question) => ({
+    ...question,
+    ...(metadata[question.id] || { targetConcept: question.tags[0], prereqsUsed: question.tags.slice(1), difficulty: question.tags.length, gateWeight: "medium" })
+  }));
+}
+
 function probabilityFoundationProblems() {
   return [
     {
@@ -18772,6 +19376,62 @@ function randomVariablesExpectationReviewQuestions() {
     ...question,
     ...(metadata[question.id] || { targetConcept: question.tags[0], prereqsUsed: question.tags.slice(1), difficulty: question.tags.length, gateWeight: "medium" })
   }));
+}
+
+function machineLearningDataModelsLossConceptGraph() {
+  return {
+    chapterId: "gate-da-machine-learning-data-models-loss",
+    chapterTitle: "ML Chapter 1: Data, Models, and Loss Functions",
+    gateWeight: "high",
+    fallbackConcepts: ["data-object", "task-type", "loss-objective", "model-class"],
+    fallbackDifficultyMix: [1, 2, 2, 3],
+    fallbackInstruction: "Retest the Data -> Model -> Loss/Objective frame with tiny GATE-style tables before moving to evaluation.",
+    stableNextAction: "Next: move to ML Chapter 2 only after task type, prediction object, model class, and loss/objective are reliable.",
+    nodes: {
+      "data-object": {
+        label: "Data object",
+        prereqs: [],
+        repairMaterial: "Review ML Chapter 1.1 and mark example, features, and target before naming an algorithm.",
+        gateWeight: "high"
+      },
+      "task-type": {
+        label: "Task type",
+        prereqs: ["data-object"],
+        repairMaterial: "Review ML Chapter 1.1-1.2 and classify five prompts as regression, classification, clustering, PCA, or evaluation.",
+        gateWeight: "high"
+      },
+      "prediction-object": {
+        label: "Prediction object",
+        prereqs: ["task-type"],
+        repairMaterial: "Review ML Chapter 1.2 and write whether each model outputs a number, score, class, cluster id, probability, or representation.",
+        gateWeight: "high"
+      },
+      "model-class": {
+        label: "Model class",
+        prereqs: ["prediction-object"],
+        repairMaterial: "Review ML Chapter 1.3 and separate the prediction rule family from the algorithm used to fit it.",
+        gateWeight: "high"
+      },
+      "loss-objective": {
+        label: "Loss/objective",
+        prereqs: ["prediction-object", "model-class"],
+        repairMaterial: "Review ML Chapter 1.4 and compute absolute error, squared error, and 0-1 loss on three tiny examples.",
+        gateWeight: "high"
+      },
+      "learned-fixed": {
+        label: "Learned versus fixed choices",
+        prereqs: ["model-class", "loss-objective"],
+        repairMaterial: "Review ML Chapter 1.5 and label weights, biases, k, lambda, depth, and learning rate as parameter or hyperparameter.",
+        gateWeight: "medium"
+      },
+      "failure-mode": {
+        label: "Failure-mode diagnosis",
+        prereqs: ["data-object", "model-class", "loss-objective"],
+        repairMaterial: "Review ML Chapter 1.7 and diagnose failures as data, model class, loss/objective, training, evaluation, or interpretation.",
+        gateWeight: "medium"
+      }
+    }
+  };
 }
 
 function probabilityFoundationConceptGraph() {
@@ -27284,6 +27944,7 @@ function conceptGraphForSection(section) {
   if (section?.id === "gate-da-covariance-correlation") return covarianceCorrelationConceptGraph();
   if (section?.id === "gate-da-conditional-expectation-variance") return conditionalExpectationConceptGraph();
   if (section?.id === "gate-da-continuous-distributions-order-statistics") return continuousDistributionsOrderStatisticsConceptGraph();
+  if (section?.id === "gate-da-machine-learning-data-models-loss") return machineLearningDataModelsLossConceptGraph();
   return null;
 }
 
