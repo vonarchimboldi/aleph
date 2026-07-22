@@ -1,7 +1,7 @@
 const STORAGE_KEY = "learning-studio-data-v2";
 const LEGACY_STORAGE_KEYS = ["learning-studio-data-v1"];
 const SESSION_KEY = "aleph-session";
-const COURSE_PLAN_VERSION = "seeded-user-canonical-workspace-v125";
+const COURSE_PLAN_VERSION = "seeded-user-canonical-workspace-v126";
 const MAX_FEEDBACK_ATTACHMENT_BYTES = 3 * 1024 * 1024;
 const MAX_COMPRESSED_FEEDBACK_BYTES = 2400 * 1024;
 const MAX_FEEDBACK_PDF_PAGES = 6;
@@ -941,7 +941,7 @@ function buildGateDaBasicPlan(now, accountTypes, sections, user = basicGateDaUse
         title: "Machine Learning",
         date: monday,
         status: "In progress",
-        details: "GATE DA Basic Machine Learning starts with the official Data -> Model -> Loss/Objective frame. Chapter 1 covers datasets, model families, prediction objects, losses, training choices, fixed choices, and failure-mode diagnosis before moving to evaluation and classifiers.",
+        details: "GATE DA Basic Machine Learning starts with the official Data -> Model -> Loss/Objective frame. Chapters 1-2 now cover datasets, model families, loss/objective framing, evaluation metrics, validation methodology, cross-validation, and overfitting diagnostics before moving to regression and classifiers.",
         sectionIds: machineLearningSections.map((section) => section.id),
         updatedAt: now
       }
@@ -1657,6 +1657,36 @@ function buildGateDaBasicPlan(now, accountTypes, sections, user = basicGateDaUse
         date: sunday,
         details: "Take the graph-backed objective review for dataset type, model family, prediction object, loss/objective, learned versus fixed choices, and GATE-style first-step diagnosis.",
         updatedAt: now
+      },
+      {
+        id: "schedule-machine-learning-chapter-2-study",
+        title: "ML Chapter 2: Evaluation, Metrics, and Validation",
+        week: 2,
+        subject: "Machine Learning",
+        kind: "Study",
+        date: weekTwoMonday,
+        details: "Study train/validation/test roles, regression metrics, confusion-matrix metrics, cross-validation, LOOCV, and overfit/underfit diagnosis.",
+        updatedAt: now
+      },
+      {
+        id: "schedule-machine-learning-chapter-2-practice",
+        title: "ML Chapter 2: Labelled Practice",
+        week: 2,
+        subject: "Machine Learning",
+        kind: "Practice",
+        date: addDays(weekTwoMonday, 2),
+        details: "Solve labelled evaluation practice: MAE/MSE/RMSE, TP/FP/TN/FN, accuracy, precision, recall, CV counts, and train-validation gap diagnosis.",
+        updatedAt: now
+      },
+      {
+        id: "schedule-machine-learning-chapter-2-review",
+        title: "ML Chapter 2: Objective Review",
+        week: 2,
+        subject: "Machine Learning",
+        kind: "Review",
+        date: weekTwoSunday,
+        details: "Take the graph-backed objective review for evaluation metrics and validation methodology.",
+        updatedAt: now
       }
     ],
     tests: [
@@ -1875,6 +1905,15 @@ function buildGateDaBasicPlan(now, accountTypes, sections, user = basicGateDaUse
         details: "Objective end-of-chapter quiz for the Data -> Model -> Loss/Objective frame, dataset types, prediction objects, model families, loss calculations, learned versus fixed choices, and first failure-mode diagnosis.",
         sectionId: machineLearningSection?.id,
         quizId: "quiz-machine-learning-chapter-1-objective-review",
+        updatedAt: now
+      },
+      {
+        id: "test-machine-learning-chapter-2-objective-review",
+        title: "ML Chapter 2 Objective Review",
+        date: weekTwoSunday,
+        details: "Objective end-of-chapter quiz for train/validation/test roles, regression metrics, confusion matrices, accuracy, precision, recall, cross-validation counts, LOOCV, and overfit/underfit diagnosis.",
+        sectionId: machineLearningSections[1]?.id,
+        quizId: "quiz-machine-learning-chapter-2-objective-review",
         updatedAt: now
       }
     ],
@@ -2661,6 +2700,39 @@ function buildGateDaBasicPlan(now, accountTypes, sections, user = basicGateDaUse
         done: false,
         details: "Submit the Chapter 1 objective quiz so the learner record logs ML framing strengths and weaknesses.",
         updatedAt: now
+      },
+      {
+        id: "task-machine-learning-chapter-2-read",
+        week: 2,
+        title: "ML Ch 2: Read evaluation metrics",
+        type: "Study",
+        date: weekTwoMonday,
+        status: "todo",
+        done: false,
+        details: "Open Subjects -> Machine Learning -> Chapter 2 and study split roles, regression metrics, confusion matrices, CV/LOOCV, and overfit diagnosis.",
+        updatedAt: now
+      },
+      {
+        id: "task-machine-learning-chapter-2-practice",
+        week: 2,
+        title: "ML Ch 2: Solve labelled practice",
+        type: "Practice",
+        date: addDays(weekTwoMonday, 2),
+        status: "todo",
+        done: false,
+        details: "Attempt the evaluation and validation practice problems before opening the worked solutions.",
+        updatedAt: now
+      },
+      {
+        id: "task-machine-learning-chapter-2-review",
+        week: 2,
+        title: "ML Ch 2: Take objective review",
+        type: "Review",
+        date: weekTwoSunday,
+        status: "todo",
+        done: false,
+        details: "Submit the Chapter 2 objective quiz so the learner record logs evaluation-method strengths and weaknesses.",
+        updatedAt: now
       }
     ],
     accountTypes,
@@ -2687,7 +2759,7 @@ function buildGateDaBasicPlan(now, accountTypes, sections, user = basicGateDaUse
         startDate: monday,
         endDate: "2026-08-30",
         status: "active",
-        details: `GATE DA Basic plan surfaces: Subjects, Tasks, Schedule, Tests, Feedback, Resources, and Share. Recommended pace: study Probability, Linear Algebra, DSA, and Machine Learning in parallel. Every 15 days, Aleph should generate an adaptive cumulative review quiz from prior performance, repeating missed concepts more often, reducing mastered concepts, and keeping high-weight exam topics in rotation. Current material build: Probability Chapters 1-10, Linear Algebra Chapters 1-12 plus a chapterless cumulative past-paper style drill, DSA Chapters 1-9 with a progression gate before Chapter 3, and Machine Learning Chapter 1.${trialNote}`,
+        details: `GATE DA Basic plan surfaces: Subjects, Tasks, Schedule, Tests, Feedback, Resources, and Share. Recommended pace: study Probability, Linear Algebra, DSA, and Machine Learning in parallel. Every 15 days, Aleph should generate an adaptive cumulative review quiz from prior performance, repeating missed concepts more often, reducing mastered concepts, and keeping high-weight exam topics in rotation. Current material build: Probability Chapters 1-10, Linear Algebra Chapters 1-12 plus a chapterless cumulative past-paper style drill, DSA Chapters 1-9 with a progression gate before Chapter 3, and Machine Learning Chapters 1-2.${trialNote}`,
         updatedAt: now
       }
     ],
@@ -2798,6 +2870,13 @@ function buildGateDaBasicPlan(now, accountTypes, sections, user = basicGateDaUse
         date: sunday,
         details: "Review misses for failing to identify the data object, confusing model with algorithm, picking a metric before a loss/objective, treating fixed hyperparameters as learned parameters, and skipping failure-mode diagnosis.",
         updatedAt: now
+      },
+      {
+        id: "feedback-machine-learning-chapter-2",
+        title: "Machine Learning Chapter 2 feedback focus",
+        date: weekTwoSunday,
+        details: "Review misses for train/validation/test leakage, using the wrong metric for the task, miscounting TP/FP/TN/FN, swapping precision and recall denominators, counting CV folds incorrectly, and confusing underfitting with overfitting.",
+        updatedAt: now
       }
     ],
     resources: [
@@ -2814,6 +2893,14 @@ function buildGateDaBasicPlan(now, accountTypes, sections, user = basicGateDaUse
         title: "Machine Learning Chapter 1: Data, Models, and Loss Functions",
         date: monday,
         details: "Open Subjects -> Machine Learning to study Chapter 1 and then take the objective review in Tests.",
+        link: "",
+        updatedAt: now
+      },
+      {
+        id: "resource-machine-learning-evaluation-metrics-validation",
+        title: "Machine Learning Chapter 2: Evaluation, Metrics, and Validation Methodology",
+        date: weekTwoMonday,
+        details: "Open Subjects -> Machine Learning to study Chapter 2 and then take the objective review in Tests.",
         link: "",
         updatedAt: now
       },
@@ -3311,6 +3398,274 @@ function gateDaMachineLearningSections(updatedAt = new Date().toISOString()) {
         "Loss turns wrongness into a number; the objective is what training optimizes.",
         "Parameters are fitted from data; hyperparameters are chosen outside the fit.",
         "Failure modes should be named precisely: data, model, loss, training, evaluation, or interpretation."
+      ],
+      updatedAt
+    },
+    {
+      id: "gate-da-machine-learning-evaluation-metrics-validation",
+      exam: "GATE DA",
+      accountTier: "Basic",
+      subject: "Machine Learning",
+      chapter: "Chapter 2",
+      section: "2",
+      title: "Evaluation, Metrics, and Validation Methodology",
+      summary: "How to judge whether a model is good: split roles, regression metrics, classification metrics, confusion matrices, cross-validation, and overfitting diagnostics.",
+      sectionPreview: "Chapter 1 asked what the data, model, and loss are. Chapter 2 asks whether the fitted model should be trusted. GATE DA evaluation questions are usually small: a confusion matrix, a few predictions, a train/test split, or a cross-validation count.",
+      previewActivity: "A classifier is tested on 20 examples. It predicts 12 correctly. Of the 8 predicted positive examples, 6 are truly positive. What can you compute immediately: accuracy, precision, recall, or all three? What information is still missing?",
+      chapterIntro: [
+        "Evaluation is the bridge between fitting a model and trusting a model. A model can have low training loss and still be poor on new data. The job of validation methodology is to make that failure visible before the final test.",
+        "This chapter uses the Chapter 1 frame but changes the question. Instead of asking what objective trains the model, we ask which metric measures the behavior we care about and whether the data split makes the measurement honest.",
+        "For GATE DA, expect hand calculations: MAE, MSE, RMSE, accuracy, precision, recall, split counts, LOOCV counts, and short interpretations of underfitting or overfitting."
+      ],
+      bookSections: [
+        {
+          number: "2.1",
+          title: "Train, Validation, and Test Roles",
+          paragraphs: [
+            "Training data is used to fit model parameters. Validation data is used to choose among models, hyperparameters, or feature choices. Test data is used once at the end to estimate final performance on unseen examples.",
+            "The test set must remain untouched during model selection. If you inspect test performance repeatedly and keep changing the model, the test set quietly becomes part of training.",
+            "In a GATE problem, first label each split by its job: fit, choose, or final estimate. Many mistakes come from using the test set to choose k, lambda, tree depth, or feature transformations."
+          ],
+          blocks: [
+            {
+              type: "principle",
+              title: "Principle: split roles",
+              body: "Train fits parameters. Validation chooses models or hyperparameters. Test estimates final performance after choices are locked."
+            },
+            {
+              type: "warning",
+              title: "Common trap",
+              body: "If the test set is used to choose the model, it is no longer an honest final test."
+            }
+          ]
+        },
+        {
+          number: "2.2",
+          title: "Regression Metrics",
+          paragraphs: [
+            "Regression predicts numbers, so evaluation usually starts from residuals y - yhat. Absolute error records the size of the miss. Squared error punishes large misses more strongly.",
+            "MAE is the average absolute error. MSE is the average squared error. RMSE is the square root of MSE, so it returns to the original unit of the target.",
+            "A loss can also be a metric, but do not assume the training objective and reporting metric are identical. A model may be trained with squared loss and reported with MAE."
+          ],
+          blocks: [
+            {
+              type: "example",
+              title: "Example 2.1: three residuals",
+              body: "If absolute errors are 1, 2, and 3, then MAE = 2. If squared errors are 1, 4, and 9, then MSE = 14/3 and RMSE = sqrt(14/3)."
+            },
+            {
+              type: "strategy",
+              title: "Regression table",
+              body: "Write y, yhat, residual, absolute error, and squared error before averaging."
+            }
+          ]
+        },
+        {
+          number: "2.3",
+          title: "The Confusion Matrix",
+          paragraphs: [
+            "Binary classification evaluation depends on which class is called positive. Once the positive class is fixed, every prediction falls into true positive, false positive, true negative, or false negative.",
+            "Accuracy is the fraction of all predictions that are correct. Precision asks: among predicted positives, how many were truly positive? Recall asks: among actual positives, how many were found?",
+            "Accuracy can be misleading when classes are imbalanced. If only 2 percent of examples are positive, a classifier can get 98 percent accuracy by always predicting negative while having zero recall for the positive class."
+          ],
+          blocks: [
+            {
+              type: "definition",
+              title: "Definitions",
+              body: "Accuracy = (TP + TN) / total. Precision = TP / (TP + FP). Recall = TP / (TP + FN)."
+            },
+            {
+              type: "checkpoint",
+              title: "Checkpoint",
+              body: "If the positive class changes from fraud to not-fraud, do TP and FP stay the same?"
+            }
+          ]
+        },
+        {
+          number: "2.4",
+          title: "Choosing the Right Metric",
+          paragraphs: [
+            "The metric should match the cost of mistakes. If false positives are costly, precision matters. If missed positives are costly, recall matters. If all classes are balanced and all mistakes are similar, accuracy may be enough.",
+            "For regression, the metric should match the meaning of errors. MAE is easier to interpret and less dominated by large misses. MSE/RMSE cares more about large errors.",
+            "Before computing, write the task type and the metric. After computing, add one sentence explaining what the number means."
+          ],
+          blocks: [
+            {
+              type: "example",
+              title: "Example 2.2: medical screening",
+              body: "For a first screening test, missing a real case can be worse than flagging an extra person for follow-up. Recall is usually central."
+            },
+            {
+              type: "example",
+              title: "Example 2.3: limited manual review",
+              body: "If only a small number of predicted positives can be reviewed manually, precision becomes important."
+            }
+          ]
+        },
+        {
+          number: "2.5",
+          title: "Cross-Validation and LOOCV",
+          paragraphs: [
+            "Cross-validation estimates how a model-selection choice may perform on unseen data by repeatedly training on one part of the data and validating on another part.",
+            "In k-fold cross-validation, the data is split into k folds. The model is trained k times; each fold is used once as validation. The reported CV score is usually the average validation score.",
+            "Leave-one-out cross-validation is the special case where each validation fold contains one example. If n examples are available for CV, LOOCV trains n models. If a held-out test set is removed first, count only the remaining training/validation examples."
+          ],
+          blocks: [
+            {
+              type: "principle",
+              title: "What CV estimates",
+              body: "Cross-validation estimates validation performance for model selection. It does not prove the model will always generalize, and it does not replace a final untouched test set."
+            },
+            {
+              type: "checkpoint",
+              title: "Checkpoint",
+              body: "If 12 examples remain after holding out a test set, how many LOOCV training runs are made?"
+            }
+          ]
+        },
+        {
+          number: "2.6",
+          title: "Underfitting, Overfitting, Bias, and Variance",
+          paragraphs: [
+            "High training error and high validation error suggest underfitting: the model class or features are too weak to capture the pattern.",
+            "Low training error and high validation/test error suggest overfitting: the model captured training-specific noise or accidental patterns.",
+            "Bias-variance language gives a compact diagnosis. High bias means the model is systematically too simple. High variance means the model changes too much with the sample. Regularization often increases bias while reducing variance."
+          ],
+          blocks: [
+            {
+              type: "strategy",
+              title: "Gap diagnosis",
+              body: "Compare training error with validation/test error. The level tells whether the model fits at all; the gap tells whether the fit transfers."
+            },
+            {
+              type: "warning",
+              title: "Common trap",
+              body: "Do not call every bad model overfit. If training error is also high, the first diagnosis is underfitting."
+            }
+          ]
+        },
+        {
+          number: "2.7",
+          title: "GATE Evaluation Routine",
+          paragraphs: [
+            "The standard routine for this chapter is: Task type -> Split role -> Prediction object -> Metric -> Calculation table -> Interpretation.",
+            "For regression, the calculation table uses residuals. For classification, the calculation table uses TP, FP, TN, and FN. For validation methodology, the table may simply count folds, held-out examples, or model-selection runs.",
+            "The final answer should not stop at a number. State what the number means and whether the estimate came from training, validation, cross-validation, or test data."
+          ],
+          blocks: [
+            {
+              type: "principle",
+              title: "Chapter 2 first line",
+              body: "Write: task type, split role, metric, and positive class before doing arithmetic."
+            }
+          ]
+        }
+      ],
+      concepts: [
+        {
+          name: "Split roles",
+          description: "Training fits, validation selects, and test estimates final performance.",
+          cue: "Ask fit, choose, or final estimate?"
+        },
+        {
+          name: "Regression metrics",
+          description: "MAE, MSE, and RMSE summarize numeric prediction errors.",
+          cue: "Build a residual table."
+        },
+        {
+          name: "Confusion matrix",
+          description: "TP, FP, TN, and FN after choosing the positive class.",
+          cue: "Mark positive class first."
+        },
+        {
+          name: "Classification metrics",
+          description: "Accuracy, precision, and recall answer different questions.",
+          cue: "Accuracy: all correct. Precision: predicted positive quality. Recall: actual positive coverage."
+        },
+        {
+          name: "Cross-validation",
+          description: "Repeated train/validation splits for model selection.",
+          cue: "Count folds and training runs."
+        },
+        {
+          name: "Generalization gap",
+          description: "The difference between training performance and validation/test performance.",
+          cue: "Low train error but high validation error means overfitting."
+        },
+        {
+          name: "Bias-variance diagnosis",
+          description: "High bias underfits; high variance overfits or changes too much with the sample.",
+          cue: "Use level and gap of errors."
+        }
+      ],
+      techniques: [
+        {
+          name: "Label split roles",
+          when: "a problem gives train, validation, test, or cross-validation data.",
+          move: "Write fit, choose, or final estimate next to each split."
+        },
+        {
+          name: "Build a residual table",
+          when: "a regression metric is requested.",
+          move: "List y, yhat, |y-yhat|, and (y-yhat)^2 before averaging."
+        },
+        {
+          name: "Build a confusion matrix",
+          when: "classification predictions and true labels are given.",
+          move: "Choose the positive class, then count TP, FP, TN, and FN."
+        },
+        {
+          name: "Choose the metric from the error cost",
+          when: "a word problem asks which metric matters.",
+          move: "Ask whether false positives, false negatives, large numeric errors, or overall correctness are most costly."
+        },
+        {
+          name: "Count validation runs",
+          when: "k-fold CV or LOOCV is described.",
+          move: "Count how many folds or one-example validation sets are created after any held-out test set is removed."
+        },
+        {
+          name: "Diagnose fit from error pattern",
+          when: "training and validation/test errors are compared.",
+          move: "High train and high validation means underfit; low train and high validation means overfit."
+        }
+      ],
+      practiceProblems: machineLearningEvaluationMetricsProblems(),
+      reviewPrompts: [
+        "Why should the test set stay untouched until the end?",
+        "What is the difference between validation error and test error?",
+        "When is accuracy misleading?",
+        "Explain precision and recall without formulas.",
+        "What should you write before computing TP, FP, TN, and FN?",
+        "How many models are trained in 5-fold cross-validation?",
+        "How many LOOCV runs are made if 4 examples are held out from 20 as a final test set?",
+        "Why can a model with low training error still be bad?",
+        "What error pattern suggests underfitting?",
+        "How does regularization usually affect bias and variance?"
+      ],
+      reviewQuiz: {
+        id: "quiz-machine-learning-chapter-2-objective-review",
+        title: "ML Chapter 2 Objective Review",
+        instructions: "Complete this after studying evaluation metrics and validation methodology. The quiz checks split roles, regression metrics, confusion-matrix metrics, cross-validation counts, and overfit/underfit diagnosis.",
+        questions: machineLearningEvaluationMetricsReviewQuestions()
+      },
+      readingQuestions: [
+        "What is training data used for?",
+        "What is validation data used for?",
+        "What is test data used for?",
+        "Which metric uses predicted positives in its denominator?",
+        "Which metric uses actual positives in its denominator?",
+        "What does k count in k-fold cross-validation?",
+        "What error pattern suggests overfitting?"
+      ],
+      chapterSummary: [
+        "Training data fits parameters; validation chooses models; test data gives the final estimate.",
+        "MAE, MSE, and RMSE evaluate numeric predictions.",
+        "Accuracy, precision, and recall require a positive class and confusion-matrix counts.",
+        "Cross-validation repeats train/validation splits for model selection.",
+        "LOOCV trains one model per available validation example.",
+        "Low training error with high validation/test error indicates overfitting.",
+        "High training and validation error indicates underfitting."
       ],
       updatedAt
     }
@@ -13535,6 +13890,226 @@ function machineLearningDataModelsLossReviewQuestions() {
   }));
 }
 
+function machineLearningEvaluationMetricsProblems() {
+  return [
+    {
+      label: "Problem 1: Split roles",
+      concept: "Split roles",
+      difficulty: "Concept",
+      technique: "Label split roles",
+      prompt: "A learner trains three models on set A, picks the best regularization strength using set B, and reports final accuracy on set C. What are A, B, and C?",
+      solution: "A is the training set because it fits model parameters. B is the validation set because it chooses the regularization strength. C is the test set because it reports final performance after choices are locked."
+    },
+    {
+      label: "Problem 2: Regression metrics",
+      concept: "Regression metrics",
+      difficulty: "Mechanics",
+      technique: "Build a residual table",
+      prompt: "For true values [3, 5, 8] and predictions [2, 7, 8], compute MAE and MSE.",
+      solution: "Errors are 1, -2, 0. Absolute errors are 1, 2, 0, so MAE = (1+2+0)/3 = 1. Squared errors are 1, 4, 0, so MSE = 5/3."
+    },
+    {
+      label: "Problem 3: RMSE",
+      concept: "Regression metrics",
+      difficulty: "Mechanics",
+      technique: "Build a residual table",
+      prompt: "If squared errors on four test examples are 1, 1, 4, and 10, compute MSE and RMSE.",
+      solution: "MSE = (1+1+4+10)/4 = 16/4 = 4. RMSE = sqrt(4) = 2."
+    },
+    {
+      label: "Problem 4: Confusion matrix counts",
+      concept: "Confusion matrix",
+      difficulty: "GATE-style",
+      technique: "Build a confusion matrix",
+      prompt: "Positive class is fraud. Among 20 examples: TP=4, FP=2, TN=11, FN=3. Compute accuracy, precision, and recall.",
+      solution: "Accuracy = (TP+TN)/20 = (4+11)/20 = 15/20 = 0.75. Precision = TP/(TP+FP) = 4/(4+2) = 2/3. Recall = TP/(TP+FN) = 4/(4+3) = 4/7."
+    },
+    {
+      label: "Problem 5: Pick the metric",
+      concept: "Classification metrics",
+      difficulty: "Application",
+      technique: "Choose the metric from the error cost",
+      prompt: "A rare-disease screening model should avoid missing true cases at the first screening stage. Which metric should be emphasized first: accuracy, precision, or recall?",
+      solution: "Recall should be emphasized because recall measures how many actual positive cases are found: TP/(TP+FN). Missing true cases means false negatives are costly."
+    },
+    {
+      label: "Problem 6: k-fold count",
+      concept: "Cross-validation",
+      difficulty: "Mechanics",
+      technique: "Count validation runs",
+      prompt: "A dataset is evaluated with 5-fold cross-validation. How many training runs are made, and how many times is each fold used as validation?",
+      solution: "There are 5 training runs. Each fold is used exactly once as the validation fold."
+    },
+    {
+      label: "Problem 7: LOOCV after test holdout",
+      concept: "Cross-validation",
+      difficulty: "GATE-style",
+      technique: "Count validation runs",
+      prompt: "There are 20 labelled examples. Four are held out as the final test set. LOOCV is run on the remaining examples. How many models are trained during LOOCV?",
+      solution: "After holding out 4 final test examples, 16 examples remain for cross-validation. LOOCV uses one validation example at a time, so it trains 16 models."
+    },
+    {
+      label: "Problem 8: Fit diagnosis",
+      concept: "Generalization gap",
+      difficulty: "Application",
+      technique: "Diagnose fit from error pattern",
+      prompt: "Model A has training error 0.03 and validation error 0.35. Model B has training error 0.32 and validation error 0.34. Which model looks overfit, and which looks underfit?",
+      solution: "Model A looks overfit: training error is very low but validation error is much higher. Model B looks underfit: both training and validation errors are high and close."
+    }
+  ];
+}
+
+function machineLearningEvaluationMetricsReviewQuestions() {
+  const metadata = {
+    "ml-eval-review-1": { targetConcept: "split-roles", prereqsUsed: [], difficulty: 1, gateWeight: "high" },
+    "ml-eval-review-2": { targetConcept: "regression-metrics", prereqsUsed: ["prediction-object"], difficulty: 2, gateWeight: "high" },
+    "ml-eval-review-3": { targetConcept: "confusion-matrix", prereqsUsed: ["prediction-object"], difficulty: 2, gateWeight: "high" },
+    "ml-eval-review-4": { targetConcept: "classification-metrics", prereqsUsed: ["confusion-matrix"], difficulty: 2, gateWeight: "high" },
+    "ml-eval-review-5": { targetConcept: "classification-metrics", prereqsUsed: ["confusion-matrix"], difficulty: 2, gateWeight: "high" },
+    "ml-eval-review-6": { targetConcept: "metric-selection", prereqsUsed: ["classification-metrics"], difficulty: 2, gateWeight: "medium" },
+    "ml-eval-review-7": { targetConcept: "cross-validation", prereqsUsed: ["split-roles"], difficulty: 2, gateWeight: "high" },
+    "ml-eval-review-8": { targetConcept: "cross-validation", prereqsUsed: ["split-roles"], difficulty: 3, gateWeight: "high" },
+    "ml-eval-review-9": { targetConcept: "generalization-gap", prereqsUsed: ["split-roles"], difficulty: 2, gateWeight: "medium" },
+    "ml-eval-review-10": { targetConcept: "bias-variance", prereqsUsed: ["generalization-gap"], difficulty: 3, gateWeight: "medium" }
+  };
+  const questions = [
+    {
+      id: "ml-eval-review-1",
+      kind: "single concept",
+      tags: ["split-roles"],
+      prompt: "Which split should be used once at the end to estimate final performance after model choices are locked?",
+      options: [
+        { id: "a", text: "Training set" },
+        { id: "b", text: "Validation set" },
+        { id: "c", text: "Test set" },
+        { id: "d", text: "Feature set" }
+      ],
+      answer: "c"
+    },
+    {
+      id: "ml-eval-review-2",
+      kind: "single concept",
+      tags: ["regression-metrics"],
+      prompt: "True values are [2, 4] and predictions are [1, 7]. What is the MSE?",
+      options: [
+        { id: "a", text: "2" },
+        { id: "b", text: "4" },
+        { id: "c", text: "5" },
+        { id: "d", text: "10" }
+      ],
+      answer: "c"
+    },
+    {
+      id: "ml-eval-review-3",
+      kind: "single concept",
+      tags: ["confusion-matrix"],
+      prompt: "Positive class is spam. A spam email predicted as not spam is counted as what?",
+      options: [
+        { id: "a", text: "True positive" },
+        { id: "b", text: "False positive" },
+        { id: "c", text: "True negative" },
+        { id: "d", text: "False negative" }
+      ],
+      answer: "d"
+    },
+    {
+      id: "ml-eval-review-4",
+      kind: "single concept",
+      tags: ["classification-metrics", "confusion-matrix"],
+      prompt: "If TP=6 and FP=3, what is precision?",
+      options: [
+        { id: "a", text: "6/9" },
+        { id: "b", text: "6/12" },
+        { id: "c", text: "3/6" },
+        { id: "d", text: "9/6" }
+      ],
+      answer: "a"
+    },
+    {
+      id: "ml-eval-review-5",
+      kind: "single concept",
+      tags: ["classification-metrics", "confusion-matrix"],
+      prompt: "If TP=6 and FN=2, what is recall?",
+      options: [
+        { id: "a", text: "6/8" },
+        { id: "b", text: "6/9" },
+        { id: "c", text: "2/8" },
+        { id: "d", text: "8/6" }
+      ],
+      answer: "a"
+    },
+    {
+      id: "ml-eval-review-6",
+      kind: "mixed: two concepts",
+      tags: ["metric-selection", "classification-metrics"],
+      prompt: "A first-stage disease screen mainly wants to avoid missing actual sick patients. Which metric is most directly relevant?",
+      options: [
+        { id: "a", text: "Recall" },
+        { id: "b", text: "Precision only" },
+        { id: "c", text: "MSE" },
+        { id: "d", text: "RMSE" }
+      ],
+      answer: "a"
+    },
+    {
+      id: "ml-eval-review-7",
+      kind: "mixed: two concepts",
+      tags: ["cross-validation", "split-roles"],
+      prompt: "How many models are trained in 4-fold cross-validation?",
+      options: [
+        { id: "a", text: "1" },
+        { id: "b", text: "3" },
+        { id: "c", text: "4" },
+        { id: "d", text: "8" }
+      ],
+      answer: "c"
+    },
+    {
+      id: "ml-eval-review-8",
+      kind: "mixed: three concepts",
+      tags: ["cross-validation", "split-roles"],
+      prompt: "A dataset has 15 examples. Three are held out as a final test set. LOOCV is run on the rest. How many LOOCV training runs are made?",
+      options: [
+        { id: "a", text: "3" },
+        { id: "b", text: "12" },
+        { id: "c", text: "15" },
+        { id: "d", text: "45" }
+      ],
+      answer: "b"
+    },
+    {
+      id: "ml-eval-review-9",
+      kind: "mixed: two concepts",
+      tags: ["generalization-gap", "split-roles"],
+      prompt: "Training error is 0.02 and validation error is 0.40. What is the best first diagnosis?",
+      options: [
+        { id: "a", text: "Overfitting" },
+        { id: "b", text: "Underfitting" },
+        { id: "c", text: "No generalization issue" },
+        { id: "d", text: "The problem must be clustering" }
+      ],
+      answer: "a"
+    },
+    {
+      id: "ml-eval-review-10",
+      kind: "mixed: three concepts",
+      tags: ["bias-variance", "generalization-gap"],
+      prompt: "Training error and validation error are both high and close to each other. Which diagnosis is most consistent?",
+      options: [
+        { id: "a", text: "High bias / underfitting" },
+        { id: "b", text: "High variance / overfitting" },
+        { id: "c", text: "Perfect generalization" },
+        { id: "d", text: "The test set was used correctly" }
+      ],
+      answer: "a"
+    }
+  ];
+  return questions.map((question) => ({
+    ...question,
+    ...(metadata[question.id] || { targetConcept: question.tags[0], prereqsUsed: question.tags.slice(1), difficulty: question.tags.length, gateWeight: "medium" })
+  }));
+}
+
 function probabilityFoundationProblems() {
   return [
     {
@@ -19428,6 +20003,68 @@ function machineLearningDataModelsLossConceptGraph() {
         label: "Failure-mode diagnosis",
         prereqs: ["data-object", "model-class", "loss-objective"],
         repairMaterial: "Review ML Chapter 1.7 and diagnose failures as data, model class, loss/objective, training, evaluation, or interpretation.",
+        gateWeight: "medium"
+      }
+    }
+  };
+}
+
+function machineLearningEvaluationMetricsConceptGraph() {
+  return {
+    chapterId: "gate-da-machine-learning-evaluation-metrics-validation",
+    chapterTitle: "ML Chapter 2: Evaluation, Metrics, and Validation Methodology",
+    gateWeight: "high",
+    fallbackConcepts: ["split-roles", "regression-metrics", "confusion-matrix", "classification-metrics"],
+    fallbackDifficultyMix: [1, 2, 2, 3],
+    fallbackInstruction: "Retest split roles, residual tables, confusion-matrix counts, and CV/LOOCV counts before moving to regression.",
+    stableNextAction: "Next: move to regression only after train/validation/test roles, metrics, and overfit diagnosis are reliable.",
+    nodes: {
+      "split-roles": {
+        label: "Train/validation/test roles",
+        prereqs: [],
+        repairMaterial: "Review ML Chapter 2.1 and label each split as fit, choose, or final estimate.",
+        gateWeight: "high"
+      },
+      "regression-metrics": {
+        label: "Regression metrics",
+        prereqs: ["prediction-object"],
+        repairMaterial: "Review ML Chapter 2.2 and compute MAE, MSE, and RMSE from a residual table.",
+        gateWeight: "high"
+      },
+      "confusion-matrix": {
+        label: "Confusion matrix",
+        prereqs: ["prediction-object"],
+        repairMaterial: "Review ML Chapter 2.3 and count TP, FP, TN, and FN after marking the positive class.",
+        gateWeight: "high"
+      },
+      "classification-metrics": {
+        label: "Accuracy, precision, recall",
+        prereqs: ["confusion-matrix"],
+        repairMaterial: "Review ML Chapter 2.3 and write the denominators for accuracy, precision, and recall before calculating.",
+        gateWeight: "high"
+      },
+      "metric-selection": {
+        label: "Metric selection",
+        prereqs: ["classification-metrics", "regression-metrics"],
+        repairMaterial: "Review ML Chapter 2.4 and match metric choice to false-positive, false-negative, or large-error cost.",
+        gateWeight: "medium"
+      },
+      "cross-validation": {
+        label: "Cross-validation and LOOCV",
+        prereqs: ["split-roles"],
+        repairMaterial: "Review ML Chapter 2.5 and count validation folds only after removing any final held-out test set.",
+        gateWeight: "high"
+      },
+      "generalization-gap": {
+        label: "Generalization gap",
+        prereqs: ["split-roles"],
+        repairMaterial: "Review ML Chapter 2.6 and compare training error with validation/test error.",
+        gateWeight: "medium"
+      },
+      "bias-variance": {
+        label: "Bias-variance diagnosis",
+        prereqs: ["generalization-gap"],
+        repairMaterial: "Review ML Chapter 2.6 and classify high-high errors as underfit and low-high errors as overfit.",
         gateWeight: "medium"
       }
     }
@@ -27945,6 +28582,7 @@ function conceptGraphForSection(section) {
   if (section?.id === "gate-da-conditional-expectation-variance") return conditionalExpectationConceptGraph();
   if (section?.id === "gate-da-continuous-distributions-order-statistics") return continuousDistributionsOrderStatisticsConceptGraph();
   if (section?.id === "gate-da-machine-learning-data-models-loss") return machineLearningDataModelsLossConceptGraph();
+  if (section?.id === "gate-da-machine-learning-evaluation-metrics-validation") return machineLearningEvaluationMetricsConceptGraph();
   return null;
 }
 
