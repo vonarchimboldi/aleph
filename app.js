@@ -1,7 +1,7 @@
 const STORAGE_KEY = "learning-studio-data-v2";
 const LEGACY_STORAGE_KEYS = ["learning-studio-data-v1"];
 const SESSION_KEY = "aleph-session";
-const COURSE_PLAN_VERSION = "seeded-user-canonical-workspace-v127";
+const COURSE_PLAN_VERSION = "seeded-user-canonical-workspace-v128";
 const MAX_FEEDBACK_ATTACHMENT_BYTES = 3 * 1024 * 1024;
 const MAX_COMPRESSED_FEEDBACK_BYTES = 2400 * 1024;
 const MAX_FEEDBACK_PDF_PAGES = 6;
@@ -941,7 +941,7 @@ function buildGateDaBasicPlan(now, accountTypes, sections, user = basicGateDaUse
         title: "Machine Learning",
         date: monday,
         status: "In progress",
-        details: "GATE DA Basic Machine Learning starts with the official Data -> Model -> Loss/Objective frame. Chapters 1-3 now cover datasets, model families, loss/objective framing, evaluation metrics, validation methodology, linear regression, least squares, and ridge regularization before moving to classifiers.",
+        details: "GATE DA Basic Machine Learning starts with the official Data -> Model -> Loss/Objective frame. Chapters 1-4 now cover datasets, model families, loss/objective framing, evaluation metrics, validation methodology, regression, and classifier decision boundaries before moving to specific classifier training methods.",
         sectionIds: machineLearningSections.map((section) => section.id),
         updatedAt: now
       }
@@ -1717,6 +1717,36 @@ function buildGateDaBasicPlan(now, accountTypes, sections, user = basicGateDaUse
         date: weekThreeSunday,
         details: "Take the graph-backed objective review for linear regression and ridge regression.",
         updatedAt: now
+      },
+      {
+        id: "schedule-machine-learning-chapter-4-study",
+        title: "ML Chapter 4: Classification Scores and Boundaries",
+        week: 4,
+        subject: "Machine Learning",
+        kind: "Study",
+        date: weekFourMonday,
+        details: "Study classifier scores, sign rules, decision boundaries, linear versus nonlinear separability, XOR, margins, and boundary failure modes.",
+        updatedAt: now
+      },
+      {
+        id: "schedule-machine-learning-chapter-4-practice",
+        title: "ML Chapter 4: Labelled Practice",
+        week: 4,
+        subject: "Machine Learning",
+        kind: "Practice",
+        date: addDays(weekFourMonday, 2),
+        details: "Solve labelled classification-boundary practice: compute scores, classify by sign, identify boundaries, test separability, reason about XOR, and compare margins.",
+        updatedAt: now
+      },
+      {
+        id: "schedule-machine-learning-chapter-4-review",
+        title: "ML Chapter 4: Objective Review",
+        week: 4,
+        subject: "Machine Learning",
+        kind: "Review",
+        date: weekFourSunday,
+        details: "Take the graph-backed objective review for classification scores, decision boundaries, separability, XOR, and margins.",
+        updatedAt: now
       }
     ],
     tests: [
@@ -1953,6 +1983,15 @@ function buildGateDaBasicPlan(now, accountTypes, sections, user = basicGateDaUse
         details: "Objective end-of-chapter quiz for linear regression and ridge regression: prediction rules, residuals, squared loss, one-parameter fitting, intercepts, ridge penalties, and regression failure modes.",
         sectionId: machineLearningSections[2]?.id,
         quizId: "quiz-machine-learning-chapter-3-objective-review",
+        updatedAt: now
+      },
+      {
+        id: "test-machine-learning-chapter-4-objective-review",
+        title: "ML Chapter 4 Objective Review",
+        date: weekFourSunday,
+        details: "Objective end-of-chapter quiz for classifier scores, sign rules, decision boundaries, linear separability, XOR, margins, candidate-classifier testing, and boundary failure modes.",
+        sectionId: machineLearningSections[3]?.id,
+        quizId: "quiz-machine-learning-chapter-4-objective-review",
         updatedAt: now
       }
     ],
@@ -2805,6 +2844,39 @@ function buildGateDaBasicPlan(now, accountTypes, sections, user = basicGateDaUse
         done: false,
         details: "Submit the Chapter 3 objective quiz so the learner record logs regression strengths and weaknesses.",
         updatedAt: now
+      },
+      {
+        id: "task-machine-learning-chapter-4-read",
+        week: 4,
+        title: "ML Ch 4: Read classification boundaries",
+        type: "Study",
+        date: weekFourMonday,
+        status: "todo",
+        done: false,
+        details: "Open Subjects -> Machine Learning -> Chapter 4 and study scores, sign rules, boundaries, linear separability, XOR, margins, and classifier failure modes.",
+        updatedAt: now
+      },
+      {
+        id: "task-machine-learning-chapter-4-practice",
+        week: 4,
+        title: "ML Ch 4: Solve labelled practice",
+        type: "Practice",
+        date: addDays(weekFourMonday, 2),
+        status: "todo",
+        done: false,
+        details: "Attempt the classification-score and boundary practice problems before opening the worked solutions.",
+        updatedAt: now
+      },
+      {
+        id: "task-machine-learning-chapter-4-review",
+        week: 4,
+        title: "ML Ch 4: Take objective review",
+        type: "Review",
+        date: weekFourSunday,
+        status: "todo",
+        done: false,
+        details: "Submit the Chapter 4 objective quiz so the learner record logs classification-boundary strengths and weaknesses.",
+        updatedAt: now
       }
     ],
     accountTypes,
@@ -2831,7 +2903,7 @@ function buildGateDaBasicPlan(now, accountTypes, sections, user = basicGateDaUse
         startDate: monday,
         endDate: "2026-08-30",
         status: "active",
-        details: `GATE DA Basic plan surfaces: Subjects, Tasks, Schedule, Tests, Feedback, Resources, and Share. Recommended pace: study Probability, Linear Algebra, DSA, and Machine Learning in parallel. Every 15 days, Aleph should generate an adaptive cumulative review quiz from prior performance, repeating missed concepts more often, reducing mastered concepts, and keeping high-weight exam topics in rotation. Current material build: Probability Chapters 1-10, Linear Algebra Chapters 1-12 plus a chapterless cumulative past-paper style drill, DSA Chapters 1-9 with a progression gate before Chapter 3, and Machine Learning Chapters 1-3.${trialNote}`,
+        details: `GATE DA Basic plan surfaces: Subjects, Tasks, Schedule, Tests, Feedback, Resources, and Share. Recommended pace: study Probability, Linear Algebra, DSA, and Machine Learning in parallel. Every 15 days, Aleph should generate an adaptive cumulative review quiz from prior performance, repeating missed concepts more often, reducing mastered concepts, and keeping high-weight exam topics in rotation. Current material build: Probability Chapters 1-10, Linear Algebra Chapters 1-12 plus a chapterless cumulative past-paper style drill, DSA Chapters 1-9 with a progression gate before Chapter 3, and Machine Learning Chapters 1-4.${trialNote}`,
         updatedAt: now
       }
     ],
@@ -2956,6 +3028,13 @@ function buildGateDaBasicPlan(now, accountTypes, sections, user = basicGateDaUse
         date: weekThreeSunday,
         details: "Review misses for residual sign errors, forgetting to square before summing, forcing or adding an intercept incorrectly, using the wrong least-squares slope formula, mixing data loss with ridge penalty, and missing regression failure modes.",
         updatedAt: now
+      },
+      {
+        id: "feedback-machine-learning-chapter-4",
+        title: "Machine Learning Chapter 4 feedback focus",
+        date: weekFourSunday,
+        details: "Review misses for confusing score with class label, using the wrong sign rule, misidentifying the decision boundary, missing linear separability, misunderstanding XOR, treating margin as accuracy, and ignoring boundary failure modes.",
+        updatedAt: now
       }
     ],
     resources: [
@@ -2988,6 +3067,14 @@ function buildGateDaBasicPlan(now, accountTypes, sections, user = basicGateDaUse
         title: "Machine Learning Chapter 3: Linear Regression and Ridge Regression",
         date: weekThreeMonday,
         details: "Open Subjects -> Machine Learning to study Chapter 3 and then take the objective review in Tests.",
+        link: "",
+        updatedAt: now
+      },
+      {
+        id: "resource-machine-learning-classification-boundaries",
+        title: "Machine Learning Chapter 4: Classification as Scores, Boundaries, and Margins",
+        date: weekFourMonday,
+        details: "Open Subjects -> Machine Learning to study Chapter 4 and then take the objective review in Tests.",
         link: "",
         updatedAt: now
       },
@@ -4016,6 +4103,217 @@ function gateDaMachineLearningSections(updatedAt = new Date().toISOString()) {
         "An intercept lets the line shift instead of passing through the origin.",
         "Ridge adds lambda ||w||^2 to discourage large weights.",
         "Common failure modes include nonlinearity, outliers, scale problems, missing features, multicollinearity, and poor generalization."
+      ],
+      updatedAt
+    },
+    {
+      id: "gate-da-machine-learning-classification-boundaries",
+      exam: "GATE DA",
+      accountTier: "Basic",
+      subject: "Machine Learning",
+      chapter: "Chapter 4",
+      section: "4",
+      title: "Classification as Scores, Boundaries, and Margins",
+      summary: "The shared language of classifiers: scores, thresholds, sign rules, decision boundaries, linear separability, XOR, margins, and boundary failure modes.",
+      sectionPreview: "Before studying perceptron, logistic regression, SVM, kNN, or trees, learn what every classifier is trying to do: turn a feature vector into a class decision. The core object is the boundary separating one class from another.",
+      previewActivity: "Let score s = x1 + x2 - 1. Predict +1 if s >= 0 and -1 otherwise. Classify (1,1), (1,0), and (0,0). Which equation describes the decision boundary?",
+      chapterIntro: [
+        "Regression predicted a number. Classification predicts a class. Many classifiers do this indirectly: they compute a score, then convert the score into a label.",
+        "This chapter studies the geometry behind that conversion. A linear score w^T x + b creates a linear boundary w^T x + b = 0. Points on one side receive one label; points on the other side receive the other label.",
+        "The big diagnostic is whether one straight boundary can separate the data. XOR is the canonical small example where a single linear boundary fails in the original features."
+      ],
+      bookSections: [
+        {
+          number: "4.1",
+          title: "Scores, Labels, and Decision Rules",
+          paragraphs: [
+            "A classifier may output a class label directly, but many useful classifiers output a score first. A decision rule then turns that score into a class.",
+            "For binary labels +1 and -1, a common rule is: predict +1 if the score is at least 0, and predict -1 otherwise.",
+            "The score is not the same thing as a probability. A probability has a scale from 0 to 1. A score can be any real number unless the model specifically calibrates it."
+          ],
+          blocks: [
+            {
+              type: "definition",
+              title: "Definition: score rule",
+              body: "A score rule computes a real number s(x). A sign rule converts it into a label, often +1 when s(x) >= 0 and -1 when s(x) < 0."
+            },
+            {
+              type: "example",
+              title: "Example 4.1: sign rule",
+              body: "If s(x) = 2x1 - x2 + 1 and x = [1,4], then s = 2 - 4 + 1 = -1, so the predicted class is -1."
+            }
+          ]
+        },
+        {
+          number: "4.2",
+          title: "Decision Boundaries",
+          paragraphs: [
+            "The decision boundary is the set of points where the classifier is exactly undecided between the two sides.",
+            "For a linear score s(x) = w^T x + b, the boundary is w^T x + b = 0. In two dimensions this is a line; in higher dimensions it is a hyperplane.",
+            "To classify a point, substitute it into the score. The sign tells the side of the boundary."
+          ],
+          blocks: [
+            {
+              type: "principle",
+              title: "Principle: boundary from equality",
+              body: "For a sign classifier, replace the inequality by equality. The boundary is where the score equals 0."
+            },
+            {
+              type: "checkpoint",
+              title: "Checkpoint",
+              body: "For s(x) = x1 - 2x2 + 3, what equation describes the boundary?"
+            }
+          ]
+        },
+        {
+          number: "4.3",
+          title: "Linear Separability",
+          paragraphs: [
+            "A labelled dataset is linearly separable if one line or hyperplane can put all positive examples on one side and all negative examples on the other side.",
+            "This is a geometric property of the data representation. The same examples may become separable after adding a nonlinear feature, but they may not be separable in the original features.",
+            "GATE-style separability questions are usually tiny. Draw or mentally test whether a line can divide the labelled points without mixing classes."
+          ],
+          blocks: [
+            {
+              type: "definition",
+              title: "Definition: linearly separable",
+              body: "A binary labelled dataset is linearly separable if there exist w and b such that w^T x + b is positive for every positive example and negative for every negative example."
+            },
+            {
+              type: "strategy",
+              title: "Separability check",
+              body: "In 2D, sketch the positive and negative points. Ask whether one straight line can isolate the classes."
+            }
+          ]
+        },
+        {
+          number: "4.4",
+          title: "XOR as the Canonical Failure",
+          paragraphs: [
+            "XOR labels the two diagonal corners of a square as positive and the other two corners as negative, or vice versa.",
+            "No single straight line can separate opposite corners from the other opposite corners. Any line that captures one positive corner will fail on the other or include a negative corner.",
+            "This example explains why later models need nonlinear features, hidden layers, kernels, local methods, or piecewise boundaries."
+          ],
+          blocks: [
+            {
+              type: "example",
+              title: "Example 4.2: XOR points",
+              body: "Let positives be (0,1) and (1,0), and negatives be (0,0) and (1,1). A single line cannot separate these labels in the original x1,x2 plane."
+            },
+            {
+              type: "principle",
+              title: "Principle: representation matters",
+              body: "Linear failure in the original features does not mean classification is impossible. It means this representation needs a nonlinear boundary or transformed features."
+            }
+          ]
+        },
+        {
+          number: "4.5",
+          title: "Margins",
+          paragraphs: [
+            "Correct classification only asks whether a point is on the right side of the boundary. Margin asks how far or how confidently it is on the right side.",
+            "For labels y in {+1,-1}, the signed quantity y(w^T x + b) is positive when the point is correctly classified and larger when the score agrees more strongly with the label.",
+            "SVM will later choose a separating boundary by maximizing margin. For now, the important idea is that two classifiers may make the same labels but differ in confidence near the boundary."
+          ],
+          blocks: [
+            {
+              type: "definition",
+              title: "Definition: functional margin",
+              body: "For label y in {+1,-1}, the functional margin is y(w^T x + b). Positive means correct; negative means incorrect under the sign rule."
+            },
+            {
+              type: "warning",
+              title: "Common trap",
+              body: "Margin is not accuracy. Accuracy counts correct labels. Margin measures score-side confidence for individual points."
+            }
+          ]
+        },
+        {
+          number: "4.6",
+          title: "Testing a Candidate Classifier",
+          paragraphs: [
+            "Given w, b, and a small dataset, the fastest test is mechanical: compute the score for each point, apply the sign rule, compare with the true label, and count errors.",
+            "This process also identifies points near the boundary. Points with scores close to 0 are less stable because a small change in weights, features, or measurement can flip the prediction.",
+            "A clean GATE answer should include score, predicted label, true label, and whether the point is correct."
+          ],
+          blocks: [
+            {
+              type: "strategy",
+              title: "Classifier table",
+              body: "For each point, write x, true y, score, predicted sign, correct/incorrect, and margin if requested."
+            }
+          ]
+        },
+        {
+          number: "4.7",
+          title: "Boundary Failure Modes",
+          paragraphs: [
+            "A boundary can fail because the data is not linearly separable, because outliers pull the boundary to a bad location, because feature scaling changes score geometry, or because class imbalance makes a naive boundary look better than it is.",
+            "Ambiguous points near the boundary deserve special attention. They may be correctly classified but with tiny margin.",
+            "This chapter should train a habit: before choosing a classifier, ask what kind of boundary the data seems to need."
+          ],
+          blocks: [
+            {
+              type: "principle",
+              title: "Boundary diagnosis",
+              body: "Name whether the issue is non-separability, bad representation, outlier sensitivity, scaling, class imbalance, or near-boundary ambiguity."
+            }
+          ]
+        }
+      ],
+      concepts: [
+        { name: "Score rule", description: "A real-valued function s(x) used before assigning a class.", cue: "Compute the score before the label." },
+        { name: "Sign decision", description: "A rule that turns a score into +1 or -1.", cue: "Check the threshold and inequality." },
+        { name: "Decision boundary", description: "The set of points where the classifier is undecided.", cue: "Set the score equal to zero." },
+        { name: "Linear separability", description: "Whether one line or hyperplane can separate the labels.", cue: "Ask if one straight cut can divide the classes." },
+        { name: "XOR failure", description: "Opposite-corner labels that a single linear boundary cannot separate.", cue: "Diagonal positives and negatives signal XOR." },
+        { name: "Margin", description: "How strongly the score agrees with the true label.", cue: "Correct is sign; margin is confidence." },
+        { name: "Boundary failure mode", description: "Nonlinear need, outlier, scaling, imbalance, or ambiguity.", cue: "Diagnose geometry before choosing the algorithm." }
+      ],
+      techniques: [
+        { name: "Compute score then sign", when: "w, b, and x are given.", move: "Evaluate w^T x + b, then apply the stated sign rule." },
+        { name: "Find the boundary", when: "a linear score is given.", move: "Set w^T x + b = 0 and interpret the line or hyperplane." },
+        { name: "Test separability", when: "small labelled 2D points are shown.", move: "Sketch or reason whether one straight line can separate all positives from negatives." },
+        { name: "Recognize XOR", when: "opposite corners have the same label.", move: "State that no single linear boundary separates the original features." },
+        { name: "Compare margins", when: "scores and true labels are given.", move: "Compute y times score and compare positive values." },
+        { name: "Diagnose boundary failure", when: "a classifier fails or is unstable.", move: "Identify nonlinearity, outlier, scale, imbalance, or near-boundary ambiguity." }
+      ],
+      practiceProblems: machineLearningClassificationBoundariesProblems(),
+      reviewPrompts: [
+        "What is the difference between a score and a class label?",
+        "How do you get the decision boundary from a score rule?",
+        "Why is w^T x + b = 0 the boundary for a linear sign classifier?",
+        "What does it mean for data to be linearly separable?",
+        "Why does XOR fail for one straight-line classifier?",
+        "How can a point be correctly classified but still have small margin?",
+        "Why does feature scaling affect score geometry?",
+        "What should a classifier-testing table include?",
+        "How is margin different from accuracy?",
+        "What failure modes suggest a nonlinear boundary may be needed?"
+      ],
+      reviewQuiz: {
+        id: "quiz-machine-learning-chapter-4-objective-review",
+        title: "ML Chapter 4 Objective Review",
+        instructions: "Complete this after studying classification scores, boundaries, separability, XOR, and margins. The quiz checks score evaluation, sign rules, boundary equations, linear separability, XOR diagnosis, margins, and boundary failure modes.",
+        questions: machineLearningClassificationBoundariesReviewQuestions()
+      },
+      readingQuestions: [
+        "What does a classifier score represent?",
+        "How does a sign rule turn a score into a class?",
+        "What is a decision boundary?",
+        "What does linearly separable mean?",
+        "Why is XOR not linearly separable in the original features?",
+        "What is a functional margin?",
+        "What boundary failure modes matter before choosing a classifier?"
+      ],
+      chapterSummary: [
+        "Many classifiers compute a score before assigning a class.",
+        "A linear sign classifier uses score w^T x + b.",
+        "The decision boundary is w^T x + b = 0.",
+        "Linearly separable data can be divided by one line or hyperplane.",
+        "XOR is the canonical tiny dataset that a single linear boundary cannot separate.",
+        "Margin measures score-side confidence, not just correctness.",
+        "Boundary failures include non-separability, outliers, scaling, imbalance, and near-boundary ambiguity."
       ],
       updatedAt
     }
@@ -14680,6 +14978,226 @@ function machineLearningLinearRidgeRegressionReviewQuestions() {
   }));
 }
 
+function machineLearningClassificationBoundariesProblems() {
+  return [
+    {
+      label: "Problem 1: Score and sign",
+      concept: "Score rule",
+      difficulty: "Mechanics",
+      technique: "Compute score then sign",
+      prompt: "Let s(x) = 2x1 - x2 + 1. Predict +1 if s >= 0 and -1 otherwise. Classify x = [1,4].",
+      solution: "s = 2(1) - 4 + 1 = -1. Since s < 0, the predicted class is -1."
+    },
+    {
+      label: "Problem 2: Boundary equation",
+      concept: "Decision boundary",
+      difficulty: "Mechanics",
+      technique: "Find the boundary",
+      prompt: "For score s(x) = x1 - 2x2 + 3, write the decision boundary.",
+      solution: "The boundary is where the score equals 0: x1 - 2x2 + 3 = 0."
+    },
+    {
+      label: "Problem 3: Side of boundary",
+      concept: "Sign decision",
+      difficulty: "GATE-style",
+      technique: "Compute score then sign",
+      prompt: "For s(x) = x1 + x2 - 1, classify (1,1), (1,0), and (0,0) using +1 when s >= 0.",
+      solution: "Scores are 1, 0, and -1. So (1,1) -> +1, (1,0) -> +1 because the rule includes equality, and (0,0) -> -1."
+    },
+    {
+      label: "Problem 4: Linear separability",
+      concept: "Linear separability",
+      difficulty: "Concept",
+      technique: "Test separability",
+      prompt: "Positive points are (0,1) and (1,1). Negative points are (0,0) and (1,0). Is this linearly separable?",
+      solution: "Yes. The horizontal line x2 = 0.5 separates positives above the line from negatives below the line."
+    },
+    {
+      label: "Problem 5: XOR diagnosis",
+      concept: "XOR failure",
+      difficulty: "Concept",
+      technique: "Recognize XOR",
+      prompt: "Positive points are (0,1) and (1,0). Negative points are (0,0) and (1,1). Can one straight line separate them?",
+      solution: "No. This is the XOR pattern: opposite corners share a label. A single straight line cannot separate the positive diagonal from the negative diagonal."
+    },
+    {
+      label: "Problem 6: Functional margin",
+      concept: "Margin",
+      difficulty: "Mechanics",
+      technique: "Compare margins",
+      prompt: "For label y = -1 and score s = -3, compute the functional margin y*s. Is the point correctly classified?",
+      solution: "The margin is (-1)(-3) = 3. It is positive, so the point is correctly classified with margin 3."
+    },
+    {
+      label: "Problem 7: Candidate classifier table",
+      concept: "Candidate classifier testing",
+      difficulty: "GATE-style",
+      technique: "Compute score then sign",
+      prompt: "Use s(x)=x1-x2. Predict +1 if s>=0. For points (2,1) with y=+1 and (1,3) with y=-1, count mistakes.",
+      solution: "For (2,1), s=1 so prediction is +1, correct. For (1,3), s=-2 so prediction is -1, correct. Mistakes = 0."
+    },
+    {
+      label: "Problem 8: Boundary failure",
+      concept: "Boundary failure mode",
+      difficulty: "Application",
+      technique: "Diagnose boundary failure",
+      prompt: "A linear classifier correctly labels most points, but several points with scores close to 0 flip labels when measurements are rounded. What failure mode is most direct?",
+      solution: "This is near-boundary ambiguity or instability. The points have tiny margin, so small measurement changes can flip the sign."
+    }
+  ];
+}
+
+function machineLearningClassificationBoundariesReviewQuestions() {
+  const metadata = {
+    "ml-cls-review-1": { targetConcept: "score-rule", prereqsUsed: [], difficulty: 1, gateWeight: "high" },
+    "ml-cls-review-2": { targetConcept: "sign-decision", prereqsUsed: ["score-rule"], difficulty: 1, gateWeight: "high" },
+    "ml-cls-review-3": { targetConcept: "decision-boundary", prereqsUsed: ["score-rule"], difficulty: 2, gateWeight: "high" },
+    "ml-cls-review-4": { targetConcept: "linear-separability", prereqsUsed: ["decision-boundary"], difficulty: 2, gateWeight: "high" },
+    "ml-cls-review-5": { targetConcept: "xor-failure", prereqsUsed: ["linear-separability"], difficulty: 2, gateWeight: "high" },
+    "ml-cls-review-6": { targetConcept: "margin", prereqsUsed: ["score-rule", "sign-decision"], difficulty: 2, gateWeight: "medium" },
+    "ml-cls-review-7": { targetConcept: "candidate-testing", prereqsUsed: ["score-rule", "sign-decision"], difficulty: 3, gateWeight: "high" },
+    "ml-cls-review-8": { targetConcept: "boundary-failure", prereqsUsed: ["margin"], difficulty: 2, gateWeight: "medium" },
+    "ml-cls-review-9": { targetConcept: "decision-boundary", prereqsUsed: ["score-rule"], difficulty: 2, gateWeight: "high" },
+    "ml-cls-review-10": { targetConcept: "boundary-failure", prereqsUsed: ["linear-separability"], difficulty: 3, gateWeight: "medium" }
+  };
+  const questions = [
+    {
+      id: "ml-cls-review-1",
+      kind: "single concept",
+      tags: ["score-rule"],
+      prompt: "For s(x)=2x1+x2-4 and x=[1,3], what is the score?",
+      options: [
+        { id: "a", text: "1" },
+        { id: "b", text: "2" },
+        { id: "c", text: "5" },
+        { id: "d", text: "-1" }
+      ],
+      answer: "a"
+    },
+    {
+      id: "ml-cls-review-2",
+      kind: "single concept",
+      tags: ["sign-decision", "score-rule"],
+      prompt: "The rule is predict +1 if s >= 0. If s = 0, what is the prediction?",
+      options: [
+        { id: "a", text: "+1" },
+        { id: "b", text: "-1" },
+        { id: "c", text: "No class is possible" },
+        { id: "d", text: "The score becomes a probability" }
+      ],
+      answer: "a"
+    },
+    {
+      id: "ml-cls-review-3",
+      kind: "single concept",
+      tags: ["decision-boundary", "score-rule"],
+      prompt: "For s(x)=x1+x2-2, which equation is the decision boundary?",
+      options: [
+        { id: "a", text: "x1 + x2 - 2 = 0" },
+        { id: "b", text: "x1 + x2 - 2 = 1" },
+        { id: "c", text: "x1 = 0 only" },
+        { id: "d", text: "x2 = 2 only" }
+      ],
+      answer: "a"
+    },
+    {
+      id: "ml-cls-review-4",
+      kind: "single concept",
+      tags: ["linear-separability"],
+      prompt: "Positive points have x2=1 and negative points have x2=0. Which line separates them?",
+      options: [
+        { id: "a", text: "x2 = 0.5" },
+        { id: "b", text: "x1 = 0" },
+        { id: "c", text: "x1 + x2 = 10" },
+        { id: "d", text: "No line can separate them" }
+      ],
+      answer: "a"
+    },
+    {
+      id: "ml-cls-review-5",
+      kind: "single concept",
+      tags: ["xor-failure", "linear-separability"],
+      prompt: "Which pattern is the canonical example that a single linear boundary cannot separate in the original two features?",
+      options: [
+        { id: "a", text: "XOR" },
+        { id: "b", text: "A horizontal split" },
+        { id: "c", text: "A vertical split" },
+        { id: "d", text: "All positives above all negatives" }
+      ],
+      answer: "a"
+    },
+    {
+      id: "ml-cls-review-6",
+      kind: "mixed: two concepts",
+      tags: ["margin", "score-rule", "sign-decision"],
+      prompt: "For true label y=+1 and score s=4, what is the functional margin y*s?",
+      options: [
+        { id: "a", text: "-4" },
+        { id: "b", text: "0" },
+        { id: "c", text: "1" },
+        { id: "d", text: "4" }
+      ],
+      answer: "d"
+    },
+    {
+      id: "ml-cls-review-7",
+      kind: "mixed: three concepts",
+      tags: ["candidate-testing", "score-rule", "sign-decision"],
+      prompt: "Use s=x1-x2 and predict +1 if s>=0. What is the prediction for x=(1,3)?",
+      options: [
+        { id: "a", text: "+1" },
+        { id: "b", text: "-1" },
+        { id: "c", text: "0" },
+        { id: "d", text: "Cannot compute a score" }
+      ],
+      answer: "b"
+    },
+    {
+      id: "ml-cls-review-8",
+      kind: "mixed: two concepts",
+      tags: ["boundary-failure", "margin"],
+      prompt: "A point is correctly classified but has score very close to 0. What is the best interpretation?",
+      options: [
+        { id: "a", text: "It has small margin and may be unstable." },
+        { id: "b", text: "It must be an XOR point." },
+        { id: "c", text: "It has maximum confidence." },
+        { id: "d", text: "It cannot be evaluated." }
+      ],
+      answer: "a"
+    },
+    {
+      id: "ml-cls-review-9",
+      kind: "mixed: two concepts",
+      tags: ["decision-boundary", "score-rule"],
+      prompt: "For s=3x1-6, which points lie on the boundary?",
+      options: [
+        { id: "a", text: "All points with x1=2" },
+        { id: "b", text: "All points with x1=0" },
+        { id: "c", text: "All points with x2=2" },
+        { id: "d", text: "No points lie on it" }
+      ],
+      answer: "a"
+    },
+    {
+      id: "ml-cls-review-10",
+      kind: "mixed: three concepts",
+      tags: ["boundary-failure", "linear-separability"],
+      prompt: "If classes cannot be separated by any single line in the original 2D features, what is the most direct diagnosis?",
+      options: [
+        { id: "a", text: "The original representation is not linearly separable." },
+        { id: "b", text: "The residual sign is wrong." },
+        { id: "c", text: "The MSE must be zero." },
+        { id: "d", text: "The test set was used once." }
+      ],
+      answer: "a"
+    }
+  ];
+  return questions.map((question) => ({
+    ...question,
+    ...(metadata[question.id] || { targetConcept: question.tags[0], prereqsUsed: question.tags.slice(1), difficulty: question.tags.length, gateWeight: "medium" })
+  }));
+}
+
 function probabilityFoundationProblems() {
   return [
     {
@@ -20691,6 +21209,68 @@ function machineLearningLinearRidgeRegressionConceptGraph() {
         label: "Regression failure modes",
         prereqs: ["prediction-rule", "squared-loss", "ridge-penalty"],
         repairMaterial: "Review ML Chapter 3.7 and diagnose nonlinearity, outliers, scale, missing features, multicollinearity, or generalization.",
+        gateWeight: "medium"
+      }
+    }
+  };
+}
+
+function machineLearningClassificationBoundariesConceptGraph() {
+  return {
+    chapterId: "gate-da-machine-learning-classification-boundaries",
+    chapterTitle: "ML Chapter 4: Classification as Scores, Boundaries, and Margins",
+    gateWeight: "high",
+    fallbackConcepts: ["score-rule", "sign-decision", "decision-boundary", "linear-separability"],
+    fallbackDifficultyMix: [1, 2, 2, 3],
+    fallbackInstruction: "Retest score computation, sign decisions, boundary equations, XOR recognition, and margin comparison before moving to perceptron updates.",
+    stableNextAction: "Next: move to perceptron only after score rules, boundaries, separability, XOR, and margins are reliable.",
+    nodes: {
+      "score-rule": {
+        label: "Score rule",
+        prereqs: [],
+        repairMaterial: "Review ML Chapter 4.1 and compute the score before applying any class label.",
+        gateWeight: "high"
+      },
+      "sign-decision": {
+        label: "Sign decision",
+        prereqs: ["score-rule"],
+        repairMaterial: "Review ML Chapter 4.1 and mark the threshold rule, especially what happens at equality.",
+        gateWeight: "high"
+      },
+      "decision-boundary": {
+        label: "Decision boundary",
+        prereqs: ["score-rule", "sign-decision"],
+        repairMaterial: "Review ML Chapter 4.2 and set the score equal to 0 to find the boundary.",
+        gateWeight: "high"
+      },
+      "linear-separability": {
+        label: "Linear separability",
+        prereqs: ["decision-boundary"],
+        repairMaterial: "Review ML Chapter 4.3 and sketch whether one straight line can separate all labelled points.",
+        gateWeight: "high"
+      },
+      "xor-failure": {
+        label: "XOR failure",
+        prereqs: ["linear-separability"],
+        repairMaterial: "Review ML Chapter 4.4 and identify opposite-corner labels as the canonical linear-boundary failure.",
+        gateWeight: "high"
+      },
+      margin: {
+        label: "Margin",
+        prereqs: ["score-rule", "sign-decision"],
+        repairMaterial: "Review ML Chapter 4.5 and compute y times score to separate correctness from confidence.",
+        gateWeight: "medium"
+      },
+      "candidate-testing": {
+        label: "Candidate classifier testing",
+        prereqs: ["score-rule", "sign-decision", "margin"],
+        repairMaterial: "Review ML Chapter 4.6 and build a table with true label, score, predicted label, correctness, and margin.",
+        gateWeight: "high"
+      },
+      "boundary-failure": {
+        label: "Boundary failure mode",
+        prereqs: ["decision-boundary", "linear-separability", "margin"],
+        repairMaterial: "Review ML Chapter 4.7 and diagnose non-separability, outliers, scaling, imbalance, or near-boundary ambiguity.",
         gateWeight: "medium"
       }
     }
@@ -29210,6 +29790,7 @@ function conceptGraphForSection(section) {
   if (section?.id === "gate-da-machine-learning-data-models-loss") return machineLearningDataModelsLossConceptGraph();
   if (section?.id === "gate-da-machine-learning-evaluation-metrics-validation") return machineLearningEvaluationMetricsConceptGraph();
   if (section?.id === "gate-da-machine-learning-linear-ridge-regression") return machineLearningLinearRidgeRegressionConceptGraph();
+  if (section?.id === "gate-da-machine-learning-classification-boundaries") return machineLearningClassificationBoundariesConceptGraph();
   return null;
 }
 
