@@ -1,7 +1,7 @@
 const STORAGE_KEY = "learning-studio-data-v2";
 const LEGACY_STORAGE_KEYS = ["learning-studio-data-v1"];
 const SESSION_KEY = "aleph-session";
-const COURSE_PLAN_VERSION = "seeded-user-canonical-workspace-v126";
+const COURSE_PLAN_VERSION = "seeded-user-canonical-workspace-v127";
 const MAX_FEEDBACK_ATTACHMENT_BYTES = 3 * 1024 * 1024;
 const MAX_COMPRESSED_FEEDBACK_BYTES = 2400 * 1024;
 const MAX_FEEDBACK_PDF_PAGES = 6;
@@ -941,7 +941,7 @@ function buildGateDaBasicPlan(now, accountTypes, sections, user = basicGateDaUse
         title: "Machine Learning",
         date: monday,
         status: "In progress",
-        details: "GATE DA Basic Machine Learning starts with the official Data -> Model -> Loss/Objective frame. Chapters 1-2 now cover datasets, model families, loss/objective framing, evaluation metrics, validation methodology, cross-validation, and overfitting diagnostics before moving to regression and classifiers.",
+        details: "GATE DA Basic Machine Learning starts with the official Data -> Model -> Loss/Objective frame. Chapters 1-3 now cover datasets, model families, loss/objective framing, evaluation metrics, validation methodology, linear regression, least squares, and ridge regularization before moving to classifiers.",
         sectionIds: machineLearningSections.map((section) => section.id),
         updatedAt: now
       }
@@ -1687,6 +1687,36 @@ function buildGateDaBasicPlan(now, accountTypes, sections, user = basicGateDaUse
         date: weekTwoSunday,
         details: "Take the graph-backed objective review for evaluation metrics and validation methodology.",
         updatedAt: now
+      },
+      {
+        id: "schedule-machine-learning-chapter-3-study",
+        title: "ML Chapter 3: Linear and Ridge Regression",
+        week: 3,
+        subject: "Machine Learning",
+        kind: "Study",
+        date: weekThreeMonday,
+        details: "Study prediction rules, residuals, squared loss, one-parameter fitting, intercepts, ridge penalties, and regression failure modes.",
+        updatedAt: now
+      },
+      {
+        id: "schedule-machine-learning-chapter-3-practice",
+        title: "ML Chapter 3: Labelled Practice",
+        week: 3,
+        subject: "Machine Learning",
+        kind: "Practice",
+        date: addDays(weekThreeMonday, 2),
+        details: "Solve labelled regression practice: residual tables, least-squares slope fitting, prediction, ridge objective values, and failure-mode diagnosis.",
+        updatedAt: now
+      },
+      {
+        id: "schedule-machine-learning-chapter-3-review",
+        title: "ML Chapter 3: Objective Review",
+        week: 3,
+        subject: "Machine Learning",
+        kind: "Review",
+        date: weekThreeSunday,
+        details: "Take the graph-backed objective review for linear regression and ridge regression.",
+        updatedAt: now
       }
     ],
     tests: [
@@ -1914,6 +1944,15 @@ function buildGateDaBasicPlan(now, accountTypes, sections, user = basicGateDaUse
         details: "Objective end-of-chapter quiz for train/validation/test roles, regression metrics, confusion matrices, accuracy, precision, recall, cross-validation counts, LOOCV, and overfit/underfit diagnosis.",
         sectionId: machineLearningSections[1]?.id,
         quizId: "quiz-machine-learning-chapter-2-objective-review",
+        updatedAt: now
+      },
+      {
+        id: "test-machine-learning-chapter-3-objective-review",
+        title: "ML Chapter 3 Objective Review",
+        date: weekThreeSunday,
+        details: "Objective end-of-chapter quiz for linear regression and ridge regression: prediction rules, residuals, squared loss, one-parameter fitting, intercepts, ridge penalties, and regression failure modes.",
+        sectionId: machineLearningSections[2]?.id,
+        quizId: "quiz-machine-learning-chapter-3-objective-review",
         updatedAt: now
       }
     ],
@@ -2733,6 +2772,39 @@ function buildGateDaBasicPlan(now, accountTypes, sections, user = basicGateDaUse
         done: false,
         details: "Submit the Chapter 2 objective quiz so the learner record logs evaluation-method strengths and weaknesses.",
         updatedAt: now
+      },
+      {
+        id: "task-machine-learning-chapter-3-read",
+        week: 3,
+        title: "ML Ch 3: Read linear and ridge regression",
+        type: "Study",
+        date: weekThreeMonday,
+        status: "todo",
+        done: false,
+        details: "Open Subjects -> Machine Learning -> Chapter 3 and study residuals, least squares, intercepts, fitted predictions, ridge penalties, and regression failure modes.",
+        updatedAt: now
+      },
+      {
+        id: "task-machine-learning-chapter-3-practice",
+        week: 3,
+        title: "ML Ch 3: Solve labelled practice",
+        type: "Practice",
+        date: addDays(weekThreeMonday, 2),
+        status: "todo",
+        done: false,
+        details: "Attempt the linear/ridge regression practice problems before opening the worked solutions.",
+        updatedAt: now
+      },
+      {
+        id: "task-machine-learning-chapter-3-review",
+        week: 3,
+        title: "ML Ch 3: Take objective review",
+        type: "Review",
+        date: weekThreeSunday,
+        status: "todo",
+        done: false,
+        details: "Submit the Chapter 3 objective quiz so the learner record logs regression strengths and weaknesses.",
+        updatedAt: now
       }
     ],
     accountTypes,
@@ -2759,7 +2831,7 @@ function buildGateDaBasicPlan(now, accountTypes, sections, user = basicGateDaUse
         startDate: monday,
         endDate: "2026-08-30",
         status: "active",
-        details: `GATE DA Basic plan surfaces: Subjects, Tasks, Schedule, Tests, Feedback, Resources, and Share. Recommended pace: study Probability, Linear Algebra, DSA, and Machine Learning in parallel. Every 15 days, Aleph should generate an adaptive cumulative review quiz from prior performance, repeating missed concepts more often, reducing mastered concepts, and keeping high-weight exam topics in rotation. Current material build: Probability Chapters 1-10, Linear Algebra Chapters 1-12 plus a chapterless cumulative past-paper style drill, DSA Chapters 1-9 with a progression gate before Chapter 3, and Machine Learning Chapters 1-2.${trialNote}`,
+        details: `GATE DA Basic plan surfaces: Subjects, Tasks, Schedule, Tests, Feedback, Resources, and Share. Recommended pace: study Probability, Linear Algebra, DSA, and Machine Learning in parallel. Every 15 days, Aleph should generate an adaptive cumulative review quiz from prior performance, repeating missed concepts more often, reducing mastered concepts, and keeping high-weight exam topics in rotation. Current material build: Probability Chapters 1-10, Linear Algebra Chapters 1-12 plus a chapterless cumulative past-paper style drill, DSA Chapters 1-9 with a progression gate before Chapter 3, and Machine Learning Chapters 1-3.${trialNote}`,
         updatedAt: now
       }
     ],
@@ -2877,6 +2949,13 @@ function buildGateDaBasicPlan(now, accountTypes, sections, user = basicGateDaUse
         date: weekTwoSunday,
         details: "Review misses for train/validation/test leakage, using the wrong metric for the task, miscounting TP/FP/TN/FN, swapping precision and recall denominators, counting CV folds incorrectly, and confusing underfitting with overfitting.",
         updatedAt: now
+      },
+      {
+        id: "feedback-machine-learning-chapter-3",
+        title: "Machine Learning Chapter 3 feedback focus",
+        date: weekThreeSunday,
+        details: "Review misses for residual sign errors, forgetting to square before summing, forcing or adding an intercept incorrectly, using the wrong least-squares slope formula, mixing data loss with ridge penalty, and missing regression failure modes.",
+        updatedAt: now
       }
     ],
     resources: [
@@ -2901,6 +2980,14 @@ function buildGateDaBasicPlan(now, accountTypes, sections, user = basicGateDaUse
         title: "Machine Learning Chapter 2: Evaluation, Metrics, and Validation Methodology",
         date: weekTwoMonday,
         details: "Open Subjects -> Machine Learning to study Chapter 2 and then take the objective review in Tests.",
+        link: "",
+        updatedAt: now
+      },
+      {
+        id: "resource-machine-learning-linear-ridge-regression",
+        title: "Machine Learning Chapter 3: Linear Regression and Ridge Regression",
+        date: weekThreeMonday,
+        details: "Open Subjects -> Machine Learning to study Chapter 3 and then take the objective review in Tests.",
         link: "",
         updatedAt: now
       },
@@ -3666,6 +3753,269 @@ function gateDaMachineLearningSections(updatedAt = new Date().toISOString()) {
         "LOOCV trains one model per available validation example.",
         "Low training error with high validation/test error indicates overfitting.",
         "High training and validation error indicates underfitting."
+      ],
+      updatedAt
+    },
+    {
+      id: "gate-da-machine-learning-linear-ridge-regression",
+      exam: "GATE DA",
+      accountTier: "Basic",
+      subject: "Machine Learning",
+      chapter: "Chapter 3",
+      section: "3",
+      title: "Linear Regression and Ridge Regression",
+      summary: "Numeric prediction with lines and hyperplanes: residuals, squared loss, one-parameter fitting, intercepts, predictions, ridge penalties, and regression failure modes.",
+      sectionPreview: "Chapter 3 is the first full training chapter. Chapter 1 gave the Data -> Model -> Loss/Objective frame. Chapter 2 gave evaluation. Now we fit a numeric prediction rule and see how the chosen objective determines the fitted parameter.",
+      previewActivity: "Data are (x,y) = (1,2), (2,4), (3,6). Suppose the model is yhat = wx with no intercept. What value of w seems right? What residuals do you get? What squared loss do you get? Try this before reading the derivative method.",
+      chapterIntro: [
+        "Linear regression predicts a number from features. In one dimension, the model may be yhat = wx or yhat = wx + b. In many dimensions, it becomes yhat = w^T x + b.",
+        "The key habit is to separate the prediction rule from the objective. The rule says what predictions are allowed. The objective says which allowed rule is best.",
+        "For GATE DA Basic, the important calculations are small: residual tables, squared-loss comparisons, one-parameter derivatives, fitted predictions, ridge objective values, and bias-variance interpretation."
+      ],
+      bookSections: [
+        {
+          number: "3.1",
+          title: "Prediction Rule and Residuals",
+          paragraphs: [
+            "Linear regression begins with a numeric target y and a numeric prediction yhat. In the simplest no-intercept model, yhat = wx. The single parameter w controls the slope.",
+            "With an intercept, the model is yhat = wx + b. The slope w controls how prediction changes with x, while b shifts the line up or down.",
+            "The residual is y - yhat. A residual is signed: positive means the model predicted too low, negative means the model predicted too high."
+          ],
+          blocks: [
+            {
+              type: "definition",
+              title: "Definition: residual",
+              body: "For one example, residual = y - yhat. Linear regression objectives are usually built from these residuals."
+            },
+            {
+              type: "example",
+              title: "Example 3.1: one prediction",
+              body: "If yhat = 2x + 1 and x = 3, then yhat = 7. If the true y is 10, the residual is 10 - 7 = 3."
+            }
+          ]
+        },
+        {
+          number: "3.2",
+          title: "Squared Loss and Least Squares",
+          paragraphs: [
+            "Least squares chooses parameters by minimizing the sum of squared residuals. Squaring makes all errors nonnegative and punishes large misses more heavily than small misses.",
+            "For a candidate model, compute each prediction, each residual, each squared residual, and then add. This table is the safest way to answer GATE-style regression questions.",
+            "Least squares is an objective, not just a formula. If the loss changes from squared error to absolute error, the preferred model can change."
+          ],
+          blocks: [
+            {
+              type: "principle",
+              title: "Principle: least squares",
+              body: "Choose the parameter values that minimize sum_i (y_i - yhat_i)^2."
+            },
+            {
+              type: "strategy",
+              title: "Residual table",
+              body: "For each row, write x, y, yhat, residual, and squared residual. Only then add the loss."
+            }
+          ]
+        },
+        {
+          number: "3.3",
+          title: "Fitting yhat = wx by One Derivative",
+          paragraphs: [
+            "When the model is yhat = wx and there is no intercept, the sum of squared errors is S(w) = sum_i (y_i - wx_i)^2.",
+            "Differentiate S(w) with respect to w, set the derivative to zero, and solve. The result is w = sum_i x_i y_i / sum_i x_i^2, provided the denominator is nonzero.",
+            "This formula is not something to memorize blindly. It comes from the objective. If the model or loss changes, the fitting equation changes."
+          ],
+          blocks: [
+            {
+              type: "example",
+              title: "Example 3.2: fit through the origin",
+              body: "For (1,2), (2,4), (3,6), sum xy = 2 + 8 + 18 = 28 and sum x^2 = 1 + 4 + 9 = 14. So w = 28/14 = 2."
+            },
+            {
+              type: "checkpoint",
+              title: "Checkpoint",
+              body: "For (1,1), (2,2), (3,2), what are sum xy and sum x^2 before computing w?"
+            }
+          ]
+        },
+        {
+          number: "3.4",
+          title: "Intercepts and Centering Intuition",
+          paragraphs: [
+            "A no-intercept line yhat = wx must pass through the origin. This is appropriate only when zero input should imply zero prediction or when the problem explicitly imposes it.",
+            "Adding b gives the model more freedom. The line can shift vertically, often reducing training loss. The intercept is a learned parameter unless the problem fixes it.",
+            "Centering gives useful intuition: after subtracting means, the slope describes how deviations in x move with deviations in y. Later linear algebra chapters connect this to projections."
+          ],
+          blocks: [
+            {
+              type: "warning",
+              title: "Common trap",
+              body: "Do not fit a no-intercept model unless the problem states yhat = wx or gives a reason the line must pass through the origin."
+            },
+            {
+              type: "principle",
+              title: "Intercept role",
+              body: "The intercept handles baseline prediction when x is zero or when the feature values are centered away from zero."
+            }
+          ]
+        },
+        {
+          number: "3.5",
+          title: "Prediction After Fitting",
+          paragraphs: [
+            "Once parameters are fitted, prediction is substitution. Put the new x into the fitted rule and compute yhat.",
+            "Evaluation after fitting is a separate step. A training residual measures fit on training data. A test residual measures performance on held-out data.",
+            "Keep the Chapter 2 distinction alive: the same formula yhat = wx + b may be used on training, validation, or test examples, but the interpretation of the error changes with the split."
+          ],
+          blocks: [
+            {
+              type: "example",
+              title: "Example 3.3: fitted prediction",
+              body: "If the fitted model is yhat = 3x - 2, then at x = 5 the prediction is 13."
+            },
+            {
+              type: "strategy",
+              title: "Prediction routine",
+              body: "State the fitted rule, substitute the new feature value, compute yhat, then compute residual only if the true y is known."
+            }
+          ]
+        },
+        {
+          number: "3.6",
+          title: "Ridge Regression",
+          paragraphs: [
+            "Ridge regression modifies least squares by adding an L2 penalty on weights. A typical objective is sum_i (y_i - w^T x_i)^2 + lambda ||w||^2.",
+            "The first term measures data fit. The second term penalizes large weights. The parameter lambda controls how strongly large weights are discouraged.",
+            "Ridge can increase bias because it pulls weights toward zero, but it can reduce variance and make fitted models more stable, especially when features are correlated or the dataset is small."
+          ],
+          blocks: [
+            {
+              type: "definition",
+              title: "Definition: ridge objective",
+              body: "Ridge objective = squared-error data loss + lambda times an L2 weight penalty."
+            },
+            {
+              type: "example",
+              title: "Example 3.4: penalty value",
+              body: "If w = [3,4] and lambda = 2, then lambda ||w||^2 = 2(3^2 + 4^2) = 50."
+            }
+          ]
+        },
+        {
+          number: "3.7",
+          title: "Failure Modes",
+          paragraphs: [
+            "Linear regression fails when the model class is too simple for the pattern, important features are missing, outliers dominate squared loss, or the train/test relationship changes.",
+            "Feature scale matters for ridge because the penalty acts on weights. If one feature is measured in thousands and another in decimals, weight size can be hard to compare without scaling.",
+            "Multicollinearity means features carry overlapping information. Ordinary least squares can become unstable; ridge often stabilizes by penalizing large weights."
+          ],
+          blocks: [
+            {
+              type: "principle",
+              title: "Regression diagnosis",
+              body: "Name whether the issue is model class, data representation, outliers, feature scale, multicollinearity, or generalization."
+            }
+          ]
+        }
+      ],
+      concepts: [
+        {
+          name: "Prediction rule",
+          description: "The form yhat = wx, yhat = wx+b, or yhat = w^Tx+b.",
+          cue: "Check whether there is an intercept."
+        },
+        {
+          name: "Residual",
+          description: "The signed error y - yhat.",
+          cue: "Compute prediction first, residual second."
+        },
+        {
+          name: "Squared loss",
+          description: "The sum or average of squared residuals.",
+          cue: "Square each residual before adding."
+        },
+        {
+          name: "One-parameter fit",
+          description: "For yhat=wx, w = sum xy / sum x^2 under squared loss.",
+          cue: "Build sum xy and sum x^2."
+        },
+        {
+          name: "Intercept",
+          description: "A learned baseline shift b in yhat = wx+b.",
+          cue: "No intercept means the line passes through zero."
+        },
+        {
+          name: "Ridge penalty",
+          description: "An L2 penalty lambda ||w||^2 added to squared-error loss.",
+          cue: "Separate data loss from penalty."
+        },
+        {
+          name: "Regression failure mode",
+          description: "Linear limitation, outliers, scale, missing features, multicollinearity, or generalization gap.",
+          cue: "Diagnose before changing the model."
+        }
+      ],
+      techniques: [
+        {
+          name: "Write the fitted-rule table",
+          when: "a regression problem gives candidate models or fitted parameters.",
+          move: "List x, y, yhat, residual, and squared residual."
+        },
+        {
+          name: "Fit through the origin",
+          when: "the model is explicitly yhat = wx.",
+          move: "Compute sum xy and sum x^2, then divide."
+        },
+        {
+          name: "Check intercept assumptions",
+          when: "a problem gives yhat = wx or yhat = wx+b.",
+          move: "State whether the line must pass through the origin."
+        },
+        {
+          name: "Separate ridge terms",
+          when: "a regularized objective appears.",
+          move: "Compute squared-error data loss and lambda ||w||^2 separately, then add."
+        },
+        {
+          name: "Diagnose regression failure",
+          when: "a line fits poorly or ridge changes behavior.",
+          move: "Choose among nonlinearity, outliers, scale, missing features, multicollinearity, or overfitting."
+        }
+      ],
+      practiceProblems: machineLearningLinearRidgeRegressionProblems(),
+      reviewPrompts: [
+        "What is the difference between y, yhat, and the residual?",
+        "Why does yhat = wx force the fitted line through the origin?",
+        "How do you fit w by hand for yhat = wx under squared loss?",
+        "Why does squared loss react strongly to outliers?",
+        "What is the role of the intercept b?",
+        "What two parts make up the ridge objective?",
+        "How does increasing lambda affect the preferred weight size?",
+        "Why can ridge increase bias but reduce variance?",
+        "Why can feature scaling matter for ridge?",
+        "What should appear in a GATE-style residual table?"
+      ],
+      reviewQuiz: {
+        id: "quiz-machine-learning-chapter-3-objective-review",
+        title: "ML Chapter 3 Objective Review",
+        instructions: "Complete this after studying linear regression and ridge regression. The quiz checks prediction rules, residuals, squared loss, one-parameter least squares, intercepts, ridge penalties, and regression failure modes.",
+        questions: machineLearningLinearRidgeRegressionReviewQuestions()
+      },
+      readingQuestions: [
+        "What is a residual?",
+        "What objective defines least squares?",
+        "How do you fit yhat = wx by one derivative?",
+        "What changes when an intercept is included?",
+        "What is the difference between data loss and ridge penalty?",
+        "Why can regularization reduce variance?",
+        "What failure modes are common for linear regression?"
+      ],
+      chapterSummary: [
+        "Linear regression predicts numeric targets with a line or hyperplane.",
+        "Residual = y - yhat.",
+        "Least squares minimizes the sum of squared residuals.",
+        "For yhat = wx, the fitted slope is sum xy / sum x^2.",
+        "An intercept lets the line shift instead of passing through the origin.",
+        "Ridge adds lambda ||w||^2 to discourage large weights.",
+        "Common failure modes include nonlinearity, outliers, scale problems, missing features, multicollinearity, and poor generalization."
       ],
       updatedAt
     }
@@ -14110,6 +14460,226 @@ function machineLearningEvaluationMetricsReviewQuestions() {
   }));
 }
 
+function machineLearningLinearRidgeRegressionProblems() {
+  return [
+    {
+      label: "Problem 1: Prediction and residual",
+      concept: "Residual",
+      difficulty: "Mechanics",
+      technique: "Write the fitted-rule table",
+      prompt: "The model is yhat = 3x - 1. For x = 4 and true y = 10, compute yhat and the residual y - yhat.",
+      solution: "The prediction is yhat = 3(4) - 1 = 11. The residual is y - yhat = 10 - 11 = -1, so the model predicted 1 unit too high."
+    },
+    {
+      label: "Problem 2: Squared-loss table",
+      concept: "Squared loss",
+      difficulty: "Mechanics",
+      technique: "Write the fitted-rule table",
+      prompt: "Data are (1,2), (2,5), (3,7). Candidate model is yhat = 2x. Compute total squared loss.",
+      solution: "Predictions are 2, 4, 6. Residuals are 0, 1, 1. Squared residuals are 0, 1, 1, so total squared loss is 2."
+    },
+    {
+      label: "Problem 3: Fit yhat = wx",
+      concept: "One-parameter fit",
+      difficulty: "GATE-style",
+      technique: "Fit through the origin",
+      prompt: "Fit yhat = wx by least squares for data (1,1), (2,2), (3,2). Compute w.",
+      solution: "Use w = sum xy / sum x^2. Here sum xy = 1(1)+2(2)+3(2)=1+4+6=11. Sum x^2 = 1+4+9=14. So w = 11/14."
+    },
+    {
+      label: "Problem 4: Intercept diagnosis",
+      concept: "Intercept",
+      difficulty: "Concept",
+      technique: "Check intercept assumptions",
+      prompt: "A fitted rule yhat = wx is used for house price from area. What structural assumption does this make at x = 0?",
+      solution: "It assumes the prediction is 0 when area is 0 because the line must pass through the origin. If that assumption is not intended, an intercept b should usually be considered."
+    },
+    {
+      label: "Problem 5: Fitted prediction",
+      concept: "Prediction rule",
+      difficulty: "Mechanics",
+      technique: "Write the fitted-rule table",
+      prompt: "The fitted model is yhat = 1.5x + 2. Predict y when x = 6.",
+      solution: "Substitute x = 6: yhat = 1.5(6) + 2 = 9 + 2 = 11."
+    },
+    {
+      label: "Problem 6: Ridge penalty",
+      concept: "Ridge penalty",
+      difficulty: "Mechanics",
+      technique: "Separate ridge terms",
+      prompt: "For w = [2,-1] and lambda = 3, compute the ridge penalty lambda ||w||^2.",
+      solution: "||w||^2 = 2^2 + (-1)^2 = 5. The penalty is 3 x 5 = 15."
+    },
+    {
+      label: "Problem 7: Ridge objective",
+      concept: "Ridge penalty",
+      difficulty: "GATE-style",
+      technique: "Separate ridge terms",
+      prompt: "A model has squared-error data loss 8. Its weight is w = [1,2], and lambda = 2. Compute the full ridge objective.",
+      solution: "The penalty is lambda ||w||^2 = 2(1^2+2^2)=2(5)=10. Full objective = data loss + penalty = 8 + 10 = 18."
+    },
+    {
+      label: "Problem 8: Failure mode",
+      concept: "Regression failure mode",
+      difficulty: "Application",
+      technique: "Diagnose regression failure",
+      prompt: "A least-squares line changes drastically when one extreme point is added to the dataset. Which failure mode is most directly involved?",
+      solution: "This is outlier sensitivity. Squared loss gives large residuals very large influence, so an extreme point can pull the fitted line strongly."
+    }
+  ];
+}
+
+function machineLearningLinearRidgeRegressionReviewQuestions() {
+  const metadata = {
+    "ml-reg-review-1": { targetConcept: "prediction-rule", prereqsUsed: [], difficulty: 1, gateWeight: "high" },
+    "ml-reg-review-2": { targetConcept: "residual", prereqsUsed: ["prediction-rule"], difficulty: 1, gateWeight: "high" },
+    "ml-reg-review-3": { targetConcept: "squared-loss", prereqsUsed: ["residual"], difficulty: 2, gateWeight: "high" },
+    "ml-reg-review-4": { targetConcept: "one-parameter-fit", prereqsUsed: ["squared-loss"], difficulty: 3, gateWeight: "high" },
+    "ml-reg-review-5": { targetConcept: "intercept", prereqsUsed: ["prediction-rule"], difficulty: 1, gateWeight: "medium" },
+    "ml-reg-review-6": { targetConcept: "ridge-penalty", prereqsUsed: ["squared-loss"], difficulty: 2, gateWeight: "high" },
+    "ml-reg-review-7": { targetConcept: "ridge-penalty", prereqsUsed: ["squared-loss", "prediction-rule"], difficulty: 3, gateWeight: "high" },
+    "ml-reg-review-8": { targetConcept: "regression-failure", prereqsUsed: ["squared-loss"], difficulty: 2, gateWeight: "medium" },
+    "ml-reg-review-9": { targetConcept: "regression-failure", prereqsUsed: ["ridge-penalty"], difficulty: 2, gateWeight: "medium" },
+    "ml-reg-review-10": { targetConcept: "prediction-rule", prereqsUsed: ["intercept", "residual"], difficulty: 2, gateWeight: "high" }
+  };
+  const questions = [
+    {
+      id: "ml-reg-review-1",
+      kind: "single concept",
+      tags: ["prediction-rule"],
+      prompt: "For yhat = wx + b, which symbol is the intercept?",
+      options: [
+        { id: "a", text: "x" },
+        { id: "b", text: "y" },
+        { id: "c", text: "w" },
+        { id: "d", text: "b" }
+      ],
+      answer: "d"
+    },
+    {
+      id: "ml-reg-review-2",
+      kind: "single concept",
+      tags: ["residual", "prediction-rule"],
+      prompt: "If y = 9 and yhat = 6, what is the residual y - yhat?",
+      options: [
+        { id: "a", text: "-3" },
+        { id: "b", text: "3" },
+        { id: "c", text: "6" },
+        { id: "d", text: "15" }
+      ],
+      answer: "b"
+    },
+    {
+      id: "ml-reg-review-3",
+      kind: "single concept",
+      tags: ["squared-loss", "residual"],
+      prompt: "Residuals are 1, -2, and 0. What is the total squared loss?",
+      options: [
+        { id: "a", text: "1" },
+        { id: "b", text: "3" },
+        { id: "c", text: "5" },
+        { id: "d", text: "9" }
+      ],
+      answer: "c"
+    },
+    {
+      id: "ml-reg-review-4",
+      kind: "mixed: three concepts",
+      tags: ["one-parameter-fit", "squared-loss"],
+      prompt: "Fit yhat = wx to points (1,2) and (2,4). What is w?",
+      options: [
+        { id: "a", text: "1" },
+        { id: "b", text: "2" },
+        { id: "c", text: "3" },
+        { id: "d", text: "5" }
+      ],
+      answer: "b"
+    },
+    {
+      id: "ml-reg-review-5",
+      kind: "single concept",
+      tags: ["intercept", "prediction-rule"],
+      prompt: "Which statement is true for the no-intercept model yhat = wx?",
+      options: [
+        { id: "a", text: "The line must pass through the origin." },
+        { id: "b", text: "The line must be horizontal." },
+        { id: "c", text: "The residuals must all be zero." },
+        { id: "d", text: "The model cannot make numeric predictions." }
+      ],
+      answer: "a"
+    },
+    {
+      id: "ml-reg-review-6",
+      kind: "single concept",
+      tags: ["ridge-penalty"],
+      prompt: "For w = [3,4] and lambda = 1, what is lambda ||w||^2?",
+      options: [
+        { id: "a", text: "5" },
+        { id: "b", text: "7" },
+        { id: "c", text: "25" },
+        { id: "d", text: "50" }
+      ],
+      answer: "c"
+    },
+    {
+      id: "ml-reg-review-7",
+      kind: "mixed: three concepts",
+      tags: ["ridge-penalty", "squared-loss"],
+      prompt: "Squared-error data loss is 6. The ridge penalty is 4. What is the full ridge objective?",
+      options: [
+        { id: "a", text: "2" },
+        { id: "b", text: "4" },
+        { id: "c", text: "6" },
+        { id: "d", text: "10" }
+      ],
+      answer: "d"
+    },
+    {
+      id: "ml-reg-review-8",
+      kind: "mixed: two concepts",
+      tags: ["regression-failure", "squared-loss"],
+      prompt: "Which issue is squared loss especially sensitive to?",
+      options: [
+        { id: "a", text: "Large outliers" },
+        { id: "b", text: "The name of the target variable" },
+        { id: "c", text: "Whether labels are strings" },
+        { id: "d", text: "The number of folds in CV only" }
+      ],
+      answer: "a"
+    },
+    {
+      id: "ml-reg-review-9",
+      kind: "mixed: two concepts",
+      tags: ["regression-failure", "ridge-penalty"],
+      prompt: "Ridge often helps when ordinary least squares is unstable because features are highly correlated. Which failure mode is this?",
+      options: [
+        { id: "a", text: "Multicollinearity" },
+        { id: "b", text: "Class imbalance" },
+        { id: "c", text: "Wrong positive class" },
+        { id: "d", text: "No validation set" }
+      ],
+      answer: "a"
+    },
+    {
+      id: "ml-reg-review-10",
+      kind: "mixed: two concepts",
+      tags: ["prediction-rule", "intercept", "residual"],
+      prompt: "For yhat = 2x + 1 and x = 3, true y = 8. What are yhat and residual y - yhat?",
+      options: [
+        { id: "a", text: "yhat = 7, residual = 1" },
+        { id: "b", text: "yhat = 8, residual = 0" },
+        { id: "c", text: "yhat = 6, residual = 2" },
+        { id: "d", text: "yhat = 7, residual = -1" }
+      ],
+      answer: "a"
+    }
+  ];
+  return questions.map((question) => ({
+    ...question,
+    ...(metadata[question.id] || { targetConcept: question.tags[0], prereqsUsed: question.tags.slice(1), difficulty: question.tags.length, gateWeight: "medium" })
+  }));
+}
+
 function probabilityFoundationProblems() {
   return [
     {
@@ -20065,6 +20635,62 @@ function machineLearningEvaluationMetricsConceptGraph() {
         label: "Bias-variance diagnosis",
         prereqs: ["generalization-gap"],
         repairMaterial: "Review ML Chapter 2.6 and classify high-high errors as underfit and low-high errors as overfit.",
+        gateWeight: "medium"
+      }
+    }
+  };
+}
+
+function machineLearningLinearRidgeRegressionConceptGraph() {
+  return {
+    chapterId: "gate-da-machine-learning-linear-ridge-regression",
+    chapterTitle: "ML Chapter 3: Linear Regression and Ridge Regression",
+    gateWeight: "high",
+    fallbackConcepts: ["prediction-rule", "residual", "squared-loss", "ridge-penalty"],
+    fallbackDifficultyMix: [1, 2, 2, 3],
+    fallbackInstruction: "Retest residual tables, one-parameter least-squares fitting, and ridge objective separation before moving to classifiers.",
+    stableNextAction: "Next: move to classifier boundaries only after residuals, squared loss, fitted predictions, and ridge penalties are reliable.",
+    nodes: {
+      "prediction-rule": {
+        label: "Prediction rule",
+        prereqs: [],
+        repairMaterial: "Review ML Chapter 3.1 and state whether the model is yhat=wx, yhat=wx+b, or yhat=w^T x+b before computing.",
+        gateWeight: "high"
+      },
+      residual: {
+        label: "Residual",
+        prereqs: ["prediction-rule"],
+        repairMaterial: "Review ML Chapter 3.1 and compute yhat first, then residual y-yhat with sign.",
+        gateWeight: "high"
+      },
+      "squared-loss": {
+        label: "Squared loss",
+        prereqs: ["residual"],
+        repairMaterial: "Review ML Chapter 3.2 and build x, y, yhat, residual, squared residual tables.",
+        gateWeight: "high"
+      },
+      "one-parameter-fit": {
+        label: "One-parameter least squares",
+        prereqs: ["squared-loss"],
+        repairMaterial: "Review ML Chapter 3.3 and compute sum xy and sum x^2 before dividing.",
+        gateWeight: "high"
+      },
+      intercept: {
+        label: "Intercept",
+        prereqs: ["prediction-rule"],
+        repairMaterial: "Review ML Chapter 3.4 and decide whether the line is forced through the origin.",
+        gateWeight: "medium"
+      },
+      "ridge-penalty": {
+        label: "Ridge penalty",
+        prereqs: ["squared-loss"],
+        repairMaterial: "Review ML Chapter 3.6 and compute data loss and lambda ||w||^2 separately before adding.",
+        gateWeight: "high"
+      },
+      "regression-failure": {
+        label: "Regression failure modes",
+        prereqs: ["prediction-rule", "squared-loss", "ridge-penalty"],
+        repairMaterial: "Review ML Chapter 3.7 and diagnose nonlinearity, outliers, scale, missing features, multicollinearity, or generalization.",
         gateWeight: "medium"
       }
     }
@@ -28583,6 +29209,7 @@ function conceptGraphForSection(section) {
   if (section?.id === "gate-da-continuous-distributions-order-statistics") return continuousDistributionsOrderStatisticsConceptGraph();
   if (section?.id === "gate-da-machine-learning-data-models-loss") return machineLearningDataModelsLossConceptGraph();
   if (section?.id === "gate-da-machine-learning-evaluation-metrics-validation") return machineLearningEvaluationMetricsConceptGraph();
+  if (section?.id === "gate-da-machine-learning-linear-ridge-regression") return machineLearningLinearRidgeRegressionConceptGraph();
   return null;
 }
 
