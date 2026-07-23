@@ -160,21 +160,27 @@ Purpose: Show discriminative probabilistic classification with a linear decision
 Core questions:
 
 1. What is the linear score before the sigmoid?
-2. What does the sigmoid turn the score into?
-3. What is the decision boundary for a probability threshold of \(1/2\)?
-4. Why is logistic regression discriminative?
-5. What loss is used for probabilistic classification?
-6. How is logistic regression different from Naive Bayes?
-7. What does model confidence mean?
-8. Why does standard logistic regression fail on XOR without nonlinear features?
-9. What failure modes matter: linear boundary limitation, separability instability, calibration, and threshold choice?
-10. Which GATE questions are likely classification-model identity questions?
-11. What calculations should stay light for Basic: score, probability, decision, and model category?
+2. Why is the linear score the log odds: \(w^Tx+b=\log(p/(1-p))\)?
+3. What are odds, log odds, and probability, and how are they different?
+4. What does the sigmoid turn log odds into?
+5. How should a coefficient be interpreted: change in log odds, odds multiplier \(e^{w_j}\), or probability change?
+6. Why is it wrong to say a coefficient is a fixed additive probability change?
+7. What is the decision boundary for a probability threshold of \(1/2\)?
+8. Why is logistic regression discriminative?
+9. What loss is used for probabilistic classification?
+10. How is logistic regression different from Naive Bayes?
+11. What does model confidence mean?
+12. Why does standard logistic regression fail on XOR without nonlinear features?
+13. What failure modes matter: linear boundary limitation, separability instability, calibration, coefficient misinterpretation, and threshold choice?
+14. Which GATE questions are likely classification-model identity questions?
+15. What calculations should stay light for Basic: score, log odds, odds multiplier, probability, decision, and model category?
 
 Required GATE-style outcomes:
 
 - Identify logistic regression as discriminative.
 - Convert a linear score into a classification decision.
+- Interpret the linear score as log odds and \(e^{w_j}\) as an odds multiplier.
+- Avoid the common mistake of reading coefficients as fixed probability changes.
 - Recognize when the boundary is linear even though the output is probabilistic.
 - Explain cross-entropy/log-loss at an intuitive and computational level.
 
