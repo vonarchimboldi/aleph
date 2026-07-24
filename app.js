@@ -1,7 +1,7 @@
 const STORAGE_KEY = "learning-studio-data-v2";
 const LEGACY_STORAGE_KEYS = ["learning-studio-data-v1"];
 const SESSION_KEY = "aleph-session";
-const COURSE_PLAN_VERSION = "seeded-user-canonical-workspace-v131";
+const COURSE_PLAN_VERSION = "seeded-user-canonical-workspace-v132";
 const MAX_FEEDBACK_ATTACHMENT_BYTES = 3 * 1024 * 1024;
 const MAX_COMPRESSED_FEEDBACK_BYTES = 2400 * 1024;
 const MAX_FEEDBACK_PDF_PAGES = 6;
@@ -705,6 +705,18 @@ function buildPriyankaPlatinumPlan(now, accountTypes, sections, user = defaultUs
     schedule.push(cmiReview.schedule);
     tasks.push(cmiReview.task);
     tests.push(cmiReview.test);
+    ["subject-discrete-mathematics", "subject-data-structures-algorithms"].forEach((subjectId) => {
+      const subject = subjects.find((entry) => entry.id === subjectId);
+      const workflow = subject?.weeklyReviewWorkflows?.find((entry) => entry.week === cmiReview.test.week);
+      if (!workflow) return;
+      workflow.title = cmiReview.test.title;
+      workflow.status = "Published";
+      workflow.workflowType = cmiReview.test.workflowType;
+      workflow.details = cmiReview.test.details;
+      workflow.testId = cmiReview.test.id;
+      workflow.materialId = cmiReview.test.materialId;
+      workflow.materialUrl = cmiReview.test.materialUrl;
+    });
   });
 
   return {
@@ -30504,6 +30516,7 @@ function cmiDiscreteDsaReviewQuiz(now, startDate, config) {
     },
     test: {
       id: testId,
+      week,
       title: `Week ${week}: CMI-level Discrete Math and DSA review quiz`,
       date,
       details,
@@ -32714,14 +32727,15 @@ function renderSubjects() {
 
 function renderTests() {
   const container = document.querySelector("#tests-list");
-  if (!state.tests.length) {
+  const visibleTests = state.tests.filter((test) => test.workflowType !== "cmi-dm-dsa-review");
+  if (!visibleTests.length) {
     container.innerHTML = '<div class="empty">No test items yet.</div>';
     return;
   }
 
   container.innerHTML = `
-    ${state.tests.map(testTemplate).join("")}
-    ${activeTestId ? activeQuizTemplate(activeTestId) : ""}
+    ${visibleTests.map(testTemplate).join("")}
+    ${activeTestId && visibleTests.some((test) => test.id === activeTestId) ? activeQuizTemplate(activeTestId) : ""}
   `;
 
   container.querySelectorAll("[data-start-test]").forEach((button) => {
@@ -33032,6 +33046,20 @@ function weeklyReviewWorkflowSection(subject) {
 }
 
 function weeklyReviewWorkflowCard(workflow) {
+  const linkedTest = workflow.testId
+    ? state.tests.find((test) => test.id === workflow.testId)
+    : null;
+  const materialId = linkedTest?.materialId || workflow.materialId;
+  const submission = materialId ? patternSubmission(materialId) : null;
+  const feedbackRecord = submission?.feedbackRecord || null;
+  const linkedQuiz = linkedTest?.materialUrl
+    ? `
+      <div class="weekly-review-linked-quiz">
+        <a class="primary-btn inline-link" href="${escapeHtml(linkedTest.materialUrl)}" target="_blank" rel="noreferrer">Open quiz</a>
+        ${reviewQuizSubmissionTemplate(linkedTest, submission, feedbackRecord)}
+      </div>
+    `
+    : "";
   return `
     <article class="weekly-review-card">
       <div>
@@ -33043,6 +33071,7 @@ function weeklyReviewWorkflowCard(workflow) {
         <span class="tag">${formatDate(workflow.date)}</span>
         <span class="tag">${escapeHtml(workflow.status || "Workflow ready")}</span>
       </div>
+      ${linkedQuiz}
     </article>
   `;
 }
