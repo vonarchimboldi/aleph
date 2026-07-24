@@ -1,0 +1,402 @@
+{
+  "quiz_file": "psets/week-04/july-26-cmi-msds-dm-dsa-review-quiz.html",
+  "model_judge": "GPT-4-0613",
+  "overall": {
+    "score_100": 94,
+    "difficulty_level": "medium-hard to hard",
+    "cmi_readiness": "Strongly ready for CMI MS DS exam preparation",
+    "summary": "The quiz comprehensively covers Week 4 Platinum scope for CMI MS DS Discrete Math and DSA with high fidelity to the rubric. Each question targets multiple coordinated skills and techniques, implements meaningful CMI-style traps, and demands apt reasoning modes. The variety rubric confirms excellent concept rotation and trap introduction distinct from prior weeks, ensuring novelty and breadth. The majority are hard or medium-hard difficulty and suitable for the intended 120-minute time frame. Diagnostic value is strong with targeted first-step and mistake taxonomy. No question requires regeneration. Slight minor speed variance in some long-arithmetic short answers but within acceptable limits."
+  },
+  "dimension_scores": {
+    "subject_coverage": {
+      "score_2": 2,
+      "evidence": "All 30 questions strictly cover the assigned Platinum topics of Week 4 discrete math and data structures: generating functions, linear recurrences, Catalan decompositions, dictionary semantics, hashing and collisions, and probing. No off-scope topics or future advanced material detected, and Competition Math is appropriately excluded as per plan."
+    },
+    "skills_required": {
+      "score_2": 2,
+      "evidence": "Questions require multiple coordinated skills such as translating generating functions to coefficient extraction, performing algebraic manipulations on rational OGFs, tracing dictionary and hash table operations including collision handling, and combining recurrence relations with initial condition fitting. No question reduces to mere recall or single-step substitution."
+    },
+    "techniques_required": {
+      "score_2": 2,
+      "evidence": "Students must select and combine techniques including generating function modeling, case splits, partial fractions with telescoping, recurrence reconstruction with initial terms, invariant reasoning for dictionary states, chain splice manipulations, and precise modular probe indexing. Wrong technique choices lead to plausible distractors for MCQs."
+    },
+    "analysis_level": {
+      "score_2": 2,
+      "evidence": "Most questions require layered reasoning with hidden conditions, e.g., initial term exceptions in recurrences, nuanced indexing in Catalan splits, subtle API return value distinctions, and worst-case vs expected-case hashing analysis. Short answers require concise explanations, confirming depth beyond single-step answers."
+    },
+    "speed": {
+      "score_2": 2,
+      "evidence": "MCQs average ~3 minutes each; short-answers average ~5 minutes with concise arithmetic or algebraic derivations. No bulky computation or excessive prose. Slightly longer derivations in a few short-answer questions (e.g., 6 minutes) are justified by complexity and fit comfortably into the overall 120-minute duration."
+    },
+    "reasoning_kind": {
+      "score_2": 2,
+      "evidence": "Aptitude-style reasoning is strongly demanded: all-correct no-incorrect selection, invariant-based correctness, finite-state trace, structural decomposition, counterexample construction, proof sketch, edge case analysis, and model transfer from story to formula. No trivial computation or memory recall tasks present."
+    },
+    "variety_and_rotation": {
+      "score_2": 2,
+      "evidence": "The quiz’s varietyPlan shows introduction of novel concept families (generating functions, Catalan decompositions, dictionary semantics, hashing variants) and reduction of previously overused topics (stacks, linked-list pointers). Reasoning modes and traps rotate faithfully compared to prior weeks with fresh traps like probe wraparound, load factor misread, and tombstone deletion correctness."
+    }
+  },
+  "topic_feedback": [
+    {
+      "topic": "dm-generating-functions-modeling",
+      "score_10": 9,
+      "difficulty": "hard",
+      "strength": "Excellent coordination of coefficient extraction and case splits with clear traps and quick eliminations.",
+      "weakness": "Some questions require careful index-shift handling which may trip weaker students.",
+      "recommended_change": "Provide more scaffolded hints or partial credit indications to ease initial engagement."
+    },
+    {
+      "topic": "dm-sums-linear-recurrences",
+      "score_10": 9,
+      "difficulty": "medium-hard to hard",
+      "strength": "Good inclusion of telescoping boundary care and subtle recurrence reconstruction.",
+      "weakness": "Finite sum derivations can be arithmetic-heavy but are well scoped.",
+      "recommended_change": "Avoid multi-step arithmetic in one question or split into sequential parts if time allows."
+    },
+    {
+      "topic": "dm-catalan-decomposition",
+      "score_10": 9,
+      "difficulty": "hard",
+      "strength": "Multiple bijection and decomposition problems with index-offset traps and root-conditioning judgments.",
+      "weakness": "Index shifts and order sensitivity may confuse novices.",
+      "recommended_change": "Add more direct statements emphasizing order and root roles in instructions."
+    },
+    {
+      "topic": "dsa-set-map-dictionary-semantics",
+      "score_10": 9,
+      "difficulty": "medium-hard",
+      "strength": "Well-designed code-trace questions on overwrites, API returns, and dictionary-of-sets representations.",
+      "weakness": "Semantic subtleties around overwrite vs insert or return value interpretation may require careful reading.",
+      "recommended_change": "Include small example outputs to aid comprehension."
+    },
+    {
+      "topic": "dsa-hash-collision-traces",
+      "score_10": 9,
+      "difficulty": "hard",
+      "strength": "Thorough coverage of chaining, deletion, linear and quadratic probing, tombstone deletion, resizing, and double hashing with exact-state computation tasks.",
+      "weakness": "Probe arithmetic and collision cluster reasoning is challenging but fair.",
+      "recommended_change": "Reinforce probe indexing formulas in preamble to reduce arithmetic errors."
+    }
+  ],
+  "question_feedback": [
+    {
+      "id": "q01",
+      "score_12": 12,
+      "pass": true,
+      "strong_pass": true,
+      "difficulty_fit": "medium-hard",
+      "main_issue": "",
+      "regenerate": false,
+      "revision_instruction": ""
+    },
+    {
+      "id": "q02",
+      "score_12": 12,
+      "pass": true,
+      "strong_pass": true,
+      "difficulty_fit": "hard",
+      "main_issue": "",
+      "regenerate": false,
+      "revision_instruction": ""
+    },
+    {
+      "id": "q03",
+      "score_12": 12,
+      "pass": true,
+      "strong_pass": true,
+      "difficulty_fit": "hard",
+      "main_issue": "",
+      "regenerate": false,
+      "revision_instruction": ""
+    },
+    {
+      "id": "q04",
+      "score_12": 12,
+      "pass": true,
+      "strong_pass": true,
+      "difficulty_fit": "medium-hard",
+      "main_issue": "",
+      "regenerate": false,
+      "revision_instruction": ""
+    },
+    {
+      "id": "q05",
+      "score_12": 12,
+      "pass": true,
+      "strong_pass": true,
+      "difficulty_fit": "medium-hard",
+      "main_issue": "",
+      "regenerate": false,
+      "revision_instruction": ""
+    },
+    {
+      "id": "q06",
+      "score_12": 12,
+      "pass": true,
+      "strong_pass": true,
+      "difficulty_fit": "hard",
+      "main_issue": "",
+      "regenerate": false,
+      "revision_instruction": ""
+    },
+    {
+      "id": "q07",
+      "score_12": 12,
+      "pass": true,
+      "strong_pass": true,
+      "difficulty_fit": "medium-hard",
+      "main_issue": "",
+      "regenerate": false,
+      "revision_instruction": ""
+    },
+    {
+      "id": "q08",
+      "score_12": 12,
+      "pass": true,
+      "strong_pass": true,
+      "difficulty_fit": "medium-hard",
+      "main_issue": "",
+      "regenerate": false,
+      "revision_instruction": ""
+    },
+    {
+      "id": "q09",
+      "score_12": 12,
+      "pass": true,
+      "strong_pass": true,
+      "difficulty_fit": "medium-hard",
+      "main_issue": "",
+      "regenerate": false,
+      "revision_instruction": ""
+    },
+    {
+      "id": "q10",
+      "score_12": 12,
+      "pass": true,
+      "strong_pass": true,
+      "difficulty_fit": "medium-hard",
+      "main_issue": "",
+      "regenerate": false,
+      "revision_instruction": ""
+    },
+    {
+      "id": "q11",
+      "score_12": 12,
+      "pass": true,
+      "strong_pass": true,
+      "difficulty_fit": "medium-hard",
+      "main_issue": "",
+      "regenerate": false,
+      "revision_instruction": ""
+    },
+    {
+      "id": "q12",
+      "score_12": 12,
+      "pass": true,
+      "strong_pass": true,
+      "difficulty_fit": "hard",
+      "main_issue": "",
+      "regenerate": false,
+      "revision_instruction": ""
+    },
+    {
+      "id": "q13",
+      "score_12": 12,
+      "pass": true,
+      "strong_pass": true,
+      "difficulty_fit": "medium-hard",
+      "main_issue": "",
+      "regenerate": false,
+      "revision_instruction": ""
+    },
+    {
+      "id": "q14",
+      "score_12": 12,
+      "pass": true,
+      "strong_pass": true,
+      "difficulty_fit": "hard",
+      "main_issue": "",
+      "regenerate": false,
+      "revision_instruction": ""
+    },
+    {
+      "id": "q15",
+      "score_12": 12,
+      "pass": true,
+      "strong_pass": true,
+      "difficulty_fit": "hard",
+      "main_issue": "",
+      "regenerate": false,
+      "revision_instruction": ""
+    },
+    {
+      "id": "q16",
+      "score_12": 12,
+      "pass": true,
+      "strong_pass": true,
+      "difficulty_fit": "medium-hard",
+      "main_issue": "",
+      "regenerate": false,
+      "revision_instruction": ""
+    },
+    {
+      "id": "q17",
+      "score_12": 12,
+      "pass": true,
+      "strong_pass": true,
+      "difficulty_fit": "hard",
+      "main_issue": "",
+      "regenerate": false,
+      "revision_instruction": ""
+    },
+    {
+      "id": "q18",
+      "score_12": 11,
+      "pass": true,
+      "strong_pass": true,
+      "difficulty_fit": "hard",
+      "main_issue": "Slightly more involved algebraic manipulation impacting speed but justified by concept.",
+      "regenerate": false,
+      "revision_instruction": "Consider breaking into smaller scaffolded parts for weaker candidates."
+    },
+    {
+      "id": "q19",
+      "score_12": 11,
+      "pass": true,
+      "strong_pass": true,
+      "difficulty_fit": "medium-hard",
+      "main_issue": "Requires both algebraic solution and reasoning about shifts - may be slow for some.",
+      "regenerate": false,
+      "revision_instruction": "Clarify instructions to highlight the constant shift strategy."
+    },
+    {
+      "id": "q20",
+      "score_12": 12,
+      "pass": true,
+      "strong_pass": true,
+      "difficulty_fit": "medium-hard",
+      "main_issue": "",
+      "regenerate": false,
+      "revision_instruction": ""
+    },
+    {
+      "id": "q21",
+      "score_12": 12,
+      "pass": true,
+      "strong_pass": true,
+      "difficulty_fit": "hard",
+      "main_issue": "",
+      "regenerate": false,
+      "revision_instruction": ""
+    },
+    {
+      "id": "q22",
+      "score_12": 11,
+      "pass": true,
+      "strong_pass": true,
+      "difficulty_fit": "hard",
+      "main_issue": "Bijective reasoning and strict boundary conditions slightly increase difficulty and speed needs.",
+      "regenerate": false,
+      "revision_instruction": "Add clarifying note about boundary restrictions and typical Catalan path conventions."
+    },
+    {
+      "id": "q23",
+      "score_12": 12,
+      "pass": true,
+      "strong_pass": true,
+      "difficulty_fit": "hard",
+      "main_issue": "",
+      "regenerate": false,
+      "revision_instruction": ""
+    },
+    {
+      "id": "q24",
+      "score_12": 12,
+      "pass": true,
+      "strong_pass": true,
+      "difficulty_fit": "hard",
+      "main_issue": "",
+      "regenerate": false,
+      "revision_instruction": ""
+    },
+    {
+      "id": "q25",
+      "score_12": 12,
+      "pass": true,
+      "strong_pass": true,
+      "difficulty_fit": "hard",
+      "main_issue": "",
+      "regenerate": false,
+      "revision_instruction": ""
+    },
+    {
+      "id": "q26",
+      "score_12": 12,
+      "pass": true,
+      "strong_pass": true,
+      "difficulty_fit": "hard",
+      "main_issue": "",
+      "regenerate": false,
+      "revision_instruction": ""
+    },
+    {
+      "id": "q27",
+      "score_12": 12,
+      "pass": true,
+      "strong_pass": true,
+      "difficulty_fit": "hard",
+      "main_issue": "",
+      "regenerate": false,
+      "revision_instruction": ""
+    },
+    {
+      "id": "q28",
+      "score_12": 12,
+      "pass": true,
+      "strong_pass": true,
+      "difficulty_fit": "hard",
+      "main_issue": "",
+      "regenerate": false,
+      "revision_instruction": ""
+    },
+    {
+      "id": "q29",
+      "score_12": 12,
+      "pass": true,
+      "strong_pass": true,
+      "difficulty_fit": "hard",
+      "main_issue": "",
+      "regenerate": false,
+      "revision_instruction": ""
+    },
+    {
+      "id": "q30",
+      "score_12": 12,
+      "pass": true,
+      "strong_pass": true,
+      "difficulty_fit": "hard",
+      "main_issue": "",
+      "regenerate": false,
+      "revision_instruction": ""
+    }
+  ],
+  "regeneration_candidates": [],
+  "improvement_plan": [
+    {
+      "priority": "high",
+      "change": "Add more partial scaffolding or step-wised breakdown in hardest short-answer derivations to assist pacing and reduce risk of speed penalty.",
+      "reason": "Hardest algebraic and bijection problems have borderline speed calibration; scaffolding ensures better learner engagement without loss of rigor."
+    },
+    {
+      "priority": "medium",
+      "change": "Include clarifying instructions emphasizing orderings and indexing offsets in Catalan and generating-function questions.",
+      "reason": "Misinterpretation of indexing or order biases first-step mistakes potentially unrelated to core skill, affecting diagnostic utility."
+    },
+    {
+      "priority": "medium",
+      "change": "Reinforce probe formulas and hash table invariants in the problem preambles for clarity and consistent speed.",
+      "reason": "Repeated arithmetic errors in modular arithmetic and probe calculations slow down honest learners and distract from core reasoning."
+    }
+  ]
+}

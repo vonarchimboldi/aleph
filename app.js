@@ -1,7 +1,7 @@
 const STORAGE_KEY = "learning-studio-data-v2";
 const LEGACY_STORAGE_KEYS = ["learning-studio-data-v1"];
 const SESSION_KEY = "aleph-session";
-const COURSE_PLAN_VERSION = "seeded-user-canonical-workspace-v130";
+const COURSE_PLAN_VERSION = "seeded-user-canonical-workspace-v131";
 const MAX_FEEDBACK_ATTACHMENT_BYTES = 3 * 1024 * 1024;
 const MAX_COMPRESSED_FEEDBACK_BYTES = 2400 * 1024;
 const MAX_FEEDBACK_PDF_PAGES = 6;
@@ -30448,6 +30448,16 @@ function cmiDiscreteDsaReviewQuizzes(now, startDate) {
       scopeDetails: [
         "Discrete Math groups: binomial coefficients/permutations, relations/state machines, combinations/casework.",
         "DSA groups: linked-list invariants, stacks/queues/traces, implementation edge cases."
+      ]
+    }),
+    cmiDiscreteDsaReviewQuiz(now, startDate, {
+      week: 4,
+      titleDate: "July 26",
+      dateOffset: 27,
+      materialUrl: "psets/week-04/july-26-cmi-msds-dm-dsa-review-quiz.html",
+      scopeDetails: [
+        "Discrete Math groups: generating-function modeling, finite sums and linear recurrences, Catalan decompositions.",
+        "DSA groups: set/map/dictionary semantics, hash collision traces, hash-table invariants and complexity."
       ]
     })
   ];

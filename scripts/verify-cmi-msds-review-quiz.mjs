@@ -37,6 +37,17 @@ const quizzes = [
       "dsa-stacks-queues-traces",
       "dsa-implementation-edge-cases"
     ]
+  },
+  {
+    file: "psets/week-04/july-26-cmi-msds-dm-dsa-review-quiz.html",
+    expectedTopics: [
+      "dm-generating-functions-modeling",
+      "dm-sums-linear-recurrences",
+      "dm-catalan-decomposition",
+      "dsa-set-map-dictionary-semantics",
+      "dsa-hash-collision-traces",
+      "dsa-hash-invariants-complexity"
+    ]
   }
 ];
 
