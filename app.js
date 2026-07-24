@@ -1,7 +1,7 @@
 const STORAGE_KEY = "learning-studio-data-v2";
 const LEGACY_STORAGE_KEYS = ["learning-studio-data-v1"];
 const SESSION_KEY = "aleph-session";
-const COURSE_PLAN_VERSION = "seeded-user-canonical-workspace-v129";
+const COURSE_PLAN_VERSION = "seeded-user-canonical-workspace-v130";
 const MAX_FEEDBACK_ATTACHMENT_BYTES = 3 * 1024 * 1024;
 const MAX_COMPRESSED_FEEDBACK_BYTES = 2400 * 1024;
 const MAX_FEEDBACK_PDF_PAGES = 6;
@@ -941,7 +941,7 @@ function buildGateDaBasicPlan(now, accountTypes, sections, user = basicGateDaUse
         title: "Machine Learning",
         date: monday,
         status: "In progress",
-        details: "GATE DA Basic Machine Learning starts with the official Data -> Model -> Loss/Objective frame. Current built chapters cover datasets, model families, loss/objective framing, evaluation metrics, validation methodology, regression, classifier boundaries, and Naive Bayes generative classification.",
+        details: "GATE DA Basic Machine Learning starts with the official Data -> Model -> Loss/Objective frame. Current built chapters cover datasets, model families, loss/objective framing, evaluation metrics, validation methodology, regression, classifier boundaries, perceptron updates, logistic regression, log odds, and Naive Bayes generative classification.",
         sectionIds: machineLearningSections.map((section) => section.id),
         updatedAt: now
       }
@@ -1749,6 +1749,66 @@ function buildGateDaBasicPlan(now, accountTypes, sections, user = basicGateDaUse
         updatedAt: now
       },
       {
+        id: "schedule-machine-learning-chapter-5-study",
+        title: "ML Chapter 5: Perceptron and Linear Classifier Updates",
+        week: 5,
+        subject: "Machine Learning",
+        kind: "Study",
+        date: weekFiveMonday,
+        details: "Study mistake-driven linear classifier training: perceptron update triggers, old versus new weights, bias updates, score changes, separability, XOR failure, and cycling.",
+        updatedAt: now
+      },
+      {
+        id: "schedule-machine-learning-chapter-5-practice",
+        title: "ML Chapter 5: Labelled Practice",
+        week: 5,
+        subject: "Machine Learning",
+        kind: "Practice",
+        date: addDays(weekFiveMonday, 2),
+        details: "Solve labelled perceptron practice: one-step updates, score changes, boundary movement, sign conventions, order dependence, and convergence assumptions.",
+        updatedAt: now
+      },
+      {
+        id: "schedule-machine-learning-chapter-5-review",
+        title: "ML Chapter 5: Objective Review",
+        week: 5,
+        subject: "Machine Learning",
+        kind: "Review",
+        date: weekFiveSunday,
+        details: "Take the graph-backed objective review for perceptron updates and linear-classifier training.",
+        updatedAt: now
+      },
+      {
+        id: "schedule-machine-learning-chapter-6-study",
+        title: "ML Chapter 6: Logistic Regression and Log Odds",
+        week: 6,
+        subject: "Machine Learning",
+        kind: "Study",
+        date: weekSixMonday,
+        details: "Study logistic regression as discriminative probabilistic classification: score, odds, log odds, sigmoid, coefficient interpretation, cross-entropy, thresholds, XOR failure, and calibration.",
+        updatedAt: now
+      },
+      {
+        id: "schedule-machine-learning-chapter-6-practice",
+        title: "ML Chapter 6: Labelled Practice",
+        week: 6,
+        subject: "Machine Learning",
+        kind: "Practice",
+        date: addDays(weekSixMonday, 2),
+        details: "Solve labelled logistic-regression practice: scores, sigmoid values, log-odds interpretation, odds multipliers, class decisions, log loss, and model identity.",
+        updatedAt: now
+      },
+      {
+        id: "schedule-machine-learning-chapter-6-review",
+        title: "ML Chapter 6: Objective Review",
+        week: 6,
+        subject: "Machine Learning",
+        kind: "Review",
+        date: weekSixSunday,
+        details: "Take the graph-backed objective review for logistic regression, log odds, thresholds, and probabilistic classifier failure modes.",
+        updatedAt: now
+      },
+      {
         id: "schedule-machine-learning-chapter-7-study",
         title: "ML Chapter 7: Naive Bayes and Generative Classification",
         week: 7,
@@ -2025,11 +2085,29 @@ function buildGateDaBasicPlan(now, accountTypes, sections, user = basicGateDaUse
         updatedAt: now
       },
       {
+        id: "test-machine-learning-chapter-5-objective-review",
+        title: "ML Chapter 5 Objective Review",
+        date: weekFiveSunday,
+        details: "Objective end-of-chapter quiz for perceptron updates: mistake triggers, update direction, old versus new weights, bias updates, score changes, sign conventions, separability, XOR failure, and convergence assumptions.",
+        sectionId: machineLearningSections[4]?.id,
+        quizId: "quiz-machine-learning-chapter-5-objective-review",
+        updatedAt: now
+      },
+      {
+        id: "test-machine-learning-chapter-6-objective-review",
+        title: "ML Chapter 6 Objective Review",
+        date: weekSixSunday,
+        details: "Objective end-of-chapter quiz for logistic regression: linear score, odds, log odds, sigmoid probabilities, coefficient interpretation, threshold decisions, cross-entropy/log loss, discriminative identity, and XOR failure.",
+        sectionId: machineLearningSections[5]?.id,
+        quizId: "quiz-machine-learning-chapter-6-objective-review",
+        updatedAt: now
+      },
+      {
         id: "test-machine-learning-chapter-7-objective-review",
         title: "ML Chapter 7 Objective Review",
         date: weekSevenSunday,
         details: "Objective end-of-chapter quiz for Naive Bayes: priors, likelihoods, posteriors, conditional independence, MAP classification, parameter counting, smoothing, misclassification probability, and generative-model failure modes.",
-        sectionId: machineLearningSections[4]?.id,
+        sectionId: machineLearningSections[6]?.id,
         quizId: "quiz-machine-learning-chapter-7-objective-review",
         updatedAt: now
       }
@@ -2918,6 +2996,72 @@ function buildGateDaBasicPlan(now, accountTypes, sections, user = basicGateDaUse
         updatedAt: now
       },
       {
+        id: "task-machine-learning-chapter-5-read",
+        week: 5,
+        title: "ML Ch 5: Read perceptron updates",
+        type: "Study",
+        date: weekFiveMonday,
+        status: "todo",
+        done: false,
+        details: "Open Subjects -> Machine Learning -> Chapter 5 and study mistake-driven updates, score changes, bias updates, separability, XOR failure, and cycling.",
+        updatedAt: now
+      },
+      {
+        id: "task-machine-learning-chapter-5-practice",
+        week: 5,
+        title: "ML Ch 5: Solve labelled practice",
+        type: "Practice",
+        date: addDays(weekFiveMonday, 2),
+        status: "todo",
+        done: false,
+        details: "Attempt the perceptron update practice problems before opening the worked solutions.",
+        updatedAt: now
+      },
+      {
+        id: "task-machine-learning-chapter-5-review",
+        week: 5,
+        title: "ML Ch 5: Take objective review",
+        type: "Review",
+        date: weekFiveSunday,
+        status: "todo",
+        done: false,
+        details: "Submit the Chapter 5 objective quiz so the learner record logs perceptron-update strengths and weaknesses.",
+        updatedAt: now
+      },
+      {
+        id: "task-machine-learning-chapter-6-read",
+        week: 6,
+        title: "ML Ch 6: Read logistic regression",
+        type: "Study",
+        date: weekSixMonday,
+        status: "todo",
+        done: false,
+        details: "Open Subjects -> Machine Learning -> Chapter 6 and study scores, sigmoid probabilities, odds, log odds, coefficient interpretation, thresholds, log loss, and XOR failure.",
+        updatedAt: now
+      },
+      {
+        id: "task-machine-learning-chapter-6-practice",
+        week: 6,
+        title: "ML Ch 6: Solve labelled practice",
+        type: "Practice",
+        date: addDays(weekSixMonday, 2),
+        status: "todo",
+        done: false,
+        details: "Attempt the logistic regression and log-odds practice problems before opening the worked solutions.",
+        updatedAt: now
+      },
+      {
+        id: "task-machine-learning-chapter-6-review",
+        week: 6,
+        title: "ML Ch 6: Take objective review",
+        type: "Review",
+        date: weekSixSunday,
+        status: "todo",
+        done: false,
+        details: "Submit the Chapter 6 objective quiz so the learner record logs logistic-regression strengths and weaknesses.",
+        updatedAt: now
+      },
+      {
         id: "task-machine-learning-chapter-7-read",
         week: 7,
         title: "ML Ch 7: Read Naive Bayes",
@@ -2975,7 +3119,7 @@ function buildGateDaBasicPlan(now, accountTypes, sections, user = basicGateDaUse
         startDate: monday,
         endDate: "2026-08-30",
         status: "active",
-        details: `GATE DA Basic plan surfaces: Subjects, Tasks, Schedule, Tests, Feedback, Resources, and Share. Recommended pace: study Probability, Linear Algebra, DSA, and Machine Learning in parallel. Every 15 days, Aleph should generate an adaptive cumulative review quiz from prior performance, repeating missed concepts more often, reducing mastered concepts, and keeping high-weight exam topics in rotation. Current material build: Probability Chapters 1-10, Linear Algebra Chapters 1-12 plus a chapterless cumulative past-paper style drill, DSA Chapters 1-9 with a progression gate before Chapter 3, and Machine Learning Chapters 1-4 plus Chapter 7 Naive Bayes.${trialNote}`,
+        details: `GATE DA Basic plan surfaces: Subjects, Tasks, Schedule, Tests, Feedback, Resources, and Share. Recommended pace: study Probability, Linear Algebra, DSA, and Machine Learning in parallel. Every 15 days, Aleph should generate an adaptive cumulative review quiz from prior performance, repeating missed concepts more often, reducing mastered concepts, and keeping high-weight exam topics in rotation. Current material build: Probability Chapters 1-10, Linear Algebra Chapters 1-12 plus a chapterless cumulative past-paper style drill, DSA Chapters 1-9 with a progression gate before Chapter 3, and Machine Learning Chapters 1-7.${trialNote}`,
         updatedAt: now
       }
     ],
@@ -3109,6 +3253,20 @@ function buildGateDaBasicPlan(now, accountTypes, sections, user = basicGateDaUse
         updatedAt: now
       },
       {
+        id: "feedback-machine-learning-chapter-5",
+        title: "Machine Learning Chapter 5 feedback focus",
+        date: weekFiveSunday,
+        details: "Review misses for updating on correctly classified points, using the wrong update sign, mixing old and new weights, forgetting the bias update, failing to show the misclassified score improves, assuming convergence without separability, and missing XOR cycling.",
+        updatedAt: now
+      },
+      {
+        id: "feedback-machine-learning-chapter-6",
+        title: "Machine Learning Chapter 6 feedback focus",
+        date: weekSixSunday,
+        details: "Review misses for confusing probability, odds, and log odds; treating coefficients as fixed probability changes; using the wrong sigmoid value; misreading the 0.5 threshold; mixing logistic regression with Naive Bayes; and ignoring linear-boundary failure on XOR.",
+        updatedAt: now
+      },
+      {
         id: "feedback-machine-learning-chapter-7",
         title: "Machine Learning Chapter 7 feedback focus",
         date: weekSevenSunday,
@@ -3154,6 +3312,22 @@ function buildGateDaBasicPlan(now, accountTypes, sections, user = basicGateDaUse
         title: "Machine Learning Chapter 4: Classification as Scores, Boundaries, and Margins",
         date: weekFourMonday,
         details: "Open Subjects -> Machine Learning to study Chapter 4 and then take the objective review in Tests.",
+        link: "",
+        updatedAt: now
+      },
+      {
+        id: "resource-machine-learning-perceptron-updates",
+        title: "Machine Learning Chapter 5: Perceptron and Linear Classifier Updates",
+        date: weekFiveMonday,
+        details: "Open Subjects -> Machine Learning to study mistake-driven updates, score changes, bias updates, separability assumptions, XOR failure, and update simulation.",
+        link: "",
+        updatedAt: now
+      },
+      {
+        id: "resource-machine-learning-logistic-regression",
+        title: "Machine Learning Chapter 6: Logistic Regression and Log Odds",
+        date: weekSixMonday,
+        details: "Open Subjects -> Machine Learning to study linear scores, sigmoid probabilities, odds, log odds, coefficient interpretation, threshold decisions, cross-entropy, and logistic failure modes.",
         link: "",
         updatedAt: now
       },
@@ -4401,6 +4575,264 @@ function gateDaMachineLearningSections(updatedAt = new Date().toISOString()) {
         "XOR is the canonical tiny dataset that a single linear boundary cannot separate.",
         "Margin measures score-side confidence, not just correctness.",
         "Boundary failures include non-separability, outliers, scaling, imbalance, and near-boundary ambiguity."
+      ],
+      updatedAt
+    },
+    {
+      id: "gate-da-machine-learning-perceptron-updates",
+      exam: "GATE DA",
+      accountTier: "Basic",
+      subject: "Machine Learning",
+      chapter: "Chapter 5",
+      section: "5",
+      title: "Perceptron and Linear Classifier Updates",
+      summary: "Perceptron training is the simplest mistake-driven way to fit a linear classifier: update only after a mistake, move weights toward the misclassified point, and rely on linear separability for convergence.",
+      sectionPreview: "Chapter 4 taught scores and boundaries. Chapter 5 asks how a linear boundary is trained from labelled mistakes. GATE-style questions usually ask for one update, the new score, or the condition under which the algorithm converges.",
+      previewActivity: "Let w=(0,0), b=0, x=(2,1), y=+1, and predict +1 only when w^T x+b > 0. Is the point misclassified? If yes, what should happen to w and b?",
+      chapterIntro: [
+        "The perceptron is a linear classifier trained by mistakes. If a point is already on the correct side of the boundary, no update is made.",
+        "If a labelled point is misclassified, the update changes w and b so the score for that same point moves in the correct direction.",
+        "For GATE DA Basic, the important work is hand simulation: old score, prediction, mistake check, update, new score, and convergence diagnosis."
+      ],
+      bookSections: [
+        {
+          number: "5.1",
+          title: "When Updates Happen",
+          paragraphs: [
+            "Use labels y in {+1,-1} and score s=w^T x+b. A compact mistake test is y*s <= 0 when equality is treated as a mistake.",
+            "If y*s is positive, the point is correctly classified. If y*s is zero or negative, the update is triggered under the usual perceptron convention.",
+            "Always check the sign convention in the question. Some statements predict +1 when s>=0, while others require s>0."
+          ],
+          blocks: [
+            { type: "principle", title: "Mistake check", body: "Do not update before checking whether the current classifier actually made a mistake." }
+          ]
+        },
+        {
+          number: "5.2",
+          title: "The Update Rule",
+          paragraphs: [
+            "With learning rate 1, the standard update is w_new = w_old + yx and b_new = b_old + y.",
+            "A misclassified positive point adds x to w and increases b. A misclassified negative point subtracts x from w and decreases b.",
+            "The update must be applied to the old values. Mixing old w with new b midway is a common trace error."
+          ],
+          blocks: [
+            { type: "formula", title: "Perceptron update", body: "If y(w^T x+b) <= 0, set w <- w + yx and b <- b + y." }
+          ]
+        },
+        {
+          number: "5.3",
+          title: "Why the Score Moves Correctly",
+          paragraphs: [
+            "After an update, the same point's score changes by y||x||^2 plus the bias contribution y.",
+            "Equivalently, the signed score y(w^T x+b) increases by ||x||^2+1 when the bias is included as a coordinate.",
+            "That algebra is often enough to answer whether the update helped the misclassified point."
+          ],
+          blocks: [
+            { type: "checkpoint", title: "Checkpoint", body: "If y=+1, does adding x to w increase or decrease w^T x for the same x?" }
+          ]
+        },
+        {
+          number: "5.4",
+          title: "Geometry, Separability, and XOR",
+          paragraphs: [
+            "The weight vector is perpendicular to the decision boundary. Updating w changes the boundary orientation; updating b shifts it.",
+            "The perceptron convergence guarantee requires linearly separable data and a consistent update convention.",
+            "On XOR in the original two features, no single linear boundary works, so the algorithm can keep cycling instead of settling."
+          ],
+          blocks: [
+            { type: "warning", title: "Convergence trap", body: "Do not claim perceptron always converges. The standard guarantee needs linear separability." }
+          ]
+        },
+        {
+          number: "5.5",
+          title: "GATE-Style Simulation Table",
+          paragraphs: [
+            "For each example, write old w, old b, score, predicted label, true label, mistake or no mistake, then new w and new b.",
+            "If only one example is asked, do not simulate a full training run. Compute the one requested update and the new score.",
+            "If the question asks about order dependence, note that different example orders can produce different intermediate boundaries."
+          ],
+          blocks: [
+            { type: "strategy", title: "Trace row", body: "old state -> score -> mistake check -> update -> new state." }
+          ]
+        }
+      ],
+      concepts: [
+        { name: "Mistake trigger", description: "The condition that decides whether to update.", cue: "Check y times score." },
+        { name: "Perceptron update", description: "w <- w+yx and b <- b+y after a mistake.", cue: "Positive adds; negative subtracts." },
+        { name: "Old versus new state", description: "The update uses old weights and bias.", cue: "Do not mix states." },
+        { name: "Score improvement", description: "The update moves the misclassified point toward the correct side.", cue: "Recompute signed score." },
+        { name: "Linear separability", description: "The convergence condition for the standard perceptron theorem.", cue: "One line must separate." },
+        { name: "XOR cycling", description: "A nonseparable pattern where updates need not settle.", cue: "Opposite corners share labels." }
+      ],
+      techniques: [
+        { name: "Run one update", when: "w, b, x, and y are given.", move: "Compute score, test mistake, then apply w+yx and b+y if needed." },
+        { name: "Compare old and new score", when: "asked whether an update helped.", move: "Evaluate the score before and after for the same point." },
+        { name: "Diagnose convergence", when: "the prompt asks if training must finish.", move: "Check whether the data is linearly separable." },
+        { name: "Track sign convention", when: "the prediction rule includes equality.", move: "Use the exact inequality from the question." },
+        { name: "Explain XOR failure", when: "opposite-corner labels appear.", move: "State no single linear boundary exists in the original features." }
+      ],
+      practiceProblems: machineLearningPerceptronUpdatesProblems(),
+      reviewPrompts: [
+        "When does the perceptron update?",
+        "What is the update after a misclassified positive point?",
+        "What is the update after a misclassified negative point?",
+        "Why must old and new weights be kept separate in a trace?",
+        "How can you show the update improves the signed score of the current point?",
+        "What assumption is needed for the standard convergence guarantee?",
+        "Why does XOR cause trouble for a single linear perceptron?"
+      ],
+      reviewQuiz: {
+        id: "quiz-machine-learning-chapter-5-objective-review",
+        title: "ML Chapter 5 Objective Review",
+        instructions: "Complete this after studying perceptron updates. The quiz checks mistake triggers, update direction, bias updates, score changes, sign conventions, separability, XOR failure, and convergence assumptions.",
+        questions: machineLearningPerceptronUpdatesReviewQuestions()
+      },
+      readingQuestions: [
+        "What does y(w^T x+b) tell you?",
+        "Why does a misclassified positive point add x to w?",
+        "How does the bias update shift the boundary?",
+        "What happens if data is not linearly separable?",
+        "Why is a one-step trace often enough for GATE?"
+      ],
+      chapterSummary: [
+        "Perceptron is mistake-driven linear classifier training.",
+        "The standard update is w <- w+yx and b <- b+y.",
+        "A positive mistake pushes the score up; a negative mistake pushes it down.",
+        "Old and new states must be tracked carefully.",
+        "Convergence requires linear separability.",
+        "XOR is the canonical nonseparable failure in the original features."
+      ],
+      updatedAt
+    },
+    {
+      id: "gate-da-machine-learning-logistic-regression-log-odds",
+      exam: "GATE DA",
+      accountTier: "Basic",
+      subject: "Machine Learning",
+      chapter: "Chapter 6",
+      section: "6",
+      title: "Logistic Regression and Log Odds",
+      summary: "Logistic regression is a discriminative probabilistic classifier: a linear score is interpreted as log odds, passed through a sigmoid, and trained with log loss.",
+      sectionPreview: "This chapter is where score, probability, and interpretation meet. The linear score is not the probability; it is the log odds. The sigmoid converts log odds to probability, and a threshold converts probability to a class.",
+      previewActivity: "If log odds are 0, the odds are e^0=1 and the probability is 1/(1+1)=0.5. What class would a 0.5-threshold classifier predict if positive is chosen at p>=0.5?",
+      chapterIntro: [
+        "Logistic regression keeps the linear score from Chapter 4 but changes the interpretation. The score z=w^T x+b is the log odds of the positive class.",
+        "The sigmoid maps any real z to a probability between 0 and 1. This lets the model express confidence without changing the fact that the 0.5 decision boundary is linear.",
+        "The hardest beginner mistake is coefficient interpretation. A coefficient adds to log odds and multiplies odds; it is not a fixed additive change in probability."
+      ],
+      bookSections: [
+        {
+          number: "6.1",
+          title: "Score, Odds, Log Odds, Probability",
+          paragraphs: [
+            "Odds compare success probability to failure probability: odds = p/(1-p). If p=0.75, odds are 3.",
+            "Log odds are the logarithm of odds: log(p/(1-p)). Logistic regression sets this equal to the linear score w^T x+b.",
+            "Probability, odds, and log odds carry the same information but use different scales. Probability is bounded; log odds can be any real number."
+          ],
+          blocks: [
+            { type: "definition", title: "Definition: log odds", body: "log odds = log(p/(1-p)). Logistic regression models log odds as a linear function of the features." }
+          ]
+        },
+        {
+          number: "6.2",
+          title: "Sigmoid and Decision Boundary",
+          paragraphs: [
+            "The sigmoid function sigma(z)=1/(1+e^{-z}) turns log odds z into probability.",
+            "At z=0, sigma(z)=0.5. Therefore the 0.5 decision boundary is w^T x+b=0.",
+            "The output is nonlinear as a probability, but the boundary at threshold 0.5 is linear in the original features."
+          ],
+          blocks: [
+            { type: "formula", title: "Sigmoid", body: "P(Y=1|x)=sigma(w^T x+b)=1/(1+e^{-(w^T x+b)})." }
+          ]
+        },
+        {
+          number: "6.3",
+          title: "Interpreting Coefficients",
+          paragraphs: [
+            "Increasing feature x_j by one unit increases log odds by w_j when other features are fixed.",
+            "The odds are multiplied by e^{w_j}. If w_j=ln 2, the odds double for a one-unit increase.",
+            "The probability change is not fixed. The same coefficient causes different probability changes depending on the starting score."
+          ],
+          blocks: [
+            { type: "warning", title: "Coefficient trap", body: "A logistic coefficient is not an additive probability increase. It is a log-odds change and odds multiplier." }
+          ]
+        },
+        {
+          number: "6.4",
+          title: "Loss and Model Identity",
+          paragraphs: [
+            "Logistic regression is trained with cross-entropy or log loss, which strongly penalizes confident wrong probabilities.",
+            "It is discriminative because it models P(Y|X) directly rather than modelling P(X|Y) and P(Y).",
+            "Naive Bayes uses priors and likelihoods; logistic regression uses a direct score-to-probability rule."
+          ],
+          blocks: [
+            { type: "principle", title: "Model identity", body: "Sigmoid of a linear score points to logistic regression; priors and likelihoods point to Naive Bayes." }
+          ]
+        },
+        {
+          number: "6.5",
+          title: "Failure Modes",
+          paragraphs: [
+            "With the original features, standard logistic regression has a linear 0.5 boundary. It fails on XOR for the same geometric reason as other single linear boundaries.",
+            "Separable data can make coefficients grow large without improving the class boundary much, so regularization often matters.",
+            "Threshold choice and calibration matter when probabilities are used for decisions rather than only class labels."
+          ],
+          blocks: [
+            { type: "strategy", title: "Failure diagnosis", body: "Name whether the issue is linear-boundary limitation, separability instability, coefficient misinterpretation, calibration, or threshold choice." }
+          ]
+        }
+      ],
+      concepts: [
+        { name: "Linear score", description: "The value z=w^T x+b before the sigmoid.", cue: "Compute z first." },
+        { name: "Odds", description: "p/(1-p), the ratio of success probability to failure probability.", cue: "Probability to ratio." },
+        { name: "Log odds", description: "log(p/(1-p)), modelled by the linear score.", cue: "Score equals log odds." },
+        { name: "Sigmoid", description: "The function that maps a real score to a probability.", cue: "1/(1+e^{-z})." },
+        { name: "Odds multiplier", description: "e^{w_j}, the effect of a one-unit feature increase on odds.", cue: "Coefficient exponentiates." },
+        { name: "Decision threshold", description: "A probability cutoff used to assign a class.", cue: "0.5 means z=0." },
+        { name: "Cross-entropy", description: "Logistic regression's probabilistic classification loss.", cue: "Confident wrong is expensive." },
+        { name: "Linear boundary failure", description: "XOR cannot be separated without nonlinear features.", cue: "Probability does not fix geometry." }
+      ],
+      techniques: [
+        { name: "Compute sigmoid probability", when: "a score z is given.", move: "Use sigma(z)=1/(1+e^{-z}) or known values such as z=0 -> 0.5." },
+        { name: "Convert log odds", when: "log odds are given.", move: "Exponentiate to odds, then use p=odds/(1+odds)." },
+        { name: "Classify by threshold", when: "a probability threshold is given.", move: "Compare p to the threshold or convert threshold 0.5 to z=0." },
+        { name: "Interpret coefficient", when: "a feature coefficient is asked about.", move: "Say log-odds change w_j and odds multiplier e^{w_j}, not fixed probability change." },
+        { name: "Compare with Naive Bayes", when: "model identity is asked.", move: "Logistic is discriminative P(Y|X); Naive Bayes is generative P(Y), P(X|Y)." },
+        { name: "Diagnose XOR failure", when: "opposite-corner labels appear.", move: "State that the 0.5 boundary is still linear without nonlinear features." }
+      ],
+      practiceProblems: machineLearningLogisticRegressionProblems(),
+      reviewPrompts: [
+        "What is the difference between probability, odds, and log odds?",
+        "Why is w^T x+b called the log odds?",
+        "What does the sigmoid do?",
+        "Why is the 0.5 boundary linear?",
+        "How should a logistic coefficient be interpreted?",
+        "Why is it wrong to call a coefficient a fixed probability increase?",
+        "Why is logistic regression discriminative?",
+        "How is logistic regression different from Naive Bayes?",
+        "Why does logistic regression fail on XOR without nonlinear features?"
+      ],
+      reviewQuiz: {
+        id: "quiz-machine-learning-chapter-6-objective-review",
+        title: "ML Chapter 6 Objective Review",
+        instructions: "Complete this after studying logistic regression and log odds. The quiz checks score-to-probability conversion, odds/log-odds interpretation, coefficient meaning, threshold decisions, cross-entropy, discriminative identity, and linear-boundary failure.",
+        questions: machineLearningLogisticRegressionReviewQuestions()
+      },
+      readingQuestions: [
+        "What is the linear score before the sigmoid?",
+        "How do odds differ from probability?",
+        "Why does z=0 imply probability 0.5?",
+        "What does e^{w_j} mean?",
+        "Why is logistic regression not Naive Bayes?",
+        "What does XOR reveal about the boundary?"
+      ],
+      chapterSummary: [
+        "Logistic regression models log odds as w^T x+b.",
+        "The sigmoid converts log odds to probability.",
+        "The 0.5 decision boundary is w^T x+b=0.",
+        "A coefficient changes log odds and multiplies odds; it is not a fixed probability change.",
+        "Logistic regression is discriminative and uses cross-entropy/log loss.",
+        "Standard logistic regression still has a linear boundary in the original features."
       ],
       updatedAt
     },
@@ -15462,6 +15894,446 @@ function machineLearningClassificationBoundariesReviewQuestions() {
   }));
 }
 
+function machineLearningPerceptronUpdatesProblems() {
+  return [
+    {
+      label: "Problem 1: Mistake trigger",
+      concept: "Mistake trigger",
+      difficulty: "Mechanics",
+      technique: "Run one update",
+      prompt: "Let w=(1,-1), b=0, x=(1,2), y=-1. Compute y(w^T x+b). Does the standard perceptron update trigger if y*s <= 0?",
+      solution: "s=1(1)+(-1)(2)+0=-1. y*s=(-1)(-1)=1, so the point is correctly classified and no update triggers."
+    },
+    {
+      label: "Problem 2: Positive update",
+      concept: "Perceptron update",
+      difficulty: "Mechanics",
+      technique: "Run one update",
+      prompt: "Let w=(0,0), b=0, x=(2,1), y=+1. Using w<-w+yx and b<-b+y after a mistake, find the new w and b.",
+      solution: "The old score is 0, so y*s=0 and the update triggers. w_new=(0,0)+(2,1)=(2,1), b_new=1."
+    },
+    {
+      label: "Problem 3: Negative update",
+      concept: "Perceptron update",
+      difficulty: "Mechanics",
+      technique: "Run one update",
+      prompt: "Let w=(1,1), b=0, x=(2,1), y=-1. Check the mistake condition and update if needed.",
+      solution: "s=1*2+1*1=3. y*s=-3, so it is a mistake. w_new=(1,1)+(-1)(2,1)=(-1,0), b_new=-1."
+    },
+    {
+      label: "Problem 4: New score",
+      concept: "Score improvement",
+      difficulty: "GATE-style",
+      technique: "Compare old and new score",
+      prompt: "Using the result of Problem 2, compute the new score on x=(2,1).",
+      solution: "With w=(2,1), b=1, score = 2*2+1*1+1=6. The positive point now has a positive score."
+    },
+    {
+      label: "Problem 5: Sign convention",
+      concept: "Sign convention",
+      difficulty: "GATE-style",
+      technique: "Track sign convention",
+      prompt: "A rule predicts +1 if s>=0. For y=-1 and s=0, is the point correctly classified?",
+      solution: "No. The rule predicts +1 at equality, but the true label is -1, so it is misclassified."
+    },
+    {
+      label: "Problem 6: Old versus new",
+      concept: "Old versus new state",
+      difficulty: "Concept",
+      technique: "Run one update",
+      prompt: "Why should a perceptron trace write old w, old b, score, mistake check, and then new w, new b in separate columns?",
+      solution: "The score and mistake check must use the old classifier. The update then creates the new classifier. Mixing old and new values can give the wrong score and wrong second update."
+    },
+    {
+      label: "Problem 7: Convergence condition",
+      concept: "Linear separability",
+      difficulty: "Concept",
+      technique: "Diagnose convergence",
+      prompt: "What assumption is needed for the standard perceptron convergence guarantee?",
+      solution: "The labelled data must be linearly separable under the chosen feature representation, with a consistent update rule."
+    },
+    {
+      label: "Problem 8: XOR failure",
+      concept: "XOR cycling",
+      difficulty: "Application",
+      technique: "Explain XOR failure",
+      prompt: "Why does the perceptron not have a convergence guarantee on XOR in the original two features?",
+      solution: "XOR is not linearly separable in the original two features. Since no single line can correctly classify all points, mistake-driven updates can keep cycling."
+    }
+  ];
+}
+
+function machineLearningPerceptronUpdatesReviewQuestions() {
+  const metadata = {
+    "ml-per-review-1": { targetConcept: "mistake-trigger", prereqsUsed: ["score-rule"], difficulty: 1, gateWeight: "high" },
+    "ml-per-review-2": { targetConcept: "positive-update", prereqsUsed: ["mistake-trigger"], difficulty: 2, gateWeight: "high" },
+    "ml-per-review-3": { targetConcept: "negative-update", prereqsUsed: ["mistake-trigger"], difficulty: 2, gateWeight: "high" },
+    "ml-per-review-4": { targetConcept: "bias-update", prereqsUsed: ["positive-update"], difficulty: 2, gateWeight: "medium" },
+    "ml-per-review-5": { targetConcept: "score-improvement", prereqsUsed: ["positive-update"], difficulty: 3, gateWeight: "high" },
+    "ml-per-review-6": { targetConcept: "sign-convention", prereqsUsed: ["mistake-trigger"], difficulty: 2, gateWeight: "medium" },
+    "ml-per-review-7": { targetConcept: "old-new-state", prereqsUsed: ["mistake-trigger"], difficulty: 2, gateWeight: "medium" },
+    "ml-per-review-8": { targetConcept: "linear-separability", prereqsUsed: ["decision-boundary"], difficulty: 2, gateWeight: "high" },
+    "ml-per-review-9": { targetConcept: "xor-cycling", prereqsUsed: ["linear-separability"], difficulty: 2, gateWeight: "high" },
+    "ml-per-review-10": { targetConcept: "update-simulation", prereqsUsed: ["mistake-trigger", "positive-update", "score-improvement"], difficulty: 3, gateWeight: "high" }
+  };
+  const questions = [
+    {
+      id: "ml-per-review-1",
+      kind: "single concept",
+      tags: ["mistake-trigger", "score-rule"],
+      prompt: "For y in {+1,-1}, which quantity is most direct for checking a perceptron mistake?",
+      options: [
+        { id: "a", text: "y(w^T x+b)" },
+        { id: "b", text: "Only ||w||" },
+        { id: "c", text: "Only b" },
+        { id: "d", text: "The test accuracy" }
+      ],
+      answer: "a"
+    },
+    {
+      id: "ml-per-review-2",
+      kind: "mixed: two concepts",
+      tags: ["positive-update", "mistake-trigger"],
+      prompt: "A positive point is misclassified. With learning rate 1, what is the standard weight update?",
+      options: [
+        { id: "a", text: "w <- w + x" },
+        { id: "b", text: "w <- w - x" },
+        { id: "c", text: "w <- x - w" },
+        { id: "d", text: "w is unchanged" }
+      ],
+      answer: "a"
+    },
+    {
+      id: "ml-per-review-3",
+      kind: "mixed: two concepts",
+      tags: ["negative-update", "mistake-trigger"],
+      prompt: "A negative point is misclassified. With learning rate 1, what is the standard weight update?",
+      options: [
+        { id: "a", text: "w <- w + x" },
+        { id: "b", text: "w <- w - x" },
+        { id: "c", text: "w <- 0" },
+        { id: "d", text: "Only the validation set changes" }
+      ],
+      answer: "b"
+    },
+    {
+      id: "ml-per-review-4",
+      kind: "mixed: two concepts",
+      tags: ["bias-update", "positive-update"],
+      prompt: "For a misclassified point with y=-1, what is the bias update under b <- b+y?",
+      options: [
+        { id: "a", text: "b decreases by 1" },
+        { id: "b", text: "b increases by 1" },
+        { id: "c", text: "b is squared" },
+        { id: "d", text: "b becomes 0.5" }
+      ],
+      answer: "a"
+    },
+    {
+      id: "ml-per-review-5",
+      kind: "mixed: three concepts",
+      tags: ["score-improvement", "positive-update"],
+      prompt: "w=(0,0), b=0, x=(1,2), y=+1. After one update, what is the new score on x?",
+      options: [
+        { id: "a", text: "0" },
+        { id: "b", text: "1" },
+        { id: "c", text: "6" },
+        { id: "d", text: "-6" }
+      ],
+      answer: "c"
+    },
+    {
+      id: "ml-per-review-6",
+      kind: "mixed: two concepts",
+      tags: ["sign-convention", "mistake-trigger"],
+      prompt: "A classifier predicts +1 when s>=0. If s=0 and y=-1, what happens?",
+      options: [
+        { id: "a", text: "It predicts +1 and makes a mistake." },
+        { id: "b", text: "It predicts -1 and is correct." },
+        { id: "c", text: "No prediction is possible." },
+        { id: "d", text: "The point is removed." }
+      ],
+      answer: "a"
+    },
+    {
+      id: "ml-per-review-7",
+      kind: "single concept",
+      tags: ["old-new-state"],
+      prompt: "In a perceptron trace, which values should be used to compute the score before deciding whether to update?",
+      options: [
+        { id: "a", text: "The old w and old b" },
+        { id: "b", text: "The new w and old b" },
+        { id: "c", text: "The validation fold only" },
+        { id: "d", text: "The next example's label" }
+      ],
+      answer: "a"
+    },
+    {
+      id: "ml-per-review-8",
+      kind: "single concept",
+      tags: ["linear-separability"],
+      prompt: "What condition is needed for the standard perceptron convergence guarantee?",
+      options: [
+        { id: "a", text: "The data is linearly separable in the chosen features." },
+        { id: "b", text: "The classes are perfectly balanced." },
+        { id: "c", text: "The loss is squared error." },
+        { id: "d", text: "The model is Naive Bayes." }
+      ],
+      answer: "a"
+    },
+    {
+      id: "ml-per-review-9",
+      kind: "mixed: two concepts",
+      tags: ["xor-cycling", "linear-separability"],
+      prompt: "Why can perceptron fail to converge on XOR in the original features?",
+      options: [
+        { id: "a", text: "XOR is not linearly separable by one straight boundary." },
+        { id: "b", text: "XOR has no labels." },
+        { id: "c", text: "All XOR points have zero features." },
+        { id: "d", text: "The sigmoid is missing." }
+      ],
+      answer: "a"
+    },
+    {
+      id: "ml-per-review-10",
+      kind: "mixed: three concepts",
+      tags: ["update-simulation", "mistake-trigger", "positive-update", "score-improvement"],
+      prompt: "w=(1,0), b=0, x=(1,1), y=-1. The score is 1. After one perceptron update, what is w?",
+      options: [
+        { id: "a", text: "(0,-1)" },
+        { id: "b", text: "(2,1)" },
+        { id: "c", text: "(1,0)" },
+        { id: "d", text: "(-1,-1)" }
+      ],
+      answer: "a"
+    }
+  ];
+  return questions.map((question) => ({
+    ...question,
+    ...(metadata[question.id] || { targetConcept: question.tags[0], prereqsUsed: question.tags.slice(1), difficulty: question.tags.length, gateWeight: "medium" })
+  }));
+}
+
+function machineLearningLogisticRegressionProblems() {
+  return [
+    {
+      label: "Problem 1: Score to probability",
+      concept: "Sigmoid",
+      difficulty: "Mechanics",
+      technique: "Compute sigmoid probability",
+      prompt: "For logistic regression score z=0, compute P(Y=1|x).",
+      solution: "sigma(0)=1/(1+e^0)=1/2. So the predicted positive probability is 0.5."
+    },
+    {
+      label: "Problem 2: Probability to odds",
+      concept: "Odds",
+      difficulty: "Mechanics",
+      technique: "Convert log odds",
+      prompt: "If p=0.75, what are the odds p/(1-p)?",
+      solution: "Odds = 0.75/0.25 = 3. The positive class is three times as likely as the negative class under the model."
+    },
+    {
+      label: "Problem 3: Log odds",
+      concept: "Log odds",
+      difficulty: "Mechanics",
+      technique: "Convert log odds",
+      prompt: "If the odds are 3, what are the log odds?",
+      solution: "The log odds are log(3)."
+    },
+    {
+      label: "Problem 4: Threshold decision",
+      concept: "Decision threshold",
+      difficulty: "GATE-style",
+      technique: "Classify by threshold",
+      prompt: "A logistic model has score z=-2. With threshold 0.5, which class is predicted?",
+      solution: "Since z<0, sigma(z)<0.5. The model predicts the negative class under a 0.5 threshold."
+    },
+    {
+      label: "Problem 5: Coefficient interpretation",
+      concept: "Odds multiplier",
+      difficulty: "Concept",
+      technique: "Interpret coefficient",
+      prompt: "A feature coefficient is ln 2. What happens to the odds for a one-unit increase in that feature, holding other features fixed?",
+      solution: "The odds are multiplied by e^(ln 2)=2. The odds double. This is not a fixed additive change in probability."
+    },
+    {
+      label: "Problem 6: Boundary equation",
+      concept: "Linear boundary",
+      difficulty: "GATE-style",
+      technique: "Classify by threshold",
+      prompt: "For P(Y=1|x)=sigma(2x1-x2+1), write the 0.5 decision boundary.",
+      solution: "The 0.5 boundary occurs when the score is 0: 2x1 - x2 + 1 = 0."
+    },
+    {
+      label: "Problem 7: Model identity",
+      concept: "Discriminative model",
+      difficulty: "Concept",
+      technique: "Compare with Naive Bayes",
+      prompt: "Why is logistic regression discriminative rather than generative?",
+      solution: "It directly models P(Y|X) through a score and sigmoid. It does not model P(Y) and P(X|Y) separately."
+    },
+    {
+      label: "Problem 8: XOR failure",
+      concept: "Linear boundary failure",
+      difficulty: "Application",
+      technique: "Diagnose XOR failure",
+      prompt: "Why does standard logistic regression fail on XOR without nonlinear features?",
+      solution: "At threshold 0.5, the decision boundary is w^T x+b=0, a single linear boundary. XOR is not linearly separable in the original features."
+    }
+  ];
+}
+
+function machineLearningLogisticRegressionReviewQuestions() {
+  const metadata = {
+    "ml-log-review-1": { targetConcept: "linear-score", prereqsUsed: ["score-rule"], difficulty: 1, gateWeight: "high" },
+    "ml-log-review-2": { targetConcept: "sigmoid", prereqsUsed: ["linear-score"], difficulty: 1, gateWeight: "high" },
+    "ml-log-review-3": { targetConcept: "odds", prereqsUsed: [], difficulty: 1, gateWeight: "medium" },
+    "ml-log-review-4": { targetConcept: "log-odds", prereqsUsed: ["odds"], difficulty: 2, gateWeight: "high" },
+    "ml-log-review-5": { targetConcept: "threshold-boundary", prereqsUsed: ["sigmoid", "linear-score"], difficulty: 2, gateWeight: "high" },
+    "ml-log-review-6": { targetConcept: "coefficient-interpretation", prereqsUsed: ["log-odds"], difficulty: 3, gateWeight: "high" },
+    "ml-log-review-7": { targetConcept: "odds-multiplier", prereqsUsed: ["coefficient-interpretation"], difficulty: 2, gateWeight: "high" },
+    "ml-log-review-8": { targetConcept: "cross-entropy", prereqsUsed: ["sigmoid"], difficulty: 2, gateWeight: "medium" },
+    "ml-log-review-9": { targetConcept: "discriminative-identity", prereqsUsed: ["linear-score"], difficulty: 2, gateWeight: "high" },
+    "ml-log-review-10": { targetConcept: "logistic-xor-failure", prereqsUsed: ["threshold-boundary", "linear-separability"], difficulty: 3, gateWeight: "high" }
+  };
+  const questions = [
+    {
+      id: "ml-log-review-1",
+      kind: "single concept",
+      tags: ["linear-score"],
+      prompt: "In logistic regression, what is z=w^T x+b before applying the sigmoid?",
+      options: [
+        { id: "a", text: "The linear score, interpreted as log odds" },
+        { id: "b", text: "The squared error" },
+        { id: "c", text: "The class prior" },
+        { id: "d", text: "The number of folds" }
+      ],
+      answer: "a"
+    },
+    {
+      id: "ml-log-review-2",
+      kind: "single concept",
+      tags: ["sigmoid", "linear-score"],
+      prompt: "What is sigma(0)?",
+      options: [
+        { id: "a", text: "0" },
+        { id: "b", text: "0.5" },
+        { id: "c", text: "1" },
+        { id: "d", text: "e" }
+      ],
+      answer: "b"
+    },
+    {
+      id: "ml-log-review-3",
+      kind: "single concept",
+      tags: ["odds"],
+      prompt: "If p=0.8, what are the odds p/(1-p)?",
+      options: [
+        { id: "a", text: "0.2" },
+        { id: "b", text: "0.8" },
+        { id: "c", text: "4" },
+        { id: "d", text: "5" }
+      ],
+      answer: "c"
+    },
+    {
+      id: "ml-log-review-4",
+      kind: "mixed: two concepts",
+      tags: ["log-odds", "odds"],
+      prompt: "If odds are 1, what are the log odds?",
+      options: [
+        { id: "a", text: "0" },
+        { id: "b", text: "0.5" },
+        { id: "c", text: "1" },
+        { id: "d", text: "e" }
+      ],
+      answer: "a"
+    },
+    {
+      id: "ml-log-review-5",
+      kind: "mixed: two concepts",
+      tags: ["threshold-boundary", "sigmoid", "linear-score"],
+      prompt: "For threshold 0.5, what is the logistic-regression decision boundary?",
+      options: [
+        { id: "a", text: "w^T x+b=0" },
+        { id: "b", text: "w^T x+b=1" },
+        { id: "c", text: "P(X|Y)=0" },
+        { id: "d", text: "The nearest-neighbor distance is 0" }
+      ],
+      answer: "a"
+    },
+    {
+      id: "ml-log-review-6",
+      kind: "mixed: three concepts",
+      tags: ["coefficient-interpretation", "log-odds"],
+      prompt: "Which is the correct interpretation of a logistic coefficient w_j?",
+      options: [
+        { id: "a", text: "A one-unit feature increase adds w_j to log odds, holding other features fixed." },
+        { id: "b", text: "A one-unit feature increase always adds w_j to probability." },
+        { id: "c", text: "It is the class prior." },
+        { id: "d", text: "It is the number of errors." }
+      ],
+      answer: "a"
+    },
+    {
+      id: "ml-log-review-7",
+      kind: "mixed: two concepts",
+      tags: ["odds-multiplier", "coefficient-interpretation"],
+      prompt: "If w_j=ln 3, what is the odds multiplier for a one-unit increase in feature j?",
+      options: [
+        { id: "a", text: "ln 3" },
+        { id: "b", text: "3" },
+        { id: "c", text: "1/3" },
+        { id: "d", text: "0.3" }
+      ],
+      answer: "b"
+    },
+    {
+      id: "ml-log-review-8",
+      kind: "single concept",
+      tags: ["cross-entropy"],
+      prompt: "Which loss is most directly associated with logistic regression probabilistic classification?",
+      options: [
+        { id: "a", text: "Cross-entropy/log loss" },
+        { id: "b", text: "Heap-order loss" },
+        { id: "c", text: "Euclidean distance only" },
+        { id: "d", text: "Covariance loss" }
+      ],
+      answer: "a"
+    },
+    {
+      id: "ml-log-review-9",
+      kind: "mixed: two concepts",
+      tags: ["discriminative-identity", "linear-score"],
+      prompt: "Why is logistic regression discriminative?",
+      options: [
+        { id: "a", text: "It models P(Y|X) directly through a score and sigmoid." },
+        { id: "b", text: "It estimates P(X|Y) for every feature value." },
+        { id: "c", text: "It stores all training points as neighbors." },
+        { id: "d", text: "It maximizes a hard margin." }
+      ],
+      answer: "a"
+    },
+    {
+      id: "ml-log-review-10",
+      kind: "mixed: three concepts",
+      tags: ["logistic-xor-failure", "threshold-boundary", "linear-separability"],
+      prompt: "Why does standard logistic regression fail on XOR without nonlinear features?",
+      options: [
+        { id: "a", text: "Its 0.5 boundary is still linear in the original features." },
+        { id: "b", text: "It cannot output probabilities." },
+        { id: "c", text: "It has no coefficient vector." },
+        { id: "d", text: "It is a generative model." }
+      ],
+      answer: "a"
+    }
+  ];
+  return questions.map((question) => ({
+    ...question,
+    ...(metadata[question.id] || { targetConcept: question.tags[0], prereqsUsed: question.tags.slice(1), difficulty: question.tags.length, gateWeight: "medium" })
+  }));
+}
+
 function machineLearningNaiveBayesProblems() {
   return [
     {
@@ -21756,6 +22628,154 @@ function machineLearningClassificationBoundariesConceptGraph() {
         prereqs: ["decision-boundary", "linear-separability", "margin"],
         repairMaterial: "Review ML Chapter 4.7 and diagnose non-separability, outliers, scaling, imbalance, or near-boundary ambiguity.",
         gateWeight: "medium"
+      }
+    }
+  };
+}
+
+function machineLearningPerceptronUpdatesConceptGraph() {
+  return {
+    chapterId: "gate-da-machine-learning-perceptron-updates",
+    chapterTitle: "ML Chapter 5: Perceptron and Linear Classifier Updates",
+    gateWeight: "high",
+    fallbackConcepts: ["mistake-trigger", "positive-update", "negative-update", "linear-separability"],
+    fallbackDifficultyMix: [1, 2, 2, 3],
+    fallbackInstruction: "Retest perceptron mistake checks, positive and negative updates, old/new state tracking, score improvement, sign conventions, separability, and XOR failure.",
+    stableNextAction: "Next: move to logistic regression only after one-step perceptron traces and separability reasoning are reliable.",
+    nodes: {
+      "mistake-trigger": {
+        label: "Mistake trigger",
+        prereqs: ["score-rule", "sign-decision"],
+        repairMaterial: "Review ML Chapter 5.1 and compute y(w^T x+b) before updating.",
+        gateWeight: "high"
+      },
+      "positive-update": {
+        label: "Misclassified positive update",
+        prereqs: ["mistake-trigger"],
+        repairMaterial: "Review ML Chapter 5.2 and practice w <- w+x, b <- b+1 for y=+1 mistakes.",
+        gateWeight: "high"
+      },
+      "negative-update": {
+        label: "Misclassified negative update",
+        prereqs: ["mistake-trigger"],
+        repairMaterial: "Review ML Chapter 5.2 and practice w <- w-x, b <- b-1 for y=-1 mistakes.",
+        gateWeight: "high"
+      },
+      "bias-update": {
+        label: "Bias update",
+        prereqs: ["positive-update", "negative-update"],
+        repairMaterial: "Review ML Chapter 5.2 and track b separately from the weight vector.",
+        gateWeight: "medium"
+      },
+      "old-new-state": {
+        label: "Old versus new state",
+        prereqs: ["mistake-trigger"],
+        repairMaterial: "Review ML Chapter 5.5 and use a trace table: old state, score, mistake, update, new state.",
+        gateWeight: "medium"
+      },
+      "score-improvement": {
+        label: "Score improvement after update",
+        prereqs: ["positive-update", "negative-update", "old-new-state"],
+        repairMaterial: "Review ML Chapter 5.3 and recompute the same point's signed score after the update.",
+        gateWeight: "high"
+      },
+      "sign-convention": {
+        label: "Sign convention",
+        prereqs: ["mistake-trigger"],
+        repairMaterial: "Review ML Chapter 5.1 and mark whether equality predicts +1, -1, or counts as a mistake.",
+        gateWeight: "medium"
+      },
+      "linear-separability": {
+        label: "Linear separability for convergence",
+        prereqs: ["decision-boundary"],
+        repairMaterial: "Review ML Chapter 5.4 and state that the standard convergence guarantee needs separability.",
+        gateWeight: "high"
+      },
+      "xor-cycling": {
+        label: "XOR cycling/nonconvergence",
+        prereqs: ["linear-separability"],
+        repairMaterial: "Review ML Chapter 5.4 and explain that XOR has no single separating line in the original features.",
+        gateWeight: "high"
+      },
+      "update-simulation": {
+        label: "One-step update simulation",
+        prereqs: ["mistake-trigger", "positive-update", "negative-update", "bias-update", "old-new-state"],
+        repairMaterial: "Review ML Chapter 5.5 and run three one-row traces with old w,b -> score -> update -> new w,b.",
+        gateWeight: "high"
+      }
+    }
+  };
+}
+
+function machineLearningLogisticRegressionConceptGraph() {
+  return {
+    chapterId: "gate-da-machine-learning-logistic-regression-log-odds",
+    chapterTitle: "ML Chapter 6: Logistic Regression and Log Odds",
+    gateWeight: "high",
+    fallbackConcepts: ["linear-score", "sigmoid", "log-odds", "coefficient-interpretation"],
+    fallbackDifficultyMix: [1, 2, 2, 3],
+    fallbackInstruction: "Retest logistic score calculation, sigmoid interpretation, odds/log-odds conversions, coefficient interpretation, 0.5 boundary, log loss, and discriminative model identity.",
+    stableNextAction: "Next: move to Naive Bayes only after probability, odds, log odds, sigmoid, and coefficient interpretation are reliable.",
+    nodes: {
+      "linear-score": {
+        label: "Linear score",
+        prereqs: ["score-rule"],
+        repairMaterial: "Review ML Chapter 6.1 and compute z=w^T x+b before applying sigmoid.",
+        gateWeight: "high"
+      },
+      odds: {
+        label: "Odds",
+        prereqs: [],
+        repairMaterial: "Review ML Chapter 6.1 and convert probability p into odds p/(1-p).",
+        gateWeight: "medium"
+      },
+      "log-odds": {
+        label: "Log odds",
+        prereqs: ["odds", "linear-score"],
+        repairMaterial: "Review ML Chapter 6.1 and state that z=w^T x+b equals log(p/(1-p)).",
+        gateWeight: "high"
+      },
+      sigmoid: {
+        label: "Sigmoid probability",
+        prereqs: ["linear-score", "log-odds"],
+        repairMaterial: "Review ML Chapter 6.2 and use sigma(z)=1/(1+e^{-z}), especially sigma(0)=0.5.",
+        gateWeight: "high"
+      },
+      "threshold-boundary": {
+        label: "0.5 threshold boundary",
+        prereqs: ["sigmoid", "linear-score"],
+        repairMaterial: "Review ML Chapter 6.2 and set w^T x+b=0 for a 0.5 threshold.",
+        gateWeight: "high"
+      },
+      "coefficient-interpretation": {
+        label: "Coefficient as log-odds change",
+        prereqs: ["log-odds"],
+        repairMaterial: "Review ML Chapter 6.3 and say coefficient means log-odds change, not fixed probability change.",
+        gateWeight: "high"
+      },
+      "odds-multiplier": {
+        label: "Odds multiplier",
+        prereqs: ["coefficient-interpretation"],
+        repairMaterial: "Review ML Chapter 6.3 and exponentiate the coefficient to get e^{w_j}.",
+        gateWeight: "high"
+      },
+      "cross-entropy": {
+        label: "Cross-entropy/log loss",
+        prereqs: ["sigmoid"],
+        repairMaterial: "Review ML Chapter 6.4 and remember confident wrong probabilities receive large log loss.",
+        gateWeight: "medium"
+      },
+      "discriminative-identity": {
+        label: "Discriminative model identity",
+        prereqs: ["linear-score", "sigmoid"],
+        repairMaterial: "Review ML Chapter 6.4 and contrast direct P(Y|X) modelling with Naive Bayes P(Y), P(X|Y).",
+        gateWeight: "high"
+      },
+      "logistic-xor-failure": {
+        label: "Logistic XOR failure",
+        prereqs: ["threshold-boundary", "linear-separability"],
+        repairMaterial: "Review ML Chapter 6.5 and explain that a sigmoid probability still has a linear 0.5 boundary.",
+        gateWeight: "high"
       }
     }
   };
@@ -30343,6 +31363,8 @@ function conceptGraphForSection(section) {
   if (section?.id === "gate-da-machine-learning-evaluation-metrics-validation") return machineLearningEvaluationMetricsConceptGraph();
   if (section?.id === "gate-da-machine-learning-linear-ridge-regression") return machineLearningLinearRidgeRegressionConceptGraph();
   if (section?.id === "gate-da-machine-learning-classification-boundaries") return machineLearningClassificationBoundariesConceptGraph();
+  if (section?.id === "gate-da-machine-learning-perceptron-updates") return machineLearningPerceptronUpdatesConceptGraph();
+  if (section?.id === "gate-da-machine-learning-logistic-regression-log-odds") return machineLearningLogisticRegressionConceptGraph();
   if (section?.id === "gate-da-machine-learning-naive-bayes-generative-classification") return machineLearningNaiveBayesConceptGraph();
   return null;
 }
