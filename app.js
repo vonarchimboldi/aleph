@@ -1,7 +1,7 @@
 const STORAGE_KEY = "learning-studio-data-v2";
 const LEGACY_STORAGE_KEYS = ["learning-studio-data-v1"];
 const SESSION_KEY = "aleph-session";
-const COURSE_PLAN_VERSION = "seeded-user-canonical-workspace-v128";
+const COURSE_PLAN_VERSION = "seeded-user-canonical-workspace-v129";
 const MAX_FEEDBACK_ATTACHMENT_BYTES = 3 * 1024 * 1024;
 const MAX_COMPRESSED_FEEDBACK_BYTES = 2400 * 1024;
 const MAX_FEEDBACK_PDF_PAGES = 6;
@@ -941,7 +941,7 @@ function buildGateDaBasicPlan(now, accountTypes, sections, user = basicGateDaUse
         title: "Machine Learning",
         date: monday,
         status: "In progress",
-        details: "GATE DA Basic Machine Learning starts with the official Data -> Model -> Loss/Objective frame. Chapters 1-4 now cover datasets, model families, loss/objective framing, evaluation metrics, validation methodology, regression, and classifier decision boundaries before moving to specific classifier training methods.",
+        details: "GATE DA Basic Machine Learning starts with the official Data -> Model -> Loss/Objective frame. Current built chapters cover datasets, model families, loss/objective framing, evaluation metrics, validation methodology, regression, classifier boundaries, and Naive Bayes generative classification.",
         sectionIds: machineLearningSections.map((section) => section.id),
         updatedAt: now
       }
@@ -1747,6 +1747,36 @@ function buildGateDaBasicPlan(now, accountTypes, sections, user = basicGateDaUse
         date: weekFourSunday,
         details: "Take the graph-backed objective review for classification scores, decision boundaries, separability, XOR, and margins.",
         updatedAt: now
+      },
+      {
+        id: "schedule-machine-learning-chapter-7-study",
+        title: "ML Chapter 7: Naive Bayes and Generative Classification",
+        week: 7,
+        subject: "Machine Learning",
+        kind: "Study",
+        date: weekSevenMonday,
+        details: "Study priors, likelihoods, posteriors, the naive conditional-independence assumption, MAP classification, parameter counting, smoothing, and generative/discriminative contrast.",
+        updatedAt: now
+      },
+      {
+        id: "schedule-machine-learning-chapter-7-practice",
+        title: "ML Chapter 7: Labelled Practice",
+        week: 7,
+        subject: "Machine Learning",
+        kind: "Practice",
+        date: addDays(weekSevenMonday, 2),
+        details: "Solve labelled Naive Bayes practice: posterior scores, normalization, binary-feature parameter counts, zero-count smoothing, MAP choice, and misclassification probability.",
+        updatedAt: now
+      },
+      {
+        id: "schedule-machine-learning-chapter-7-review",
+        title: "ML Chapter 7: Objective Review",
+        week: 7,
+        subject: "Machine Learning",
+        kind: "Review",
+        date: weekSevenSunday,
+        details: "Take the graph-backed objective review for Naive Bayes and generative classification.",
+        updatedAt: now
       }
     ],
     tests: [
@@ -1992,6 +2022,15 @@ function buildGateDaBasicPlan(now, accountTypes, sections, user = basicGateDaUse
         details: "Objective end-of-chapter quiz for classifier scores, sign rules, decision boundaries, linear separability, XOR, margins, candidate-classifier testing, and boundary failure modes.",
         sectionId: machineLearningSections[3]?.id,
         quizId: "quiz-machine-learning-chapter-4-objective-review",
+        updatedAt: now
+      },
+      {
+        id: "test-machine-learning-chapter-7-objective-review",
+        title: "ML Chapter 7 Objective Review",
+        date: weekSevenSunday,
+        details: "Objective end-of-chapter quiz for Naive Bayes: priors, likelihoods, posteriors, conditional independence, MAP classification, parameter counting, smoothing, misclassification probability, and generative-model failure modes.",
+        sectionId: machineLearningSections[4]?.id,
+        quizId: "quiz-machine-learning-chapter-7-objective-review",
         updatedAt: now
       }
     ],
@@ -2877,6 +2916,39 @@ function buildGateDaBasicPlan(now, accountTypes, sections, user = basicGateDaUse
         done: false,
         details: "Submit the Chapter 4 objective quiz so the learner record logs classification-boundary strengths and weaknesses.",
         updatedAt: now
+      },
+      {
+        id: "task-machine-learning-chapter-7-read",
+        week: 7,
+        title: "ML Ch 7: Read Naive Bayes",
+        type: "Study",
+        date: weekSevenMonday,
+        status: "todo",
+        done: false,
+        details: "Open Subjects -> Machine Learning -> Chapter 7 and study priors, likelihoods, posteriors, conditional independence, MAP classification, smoothing, and failure modes.",
+        updatedAt: now
+      },
+      {
+        id: "task-machine-learning-chapter-7-practice",
+        week: 7,
+        title: "ML Ch 7: Solve labelled practice",
+        type: "Practice",
+        date: addDays(weekSevenMonday, 2),
+        status: "todo",
+        done: false,
+        details: "Attempt the Naive Bayes practice problems before opening the worked solutions.",
+        updatedAt: now
+      },
+      {
+        id: "task-machine-learning-chapter-7-review",
+        week: 7,
+        title: "ML Ch 7: Take objective review",
+        type: "Review",
+        date: weekSevenSunday,
+        status: "todo",
+        done: false,
+        details: "Submit the Chapter 7 objective quiz so the learner record logs generative-classifier strengths and weaknesses.",
+        updatedAt: now
       }
     ],
     accountTypes,
@@ -2903,7 +2975,7 @@ function buildGateDaBasicPlan(now, accountTypes, sections, user = basicGateDaUse
         startDate: monday,
         endDate: "2026-08-30",
         status: "active",
-        details: `GATE DA Basic plan surfaces: Subjects, Tasks, Schedule, Tests, Feedback, Resources, and Share. Recommended pace: study Probability, Linear Algebra, DSA, and Machine Learning in parallel. Every 15 days, Aleph should generate an adaptive cumulative review quiz from prior performance, repeating missed concepts more often, reducing mastered concepts, and keeping high-weight exam topics in rotation. Current material build: Probability Chapters 1-10, Linear Algebra Chapters 1-12 plus a chapterless cumulative past-paper style drill, DSA Chapters 1-9 with a progression gate before Chapter 3, and Machine Learning Chapters 1-4.${trialNote}`,
+        details: `GATE DA Basic plan surfaces: Subjects, Tasks, Schedule, Tests, Feedback, Resources, and Share. Recommended pace: study Probability, Linear Algebra, DSA, and Machine Learning in parallel. Every 15 days, Aleph should generate an adaptive cumulative review quiz from prior performance, repeating missed concepts more often, reducing mastered concepts, and keeping high-weight exam topics in rotation. Current material build: Probability Chapters 1-10, Linear Algebra Chapters 1-12 plus a chapterless cumulative past-paper style drill, DSA Chapters 1-9 with a progression gate before Chapter 3, and Machine Learning Chapters 1-4 plus Chapter 7 Naive Bayes.${trialNote}`,
         updatedAt: now
       }
     ],
@@ -3035,6 +3107,13 @@ function buildGateDaBasicPlan(now, accountTypes, sections, user = basicGateDaUse
         date: weekFourSunday,
         details: "Review misses for confusing score with class label, using the wrong sign rule, misidentifying the decision boundary, missing linear separability, misunderstanding XOR, treating margin as accuracy, and ignoring boundary failure modes.",
         updatedAt: now
+      },
+      {
+        id: "feedback-machine-learning-chapter-7",
+        title: "Machine Learning Chapter 7 feedback focus",
+        date: weekSevenSunday,
+        details: "Review misses for confusing priors with likelihoods, normalizing too early or not at all, dropping the naive conditional-independence product, picking the wrong MAP class, mishandling zero counts and Laplace smoothing, overcounting parameters, and ignoring correlated-feature failure modes.",
+        updatedAt: now
       }
     ],
     resources: [
@@ -3075,6 +3154,14 @@ function buildGateDaBasicPlan(now, accountTypes, sections, user = basicGateDaUse
         title: "Machine Learning Chapter 4: Classification as Scores, Boundaries, and Margins",
         date: weekFourMonday,
         details: "Open Subjects -> Machine Learning to study Chapter 4 and then take the objective review in Tests.",
+        link: "",
+        updatedAt: now
+      },
+      {
+        id: "resource-machine-learning-naive-bayes",
+        title: "Machine Learning Chapter 7: Naive Bayes and Generative Classification",
+        date: weekSevenMonday,
+        details: "Open Subjects -> Machine Learning to study priors, likelihoods, posteriors, conditional independence, MAP classification, smoothing, and generative classifier failure modes.",
         link: "",
         updatedAt: now
       },
@@ -4314,6 +4401,183 @@ function gateDaMachineLearningSections(updatedAt = new Date().toISOString()) {
         "XOR is the canonical tiny dataset that a single linear boundary cannot separate.",
         "Margin measures score-side confidence, not just correctness.",
         "Boundary failures include non-separability, outliers, scaling, imbalance, and near-boundary ambiguity."
+      ],
+      updatedAt
+    },
+    {
+      id: "gate-da-machine-learning-naive-bayes-generative-classification",
+      exam: "GATE DA",
+      accountTier: "Basic",
+      subject: "Machine Learning",
+      chapter: "Chapter 7",
+      section: "7",
+      title: "Naive Bayes and Generative Classification",
+      summary: "Naive Bayes classifies by building a probability model for each class, multiplying feature likelihoods under a conditional-independence assumption, and choosing the class with the largest posterior score.",
+      sectionPreview: "This chapter turns Bayes' theorem into a classifier. The exam habit is to separate prior, likelihood, evidence, and posterior; compute unnormalized class scores; normalize only when the question asks for probabilities; and notice when the naive independence assumption is doing too much work.",
+      previewActivity: "A spam filter has P(spam)=0.2, P(free|spam)=0.8, and P(free|not spam)=0.1. Before calculating, identify the prior and likelihood terms. Which class should become more plausible after seeing the word free?",
+      chapterIntro: [
+        "Naive Bayes is a generative classifier: it asks how likely each class is, and how likely the observed features would be if that class were true.",
+        "The model is simple enough for hand calculation, which is why it appears naturally in GATE-style questions. You will often be given tiny class counts, feature probabilities, or binary feature tables.",
+        "The main skill is disciplined bookkeeping. Write one score per class, multiply the prior by the relevant likelihood factors, compare scores for MAP classification, and normalize only when an actual posterior probability is required."
+      ],
+      bookSections: [
+        {
+          number: "7.1",
+          title: "Generative Versus Discriminative",
+          paragraphs: [
+            "A discriminative classifier tries to model the boundary or the conditional class probability directly. A generative classifier models how data could have been produced under each class.",
+            "Naive Bayes uses class priors P(Y) and feature likelihoods P(X_j | Y). Logistic regression, by contrast, directly models P(Y | X) through a score and link function.",
+            "For GATE DA, this distinction helps identify the algorithm from the symbols in the problem statement. Priors and likelihood tables are strong Naive Bayes signals."
+          ],
+          blocks: [
+            {
+              type: "definition",
+              title: "Definition: generative classifier",
+              body: "A generative classifier models P(Y) and P(X | Y), then uses Bayes' theorem to compare P(Y | X)."
+            }
+          ]
+        },
+        {
+          number: "7.2",
+          title: "Prior, Likelihood, Posterior",
+          paragraphs: [
+            "The prior P(Y=c) is the class probability before seeing the current feature vector. The likelihood P(X=x | Y=c) says how compatible the observed features are with class c.",
+            "The posterior P(Y=c | X=x) is the class probability after seeing the features. Bayes' theorem says posterior is proportional to prior times likelihood.",
+            "When only the predicted class is asked, the denominator P(X=x) is common to all classes. Compare unnormalized scores instead of wasting time."
+          ],
+          blocks: [
+            {
+              type: "principle",
+              title: "MAP score",
+              body: "For each class c, compute score(c) = P(Y=c)P(X=x | Y=c). Choose the class with the largest score."
+            },
+            {
+              type: "warning",
+              title: "Common trap",
+              body: "Do not confuse P(feature | class) with P(class | feature). They are different quantities."
+            }
+          ]
+        },
+        {
+          number: "7.3",
+          title: "The Naive Independence Assumption",
+          paragraphs: [
+            "The full likelihood P(X_1=x_1, ..., X_d=x_d | Y=c) can be hard to estimate. Naive Bayes replaces it with a product of individual feature likelihoods.",
+            "The assumption is conditional independence given the class: after the class is known, the model treats features as independent.",
+            "The assumption may be false in real data, but the classifier can still work well. In exams, the assumption tells you exactly which probabilities to multiply."
+          ],
+          blocks: [
+            {
+              type: "formula",
+              title: "Naive Bayes score",
+              body: "score(c) = P(Y=c) * product over j of P(X_j=x_j | Y=c)."
+            }
+          ]
+        },
+        {
+          number: "7.4",
+          title: "MAP Classification and Normalization",
+          paragraphs: [
+            "MAP means maximum a posteriori: choose the class with the largest posterior probability. Since the evidence denominator is common, the largest unnormalized score gives the same class.",
+            "If the question asks for posterior probabilities, normalize the class scores by dividing each score by the sum of all class scores.",
+            "For a two-class problem, the probability of misclassification under the posterior is 1 minus the posterior probability of the chosen class."
+          ],
+          blocks: [
+            {
+              type: "example",
+              title: "Example 7.1: normalize two scores",
+              body: "If class scores are 0.12 and 0.03, the posterior probabilities are 0.12/0.15 = 0.8 and 0.03/0.15 = 0.2."
+            }
+          ]
+        },
+        {
+          number: "7.5",
+          title: "Parameter Counts and Smoothing",
+          paragraphs: [
+            "A binary Naive Bayes model with C classes and d binary features needs class-prior parameters and conditional feature probabilities for each feature-class pair.",
+            "Zero counts are dangerous: if one feature value never appeared with a class in training, the product score can collapse to zero.",
+            "Laplace smoothing repairs this by adding a small pseudo-count to every feature value count before estimating probabilities."
+          ],
+          blocks: [
+            {
+              type: "strategy",
+              title: "Smoothing check",
+              body: "If any likelihood is zero because of a missing count, ask whether Laplace smoothing or add-one estimation should be applied."
+            }
+          ]
+        },
+        {
+          number: "7.6",
+          title: "Failure Modes",
+          paragraphs: [
+            "Naive Bayes can overcount evidence when features are strongly correlated. Two duplicated features can make one piece of evidence look like two independent confirmations.",
+            "It can also fail when priors are badly estimated, feature probabilities are sparse, or the test distribution changes from the training distribution.",
+            "The GATE-style answer should name the modelling assumption, not just say the classifier is bad."
+          ],
+          blocks: [
+            {
+              type: "principle",
+              title: "Failure diagnosis",
+              body: "Say whether the failure is due to correlated features, sparse counts, wrong priors, distribution shift, or using an inappropriate likelihood model."
+            }
+          ]
+        }
+      ],
+      concepts: [
+        { name: "Generative classifier", description: "A classifier that models class priors and feature likelihoods.", cue: "Look for P(Y) and P(X | Y)." },
+        { name: "Prior", description: "The class probability before seeing the current features.", cue: "Before evidence." },
+        { name: "Likelihood", description: "The probability of the observed features under a class.", cue: "Feature given class." },
+        { name: "Posterior", description: "The class probability after seeing the features.", cue: "Class given features." },
+        { name: "Naive independence", description: "Conditional feature independence given the class.", cue: "Multiply feature likelihoods." },
+        { name: "MAP classification", description: "Choosing the class with largest posterior score.", cue: "Compare unnormalized scores." },
+        { name: "Laplace smoothing", description: "Adding pseudo-counts to avoid zero likelihoods.", cue: "Zero counts should not kill a class." },
+        { name: "Failure mode", description: "Correlated features, sparse counts, bad priors, or distribution shift.", cue: "Name the assumption being violated." }
+      ],
+      techniques: [
+        { name: "Separate probability roles", when: "Bayes symbols are given.", move: "Label prior, likelihood, evidence, and posterior before calculating." },
+        { name: "Compute class scores", when: "A feature vector and likelihood table are given.", move: "For each class, multiply prior by the relevant feature likelihoods." },
+        { name: "Normalize posteriors", when: "The question asks for actual probabilities.", move: "Divide each class score by the sum of all class scores." },
+        { name: "Apply MAP", when: "The question asks for the predicted class.", move: "Choose the class with the largest unnormalized score." },
+        { name: "Count parameters", when: "Classes and binary or categorical features are specified.", move: "Count priors and feature-value probabilities per class, respecting sum-to-one constraints if asked." },
+        { name: "Repair zero counts", when: "A likelihood estimate is zero.", move: "Use the stated smoothing rule, usually add-one/Laplace smoothing." },
+        { name: "Diagnose naive failures", when: "Features are correlated or duplicated.", move: "State that conditional independence is violated and evidence is overcounted." }
+      ],
+      practiceProblems: machineLearningNaiveBayesProblems(),
+      reviewPrompts: [
+        "What makes Naive Bayes generative rather than discriminative?",
+        "How do prior, likelihood, evidence, and posterior differ?",
+        "Why can MAP classification use unnormalized scores?",
+        "When must you normalize the class scores?",
+        "What exactly is the naive independence assumption?",
+        "How do you estimate binary feature likelihoods from counts?",
+        "Why do zero counts cause trouble?",
+        "How does Laplace smoothing change a zero likelihood?",
+        "How do correlated features break the model assumption?",
+        "What is the posterior misclassification probability after choosing a class?"
+      ],
+      reviewQuiz: {
+        id: "quiz-machine-learning-chapter-7-objective-review",
+        title: "ML Chapter 7 Objective Review",
+        instructions: "Complete this after studying Naive Bayes and generative classification. The quiz checks probability-role identification, class-score computation, normalization, MAP decisions, conditional independence, parameter counts, smoothing, and failure-mode diagnosis.",
+        questions: machineLearningNaiveBayesReviewQuestions()
+      },
+      readingQuestions: [
+        "What does a generative classifier model?",
+        "What is the difference between P(X | Y) and P(Y | X)?",
+        "Why does Naive Bayes multiply feature likelihoods?",
+        "What does MAP stand for?",
+        "When is normalization unnecessary?",
+        "What problem does smoothing solve?",
+        "Why can duplicated or highly correlated features mislead Naive Bayes?"
+      ],
+      chapterSummary: [
+        "Naive Bayes models class priors and feature likelihoods.",
+        "The posterior is proportional to prior times likelihood.",
+        "The naive assumption is conditional independence of features given the class.",
+        "MAP classification compares unnormalized class scores.",
+        "Normalize scores only when actual posterior probabilities are requested.",
+        "Zero counts can collapse a class score, so smoothing is often needed.",
+        "Major failure modes include correlated features, sparse counts, bad priors, and distribution shift."
       ],
       updatedAt
     }
@@ -15198,6 +15462,226 @@ function machineLearningClassificationBoundariesReviewQuestions() {
   }));
 }
 
+function machineLearningNaiveBayesProblems() {
+  return [
+    {
+      label: "Problem 1: Identify the model type",
+      concept: "Generative classifier",
+      difficulty: "Concept",
+      technique: "Separate probability roles",
+      prompt: "A classifier is specified by P(Y), P(X1|Y), and P(X2|Y). Is this more directly Naive Bayes or logistic regression?",
+      solution: "This is more directly Naive Bayes. The model gives a prior for the class and likelihoods for features given the class, which is the generative-classifier setup."
+    },
+    {
+      label: "Problem 2: Compute class scores",
+      concept: "MAP classification",
+      difficulty: "Mechanics",
+      technique: "Compute class scores",
+      prompt: "For classes A and B, P(A)=0.4, P(B)=0.6. For observed binary features x1=1, x2=0, suppose P(x1=1|A)=0.5, P(x2=0|A)=0.8, P(x1=1|B)=0.2, P(x2=0|B)=0.5. Using Naive Bayes, compute the unnormalized scores.",
+      solution: "score(A)=0.4*0.5*0.8=0.16. score(B)=0.6*0.2*0.5=0.06."
+    },
+    {
+      label: "Problem 3: Normalize posteriors",
+      concept: "Posterior normalization",
+      difficulty: "Mechanics",
+      technique: "Normalize posteriors",
+      prompt: "If two unnormalized class scores are 0.16 and 0.06, what are the normalized posterior probabilities?",
+      solution: "The total score is 0.22. The normalized posteriors are 0.16/0.22 = 8/11 and 0.06/0.22 = 3/11."
+    },
+    {
+      label: "Problem 4: MAP and error probability",
+      concept: "Misclassification probability",
+      difficulty: "GATE-style",
+      technique: "Apply MAP",
+      prompt: "If P(A|x)=8/11 and P(B|x)=3/11, what is the MAP class and posterior probability of making a mistake?",
+      solution: "The MAP class is A because 8/11 is larger. The posterior probability of mistake after choosing A is 1 - 8/11 = 3/11."
+    },
+    {
+      label: "Problem 5: Binary-feature parameter count",
+      concept: "Parameter counting",
+      difficulty: "GATE-style",
+      technique: "Count parameters",
+      prompt: "A Naive Bayes model has 3 classes and 5 binary features. Ignoring smoothing constants, how many independent conditional feature probabilities P(Xj=1|Y=c) are needed?",
+      solution: "For each class and each binary feature, one probability P(Xj=1|Y=c) determines P(Xj=0|Y=c). So the conditional feature table needs 3*5 = 15 independent probabilities."
+    },
+    {
+      label: "Problem 6: Zero count and smoothing",
+      concept: "Laplace smoothing",
+      difficulty: "GATE-style",
+      technique: "Repair zero counts",
+      prompt: "In class A, a binary feature has count X=1 in 0 of 4 examples. With add-one smoothing, estimate P(X=1|A).",
+      solution: "For a binary feature, add one count to each value. The estimate is (0+1)/(4+2)=1/6."
+    },
+    {
+      label: "Problem 7: Independence assumption",
+      concept: "Naive independence",
+      difficulty: "Concept",
+      technique: "Compute class scores",
+      prompt: "What assumption lets Naive Bayes replace P(X1=x1, X2=x2|Y=c) with P(X1=x1|Y=c)P(X2=x2|Y=c)?",
+      solution: "It assumes X1 and X2 are conditionally independent given the class Y=c."
+    },
+    {
+      label: "Problem 8: Correlated-feature failure",
+      concept: "Failure mode",
+      difficulty: "Application",
+      technique: "Diagnose naive failures",
+      prompt: "A spam model uses two features: contains word free and contains word free twice. Why can Naive Bayes overstate evidence here?",
+      solution: "The features are strongly correlated. Naive Bayes treats them as conditionally independent given the class, so it can count nearly the same evidence twice."
+    }
+  ];
+}
+
+function machineLearningNaiveBayesReviewQuestions() {
+  const metadata = {
+    "ml-nb-review-1": { targetConcept: "generative-discriminative", prereqsUsed: [], difficulty: 1, gateWeight: "high" },
+    "ml-nb-review-2": { targetConcept: "priors-likelihoods", prereqsUsed: [], difficulty: 1, gateWeight: "high" },
+    "ml-nb-review-3": { targetConcept: "map-classification", prereqsUsed: ["priors-likelihoods"], difficulty: 2, gateWeight: "high" },
+    "ml-nb-review-4": { targetConcept: "posterior-normalization", prereqsUsed: ["map-classification"], difficulty: 2, gateWeight: "high" },
+    "ml-nb-review-5": { targetConcept: "naive-independence", prereqsUsed: ["priors-likelihoods"], difficulty: 2, gateWeight: "high" },
+    "ml-nb-review-6": { targetConcept: "misclassification-probability", prereqsUsed: ["posterior-normalization"], difficulty: 2, gateWeight: "medium" },
+    "ml-nb-review-7": { targetConcept: "parameter-counting", prereqsUsed: ["naive-independence"], difficulty: 3, gateWeight: "medium" },
+    "ml-nb-review-8": { targetConcept: "smoothing", prereqsUsed: ["priors-likelihoods"], difficulty: 3, gateWeight: "high" },
+    "ml-nb-review-9": { targetConcept: "nb-failure-mode", prereqsUsed: ["naive-independence"], difficulty: 2, gateWeight: "medium" },
+    "ml-nb-review-10": { targetConcept: "map-classification", prereqsUsed: ["priors-likelihoods", "naive-independence"], difficulty: 3, gateWeight: "high" }
+  };
+  const questions = [
+    {
+      id: "ml-nb-review-1",
+      kind: "single concept",
+      tags: ["generative-discriminative"],
+      prompt: "Which description best matches Naive Bayes?",
+      options: [
+        { id: "a", text: "It models class priors and feature likelihoods, then applies Bayes' theorem." },
+        { id: "b", text: "It fits a maximum-margin hyperplane." },
+        { id: "c", text: "It predicts by averaging nearest labels." },
+        { id: "d", text: "It splits data greedily by impurity." }
+      ],
+      answer: "a"
+    },
+    {
+      id: "ml-nb-review-2",
+      kind: "single concept",
+      tags: ["priors-likelihoods"],
+      prompt: "In P(X=1|Y=A), what role does this term play in Naive Bayes?",
+      options: [
+        { id: "a", text: "Feature likelihood" },
+        { id: "b", text: "Class prior" },
+        { id: "c", text: "Evidence denominator" },
+        { id: "d", text: "Posterior class probability" }
+      ],
+      answer: "a"
+    },
+    {
+      id: "ml-nb-review-3",
+      kind: "mixed: two concepts",
+      tags: ["map-classification", "priors-likelihoods"],
+      prompt: "Two class scores are score(A)=0.18 and score(B)=0.12. What is the MAP class?",
+      options: [
+        { id: "a", text: "A" },
+        { id: "b", text: "B" },
+        { id: "c", text: "Both classes are equally likely" },
+        { id: "d", text: "Cannot decide without dividing by P(X)" }
+      ],
+      answer: "a"
+    },
+    {
+      id: "ml-nb-review-4",
+      kind: "mixed: two concepts",
+      tags: ["posterior-normalization", "map-classification"],
+      prompt: "Class scores are 0.18 and 0.12. What is the normalized posterior for the first class?",
+      options: [
+        { id: "a", text: "0.18" },
+        { id: "b", text: "0.30" },
+        { id: "c", text: "0.60" },
+        { id: "d", text: "0.40" }
+      ],
+      answer: "c"
+    },
+    {
+      id: "ml-nb-review-5",
+      kind: "single concept",
+      tags: ["naive-independence"],
+      prompt: "What is the naive assumption in Naive Bayes?",
+      options: [
+        { id: "a", text: "Features are conditionally independent given the class." },
+        { id: "b", text: "Classes are equally likely." },
+        { id: "c", text: "All decision boundaries are linear." },
+        { id: "d", text: "Training and test sets are identical." }
+      ],
+      answer: "a"
+    },
+    {
+      id: "ml-nb-review-6",
+      kind: "mixed: two concepts",
+      tags: ["misclassification-probability", "posterior-normalization"],
+      prompt: "If the MAP class has posterior probability 0.7 in a two-class setting, what is the posterior probability of error?",
+      options: [
+        { id: "a", text: "0.3" },
+        { id: "b", text: "0.7" },
+        { id: "c", text: "1.7" },
+        { id: "d", text: "0" }
+      ],
+      answer: "a"
+    },
+    {
+      id: "ml-nb-review-7",
+      kind: "mixed: three concepts",
+      tags: ["parameter-counting", "naive-independence"],
+      prompt: "For 4 classes and 6 binary features, how many independent conditional probabilities P(Xj=1|Y=c) are needed?",
+      options: [
+        { id: "a", text: "10" },
+        { id: "b", text: "24" },
+        { id: "c", text: "48" },
+        { id: "d", text: "64" }
+      ],
+      answer: "b"
+    },
+    {
+      id: "ml-nb-review-8",
+      kind: "mixed: three concepts",
+      tags: ["smoothing", "priors-likelihoods"],
+      prompt: "A binary feature has count X=1 in 0 out of 3 examples of class C. With add-one smoothing, what is P(X=1|C)?",
+      options: [
+        { id: "a", text: "0" },
+        { id: "b", text: "1/5" },
+        { id: "c", text: "1/3" },
+        { id: "d", text: "1/2" }
+      ],
+      answer: "b"
+    },
+    {
+      id: "ml-nb-review-9",
+      kind: "mixed: two concepts",
+      tags: ["nb-failure-mode", "naive-independence"],
+      prompt: "Two features are almost duplicates. What Naive Bayes issue is most likely?",
+      options: [
+        { id: "a", text: "Correlated evidence can be counted as if independent." },
+        { id: "b", text: "The class prior must become zero." },
+        { id: "c", text: "The model becomes kNN." },
+        { id: "d", text: "The posterior cannot be normalized." }
+      ],
+      answer: "a"
+    },
+    {
+      id: "ml-nb-review-10",
+      kind: "mixed: three concepts",
+      tags: ["map-classification", "priors-likelihoods", "naive-independence"],
+      prompt: "P(A)=0.5, P(B)=0.5. For x1=1,x2=1, likelihoods are P(x1|A)=0.8, P(x2|A)=0.5, P(x1|B)=0.4, P(x2|B)=0.9. Which class does Naive Bayes choose?",
+      options: [
+        { id: "a", text: "A, because 0.5*0.8*0.5 = 0.20 is larger than 0.18" },
+        { id: "b", text: "B, because 0.9 is the largest single likelihood" },
+        { id: "c", text: "A and B tie" },
+        { id: "d", text: "Cannot decide without a validation set" }
+      ],
+      answer: "a"
+    }
+  ];
+  return questions.map((question) => ({
+    ...question,
+    ...(metadata[question.id] || { targetConcept: question.tags[0], prereqsUsed: question.tags.slice(1), difficulty: question.tags.length, gateWeight: "medium" })
+  }));
+}
+
 function probabilityFoundationProblems() {
   return [
     {
@@ -21271,6 +21755,74 @@ function machineLearningClassificationBoundariesConceptGraph() {
         label: "Boundary failure mode",
         prereqs: ["decision-boundary", "linear-separability", "margin"],
         repairMaterial: "Review ML Chapter 4.7 and diagnose non-separability, outliers, scaling, imbalance, or near-boundary ambiguity.",
+        gateWeight: "medium"
+      }
+    }
+  };
+}
+
+function machineLearningNaiveBayesConceptGraph() {
+  return {
+    chapterId: "gate-da-machine-learning-naive-bayes-generative-classification",
+    chapterTitle: "ML Chapter 7: Naive Bayes and Generative Classification",
+    gateWeight: "high",
+    fallbackConcepts: ["priors-likelihoods", "naive-independence", "map-classification", "smoothing"],
+    fallbackDifficultyMix: [1, 2, 2, 3],
+    fallbackInstruction: "Retest probability-role identification, Naive Bayes score products, MAP decisions, posterior normalization, smoothing, and failure-mode diagnosis before moving to discriminative probabilistic classifiers.",
+    stableNextAction: "Next: move to logistic regression only after priors, likelihoods, posteriors, MAP scoring, smoothing, and independence assumptions are reliable.",
+    nodes: {
+      "generative-discriminative": {
+        label: "Generative versus discriminative classifier",
+        prereqs: [],
+        repairMaterial: "Review ML Chapter 7.1 and identify whether the model gives P(Y), P(X|Y), or directly gives P(Y|X).",
+        gateWeight: "high"
+      },
+      "priors-likelihoods": {
+        label: "Prior and likelihood roles",
+        prereqs: ["generative-discriminative"],
+        repairMaterial: "Review ML Chapter 7.2 and label prior, likelihood, posterior, and evidence before calculating.",
+        gateWeight: "high"
+      },
+      "naive-independence": {
+        label: "Naive conditional independence",
+        prereqs: ["priors-likelihoods"],
+        repairMaterial: "Review ML Chapter 7.3 and write the likelihood as a product only because features are conditionally independent given the class.",
+        gateWeight: "high"
+      },
+      "map-classification": {
+        label: "MAP classification",
+        prereqs: ["priors-likelihoods", "naive-independence"],
+        repairMaterial: "Review ML Chapter 7.4 and compute one unnormalized prior-times-likelihood score per class.",
+        gateWeight: "high"
+      },
+      "posterior-normalization": {
+        label: "Posterior normalization",
+        prereqs: ["map-classification"],
+        repairMaterial: "Review ML Chapter 7.4 and divide each class score by the sum of all class scores only when probabilities are requested.",
+        gateWeight: "high"
+      },
+      "misclassification-probability": {
+        label: "Posterior error probability",
+        prereqs: ["posterior-normalization", "map-classification"],
+        repairMaterial: "Review ML Chapter 7.4 and use 1 minus the posterior of the chosen MAP class.",
+        gateWeight: "medium"
+      },
+      "parameter-counting": {
+        label: "Naive Bayes parameter counts",
+        prereqs: ["naive-independence"],
+        repairMaterial: "Review ML Chapter 7.5 and count feature-value probabilities separately for each feature and class, respecting binary complements.",
+        gateWeight: "medium"
+      },
+      smoothing: {
+        label: "Laplace smoothing",
+        prereqs: ["priors-likelihoods", "parameter-counting"],
+        repairMaterial: "Review ML Chapter 7.5 and apply add-one smoothing before multiplying likelihoods when counts are sparse.",
+        gateWeight: "high"
+      },
+      "nb-failure-mode": {
+        label: "Naive Bayes failure modes",
+        prereqs: ["naive-independence", "smoothing"],
+        repairMaterial: "Review ML Chapter 7.6 and diagnose correlated features, sparse counts, wrong priors, distribution shift, or the wrong likelihood model.",
         gateWeight: "medium"
       }
     }
@@ -29791,6 +30343,7 @@ function conceptGraphForSection(section) {
   if (section?.id === "gate-da-machine-learning-evaluation-metrics-validation") return machineLearningEvaluationMetricsConceptGraph();
   if (section?.id === "gate-da-machine-learning-linear-ridge-regression") return machineLearningLinearRidgeRegressionConceptGraph();
   if (section?.id === "gate-da-machine-learning-classification-boundaries") return machineLearningClassificationBoundariesConceptGraph();
+  if (section?.id === "gate-da-machine-learning-naive-bayes-generative-classification") return machineLearningNaiveBayesConceptGraph();
   return null;
 }
 
