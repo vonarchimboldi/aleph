@@ -310,7 +310,35 @@ Required GATE-style outcomes:
 - Explain why decision-tree regions can be nonlinear even when each split is simple.
 - Explain overfitting and why pruning/validation matters.
 
-### Chapter 12: Clustering
+### Chapter 12: Ensembles, Random Forests, and Boosting
+
+Purpose: Explain how ensembles improve generalization by combining diverse learners, with explicit attention to the bias-variance tradeoff.
+
+Core questions:
+
+1. Why do deep decision trees typically have low training bias but high variance?
+2. How does bootstrap aggregation reduce variance?
+3. Why does averaging help only when component errors are not perfectly correlated?
+4. How does a random forest decorrelate its trees through random feature subsets?
+5. How are classification votes and regression predictions aggregated?
+6. What are out-of-bag examples, and how can they estimate generalization performance?
+7. How does boosting build learners sequentially to correct current errors?
+8. Why does boosting often reduce bias more directly than bagging?
+9. How do learning rate, tree depth, number of learners, and early stopping control boosted-model variance?
+10. How do bagging and boosting differ in parallelism, weighting, sensitivity to noise, and interpretability?
+11. What failure modes matter: correlated trees, weak diversity, class imbalance, noisy labels, leakage, overfitting, and misleading feature importance?
+12. Which small ensemble calculations can GATE reasonably ask?
+
+Required GATE-style outcomes:
+
+- Compute a majority vote or averaged ensemble prediction.
+- Explain why bagging and random forests primarily reduce variance.
+- Explain why boosting primarily attacks bias and how regularization controls variance.
+- Distinguish bootstrap row sampling from random feature selection.
+- Interpret out-of-bag evaluation.
+- Compare bagging, random forests, and boosting under the bias-variance framework.
+
+### Chapter 13: Clustering
 
 Purpose: Teach unsupervised grouping through distance objectives.
 
@@ -334,7 +362,7 @@ Required GATE-style outcomes:
 - Reason about k-means cluster geometry.
 - Identify k-medoids as a clustering algorithm.
 
-### Chapter 13: PCA, SVD, and Dimensionality Reduction
+### Chapter 14: PCA, SVD, and Dimensionality Reduction
 
 Purpose: Teach representation learning through variance and reconstruction.
 
@@ -358,7 +386,7 @@ Required GATE-style outcomes:
 - Identify the first principal direction as maximum variance.
 - Link PCA to dimensionality reduction and feature extraction.
 
-### Chapter 14: Multilayer Perceptrons and Neural Networks
+### Chapter 15: Multilayer Perceptrons and Neural Networks
 
 Purpose: Cover the GATE DA neural-network requirement through the Data -> Model -> Loss/Objective frame, with MLPs as nonlinear classifiers and regressors.
 

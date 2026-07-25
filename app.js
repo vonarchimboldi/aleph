@@ -1,7 +1,7 @@
 const STORAGE_KEY = "learning-studio-data-v2";
 const LEGACY_STORAGE_KEYS = ["learning-studio-data-v1"];
 const SESSION_KEY = "aleph-session";
-const COURSE_PLAN_VERSION = "seeded-user-canonical-workspace-v136";
+const COURSE_PLAN_VERSION = "seeded-user-canonical-workspace-v137";
 const MAX_FEEDBACK_ATTACHMENT_BYTES = 3 * 1024 * 1024;
 const MAX_COMPRESSED_FEEDBACK_BYTES = 2400 * 1024;
 const MAX_FEEDBACK_PDF_PAGES = 6;
@@ -1969,6 +1969,36 @@ function buildGateDaBasicPlan(now, accountTypes, sections, user = basicGateDaUse
         date: weekElevenSunday,
         details: "Take the graph-backed objective review for entropy, Gini, information gain, split selection, axis-aligned regions, greediness, overfitting, pruning, and instability.",
         updatedAt: now
+      },
+      {
+        id: "schedule-machine-learning-chapter-12-study",
+        title: "ML Chapter 12: Ensembles, Random Forests, and Boosting",
+        week: 12,
+        subject: "Machine Learning",
+        kind: "Study",
+        date: weekTwelveMonday,
+        details: "Study bagging, bootstrap samples, ensemble averaging, tree correlation, random feature subsets, out-of-bag evaluation, boosting, and how forests and boosting address different sides of the bias-variance tradeoff.",
+        updatedAt: now
+      },
+      {
+        id: "schedule-machine-learning-chapter-12-practice",
+        title: "ML Chapter 12: Labelled Practice",
+        week: 12,
+        subject: "Machine Learning",
+        kind: "Practice",
+        date: addDays(weekTwelveMonday, 2),
+        details: "Solve labelled ensemble practice: votes, averaged predictions, bootstrap/OOB reasoning, variance under correlation, random-feature decorrelation, boosting updates, and bias-variance diagnosis.",
+        updatedAt: now
+      },
+      {
+        id: "schedule-machine-learning-chapter-12-review",
+        title: "ML Chapter 12: Objective Review",
+        week: 12,
+        subject: "Machine Learning",
+        kind: "Review",
+        date: weekTwelveSunday,
+        details: "Take the graph-backed objective review for bagging, random forests, boosting, out-of-bag evaluation, diversity, regularization, and bias-variance tradeoffs.",
+        updatedAt: now
       }
     ],
     tests: [
@@ -2277,6 +2307,15 @@ function buildGateDaBasicPlan(now, accountTypes, sections, user = basicGateDaUse
         details: "Objective end-of-chapter quiz for entropy, Gini impurity, weighted child impurity, information gain, first-split selection, numerical thresholds, XOR regions, pruning, and tree failure modes.",
         sectionId: machineLearningSections[10]?.id,
         quizId: "quiz-machine-learning-chapter-11-objective-review",
+        updatedAt: now
+      },
+      {
+        id: "test-machine-learning-chapter-12-objective-review",
+        title: "ML Chapter 12 Objective Review",
+        date: weekTwelveSunday,
+        details: "Objective end-of-chapter quiz for bagging, bootstrap samples, random forests, out-of-bag evaluation, boosting, ensemble aggregation, diversity, regularization, and bias-variance reasoning.",
+        sectionId: machineLearningSections[11]?.id,
+        quizId: "quiz-machine-learning-chapter-12-objective-review",
         updatedAt: now
       }
     ],
@@ -3393,6 +3432,39 @@ function buildGateDaBasicPlan(now, accountTypes, sections, user = basicGateDaUse
         done: false,
         details: "Submit the Chapter 11 objective quiz so the learner record logs decision-tree strengths and weaknesses.",
         updatedAt: now
+      },
+      {
+        id: "task-machine-learning-chapter-12-read",
+        week: 12,
+        title: "ML Ch 12: Read ensembles",
+        type: "Study",
+        date: weekTwelveMonday,
+        status: "todo",
+        done: false,
+        details: "Open Subjects -> Machine Learning -> Chapter 12 and study bagging, random forests, boosting, OOB evaluation, diversity, regularization, and bias-variance tradeoffs.",
+        updatedAt: now
+      },
+      {
+        id: "task-machine-learning-chapter-12-practice",
+        week: 12,
+        title: "ML Ch 12: Solve labelled practice",
+        type: "Practice",
+        date: addDays(weekTwelveMonday, 2),
+        status: "todo",
+        done: false,
+        details: "Attempt ensemble votes, averages, bootstrap/OOB, correlated-tree variance, random-feature, boosting, and bias-variance problems before opening solutions.",
+        updatedAt: now
+      },
+      {
+        id: "task-machine-learning-chapter-12-review",
+        week: 12,
+        title: "ML Ch 12: Take objective review",
+        type: "Review",
+        date: weekTwelveSunday,
+        status: "todo",
+        done: false,
+        details: "Submit the Chapter 12 objective quiz so the learner record logs ensemble and bias-variance strengths and weaknesses.",
+        updatedAt: now
       }
     ],
     accountTypes,
@@ -3419,7 +3491,7 @@ function buildGateDaBasicPlan(now, accountTypes, sections, user = basicGateDaUse
         startDate: monday,
         endDate: "2026-08-30",
         status: "active",
-        details: `GATE DA Basic plan surfaces: Subjects, Tasks, Schedule, Tests, Feedback, Resources, and Share. Recommended pace: study Probability, Linear Algebra, DSA, and Machine Learning in parallel. Every 15 days, Aleph should generate an adaptive cumulative review quiz from prior performance, repeating missed concepts more often, reducing mastered concepts, and keeping high-weight exam topics in rotation. Current material build: Probability Chapters 1-10, Linear Algebra Chapters 1-12 plus a chapterless cumulative past-paper style drill, DSA Chapters 1-9 with a progression gate before Chapter 3, and Machine Learning Chapters 1-11.${trialNote}`,
+        details: `GATE DA Basic plan surfaces: Subjects, Tasks, Schedule, Tests, Feedback, Resources, and Share. Recommended pace: study Probability, Linear Algebra, DSA, and Machine Learning in parallel. Every 15 days, Aleph should generate an adaptive cumulative review quiz from prior performance, repeating missed concepts more often, reducing mastered concepts, and keeping high-weight exam topics in rotation. Current material build: Probability Chapters 1-10, Linear Algebra Chapters 1-12 plus a chapterless cumulative past-paper style drill, DSA Chapters 1-9 with a progression gate before Chapter 3, and Machine Learning Chapters 1-12.${trialNote}`,
         updatedAt: now
       }
     ],
@@ -3600,6 +3672,13 @@ function buildGateDaBasicPlan(now, accountTypes, sections, user = basicGateDaUse
         date: weekElevenSunday,
         details: "Review misses for using raw rather than weighted child impurity, reversing information gain, confusing entropy with Gini, testing invalid numerical thresholds, assuming greedy splits are globally optimal, treating axis-aligned splits as only linear overall, skipping validation or pruning, and ignoring instability or high-cardinality bias.",
         updatedAt: now
+      },
+      {
+        id: "feedback-machine-learning-chapter-12",
+        title: "Machine Learning Chapter 12 feedback focus",
+        date: weekTwelveSunday,
+        details: "Review misses for claiming averaging removes bias, ignoring correlation between trees, confusing bootstrap rows with random feature subsets, misreading OOB examples, treating boosting as parallel voting, saying boosting can only affect bias, and overlooking learning rate, depth, early stopping, noisy labels, imbalance, or leakage.",
+        updatedAt: now
       }
     ],
     resources: [
@@ -3696,6 +3775,14 @@ function buildGateDaBasicPlan(now, accountTypes, sections, user = basicGateDaUse
         title: "Machine Learning Chapter 11: Decision Trees",
         date: weekElevenMonday,
         details: "Open Subjects -> Machine Learning to study entropy, Gini impurity, information gain, split selection, numerical thresholds, tree geometry, pruning, validation, and failure modes.",
+        link: "",
+        updatedAt: now
+      },
+      {
+        id: "resource-machine-learning-ensembles",
+        title: "Machine Learning Chapter 12: Ensembles, Random Forests, and Boosting",
+        date: weekTwelveMonday,
+        details: "Open Subjects -> Machine Learning to study bagging, random forests, boosting, OOB evaluation, ensemble diversity, regularization, and the bias-variance tradeoff.",
         link: "",
         updatedAt: now
       },
@@ -5988,6 +6075,162 @@ function gateDaMachineLearningSections(updatedAt = new Date().toISOString()) {
         "Axis-aligned splits can compose into nonlinear regions and solve XOR.",
         "Validation-guided stopping or pruning controls overfitting.",
         "Instability, high-cardinality bias, deep-tree overfit, and shallow-tree underfit are key failures."
+      ],
+      updatedAt
+    },
+    {
+      id: "gate-da-machine-learning-ensembles-random-forests-boosting",
+      exam: "GATE DA",
+      accountTier: "Basic",
+      subject: "Machine Learning",
+      chapter: "Chapter 12",
+      section: "12",
+      title: "Ensembles, Random Forests, and Boosting",
+      summary: "Bagging, random forests, and boosting through aggregation, diversity, bootstrap and out-of-bag reasoning, sequential correction, regularization, and the bias-variance tradeoff.",
+      sectionPreview: "A deep tree can fit complex structure but change dramatically when its training sample changes. Random forests stabilize such trees by averaging diverse versions. Boosting instead builds a sequence in which each new learner repairs what the current ensemble still gets wrong.",
+      previewActivity: "Three classifiers predict +1, +1, and -1. What is the majority vote? If all three always make the same mistakes, why is having three models less useful?",
+      intro: [
+        "Ensembles combine models to obtain a predictor that is often more reliable than any component. Their benefit depends on both component quality and diversity.",
+        "Bagging and random forests mainly target variance: averaging unstable, imperfectly correlated trees makes predictions less sensitive to the sampled training set.",
+        "Boosting mainly targets bias through sequential correction. Its eventual variance depends on depth, learning rate, learner count, noise, and stopping."
+      ],
+      bookSections: [
+        {
+          number: "12.1",
+          title: "Bias, Variance, and Why Trees Need Ensembles",
+          paragraphs: [
+            "Bias is systematic error from a model that is too restricted; variance is sensitivity to the particular training sample. Deep trees often have low training bias but high variance.",
+            "Averaging does not repair a shared systematic mistake. It works best when learners are reasonably accurate and their errors are not perfectly correlated.",
+            "For regression errors with variance sigma^2 and pairwise correlation rho, averaging B learners gives variance sigma^2[rho+(1-rho)/B]."
+          ],
+          blocks: [
+            { type: "formula", title: "Correlated-average variance", body: "Var(average)=sigma^2[rho+(1-rho)/B]. More learners shrink the uncorrelated part; correlation leaves a floor." },
+            { type: "principle", title: "Tradeoff map", body: "Random forests primarily reduce variance. Boosting primarily reduces bias, while regularization manages variance." }
+          ]
+        },
+        {
+          number: "12.2",
+          title: "Bagging and Bootstrap Aggregation",
+          paragraphs: [
+            "Bagging trains each learner on a bootstrap sample: n rows drawn with replacement from the original n rows. Some rows repeat and some are omitted.",
+            "Regression outputs are averaged; classification commonly uses majority vote or averaged class probabilities.",
+            "Bagged learners train independently and in parallel. Bagging stabilizes high-variance learners but does little to remove bias shared by all learners."
+          ],
+          blocks: [
+            { type: "formula", title: "Aggregation", body: "Regression: f_bar(x)=(1/B)sum_b f_b(x). Classification: choose the largest vote or averaged probability." },
+            { type: "warning", title: "Bootstrap meaning", body: "Sample rows with replacement. This is not the same operation as selecting features." }
+          ]
+        },
+        {
+          number: "12.3",
+          title: "Random Forests and Decorrelation",
+          paragraphs: [
+            "A random forest adds random feature selection to bagged trees. At each split, only a random subset of features is offered as candidates.",
+            "This prevents one dominant feature from forcing many trees into nearly identical early splits. Lower correlation makes averaging reduce variance more effectively.",
+            "Forests generally keep individual trees deep and rely on aggregation plus decorrelation for stability."
+          ],
+          blocks: [
+            { type: "principle", title: "Two sources of randomness", body: "Bootstrap rows create different datasets; random feature subsets create different split opportunities." },
+            { type: "warning", title: "Not independent", body: "Forest trees remain correlated because they share the original dataset and learning procedure." }
+          ]
+        },
+        {
+          number: "12.4",
+          title: "Out-of-Bag Evaluation",
+          paragraphs: [
+            "A row omitted from a tree's bootstrap sample is out of bag for that tree. Predict that row using only trees for which it was omitted.",
+            "Aggregating OOB predictions across training rows gives an internal performance estimate.",
+            "OOB evaluation does not excuse leakage: preprocessing and tuning still require care, and a final untouched test set remains valuable."
+          ],
+          blocks: [
+            { type: "formula", title: "Omission probability", body: "P(a fixed row is omitted)=(1-1/n)^n, approaching e^-1, about 0.368." },
+            { type: "strategy", title: "OOB rule", body: "For row i, aggregate only trees whose bootstrap samples did not contain row i." }
+          ]
+        },
+        {
+          number: "12.5",
+          title: "Boosting as Sequential Error Correction",
+          paragraphs: [
+            "Boosting builds an additive model sequentially. Each weak learner improves the current ensemble by emphasizing mistakes or fitting residual-like errors.",
+            "AdaBoost increases attention to misclassified examples and weights learners by performance. Gradient boosting fits learners toward a loss-reducing direction.",
+            "Because each learner depends on the current ensemble, boosting is not ordinary parallel majority voting."
+          ],
+          blocks: [
+            { type: "formula", title: "Additive ensemble", body: "F_M(x)=sum_m alpha_m h_m(x); with shrinkage, F_m=F_(m-1)+eta alpha_m h_m." },
+            { type: "principle", title: "Bias mechanism", body: "Each stage adds missing structure, so many weak rules can form a strong predictor and reduce underfitting." }
+          ]
+        },
+        {
+          number: "12.6",
+          title: "Boosting, Variance Control, and Failure Modes",
+          paragraphs: [
+            "Boosting primarily reduces bias; it does not eliminate variance. A flexible boosted model can overfit with deep base trees, too many stages, or noisy labels.",
+            "Small learning rates, shallow trees, subsampling, and early stopping regularize the sequence, trading faster bias reduction for variance control.",
+            "Forests can fail when trees remain highly correlated. Boosting can chase mislabeled points and outliers. Both require leakage-safe validation and care with imbalance."
+          ],
+          blocks: [
+            { type: "strategy", title: "Compare the levers", body: "Forest diversity lowers variance. Boosting stages lower bias until noise-fitting raises variance; depth, shrinkage, and stopping control the balance." },
+            { type: "warning", title: "Feature importance", body: "Impurity importance can favor continuous or high-cardinality variables and does not prove causality." }
+          ]
+        }
+      ],
+      concepts: [
+        { name: "Bias-variance tradeoff", description: "Systematic underfit versus sample sensitivity.", cue: "Forest lowers variance; boosting attacks bias." },
+        { name: "Bagging", description: "Parallel training on bootstrap samples followed by aggregation.", cue: "Resample rows, fit, combine." },
+        { name: "Bootstrap sample", description: "A same-size row sample drawn with replacement.", cue: "Repeats and omissions." },
+        { name: "Random forest", description: "Bagged trees with random candidate features at splits.", cue: "Rows plus features." },
+        { name: "Tree correlation", description: "Similarity of component prediction errors.", cue: "Correlation creates a variance floor." },
+        { name: "Out-of-bag evaluation", description: "Predict each row using trees that omitted it.", cue: "Omitted for that tree." },
+        { name: "Boosting", description: "Sequential additive correction of current errors.", cue: "Next learner repairs the ensemble." },
+        { name: "Boosting regularization", description: "Depth, shrinkage, subsampling, and stopping controls.", cue: "Manage variance while reducing bias." },
+        { name: "Ensemble failure mode", description: "Correlation, noise chasing, imbalance, leakage, or misleading importance.", cue: "Diversity and validation still matter." }
+      ],
+      techniques: [
+        { name: "Aggregate predictions", when: "component outputs are supplied.", move: "Use the stated majority, weighted vote, probability average, or regression average." },
+        { name: "Compute averaged variance", when: "learner variance and correlation are supplied.", move: "Separate the shrinking independent component from the correlation floor." },
+        { name: "Identify bootstrap and OOB rows", when: "resampled indices are given.", move: "Repeated indices are in bag; absent indices are out of bag for that learner." },
+        { name: "Distinguish forest randomness", when: "row and feature sampling are mixed.", move: "Bootstrap changes rows; feature subsampling changes split candidates." },
+        { name: "Trace boosting", when: "errors or learner weights are supplied.", move: "Update attention or residuals sequentially, then form the weighted additive prediction." },
+        { name: "Diagnose bias and variance", when: "training and validation behavior is described.", move: "Name the dominant error and choose diversity, depth, shrinkage, or stopping." }
+      ],
+      practiceProblems: machineLearningEnsembleProblems(),
+      reviewPrompts: [
+        "Why are deep trees high variance?",
+        "When does averaging reduce variance most strongly?",
+        "What does bootstrap sampling do?",
+        "How does a random forest decorrelate trees?",
+        "What is an out-of-bag prediction?",
+        "Why is boosting sequential?",
+        "How does boosting reduce bias?",
+        "Can boosting increase variance?",
+        "Which controls regularize boosting?",
+        "How do forests and boosting fail differently?"
+      ],
+      reviewQuiz: {
+        id: "quiz-machine-learning-chapter-12-objective-review",
+        title: "ML Chapter 12 Objective Review",
+        instructions: "Complete this after studying ensembles. The quiz checks aggregation, bootstrap sampling, random forests, correlation, OOB evaluation, boosting, regularization, and the bias-variance tradeoff.",
+        questions: machineLearningEnsembleReviewQuestions()
+      },
+      readingQuestions: [
+        "Why does averaging not remove perfectly correlated error?",
+        "What is sampled in bagging?",
+        "What extra randomness defines a random forest?",
+        "Which trees may predict an OOB row?",
+        "What does each boosting stage correct?",
+        "Why are learning rate and early stopping important?",
+        "Which method primarily reduces variance and which primarily reduces bias?"
+      ],
+      chapterSummary: [
+        "Ensembles combine models, and diversity determines how much aggregation helps.",
+        "Bagging trains in parallel on bootstrap samples and primarily reduces variance.",
+        "Random forests decorrelate bagged trees through random feature subsets.",
+        "Correlation leaves a floor below which averaging cannot push variance.",
+        "OOB predictions use only trees that omitted the target row.",
+        "Boosting builds an additive model sequentially and primarily reduces bias.",
+        "Boosting can increase variance when complexity or noise chasing is uncontrolled.",
+        "Depth, shrinkage, subsampling, and early stopping regularize boosted models.",
+        "Forests and boosting address different sides of bias-variance; neither makes the tradeoff disappear."
       ],
       updatedAt
     }
@@ -18196,6 +18439,90 @@ function machineLearningDecisionTreeReviewQuestions() {
   }));
 }
 
+function machineLearningEnsembleProblems() {
+  return [
+    { label: "Problem 1: Majority vote", concept: "Ensemble aggregation", difficulty: "Mechanics", technique: "Aggregate predictions", prompt: "Five trees predict A, B, A, A, and B. What is the forest majority-vote prediction?", solution: "Class A receives three votes and B receives two, so the ensemble predicts A." },
+    { label: "Problem 2: Regression average", concept: "Ensemble aggregation", difficulty: "Mechanics", technique: "Aggregate predictions", prompt: "Three regression trees predict 4, 7, and 10. What is the bagged prediction?", solution: "Bagging averages regression outputs: (4+7+10)/3=21/3=7." },
+    { label: "Problem 3: Bootstrap and OOB", concept: "Bootstrap and OOB", difficulty: "GATE-style", technique: "Identify bootstrap and OOB rows", prompt: "Rows are indexed 1 through 5. One bootstrap sample is [1,1,2,4,5]. Which rows repeat and which row is out of bag?", solution: "Row 1 repeats. Row 3 does not occur, so row 3 is out of bag for this tree." },
+    { label: "Problem 4: Correlated-average variance", concept: "Tree correlation", difficulty: "GATE-style", technique: "Compute averaged variance", prompt: "Each tree error has variance 9, pairwise correlation rho=0.25, and B=4 trees are averaged. Compute the ensemble error variance.", solution: "Use 9[0.25+(1-0.25)/4]=9[0.25+0.1875]=9(0.4375)=3.9375. Correlation prevents the variance from falling to 9/4." },
+    { label: "Problem 5: Why random features help", concept: "Random forest", difficulty: "Concept", technique: "Distinguish forest randomness", prompt: "One feature is very strong and appears in nearly every bagged tree's root split. Why can random feature subsets improve the ensemble?", solution: "Restricting split candidates sometimes excludes the dominant feature, creating different tree structures. Lower correlation makes averaging more effective at reducing variance." },
+    { label: "Problem 6: OOB prediction", concept: "Out-of-bag evaluation", difficulty: "GATE-style", technique: "Identify bootstrap and OOB rows", prompt: "For training row i, trees 1, 3, and 5 omitted it and predict +1, -1, +1. Trees 2 and 4 trained on it. What is its OOB prediction?", solution: "Use only trees 1, 3, and 5. Their majority is +1, so the OOB prediction is +1; trees 2 and 4 are excluded." },
+    { label: "Problem 7: Weighted boosted vote", concept: "Boosting", difficulty: "GATE-style", technique: "Trace boosting", prompt: "Two boosted classifiers output h_1(x)=+1 and h_2(x)=-1 with weights alpha_1=0.8 and alpha_2=0.3. What is sign(alpha_1 h_1+alpha_2 h_2)?", solution: "The additive score is 0.8-0.3=0.5, so the ensemble predicts +1." },
+    { label: "Problem 8: Bias-variance diagnosis", concept: "Bias-variance tradeoff", difficulty: "Application", technique: "Diagnose bias and variance", prompt: "Model A is a deep tree whose validation result changes sharply across training samples. Model B is a boosted sequence whose training and validation errors are both high after ten shallow learners. Name the dominant problem and a suitable response for each.", solution: "A shows high variance: bagging or a random forest can stabilize it. B shows high bias or underfitting: additional boosting stages or modestly richer weak learners can add structure, while validation controls eventual variance." }
+  ];
+}
+
+function machineLearningEnsembleReviewQuestions() {
+  const metadata = {
+    "ml-ensemble-review-1": { targetConcept: "ensemble-aggregation", prereqsUsed: [], difficulty: 1, gateWeight: "high" },
+    "ml-ensemble-review-2": { targetConcept: "bootstrap-sampling", prereqsUsed: [], difficulty: 1, gateWeight: "high" },
+    "ml-ensemble-review-3": { targetConcept: "bias-variance-tradeoff", prereqsUsed: [], difficulty: 1, gateWeight: "high" },
+    "ml-ensemble-review-4": { targetConcept: "random-forest", prereqsUsed: ["bootstrap-sampling"], difficulty: 2, gateWeight: "high" },
+    "ml-ensemble-review-5": { targetConcept: "tree-correlation", prereqsUsed: ["ensemble-aggregation"], difficulty: 2, gateWeight: "high" },
+    "ml-ensemble-review-6": { targetConcept: "out-of-bag", prereqsUsed: ["bootstrap-sampling"], difficulty: 2, gateWeight: "medium" },
+    "ml-ensemble-review-7": { targetConcept: "boosting-sequence", prereqsUsed: ["ensemble-aggregation"], difficulty: 2, gateWeight: "high" },
+    "ml-ensemble-review-8": { targetConcept: "forest-variance", prereqsUsed: ["random-forest", "tree-correlation"], difficulty: 3, gateWeight: "high" },
+    "ml-ensemble-review-9": { targetConcept: "boosting-regularization", prereqsUsed: ["boosting-sequence", "bias-variance-tradeoff"], difficulty: 3, gateWeight: "high" },
+    "ml-ensemble-review-10": { targetConcept: "ensemble-failure-mode", prereqsUsed: ["out-of-bag", "boosting-regularization"], difficulty: 3, gateWeight: "medium" }
+  };
+  const questions = [
+    {
+      id: "ml-ensemble-review-1",
+      kind: "single concept", tags: ["ensemble-aggregation"], prompt: "How are ordinary bagged regression-tree predictions combined?", options: [{ id: "a", text: "By averaging" }, { id: "b", text: "By taking only the deepest tree" }, { id: "c", text: "By summing without scaling" }, { id: "d", text: "By choosing a random tree" }],
+      answer: "a"
+    },
+    {
+      id: "ml-ensemble-review-2",
+      kind: "single concept", tags: ["bootstrap-sampling"], prompt: "What defines a bootstrap sample of n training rows?", options: [{ id: "a", text: "Draw n rows with replacement." }, { id: "b", text: "Select every row exactly once." }, { id: "c", text: "Choose only the features." }, { id: "d", text: "Draw exclusively from the test set." }],
+      answer: "a"
+    },
+    {
+      id: "ml-ensemble-review-3",
+      kind: "single concept", tags: ["bias-variance-tradeoff"], prompt: "Which broad description is most accurate?", options: [{ id: "a", text: "Random forests mainly reduce variance; boosting mainly reduces bias." }, { id: "b", text: "Both eliminate all bias and variance." }, { id: "c", text: "Forests only increase variance." }, { id: "d", text: "Boosting cannot alter underfitting." }],
+      answer: "a"
+    },
+    {
+      id: "ml-ensemble-review-4",
+      kind: "mixed: two concepts", tags: ["random-forest", "bootstrap-sampling"], prompt: "What distinguishes a random forest from plain bagged trees?", options: [{ id: "a", text: "Random feature subsets are considered at splits in addition to bootstrap rows." }, { id: "b", text: "Every tree uses identical rows and features." }, { id: "c", text: "Trees are replaced by linear regression." }, { id: "d", text: "No predictions are aggregated." }],
+      answer: "a"
+    },
+    {
+      id: "ml-ensemble-review-5",
+      kind: "mixed: two concepts", tags: ["tree-correlation", "ensemble-aggregation"], prompt: "Why does perfectly correlated tree error limit the benefit of averaging?", options: [{ id: "a", text: "A shared error does not cancel across trees." }, { id: "b", text: "Averaging always doubles shared error." }, { id: "c", text: "Correlation makes every tree unbiased." }, { id: "d", text: "Correlation creates more training rows." }],
+      answer: "a"
+    },
+    {
+      id: "ml-ensemble-review-6",
+      kind: "mixed: two concepts", tags: ["out-of-bag", "bootstrap-sampling"], prompt: "Which trees may be used for the OOB prediction of row i?", options: [{ id: "a", text: "Only trees whose bootstrap samples omitted row i" }, { id: "b", text: "Only trees trained twice on row i" }, { id: "c", text: "Every tree regardless of its sample" }, { id: "d", text: "No trained trees" }],
+      answer: "a"
+    },
+    {
+      id: "ml-ensemble-review-7",
+      kind: "mixed: two concepts", tags: ["boosting-sequence", "ensemble-aggregation"], prompt: "Why is a boosting procedure fundamentally sequential?", options: [{ id: "a", text: "Each learner is chosen to improve the current additive ensemble." }, { id: "b", text: "All learners are identical and independent." }, { id: "c", text: "Only the first learner is used." }, { id: "d", text: "Labels are discarded after each stage." }],
+      answer: "a"
+    },
+    {
+      id: "ml-ensemble-review-8",
+      kind: "mixed: three concepts", tags: ["forest-variance", "random-forest", "tree-correlation"], prompt: "How do random feature subsets support variance reduction in a forest?", options: [{ id: "a", text: "They decorrelate tree structures, making averaging more effective." }, { id: "b", text: "They guarantee zero bias." }, { id: "c", text: "They make all root splits identical." }, { id: "d", text: "They remove bootstrap sampling." }],
+      answer: "a"
+    },
+    {
+      id: "ml-ensemble-review-9",
+      kind: "mixed: three concepts", tags: ["boosting-regularization", "boosting-sequence", "bias-variance-tradeoff"], prompt: "A boosted model begins fitting noisy labels after many stages. Which response best manages variance?", options: [{ id: "a", text: "Use shallow learners, shrinkage, and validation-based early stopping." }, { id: "b", text: "Increase depth and learning rate without validation." }, { id: "c", text: "Train forever because boosting affects only bias." }, { id: "d", text: "Evaluate repeatedly on the final test set." }],
+      answer: "a"
+    },
+    {
+      id: "ml-ensemble-review-10",
+      kind: "mixed: three concepts", tags: ["ensemble-failure-mode", "out-of-bag", "boosting-regularization"], prompt: "Which statement correctly identifies an ensemble limitation?", options: [{ id: "a", text: "OOB estimates do not prevent preprocessing leakage, and boosting can chase mislabeled points." }, { id: "b", text: "OOB evaluation makes a test set unnecessary in every workflow." }, { id: "c", text: "Feature importance always proves causality." }, { id: "d", text: "Class imbalance never affects ensemble predictions." }],
+      answer: "a"
+    }
+  ];
+  return questions.map((question) => ({
+    ...question,
+    ...(metadata[question.id] || { targetConcept: question.tags[0], prereqsUsed: question.tags.slice(1), difficulty: question.tags.length, gateWeight: "medium" })
+  }));
+}
+
 function probabilityFoundationProblems() {
   return [
     {
@@ -24691,6 +25018,30 @@ function machineLearningDecisionTreeConceptGraph() {
       "tree-overfitting": { label: "Tree overfitting", prereqs: ["greedy-split"], repairMaterial: "Review ML Chapter 11.5 and compare training and validation error as depth grows.", gateWeight: "high" },
       "pruning-validation": { label: "Pruning and validation", prereqs: ["tree-overfitting", "split-selection"], repairMaterial: "Review ML Chapter 11.5 and choose stopping or pruning strength on validation data.", gateWeight: "high" },
       "tree-failure-mode": { label: "Instability and split bias", prereqs: ["greedy-split", "pruning-validation"], repairMaterial: "Review ML Chapter 11.6 and check sensitivity to data changes, high-cardinality candidates, excessive depth, and shallow underfit.", gateWeight: "medium" }
+    }
+  };
+}
+
+function machineLearningEnsembleConceptGraph() {
+  return {
+    chapterId: "gate-da-machine-learning-ensembles-random-forests-boosting",
+    chapterTitle: "ML Chapter 12: Ensembles, Random Forests, and Boosting",
+    gateWeight: "medium",
+    fallbackConcepts: ["bias-variance-tradeoff", "bootstrap-sampling", "random-forest", "boosting-sequence"],
+    fallbackDifficultyMix: [1, 2, 2, 3],
+    fallbackInstruction: "Retest aggregation, bootstrap/OOB membership, forest decorrelation, sequential boosting, and bias-versus-variance diagnosis.",
+    stableNextAction: "Next: move to clustering after you can explain why forests lower variance, boosting lowers bias, and regularization prevents boosting from trading bias for excessive variance.",
+    nodes: {
+      "ensemble-aggregation": { label: "Ensemble aggregation", prereqs: [], repairMaterial: "Review ML Chapter 12.2 and distinguish regression averaging, majority vote, probability averaging, and weighted additive scores.", gateWeight: "high" },
+      "bootstrap-sampling": { label: "Bootstrap sampling", prereqs: [], repairMaterial: "Review ML Chapter 12.2: draw n rows with replacement, allowing repeats and omissions.", gateWeight: "high" },
+      "bias-variance-tradeoff": { label: "Ensemble bias-variance tradeoff", prereqs: [], repairMaterial: "Review ML Chapter 12.1 and separate systematic underfit from training-sample sensitivity.", gateWeight: "high" },
+      "random-forest": { label: "Random forest construction", prereqs: ["bootstrap-sampling"], repairMaterial: "Review ML Chapter 12.3 and separate bootstrap row randomness from per-split feature randomness.", gateWeight: "high" },
+      "tree-correlation": { label: "Tree correlation and variance floor", prereqs: ["ensemble-aggregation"], repairMaterial: "Review ML Chapter 12.1 and use sigma^2[rho+(1-rho)/B] to see why shared errors remain.", gateWeight: "high" },
+      "forest-variance": { label: "Random-forest variance reduction", prereqs: ["random-forest", "tree-correlation"], repairMaterial: "Review ML Chapter 12.3 and explain how feature randomness decorrelates trees so averaging stabilizes them.", gateWeight: "high" },
+      "out-of-bag": { label: "Out-of-bag evaluation", prereqs: ["bootstrap-sampling"], repairMaterial: "Review ML Chapter 12.4 and predict each row using only trees whose bootstrap samples omitted it.", gateWeight: "medium" },
+      "boosting-sequence": { label: "Sequential boosting", prereqs: ["ensemble-aggregation"], repairMaterial: "Review ML Chapter 12.5 and trace how each learner corrects the current additive model.", gateWeight: "high" },
+      "boosting-regularization": { label: "Boosting bias and variance control", prereqs: ["boosting-sequence", "bias-variance-tradeoff"], repairMaterial: "Review ML Chapter 12.6 and connect shallow depth, shrinkage, subsampling, and early stopping to variance control.", gateWeight: "high" },
+      "ensemble-failure-mode": { label: "Ensemble failure modes", prereqs: ["out-of-bag", "boosting-regularization"], repairMaterial: "Review ML Chapter 12.6 and check correlation, noise chasing, imbalance, leakage, and importance bias.", gateWeight: "medium" }
     }
   };
 }
@@ -33227,6 +33578,7 @@ function conceptGraphForSection(section) {
   if (section?.id === "gate-da-machine-learning-svm-margin-classification") return machineLearningSvmMarginConceptGraph();
   if (section?.id === "gate-da-machine-learning-lda-scatter-classification") return machineLearningLdaScatterConceptGraph();
   if (section?.id === "gate-da-machine-learning-decision-trees") return machineLearningDecisionTreeConceptGraph();
+  if (section?.id === "gate-da-machine-learning-ensembles-random-forests-boosting") return machineLearningEnsembleConceptGraph();
   return null;
 }
 
