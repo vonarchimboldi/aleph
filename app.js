@@ -1,7 +1,7 @@
 const STORAGE_KEY = "learning-studio-data-v2";
 const LEGACY_STORAGE_KEYS = ["learning-studio-data-v1"];
 const SESSION_KEY = "aleph-session";
-const COURSE_PLAN_VERSION = "seeded-user-canonical-workspace-v135";
+const COURSE_PLAN_VERSION = "seeded-user-canonical-workspace-v136";
 const MAX_FEEDBACK_ATTACHMENT_BYTES = 3 * 1024 * 1024;
 const MAX_COMPRESSED_FEEDBACK_BYTES = 2400 * 1024;
 const MAX_FEEDBACK_PDF_PAGES = 6;
@@ -1939,6 +1939,36 @@ function buildGateDaBasicPlan(now, accountTypes, sections, user = basicGateDaUse
         date: weekTenSunday,
         details: "Take the graph-backed objective review for within/between scatter, Fisher criterion, LDA projection, generalized eigenvalue form, singular scatter, assumptions, and failure diagnosis.",
         updatedAt: now
+      },
+      {
+        id: "schedule-machine-learning-chapter-11-study",
+        title: "ML Chapter 11: Decision Trees",
+        week: 11,
+        subject: "Machine Learning",
+        kind: "Study",
+        date: weekElevenMonday,
+        details: "Study tree nodes and leaves, entropy, Gini impurity, weighted child impurity, information gain, categorical and numerical splits, greedy construction, XOR regions, pruning, validation, and failure modes.",
+        updatedAt: now
+      },
+      {
+        id: "schedule-machine-learning-chapter-11-practice",
+        title: "ML Chapter 11: Labelled Practice",
+        week: 11,
+        subject: "Machine Learning",
+        kind: "Practice",
+        date: addDays(weekElevenMonday, 2),
+        details: "Solve labelled decision-tree practice: impurity calculations, weighted split scores, information gain, first-split selection, numerical thresholds, XOR, pruning, and high-cardinality bias.",
+        updatedAt: now
+      },
+      {
+        id: "schedule-machine-learning-chapter-11-review",
+        title: "ML Chapter 11: Objective Review",
+        week: 11,
+        subject: "Machine Learning",
+        kind: "Review",
+        date: weekElevenSunday,
+        details: "Take the graph-backed objective review for entropy, Gini, information gain, split selection, axis-aligned regions, greediness, overfitting, pruning, and instability.",
+        updatedAt: now
       }
     ],
     tests: [
@@ -2238,6 +2268,15 @@ function buildGateDaBasicPlan(now, accountTypes, sections, user = basicGateDaUse
         details: "Objective end-of-chapter quiz for class means, within-class and between-class scatter, Fisher criterion, projection directions, generalized eigenvalue recognition, singular S_W, assumptions, and failure modes.",
         sectionId: machineLearningSections[9]?.id,
         quizId: "quiz-machine-learning-chapter-10-objective-review",
+        updatedAt: now
+      },
+      {
+        id: "test-machine-learning-chapter-11-objective-review",
+        title: "ML Chapter 11 Objective Review",
+        date: weekElevenSunday,
+        details: "Objective end-of-chapter quiz for entropy, Gini impurity, weighted child impurity, information gain, first-split selection, numerical thresholds, XOR regions, pruning, and tree failure modes.",
+        sectionId: machineLearningSections[10]?.id,
+        quizId: "quiz-machine-learning-chapter-11-objective-review",
         updatedAt: now
       }
     ],
@@ -3321,6 +3360,39 @@ function buildGateDaBasicPlan(now, accountTypes, sections, user = basicGateDaUse
         done: false,
         details: "Submit the Chapter 10 objective quiz so the learner record logs scatter-based-classifier strengths and weaknesses.",
         updatedAt: now
+      },
+      {
+        id: "task-machine-learning-chapter-11-read",
+        week: 11,
+        title: "ML Ch 11: Read decision trees",
+        type: "Study",
+        date: weekElevenMonday,
+        status: "todo",
+        done: false,
+        details: "Open Subjects -> Machine Learning -> Chapter 11 and study impurity, gain, split selection, tree geometry, pruning, validation, and failure modes.",
+        updatedAt: now
+      },
+      {
+        id: "task-machine-learning-chapter-11-practice",
+        week: 11,
+        title: "ML Ch 11: Solve labelled practice",
+        type: "Practice",
+        date: addDays(weekElevenMonday, 2),
+        status: "todo",
+        done: false,
+        details: "Attempt the entropy, Gini, weighted impurity, gain, threshold, XOR, pruning, and bias problems before opening worked solutions.",
+        updatedAt: now
+      },
+      {
+        id: "task-machine-learning-chapter-11-review",
+        week: 11,
+        title: "ML Ch 11: Take objective review",
+        type: "Review",
+        date: weekElevenSunday,
+        status: "todo",
+        done: false,
+        details: "Submit the Chapter 11 objective quiz so the learner record logs decision-tree strengths and weaknesses.",
+        updatedAt: now
       }
     ],
     accountTypes,
@@ -3347,7 +3419,7 @@ function buildGateDaBasicPlan(now, accountTypes, sections, user = basicGateDaUse
         startDate: monday,
         endDate: "2026-08-30",
         status: "active",
-        details: `GATE DA Basic plan surfaces: Subjects, Tasks, Schedule, Tests, Feedback, Resources, and Share. Recommended pace: study Probability, Linear Algebra, DSA, and Machine Learning in parallel. Every 15 days, Aleph should generate an adaptive cumulative review quiz from prior performance, repeating missed concepts more often, reducing mastered concepts, and keeping high-weight exam topics in rotation. Current material build: Probability Chapters 1-10, Linear Algebra Chapters 1-12 plus a chapterless cumulative past-paper style drill, DSA Chapters 1-9 with a progression gate before Chapter 3, and Machine Learning Chapters 1-10.${trialNote}`,
+        details: `GATE DA Basic plan surfaces: Subjects, Tasks, Schedule, Tests, Feedback, Resources, and Share. Recommended pace: study Probability, Linear Algebra, DSA, and Machine Learning in parallel. Every 15 days, Aleph should generate an adaptive cumulative review quiz from prior performance, repeating missed concepts more often, reducing mastered concepts, and keeping high-weight exam topics in rotation. Current material build: Probability Chapters 1-10, Linear Algebra Chapters 1-12 plus a chapterless cumulative past-paper style drill, DSA Chapters 1-9 with a progression gate before Chapter 3, and Machine Learning Chapters 1-11.${trialNote}`,
         updatedAt: now
       }
     ],
@@ -3521,6 +3593,13 @@ function buildGateDaBasicPlan(now, accountTypes, sections, user = basicGateDaUse
         date: weekTenSunday,
         details: "Review misses for mixing within-class and between-class scatter, forgetting to center observations at their class mean, maximizing separation without penalizing within-class spread, reversing the Fisher ratio, treating an ordinary eigenproblem as generalized, inverting singular S_W without diagnosis, confusing LDA with PCA, and ignoring covariance assumptions or outliers.",
         updatedAt: now
+      },
+      {
+        id: "feedback-machine-learning-chapter-11",
+        title: "Machine Learning Chapter 11 feedback focus",
+        date: weekElevenSunday,
+        details: "Review misses for using raw rather than weighted child impurity, reversing information gain, confusing entropy with Gini, testing invalid numerical thresholds, assuming greedy splits are globally optimal, treating axis-aligned splits as only linear overall, skipping validation or pruning, and ignoring instability or high-cardinality bias.",
+        updatedAt: now
       }
     ],
     resources: [
@@ -3609,6 +3688,14 @@ function buildGateDaBasicPlan(now, accountTypes, sections, user = basicGateDaUse
         title: "Machine Learning Chapter 10: LDA and Scatter-Based Classification",
         date: weekTenMonday,
         details: "Open Subjects -> Machine Learning to study class means, within/between scatter, Fisher ratio, generalized eigenvalue recognition, projection directions, assumptions, and failure modes.",
+        link: "",
+        updatedAt: now
+      },
+      {
+        id: "resource-machine-learning-decision-trees",
+        title: "Machine Learning Chapter 11: Decision Trees",
+        date: weekElevenMonday,
+        details: "Open Subjects -> Machine Learning to study entropy, Gini impurity, information gain, split selection, numerical thresholds, tree geometry, pruning, validation, and failure modes.",
         link: "",
         updatedAt: now
       },
@@ -5744,6 +5831,163 @@ function gateDaMachineLearningSections(updatedAt = new Date().toISOString()) {
         "Projection direction is unchanged by nonzero rescaling.",
         "LDA, PCA, logistic regression, and SVM may all be linear but optimize different goals.",
         "Singular S_W, unequal covariances, overlap, nonlinear structure, and outliers are key failure modes."
+      ],
+      updatedAt
+    },
+    {
+      id: "gate-da-machine-learning-decision-trees",
+      exam: "GATE DA",
+      accountTier: "Basic",
+      subject: "Machine Learning",
+      chapter: "Chapter 11",
+      section: "11",
+      title: "Decision Trees",
+      summary: "Decision-tree classification through impurity, weighted split quality, information gain, greedy construction, axis-aligned regions, pruning, validation, and failure diagnosis.",
+      sectionPreview: "A decision tree repeatedly asks a simple question that makes the resulting groups purer. The arithmetic is local—count labels, score candidate splits, and choose the largest impurity reduction—but the combined leaves can form a nonlinear decision region.",
+      previewActivity: "A node contains four positive and four negative examples. One split creates children (4+,0-) and (0+,4-). Without calculating logarithms, what are the child impurities and why must this split have maximal entropy reduction?",
+      intro: [
+        "A decision tree routes an input from a root through internal tests to a leaf prediction. Classification leaves usually predict a majority class or class-frequency estimate.",
+        "Training is an objective-reduction procedure: compare candidate splits by the weighted impurity of their children, or equivalently by information gain.",
+        "GATE questions favor small count tables. Keep the parent counts, each child count, child weight, impurity, and weighted contribution in one compact table."
+      ],
+      bookSections: [
+        {
+          number: "11.1",
+          title: "Nodes, Leaves, and Impurity",
+          paragraphs: [
+            "A pure node contains one class; a mixed node contains several. An impurity measure is zero at purity and larger when labels are mixed.",
+            "Binary entropy is H(p)=-p log_2 p-(1-p)log_2(1-p), with 0 log 0 interpreted as zero. Gini impurity is 1-sum_k p_k^2.",
+            "For a balanced binary node, entropy is 1 and Gini is 1/2. Do not compare their raw numerical scales as if they were the same measure."
+          ],
+          blocks: [
+            { type: "formula", title: "Classification impurities", body: "Entropy: H=-sum_k p_k log_2 p_k. Gini: G=1-sum_k p_k^2. Classification error: 1-max_k p_k." },
+            { type: "strategy", title: "Count first", body: "Convert child label counts into proportions before applying the selected impurity formula." }
+          ]
+        },
+        {
+          number: "11.2",
+          title: "Weighted Child Impurity and Information Gain",
+          paragraphs: [
+            "A split creates child nodes of possibly different sizes. Its post-split impurity is the size-weighted average of child impurities.",
+            "Information gain equals parent impurity minus weighted child impurity. A larger gain means a larger local reduction in uncertainty.",
+            "A tiny pure child does not automatically make a split excellent; its contribution is small because its weight is small."
+          ],
+          blocks: [
+            { type: "formula", title: "Split objective", body: "I_after = sum_j (n_j/n) I(child_j); Gain = I(parent)-I_after." },
+            { type: "warning", title: "Weighting trap", body: "Never average child impurities equally unless the children have equal sample counts." }
+          ]
+        },
+        {
+          number: "11.3",
+          title: "Selecting Categorical and Numerical Splits",
+          paragraphs: [
+            "A categorical attribute can branch by category or by allowed category groupings. For a numerical feature, candidate thresholds are placed between adjacent sorted values, usually where labels can change.",
+            "Each threshold partitions examples into x_j<=t and x_j>t. Score every permitted candidate using the same impurity measure and weighting rule.",
+            "If two splits tie, an implementation needs a deterministic tie rule; the mathematical objective alone does not distinguish them."
+          ],
+          blocks: [
+            { type: "strategy", title: "Numerical threshold routine", body: "Sort values, test midpoints between adjacent distinct values, make child count tables, and compare weighted impurities." },
+            { type: "example", title: "Example 11.1", body: "Observed values 1,2,4,7 produce candidate midpoint thresholds 1.5,3,5.5." }
+          ]
+        },
+        {
+          number: "11.4",
+          title: "Greedy Growth and Decision Geometry",
+          paragraphs: [
+            "Standard tree induction is greedy: it chooses the best current split and then repeats inside each child. It does not generally search all possible complete trees.",
+            "A test x_j<=t creates an axis-aligned cut. Several cuts combine into rectangular leaf regions, so the overall boundary can be nonlinear and disconnected.",
+            "XOR cannot be solved by one linear boundary, but a shallow tree can first split on one bit and then split each branch on the other."
+          ],
+          blocks: [
+            { type: "principle", title: "Local is not global", body: "The largest immediate gain need not belong to the globally smallest or most accurate final tree." },
+            { type: "principle", title: "XOR cue", body: "Simple axis-aligned questions can compose into a nonlinear classifier." }
+          ]
+        },
+        {
+          number: "11.5",
+          title: "Stopping, Pruning, and Validation",
+          paragraphs: [
+            "Growing until every training leaf is pure can fit noise. Pre-pruning limits depth, leaf size, or gain; post-pruning removes branches from a larger tree.",
+            "Tree size is a model-complexity choice and should be selected using validation performance, not test performance.",
+            "A shallow tree may underfit genuine interactions, while a deep unpruned tree may have low training error and poor generalization."
+          ],
+          blocks: [
+            { type: "warning", title: "Pure training leaves", body: "Training purity is not evidence of good test performance." },
+            { type: "strategy", title: "Complexity control", body: "Use validation data to choose depth, minimum leaf size, or pruning strength." }
+          ]
+        },
+        {
+          number: "11.6",
+          title: "Failure Modes and Exam Shortcuts",
+          paragraphs: [
+            "Trees can be unstable: a small change in data may alter an early split and therefore the entire subtree below it.",
+            "Attributes with many possible categories or candidate partitions can receive more chances to produce accidental gain. Validation and constrained splitting help control this bias.",
+            "For speed, memorize H(1/2)=1, H(1)=0, Gini(1/2)=1/2, and pure-node impurity zero. Preserve enough decimal precision until the final NAT answer."
+          ],
+          blocks: [
+            { type: "strategy", title: "GATE count table", body: "For each candidate record child size, positive count, negative count, impurity, weight, and weighted contribution." },
+            { type: "warning", title: "Round at the end", body: "Early rounding can reverse the order of two close information-gain values." }
+          ]
+        }
+      ],
+      concepts: [
+        { name: "Node impurity", description: "Numerical label-mixing score at a tree node.", cue: "Pure means zero." },
+        { name: "Entropy", description: "Negative sum of class proportions times base-two log proportions.", cue: "Balanced binary node equals one." },
+        { name: "Gini impurity", description: "One minus the sum of squared class proportions.", cue: "Balanced binary node equals one-half." },
+        { name: "Weighted child impurity", description: "Child impurity averaged by child sample counts.", cue: "Weight before adding." },
+        { name: "Information gain", description: "Parent impurity minus post-split weighted impurity.", cue: "Largest reduction wins." },
+        { name: "Numerical threshold", description: "A midpoint candidate that partitions sorted feature values.", cue: "Sort, midpoint, count." },
+        { name: "Greedy split", description: "Best immediate split rather than globally optimized tree.", cue: "Local choice only." },
+        { name: "Axis-aligned region", description: "Rectangular regions composed from feature-threshold tests.", cue: "Simple cuts, nonlinear whole." },
+        { name: "Pruning", description: "Complexity control by limiting or removing branches.", cue: "Validate tree size." },
+        { name: "Tree failure mode", description: "Overfitting, instability, high-cardinality bias, or underfitting.", cue: "Inspect depth, data, and candidates." }
+      ],
+      techniques: [
+        { name: "Compute node impurity", when: "class counts are supplied.", move: "Convert counts to proportions and apply the stated entropy or Gini formula." },
+        { name: "Score a split", when: "child label tables are supplied.", move: "Weight each child impurity by child size, add, then subtract from the parent." },
+        { name: "Select the first split", when: "several attributes or thresholds compete.", move: "Choose maximum gain or minimum weighted child impurity under one common measure." },
+        { name: "Generate numerical thresholds", when: "a continuous feature is given.", move: "Sort distinct values and test permitted adjacent midpoints." },
+        { name: "Trace an XOR tree", when: "one line cannot separate alternating labels.", move: "Split on one coordinate, then the other inside each branch." },
+        { name: "Diagnose tree complexity", when: "training and validation behavior differ.", move: "Distinguish deep-tree overfit from shallow-tree underfit and choose pruning with validation." }
+      ],
+      practiceProblems: machineLearningDecisionTreeProblems(),
+      reviewPrompts: [
+        "When are entropy and Gini zero?",
+        "Why must child impurities be size weighted?",
+        "How is information gain computed?",
+        "Which candidate split is selected first?",
+        "How are numerical threshold candidates generated?",
+        "Why is ordinary tree growth greedy?",
+        "How can axis-aligned splits solve XOR?",
+        "Why can a pure training tree overfit?",
+        "How should pruning strength be selected?",
+        "Why can trees be unstable or biased toward high-cardinality attributes?"
+      ],
+      reviewQuiz: {
+        id: "quiz-machine-learning-chapter-11-objective-review",
+        title: "ML Chapter 11 Objective Review",
+        instructions: "Complete this after studying decision trees. The quiz checks entropy, Gini, weighted child impurity, information gain, split selection, numerical thresholds, greedy growth, XOR geometry, pruning, validation, and failure modes.",
+        questions: machineLearningDecisionTreeReviewQuestions()
+      },
+      readingQuestions: [
+        "What prediction is stored at a classification leaf?",
+        "What are entropy and Gini at a pure node?",
+        "Why are child impurities weighted?",
+        "Which direction should information gain be optimized?",
+        "Where do numerical threshold candidates come from?",
+        "Why can a tree be nonlinear overall?",
+        "What is the difference between pre-pruning and post-pruning?"
+      ],
+      chapterSummary: [
+        "Decision trees route examples through feature tests to leaf predictions.",
+        "Entropy, Gini, and classification error measure label mixing.",
+        "Post-split impurity is a child-size-weighted average.",
+        "Information gain is parent impurity minus weighted child impurity.",
+        "Numerical split candidates come from ordered feature values.",
+        "Greedy growth chooses the best immediate split, not necessarily the best complete tree.",
+        "Axis-aligned splits can compose into nonlinear regions and solve XOR.",
+        "Validation-guided stopping or pruning controls overfitting.",
+        "Instability, high-cardinality bias, deep-tree overfit, and shallow-tree underfit are key failures."
       ],
       updatedAt
     }
@@ -17868,6 +18112,90 @@ function machineLearningLdaScatterReviewQuestions() {
   }));
 }
 
+function machineLearningDecisionTreeProblems() {
+  return [
+    { label: "Problem 1: Entropy of a node", concept: "Entropy", difficulty: "Mechanics", technique: "Compute node impurity", prompt: "A node contains four positive and four negative examples. Compute its base-two entropy.", solution: "The proportions are 1/2 and 1/2. Therefore H=-(1/2)log_2(1/2)-(1/2)log_2(1/2)=1 bit." },
+    { label: "Problem 2: Gini impurity", concept: "Gini impurity", difficulty: "Mechanics", technique: "Compute node impurity", prompt: "A node has class counts 3 and 1. Compute its Gini impurity.", solution: "The proportions are 3/4 and 1/4. G=1-(3/4)^2-(1/4)^2=1-9/16-1/16=6/16=3/8." },
+    { label: "Problem 3: Weighted child impurity", concept: "Weighted child impurity", difficulty: "GATE-style", technique: "Score a split", prompt: "A split of ten examples creates a pure child of size 2 with entropy 0 and a child of size 8 with entropy 1. Compute post-split entropy.", solution: "Weight by child size: (2/10)(0)+(8/10)(1)=0.8. An unweighted average of 0.5 would be incorrect." },
+    { label: "Problem 4: Information gain", concept: "Information gain", difficulty: "GATE-style", technique: "Score a split", prompt: "A parent has entropy 1. A candidate split has weighted child entropy 0.4. What is its information gain?", solution: "Gain=parent entropy minus weighted child entropy=1-0.4=0.6 bits." },
+    { label: "Problem 5: Select the first split", concept: "Split selection", difficulty: "GATE-style", technique: "Select the first split", prompt: "Using entropy, split A has weighted child impurity 0.55 and split B has 0.30. The parent impurity is 0.90. Which split is selected, and what are their gains?", solution: "Gain(A)=0.90-0.55=0.35 and Gain(B)=0.90-0.30=0.60. Select B because it has larger gain, equivalently smaller post-split impurity." },
+    { label: "Problem 6: Numerical thresholds", concept: "Numerical threshold", difficulty: "Mechanics", technique: "Generate numerical thresholds", prompt: "A numerical feature has sorted distinct values 1, 2, 4, and 7. List the midpoint threshold candidates.", solution: "The adjacent midpoints are (1+2)/2=1.5, (2+4)/2=3, and (4+7)/2=5.5." },
+    { label: "Problem 7: XOR tree", concept: "Axis-aligned region", difficulty: "Application", technique: "Trace an XOR tree", prompt: "For binary x_1,x_2, the label is positive exactly when the bits differ. Describe a depth-two tree that classifies all four inputs.", solution: "Split first on x_1. In the x_1=0 branch, predict positive when x_2=1; in the x_1=1 branch, predict positive when x_2=0. Two axis-aligned levels solve the nonlinear XOR pattern." },
+    { label: "Problem 8: Diagnose overfitting", concept: "Pruning and validation", difficulty: "Application", technique: "Diagnose tree complexity", prompt: "A deep tree has zero training error but much worse validation error than a depth-four tree. Which model should be preferred and what principle supports the choice?", solution: "Prefer the depth-four tree if its validation performance is better. The deep tree is fitting training-specific noise; validation-guided stopping or post-pruning controls this overfitting." }
+  ];
+}
+
+function machineLearningDecisionTreeReviewQuestions() {
+  const metadata = {
+    "ml-tree-review-1": { targetConcept: "entropy", prereqsUsed: [], difficulty: 1, gateWeight: "high" },
+    "ml-tree-review-2": { targetConcept: "gini-impurity", prereqsUsed: [], difficulty: 1, gateWeight: "high" },
+    "ml-tree-review-3": { targetConcept: "node-impurity", prereqsUsed: [], difficulty: 1, gateWeight: "high" },
+    "ml-tree-review-4": { targetConcept: "weighted-child-impurity", prereqsUsed: ["node-impurity"], difficulty: 2, gateWeight: "high" },
+    "ml-tree-review-5": { targetConcept: "information-gain", prereqsUsed: ["weighted-child-impurity"], difficulty: 2, gateWeight: "high" },
+    "ml-tree-review-6": { targetConcept: "numerical-threshold", prereqsUsed: ["split-selection"], difficulty: 2, gateWeight: "high" },
+    "ml-tree-review-7": { targetConcept: "greedy-split", prereqsUsed: ["information-gain"], difficulty: 2, gateWeight: "medium" },
+    "ml-tree-review-8": { targetConcept: "axis-aligned-region", prereqsUsed: ["split-selection", "greedy-split"], difficulty: 3, gateWeight: "high" },
+    "ml-tree-review-9": { targetConcept: "pruning-validation", prereqsUsed: ["tree-overfitting", "split-selection"], difficulty: 3, gateWeight: "high" },
+    "ml-tree-review-10": { targetConcept: "tree-failure-mode", prereqsUsed: ["greedy-split", "pruning-validation"], difficulty: 3, gateWeight: "medium" }
+  };
+  const questions = [
+    {
+      id: "ml-tree-review-1",
+      kind: "single concept", tags: ["entropy"], prompt: "What is the base-two entropy of a balanced binary node?", options: [{ id: "a", text: "0" }, { id: "b", text: "1" }, { id: "c", text: "2" }, { id: "d", text: "1/2" }],
+      answer: "b"
+    },
+    {
+      id: "ml-tree-review-2",
+      kind: "single concept", tags: ["gini-impurity"], prompt: "What is the Gini impurity of a pure classification node?", options: [{ id: "a", text: "0" }, { id: "b", text: "1/2" }, { id: "c", text: "1" }, { id: "d", text: "It depends on node size." }],
+      answer: "a"
+    },
+    {
+      id: "ml-tree-review-3",
+      kind: "single concept", tags: ["node-impurity"], prompt: "Which node is most impure under standard binary entropy or Gini?", options: [{ id: "a", text: "50% positive and 50% negative" }, { id: "b", text: "100% positive" }, { id: "c", text: "100% negative" }, { id: "d", text: "A one-example pure node" }],
+      answer: "a"
+    },
+    {
+      id: "ml-tree-review-4",
+      kind: "mixed: two concepts", tags: ["weighted-child-impurity", "node-impurity"], prompt: "Children of sizes 2 and 8 have impurities 0 and 1. What is their weighted impurity?", options: [{ id: "a", text: "0.2" }, { id: "b", text: "0.5" }, { id: "c", text: "0.8" }, { id: "d", text: "1.0" }],
+      answer: "c"
+    },
+    {
+      id: "ml-tree-review-5",
+      kind: "mixed: two concepts", tags: ["information-gain", "weighted-child-impurity"], prompt: "How is information gain computed for a candidate split?", options: [{ id: "a", text: "Parent impurity minus weighted child impurity" }, { id: "b", text: "Weighted child impurity minus parent impurity" }, { id: "c", text: "Sum of unweighted child impurities" }, { id: "d", text: "Parent sample count minus child count" }],
+      answer: "a"
+    },
+    {
+      id: "ml-tree-review-6",
+      kind: "mixed: two concepts", tags: ["numerical-threshold", "split-selection"], prompt: "Which are the midpoint candidates for sorted values 1, 3, and 8?", options: [{ id: "a", text: "2 and 5.5" }, { id: "b", text: "1 and 8" }, { id: "c", text: "3 and 8" }, { id: "d", text: "4 and 6" }],
+      answer: "a"
+    },
+    {
+      id: "ml-tree-review-7",
+      kind: "mixed: two concepts", tags: ["greedy-split", "information-gain"], prompt: "What does greedy decision-tree growth guarantee at each node?", options: [{ id: "a", text: "The best immediate permitted impurity reduction" }, { id: "b", text: "The globally smallest possible final tree" }, { id: "c", text: "Zero test error" }, { id: "d", text: "The same tree for every sample" }],
+      answer: "a"
+    },
+    {
+      id: "ml-tree-review-8",
+      kind: "mixed: three concepts", tags: ["axis-aligned-region", "split-selection", "greedy-split"], prompt: "How can a decision tree classify XOR despite using simple feature tests?", options: [{ id: "a", text: "Several axis-aligned splits compose into nonlinear leaf regions." }, { id: "b", text: "One linear split always separates XOR." }, { id: "c", text: "The tree removes one class." }, { id: "d", text: "Impurity is ignored." }],
+      answer: "a"
+    },
+    {
+      id: "ml-tree-review-9",
+      kind: "mixed: three concepts", tags: ["pruning-validation", "tree-overfitting", "split-selection"], prompt: "A fully grown tree has lower training error but higher validation error than a pruned tree. Which choice is justified?", options: [{ id: "a", text: "Choose the pruned tree using validation performance." }, { id: "b", text: "Always choose the deepest tree." }, { id: "c", text: "Choose using test data repeatedly." }, { id: "d", text: "Ignore the validation gap." }],
+      answer: "a"
+    },
+    {
+      id: "ml-tree-review-10",
+      kind: "mixed: three concepts", tags: ["tree-failure-mode", "greedy-split", "pruning-validation"], prompt: "Which statement correctly describes a decision-tree failure mode?", options: [{ id: "a", text: "Small data changes can alter an early split and restructure the tree." }, { id: "b", text: "Greedy growth always finds the globally optimal tree." }, { id: "c", text: "More categories can never affect split selection." }, { id: "d", text: "Pure training leaves guarantee generalization." }],
+      answer: "a"
+    }
+  ];
+  return questions.map((question) => ({
+    ...question,
+    ...(metadata[question.id] || { targetConcept: question.tags[0], prereqsUsed: question.tags.slice(1), difficulty: question.tags.length, gateWeight: "medium" })
+  }));
+}
+
 function probabilityFoundationProblems() {
   return [
     {
@@ -24337,6 +24665,32 @@ function machineLearningLdaScatterConceptGraph() {
       "model-comparison": { label: "LDA, PCA, logistic, and SVM comparison", prereqs: ["fisher-criterion"], repairMaterial: "Review ML Chapter 10.5 and match each method to scatter, variance, log-loss probability, or margin.", gateWeight: "high" },
       "singular-scatter": { label: "Singular within scatter", prereqs: ["within-scatter", "lda-direction"], repairMaterial: "Review ML Chapter 10.6 and use regularization, a pseudoinverse, or dimension reduction instead of an invalid inverse.", gateWeight: "high" },
       "lda-failure-mode": { label: "LDA assumptions and failure modes", prereqs: ["within-scatter", "projected-classification"], repairMaterial: "Review ML Chapter 10.6 and check shared covariance, outliers, overlap, and nonlinear class structure.", gateWeight: "medium" }
+    }
+  };
+}
+
+function machineLearningDecisionTreeConceptGraph() {
+  return {
+    chapterId: "gate-da-machine-learning-decision-trees",
+    chapterTitle: "ML Chapter 11: Decision Trees",
+    gateWeight: "high",
+    fallbackConcepts: ["node-impurity", "weighted-child-impurity", "information-gain", "split-selection"],
+    fallbackDifficultyMix: [1, 2, 2, 3],
+    fallbackInstruction: "Retest class proportions, impurity, child-size weighting, gain direction, and first-split selection before moving to clustering.",
+    stableNextAction: "Next: continue only after you can score categorical and numerical splits, explain XOR geometry, and select tree complexity using validation.",
+    nodes: {
+      "node-impurity": { label: "Node impurity", prereqs: [], repairMaterial: "Review ML Chapter 11.1 and convert class counts into proportions before applying an impurity formula.", gateWeight: "high" },
+      entropy: { label: "Entropy", prereqs: ["node-impurity"], repairMaterial: "Review ML Chapter 11.1 and use H=-sum p_k log_2 p_k, with pure entropy zero.", gateWeight: "high" },
+      "gini-impurity": { label: "Gini impurity", prereqs: ["node-impurity"], repairMaterial: "Review ML Chapter 11.1 and use G=1-sum p_k^2.", gateWeight: "high" },
+      "weighted-child-impurity": { label: "Weighted child impurity", prereqs: ["node-impurity"], repairMaterial: "Review ML Chapter 11.2 and multiply every child impurity by its sample fraction before adding.", gateWeight: "high" },
+      "information-gain": { label: "Information gain", prereqs: ["weighted-child-impurity"], repairMaterial: "Review ML Chapter 11.2 and subtract weighted child impurity from parent impurity.", gateWeight: "high" },
+      "split-selection": { label: "First-split selection", prereqs: ["information-gain"], repairMaterial: "Review ML Chapter 11.2-11.3 and choose maximum gain, equivalently minimum post-split impurity.", gateWeight: "high" },
+      "numerical-threshold": { label: "Numerical threshold candidates", prereqs: ["split-selection"], repairMaterial: "Review ML Chapter 11.3: sort distinct values and test permitted adjacent midpoints.", gateWeight: "high" },
+      "greedy-split": { label: "Greedy tree construction", prereqs: ["information-gain"], repairMaterial: "Review ML Chapter 11.4 and distinguish best immediate split from globally optimal complete tree.", gateWeight: "medium" },
+      "axis-aligned-region": { label: "Axis-aligned nonlinear regions", prereqs: ["split-selection", "greedy-split"], repairMaterial: "Review ML Chapter 11.4 and trace two feature splits that solve XOR.", gateWeight: "high" },
+      "tree-overfitting": { label: "Tree overfitting", prereqs: ["greedy-split"], repairMaterial: "Review ML Chapter 11.5 and compare training and validation error as depth grows.", gateWeight: "high" },
+      "pruning-validation": { label: "Pruning and validation", prereqs: ["tree-overfitting", "split-selection"], repairMaterial: "Review ML Chapter 11.5 and choose stopping or pruning strength on validation data.", gateWeight: "high" },
+      "tree-failure-mode": { label: "Instability and split bias", prereqs: ["greedy-split", "pruning-validation"], repairMaterial: "Review ML Chapter 11.6 and check sensitivity to data changes, high-cardinality candidates, excessive depth, and shallow underfit.", gateWeight: "medium" }
     }
   };
 }
@@ -32872,6 +33226,7 @@ function conceptGraphForSection(section) {
   if (section?.id === "gate-da-machine-learning-knn-prototype-classifiers") return machineLearningKnnPrototypeConceptGraph();
   if (section?.id === "gate-da-machine-learning-svm-margin-classification") return machineLearningSvmMarginConceptGraph();
   if (section?.id === "gate-da-machine-learning-lda-scatter-classification") return machineLearningLdaScatterConceptGraph();
+  if (section?.id === "gate-da-machine-learning-decision-trees") return machineLearningDecisionTreeConceptGraph();
   return null;
 }
 
