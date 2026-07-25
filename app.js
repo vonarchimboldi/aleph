@@ -1,7 +1,7 @@
 const STORAGE_KEY = "learning-studio-data-v2";
 const LEGACY_STORAGE_KEYS = ["learning-studio-data-v1"];
 const SESSION_KEY = "aleph-session";
-const COURSE_PLAN_VERSION = "seeded-user-canonical-workspace-v132";
+const COURSE_PLAN_VERSION = "seeded-user-canonical-workspace-v133";
 const MAX_FEEDBACK_ATTACHMENT_BYTES = 3 * 1024 * 1024;
 const MAX_COMPRESSED_FEEDBACK_BYTES = 2400 * 1024;
 const MAX_FEEDBACK_PDF_PAGES = 6;
@@ -1849,6 +1849,36 @@ function buildGateDaBasicPlan(now, accountTypes, sections, user = basicGateDaUse
         date: weekSevenSunday,
         details: "Take the graph-backed objective review for Naive Bayes and generative classification.",
         updatedAt: now
+      },
+      {
+        id: "schedule-machine-learning-chapter-8-study",
+        title: "ML Chapter 8: kNN and Prototype Classifiers",
+        week: 8,
+        subject: "Machine Learning",
+        kind: "Study",
+        date: weekEightMonday,
+        details: "Study distance metrics, sorted-neighbor voting, the effect of k, nearest-centroid and prototype rules, local nonlinear boundaries, XOR, scaling, ties, and train-time versus prediction-time costs.",
+        updatedAt: now
+      },
+      {
+        id: "schedule-machine-learning-chapter-8-practice",
+        title: "ML Chapter 8: Labelled Practice",
+        week: 8,
+        subject: "Machine Learning",
+        kind: "Practice",
+        date: addDays(weekEightMonday, 2),
+        details: "Solve labelled distance-based practice: neighbor tables, k-vote changes, centroid comparisons, squared-distance boundary expansion, XOR classification, scaling, ties, and storage/cost comparisons.",
+        updatedAt: now
+      },
+      {
+        id: "schedule-machine-learning-chapter-8-review",
+        title: "ML Chapter 8: Objective Review",
+        week: 8,
+        subject: "Machine Learning",
+        kind: "Review",
+        date: weekEightSunday,
+        details: "Take the graph-backed objective review for kNN, nearest-centroid and prototype classification, distance metrics, nonlinear boundaries, scaling, ties, and prediction cost.",
+        updatedAt: now
       }
     ],
     tests: [
@@ -2121,6 +2151,15 @@ function buildGateDaBasicPlan(now, accountTypes, sections, user = basicGateDaUse
         details: "Objective end-of-chapter quiz for Naive Bayes: priors, likelihoods, posteriors, conditional independence, MAP classification, parameter counting, smoothing, misclassification probability, and generative-model failure modes.",
         sectionId: machineLearningSections[6]?.id,
         quizId: "quiz-machine-learning-chapter-7-objective-review",
+        updatedAt: now
+      },
+      {
+        id: "test-machine-learning-chapter-8-objective-review",
+        title: "ML Chapter 8 Objective Review",
+        date: weekEightSunday,
+        details: "Objective end-of-chapter quiz for distance metrics, sorted neighbors, k-voting, nearest-centroid rules, squared-distance boundaries, XOR/local structure, scaling, ties, and train/test cost.",
+        sectionId: machineLearningSections[7]?.id,
+        quizId: "quiz-machine-learning-chapter-8-objective-review",
         updatedAt: now
       }
     ],
@@ -3105,6 +3144,39 @@ function buildGateDaBasicPlan(now, accountTypes, sections, user = basicGateDaUse
         done: false,
         details: "Submit the Chapter 7 objective quiz so the learner record logs generative-classifier strengths and weaknesses.",
         updatedAt: now
+      },
+      {
+        id: "task-machine-learning-chapter-8-read",
+        week: 8,
+        title: "ML Ch 8: Read kNN and prototype classifiers",
+        type: "Study",
+        date: weekEightMonday,
+        status: "todo",
+        done: false,
+        details: "Open Subjects -> Machine Learning -> Chapter 8 and study distance metrics, neighbor voting, prototype rules, nonlinear local boundaries, XOR, scaling, ties, and cost.",
+        updatedAt: now
+      },
+      {
+        id: "task-machine-learning-chapter-8-practice",
+        week: 8,
+        title: "ML Ch 8: Solve labelled practice",
+        type: "Practice",
+        date: addDays(weekEightMonday, 2),
+        status: "todo",
+        done: false,
+        details: "Attempt the kNN, nearest-centroid, distance-table, boundary, scaling, tie, and complexity practice problems before opening the worked solutions.",
+        updatedAt: now
+      },
+      {
+        id: "task-machine-learning-chapter-8-review",
+        week: 8,
+        title: "ML Ch 8: Take objective review",
+        type: "Review",
+        date: weekEightSunday,
+        status: "todo",
+        done: false,
+        details: "Submit the Chapter 8 objective quiz so the learner record logs distance-based-classifier strengths and weaknesses.",
+        updatedAt: now
       }
     ],
     accountTypes,
@@ -3131,7 +3203,7 @@ function buildGateDaBasicPlan(now, accountTypes, sections, user = basicGateDaUse
         startDate: monday,
         endDate: "2026-08-30",
         status: "active",
-        details: `GATE DA Basic plan surfaces: Subjects, Tasks, Schedule, Tests, Feedback, Resources, and Share. Recommended pace: study Probability, Linear Algebra, DSA, and Machine Learning in parallel. Every 15 days, Aleph should generate an adaptive cumulative review quiz from prior performance, repeating missed concepts more often, reducing mastered concepts, and keeping high-weight exam topics in rotation. Current material build: Probability Chapters 1-10, Linear Algebra Chapters 1-12 plus a chapterless cumulative past-paper style drill, DSA Chapters 1-9 with a progression gate before Chapter 3, and Machine Learning Chapters 1-7.${trialNote}`,
+        details: `GATE DA Basic plan surfaces: Subjects, Tasks, Schedule, Tests, Feedback, Resources, and Share. Recommended pace: study Probability, Linear Algebra, DSA, and Machine Learning in parallel. Every 15 days, Aleph should generate an adaptive cumulative review quiz from prior performance, repeating missed concepts more often, reducing mastered concepts, and keeping high-weight exam topics in rotation. Current material build: Probability Chapters 1-10, Linear Algebra Chapters 1-12 plus a chapterless cumulative past-paper style drill, DSA Chapters 1-9 with a progression gate before Chapter 3, and Machine Learning Chapters 1-8.${trialNote}`,
         updatedAt: now
       }
     ],
@@ -3284,6 +3356,13 @@ function buildGateDaBasicPlan(now, accountTypes, sections, user = basicGateDaUse
         date: weekSevenSunday,
         details: "Review misses for confusing priors with likelihoods, normalizing too early or not at all, dropping the naive conditional-independence product, picking the wrong MAP class, mishandling zero counts and Laplace smoothing, overcounting parameters, and ignoring correlated-feature failure modes.",
         updatedAt: now
+      },
+      {
+        id: "feedback-machine-learning-chapter-8",
+        title: "Machine Learning Chapter 8 feedback focus",
+        date: weekEightSunday,
+        details: "Review misses for using an unstated distance metric, failing to sort neighbors, voting before selecting exactly k points, ignoring feature scaling, confusing nearest-neighbor with nearest-centroid rules, dropping cross terms incorrectly in boundary derivations, mishandling ties, and assuming kNN has a global linear boundary.",
+        updatedAt: now
       }
     ],
     resources: [
@@ -3348,6 +3427,14 @@ function buildGateDaBasicPlan(now, accountTypes, sections, user = basicGateDaUse
         title: "Machine Learning Chapter 7: Naive Bayes and Generative Classification",
         date: weekSevenMonday,
         details: "Open Subjects -> Machine Learning to study priors, likelihoods, posteriors, conditional independence, MAP classification, smoothing, and generative classifier failure modes.",
+        link: "",
+        updatedAt: now
+      },
+      {
+        id: "resource-machine-learning-knn-prototype-classifiers",
+        title: "Machine Learning Chapter 8: kNN and Prototype Classifiers",
+        date: weekEightMonday,
+        details: "Open Subjects -> Machine Learning to study distance metrics, neighbor voting, nearest-centroid and prototype rules, nonlinear local boundaries, XOR, scaling, ties, and prediction-time cost.",
         link: "",
         updatedAt: now
       },
@@ -5022,6 +5109,158 @@ function gateDaMachineLearningSections(updatedAt = new Date().toISOString()) {
         "Normalize scores only when actual posterior probabilities are requested.",
         "Zero counts can collapse a class score, so smoothing is often needed.",
         "Major failure modes include correlated features, sparse counts, bad priors, and distribution shift."
+      ],
+      updatedAt
+    },
+    {
+      id: "gate-da-machine-learning-knn-prototype-classifiers",
+      exam: "GATE DA",
+      accountTier: "Basic",
+      subject: "Machine Learning",
+      chapter: "Chapter 8",
+      section: "8",
+      title: "kNN and Prototype Classifiers",
+      summary: "Distance-based classification by sorted neighbors or representative prototypes, with hand traces, squared-distance boundaries, XOR, scaling, ties, and computational tradeoffs.",
+      sectionPreview: "kNN makes the training data itself part of the model. To classify a new point, choose a distance, sort the training examples, keep the closest k, and vote. Prototype methods compress each class to one or more representatives.",
+      previewActivity: "Training points on a line are A: 0, 2, 8 and B: 4, 6, 10. For query x=5, list distances in increasing order. Predict with k=1 and k=3. What changes if the first coordinate is measured in metres instead of centimetres?",
+      intro: [
+        "Earlier classifiers learned a global rule: a line, a probability formula, or class likelihoods. k-nearest neighbors is different. It stores the examples and answers each query from the local neighborhood.",
+        "This makes kNN flexible enough to form nonlinear and disconnected decision regions, but it also makes distance choice, feature scaling, ties, and prediction-time work central.",
+        "Prototype classifiers sit between full kNN and a global linear model. A nearest-centroid classifier stores one mean per class; medoid methods use actual representative examples."
+      ],
+      bookSections: [
+        {
+          number: "8.1",
+          title: "Distance Is Part of the Model",
+          paragraphs: [
+            "For vectors x and z, Euclidean distance is the square root of the sum of squared coordinate differences. Manhattan distance is the sum of absolute coordinate differences.",
+            "Distance rankings determine the neighbors. Because square root is increasing, squared Euclidean distance gives the same ranking as Euclidean distance and is faster for hand work.",
+            "A distance is meaningful only when feature scales are comparable. A coordinate measured in thousands can dominate another measured between zero and one."
+          ],
+          blocks: [
+            { type: "formula", title: "Squared Euclidean distance", body: "d^2(x,z) = sum over j of (x_j-z_j)^2. Use d^2 when only rankings are needed." },
+            { type: "warning", title: "Scaling trap", body: "Changing units can change nearest neighbors unless features are standardized or the metric is adjusted." }
+          ]
+        },
+        {
+          number: "8.2",
+          title: "The kNN Hand-Calculation Routine",
+          paragraphs: [
+            "For a query, compute one distance to every training point, sort the point-label pairs, take exactly the first k, then vote.",
+            "In binary classification, odd k reduces—but does not eliminate—ties. Equal distances, multiple classes, or weighted voting can still require an explicit tie rule.",
+            "Small k follows local detail and noise. Larger k smooths the boundary and can allow a majority class to overwhelm a small local class."
+          ],
+          blocks: [
+            { type: "strategy", title: "Four-column table", body: "Write training point, label, distance, and rank. Do not vote before the ranking is complete." },
+            { type: "example", title: "Example 8.1: changing k", body: "If the sorted labels are A, B, B, A, A, then k=1 predicts A, k=3 predicts B, and k=5 predicts A." }
+          ]
+        },
+        {
+          number: "8.3",
+          title: "Nearest Centroid and Prototypes",
+          paragraphs: [
+            "A nearest-centroid classifier computes one mean vector per class and predicts the class of the closest mean. It stores far less than kNN.",
+            "A medoid is an actual data point chosen as a representative. A centroid need not be an observed example.",
+            "With two fixed centroids and ordinary squared Euclidean distance, equal-distance terms cancel to give a linear decision boundary."
+          ],
+          blocks: [
+            { type: "formula", title: "Centroid boundary", body: "||x-mu_A||^2 = ||x-mu_B||^2 expands to 2(mu_B-mu_A)^T x = ||mu_B||^2-||mu_A||^2." },
+            { type: "principle", title: "Compression tradeoff", body: "kNN stores local detail; one centroid per class compresses detail into a global representative." }
+          ]
+        },
+        {
+          number: "8.4",
+          title: "Local Nonlinear Boundaries and XOR",
+          paragraphs: [
+            "One-nearest-neighbor partitions space into regions around training examples. The combined class regions can be jagged, disconnected, and nonlinear.",
+            "For the four XOR corners, a query sufficiently near a labeled corner receives that corner's label under 1-NN. No single line can reproduce all four corner labels.",
+            "This does not make kNN automatically better. Flexibility can memorize noise, and predictions become unstable where differently labeled points are close."
+          ],
+          blocks: [
+            { type: "example", title: "Example 8.2: XOR", body: "Store (0,0),(1,1) as class 0 and (0,1),(1,0) as class 1. Each stored corner is classified correctly by 1-NN." }
+          ]
+        },
+        {
+          number: "8.5",
+          title: "Cost, Storage, and Hyperparameters",
+          paragraphs: [
+            "Basic kNN training mainly stores n examples with d features, so storage is O(nd). A direct prediction computes n distances, each costing O(d), for O(nd) query time before neighbor selection.",
+            "The value k, distance metric, weighting rule, and scaling method are hyperparameters. They are chosen using validation data, not fitted as ordinary model weights.",
+            "Nearest centroid has a fitting step that computes class means, but prediction compares only with the class prototypes."
+          ],
+          blocks: [
+            { type: "principle", title: "Lazy learning", body: "kNN has light training and expensive prediction because most work is delayed until a query arrives." }
+          ]
+        },
+        {
+          number: "8.6",
+          title: "Failure Modes and GATE Checklist",
+          paragraphs: [
+            "Unscaled features, irrelevant dimensions, noisy labels, class imbalance, ties, and high-dimensional distance concentration can all damage kNN.",
+            "Always identify the metric, k, tie rule, scaling convention, and whether voting is uniform or distance-weighted.",
+            "For GATE hand problems, the fastest reliable move is a sorted distance table. For centroid questions, compare squared distances and expand only when the boundary is requested."
+          ],
+          blocks: [
+            { type: "strategy", title: "First-error diagnosis", body: "Check metric and scaling first, ranking second, selected k neighbors third, vote fourth, and only then the final label." }
+          ]
+        }
+      ],
+      concepts: [
+        { name: "Distance metric", description: "The rule that measures closeness between feature vectors.", cue: "State Euclidean, squared Euclidean, or Manhattan before ranking." },
+        { name: "k-nearest neighbors", description: "Predict from the labels of the k closest stored examples.", cue: "Distance, sort, take k, vote." },
+        { name: "Nearest centroid", description: "Predict using the closest class mean.", cue: "One representative mean per class." },
+        { name: "Prototype", description: "A representative vector used in place of all class examples.", cue: "Centroid may be synthetic; medoid is observed." },
+        { name: "Local nonlinear boundary", description: "A boundary built from local neighborhoods rather than one global hyperplane.", cue: "kNN can form disconnected regions." },
+        { name: "Feature scaling", description: "Rescaling coordinates so one unit choice does not dominate distance.", cue: "Compare coordinate ranges before computing." },
+        { name: "Tie rule", description: "A stated rule for equal votes or equal distances.", cue: "Odd k helps but does not guarantee no tie." },
+        { name: "Lazy learning cost", description: "Little fitting work but O(nd) direct prediction work and O(nd) storage.", cue: "Training stores; querying computes." }
+      ],
+      techniques: [
+        { name: "Build a distance table", when: "a query and training points are given.", move: "Compute comparable distances, keep labels attached, and sort." },
+        { name: "Vote after selecting k", when: "running kNN.", move: "Take exactly the first k ranked points, then apply the stated vote and tie rule." },
+        { name: "Compare squared distances", when: "Euclidean ranking or a centroid comparison is asked.", move: "Drop the common square root and compare squared values." },
+        { name: "Expand a centroid boundary", when: "the decision boundary between two prototypes is requested.", move: "Set squared distances equal and cancel x^T x." },
+        { name: "Test scaling sensitivity", when: "features use different units or ranges.", move: "Check whether one coordinate dominates before trusting neighbors." },
+        { name: "Diagnose local versus global fit", when: "XOR or disconnected classes appear.", move: "Contrast a local neighborhood rule with a single linear boundary." },
+        { name: "Separate fit and query cost", when: "complexity is asked.", move: "State storage, light training, and direct O(nd) prediction separately." }
+      ],
+      practiceProblems: machineLearningKnnPrototypeProblems(),
+      reviewPrompts: [
+        "Why does squared Euclidean distance preserve Euclidean neighbor order?",
+        "What exact steps should appear in a kNN hand calculation?",
+        "How can changing k change the predicted class?",
+        "Why can an odd k still produce ambiguity?",
+        "How does nearest centroid differ from nearest neighbor?",
+        "Why is the two-centroid squared-distance boundary linear?",
+        "How can 1-NN represent XOR-like local structure?",
+        "Why can feature scaling change the model's answer?",
+        "Which quantities are stored or chosen rather than learned as weights?",
+        "Why is kNN called a lazy learner?"
+      ],
+      reviewQuiz: {
+        id: "quiz-machine-learning-chapter-8-objective-review",
+        title: "ML Chapter 8 Objective Review",
+        instructions: "Complete this after studying kNN and prototype classifiers. The quiz checks distance computation, neighbor ranking, k-voting, nearest-centroid rules, squared-distance boundaries, XOR/local structure, scaling, ties, storage, and prediction cost.",
+        questions: machineLearningKnnPrototypeReviewQuestions()
+      },
+      readingQuestions: [
+        "What choices define a kNN classifier?",
+        "Why must labels stay attached while distances are sorted?",
+        "What does a larger k usually do to the boundary?",
+        "What is the difference between a centroid and a medoid?",
+        "Why does x^T x cancel in a two-centroid boundary derivation?",
+        "Why does kNN handle some nonlinear patterns?",
+        "What are the main time and storage costs?"
+      ],
+      chapterSummary: [
+        "kNN stores training examples and predicts from a local vote.",
+        "Always state the metric, scaling, k, weighting, and tie rule.",
+        "Use a sorted point-label-distance table for hand calculations.",
+        "Nearest centroid compresses each class to a representative mean.",
+        "Equal squared distance to two fixed centroids produces a linear boundary.",
+        "kNN can form nonlinear local regions and classify XOR-like corners.",
+        "Scaling, high dimension, noise, imbalance, and ties are major failure modes.",
+        "Direct kNN uses O(nd) storage and O(nd) distance work per query."
       ],
       updatedAt
     }
@@ -16566,6 +16805,226 @@ function machineLearningNaiveBayesReviewQuestions() {
   }));
 }
 
+function machineLearningKnnPrototypeProblems() {
+  return [
+    {
+      label: "Problem 1: Squared-distance ranking",
+      concept: "Distance metric",
+      difficulty: "Mechanics",
+      technique: "Build a distance table",
+      prompt: "For query q=(2,2), training points are A=(0,2), B=(3,2), C=(2,5). Rank them by Euclidean distance without taking square roots.",
+      solution: "Squared distances are d^2(q,A)=4, d^2(q,B)=1, and d^2(q,C)=9. The ranking is B, A, C."
+    },
+    {
+      label: "Problem 2: Change k, change prediction",
+      concept: "k-nearest neighbors",
+      difficulty: "GATE-style",
+      technique: "Vote after selecting k",
+      prompt: "The five closest labels to a query, in order, are A, B, B, A, A. Predict for k=1, k=3, and k=5.",
+      solution: "For k=1 the vote is A. For k=3 the labels A,B,B give B. For k=5, A appears three times and B twice, so the prediction returns to A."
+    },
+    {
+      label: "Problem 3: Nearest centroid",
+      concept: "Nearest centroid",
+      difficulty: "Mechanics",
+      technique: "Compare squared distances",
+      prompt: "Class centroids are mu_A=(0,0) and mu_B=(4,2). Classify x=(3,1) using nearest centroid.",
+      solution: "Squared distances are ||x-mu_A||^2=3^2+1^2=10 and ||x-mu_B||^2=(-1)^2+(-1)^2=2. Predict B."
+    },
+    {
+      label: "Problem 4: Derive the prototype boundary",
+      concept: "Centroid boundary",
+      difficulty: "GATE-style",
+      technique: "Expand a centroid boundary",
+      prompt: "Find the equal-distance boundary between mu_A=(0,0) and mu_B=(4,2).",
+      solution: "Set x_1^2+x_2^2=(x_1-4)^2+(x_2-2)^2. Cancelling quadratic terms gives 8x_1+4x_2=20, or 2x_1+x_2=5."
+    },
+    {
+      label: "Problem 5: XOR and local structure",
+      concept: "Local nonlinear boundary",
+      difficulty: "Concept",
+      technique: "Diagnose local versus global fit",
+      prompt: "XOR corners (0,0),(1,1) have class 0 and (0,1),(1,0) have class 1. Why can 1-NN classify each stored corner correctly although one linear classifier cannot?",
+      solution: "At a stored corner, its nearest training point is itself at distance zero, so 1-NN returns its label. The four labels are not separable by one line, but kNN uses separate local regions rather than one global hyperplane."
+    },
+    {
+      label: "Problem 6: Scaling changes neighbors",
+      concept: "Feature scaling",
+      difficulty: "Application",
+      technique: "Test scaling sensitivity",
+      prompt: "A query differs from point P by (1,10) and from Q by (3,1). Which is closer under raw squared Euclidean distance? Why might standardization reverse the conclusion?",
+      solution: "Raw squared distances are 101 to P and 10 to Q, so Q is closer. If the second feature has a much larger natural scale, standardization can greatly reduce its contribution; then the first-coordinate difference may dominate and P can become closer."
+    },
+    {
+      label: "Problem 7: Tie handling",
+      concept: "Tie rule",
+      difficulty: "GATE-style",
+      technique: "Vote after selecting k",
+      prompt: "For a three-class problem with k=3, the selected neighbors have labels A, B, C. Is the prediction determined?",
+      solution: "No. The vote is tied 1-1-1. The classifier needs a stated tie rule, such as the closest single neighbor, distance-weighted voting, or a fixed class priority."
+    },
+    {
+      label: "Problem 8: Fit and query cost",
+      concept: "Lazy learning cost",
+      difficulty: "GATE-style",
+      technique: "Separate fit and query cost",
+      prompt: "A direct kNN classifier stores n points in d dimensions. State its storage and distance-computation cost for one query.",
+      solution: "Storage is O(nd). Computing a distance to every point costs O(nd) per query, before the extra work needed to select or sort the nearest neighbors."
+    }
+  ];
+}
+
+function machineLearningKnnPrototypeReviewQuestions() {
+  const metadata = {
+    "ml-knn-review-1": { targetConcept: "distance-metric", prereqsUsed: [], difficulty: 1, gateWeight: "high" },
+    "ml-knn-review-2": { targetConcept: "knn-routine", prereqsUsed: ["distance-metric"], difficulty: 1, gateWeight: "high" },
+    "ml-knn-review-3": { targetConcept: "k-choice", prereqsUsed: ["knn-routine"], difficulty: 2, gateWeight: "high" },
+    "ml-knn-review-4": { targetConcept: "nearest-centroid", prereqsUsed: ["distance-metric"], difficulty: 2, gateWeight: "high" },
+    "ml-knn-review-5": { targetConcept: "centroid-boundary", prereqsUsed: ["nearest-centroid"], difficulty: 2, gateWeight: "high" },
+    "ml-knn-review-6": { targetConcept: "local-nonlinear-boundary", prereqsUsed: ["knn-routine", "linear-separability"], difficulty: 2, gateWeight: "high" },
+    "ml-knn-review-7": { targetConcept: "feature-scaling", prereqsUsed: ["distance-metric"], difficulty: 3, gateWeight: "high" },
+    "ml-knn-review-8": { targetConcept: "tie-handling", prereqsUsed: ["knn-routine"], difficulty: 3, gateWeight: "medium" },
+    "ml-knn-review-9": { targetConcept: "lazy-learning-cost", prereqsUsed: ["knn-routine"], difficulty: 2, gateWeight: "medium" },
+    "ml-knn-review-10": { targetConcept: "prototype-identity", prereqsUsed: ["nearest-centroid", "knn-routine"], difficulty: 3, gateWeight: "high" }
+  };
+  const questions = [
+    {
+      id: "ml-knn-review-1",
+      kind: "single concept",
+      tags: ["distance-metric"],
+      prompt: "For Euclidean nearest-neighbor ranking, why may squared distances be compared instead?",
+      options: [
+        { id: "a", text: "Square root is increasing, so it preserves distance order." },
+        { id: "b", text: "Squared distance is always smaller." },
+        { id: "c", text: "Squaring removes feature scaling." },
+        { id: "d", text: "Euclidean distance cannot be computed in two dimensions." }
+      ],
+      answer: "a"
+    },
+    {
+      id: "ml-knn-review-2",
+      kind: "single concept",
+      tags: ["knn-routine"],
+      prompt: "What is the correct order for a basic kNN hand calculation?",
+      options: [
+        { id: "a", text: "Compute distances, sort with labels attached, take k, then vote." },
+        { id: "b", text: "Vote over all points, then choose k." },
+        { id: "c", text: "Compute class centroids, then fit a sigmoid." },
+        { id: "d", text: "Choose the majority training class without distances." }
+      ],
+      answer: "a"
+    },
+    {
+      id: "ml-knn-review-3",
+      kind: "mixed: two concepts",
+      tags: ["k-choice", "knn-routine"],
+      prompt: "The five nearest labels are A,B,B,A,A. What are the predictions for k=1 and k=3?",
+      options: [
+        { id: "a", text: "A then B" },
+        { id: "b", text: "B then A" },
+        { id: "c", text: "A then A" },
+        { id: "d", text: "B then B" }
+      ],
+      answer: "a"
+    },
+    {
+      id: "ml-knn-review-4",
+      kind: "mixed: two concepts",
+      tags: ["nearest-centroid", "distance-metric"],
+      prompt: "Centroids are A=(0,0), B=(4,0), and query x=(3,0). What does nearest centroid predict?",
+      options: [
+        { id: "a", text: "A" },
+        { id: "b", text: "B" },
+        { id: "c", text: "Tie" },
+        { id: "d", text: "Cannot classify without k" }
+      ],
+      answer: "b"
+    },
+    {
+      id: "ml-knn-review-5",
+      kind: "mixed: two concepts",
+      tags: ["centroid-boundary", "nearest-centroid"],
+      prompt: "Why is the equal-squared-distance boundary between two fixed centroids linear?",
+      options: [
+        { id: "a", text: "The common x^T x term cancels after expansion." },
+        { id: "b", text: "Every centroid lies at the origin." },
+        { id: "c", text: "k must equal one." },
+        { id: "d", text: "Distance is a class probability." }
+      ],
+      answer: "a"
+    },
+    {
+      id: "ml-knn-review-6",
+      kind: "mixed: two concepts",
+      tags: ["local-nonlinear-boundary", "linear-separability"],
+      prompt: "Why can 1-NN represent XOR-like corner labels better than one linear classifier in the original features?",
+      options: [
+        { id: "a", text: "It builds local regions around stored examples instead of one global line." },
+        { id: "b", text: "It converts every label into a probability prior." },
+        { id: "c", text: "It makes XOR linearly separable automatically." },
+        { id: "d", text: "It ignores feature values." }
+      ],
+      answer: "a"
+    },
+    {
+      id: "ml-knn-review-7",
+      kind: "mixed: three concepts",
+      tags: ["feature-scaling", "distance-metric", "knn-routine"],
+      prompt: "One feature ranges from 0 to 1 and another from 0 to 10000. What is the main raw-Euclidean kNN risk?",
+      options: [
+        { id: "a", text: "The large-scale feature can dominate the neighbor ranking." },
+        { id: "b", text: "All distances become exactly equal." },
+        { id: "c", text: "kNN becomes Naive Bayes." },
+        { id: "d", text: "Training labels disappear." }
+      ],
+      answer: "a"
+    },
+    {
+      id: "ml-knn-review-8",
+      kind: "mixed: three concepts",
+      tags: ["tie-handling", "k-choice", "knn-routine"],
+      prompt: "In a three-class problem with k=3, selected labels are A,B,C. What must be concluded?",
+      options: [
+        { id: "a", text: "A tie rule is required." },
+        { id: "b", text: "Odd k guarantees class A." },
+        { id: "c", text: "Increase every distance by one." },
+        { id: "d", text: "The nearest centroid must be used." }
+      ],
+      answer: "a"
+    },
+    {
+      id: "ml-knn-review-9",
+      kind: "mixed: two concepts",
+      tags: ["lazy-learning-cost", "knn-routine"],
+      prompt: "For n stored d-dimensional points, what is the direct distance-computation cost of one kNN query?",
+      options: [
+        { id: "a", text: "O(1)" },
+        { id: "b", text: "O(d)" },
+        { id: "c", text: "O(nd)" },
+        { id: "d", text: "O(n^2d)" }
+      ],
+      answer: "c"
+    },
+    {
+      id: "ml-knn-review-10",
+      kind: "mixed: three concepts",
+      tags: ["prototype-identity", "nearest-centroid", "knn-routine"],
+      prompt: "Which statement correctly distinguishes three distance-based models?",
+      options: [
+        { id: "a", text: "1-NN uses one closest stored point; nearest centroid uses a class mean; a medoid is an actual representative point." },
+        { id: "b", text: "All three always store every training point." },
+        { id: "c", text: "A centroid must be an observed training point." },
+        { id: "d", text: "A medoid is always the arithmetic mean." }
+      ],
+      answer: "a"
+    }
+  ];
+  return questions.map((question) => ({
+    ...question,
+    ...(metadata[question.id] || { targetConcept: question.tags[0], prereqsUsed: question.tags.slice(1), difficulty: question.tags.length, gateWeight: "medium" })
+  }));
+}
+
 function probabilityFoundationProblems() {
   return [
     {
@@ -22855,6 +23314,86 @@ function machineLearningNaiveBayesConceptGraph() {
         label: "Naive Bayes failure modes",
         prereqs: ["naive-independence", "smoothing"],
         repairMaterial: "Review ML Chapter 7.6 and diagnose correlated features, sparse counts, wrong priors, distribution shift, or the wrong likelihood model.",
+        gateWeight: "medium"
+      }
+    }
+  };
+}
+
+function machineLearningKnnPrototypeConceptGraph() {
+  return {
+    chapterId: "gate-da-machine-learning-knn-prototype-classifiers",
+    chapterTitle: "ML Chapter 8: kNN and Prototype Classifiers",
+    gateWeight: "high",
+    fallbackConcepts: ["distance-metric", "knn-routine", "nearest-centroid", "feature-scaling"],
+    fallbackDifficultyMix: [1, 2, 2, 3],
+    fallbackInstruction: "Retest distance computation, sorted-neighbor voting, centroid comparisons, scaling, ties, and local-boundary reasoning before moving to margin-based classifiers.",
+    stableNextAction: "Next: move to SVM only after distance ranking, k-voting, prototype boundaries, XOR/local structure, scaling, and kNN cost are reliable.",
+    nodes: {
+      "distance-metric": {
+        label: "Distance metric and squared-distance ranking",
+        prereqs: [],
+        repairMaterial: "Review ML Chapter 8.1 and compute one row per training point using the stated metric.",
+        gateWeight: "high"
+      },
+      "knn-routine": {
+        label: "kNN distance-sort-select-vote routine",
+        prereqs: ["distance-metric"],
+        repairMaterial: "Review ML Chapter 8.2 and keep each label attached while sorting before taking exactly k neighbors.",
+        gateWeight: "high"
+      },
+      "k-choice": {
+        label: "Effect of k",
+        prereqs: ["knn-routine"],
+        repairMaterial: "Review ML Chapter 8.2 and compare the cumulative vote after k=1,3,5 rather than reordering neighbors.",
+        gateWeight: "high"
+      },
+      "nearest-centroid": {
+        label: "Nearest-centroid classification",
+        prereqs: ["distance-metric"],
+        repairMaterial: "Review ML Chapter 8.3 and compare the query with class means, not individual nearest points.",
+        gateWeight: "high"
+      },
+      "centroid-boundary": {
+        label: "Linear boundary between fixed centroids",
+        prereqs: ["nearest-centroid"],
+        repairMaterial: "Review ML Chapter 8.3, set squared distances equal, expand, and cancel the common x^T x term.",
+        gateWeight: "high"
+      },
+      "prototype-identity": {
+        label: "Neighbor, centroid, and medoid identity",
+        prereqs: ["nearest-centroid", "knn-routine"],
+        repairMaterial: "Review ML Chapter 8.3 and distinguish stored neighbors, arithmetic means, and actual representative points.",
+        gateWeight: "medium"
+      },
+      "local-nonlinear-boundary": {
+        label: "Local nonlinear boundary and XOR",
+        prereqs: ["knn-routine", "linear-separability"],
+        repairMaterial: "Review ML Chapter 8.4 and contrast local nearest-example regions with one global hyperplane.",
+        gateWeight: "high"
+      },
+      "linear-separability": {
+        label: "Linear separability prerequisite",
+        prereqs: [],
+        repairMaterial: "Review ML Chapter 4 XOR and verify that no single line separates alternating corner labels.",
+        gateWeight: "high"
+      },
+      "feature-scaling": {
+        label: "Feature scaling sensitivity",
+        prereqs: ["distance-metric"],
+        repairMaterial: "Review ML Chapter 8.1 and compare coordinate ranges before trusting Euclidean neighbors.",
+        gateWeight: "high"
+      },
+      "tie-handling": {
+        label: "Vote and distance tie handling",
+        prereqs: ["knn-routine", "k-choice"],
+        repairMaterial: "Review ML Chapter 8.2 and state the tie rule explicitly; odd k does not prevent every multi-class or equal-distance tie.",
+        gateWeight: "medium"
+      },
+      "lazy-learning-cost": {
+        label: "kNN storage and prediction cost",
+        prereqs: ["knn-routine"],
+        repairMaterial: "Review ML Chapter 8.5 and separate O(nd) storage, light fitting, and direct O(nd) query distance work.",
         gateWeight: "medium"
       }
     }
@@ -31389,6 +31928,7 @@ function conceptGraphForSection(section) {
   if (section?.id === "gate-da-machine-learning-perceptron-updates") return machineLearningPerceptronUpdatesConceptGraph();
   if (section?.id === "gate-da-machine-learning-logistic-regression-log-odds") return machineLearningLogisticRegressionConceptGraph();
   if (section?.id === "gate-da-machine-learning-naive-bayes-generative-classification") return machineLearningNaiveBayesConceptGraph();
+  if (section?.id === "gate-da-machine-learning-knn-prototype-classifiers") return machineLearningKnnPrototypeConceptGraph();
   return null;
 }
 
