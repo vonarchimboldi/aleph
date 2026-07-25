@@ -1,7 +1,7 @@
 const STORAGE_KEY = "learning-studio-data-v2";
 const LEGACY_STORAGE_KEYS = ["learning-studio-data-v1"];
 const SESSION_KEY = "aleph-session";
-const COURSE_PLAN_VERSION = "seeded-user-canonical-workspace-v134";
+const COURSE_PLAN_VERSION = "seeded-user-canonical-workspace-v135";
 const MAX_FEEDBACK_ATTACHMENT_BYTES = 3 * 1024 * 1024;
 const MAX_COMPRESSED_FEEDBACK_BYTES = 2400 * 1024;
 const MAX_FEEDBACK_PDF_PAGES = 6;
@@ -1909,6 +1909,36 @@ function buildGateDaBasicPlan(now, accountTypes, sections, user = basicGateDaUse
         date: weekNineSunday,
         details: "Take the graph-backed objective review for SVM geometry, margins, support vectors, hard-margin assumptions, parameter scaling, outliers, XOR, and feature maps.",
         updatedAt: now
+      },
+      {
+        id: "schedule-machine-learning-chapter-10-study",
+        title: "ML Chapter 10: LDA and Scatter-Based Classification",
+        week: 10,
+        subject: "Machine Learning",
+        kind: "Study",
+        date: weekTenMonday,
+        details: "Study class means, within-class and between-class scatter, the Fisher separation ratio, generalized eigenvalue recognition, the two-class S_W inverse mean-difference shortcut, projected classification, assumptions, and failure modes.",
+        updatedAt: now
+      },
+      {
+        id: "schedule-machine-learning-chapter-10-practice",
+        title: "ML Chapter 10: Labelled Practice",
+        week: 10,
+        subject: "Machine Learning",
+        kind: "Practice",
+        date: addDays(weekTenMonday, 2),
+        details: "Solve labelled LDA practice: means, scatter matrices, Fisher-ratio comparisons, projection directions, generalized eigen equations, singular S_W diagnosis, model comparisons, and outlier effects.",
+        updatedAt: now
+      },
+      {
+        id: "schedule-machine-learning-chapter-10-review",
+        title: "ML Chapter 10: Objective Review",
+        week: 10,
+        subject: "Machine Learning",
+        kind: "Review",
+        date: weekTenSunday,
+        details: "Take the graph-backed objective review for within/between scatter, Fisher criterion, LDA projection, generalized eigenvalue form, singular scatter, assumptions, and failure diagnosis.",
+        updatedAt: now
       }
     ],
     tests: [
@@ -2199,6 +2229,15 @@ function buildGateDaBasicPlan(now, accountTypes, sections, user = basicGateDaUse
         details: "Objective end-of-chapter quiz for separating hyperplanes, functional and geometric margins, support vectors, margin width, scaling invariance, hard-margin feasibility, outliers, XOR, and nonlinear feature maps.",
         sectionId: machineLearningSections[8]?.id,
         quizId: "quiz-machine-learning-chapter-9-objective-review",
+        updatedAt: now
+      },
+      {
+        id: "test-machine-learning-chapter-10-objective-review",
+        title: "ML Chapter 10 Objective Review",
+        date: weekTenSunday,
+        details: "Objective end-of-chapter quiz for class means, within-class and between-class scatter, Fisher criterion, projection directions, generalized eigenvalue recognition, singular S_W, assumptions, and failure modes.",
+        sectionId: machineLearningSections[9]?.id,
+        quizId: "quiz-machine-learning-chapter-10-objective-review",
         updatedAt: now
       }
     ],
@@ -3249,6 +3288,39 @@ function buildGateDaBasicPlan(now, accountTypes, sections, user = basicGateDaUse
         done: false,
         details: "Submit the Chapter 9 objective quiz so the learner record logs margin-based-classifier strengths and weaknesses.",
         updatedAt: now
+      },
+      {
+        id: "task-machine-learning-chapter-10-read",
+        week: 10,
+        title: "ML Ch 10: Read LDA and scatter",
+        type: "Study",
+        date: weekTenMonday,
+        status: "todo",
+        done: false,
+        details: "Open Subjects -> Machine Learning -> Chapter 10 and study class means, scatter matrices, Fisher criterion, projection directions, generalized eigenvalue form, assumptions, and failures.",
+        updatedAt: now
+      },
+      {
+        id: "task-machine-learning-chapter-10-practice",
+        week: 10,
+        title: "ML Ch 10: Solve labelled practice",
+        type: "Practice",
+        date: addDays(weekTenMonday, 2),
+        status: "todo",
+        done: false,
+        details: "Attempt the LDA means, scatter, Fisher-ratio, inverse-scatter direction, eigen-equation, singularity, comparison, and outlier practice before opening worked solutions.",
+        updatedAt: now
+      },
+      {
+        id: "task-machine-learning-chapter-10-review",
+        week: 10,
+        title: "ML Ch 10: Take objective review",
+        type: "Review",
+        date: weekTenSunday,
+        status: "todo",
+        done: false,
+        details: "Submit the Chapter 10 objective quiz so the learner record logs scatter-based-classifier strengths and weaknesses.",
+        updatedAt: now
       }
     ],
     accountTypes,
@@ -3275,7 +3347,7 @@ function buildGateDaBasicPlan(now, accountTypes, sections, user = basicGateDaUse
         startDate: monday,
         endDate: "2026-08-30",
         status: "active",
-        details: `GATE DA Basic plan surfaces: Subjects, Tasks, Schedule, Tests, Feedback, Resources, and Share. Recommended pace: study Probability, Linear Algebra, DSA, and Machine Learning in parallel. Every 15 days, Aleph should generate an adaptive cumulative review quiz from prior performance, repeating missed concepts more often, reducing mastered concepts, and keeping high-weight exam topics in rotation. Current material build: Probability Chapters 1-10, Linear Algebra Chapters 1-12 plus a chapterless cumulative past-paper style drill, DSA Chapters 1-9 with a progression gate before Chapter 3, and Machine Learning Chapters 1-9.${trialNote}`,
+        details: `GATE DA Basic plan surfaces: Subjects, Tasks, Schedule, Tests, Feedback, Resources, and Share. Recommended pace: study Probability, Linear Algebra, DSA, and Machine Learning in parallel. Every 15 days, Aleph should generate an adaptive cumulative review quiz from prior performance, repeating missed concepts more often, reducing mastered concepts, and keeping high-weight exam topics in rotation. Current material build: Probability Chapters 1-10, Linear Algebra Chapters 1-12 plus a chapterless cumulative past-paper style drill, DSA Chapters 1-9 with a progression gate before Chapter 3, and Machine Learning Chapters 1-10.${trialNote}`,
         updatedAt: now
       }
     ],
@@ -3442,6 +3514,13 @@ function buildGateDaBasicPlan(now, accountTypes, sections, user = basicGateDaUse
         date: weekNineSunday,
         details: "Review misses for confusing score with distance, forgetting the ||w|| denominator, mixing functional and geometric margin, identifying every correctly classified point as a support vector, changing geometric margin when w and b are scaled together, assuming hard-margin feasibility with overlap or outliers, and treating a kernel as a new label rule rather than an implicit feature representation.",
         updatedAt: now
+      },
+      {
+        id: "feedback-machine-learning-chapter-10",
+        title: "Machine Learning Chapter 10 feedback focus",
+        date: weekTenSunday,
+        details: "Review misses for mixing within-class and between-class scatter, forgetting to center observations at their class mean, maximizing separation without penalizing within-class spread, reversing the Fisher ratio, treating an ordinary eigenproblem as generalized, inverting singular S_W without diagnosis, confusing LDA with PCA, and ignoring covariance assumptions or outliers.",
+        updatedAt: now
       }
     ],
     resources: [
@@ -3522,6 +3601,14 @@ function buildGateDaBasicPlan(now, accountTypes, sections, user = basicGateDaUse
         title: "Machine Learning Chapter 9: SVM and Margin-Based Classification",
         date: weekNineMonday,
         details: "Open Subjects -> Machine Learning to study separating hyperplanes, functional and geometric margins, support vectors, hard-margin assumptions, scaling invariance, outliers, XOR, and nonlinear feature-map/kernel intuition.",
+        link: "",
+        updatedAt: now
+      },
+      {
+        id: "resource-machine-learning-lda-scatter-classification",
+        title: "Machine Learning Chapter 10: LDA and Scatter-Based Classification",
+        date: weekTenMonday,
+        details: "Open Subjects -> Machine Learning to study class means, within/between scatter, Fisher ratio, generalized eigenvalue recognition, projection directions, assumptions, and failure modes.",
         link: "",
         updatedAt: now
       },
@@ -5502,6 +5589,161 @@ function gateDaMachineLearningSections(updatedAt = new Date().toISOString()) {
         "Positive rescaling changes functional margin but not boundary or geometric margin.",
         "Hard margin fails when the chosen feature representation is not separable.",
         "Feature maps and kernels can create nonlinear input-space boundaries through linear separation in transformed space."
+      ],
+      updatedAt
+    },
+    {
+      id: "gate-da-machine-learning-lda-scatter-classification",
+      exam: "GATE DA",
+      accountTier: "Basic",
+      subject: "Machine Learning",
+      chapter: "Chapter 10",
+      section: "10",
+      title: "LDA and Scatter-Based Classification",
+      summary: "Fisher linear discriminant analysis through class means, within-class compactness, between-class separation, Rayleigh quotients, generalized eigenvectors, and projected classification.",
+      sectionPreview: "LDA asks for a projection direction where class centers move far apart while points inside each class remain tightly grouped. Separation alone is not enough; the Fisher ratio rewards separation and penalizes within-class spread.",
+      previewActivity: "Class A contains (0,0),(2,0); class B contains (0,2),(2,2). Find both class means. Compare projecting onto w=(1,0) and w=(0,1): which direction separates the projected class means?",
+      intro: [
+        "PCA searches for directions of large overall variance without using labels. Fisher LDA uses labels and searches for directions that make classes easy to distinguish.",
+        "The key objects are the class means, within-class scatter S_W, and between-class scatter S_B. A useful direction makes w^T S_B w large and w^T S_W w small.",
+        "GATE questions usually use small vectors or supplied scatter matrices. The exam skill is to recognize the ratio, compute a projection direction, and diagnose singular or misleading scatter."
+      ],
+      bookSections: [
+        {
+          number: "10.1",
+          title: "Projection and Class Means",
+          paragraphs: [
+            "A direction w maps a feature vector x to the scalar z=w^T x. Classification can then be performed on this one-dimensional projected axis.",
+            "The mean of class c is mu_c. After projection, its mean becomes w^T mu_c.",
+            "A direction is promising when projected class means are separated, but mean separation must be judged relative to projected within-class spread."
+          ],
+          blocks: [
+            { type: "formula", title: "Projected class mean", body: "If z=w^T x, then the projected mean of class c is w^T mu_c." },
+            { type: "warning", title: "Separation-only trap", body: "A large difference in projected means can still be poor if each projected class has even larger spread." }
+          ]
+        },
+        {
+          number: "10.2",
+          title: "Within-Class and Between-Class Scatter",
+          paragraphs: [
+            "Within-class scatter measures how far observations lie from their own class means. For each point, form x-mu_c and accumulate its outer product.",
+            "For two classes, S_W is the sum of the two class scatter matrices. Smaller w^T S_W w means tighter classes after projection.",
+            "A common two-class between-scatter matrix is S_B=(mu_1-mu_2)(mu_1-mu_2)^T, up to a positive sample-size factor that does not change the maximizing direction."
+          ],
+          blocks: [
+            { type: "formula", title: "Scatter matrices", body: "S_W = sum over classes c and points x in c of (x-mu_c)(x-mu_c)^T; S_B = (mu_1-mu_2)(mu_1-mu_2)^T for the basic two-class form." },
+            { type: "strategy", title: "Center by the correct mean", body: "Every observation is centered at its own class mean, not the global mean, when computing S_W." }
+          ]
+        },
+        {
+          number: "10.3",
+          title: "The Fisher Criterion",
+          paragraphs: [
+            "The Fisher criterion compares projected between-class separation with projected within-class spread.",
+            "For a nonzero direction w, J(w)=(w^T S_B w)/(w^T S_W w). Multiplying w by a nonzero scalar changes numerator and denominator by the same squared factor, so J is scale invariant.",
+            "The numerator should be large and the denominator small. Reversing the ratio selects directions with overlap rather than discrimination."
+          ],
+          blocks: [
+            { type: "formula", title: "Fisher ratio", body: "J(w) = (w^T S_B w) / (w^T S_W w)." },
+            { type: "principle", title: "Recognition cue", body: "Between-class scatter in the numerator; within-class scatter in the denominator." }
+          ]
+        },
+        {
+          number: "10.4",
+          title: "Generalized Eigenvalue Direction",
+          paragraphs: [
+            "Maximizing the Fisher Rayleigh quotient produces the generalized eigenvalue equation S_B w=lambda S_W w.",
+            "If S_W is invertible, this can be rewritten as S_W^{-1}S_B w=lambda w. For two classes, the useful direction is proportional to S_W^{-1}(mu_1-mu_2).",
+            "The magnitude and sign of w are not unique: nonzero rescaling produces the same projection axis, with sign merely reversing its orientation."
+          ],
+          blocks: [
+            { type: "formula", title: "LDA eigen equation", body: "S_B w = lambda S_W w; for invertible S_W, solve an eigenproblem for S_W^{-1}S_B." },
+            { type: "formula", title: "Two-class shortcut", body: "w is proportional to S_W^{-1}(mu_1-mu_2)." }
+          ]
+        },
+        {
+          number: "10.5",
+          title: "Projected Classification and Model Comparisons",
+          paragraphs: [
+            "After choosing w, every point becomes z=w^T x. A two-class rule may compare z with a threshold derived from projected means and priors.",
+            "LDA is supervised and projection-based. PCA is unsupervised and maximizes total variance; logistic regression directly models conditional class probability; SVM maximizes a margin.",
+            "These methods can all yield linear boundaries, but they optimize different objectives and make different assumptions."
+          ],
+          blocks: [
+            { type: "example", title: "Example 10.1: projected midpoint", body: "With equal priors and projected means 1 and 5 under a simple equal-spread model, the midpoint threshold is 3." },
+            { type: "principle", title: "Model identity", body: "LDA: scatter/projection. PCA: total variance. Logistic: log loss/probability. SVM: margin." }
+          ]
+        },
+        {
+          number: "10.6",
+          title: "Assumptions and Failure Modes",
+          paragraphs: [
+            "Classical LDA classification is motivated by class-conditional Gaussian distributions with a shared covariance matrix. Strongly different covariances can make one linear boundary inappropriate.",
+            "S_W can be singular when features are redundant or dimension is large relative to sample size. Then the ordinary inverse shortcut is invalid without regularization, a pseudoinverse, or dimension reduction.",
+            "Outliers can distort class means and scatter. Heavy overlap, non-Gaussian structure, and nonlinear separation also weaken the model."
+          ],
+          blocks: [
+            { type: "warning", title: "Invertibility check", body: "Do not write S_W^{-1} until you know S_W is nonsingular or the problem supplies a regularized inverse." },
+            { type: "strategy", title: "Failure diagnosis", body: "Name singular scatter, unequal covariance, overlap, outliers, or nonlinear class structure—not merely 'LDA is bad'." }
+          ]
+        }
+      ],
+      concepts: [
+        { name: "Class mean", description: "The average feature vector within one class.", cue: "Center each point at its own class mean." },
+        { name: "Within-class scatter", description: "Accumulated spread around class means.", cue: "Denominator of the Fisher ratio." },
+        { name: "Between-class scatter", description: "Separation of class centers.", cue: "Numerator of the Fisher ratio." },
+        { name: "Fisher criterion", description: "Between-class separation divided by within-class spread.", cue: "Maximize large-over-small." },
+        { name: "Generalized eigenproblem", description: "S_B w=lambda S_W w.", cue: "Two matrices appear on opposite sides." },
+        { name: "LDA direction", description: "For two classes, w proportional to S_W^{-1}(mu_1-mu_2) when invertible.", cue: "Whiten spread, then point between means." },
+        { name: "Projected classifier", description: "Classify using the scalar w^T x and a threshold.", cue: "Project first, decide second." },
+        { name: "LDA failure mode", description: "Singular scatter, unequal covariance, overlap, nonlinear shape, or outliers.", cue: "Check assumptions before inversion." }
+      ],
+      techniques: [
+        { name: "Compute class means", when: "a small labeled dataset is given.", move: "Average each class separately before any scatter calculation." },
+        { name: "Build S_W", when: "within-class scatter is requested.", move: "Center each point at its class mean and sum outer products." },
+        { name: "Build S_B", when: "two class means are given.", move: "Form the mean difference and its outer product, using any stated weighting." },
+        { name: "Evaluate Fisher ratio", when: "candidate directions are supplied.", move: "Compute projected between scatter and within scatter, then divide." },
+        { name: "Recognize generalized eigen form", when: "optimizing a scatter ratio.", move: "Write S_B w=lambda S_W w." },
+        { name: "Use the two-class shortcut", when: "S_W is invertible.", move: "Compute S_W^{-1}(mu_1-mu_2) up to nonzero scale." },
+        { name: "Diagnose singularity and assumptions", when: "an inverse fails or classes have different shapes.", move: "State the failed condition and a valid remedy or limitation." }
+      ],
+      practiceProblems: machineLearningLdaScatterProblems(),
+      reviewPrompts: [
+        "Why is class-mean separation alone insufficient?",
+        "How is S_W constructed from a labeled dataset?",
+        "What does S_B measure in the two-class case?",
+        "Why is between scatter in the Fisher numerator?",
+        "Why is the Fisher criterion invariant to rescaling w?",
+        "What generalized eigen equation should be recognized?",
+        "When is w proportional to S_W inverse times the mean difference?",
+        "How does LDA differ from PCA, logistic regression, and SVM?",
+        "What goes wrong when S_W is singular?",
+        "Which distributional and outlier assumptions can fail?"
+      ],
+      reviewQuiz: {
+        id: "quiz-machine-learning-chapter-10-objective-review",
+        title: "ML Chapter 10 Objective Review",
+        instructions: "Complete this after studying LDA and scatter-based classification. The quiz checks class means, within/between scatter, Fisher-ratio reasoning, projection directions, generalized eigenvalue recognition, two-class shortcuts, model comparisons, singular scatter, and failure modes.",
+        questions: machineLearningLdaScatterReviewQuestions()
+      },
+      readingQuestions: [
+        "What does w^T x represent in LDA?",
+        "Which mean centers a point in S_W?",
+        "What does a large Fisher ratio mean?",
+        "Why does a generalized eigenproblem appear?",
+        "Why is the LDA direction defined only up to scale?",
+        "How is supervised LDA different from unsupervised PCA?",
+        "When is the inverse-scatter shortcut invalid?"
+      ],
+      chapterSummary: [
+        "LDA uses labels to find a projection that separates classes relative to their internal spread.",
+        "S_W measures variation around class means; S_B measures class-center separation.",
+        "The Fisher criterion is w^T S_B w divided by w^T S_W w.",
+        "Its stationary directions satisfy S_B w=lambda S_W w.",
+        "For two classes and invertible S_W, w is proportional to S_W^{-1}(mu_1-mu_2).",
+        "Projection direction is unchanged by nonzero rescaling.",
+        "LDA, PCA, logistic regression, and SVM may all be linear but optimize different goals.",
+        "Singular S_W, unequal covariances, overlap, nonlinear structure, and outliers are key failure modes."
       ],
       updatedAt
     }
@@ -17486,6 +17728,146 @@ function machineLearningSvmMarginReviewQuestions() {
   }));
 }
 
+function machineLearningLdaScatterProblems() {
+  return [
+    {
+      label: "Problem 1: Compute class means",
+      concept: "Class mean",
+      difficulty: "Mechanics",
+      technique: "Compute class means",
+      prompt: "Class A contains (0,0) and (2,0); class B contains (0,2) and (2,2). Find both class means.",
+      solution: "mu_A=((0+2)/2,(0+0)/2)=(1,0), while mu_B=((0+2)/2,(2+2)/2)=(1,2)."
+    },
+    {
+      label: "Problem 2: One-dimensional within scatter",
+      concept: "Within-class scatter",
+      difficulty: "Mechanics",
+      technique: "Build S_W",
+      prompt: "Class A has values 0 and 2; class B has values 4 and 6. Compute the one-dimensional within-class scatter S_W.",
+      solution: "The class means are 1 and 5. The squared deviations are 1,1 for A and 1,1 for B, so S_W=4."
+    },
+    {
+      label: "Problem 3: Between scatter",
+      concept: "Between-class scatter",
+      difficulty: "GATE-style",
+      technique: "Build S_B",
+      prompt: "For two class means mu_1=(1,0) and mu_2=(1,2), compute the unweighted two-class S_B=(mu_1-mu_2)(mu_1-mu_2)^T.",
+      solution: "The mean difference is (0,-2). Its outer product is S_B=[[0,0],[0,4]]."
+    },
+    {
+      label: "Problem 4: Compare projection directions",
+      concept: "Fisher criterion",
+      difficulty: "GATE-style",
+      technique: "Evaluate Fisher ratio",
+      prompt: "Let S_B=diag(1,9) and S_W=diag(1,3). Compare J(w) for w=(1,0) and w=(0,1).",
+      solution: "For (1,0), J=1/1=1. For (0,1), J=9/3=3. The second coordinate direction has the larger Fisher ratio."
+    },
+    {
+      label: "Problem 5: Two-class LDA direction",
+      concept: "LDA direction",
+      difficulty: "GATE-style",
+      technique: "Use the two-class shortcut",
+      prompt: "Suppose S_W=diag(2,1), mu_1=(3,2), and mu_2=(1,1). Find a Fisher LDA direction up to nonzero scale.",
+      solution: "mu_1-mu_2=(2,1) and S_W^{-1}=diag(1/2,1). Thus w is proportional to (1,1)."
+    },
+    {
+      label: "Problem 6: Recognize the eigenproblem",
+      concept: "Generalized eigenproblem",
+      difficulty: "Concept",
+      technique: "Recognize generalized eigen form",
+      prompt: "Which matrix equation characterizes stationary directions of J(w)=(w^T S_B w)/(w^T S_W w), and how is it converted when S_W is invertible?",
+      solution: "The equation is S_B w=lambda S_W w. If S_W is invertible, multiply by S_W^{-1} to obtain S_W^{-1}S_B w=lambda w."
+    },
+    {
+      label: "Problem 7: Singular within scatter",
+      concept: "Singular scatter",
+      difficulty: "Application",
+      technique: "Diagnose singularity and assumptions",
+      prompt: "Two features are exact duplicates, making S_W singular. Why is the ordinary inverse shortcut invalid, and name one valid response.",
+      solution: "A singular matrix has no ordinary inverse, so S_W^{-1}(mu_1-mu_2) is undefined. A valid response is regularization such as S_W+epsilon I, a pseudoinverse, or dimension reduction."
+    },
+    {
+      label: "Problem 8: LDA versus PCA",
+      concept: "Model comparison",
+      difficulty: "Concept",
+      technique: "Compare learning objectives",
+      prompt: "A direction has the greatest total variance but does not separate the labels. Would PCA or Fisher LDA be more likely to select it, and why?",
+      solution: "PCA may select it because PCA ignores labels and maximizes total variance. Fisher LDA instead rewards between-class separation relative to within-class spread."
+    }
+  ];
+}
+
+function machineLearningLdaScatterReviewQuestions() {
+  const metadata = {
+    "ml-lda-review-1": { targetConcept: "class-means", prereqsUsed: [], difficulty: 1, gateWeight: "high" },
+    "ml-lda-review-2": { targetConcept: "within-scatter", prereqsUsed: [], difficulty: 1, gateWeight: "high" },
+    "ml-lda-review-3": { targetConcept: "between-scatter", prereqsUsed: [], difficulty: 1, gateWeight: "high" },
+    "ml-lda-review-4": { targetConcept: "fisher-criterion", prereqsUsed: ["within-scatter"], difficulty: 2, gateWeight: "high" },
+    "ml-lda-review-5": { targetConcept: "lda-direction", prereqsUsed: ["class-means"], difficulty: 2, gateWeight: "high" },
+    "ml-lda-review-6": { targetConcept: "generalized-eigenproblem", prereqsUsed: ["fisher-criterion"], difficulty: 2, gateWeight: "high" },
+    "ml-lda-review-7": { targetConcept: "projected-classification", prereqsUsed: ["lda-direction"], difficulty: 2, gateWeight: "medium" },
+    "ml-lda-review-8": { targetConcept: "model-comparison", prereqsUsed: ["between-scatter", "fisher-criterion"], difficulty: 3, gateWeight: "high" },
+    "ml-lda-review-9": { targetConcept: "singular-scatter", prereqsUsed: ["within-scatter", "lda-direction"], difficulty: 3, gateWeight: "high" },
+    "ml-lda-review-10": { targetConcept: "lda-failure-mode", prereqsUsed: ["within-scatter", "projected-classification"], difficulty: 3, gateWeight: "medium" }
+  };
+  const questions = [
+    {
+      id: "ml-lda-review-1",
+      kind: "single concept", tags: ["class-means"], prompt: "What centers observations from class c when computing within-class scatter?", options: [{ id: "a", text: "Their class mean mu_c" }, { id: "b", text: "The origin" }, { id: "c", text: "The largest observation" }, { id: "d", text: "The test-set mean" }],
+      answer: "a"
+    },
+    {
+      id: "ml-lda-review-2",
+      kind: "single concept", tags: ["within-scatter"], prompt: "What does a small value of w^T S_W w indicate?", options: [{ id: "a", text: "Classes are tight within themselves after projection." }, { id: "b", text: "Projected class means are necessarily equal." }, { id: "c", text: "All labels are incorrect." }, { id: "d", text: "The direction has unit length." }],
+      answer: "a"
+    },
+    {
+      id: "ml-lda-review-3",
+      kind: "single concept", tags: ["between-scatter"], prompt: "For two classes, which expression is a standard unweighted between-scatter matrix?", options: [{ id: "a", text: "(mu_1-mu_2)(mu_1-mu_2)^T" }, { id: "b", text: "S_W^{-1}+I" }, { id: "c", text: "sum x x^T without labels" }, { id: "d", text: "mu_1^T mu_2 as a scalar" }],
+      answer: "a"
+    },
+    {
+      id: "ml-lda-review-4",
+      kind: "mixed: two concepts", tags: ["fisher-criterion", "within-scatter"], prompt: "Which direction is preferred by Fisher's criterion?", options: [{ id: "a", text: "Large w^T S_B w and small w^T S_W w" }, { id: "b", text: "Small between scatter and large within scatter" }, { id: "c", text: "Largest ||w|| regardless of data" }, { id: "d", text: "Smallest projected mean difference" }],
+      answer: "a"
+    },
+    {
+      id: "ml-lda-review-5",
+      kind: "mixed: two concepts", tags: ["lda-direction", "class-means"], prompt: "If S_W is invertible, what is the two-class Fisher direction proportional to?", options: [{ id: "a", text: "S_W^{-1}(mu_1-mu_2)" }, { id: "b", text: "S_W(mu_1+mu_2)" }, { id: "c", text: "mu_1^T mu_2" }, { id: "d", text: "The all-ones vector" }],
+      answer: "a"
+    },
+    {
+      id: "ml-lda-review-6",
+      kind: "mixed: two concepts", tags: ["generalized-eigenproblem", "fisher-criterion"], prompt: "Which equation arises when optimizing the Fisher Rayleigh quotient?", options: [{ id: "a", text: "S_B w=lambda S_W w" }, { id: "b", text: "S_B+S_W=lambda" }, { id: "c", text: "w^T w=0 for nonzero w" }, { id: "d", text: "S_W w=0 for every dataset" }],
+      answer: "a"
+    },
+    {
+      id: "ml-lda-review-7",
+      kind: "mixed: two concepts", tags: ["projected-classification", "lda-direction"], prompt: "After an LDA direction w is chosen, what quantity is commonly thresholded for two-class prediction?", options: [{ id: "a", text: "The scalar w^T x" }, { id: "b", text: "Only ||x||" }, { id: "c", text: "The feature count" }, { id: "d", text: "The training index" }],
+      answer: "a"
+    },
+    {
+      id: "ml-lda-review-8",
+      kind: "mixed: three concepts", tags: ["model-comparison", "between-scatter", "fisher-criterion"], prompt: "Which comparison between PCA and Fisher LDA is correct?", options: [{ id: "a", text: "PCA maximizes unlabeled total variance; LDA uses labels to balance between- and within-class scatter." }, { id: "b", text: "Both always choose identical directions." }, { id: "c", text: "PCA maximizes class separation using labels." }, { id: "d", text: "LDA ignores within-class spread." }],
+      answer: "a"
+    },
+    {
+      id: "ml-lda-review-9",
+      kind: "mixed: three concepts", tags: ["singular-scatter", "within-scatter", "lda-direction"], prompt: "S_W is singular. Which statement is valid?", options: [{ id: "a", text: "The ordinary inverse shortcut is invalid; regularization or a pseudoinverse may be used." }, { id: "b", text: "S_W^{-1} always exists anyway." }, { id: "c", text: "Set every class mean to zero." }, { id: "d", text: "Singularity proves perfect generalization." }],
+      answer: "a"
+    },
+    {
+      id: "ml-lda-review-10",
+      kind: "mixed: three concepts", tags: ["lda-failure-mode", "within-scatter", "projected-classification"], prompt: "Which data pattern most directly challenges the classical shared-covariance linear LDA model?", options: [{ id: "a", text: "Classes with strongly different covariance shapes and a nonlinear boundary" }, { id: "b", text: "Two classes with the same covariance" }, { id: "c", text: "An invertible S_W" }, { id: "d", text: "A nonzero mean difference" }],
+      answer: "a"
+    }
+  ];
+  return questions.map((question) => ({
+    ...question,
+    ...(metadata[question.id] || { targetConcept: question.tags[0], prereqsUsed: question.tags.slice(1), difficulty: question.tags.length, gateWeight: "medium" })
+  }));
+}
+
 function probabilityFoundationProblems() {
   return [
     {
@@ -23931,6 +24313,30 @@ function machineLearningSvmMarginConceptGraph() {
         repairMaterial: "Review ML Chapter 9.6 and explain that transformed-space linear separation can create a nonlinear input-space boundary.",
         gateWeight: "high"
       }
+    }
+  };
+}
+
+function machineLearningLdaScatterConceptGraph() {
+  return {
+    chapterId: "gate-da-machine-learning-lda-scatter-classification",
+    chapterTitle: "ML Chapter 10: LDA and Scatter-Based Classification",
+    gateWeight: "high",
+    fallbackConcepts: ["class-means", "within-scatter", "fisher-criterion", "lda-direction"],
+    fallbackDifficultyMix: [1, 2, 2, 3],
+    fallbackInstruction: "Retest class-specific centering, scatter construction, the Fisher ratio, and the two-class direction before advancing.",
+    stableNextAction: "Next: continue only after you can construct S_W and S_B, optimize the Fisher ratio, and diagnose invalid inverse or model assumptions.",
+    nodes: {
+      "class-means": { label: "Class means", prereqs: [], repairMaterial: "Review ML Chapter 10.1 and average each labeled class separately.", gateWeight: "high" },
+      "within-scatter": { label: "Within-class scatter", prereqs: ["class-means"], repairMaterial: "Review ML Chapter 10.2 and center every point at its own class mean before summing outer products.", gateWeight: "high" },
+      "between-scatter": { label: "Between-class scatter", prereqs: ["class-means"], repairMaterial: "Review ML Chapter 10.2 and form the outer product of the class-mean difference.", gateWeight: "high" },
+      "fisher-criterion": { label: "Fisher criterion", prereqs: ["within-scatter", "between-scatter"], repairMaterial: "Review ML Chapter 10.3: place projected between scatter above projected within scatter.", gateWeight: "high" },
+      "generalized-eigenproblem": { label: "Generalized eigenproblem", prereqs: ["fisher-criterion"], repairMaterial: "Review ML Chapter 10.4 and connect the Rayleigh quotient to S_B w=lambda S_W w.", gateWeight: "high" },
+      "lda-direction": { label: "Two-class LDA direction", prereqs: ["class-means", "within-scatter", "generalized-eigenproblem"], repairMaterial: "Review ML Chapter 10.4 and compute S_W^{-1}(mu_1-mu_2) only when S_W is invertible.", gateWeight: "high" },
+      "projected-classification": { label: "Projected classification", prereqs: ["lda-direction"], repairMaterial: "Review ML Chapter 10.5 and classify using the projected scalar w^T x and an appropriate threshold.", gateWeight: "medium" },
+      "model-comparison": { label: "LDA, PCA, logistic, and SVM comparison", prereqs: ["fisher-criterion"], repairMaterial: "Review ML Chapter 10.5 and match each method to scatter, variance, log-loss probability, or margin.", gateWeight: "high" },
+      "singular-scatter": { label: "Singular within scatter", prereqs: ["within-scatter", "lda-direction"], repairMaterial: "Review ML Chapter 10.6 and use regularization, a pseudoinverse, or dimension reduction instead of an invalid inverse.", gateWeight: "high" },
+      "lda-failure-mode": { label: "LDA assumptions and failure modes", prereqs: ["within-scatter", "projected-classification"], repairMaterial: "Review ML Chapter 10.6 and check shared covariance, outliers, overlap, and nonlinear class structure.", gateWeight: "medium" }
     }
   };
 }
@@ -32465,6 +32871,7 @@ function conceptGraphForSection(section) {
   if (section?.id === "gate-da-machine-learning-naive-bayes-generative-classification") return machineLearningNaiveBayesConceptGraph();
   if (section?.id === "gate-da-machine-learning-knn-prototype-classifiers") return machineLearningKnnPrototypeConceptGraph();
   if (section?.id === "gate-da-machine-learning-svm-margin-classification") return machineLearningSvmMarginConceptGraph();
+  if (section?.id === "gate-da-machine-learning-lda-scatter-classification") return machineLearningLdaScatterConceptGraph();
   return null;
 }
 
