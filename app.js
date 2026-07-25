@@ -1,7 +1,7 @@
 const STORAGE_KEY = "learning-studio-data-v2";
 const LEGACY_STORAGE_KEYS = ["learning-studio-data-v1"];
 const SESSION_KEY = "aleph-session";
-const COURSE_PLAN_VERSION = "seeded-user-canonical-workspace-v133";
+const COURSE_PLAN_VERSION = "seeded-user-canonical-workspace-v134";
 const MAX_FEEDBACK_ATTACHMENT_BYTES = 3 * 1024 * 1024;
 const MAX_COMPRESSED_FEEDBACK_BYTES = 2400 * 1024;
 const MAX_FEEDBACK_PDF_PAGES = 6;
@@ -1879,6 +1879,36 @@ function buildGateDaBasicPlan(now, accountTypes, sections, user = basicGateDaUse
         date: weekEightSunday,
         details: "Take the graph-backed objective review for kNN, nearest-centroid and prototype classification, distance metrics, nonlinear boundaries, scaling, ties, and prediction cost.",
         updatedAt: now
+      },
+      {
+        id: "schedule-machine-learning-chapter-9-study",
+        title: "ML Chapter 9: SVM and Margin-Based Classification",
+        week: 9,
+        subject: "Machine Learning",
+        kind: "Study",
+        date: weekNineMonday,
+        details: "Study separating hyperplanes, functional and geometric margins, support vectors, hard-margin feasibility, scaling of w and b, outlier sensitivity, XOR failure, and nonlinear feature-map/kernel intuition.",
+        updatedAt: now
+      },
+      {
+        id: "schedule-machine-learning-chapter-9-practice",
+        title: "ML Chapter 9: Labelled Practice",
+        week: 9,
+        subject: "Machine Learning",
+        kind: "Practice",
+        date: addDays(weekNineMonday, 2),
+        details: "Solve labelled SVM practice: score and separation checks, distances to a boundary, margin width, support-vector identification, parameter scaling, outlier effects, and feature-map reasoning.",
+        updatedAt: now
+      },
+      {
+        id: "schedule-machine-learning-chapter-9-review",
+        title: "ML Chapter 9: Objective Review",
+        week: 9,
+        subject: "Machine Learning",
+        kind: "Review",
+        date: weekNineSunday,
+        details: "Take the graph-backed objective review for SVM geometry, margins, support vectors, hard-margin assumptions, parameter scaling, outliers, XOR, and feature maps.",
+        updatedAt: now
       }
     ],
     tests: [
@@ -2160,6 +2190,15 @@ function buildGateDaBasicPlan(now, accountTypes, sections, user = basicGateDaUse
         details: "Objective end-of-chapter quiz for distance metrics, sorted neighbors, k-voting, nearest-centroid rules, squared-distance boundaries, XOR/local structure, scaling, ties, and train/test cost.",
         sectionId: machineLearningSections[7]?.id,
         quizId: "quiz-machine-learning-chapter-8-objective-review",
+        updatedAt: now
+      },
+      {
+        id: "test-machine-learning-chapter-9-objective-review",
+        title: "ML Chapter 9 Objective Review",
+        date: weekNineSunday,
+        details: "Objective end-of-chapter quiz for separating hyperplanes, functional and geometric margins, support vectors, margin width, scaling invariance, hard-margin feasibility, outliers, XOR, and nonlinear feature maps.",
+        sectionId: machineLearningSections[8]?.id,
+        quizId: "quiz-machine-learning-chapter-9-objective-review",
         updatedAt: now
       }
     ],
@@ -3177,6 +3216,39 @@ function buildGateDaBasicPlan(now, accountTypes, sections, user = basicGateDaUse
         done: false,
         details: "Submit the Chapter 8 objective quiz so the learner record logs distance-based-classifier strengths and weaknesses.",
         updatedAt: now
+      },
+      {
+        id: "task-machine-learning-chapter-9-read",
+        week: 9,
+        title: "ML Ch 9: Read SVM and margins",
+        type: "Study",
+        date: weekNineMonday,
+        status: "todo",
+        done: false,
+        details: "Open Subjects -> Machine Learning -> Chapter 9 and study SVM boundary geometry, support vectors, margins, scaling, separability, outliers, XOR, and feature maps.",
+        updatedAt: now
+      },
+      {
+        id: "task-machine-learning-chapter-9-practice",
+        week: 9,
+        title: "ML Ch 9: Solve labelled practice",
+        type: "Practice",
+        date: addDays(weekNineMonday, 2),
+        status: "todo",
+        done: false,
+        details: "Attempt the SVM separation, distance, margin, support-vector, scaling, outlier, and feature-map practice problems before opening worked solutions.",
+        updatedAt: now
+      },
+      {
+        id: "task-machine-learning-chapter-9-review",
+        week: 9,
+        title: "ML Ch 9: Take objective review",
+        type: "Review",
+        date: weekNineSunday,
+        status: "todo",
+        done: false,
+        details: "Submit the Chapter 9 objective quiz so the learner record logs margin-based-classifier strengths and weaknesses.",
+        updatedAt: now
       }
     ],
     accountTypes,
@@ -3203,7 +3275,7 @@ function buildGateDaBasicPlan(now, accountTypes, sections, user = basicGateDaUse
         startDate: monday,
         endDate: "2026-08-30",
         status: "active",
-        details: `GATE DA Basic plan surfaces: Subjects, Tasks, Schedule, Tests, Feedback, Resources, and Share. Recommended pace: study Probability, Linear Algebra, DSA, and Machine Learning in parallel. Every 15 days, Aleph should generate an adaptive cumulative review quiz from prior performance, repeating missed concepts more often, reducing mastered concepts, and keeping high-weight exam topics in rotation. Current material build: Probability Chapters 1-10, Linear Algebra Chapters 1-12 plus a chapterless cumulative past-paper style drill, DSA Chapters 1-9 with a progression gate before Chapter 3, and Machine Learning Chapters 1-8.${trialNote}`,
+        details: `GATE DA Basic plan surfaces: Subjects, Tasks, Schedule, Tests, Feedback, Resources, and Share. Recommended pace: study Probability, Linear Algebra, DSA, and Machine Learning in parallel. Every 15 days, Aleph should generate an adaptive cumulative review quiz from prior performance, repeating missed concepts more often, reducing mastered concepts, and keeping high-weight exam topics in rotation. Current material build: Probability Chapters 1-10, Linear Algebra Chapters 1-12 plus a chapterless cumulative past-paper style drill, DSA Chapters 1-9 with a progression gate before Chapter 3, and Machine Learning Chapters 1-9.${trialNote}`,
         updatedAt: now
       }
     ],
@@ -3363,6 +3435,13 @@ function buildGateDaBasicPlan(now, accountTypes, sections, user = basicGateDaUse
         date: weekEightSunday,
         details: "Review misses for using an unstated distance metric, failing to sort neighbors, voting before selecting exactly k points, ignoring feature scaling, confusing nearest-neighbor with nearest-centroid rules, dropping cross terms incorrectly in boundary derivations, mishandling ties, and assuming kNN has a global linear boundary.",
         updatedAt: now
+      },
+      {
+        id: "feedback-machine-learning-chapter-9",
+        title: "Machine Learning Chapter 9 feedback focus",
+        date: weekNineSunday,
+        details: "Review misses for confusing score with distance, forgetting the ||w|| denominator, mixing functional and geometric margin, identifying every correctly classified point as a support vector, changing geometric margin when w and b are scaled together, assuming hard-margin feasibility with overlap or outliers, and treating a kernel as a new label rule rather than an implicit feature representation.",
+        updatedAt: now
       }
     ],
     resources: [
@@ -3435,6 +3514,14 @@ function buildGateDaBasicPlan(now, accountTypes, sections, user = basicGateDaUse
         title: "Machine Learning Chapter 8: kNN and Prototype Classifiers",
         date: weekEightMonday,
         details: "Open Subjects -> Machine Learning to study distance metrics, neighbor voting, nearest-centroid and prototype rules, nonlinear local boundaries, XOR, scaling, ties, and prediction-time cost.",
+        link: "",
+        updatedAt: now
+      },
+      {
+        id: "resource-machine-learning-svm-margin-classification",
+        title: "Machine Learning Chapter 9: SVM and Margin-Based Classification",
+        date: weekNineMonday,
+        details: "Open Subjects -> Machine Learning to study separating hyperplanes, functional and geometric margins, support vectors, hard-margin assumptions, scaling invariance, outliers, XOR, and nonlinear feature-map/kernel intuition.",
         link: "",
         updatedAt: now
       },
@@ -5261,6 +5348,160 @@ function gateDaMachineLearningSections(updatedAt = new Date().toISOString()) {
         "kNN can form nonlinear local regions and classify XOR-like corners.",
         "Scaling, high dimension, noise, imbalance, and ties are major failure modes.",
         "Direct kNN uses O(nd) storage and O(nd) distance work per query."
+      ],
+      updatedAt
+    },
+    {
+      id: "gate-da-machine-learning-svm-margin-classification",
+      exam: "GATE DA",
+      accountTier: "Basic",
+      subject: "Machine Learning",
+      chapter: "Chapter 9",
+      section: "9",
+      title: "SVM and Margin-Based Classification",
+      summary: "Maximum-margin linear classification through separating hyperplanes, signed scores, geometric distance, support vectors, hard-margin feasibility, scaling invariance, and nonlinear feature representations.",
+      sectionPreview: "Many lines may classify a separable dataset correctly. A hard-margin SVM chooses the separator with the widest safe corridor between the classes. The closest training points—the support vectors—determine that corridor.",
+      previewActivity: "In one dimension, negatives lie at x=-3,-2 and positives at x=2,4. Where should the maximum-margin boundary lie? Which points determine it? What happens if a positive point is added at x=-1?",
+      intro: [
+        "Chapter 4 introduced scores, boundaries, and margins. SVM now turns margin into the training objective: among valid separators, prefer the one with the largest geometric margin.",
+        "For Basic GATE work, the important skills are geometric and algebraic: test a proposed separator, compute distance to a hyperplane, identify possible support vectors, and recognize when hard-margin separation is impossible.",
+        "The parameter pair w,b is not unique because positive rescaling leaves the boundary unchanged. SVM uses a canonical scaling so the nearest points satisfy y_i(w^T x_i+b)=1."
+      ],
+      bookSections: [
+        {
+          number: "9.1",
+          title: "Separating Hyperplanes and Signed Scores",
+          paragraphs: [
+            "A linear classifier uses f(x)=w^T x+b and predicts by the sign of f(x). Its decision boundary is f(x)=0.",
+            "With labels y in {-1,+1}, a point is correctly classified when y f(x)>0. The quantity y f(x) is the signed functional margin.",
+            "To check a candidate separator on a tiny dataset, compute y_i(w^T x_i+b) for every point. One nonpositive value disproves strict separation."
+          ],
+          blocks: [
+            { type: "formula", title: "Separation check", body: "Correct side: y_i(w^T x_i+b)>0. Canonical hard-margin constraint: y_i(w^T x_i+b)>=1." },
+            { type: "strategy", title: "GATE score table", body: "Write point, label, score, and y times score. Do not infer separation from a sketch alone." }
+          ]
+        },
+        {
+          number: "9.2",
+          title: "Functional Versus Geometric Margin",
+          paragraphs: [
+            "The functional margin y(w^T x+b) changes if w and b are multiplied by a positive constant, even though the boundary does not move.",
+            "The geometric signed distance divides by ||w||. For a correctly classified point, its geometric margin is y(w^T x+b)/||w||.",
+            "The perpendicular distance from any point x to the boundary is |w^T x+b|/||w||."
+          ],
+          blocks: [
+            { type: "formula", title: "Distance to hyperplane", body: "distance(x, w^T x+b=0) = |w^T x+b| / ||w||." },
+            { type: "warning", title: "Missing denominator trap", body: "The raw score is not a Euclidean distance unless ||w||=1." }
+          ]
+        },
+        {
+          number: "9.3",
+          title: "Support Vectors and Margin Width",
+          paragraphs: [
+            "Under canonical scaling, the closest points satisfy y_i(w^T x_i+b)=1. These points lie on the margin planes and are support vectors.",
+            "Points with y_i(w^T x_i+b)>1 are correctly classified but lie outside the margin. Moving them slightly may not change the optimal boundary.",
+            "The two margin planes are w^T x+b=1 and w^T x+b=-1. Their separation is 2/||w||, while each is 1/||w|| from the decision boundary."
+          ],
+          blocks: [
+            { type: "principle", title: "Support-vector test", body: "In canonical form, equality marks margin support vectors; strict inequality marks non-support points." },
+            { type: "example", title: "Example 9.1: one-dimensional margin", body: "For negatives up to -2 and positives from 2, boundary x=0 has support vectors -2 and 2; the full margin width is 4." }
+          ]
+        },
+        {
+          number: "9.4",
+          title: "Why Maximizing Margin Minimizes ||w||",
+          paragraphs: [
+            "Once the canonical constraints y_i(w^T x_i+b)>=1 fix the scale, maximizing 2/||w|| is equivalent to minimizing ||w||, or more conveniently (1/2)||w||^2.",
+            "Hard-margin SVM therefore seeks a small-norm separator subject to classifying every training point with canonical margin at least one.",
+            "Basic questions usually provide candidate separators or simple geometry. They do not require solving a general quadratic program."
+          ],
+          blocks: [
+            { type: "formula", title: "Hard-margin objective", body: "Minimize (1/2)||w||^2 subject to y_i(w^T x_i+b)>=1 for every training point." },
+            { type: "principle", title: "Rescaling invariance", body: "Multiplying w,b by c>0 leaves the boundary and geometric distances unchanged, but multiplies functional margins by c." }
+          ]
+        },
+        {
+          number: "9.5",
+          title: "Hard-Margin Failure and Outliers",
+          paragraphs: [
+            "Hard-margin SVM requires linear separability in the chosen feature space. If classes overlap or one label contradicts the geometry, no feasible hard-margin separator exists.",
+            "A single extreme or mislabeled point can shrink the margin, rotate the boundary, or destroy separability.",
+            "Soft-margin SVM introduces slack and a penalty tradeoff, but Basic hand problems mainly ask you to recognize why hard margin fails and what the tradeoff means."
+          ],
+          blocks: [
+            { type: "warning", title: "Feasibility before optimization", body: "Check whether any separator exists before comparing candidate margins." }
+          ]
+        },
+        {
+          number: "9.6",
+          title: "XOR, Feature Maps, and Kernels",
+          paragraphs: [
+            "A linear SVM cannot separate XOR in the original two coordinates because no single line can split alternating corners.",
+            "A nonlinear feature map can make the transformed points linearly separable. For XOR, adding a product feature x_1 x_2 is one useful conceptual example.",
+            "A kernel computes inner products in a feature space implicitly. At Basic level, recognize what changes: the separator is linear in transformed space but may be nonlinear in the original input space."
+          ],
+          blocks: [
+            { type: "principle", title: "Kernel interpretation", body: "A kernel changes the representation used for inner products; it does not simply relabel the data or replace the margin objective." },
+            { type: "strategy", title: "First-error diagnosis", body: "Check separability, signed scores, ||w|| normalization, support-vector equality, and only then feature-map or outlier issues." }
+          ]
+        }
+      ],
+      concepts: [
+        { name: "Separating hyperplane", description: "A boundary w^T x+b=0 that places the two classes on opposite sides.", cue: "Check y times score." },
+        { name: "Functional margin", description: "The signed score y(w^T x+b).", cue: "Changes under positive parameter scaling." },
+        { name: "Geometric margin", description: "The signed score divided by ||w||.", cue: "Actual perpendicular distance." },
+        { name: "Support vector", description: "A closest point that lies on a margin plane in canonical scaling.", cue: "Equality y f(x)=1." },
+        { name: "Margin width", description: "Distance between the two canonical margin planes.", cue: "2/||w||." },
+        { name: "Hard-margin SVM", description: "Maximum-margin classification with no training violations.", cue: "Requires separability." },
+        { name: "Scaling invariance", description: "Positive rescaling of w,b leaves boundary and geometric margin unchanged.", cue: "Functional margin changes; geometry does not." },
+        { name: "Feature map and kernel", description: "A transformed representation that can enable nonlinear original-space boundaries.", cue: "Linear after transformation." }
+      ],
+      techniques: [
+        { name: "Build a signed-score table", when: "a proposed separator is given.", move: "Compute f(x), then y f(x), for every point." },
+        { name: "Normalize score to distance", when: "a geometric margin or point-boundary distance is asked.", move: "Divide the absolute or signed score by ||w||." },
+        { name: "Identify support vectors", when: "canonical constraints are supplied.", move: "Find points with y_i f(x_i)=1." },
+        { name: "Compute margin width", when: "canonical w is given.", move: "Use 2/||w|| for the full corridor and 1/||w|| per side." },
+        { name: "Check rescaling", when: "two parameterizations describe the same boundary.", move: "Test whether w,b differ by one positive constant." },
+        { name: "Test hard-margin feasibility", when: "overlap, XOR, or an outlier appears.", move: "Decide separability before optimizing margin." },
+        { name: "Interpret a feature map", when: "a nonlinear pattern is discussed.", move: "Ask whether the transformed coordinates admit a linear separator." }
+      ],
+      practiceProblems: machineLearningSvmMarginProblems(),
+      reviewPrompts: [
+        "How do you verify a proposed separator using y times score?",
+        "Why is the raw score not generally a geometric distance?",
+        "What makes a training point a support vector in canonical scaling?",
+        "What are the half-margin and full margin width?",
+        "Why do positive rescalings of w,b describe the same boundary?",
+        "Why does hard-margin SVM require linear separability?",
+        "How can one outlier change the maximum-margin separator?",
+        "How does hard-margin SVM differ from perceptron?",
+        "Why does a linear SVM fail on XOR?",
+        "What does a nonlinear feature map or kernel change?"
+      ],
+      reviewQuiz: {
+        id: "quiz-machine-learning-chapter-9-objective-review",
+        title: "ML Chapter 9 Objective Review",
+        instructions: "Complete this after studying SVM and margin-based classification. The quiz checks signed-score separation, geometric distance, support vectors, margin width, scaling invariance, hard-margin feasibility, outliers, XOR, and feature-map/kernel interpretation.",
+        questions: machineLearningSvmMarginReviewQuestions()
+      },
+      readingQuestions: [
+        "What does y(w^T x+b)>0 mean?",
+        "How do functional and geometric margins differ?",
+        "Why does ||w|| appear in the distance formula?",
+        "Which points determine the margin?",
+        "Why does canonical scaling use margin one?",
+        "When is hard-margin SVM infeasible?",
+        "How can a transformed-space linear boundary become nonlinear in input space?"
+      ],
+      chapterSummary: [
+        "SVM chooses a maximum-margin separator among valid linear boundaries.",
+        "Use y(w^T x+b) to check signed classification and canonical constraints.",
+        "Divide by ||w|| to convert score into geometric distance.",
+        "Canonical support vectors satisfy y_i(w^T x_i+b)=1.",
+        "The full canonical margin width is 2/||w||.",
+        "Positive rescaling changes functional margin but not boundary or geometric margin.",
+        "Hard margin fails when the chosen feature representation is not separable.",
+        "Feature maps and kernels can create nonlinear input-space boundaries through linear separation in transformed space."
       ],
       updatedAt
     }
@@ -17025,6 +17266,226 @@ function machineLearningKnnPrototypeReviewQuestions() {
   }));
 }
 
+function machineLearningSvmMarginProblems() {
+  return [
+    {
+      label: "Problem 1: Signed-score separation",
+      concept: "Separating hyperplane",
+      difficulty: "Mechanics",
+      technique: "Build a signed-score table",
+      prompt: "For f(x)=x_1-x_2 and labeled points ((3,1),+1), ((1,3),-1), and ((2,2),+1), compute y f(x). Does f strictly separate all three?",
+      solution: "The signed values are +1*(2)=2, -1*(-2)=2, and +1*(0)=0. The boundary point is not strictly on the positive side, so the three points are not strictly separated by this rule."
+    },
+    {
+      label: "Problem 2: Distance to a boundary",
+      concept: "Geometric margin",
+      difficulty: "GATE-style",
+      technique: "Normalize score to distance",
+      prompt: "For boundary 3x_1+4x_2-5=0, find the perpendicular distance from x=(1,1).",
+      solution: "The score is 3+4-5=2 and ||w||=sqrt(3^2+4^2)=5. The distance is |2|/5=0.4."
+    },
+    {
+      label: "Problem 3: Functional versus geometric margin",
+      concept: "Scaling invariance",
+      difficulty: "GATE-style",
+      technique: "Check rescaling",
+      prompt: "A positive point has score 2 under (w,b). If both w and b are multiplied by 3, what happens to its functional margin, geometric margin, and decision boundary?",
+      solution: "The functional margin triples from 2 to 6. The norm ||w|| also triples, so the geometric margin is unchanged. The equation 3(w^T x+b)=0 has the same solution set, so the boundary is unchanged."
+    },
+    {
+      label: "Problem 4: Identify support vectors",
+      concept: "Support vector",
+      difficulty: "Mechanics",
+      technique: "Identify support vectors",
+      prompt: "A canonically scaled separator gives signed values y_i f(x_i) equal to 1, 3, 1, and 2. Which indexed points are support vectors?",
+      solution: "Points 1 and 3 are support vectors because they satisfy equality y_i f(x_i)=1 and lie on the margin planes."
+    },
+    {
+      label: "Problem 5: Margin width",
+      concept: "Margin width",
+      difficulty: "GATE-style",
+      technique: "Compute margin width",
+      prompt: "A canonical SVM has w=(3,4). Find the distance from the boundary to either margin plane and the full margin width.",
+      solution: "||w||=5. Each margin plane is 1/5 from the boundary, and the full width between the two margin planes is 2/5."
+    },
+    {
+      label: "Problem 6: One-dimensional maximum margin",
+      concept: "Hard-margin SVM",
+      difficulty: "GATE-style",
+      technique: "Test hard-margin feasibility",
+      prompt: "Negative points lie at x=-4,-2 and positive points at x=2,5. State the maximum-margin boundary and the support vectors.",
+      solution: "The closest opposite-class pair is -2 and 2. Their midpoint is 0, so the maximum-margin boundary is x=0. The support vectors are x=-2 and x=2."
+    },
+    {
+      label: "Problem 7: Outlier destroys hard-margin feasibility",
+      concept: "Hard-margin failure",
+      difficulty: "Application",
+      technique: "Test hard-margin feasibility",
+      prompt: "Start with negatives at x=-4,-2 and positives at x=2,5. Add a positive point at x=-3. Can one threshold on the line still perfectly separate the classes?",
+      solution: "No. The ordered labels now include negative at -4, positive at -3, negative at -2, then positives to the right. No single threshold can put all negatives on one side and all positives on the other, so hard-margin separation is infeasible."
+    },
+    {
+      label: "Problem 8: Feature map for XOR",
+      concept: "Feature map and kernel",
+      difficulty: "Concept",
+      technique: "Interpret a feature map",
+      prompt: "XOR labels are positive when exactly one of binary x_1,x_2 equals 1. Let z=x_1+x_2-2x_1x_2. What values does z take on the four corners, and why does it help?",
+      solution: "For (0,0),(0,1),(1,0),(1,1), z is 0,1,1,0. Thus a threshold such as z>1/2 separates the XOR labels in the transformed representation, even though no single line does so in the original two coordinates."
+    }
+  ];
+}
+
+function machineLearningSvmMarginReviewQuestions() {
+  const metadata = {
+    "ml-svm-review-1": { targetConcept: "signed-separation", prereqsUsed: [], difficulty: 1, gateWeight: "high" },
+    "ml-svm-review-2": { targetConcept: "geometric-margin", prereqsUsed: [], difficulty: 1, gateWeight: "high" },
+    "ml-svm-review-3": { targetConcept: "support-vector", prereqsUsed: ["signed-separation"], difficulty: 1, gateWeight: "high" },
+    "ml-svm-review-4": { targetConcept: "margin-width", prereqsUsed: ["geometric-margin", "support-vector"], difficulty: 2, gateWeight: "high" },
+    "ml-svm-review-5": { targetConcept: "scaling-invariance", prereqsUsed: ["geometric-margin"], difficulty: 2, gateWeight: "high" },
+    "ml-svm-review-6": { targetConcept: "hard-margin-feasibility", prereqsUsed: ["signed-separation"], difficulty: 2, gateWeight: "high" },
+    "ml-svm-review-7": { targetConcept: "outlier-sensitivity", prereqsUsed: ["hard-margin-feasibility"], difficulty: 2, gateWeight: "medium" },
+    "ml-svm-review-8": { targetConcept: "hard-margin-objective", prereqsUsed: ["margin-width", "scaling-invariance"], difficulty: 3, gateWeight: "high" },
+    "ml-svm-review-9": { targetConcept: "xor-feature-map", prereqsUsed: ["linear-separability", "hard-margin-feasibility"], difficulty: 3, gateWeight: "high" },
+    "ml-svm-review-10": { targetConcept: "support-vector", prereqsUsed: ["signed-separation", "margin-width"], difficulty: 3, gateWeight: "high" }
+  };
+  const questions = [
+    {
+      id: "ml-svm-review-1",
+      kind: "single concept",
+      tags: ["signed-separation"],
+      prompt: "For labels y in {-1,+1}, which condition means a point is strictly correctly classified by f(x)=w^T x+b?",
+      options: [
+        { id: "a", text: "y f(x) > 0" },
+        { id: "b", text: "f(x) = 0" },
+        { id: "c", text: "||w|| = 0" },
+        { id: "d", text: "y+b < 0" }
+      ],
+      answer: "a"
+    },
+    {
+      id: "ml-svm-review-2",
+      kind: "single concept",
+      tags: ["geometric-margin"],
+      prompt: "What is the perpendicular distance from x to w^T x+b=0?",
+      options: [
+        { id: "a", text: "|w^T x+b|" },
+        { id: "b", text: "|w^T x+b| / ||w||" },
+        { id: "c", text: "||x|| / |b|" },
+        { id: "d", text: "w^T w+b" }
+      ],
+      answer: "b"
+    },
+    {
+      id: "ml-svm-review-3",
+      kind: "single concept",
+      tags: ["support-vector"],
+      prompt: "Under canonical hard-margin scaling, which points on the margin planes are support vectors?",
+      options: [
+        { id: "a", text: "Points with y_i f(x_i)=1" },
+        { id: "b", text: "All points with y_i f(x_i)>1" },
+        { id: "c", text: "Only misclassified points" },
+        { id: "d", text: "Only points at the origin" }
+      ],
+      answer: "a"
+    },
+    {
+      id: "ml-svm-review-4",
+      kind: "mixed: two concepts",
+      tags: ["margin-width", "geometric-margin"],
+      prompt: "For canonical w with ||w||=4, what is the full width between the two margin planes?",
+      options: [
+        { id: "a", text: "1/4" },
+        { id: "b", text: "1/2" },
+        { id: "c", text: "2" },
+        { id: "d", text: "4" }
+      ],
+      answer: "b"
+    },
+    {
+      id: "ml-svm-review-5",
+      kind: "mixed: two concepts",
+      tags: ["scaling-invariance", "geometric-margin"],
+      prompt: "If w and b are both multiplied by positive c, what remains unchanged?",
+      options: [
+        { id: "a", text: "Boundary and geometric margins" },
+        { id: "b", text: "Functional margins only" },
+        { id: "c", text: "The numerical value of ||w||" },
+        { id: "d", text: "Canonical equality for every c" }
+      ],
+      answer: "a"
+    },
+    {
+      id: "ml-svm-review-6",
+      kind: "mixed: two concepts",
+      tags: ["hard-margin-feasibility", "signed-separation"],
+      prompt: "What must be checked before optimizing a hard-margin SVM?",
+      options: [
+        { id: "a", text: "Whether the training data are linearly separable in the chosen features" },
+        { id: "b", text: "Whether every feature is a probability" },
+        { id: "c", text: "Whether k is odd" },
+        { id: "d", text: "Whether class priors sum to one" }
+      ],
+      answer: "a"
+    },
+    {
+      id: "ml-svm-review-7",
+      kind: "mixed: two concepts",
+      tags: ["outlier-sensitivity", "hard-margin-feasibility"],
+      prompt: "A mislabeled point lies deep inside the opposite class. What is the main hard-margin consequence?",
+      options: [
+        { id: "a", text: "It can make the constraints infeasible or sharply distort the separator." },
+        { id: "b", text: "It always increases the margin." },
+        { id: "c", text: "It turns the model into kNN." },
+        { id: "d", text: "It has no effect unless it is at the origin." }
+      ],
+      answer: "a"
+    },
+    {
+      id: "ml-svm-review-8",
+      kind: "mixed: three concepts",
+      tags: ["hard-margin-objective", "margin-width", "scaling-invariance"],
+      prompt: "Why does canonical hard-margin SVM minimize (1/2)||w||^2?",
+      options: [
+        { id: "a", text: "With y_i f(x_i)>=1 fixing scale, smaller ||w|| means larger width 2/||w||." },
+        { id: "b", text: "It makes every raw score equal zero." },
+        { id: "c", text: "It maximizes the number of features." },
+        { id: "d", text: "It removes the class labels." }
+      ],
+      answer: "a"
+    },
+    {
+      id: "ml-svm-review-9",
+      kind: "mixed: three concepts",
+      tags: ["xor-feature-map", "linear-separability", "hard-margin-feasibility"],
+      prompt: "How can a feature map help a linear SVM with XOR?",
+      options: [
+        { id: "a", text: "It can make transformed points linearly separable, yielding a nonlinear boundary in input space." },
+        { id: "b", text: "It changes all labels to the same class." },
+        { id: "c", text: "It guarantees separability for every possible dataset." },
+        { id: "d", text: "It removes the margin objective." }
+      ],
+      answer: "a"
+    },
+    {
+      id: "ml-svm-review-10",
+      kind: "mixed: three concepts",
+      tags: ["support-vector", "signed-separation", "margin-width"],
+      prompt: "Canonical signed values are 1, 2.5, 1, and 4. Which statement is correct?",
+      options: [
+        { id: "a", text: "The first and third points are support vectors; all four satisfy the margin constraint." },
+        { id: "b", text: "All four are support vectors." },
+        { id: "c", text: "The second and fourth points violate separation." },
+        { id: "d", text: "No point is correctly classified." }
+      ],
+      answer: "a"
+    }
+  ];
+  return questions.map((question) => ({
+    ...question,
+    ...(metadata[question.id] || { targetConcept: question.tags[0], prereqsUsed: question.tags.slice(1), difficulty: question.tags.length, gateWeight: "medium" })
+  }));
+}
+
 function probabilityFoundationProblems() {
   return [
     {
@@ -23395,6 +23856,80 @@ function machineLearningKnnPrototypeConceptGraph() {
         prereqs: ["knn-routine"],
         repairMaterial: "Review ML Chapter 8.5 and separate O(nd) storage, light fitting, and direct O(nd) query distance work.",
         gateWeight: "medium"
+      }
+    }
+  };
+}
+
+function machineLearningSvmMarginConceptGraph() {
+  return {
+    chapterId: "gate-da-machine-learning-svm-margin-classification",
+    chapterTitle: "ML Chapter 9: SVM and Margin-Based Classification",
+    gateWeight: "high",
+    fallbackConcepts: ["signed-separation", "geometric-margin", "support-vector", "hard-margin-feasibility"],
+    fallbackDifficultyMix: [1, 2, 2, 3],
+    fallbackInstruction: "Retest signed-score tables, score-to-distance normalization, support-vector equality, margin width, and hard-margin feasibility before moving to scatter-based classification.",
+    stableNextAction: "Next: move to LDA only after separation, geometric margins, support vectors, scaling invariance, hard-margin failure, and feature-map interpretation are reliable.",
+    nodes: {
+      "signed-separation": {
+        label: "Signed-score separation",
+        prereqs: [],
+        repairMaterial: "Review ML Chapter 9.1 and compute y_i(w^T x_i+b) for every training point.",
+        gateWeight: "high"
+      },
+      "geometric-margin": {
+        label: "Geometric margin and hyperplane distance",
+        prereqs: ["signed-separation"],
+        repairMaterial: "Review ML Chapter 9.2 and divide signed or absolute score by ||w||.",
+        gateWeight: "high"
+      },
+      "support-vector": {
+        label: "Support-vector identification",
+        prereqs: ["signed-separation", "geometric-margin"],
+        repairMaterial: "Review ML Chapter 9.3 and identify canonical equality y_i f(x_i)=1.",
+        gateWeight: "high"
+      },
+      "margin-width": {
+        label: "Canonical margin width",
+        prereqs: ["geometric-margin", "support-vector"],
+        repairMaterial: "Review ML Chapter 9.3 and distinguish half-width 1/||w|| from full width 2/||w||.",
+        gateWeight: "high"
+      },
+      "scaling-invariance": {
+        label: "Parameter scaling invariance",
+        prereqs: ["geometric-margin"],
+        repairMaterial: "Review ML Chapter 9.2-9.4 and compare what happens to boundary, functional margin, norm, and geometric margin under c(w,b).",
+        gateWeight: "high"
+      },
+      "hard-margin-objective": {
+        label: "Hard-margin maximum-margin objective",
+        prereqs: ["margin-width", "scaling-invariance"],
+        repairMaterial: "Review ML Chapter 9.4 and connect minimizing ||w||^2 under canonical constraints with maximizing 2/||w||.",
+        gateWeight: "high"
+      },
+      "hard-margin-feasibility": {
+        label: "Hard-margin feasibility",
+        prereqs: ["signed-separation"],
+        repairMaterial: "Review ML Chapter 9.5 and test linear separability before optimizing a separator.",
+        gateWeight: "high"
+      },
+      "outlier-sensitivity": {
+        label: "Outlier and mislabeled-point sensitivity",
+        prereqs: ["hard-margin-feasibility"],
+        repairMaterial: "Review ML Chapter 9.5 and determine whether the point shrinks the margin, rotates the boundary, or destroys separability.",
+        gateWeight: "medium"
+      },
+      "linear-separability": {
+        label: "Linear separability prerequisite",
+        prereqs: [],
+        repairMaterial: "Review ML Chapter 4 and test whether one hyperplane can assign the required signs.",
+        gateWeight: "high"
+      },
+      "xor-feature-map": {
+        label: "XOR, feature maps, and kernels",
+        prereqs: ["linear-separability", "hard-margin-feasibility"],
+        repairMaterial: "Review ML Chapter 9.6 and explain that transformed-space linear separation can create a nonlinear input-space boundary.",
+        gateWeight: "high"
       }
     }
   };
@@ -31929,6 +32464,7 @@ function conceptGraphForSection(section) {
   if (section?.id === "gate-da-machine-learning-logistic-regression-log-odds") return machineLearningLogisticRegressionConceptGraph();
   if (section?.id === "gate-da-machine-learning-naive-bayes-generative-classification") return machineLearningNaiveBayesConceptGraph();
   if (section?.id === "gate-da-machine-learning-knn-prototype-classifiers") return machineLearningKnnPrototypeConceptGraph();
+  if (section?.id === "gate-da-machine-learning-svm-margin-classification") return machineLearningSvmMarginConceptGraph();
   return null;
 }
 
