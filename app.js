@@ -1,7 +1,7 @@
 const STORAGE_KEY = "learning-studio-data-v2";
 const LEGACY_STORAGE_KEYS = ["learning-studio-data-v1"];
 const SESSION_KEY = "aleph-session";
-const COURSE_PLAN_VERSION = "seeded-user-canonical-workspace-v137";
+const COURSE_PLAN_VERSION = "seeded-user-canonical-workspace-v138";
 const MAX_FEEDBACK_ATTACHMENT_BYTES = 3 * 1024 * 1024;
 const MAX_COMPRESSED_FEEDBACK_BYTES = 2400 * 1024;
 const MAX_FEEDBACK_PDF_PAGES = 6;
@@ -34881,6 +34881,14 @@ function renderSubjects() {
       renderTests();
       document.querySelector("#active-quiz-card")?.scrollIntoView({ behavior: "smooth", block: "start" });
     });
+    container.querySelectorAll("[data-open-linked-test]").forEach((button) => {
+      button.addEventListener("click", () => {
+        activeTestId = button.dataset.openLinkedTest;
+        showView("tests");
+        renderTests();
+        document.querySelector(`[data-material-card="${button.dataset.materialId || ""}"]`)?.scrollIntoView({ behavior: "smooth", block: "start" });
+      });
+    });
     container.querySelectorAll("[data-solution-upload]").forEach((input) => {
       input.addEventListener("change", () => savePatternSolutionUpload(input));
     });
@@ -34917,7 +34925,7 @@ function renderSubjects() {
 
 function renderTests() {
   const container = document.querySelector("#tests-list");
-  const visibleTests = state.tests.filter((test) => test.workflowType !== "cmi-dm-dsa-review");
+  const visibleTests = state.tests;
   if (!visibleTests.length) {
     container.innerHTML = '<div class="empty">No test items yet.</div>';
     return;
@@ -35239,14 +35247,12 @@ function weeklyReviewWorkflowCard(workflow) {
   const linkedTest = workflow.testId
     ? state.tests.find((test) => test.id === workflow.testId)
     : null;
-  const materialId = linkedTest?.materialId || workflow.materialId;
-  const submission = materialId ? patternSubmission(materialId) : null;
-  const feedbackRecord = submission?.feedbackRecord || null;
+  const materialId = linkedTest?.materialId || workflow.materialId || "";
   const linkedQuiz = linkedTest?.materialUrl
     ? `
       <div class="weekly-review-linked-quiz">
-        <a class="primary-btn inline-link" href="${escapeHtml(linkedTest.materialUrl)}" target="_blank" rel="noreferrer">Open quiz</a>
-        ${reviewQuizSubmissionTemplate(linkedTest, submission, feedbackRecord)}
+        <p class="muted">This assessment, its solution upload, score, and feedback are managed in the Tests section.</p>
+        <button class="primary-btn" data-open-linked-test="${escapeHtml(linkedTest.id)}" data-material-id="${escapeHtml(materialId)}" type="button">Open in Tests</button>
       </div>
     `
     : "";
