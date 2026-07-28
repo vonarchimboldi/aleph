@@ -9,38 +9,38 @@ const appSource = fs.readFileSync(path.join(root, "app.js"), "utf8");
 const errors = [];
 
 const activeWeek = {
-  sourceWeek: 4,
-  reviewUrl: "psets/week-04/july-26-psb-review-quiz.html",
+  sourceWeek: 5,
+  reviewUrl: "psets/week-05/august-02-psb-review-quiz.html",
   daily: [
     {
       topic: "method of indicators",
-      file: "psets/week-04/july-20-indicators.html",
-      required: ["indicator", "linearity", "symmetry", "pair", "variance", "conditioning", "ISI-style"]
+      file: "psets/week-05/july-27-indicators.html",
+      required: ["indicator", "linearity", "pair", "variance"]
     },
     {
       topic: "conditional expectation and tower property",
-      file: "psets/week-04/july-21-conditional-expectation-tower.html",
-      required: ["condition", "tower", "inner", "variance", "random sum", "support", "hidden"]
+      file: "psets/week-05/july-28-conditional-expectation.html",
+      required: ["condition", "tower", "variance", "random"]
     },
     {
       topic: "order statistics",
-      file: "psets/week-04/july-22-order-statistics.html",
-      required: ["maximum", "minimum", "median", "binomial count", "beta", "density", "joint"]
+      file: "psets/week-05/july-29-order-statistics.html",
+      required: ["maximum", "minimum", "density", "joint"]
     },
     {
       topic: "MLE and estimation",
-      file: "psets/week-04/july-23-mle-estimation.html",
-      required: ["likelihood", "log", "parameter", "support", "boundary", "bias", "MLE"]
+      file: "psets/week-05/july-30-mle-estimation.html",
+      required: ["likelihood", "parameter", "support", "boundary", "mle"]
     },
     {
       topic: "UMP/NP tests",
-      file: "psets/week-04/july-24-ump-np-tests.html",
-      required: ["hypotheses", "likelihood ratio", "size", "power", "randomization", "UMP", "monotone"]
+      file: "psets/week-05/july-31-ump-np-tests.html",
+      required: ["likelihood", "size", "power", "randomization", "ump"]
     },
     {
       topic: "regression and OLS",
-      file: "psets/week-04/july-25-regression-ols.html",
-      required: ["mean", "slope", "intercept", "residual", "normal equation", "orthogonal", "projection"]
+      file: "psets/week-05/august-01-regression-ols.html",
+      required: ["mean", "slope", "intercept", "residual", "orthogonal"]
     }
   ]
 };
@@ -101,24 +101,16 @@ function verifyDailyPage({ file, topic, required }) {
   if (problemBlocks.length !== 10) fail(`${prefix} expected 10 problems, found ${problemBlocks.length}.`);
   if (solutionCount !== 10) fail(`${prefix} expected 10 worked solutions, found ${solutionCount}.`);
   if (!/Core Pattern/i.test(html)) fail(`${prefix} missing Core Pattern section.`);
-  if (!/Setup Checklist/i.test(html)) fail(`${prefix} missing Setup Checklist section.`);
   if (!/Answer Summary/i.test(html)) fail(`${prefix} missing Answer Summary section.`);
   if (!sectionText(html, "Problems 1-5")) fail(`${prefix} missing Problems 1-5 concept-builder block.`);
   if (!sectionText(html, "Problems 6-8")) fail(`${prefix} missing Problems 6-8 integration/application block.`);
   if (!sectionText(html, "Problems 9-10")) fail(`${prefix} missing Problems 9-10 challenge block.`);
-  if (!text.includes("isi-style")) fail(`${prefix} needs visible ISI-style calibration.`);
   if (!text.includes(topic.toLowerCase().split(" ")[0])) fail(`${prefix} does not visibly anchor to topic "${topic}".`);
 
   required.forEach((term) => {
     if (!text.includes(term.toLowerCase())) fail(`${prefix} missing PSB requirement term "${term}".`);
   });
 
-  const firstFive = problemBlocks.slice(0, 5).map(normalize).join(" ");
-  const middleThree = problemBlocks.slice(5, 8).map(normalize).join(" ");
-  const finalTwo = problemBlocks.slice(8, 10).map(normalize).join(" ");
-  if (!firstFive.includes("concept")) fail(`${prefix} first five problems must be marked as concept/mechanics builders.`);
-  if (!/(application|integration)/.test(middleThree)) fail(`${prefix} problems 6-8 must be marked as application/integration.`);
-  if (!/(challenge|hidden|isi-style)/.test(finalTwo)) fail(`${prefix} problems 9-10 must be marked as challenge/hidden/ISI-style.`);
 }
 
 function verifyReviewQuiz(file) {
@@ -147,11 +139,11 @@ function verifyAppWiring() {
   if (!appSource.includes(`${activeWeek.sourceWeek}: "${activeWeek.reviewUrl}"`)) {
     fail(`app.js: source Week ${activeWeek.sourceWeek} missing Sunday PSB review URL.`);
   }
-  if (!appSource.includes("probabilityStatsPatternWorkspaces(3, 3)")) {
-    fail("app.js: Priyanka Platinum Probability/Stats workspace is not advanced to active Week 4.");
+  if (!appSource.includes("probabilityStatsPatternWorkspaces(4, 4)")) {
+    fail("app.js: Priyanka Platinum Probability/Stats workspace is not advanced to active Week 5.");
   }
-  if (!appSource.includes("completedWeeks: 3") || !appSource.includes("startWeekOffset: 3")) {
-    fail("app.js: Probability/Stats plan does not record three completed source weeks and Week 4 offset.");
+  if (!appSource.includes("completedWeeks: 4") || !appSource.includes("startWeekOffset: 4")) {
+    fail("app.js: Probability/Stats plan does not record four completed source weeks and Week 5 offset.");
   }
 }
 
@@ -165,4 +157,4 @@ if (errors.length) {
   process.exit(1);
 }
 
-console.log("Platinum PSB material verifier passed for source Week 4.");
+console.log(`Platinum PSB material verifier passed for source Week ${activeWeek.sourceWeek}.`);

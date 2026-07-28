@@ -1,7 +1,7 @@
 const STORAGE_KEY = "learning-studio-data-v2";
 const LEGACY_STORAGE_KEYS = ["learning-studio-data-v1"];
 const SESSION_KEY = "aleph-session";
-const COURSE_PLAN_VERSION = "seeded-user-canonical-workspace-v139";
+const COURSE_PLAN_VERSION = "seeded-user-canonical-workspace-v140";
 const MAX_FEEDBACK_ATTACHMENT_BYTES = 3 * 1024 * 1024;
 const MAX_COMPRESSED_FEEDBACK_BYTES = 2400 * 1024;
 const MAX_FEEDBACK_PDF_PAGES = 6;
@@ -1999,6 +1999,36 @@ function buildGateDaBasicPlan(now, accountTypes, sections, user = basicGateDaUse
         date: weekTwelveSunday,
         details: "Take the graph-backed objective review for bagging, random forests, boosting, out-of-bag evaluation, diversity, regularization, and bias-variance tradeoffs.",
         updatedAt: now
+      },
+      {
+        id: "schedule-machine-learning-chapter-13-study",
+        title: "ML Chapter 13: Clustering",
+        week: 13,
+        subject: "Machine Learning",
+        kind: "Study",
+        date: weekThirteenMonday,
+        details: "Study unsupervised grouping, distance choices, k-means objectives and updates, k-medoids, agglomerative traces, single and complete linkage, cluster geometry, and failure modes.",
+        updatedAt: now
+      },
+      {
+        id: "schedule-machine-learning-chapter-13-practice",
+        title: "ML Chapter 13: Labelled Practice",
+        week: 13,
+        subject: "Machine Learning",
+        kind: "Practice",
+        date: addDays(weekThirteenMonday, 2),
+        details: "Solve labelled clustering practice: distance tables, assignment/update steps, objective comparisons, medoid selection, first merges, linkage updates, scaling, chaining, and outlier diagnosis.",
+        updatedAt: now
+      },
+      {
+        id: "schedule-machine-learning-chapter-13-review",
+        title: "ML Chapter 13: Objective Review",
+        week: 13,
+        subject: "Machine Learning",
+        kind: "Review",
+        date: weekThirteenSunday,
+        details: "Take the graph-backed objective review for k-means, k-medoids, hierarchical clustering, linkage rules, metrics, geometry, and failure diagnosis.",
+        updatedAt: now
       }
     ],
     tests: [
@@ -2316,6 +2346,15 @@ function buildGateDaBasicPlan(now, accountTypes, sections, user = basicGateDaUse
         details: "Objective end-of-chapter quiz for bagging, bootstrap samples, random forests, out-of-bag evaluation, boosting, ensemble aggregation, diversity, regularization, and bias-variance reasoning.",
         sectionId: machineLearningSections[11]?.id,
         quizId: "quiz-machine-learning-chapter-12-objective-review",
+        updatedAt: now
+      },
+      {
+        id: "test-machine-learning-chapter-13-objective-review",
+        title: "ML Chapter 13 Objective Review",
+        date: weekThirteenSunday,
+        details: "Objective end-of-chapter quiz for k-means, k-medoids, hierarchical clustering, single and complete linkage, distance metrics, scaling, cluster geometry, and failure modes.",
+        sectionId: machineLearningSections[12]?.id,
+        quizId: "quiz-machine-learning-chapter-13-objective-review",
         updatedAt: now
       }
     ],
@@ -3465,6 +3504,39 @@ function buildGateDaBasicPlan(now, accountTypes, sections, user = basicGateDaUse
         done: false,
         details: "Submit the Chapter 12 objective quiz so the learner record logs ensemble and bias-variance strengths and weaknesses.",
         updatedAt: now
+      },
+      {
+        id: "task-machine-learning-chapter-13-read",
+        week: 13,
+        title: "ML Ch 13: Read clustering",
+        type: "Study",
+        date: weekThirteenMonday,
+        status: "todo",
+        done: false,
+        details: "Open Subjects -> Machine Learning -> Chapter 13 and study k-means, k-medoids, hierarchical clustering, linkage, metrics, geometry, and failures.",
+        updatedAt: now
+      },
+      {
+        id: "task-machine-learning-chapter-13-practice",
+        week: 13,
+        title: "ML Ch 13: Solve labelled practice",
+        type: "Practice",
+        date: addDays(weekThirteenMonday, 2),
+        status: "todo",
+        done: false,
+        details: "Attempt clustering assignments, centroid and medoid updates, distance/linkage traces, objective comparisons, and failure diagnosis before opening solutions.",
+        updatedAt: now
+      },
+      {
+        id: "task-machine-learning-chapter-13-review",
+        week: 13,
+        title: "ML Ch 13: Take objective review",
+        type: "Review",
+        date: weekThirteenSunday,
+        status: "todo",
+        done: false,
+        details: "Submit the Chapter 13 objective quiz so the learner record logs clustering strengths and weaknesses.",
+        updatedAt: now
       }
     ],
     accountTypes,
@@ -3491,7 +3563,7 @@ function buildGateDaBasicPlan(now, accountTypes, sections, user = basicGateDaUse
         startDate: monday,
         endDate: "2026-08-30",
         status: "active",
-        details: `GATE DA Basic plan surfaces: Subjects, Tasks, Schedule, Tests, Feedback, Resources, and Share. Recommended pace: study Probability, Linear Algebra, DSA, and Machine Learning in parallel. Every 15 days, Aleph should generate an adaptive cumulative review quiz from prior performance, repeating missed concepts more often, reducing mastered concepts, and keeping high-weight exam topics in rotation. Current material build: Probability Chapters 1-10, Linear Algebra Chapters 1-12 plus a chapterless cumulative past-paper style drill, DSA Chapters 1-9 with a progression gate before Chapter 3, and Machine Learning Chapters 1-12.${trialNote}`,
+        details: `GATE DA Basic plan surfaces: Subjects, Tasks, Schedule, Tests, Feedback, Resources, and Share. Recommended pace: study Probability, Linear Algebra, DSA, and Machine Learning in parallel. Every 15 days, Aleph should generate an adaptive cumulative review quiz from prior performance, repeating missed concepts more often, reducing mastered concepts, and keeping high-weight exam topics in rotation. Current material build: Probability Chapters 1-10, Linear Algebra Chapters 1-12 plus a chapterless cumulative past-paper style drill, DSA Chapters 1-9 with a progression gate before Chapter 3, and Machine Learning Chapters 1-13.${trialNote}`,
         updatedAt: now
       }
     ],
@@ -3679,6 +3751,13 @@ function buildGateDaBasicPlan(now, accountTypes, sections, user = basicGateDaUse
         date: weekTwelveSunday,
         details: "Review misses for claiming averaging removes bias, ignoring correlation between trees, confusing bootstrap rows with random feature subsets, misreading OOB examples, treating boosting as parallel voting, saying boosting can only affect bias, and overlooking learning rate, depth, early stopping, noisy labels, imbalance, or leakage.",
         updatedAt: now
+      },
+      {
+        id: "feedback-machine-learning-chapter-13",
+        title: "Machine Learning Chapter 13 feedback focus",
+        date: weekThirteenSunday,
+        details: "Review misses for using an unstated metric, skipping scaling, confusing centroid with medoid, assigning without updating, assuming one k-means initialization is globally optimal, reversing single and complete linkage, merging by centroid distance in a linkage question, and ignoring chaining, outliers, non-spherical clusters, or wrong k.",
+        updatedAt: now
       }
     ],
     resources: [
@@ -3783,6 +3862,14 @@ function buildGateDaBasicPlan(now, accountTypes, sections, user = basicGateDaUse
         title: "Machine Learning Chapter 12: Ensembles, Random Forests, and Boosting",
         date: weekTwelveMonday,
         details: "Open Subjects -> Machine Learning to study bagging, random forests, boosting, OOB evaluation, ensemble diversity, regularization, and the bias-variance tradeoff.",
+        link: "",
+        updatedAt: now
+      },
+      {
+        id: "resource-machine-learning-clustering",
+        title: "Machine Learning Chapter 13: Clustering",
+        date: weekThirteenMonday,
+        details: "Open Subjects -> Machine Learning to study k-means, k-medoids, hierarchical clustering, linkage rules, distance metrics, geometry, and failure modes.",
         link: "",
         updatedAt: now
       },
@@ -6231,6 +6318,146 @@ function gateDaMachineLearningSections(updatedAt = new Date().toISOString()) {
         "Boosting can increase variance when complexity or noise chasing is uncontrolled.",
         "Depth, shrinkage, subsampling, and early stopping regularize boosted models.",
         "Forests and boosting address different sides of bias-variance; neither makes the tradeoff disappear."
+      ],
+      updatedAt
+    },
+    {
+      id: "gate-da-machine-learning-clustering",
+      exam: "GATE DA",
+      accountTier: "Basic",
+      subject: "Machine Learning",
+      chapter: "Chapter 13",
+      section: "13",
+      title: "Clustering",
+      summary: "Unsupervised grouping through k-means, k-medoids, hierarchical clustering, distance metrics, linkage traces, geometry, objectives, and failure diagnosis.",
+      sectionPreview: "Clustering has no supplied class label. The algorithm must define similarity, an objective or merge rule, and a representation of each group. Different choices can produce different clusters from the same points.",
+      previewActivity: "Points lie at 0, 2, 9, and 11. With k=2 and initial centers 0 and 11, assign every point to its closest center and compute the updated means.",
+      intro: [
+        "Clustering is unsupervised: it seeks structure in features without a target label. First identify coordinates versus a distance matrix and the stated metric.",
+        "Partitional methods assign points to a fixed number of clusters. Hierarchical methods build a nested sequence of merges or splits.",
+        "GATE problems require a short trace: compute distances, state the chosen pair or assignment, update the representation, and repeat only as requested."
+      ],
+      bookSections: [
+        {
+          number: "13.1",
+          title: "Distance, Scale, and Representation",
+          paragraphs: [
+            "Euclidean distance uses squared coordinate differences; Manhattan distance uses absolute differences. A distance matrix can be used directly without coordinates.",
+            "Large-scale features can dominate both metrics. Standardization may be essential, but it must be part of the declared workflow.",
+            "A changed metric can change nearest points, assignments, medoids, and the first hierarchical merge."
+          ],
+          blocks: [
+            { type: "formula", title: "Common distances", body: "Euclidean: sqrt(sum_j (x_j-z_j)^2). Manhattan: sum_j |x_j-z_j|." },
+            { type: "warning", title: "Metric first", body: "Confirm distance and feature scale before any merge or assignment." }
+          ]
+        },
+        {
+          number: "13.2",
+          title: "k-Means Objective and Trace",
+          paragraphs: [
+            "k-means minimizes within-cluster squared Euclidean distance to cluster means.",
+            "Lloyd's algorithm alternates assignment to the nearest centroid and centroid recomputation as the arithmetic mean of assigned points.",
+            "Each complete iteration cannot increase the objective, but the result depends on initialization and need not be globally optimal."
+          ],
+          blocks: [
+            { type: "formula", title: "k-means objective", body: "J=sum_i ||x_i-mu_{c_i}||^2." },
+            { type: "strategy", title: "Trace table", body: "Record centroids, point distances, assignments, updated means, and objective if requested." }
+          ]
+        },
+        {
+          number: "13.3",
+          title: "k-Medoids",
+          paragraphs: [
+            "A medoid must be an observed point and minimizes total dissimilarity from other points in its cluster.",
+            "Unlike an arithmetic mean, a medoid works with a general distance matrix and is often less distorted by extremes.",
+            "Do not call the point closest to a mean a medoid without checking total dissimilarity."
+          ],
+          blocks: [
+            { type: "principle", title: "Centroid versus medoid", body: "A centroid is an arithmetic mean; a medoid is an observed point minimizing total distance." },
+            { type: "strategy", title: "Medoid calculation", body: "Sum each candidate point's distances to all cluster members and choose the minimum." }
+          ]
+        },
+        {
+          number: "13.4",
+          title: "Agglomerative Clustering and Linkage",
+          paragraphs: [
+            "Agglomerative clustering starts with singleton clusters and repeatedly merges the pair with smallest inter-cluster distance.",
+            "Single linkage uses the minimum cross-cluster point distance. Complete linkage uses the maximum.",
+            "After every merge, update distances with the named linkage rule rather than silently using centroid distance."
+          ],
+          blocks: [
+            { type: "formula", title: "Linkage", body: "Single(A,B)=min d(a,b); Complete(A,B)=max d(a,b), over a in A and b in B." },
+            { type: "warning", title: "Ties", body: "Equal smallest distances may produce multiple valid dendrograms unless a tie rule is given." }
+          ]
+        },
+        {
+          number: "13.5",
+          title: "Geometry and Failure Modes",
+          paragraphs: [
+            "k-means favors compact, roughly spherical clusters and struggles with elongated or curved structures.",
+            "Single linkage can recover curved chains but may connect groups through bridge points. Complete linkage favors compact groups and is sensitive to farthest pairs.",
+            "Wrong k, initialization, scaling, outliers, unequal density, and non-spherical structure can all mislead clustering."
+          ],
+          blocks: [
+            { type: "principle", title: "Shape match", body: "k-means: compact mean-centered groups. Single linkage: connectivity. Complete linkage: bounded diameter." },
+            { type: "warning", title: "No ground-truth guarantee", body: "A low objective does not prove that the clusters are stable or meaningful." }
+          ]
+        }
+      ],
+      concepts: [
+        { name: "Distance metric", description: "A rule measuring dissimilarity.", cue: "Metric and scale first." },
+        { name: "k-means objective", description: "Within-cluster squared distance to centroids.", cue: "Assign, average, repeat." },
+        { name: "Centroid update", description: "Arithmetic mean of assigned observations.", cue: "May not be observed." },
+        { name: "Medoid", description: "Observed point minimizing total dissimilarity.", cue: "Must be a data point." },
+        { name: "Agglomerative clustering", description: "Bottom-up closest-cluster merges.", cue: "Singletons to dendrogram." },
+        { name: "Single linkage", description: "Minimum cross-cluster distance.", cue: "Chaining risk." },
+        { name: "Complete linkage", description: "Maximum cross-cluster distance.", cue: "Compact groups." },
+        { name: "Clustering failure mode", description: "Scale, initialization, shape, density, outlier, or k mismatch.", cue: "Match objective to geometry." }
+      ],
+      techniques: [
+        { name: "Build a distance table", when: "coordinates and a metric are supplied.", move: "Compute the distances needed for the requested step." },
+        { name: "Trace k-means", when: "initial centers are given.", move: "Assign every point, then recompute arithmetic means." },
+        { name: "Select a medoid", when: "a cluster or distance matrix is given.", move: "Choose the observed candidate with minimum total distance." },
+        { name: "Trace a hierarchical merge", when: "pairwise distances are supplied.", move: "Merge the smallest pair and update with the named linkage." },
+        { name: "Diagnose geometry", when: "clustering behaves poorly.", move: "Check metric, scale, k, initialization, outliers, density, and shape." }
+      ],
+      practiceProblems: machineLearningClusteringProblems(),
+      reviewPrompts: [
+        "How can the metric change assignments?",
+        "What objective does k-means minimize?",
+        "What are the two k-means steps?",
+        "Why must a medoid be observed?",
+        "How is the first merge chosen?",
+        "How do single and complete linkage differ?",
+        "What is chaining?",
+        "Why does scaling matter?",
+        "Why can initialization matter?",
+        "Which shapes are difficult for k-means?"
+      ],
+      reviewQuiz: {
+        id: "quiz-machine-learning-chapter-13-objective-review",
+        title: "ML Chapter 13 Objective Review",
+        instructions: "Complete this after studying clustering. The quiz checks metrics, k-means, medoids, hierarchical merges, linkage, geometry, and failure modes.",
+        questions: machineLearningClusteringReviewQuestions()
+      },
+      readingQuestions: [
+        "What replaces labels in clustering?",
+        "What is recomputed after assignment?",
+        "How do centroid and medoid differ?",
+        "What does a dendrogram record?",
+        "Which linkage uses a minimum?",
+        "Why can single linkage chain?",
+        "Why is a low objective not proof of meaning?"
+      ],
+      chapterSummary: [
+        "Clustering groups unlabeled observations under a chosen representation and objective.",
+        "Metric and feature scale can change the result.",
+        "k-means alternates nearest-centroid assignment and arithmetic-mean updates.",
+        "Its objective is within-cluster squared Euclidean distance.",
+        "A medoid is an observed point minimizing total distance.",
+        "Agglomerative clustering repeatedly merges closest clusters.",
+        "Single linkage uses a minimum; complete linkage uses a maximum.",
+        "Scale, outliers, wrong k, chaining, density, and shape are key failures."
       ],
       updatedAt
     }
@@ -18523,6 +18750,90 @@ function machineLearningEnsembleReviewQuestions() {
   }));
 }
 
+function machineLearningClusteringProblems() {
+  return [
+    { label: "Problem 1: Distance choice", concept: "Distance metric", difficulty: "Mechanics", technique: "Build a distance table", prompt: "Find Euclidean and Manhattan distances between (1,2) and (4,6).", solution: "Coordinate differences are 3 and 4. Euclidean distance is sqrt(9+16)=5; Manhattan distance is 3+4=7." },
+    { label: "Problem 2: k-means assignment", concept: "k-means assignment", difficulty: "Mechanics", technique: "Trace k-means", prompt: "Points are 0,2,9,11 with initial centers 0 and 11. Assign each point.", solution: "Distances place 0 and 2 with center 0, while 9 and 11 go with center 11." },
+    { label: "Problem 3: Centroid update", concept: "Centroid update", difficulty: "Mechanics", technique: "Trace k-means", prompt: "Using clusters {0,2} and {9,11}, compute the new centroids and squared-error objective.", solution: "Means are 1 and 10. Squared errors are 1+1 and 1+1, so J=4." },
+    { label: "Problem 4: Select a medoid", concept: "Medoid", difficulty: "GATE-style", technique: "Select a medoid", prompt: "For one-dimensional cluster {0,2,9}, find the medoid under absolute distance.", solution: "Distance totals are 11 for 0, 9 for 2, and 16 for 9. The medoid is observed point 2." },
+    { label: "Problem 5: First merge", concept: "Agglomerative clustering", difficulty: "GATE-style", technique: "Trace a hierarchical merge", prompt: "Pairwise distances are d(A,B)=2, d(A,C)=5, d(B,C)=4. Which pair merges first?", solution: "A and B merge first because their distance 2 is the smallest." },
+    { label: "Problem 6: Single-link update", concept: "Single linkage", difficulty: "GATE-style", technique: "Trace a hierarchical merge", prompt: "After merging A,B, with d(A,C)=5 and d(B,C)=4, find single-link distance from {A,B} to C.", solution: "Single linkage takes the minimum cross distance: min(5,4)=4." },
+    { label: "Problem 7: Complete-link update", concept: "Complete linkage", difficulty: "GATE-style", technique: "Trace a hierarchical merge", prompt: "For the same distances, find complete-link distance from {A,B} to C.", solution: "Complete linkage takes the maximum cross distance: max(5,4)=5." },
+    { label: "Problem 8: Diagnose shape", concept: "Clustering failure mode", difficulty: "Application", technique: "Diagnose geometry", prompt: "Two crescent-shaped clusters are separated but non-spherical. Why may k-means fail, and which studied linkage may better follow connectivity?", solution: "Mean-centered Voronoi regions favor compact convex groups, so k-means may cut crescents incorrectly. Single linkage may follow their local connectivity, though it risks chaining." }
+  ];
+}
+
+function machineLearningClusteringReviewQuestions() {
+  const metadata = {
+    "ml-cluster-review-1": { targetConcept: "distance-metric", prereqsUsed: [], difficulty: 1, gateWeight: "high" },
+    "ml-cluster-review-2": { targetConcept: "kmeans-objective", prereqsUsed: [], difficulty: 1, gateWeight: "high" },
+    "ml-cluster-review-3": { targetConcept: "medoid", prereqsUsed: [], difficulty: 1, gateWeight: "high" },
+    "ml-cluster-review-4": { targetConcept: "kmeans-trace", prereqsUsed: ["distance-metric"], difficulty: 2, gateWeight: "high" },
+    "ml-cluster-review-5": { targetConcept: "agglomerative-merge", prereqsUsed: ["distance-metric"], difficulty: 2, gateWeight: "high" },
+    "ml-cluster-review-6": { targetConcept: "single-linkage", prereqsUsed: ["agglomerative-merge"], difficulty: 2, gateWeight: "high" },
+    "ml-cluster-review-7": { targetConcept: "complete-linkage", prereqsUsed: ["agglomerative-merge"], difficulty: 2, gateWeight: "high" },
+    "ml-cluster-review-8": { targetConcept: "scaling-sensitivity", prereqsUsed: ["distance-metric", "kmeans-trace"], difficulty: 3, gateWeight: "high" },
+    "ml-cluster-review-9": { targetConcept: "chaining", prereqsUsed: ["single-linkage", "agglomerative-merge"], difficulty: 3, gateWeight: "medium" },
+    "ml-cluster-review-10": { targetConcept: "clustering-failure", prereqsUsed: ["kmeans-objective", "complete-linkage"], difficulty: 3, gateWeight: "high" }
+  };
+  const questions = [
+    {
+      id: "ml-cluster-review-1",
+      kind: "single concept", tags: ["distance-metric"], prompt: "What is the Manhattan distance between (1,2) and (4,6)?", options: [{ id: "a", text: "5" }, { id: "b", text: "7" }, { id: "c", text: "12" }, { id: "d", text: "25" }],
+      answer: "b"
+    },
+    {
+      id: "ml-cluster-review-2",
+      kind: "single concept", tags: ["kmeans-objective"], prompt: "What objective does standard k-means minimize?", options: [{ id: "a", text: "Within-cluster squared Euclidean distance to centroids" }, { id: "b", text: "Maximum distance between every pair" }, { id: "c", text: "Classification cross-entropy" }, { id: "d", text: "Number of data features" }],
+      answer: "a"
+    },
+    {
+      id: "ml-cluster-review-3",
+      kind: "single concept", tags: ["medoid"], prompt: "Which statement uniquely identifies a medoid?", options: [{ id: "a", text: "It must be an observed data point." }, { id: "b", text: "It is always the arithmetic mean." }, { id: "c", text: "It must lie outside its cluster." }, { id: "d", text: "It requires class labels." }],
+      answer: "a"
+    },
+    {
+      id: "ml-cluster-review-4",
+      kind: "mixed: two concepts", tags: ["kmeans-trace", "distance-metric"], prompt: "After assigning points in one k-means iteration, what happens next?", options: [{ id: "a", text: "Each centroid becomes the mean of its assigned points." }, { id: "b", text: "Every point becomes a medoid." }, { id: "c", text: "The labels are revealed." }, { id: "d", text: "All clusters are merged." }],
+      answer: "a"
+    },
+    {
+      id: "ml-cluster-review-5",
+      kind: "mixed: two concepts", tags: ["agglomerative-merge", "distance-metric"], prompt: "What is the first step in agglomerative clustering?", options: [{ id: "a", text: "Merge the closest pair of singleton clusters under the stated rule." }, { id: "b", text: "Average all observations into one centroid." }, { id: "c", text: "Assign class labels." }, { id: "d", text: "Delete the closest observations." }],
+      answer: "a"
+    },
+    {
+      id: "ml-cluster-review-6",
+      kind: "mixed: two concepts", tags: ["single-linkage", "agglomerative-merge"], prompt: "How is single-link distance between two clusters defined?", options: [{ id: "a", text: "Minimum cross-cluster point distance" }, { id: "b", text: "Maximum cross-cluster point distance" }, { id: "c", text: "Distance between class labels" }, { id: "d", text: "Number of points in both clusters" }],
+      answer: "a"
+    },
+    {
+      id: "ml-cluster-review-7",
+      kind: "mixed: two concepts", tags: ["complete-linkage", "agglomerative-merge"], prompt: "How is complete-link distance between two clusters defined?", options: [{ id: "a", text: "Maximum cross-cluster point distance" }, { id: "b", text: "Minimum cross-cluster point distance" }, { id: "c", text: "Always zero" }, { id: "d", text: "Only centroid distance" }],
+      answer: "a"
+    },
+    {
+      id: "ml-cluster-review-8",
+      kind: "mixed: three concepts", tags: ["scaling-sensitivity", "distance-metric", "kmeans-trace"], prompt: "Why can an unscaled high-range feature dominate k-means?", options: [{ id: "a", text: "Its coordinate differences dominate the distance and assignments." }, { id: "b", text: "It reveals the missing class labels." }, { id: "c", text: "It makes every centroid a medoid." }, { id: "d", text: "It guarantees the global optimum." }],
+      answer: "a"
+    },
+    {
+      id: "ml-cluster-review-9",
+      kind: "mixed: three concepts", tags: ["chaining", "single-linkage", "agglomerative-merge"], prompt: "What is the single-linkage chaining failure?", options: [{ id: "a", text: "Bridge points connect otherwise distinct groups through short local gaps." }, { id: "b", text: "Every cluster becomes spherical." }, { id: "c", text: "All distances become maximum distances." }, { id: "d", text: "No clusters can ever merge." }],
+      answer: "a"
+    },
+    {
+      id: "ml-cluster-review-10",
+      kind: "mixed: three concepts", tags: ["clustering-failure", "kmeans-objective", "complete-linkage"], prompt: "Which statement correctly diagnoses clustering output?", options: [{ id: "a", text: "A low objective may still describe unstable or semantically poor groups." }, { id: "b", text: "k-means always finds the global optimum." }, { id: "c", text: "Complete linkage ignores the farthest pair." }, { id: "d", text: "Outliers never affect centroids." }],
+      answer: "a"
+    }
+  ];
+  return questions.map((question) => ({
+    ...question,
+    ...(metadata[question.id] || { targetConcept: question.tags[0], prereqsUsed: question.tags.slice(1), difficulty: question.tags.length, gateWeight: "medium" })
+  }));
+}
+
 function probabilityFoundationProblems() {
   return [
     {
@@ -25042,6 +25353,30 @@ function machineLearningEnsembleConceptGraph() {
       "boosting-sequence": { label: "Sequential boosting", prereqs: ["ensemble-aggregation"], repairMaterial: "Review ML Chapter 12.5 and trace how each learner corrects the current additive model.", gateWeight: "high" },
       "boosting-regularization": { label: "Boosting bias and variance control", prereqs: ["boosting-sequence", "bias-variance-tradeoff"], repairMaterial: "Review ML Chapter 12.6 and connect shallow depth, shrinkage, subsampling, and early stopping to variance control.", gateWeight: "high" },
       "ensemble-failure-mode": { label: "Ensemble failure modes", prereqs: ["out-of-bag", "boosting-regularization"], repairMaterial: "Review ML Chapter 12.6 and check correlation, noise chasing, imbalance, leakage, and importance bias.", gateWeight: "medium" }
+    }
+  };
+}
+
+function machineLearningClusteringConceptGraph() {
+  return {
+    chapterId: "gate-da-machine-learning-clustering",
+    chapterTitle: "ML Chapter 13: Clustering",
+    gateWeight: "high",
+    fallbackConcepts: ["distance-metric", "kmeans-objective", "medoid", "agglomerative-merge"],
+    fallbackDifficultyMix: [1, 2, 2, 3],
+    fallbackInstruction: "Retest metric calculations, one k-means iteration, medoid totals, and the first hierarchical merge.",
+    stableNextAction: "Next: move to PCA after k-means, medoids, linkage updates, scale sensitivity, and geometry failures are reliable.",
+    nodes: {
+      "distance-metric": { label: "Distance metrics", prereqs: [], repairMaterial: "Review ML Chapter 13.1 and compute Euclidean and Manhattan distances explicitly.", gateWeight: "high" },
+      "kmeans-objective": { label: "k-means objective", prereqs: ["distance-metric"], repairMaterial: "Review ML Chapter 13.2 and sum squared distances to assigned centroids.", gateWeight: "high" },
+      "kmeans-trace": { label: "k-means assignment and update", prereqs: ["distance-metric", "kmeans-objective"], repairMaterial: "Review ML Chapter 13.2: assign every point, then recompute arithmetic means.", gateWeight: "high" },
+      medoid: { label: "Medoid selection", prereqs: ["distance-metric"], repairMaterial: "Review ML Chapter 13.3 and choose the observed point with minimum total dissimilarity.", gateWeight: "high" },
+      "agglomerative-merge": { label: "Agglomerative first merge", prereqs: ["distance-metric"], repairMaterial: "Review ML Chapter 13.4 and merge the closest current clusters.", gateWeight: "high" },
+      "single-linkage": { label: "Single linkage", prereqs: ["agglomerative-merge"], repairMaterial: "Review ML Chapter 13.4 and use the minimum cross-cluster distance.", gateWeight: "high" },
+      "complete-linkage": { label: "Complete linkage", prereqs: ["agglomerative-merge"], repairMaterial: "Review ML Chapter 13.4 and use the maximum cross-cluster distance.", gateWeight: "high" },
+      "scaling-sensitivity": { label: "Feature-scale sensitivity", prereqs: ["distance-metric", "kmeans-trace"], repairMaterial: "Review ML Chapter 13.1 and compare feature ranges before distance-based clustering.", gateWeight: "high" },
+      chaining: { label: "Single-link chaining", prereqs: ["single-linkage"], repairMaterial: "Review ML Chapter 13.5 and trace how bridge points join distant dense groups.", gateWeight: "medium" },
+      "clustering-failure": { label: "Clustering failure diagnosis", prereqs: ["kmeans-objective", "complete-linkage"], repairMaterial: "Review ML Chapter 13.5 and check scale, k, initialization, outliers, density, and shape.", gateWeight: "high" }
     }
   };
 }
@@ -33587,6 +33922,7 @@ function conceptGraphForSection(section) {
   if (section?.id === "gate-da-machine-learning-lda-scatter-classification") return machineLearningLdaScatterConceptGraph();
   if (section?.id === "gate-da-machine-learning-decision-trees") return machineLearningDecisionTreeConceptGraph();
   if (section?.id === "gate-da-machine-learning-ensembles-random-forests-boosting") return machineLearningEnsembleConceptGraph();
+  if (section?.id === "gate-da-machine-learning-clustering") return machineLearningClusteringConceptGraph();
   return null;
 }
 
