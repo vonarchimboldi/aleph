@@ -1,7 +1,7 @@
 const STORAGE_KEY = "learning-studio-data-v2";
 const LEGACY_STORAGE_KEYS = ["learning-studio-data-v1"];
 const SESSION_KEY = "aleph-session";
-const COURSE_PLAN_VERSION = "seeded-user-canonical-workspace-v140";
+const COURSE_PLAN_VERSION = "seeded-user-canonical-workspace-v141";
 const MAX_FEEDBACK_ATTACHMENT_BYTES = 3 * 1024 * 1024;
 const MAX_COMPRESSED_FEEDBACK_BYTES = 2400 * 1024;
 const MAX_FEEDBACK_PDF_PAGES = 6;
@@ -879,6 +879,8 @@ function buildGateDaBasicPlan(now, accountTypes, sections, user = basicGateDaUse
   const weekTwelveSunday = addDays(weekTwelveMonday, 6);
   const weekThirteenMonday = addDays(monday, 84);
   const weekThirteenSunday = addDays(weekThirteenMonday, 6);
+  const weekFourteenMonday = addDays(monday, 91);
+  const weekFourteenSunday = addDays(weekFourteenMonday, 6);
   const linearAlgebraWeekOneMonday = monday;
   const linearAlgebraWeekOneSunday = sunday;
   const linearAlgebraWeekTwoMonday = weekTwoMonday;
@@ -2029,6 +2031,36 @@ function buildGateDaBasicPlan(now, accountTypes, sections, user = basicGateDaUse
         date: weekThirteenSunday,
         details: "Take the graph-backed objective review for k-means, k-medoids, hierarchical clustering, linkage rules, metrics, geometry, and failure diagnosis.",
         updatedAt: now
+      },
+      {
+        id: "schedule-machine-learning-chapter-14-study",
+        title: "ML Chapter 14: PCA, SVD, and Dimensionality Reduction",
+        week: 14,
+        subject: "Machine Learning",
+        kind: "Study",
+        date: weekFourteenMonday,
+        details: "Study centering, covariance, maximum-variance directions, orthogonal principal components, explained variance, projection and reconstruction, PCA through SVD, PCA versus LDA, and failure modes.",
+        updatedAt: now
+      },
+      {
+        id: "schedule-machine-learning-chapter-14-practice",
+        title: "ML Chapter 14: Labelled Practice",
+        week: 14,
+        subject: "Machine Learning",
+        kind: "Practice",
+        date: addDays(weekFourteenMonday, 2),
+        details: "Solve labelled PCA/SVD practice: centering, covariance reads, eigen-direction choice, retained/discarded variance, projections, reconstruction error, singular-value interpretation, and failure diagnosis.",
+        updatedAt: now
+      },
+      {
+        id: "schedule-machine-learning-chapter-14-review",
+        title: "ML Chapter 14: Objective Review",
+        week: 14,
+        subject: "Machine Learning",
+        kind: "Review",
+        date: weekFourteenSunday,
+        details: "Take the graph-backed objective review for PCA, SVD, variance, reconstruction, PCA-versus-LDA, scaling, outliers, and linear-structure limits.",
+        updatedAt: now
       }
     ],
     tests: [
@@ -2355,6 +2387,15 @@ function buildGateDaBasicPlan(now, accountTypes, sections, user = basicGateDaUse
         details: "Objective end-of-chapter quiz for k-means, k-medoids, hierarchical clustering, single and complete linkage, distance metrics, scaling, cluster geometry, and failure modes.",
         sectionId: machineLearningSections[12]?.id,
         quizId: "quiz-machine-learning-chapter-13-objective-review",
+        updatedAt: now
+      },
+      {
+        id: "test-machine-learning-chapter-14-objective-review",
+        title: "ML Chapter 14 Objective Review",
+        date: weekFourteenSunday,
+        details: "Objective end-of-chapter quiz for centering, covariance, principal directions, explained variance, projection/reconstruction, PCA-SVD equivalence, PCA-versus-LDA, and failure modes.",
+        sectionId: machineLearningSections[13]?.id,
+        quizId: "quiz-machine-learning-chapter-14-objective-review",
         updatedAt: now
       }
     ],
@@ -3537,6 +3578,39 @@ function buildGateDaBasicPlan(now, accountTypes, sections, user = basicGateDaUse
         done: false,
         details: "Submit the Chapter 13 objective quiz so the learner record logs clustering strengths and weaknesses.",
         updatedAt: now
+      },
+      {
+        id: "task-machine-learning-chapter-14-read",
+        week: 14,
+        title: "ML Ch 14: Read PCA and SVD",
+        type: "Study",
+        date: weekFourteenMonday,
+        status: "todo",
+        done: false,
+        details: "Open Subjects -> Machine Learning -> Chapter 14 and study centering, covariance, PCA directions, SVD, explained variance, reconstruction, comparisons, and failures.",
+        updatedAt: now
+      },
+      {
+        id: "task-machine-learning-chapter-14-practice",
+        week: 14,
+        title: "ML Ch 14: Solve labelled practice",
+        type: "Practice",
+        date: addDays(weekFourteenMonday, 2),
+        status: "todo",
+        done: false,
+        details: "Attempt the PCA centering, covariance, eigenvalue, retained-variance, projection, reconstruction, and SVD problems before opening solutions.",
+        updatedAt: now
+      },
+      {
+        id: "task-machine-learning-chapter-14-review",
+        week: 14,
+        title: "ML Ch 14: Take objective review",
+        type: "Review",
+        date: weekFourteenSunday,
+        status: "todo",
+        done: false,
+        details: "Submit the Chapter 14 objective quiz so the learner record logs dimensionality-reduction strengths and weaknesses.",
+        updatedAt: now
       }
     ],
     accountTypes,
@@ -3563,7 +3637,7 @@ function buildGateDaBasicPlan(now, accountTypes, sections, user = basicGateDaUse
         startDate: monday,
         endDate: "2026-08-30",
         status: "active",
-        details: `GATE DA Basic plan surfaces: Subjects, Tasks, Schedule, Tests, Feedback, Resources, and Share. Recommended pace: study Probability, Linear Algebra, DSA, and Machine Learning in parallel. Every 15 days, Aleph should generate an adaptive cumulative review quiz from prior performance, repeating missed concepts more often, reducing mastered concepts, and keeping high-weight exam topics in rotation. Current material build: Probability Chapters 1-10, Linear Algebra Chapters 1-12 plus a chapterless cumulative past-paper style drill, DSA Chapters 1-9 with a progression gate before Chapter 3, and Machine Learning Chapters 1-13.${trialNote}`,
+        details: `GATE DA Basic plan surfaces: Subjects, Tasks, Schedule, Tests, Feedback, Resources, and Share. Recommended pace: study Probability, Linear Algebra, DSA, and Machine Learning in parallel. Every 15 days, Aleph should generate an adaptive cumulative review quiz from prior performance, repeating missed concepts more often, reducing mastered concepts, and keeping high-weight exam topics in rotation. Current material build: Probability Chapters 1-10, Linear Algebra Chapters 1-12 plus a chapterless cumulative past-paper style drill, DSA Chapters 1-9 with a progression gate before Chapter 3, and Machine Learning Chapters 1-14.${trialNote}`,
         updatedAt: now
       }
     ],
@@ -3758,6 +3832,13 @@ function buildGateDaBasicPlan(now, accountTypes, sections, user = basicGateDaUse
         date: weekThirteenSunday,
         details: "Review misses for using an unstated metric, skipping scaling, confusing centroid with medoid, assigning without updating, assuming one k-means initialization is globally optimal, reversing single and complete linkage, merging by centroid distance in a linkage question, and ignoring chaining, outliers, non-spherical clusters, or wrong k.",
         updatedAt: now
+      },
+      {
+        id: "feedback-machine-learning-chapter-14",
+        title: "Machine Learning Chapter 14 feedback focus",
+        date: weekFourteenSunday,
+        details: "Review misses for skipping centering, confusing covariance eigenvectors with data rows, selecting the smallest eigenvalue as PC1, dividing explained variance incorrectly, treating projection as exact reconstruction, mixing singular values with covariance eigenvalues, confusing PCA with supervised LDA, and ignoring scaling, outliers, nonlinear structure, or predictive irrelevance.",
+        updatedAt: now
       }
     ],
     resources: [
@@ -3870,6 +3951,14 @@ function buildGateDaBasicPlan(now, accountTypes, sections, user = basicGateDaUse
         title: "Machine Learning Chapter 13: Clustering",
         date: weekThirteenMonday,
         details: "Open Subjects -> Machine Learning to study k-means, k-medoids, hierarchical clustering, linkage rules, distance metrics, geometry, and failure modes.",
+        link: "",
+        updatedAt: now
+      },
+      {
+        id: "resource-machine-learning-pca-svd-dimensionality-reduction",
+        title: "Machine Learning Chapter 14: PCA, SVD, and Dimensionality Reduction",
+        date: weekFourteenMonday,
+        details: "Open Subjects -> Machine Learning to study centering, covariance, principal components, explained variance, projection/reconstruction, SVD, PCA-versus-LDA, and failures.",
         link: "",
         updatedAt: now
       },
@@ -6458,6 +6547,148 @@ function gateDaMachineLearningSections(updatedAt = new Date().toISOString()) {
         "Agglomerative clustering repeatedly merges closest clusters.",
         "Single linkage uses a minimum; complete linkage uses a maximum.",
         "Scale, outliers, wrong k, chaining, density, and shape are key failures."
+      ],
+      updatedAt
+    },
+    {
+      id: "gate-da-machine-learning-pca-svd-dimensionality-reduction",
+      exam: "GATE DA",
+      accountTier: "Basic",
+      subject: "Machine Learning",
+      chapter: "Chapter 14",
+      section: "14",
+      title: "PCA, SVD, and Dimensionality Reduction",
+      summary: "Unsupervised feature extraction through centering, covariance eigendirections, explained variance, orthogonal projection, reconstruction, SVD, and failure diagnosis.",
+      sectionPreview: "PCA rotates centered data onto orthogonal directions ranked by variance. Keeping only the leading directions compresses the representation while minimizing squared linear reconstruction error.",
+      previewActivity: "A covariance matrix has eigenvalues 9, 4, and 1. Which direction is PC1? What fraction of total variance is retained by keeping the first two components?",
+      intro: [
+        "PCA is unsupervised: it ignores labels and seeks directions of large variance. Centering is essential because PCA describes variation around the mean.",
+        "The covariance matrix is symmetric positive semidefinite. Its orthonormal eigenvectors are principal directions, and their eigenvalues are variances along those directions.",
+        "SVD computes the same subspace directly from the centered data matrix and makes low-rank approximation and reconstruction geometry explicit."
+      ],
+      bookSections: [
+        {
+          number: "14.1",
+          title: "Centering and Covariance",
+          paragraphs: [
+            "Subtract the feature-wise mean from every observation to form centered data X_c. Without centering, the leading direction can point toward the mean offset rather than variation.",
+            "With observations as rows, a common covariance convention is C=(1/n)X_c^T X_c; sample covariance may use 1/(n-1). The scaling changes eigenvalues but not eigenvectors.",
+            "C is symmetric PSD, so its eigenvalues are nonnegative and it has orthonormal eigenvectors."
+          ],
+          blocks: [
+            { type: "formula", title: "Centered covariance", body: "X_c=X-1 mu^T; C=(1/n)X_c^T X_c, or 1/(n-1) by the stated convention." },
+            { type: "warning", title: "Convention check", body: "Confirm whether observations are rows or columns and whether the divisor is n or n-1." }
+          ]
+        },
+        {
+          number: "14.2",
+          title: "Maximum Variance and Principal Components",
+          paragraphs: [
+            "For a unit direction w, projected variance is w^T C w. Maximizing this Rayleigh quotient chooses an eigenvector of the largest eigenvalue.",
+            "PC1 is the largest-eigenvalue direction. Later components maximize remaining variance subject to orthogonality to earlier components.",
+            "Eigenvector sign is arbitrary: w and -w define the same one-dimensional subspace."
+          ],
+          blocks: [
+            { type: "formula", title: "PCA objective", body: "maximize w^T C w subject to ||w||=1; solution Cw=lambda_max w." },
+            { type: "principle", title: "Ranking cue", body: "Sort eigenvalues from largest to smallest; carry their matching eigenvectors." }
+          ]
+        },
+        {
+          number: "14.3",
+          title: "Explained Variance, Projection, and Reconstruction",
+          paragraphs: [
+            "The explained-variance ratio of component j is lambda_j divided by the sum of all eigenvalues.",
+            "If W_k contains the first k orthonormal principal directions, reduced coordinates are Z=X_c W_k. Centered reconstruction is ZW_k^T, and the feature mean is added back.",
+            "The minimum squared reconstruction error from discarding components equals the sum of discarded covariance eigenvalues, up to the covariance normalization."
+          ],
+          blocks: [
+            { type: "formula", title: "Compression and reconstruction", body: "Z=X_c W_k; X_hat=Z W_k^T + 1 mu^T." },
+            { type: "formula", title: "Variance accounting", body: "retained ratio=(sum_{j<=k} lambda_j)/(sum_j lambda_j); discarded variance=sum_{j>k} lambda_j." }
+          ]
+        },
+        {
+          number: "14.4",
+          title: "PCA Through SVD",
+          paragraphs: [
+            "For centered X_c=U Sigma V^T, columns of V are feature-space principal directions. Singular values rank the directions.",
+            "Eigenvalues of X_c^T X_c are sigma_j^2. Therefore covariance eigenvalues are sigma_j^2/n or sigma_j^2/(n-1), according to convention.",
+            "Truncating the SVD to its first k terms gives the best rank-k approximation in squared Frobenius norm."
+          ],
+          blocks: [
+            { type: "formula", title: "SVD-PCA link", body: "X_c^T X_c=V Sigma^2 V^T; principal directions are columns of V." },
+            { type: "warning", title: "Square first", body: "Singular values are not covariance eigenvalues; square them and apply the covariance divisor." }
+          ]
+        },
+        {
+          number: "14.5",
+          title: "PCA versus LDA and Failure Modes",
+          paragraphs: [
+            "PCA ignores labels and maximizes total variance. LDA uses labels to maximize between-class separation relative to within-class scatter.",
+            "High variance need not be predictive: PCA can discard a low-variance direction that separates classes. Feature scaling can also determine which coordinates dominate.",
+            "Outliers distort means and covariance. Standard PCA captures only linear subspaces and can poorly represent curved manifolds or heterogeneous structures."
+          ],
+          blocks: [
+            { type: "principle", title: "PCA versus LDA", body: "PCA: unsupervised total variance. LDA: supervised class separation relative to within-class spread." },
+            { type: "warning", title: "Variance is not importance", body: "Large variance may be noise; small variance may carry the target signal." }
+          ]
+        }
+      ],
+      concepts: [
+        { name: "Centering", description: "Subtracting feature means before covariance or SVD.", cue: "Variation around the mean." },
+        { name: "Covariance matrix", description: "Symmetric PSD matrix encoding feature variation.", cue: "Eigenvectors give directions." },
+        { name: "Principal direction", description: "Covariance eigenvector ranked by eigenvalue.", cue: "Largest eigenvalue is PC1." },
+        { name: "Explained variance", description: "Eigenvalue share of total covariance trace.", cue: "Retained over total." },
+        { name: "PCA projection", description: "Coordinates in a leading orthonormal subspace.", cue: "Project, then reconstruct." },
+        { name: "SVD-PCA link", description: "Right singular vectors of centered data are principal directions.", cue: "Covariance eigenvalues are squared singular values divided by sample factor." },
+        { name: "PCA versus LDA", description: "Unsupervised variance versus supervised separation.", cue: "Labels distinguish the objectives." },
+        { name: "PCA failure mode", description: "Scaling, outliers, nonlinear structure, or variance unrelated to prediction.", cue: "Variance is not meaning." }
+      ],
+      techniques: [
+        { name: "Center a data matrix", when: "raw observations are supplied.", move: "Compute each feature mean and subtract it row by row." },
+        { name: "Read PCA from eigenpairs", when: "covariance eigenvalues and eigenvectors are supplied.", move: "Sort eigenvalues descending and match directions." },
+        { name: "Compute variance retained", when: "eigenvalues are given.", move: "Divide the kept eigenvalue sum by the total." },
+        { name: "Project and reconstruct", when: "principal directions and a point are given.", move: "Center, compute W_k^T x_c, map back with W_k, then add the mean." },
+        { name: "Read PCA from SVD", when: "a centered-data SVD is supplied.", move: "Use right singular vectors and square singular values for variance." },
+        { name: "Diagnose PCA suitability", when: "a reduction behaves poorly.", move: "Check centering, scale, outliers, linearity, and target relevance." }
+      ],
+      practiceProblems: machineLearningPcaSvdProblems(),
+      reviewPrompts: [
+        "Why must data be centered?",
+        "Why is covariance PSD?",
+        "Which eigenvector is PC1?",
+        "Why are principal components orthogonal?",
+        "How is retained variance computed?",
+        "How are reduced coordinates reconstructed?",
+        "How does SVD reveal PCA directions?",
+        "Why are singular values squared?",
+        "How does PCA differ from LDA?",
+        "When can high variance be unhelpful?"
+      ],
+      reviewQuiz: {
+        id: "quiz-machine-learning-chapter-14-objective-review",
+        title: "ML Chapter 14 Objective Review",
+        instructions: "Complete this after studying PCA, SVD, and dimensionality reduction. The quiz checks centering, covariance, eigen-directions, explained variance, reconstruction, the SVD link, PCA-versus-LDA, and failures.",
+        questions: machineLearningPcaSvdReviewQuestions()
+      },
+      readingQuestions: [
+        "What changes if covariance uses n-1 instead of n?",
+        "What does a covariance eigenvalue measure?",
+        "Why is eigenvector sign irrelevant?",
+        "What variance is discarded by a k-component model?",
+        "Which singular vectors live in feature space?",
+        "Why can PCA remove a predictive feature?",
+        "Which failures suggest scaling or robust alternatives?"
+      ],
+      chapterSummary: [
+        "PCA is an unsupervised linear dimensionality-reduction method.",
+        "Center data before forming covariance or applying PCA-facing SVD.",
+        "Covariance eigenvectors are orthogonal principal directions.",
+        "PC1 corresponds to the largest covariance eigenvalue.",
+        "Eigenvalue ratios measure retained and discarded variance.",
+        "Projection compresses; reconstruction maps the compressed point back and restores the mean.",
+        "Right singular vectors of centered data give principal directions.",
+        "Squared singular values, divided by the covariance factor, give covariance eigenvalues.",
+        "PCA differs from supervised LDA and can fail under scaling, outliers, nonlinear structure, or task-irrelevant variance."
       ],
       updatedAt
     }
@@ -18834,6 +19065,90 @@ function machineLearningClusteringReviewQuestions() {
   }));
 }
 
+function machineLearningPcaSvdProblems() {
+  return [
+    { label: "Problem 1: Center observations", concept: "Centering", difficulty: "Mechanics", technique: "Center a data matrix", prompt: "Observations are (1,2) and (3,4). Find the mean and centered observations.", solution: "The feature mean is (2,3). Subtraction gives centered rows (-1,-1) and (1,1)." },
+    { label: "Problem 2: Read PC1", concept: "Principal direction", difficulty: "Mechanics", technique: "Read PCA from eigenpairs", prompt: "Covariance eigenpairs are lambda_1=5 with v_1=(1,0) and lambda_2=2 with v_2=(0,1). Identify PC1.", solution: "PC1 is v_1=(1,0), because its eigenvalue 5 is the larger projected variance." },
+    { label: "Problem 3: Retained variance", concept: "Explained variance", difficulty: "GATE-style", technique: "Compute variance retained", prompt: "Covariance eigenvalues are 9,4,1. What fraction is retained by two components?", solution: "Total variance is 14 and retained variance is 13. The retained fraction is 13/14, about 92.86%." },
+    { label: "Problem 4: Discarded variance", concept: "Reconstruction error", difficulty: "GATE-style", technique: "Compute variance retained", prompt: "For eigenvalues 9,4,1, what variance is discarded by a two-component PCA?", solution: "Only the third direction is removed, so discarded variance is lambda_3=1." },
+    { label: "Problem 5: One-dimensional projection", concept: "PCA projection", difficulty: "GATE-style", technique: "Project and reconstruct", prompt: "Mean is (1,1), PC1 is w=(1,0), and x=(4,3). Find its PC1 coordinate and reconstruction.", solution: "Centered x is (3,2). Coordinate is w^T x_c=3. Reconstructed centered point is 3w=(3,0); adding the mean gives (4,1)." },
+    { label: "Problem 6: SVD variance", concept: "SVD-PCA link", difficulty: "GATE-style", technique: "Read PCA from SVD", prompt: "Centered X has singular values 6 and 2, and covariance uses (1/n)X^T X with n=4. Find covariance eigenvalues.", solution: "Square and divide by 4: eigenvalues are 36/4=9 and 4/4=1." },
+    { label: "Problem 7: PCA versus LDA", concept: "PCA versus LDA", difficulty: "Concept", technique: "Diagnose PCA suitability", prompt: "The largest-variance direction contains no class separation, while a small-variance direction separates labels. Which method is more likely to preserve the separating direction?", solution: "LDA is more likely because it uses labels and rewards class separation. PCA may discard the low-variance direction because it ignores labels." },
+    { label: "Problem 8: Scaling failure", concept: "PCA failure mode", difficulty: "Application", technique: "Diagnose PCA suitability", prompt: "Feature A ranges from 0 to 1 and feature B from 0 to 10000 because of units. What PCA risk appears, and what should be considered?", solution: "Feature B can dominate covariance and PC1 solely because of scale. Standardization or a domain-appropriate scaling choice should be considered before PCA." }
+  ];
+}
+
+function machineLearningPcaSvdReviewQuestions() {
+  const metadata = {
+    "ml-pca-review-1": { targetConcept: "centering", prereqsUsed: [], difficulty: 1, gateWeight: "high" },
+    "ml-pca-review-2": { targetConcept: "principal-direction", prereqsUsed: [], difficulty: 1, gateWeight: "high" },
+    "ml-pca-review-3": { targetConcept: "explained-variance", prereqsUsed: [], difficulty: 1, gateWeight: "high" },
+    "ml-pca-review-4": { targetConcept: "orthogonal-components", prereqsUsed: ["principal-direction"], difficulty: 2, gateWeight: "high" },
+    "ml-pca-review-5": { targetConcept: "projection-reconstruction", prereqsUsed: ["centering"], difficulty: 2, gateWeight: "high" },
+    "ml-pca-review-6": { targetConcept: "svd-pca-link", prereqsUsed: ["principal-direction"], difficulty: 2, gateWeight: "high" },
+    "ml-pca-review-7": { targetConcept: "discarded-variance", prereqsUsed: ["explained-variance"], difficulty: 2, gateWeight: "high" },
+    "ml-pca-review-8": { targetConcept: "pca-vs-lda", prereqsUsed: ["principal-direction", "explained-variance"], difficulty: 3, gateWeight: "high" },
+    "ml-pca-review-9": { targetConcept: "scaling-outliers", prereqsUsed: ["centering", "svd-pca-link"], difficulty: 3, gateWeight: "high" },
+    "ml-pca-review-10": { targetConcept: "pca-failure", prereqsUsed: ["projection-reconstruction", "pca-vs-lda"], difficulty: 3, gateWeight: "medium" }
+  };
+  const questions = [
+    {
+      id: "ml-pca-review-1",
+      kind: "single concept", tags: ["centering"], prompt: "What operation should normally precede covariance-based PCA?", options: [{ id: "a", text: "Subtract each feature mean." }, { id: "b", text: "Assign class labels." }, { id: "c", text: "Sort observations by name." }, { id: "d", text: "Set every feature to one." }],
+      answer: "a"
+    },
+    {
+      id: "ml-pca-review-2",
+      kind: "single concept", tags: ["principal-direction"], prompt: "Which covariance eigenvector defines the first principal component?", options: [{ id: "a", text: "The eigenvector with the largest eigenvalue" }, { id: "b", text: "The eigenvector with the smallest eigenvalue" }, { id: "c", text: "Any vector with zero norm" }, { id: "d", text: "The class-mean difference only" }],
+      answer: "a"
+    },
+    {
+      id: "ml-pca-review-3",
+      kind: "single concept", tags: ["explained-variance"], prompt: "Eigenvalues are 6,3,1. What fraction does PC1 explain?", options: [{ id: "a", text: "0.6" }, { id: "b", text: "0.3" }, { id: "c", text: "0.1" }, { id: "d", text: "6.0" }],
+      answer: "a"
+    },
+    {
+      id: "ml-pca-review-4",
+      kind: "mixed: two concepts", tags: ["orthogonal-components", "principal-direction"], prompt: "Why can distinct covariance principal directions be chosen orthogonal?", options: [{ id: "a", text: "Covariance is real symmetric and has an orthonormal eigenbasis." }, { id: "b", text: "Every dataset already has labels." }, { id: "c", text: "All eigenvalues are equal to one." }, { id: "d", text: "PCA uses Manhattan distance." }],
+      answer: "a"
+    },
+    {
+      id: "ml-pca-review-5",
+      kind: "mixed: two concepts", tags: ["projection-reconstruction", "centering"], prompt: "What must be restored after reconstructing a centered PCA projection?", options: [{ id: "a", text: "The feature mean vector" }, { id: "b", text: "The class labels" }, { id: "c", text: "A random cluster id" }, { id: "d", text: "The discarded eigenvectors as zeros only" }],
+      answer: "a"
+    },
+    {
+      id: "ml-pca-review-6",
+      kind: "mixed: two concepts", tags: ["svd-pca-link", "principal-direction"], prompt: "For centered X=U Sigma V^T, which vectors are feature-space PCA directions?", options: [{ id: "a", text: "Columns of V" }, { id: "b", text: "Rows of U only" }, { id: "c", text: "The diagonal entries of X" }, { id: "d", text: "Class indicator vectors" }],
+      answer: "a"
+    },
+    {
+      id: "ml-pca-review-7",
+      kind: "mixed: two concepts", tags: ["discarded-variance", "explained-variance"], prompt: "Eigenvalues are 8,2,1. What variance is discarded by keeping two components?", options: [{ id: "a", text: "1" }, { id: "b", text: "2" }, { id: "c", text: "8" }, { id: "d", text: "10" }],
+      answer: "a"
+    },
+    {
+      id: "ml-pca-review-8",
+      kind: "mixed: three concepts", tags: ["pca-vs-lda", "principal-direction", "explained-variance"], prompt: "Which comparison between PCA and LDA is correct?", options: [{ id: "a", text: "PCA maximizes unlabeled variance; LDA uses labels for relative class separation." }, { id: "b", text: "Both always choose the same direction." }, { id: "c", text: "PCA requires class labels." }, { id: "d", text: "LDA ignores within-class spread." }],
+      answer: "a"
+    },
+    {
+      id: "ml-pca-review-9",
+      kind: "mixed: three concepts", tags: ["scaling-outliers", "centering", "svd-pca-link"], prompt: "Why can one extreme, large-scale feature dominate PCA?", options: [{ id: "a", text: "It can dominate centered covariance and singular values." }, { id: "b", text: "PCA always clips extreme values." }, { id: "c", text: "Centering forces every variance to one." }, { id: "d", text: "SVD ignores feature magnitude." }],
+      answer: "a"
+    },
+    {
+      id: "ml-pca-review-10",
+      kind: "mixed: three concepts", tags: ["pca-failure", "projection-reconstruction", "pca-vs-lda"], prompt: "Which statement identifies a genuine PCA limitation?", options: [{ id: "a", text: "A low-variance direction may carry predictive labels and be discarded." }, { id: "b", text: "PCA always preserves every observation exactly after reduction." }, { id: "c", text: "PCA models every nonlinear manifold perfectly." }, { id: "d", text: "PCA is unaffected by outliers." }],
+      answer: "a"
+    }
+  ];
+  return questions.map((question) => ({
+    ...question,
+    ...(metadata[question.id] || { targetConcept: question.tags[0], prereqsUsed: question.tags.slice(1), difficulty: question.tags.length, gateWeight: "medium" })
+  }));
+}
+
 function probabilityFoundationProblems() {
   return [
     {
@@ -25377,6 +25692,30 @@ function machineLearningClusteringConceptGraph() {
       "scaling-sensitivity": { label: "Feature-scale sensitivity", prereqs: ["distance-metric", "kmeans-trace"], repairMaterial: "Review ML Chapter 13.1 and compare feature ranges before distance-based clustering.", gateWeight: "high" },
       chaining: { label: "Single-link chaining", prereqs: ["single-linkage"], repairMaterial: "Review ML Chapter 13.5 and trace how bridge points join distant dense groups.", gateWeight: "medium" },
       "clustering-failure": { label: "Clustering failure diagnosis", prereqs: ["kmeans-objective", "complete-linkage"], repairMaterial: "Review ML Chapter 13.5 and check scale, k, initialization, outliers, density, and shape.", gateWeight: "high" }
+    }
+  };
+}
+
+function machineLearningPcaSvdConceptGraph() {
+  return {
+    chapterId: "gate-da-machine-learning-pca-svd-dimensionality-reduction",
+    chapterTitle: "ML Chapter 14: PCA, SVD, and Dimensionality Reduction",
+    gateWeight: "high",
+    fallbackConcepts: ["centering", "principal-direction", "explained-variance", "svd-pca-link"],
+    fallbackDifficultyMix: [1, 2, 2, 3],
+    fallbackInstruction: "Retest centering, covariance eigenpair ranking, retained variance, reconstruction, and the SVD link.",
+    stableNextAction: "Next: move to neural networks after PCA projection, explained variance, SVD conversion, and PCA-versus-LDA failures are reliable.",
+    nodes: {
+      centering: { label: "Data centering", prereqs: [], repairMaterial: "Review ML Chapter 14.1 and subtract each feature mean before covariance or PCA-facing SVD.", gateWeight: "high" },
+      "principal-direction": { label: "Principal direction", prereqs: ["centering"], repairMaterial: "Review ML Chapter 14.2 and match the largest covariance eigenvalue with PC1.", gateWeight: "high" },
+      "orthogonal-components": { label: "Orthogonal principal components", prereqs: ["principal-direction"], repairMaterial: "Review ML Chapter 14.2 and use symmetry of covariance to obtain orthonormal eigenvectors.", gateWeight: "high" },
+      "explained-variance": { label: "Explained variance", prereqs: ["principal-direction"], repairMaterial: "Review ML Chapter 14.3 and divide the retained eigenvalue sum by the total trace.", gateWeight: "high" },
+      "discarded-variance": { label: "Discarded variance and reconstruction error", prereqs: ["explained-variance"], repairMaterial: "Review ML Chapter 14.3 and sum eigenvalues of omitted directions.", gateWeight: "high" },
+      "projection-reconstruction": { label: "PCA projection and reconstruction", prereqs: ["centering", "principal-direction"], repairMaterial: "Review ML Chapter 14.3: center, project with W_k, map back, and restore the mean.", gateWeight: "high" },
+      "svd-pca-link": { label: "SVD-PCA link", prereqs: ["centering", "principal-direction"], repairMaterial: "Review ML Chapter 14.4 and use right singular vectors; square singular values and apply the covariance divisor.", gateWeight: "high" },
+      "pca-vs-lda": { label: "PCA versus LDA", prereqs: ["principal-direction", "explained-variance"], repairMaterial: "Review ML Chapter 14.5 and distinguish unlabeled total variance from labeled class separation.", gateWeight: "high" },
+      "scaling-outliers": { label: "Scale and outlier sensitivity", prereqs: ["centering", "svd-pca-link"], repairMaterial: "Review ML Chapter 14.5 and check units, standardization, and extreme observations before PCA.", gateWeight: "high" },
+      "pca-failure": { label: "PCA failure modes", prereqs: ["projection-reconstruction", "pca-vs-lda"], repairMaterial: "Review ML Chapter 14.5 and check nonlinear structure and whether variance aligns with the downstream target.", gateWeight: "medium" }
     }
   };
 }
@@ -33923,6 +34262,7 @@ function conceptGraphForSection(section) {
   if (section?.id === "gate-da-machine-learning-decision-trees") return machineLearningDecisionTreeConceptGraph();
   if (section?.id === "gate-da-machine-learning-ensembles-random-forests-boosting") return machineLearningEnsembleConceptGraph();
   if (section?.id === "gate-da-machine-learning-clustering") return machineLearningClusteringConceptGraph();
+  if (section?.id === "gate-da-machine-learning-pca-svd-dimensionality-reduction") return machineLearningPcaSvdConceptGraph();
   return null;
 }
 
