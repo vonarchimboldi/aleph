@@ -1,7 +1,7 @@
 const STORAGE_KEY = "learning-studio-data-v2";
 const LEGACY_STORAGE_KEYS = ["learning-studio-data-v1"];
 const SESSION_KEY = "aleph-session";
-const COURSE_PLAN_VERSION = "seeded-user-canonical-workspace-v141";
+const COURSE_PLAN_VERSION = "seeded-user-canonical-workspace-v142";
 const MAX_FEEDBACK_ATTACHMENT_BYTES = 3 * 1024 * 1024;
 const MAX_COMPRESSED_FEEDBACK_BYTES = 2400 * 1024;
 const MAX_FEEDBACK_PDF_PAGES = 6;
@@ -881,6 +881,8 @@ function buildGateDaBasicPlan(now, accountTypes, sections, user = basicGateDaUse
   const weekThirteenSunday = addDays(weekThirteenMonday, 6);
   const weekFourteenMonday = addDays(monday, 91);
   const weekFourteenSunday = addDays(weekFourteenMonday, 6);
+  const weekFifteenMonday = addDays(monday, 98);
+  const weekFifteenSunday = addDays(weekFifteenMonday, 6);
   const linearAlgebraWeekOneMonday = monday;
   const linearAlgebraWeekOneSunday = sunday;
   const linearAlgebraWeekTwoMonday = weekTwoMonday;
@@ -2061,6 +2063,36 @@ function buildGateDaBasicPlan(now, accountTypes, sections, user = basicGateDaUse
         date: weekFourteenSunday,
         details: "Take the graph-backed objective review for PCA, SVD, variance, reconstruction, PCA-versus-LDA, scaling, outliers, and linear-structure limits.",
         updatedAt: now
+      },
+      {
+        id: "schedule-machine-learning-chapter-15-study",
+        title: "ML Chapter 15: Multilayer Perceptrons and Neural Networks",
+        week: 15,
+        subject: "Machine Learning",
+        kind: "Study",
+        date: weekFifteenMonday,
+        details: "Study MLP architecture, parameter counts, activations, forward passes, task-specific outputs and losses, backpropagation, gradient descent, XOR, and training failures.",
+        updatedAt: now
+      },
+      {
+        id: "schedule-machine-learning-chapter-15-practice",
+        title: "ML Chapter 15: Labelled Practice",
+        week: 15,
+        subject: "Machine Learning",
+        kind: "Practice",
+        date: addDays(weekFifteenMonday, 2),
+        details: "Solve labelled neural-network practice: shape and parameter counting, activations, forward passes, linear-network collapse, output/loss matching, chain-rule gradients, and weight updates.",
+        updatedAt: now
+      },
+      {
+        id: "schedule-machine-learning-chapter-15-review",
+        title: "ML Chapter 15: Objective Review",
+        week: 15,
+        subject: "Machine Learning",
+        kind: "Review",
+        date: weekFifteenSunday,
+        details: "Take the graph-backed objective review for MLP architecture, nonlinear representation, losses, backpropagation, gradient updates, XOR, and failure diagnosis.",
+        updatedAt: now
       }
     ],
     tests: [
@@ -2396,6 +2428,15 @@ function buildGateDaBasicPlan(now, accountTypes, sections, user = basicGateDaUse
         details: "Objective end-of-chapter quiz for centering, covariance, principal directions, explained variance, projection/reconstruction, PCA-SVD equivalence, PCA-versus-LDA, and failure modes.",
         sectionId: machineLearningSections[13]?.id,
         quizId: "quiz-machine-learning-chapter-14-objective-review",
+        updatedAt: now
+      },
+      {
+        id: "test-machine-learning-chapter-15-objective-review",
+        title: "ML Chapter 15 Objective Review",
+        date: weekFifteenSunday,
+        details: "Objective end-of-chapter quiz for MLP shapes, parameters, activations, forward passes, output/loss matching, backpropagation, gradient descent, XOR, and training failures.",
+        sectionId: machineLearningSections[14]?.id,
+        quizId: "quiz-machine-learning-chapter-15-objective-review",
         updatedAt: now
       }
     ],
@@ -3611,6 +3652,39 @@ function buildGateDaBasicPlan(now, accountTypes, sections, user = basicGateDaUse
         done: false,
         details: "Submit the Chapter 14 objective quiz so the learner record logs dimensionality-reduction strengths and weaknesses.",
         updatedAt: now
+      },
+      {
+        id: "task-machine-learning-chapter-15-read",
+        week: 15,
+        title: "ML Ch 15: Read neural networks",
+        type: "Study",
+        date: weekFifteenMonday,
+        status: "todo",
+        done: false,
+        details: "Open Subjects -> Machine Learning -> Chapter 15 and study MLP architecture, activations, forward pass, losses, backpropagation, updates, XOR, and failures.",
+        updatedAt: now
+      },
+      {
+        id: "task-machine-learning-chapter-15-practice",
+        week: 15,
+        title: "ML Ch 15: Solve labelled practice",
+        type: "Practice",
+        date: addDays(weekFifteenMonday, 2),
+        status: "todo",
+        done: false,
+        details: "Attempt parameter-count, activation, forward-pass, loss, chain-rule, and gradient-update problems before opening solutions.",
+        updatedAt: now
+      },
+      {
+        id: "task-machine-learning-chapter-15-review",
+        week: 15,
+        title: "ML Ch 15: Take objective review",
+        type: "Review",
+        date: weekFifteenSunday,
+        status: "todo",
+        done: false,
+        details: "Submit the Chapter 15 objective quiz so the learner record logs neural-network strengths and weaknesses.",
+        updatedAt: now
       }
     ],
     accountTypes,
@@ -3637,7 +3711,7 @@ function buildGateDaBasicPlan(now, accountTypes, sections, user = basicGateDaUse
         startDate: monday,
         endDate: "2026-08-30",
         status: "active",
-        details: `GATE DA Basic plan surfaces: Subjects, Tasks, Schedule, Tests, Feedback, Resources, and Share. Recommended pace: study Probability, Linear Algebra, DSA, and Machine Learning in parallel. Every 15 days, Aleph should generate an adaptive cumulative review quiz from prior performance, repeating missed concepts more often, reducing mastered concepts, and keeping high-weight exam topics in rotation. Current material build: Probability Chapters 1-10, Linear Algebra Chapters 1-12 plus a chapterless cumulative past-paper style drill, DSA Chapters 1-9 with a progression gate before Chapter 3, and Machine Learning Chapters 1-14.${trialNote}`,
+        details: `GATE DA Basic plan surfaces: Subjects, Tasks, Schedule, Tests, Feedback, Resources, and Share. Recommended pace: study Probability, Linear Algebra, DSA, and Machine Learning in parallel. Every 15 days, Aleph should generate an adaptive cumulative review quiz from prior performance, repeating missed concepts more often, reducing mastered concepts, and keeping high-weight exam topics in rotation. Current material build: Probability Chapters 1-10, Linear Algebra Chapters 1-12 plus a chapterless cumulative past-paper style drill, DSA Chapters 1-9 with a progression gate before Chapter 3, and the complete Machine Learning Chapters 1-15 track.${trialNote}`,
         updatedAt: now
       }
     ],
@@ -3839,6 +3913,13 @@ function buildGateDaBasicPlan(now, accountTypes, sections, user = basicGateDaUse
         date: weekFourteenSunday,
         details: "Review misses for skipping centering, confusing covariance eigenvectors with data rows, selecting the smallest eigenvalue as PC1, dividing explained variance incorrectly, treating projection as exact reconstruction, mixing singular values with covariance eigenvalues, confusing PCA with supervised LDA, and ignoring scaling, outliers, nonlinear structure, or predictive irrelevance.",
         updatedAt: now
+      },
+      {
+        id: "feedback-machine-learning-chapter-15",
+        title: "Machine Learning Chapter 15 feedback focus",
+        date: weekFifteenSunday,
+        details: "Review misses for omitting biases in parameter counts, transposing weight shapes, applying activations in the wrong order, mismatching output and loss, claiming stacked linear layers become nonlinear, reversing gradient descent signs, dropping chain-rule factors, and ignoring saturation, initialization, vanishing gradients, learning rate, or overfitting.",
+        updatedAt: now
       }
     ],
     resources: [
@@ -3959,6 +4040,14 @@ function buildGateDaBasicPlan(now, accountTypes, sections, user = basicGateDaUse
         title: "Machine Learning Chapter 14: PCA, SVD, and Dimensionality Reduction",
         date: weekFourteenMonday,
         details: "Open Subjects -> Machine Learning to study centering, covariance, principal components, explained variance, projection/reconstruction, SVD, PCA-versus-LDA, and failures.",
+        link: "",
+        updatedAt: now
+      },
+      {
+        id: "resource-machine-learning-mlp-neural-networks",
+        title: "Machine Learning Chapter 15: Multilayer Perceptrons and Neural Networks",
+        date: weekFifteenMonday,
+        details: "Open Subjects -> Machine Learning to study architecture, parameter counting, activations, forward passes, losses, backpropagation, updates, XOR, and training failures.",
         link: "",
         updatedAt: now
       },
@@ -6689,6 +6778,162 @@ function gateDaMachineLearningSections(updatedAt = new Date().toISOString()) {
         "Right singular vectors of centered data give principal directions.",
         "Squared singular values, divided by the covariance factor, give covariance eigenvalues.",
         "PCA differs from supervised LDA and can fail under scaling, outliers, nonlinear structure, or task-irrelevant variance."
+      ],
+      updatedAt
+    },
+    {
+      id: "gate-da-machine-learning-mlp-neural-networks",
+      exam: "GATE DA",
+      accountTier: "Basic",
+      subject: "Machine Learning",
+      chapter: "Chapter 15",
+      section: "15",
+      title: "Multilayer Perceptrons and Neural Networks",
+      summary: "Dense neural-network architecture, activations, forward propagation, output-loss matching, backpropagation, gradient updates, nonlinear representation, and training diagnosis.",
+      sectionPreview: "An MLP composes affine layers with nonlinear activations. Forward propagation produces a prediction; backpropagation applies the chain rule to every parameter.",
+      previewActivity: "A 3-4-2 dense network has how many trainable parameters, including biases? Why would replacing every hidden activation with the identity remove its nonlinear advantage?",
+      intro: [
+        "A dense layer maps its input through weights and biases, then usually applies an activation. Layer dimensions determine every parameter shape and count.",
+        "Nonlinear hidden activations let an MLP form decision boundaries unavailable to one affine classifier. Without them, many stacked layers collapse to one affine map.",
+        "Training alternates a forward pass, loss evaluation, backpropagation, and a gradient-based parameter update."
+      ],
+      bookSections: [
+        {
+          number: "15.1",
+          title: "Architecture, Shapes, and Parameter Counts",
+          paragraphs: [
+            "For d_in inputs and d_out units, W has shape d_out by d_in and b has length d_out. The layer therefore has d_out(d_in+1) trainable parameters.",
+            "Count each connection weight and each destination-unit bias exactly once. A 3-4-2 network has 4(3+1)+2(4+1)=26 parameters.",
+            "The input layer stores features and contributes no trainable parameters unless the question explicitly defines an input transformation."
+          ],
+          blocks: [
+            { type: "formula", title: "Dense-layer count", body: "parameters = d_out d_in + d_out = d_out(d_in+1)." },
+            { type: "warning", title: "Bias check", body: "Do not omit one bias per destination unit or count the input nodes as parameters." }
+          ]
+        },
+        {
+          number: "15.2",
+          title: "Forward Pass and Activations",
+          paragraphs: [
+            "At layer l, compute z^(l)=W^(l)a^(l-1)+b^(l), then a^(l)=g(z^(l)). Apply elementwise activations coordinate by coordinate unless stated otherwise.",
+            "ReLU returns max(0,z), sigmoid returns 1/(1+e^-z), tanh lies in (-1,1), and the identity activation returns z.",
+            "A composition of affine maps with only identity activations is still one affine map. Depth alone does not create nonlinear boundaries."
+          ],
+          blocks: [
+            { type: "formula", title: "Forward recurrence", body: "a^(0)=x; z^(l)=W^(l)a^(l-1)+b^(l); a^(l)=g_l(z^(l))." },
+            { type: "principle", title: "Nonlinearity matters", body: "Hidden nonlinear activations, not merely extra affine layers, expand representational power." }
+          ]
+        },
+        {
+          number: "15.3",
+          title: "Outputs and Losses",
+          paragraphs: [
+            "Regression commonly uses a linear output with squared error. Binary classification commonly uses one sigmoid probability with binary cross-entropy.",
+            "Multiclass single-label classification commonly uses softmax probabilities with cross-entropy. The probabilities are coupled and sum to one.",
+            "The output activation and loss must match the target semantics; a technically executable mismatch can still encode the wrong learning problem."
+          ],
+          blocks: [
+            { type: "principle", title: "Standard matching", body: "Regression: linear + squared error. Binary: sigmoid + binary cross-entropy. Multiclass: softmax + cross-entropy." },
+            { type: "warning", title: "Logits versus probabilities", body: "Read whether the stated loss expects raw logits or already transformed probabilities." }
+          ]
+        },
+        {
+          number: "15.4",
+          title: "Backpropagation and Gradient Descent",
+          paragraphs: [
+            "Backpropagation is organized chain rule. It propagates the loss sensitivity from the output toward earlier layers while reusing intermediate derivatives.",
+            "For a dense layer, the weight gradient is an outer product: dL/dW^(l)=delta^(l)(a^(l-1))^T, while dL/db^(l)=delta^(l).",
+            "Gradient descent updates theta <- theta-eta grad_theta L. The minus sign moves against local increase; the learning rate eta controls step size."
+          ],
+          blocks: [
+            { type: "formula", title: "Hidden error signal", body: "delta^(l)=((W^(l+1))^T delta^(l+1)) elementwise-multiplied by g'_l(z^(l))." },
+            { type: "formula", title: "Update", body: "W <- W-eta dL/dW; b <- b-eta dL/db." }
+          ]
+        },
+        {
+          number: "15.5",
+          title: "XOR and Nonlinear Representation",
+          paragraphs: [
+            "XOR is not linearly separable in its original two coordinates, so one affine threshold cannot classify all four binary inputs.",
+            "A hidden layer with nonlinear units can create intermediate regions or features that make the output separation possible.",
+            "Adding hidden layers with identity activations does not solve XOR because their total composition remains affine."
+          ],
+          blocks: [
+            { type: "principle", title: "Representation cue", body: "Hidden nonlinear units transform the input before the final linear decision." },
+            { type: "warning", title: "Depth is not enough", body: "For XOR, require a nonlinear hidden activation—not simply another matrix multiplication." }
+          ]
+        },
+        {
+          number: "15.6",
+          title: "Training Failures and Generalization",
+          paragraphs: [
+            "A very large learning rate can make loss oscillate or diverge; a very small one can make progress imperceptible. Inspect both training curves and gradient scale.",
+            "Identical initialization can preserve symmetry between hidden units. Saturated sigmoid or tanh units can yield tiny derivatives, while ReLU units can become inactive on all observed inputs.",
+            "Falling training loss with worsening validation loss signals overfitting. Capacity control, regularization, early stopping, and more representative data address generalization rather than optimization alone."
+          ],
+          blocks: [
+            { type: "warning", title: "Diagnose the curve", body: "Flat training loss suggests optimization or gradient flow; a widening train-validation gap suggests overfitting." },
+            { type: "principle", title: "Separate failures", body: "Optimization failure and generalization failure require different remedies." }
+          ]
+        }
+      ],
+      concepts: [
+        { name: "MLP architecture", description: "Layered dense affine maps with specified widths.", cue: "Track every shape." },
+        { name: "Parameter count", description: "Weights plus one bias per destination unit.", cue: "d_out(d_in+1)." },
+        { name: "Activation function", description: "Usually elementwise nonlinearity applied after an affine map.", cue: "ReLU, sigmoid, tanh, or identity." },
+        { name: "Forward pass", description: "Layer-by-layer computation from features to prediction.", cue: "Affine, then activate." },
+        { name: "Output and loss", description: "Prediction encoding aligned with target semantics.", cue: "Match regression, binary, or multiclass." },
+        { name: "Backpropagation", description: "Efficient chain-rule evaluation of parameter gradients.", cue: "Propagate error backward." },
+        { name: "Gradient descent", description: "A step opposite the loss gradient.", cue: "Subtract eta times gradient." },
+        { name: "XOR representation", description: "Nonlinear hidden features enable non-linearly-separable labels.", cue: "Nonlinearity, not depth alone." },
+        { name: "Neural training failure", description: "Optimization, gradient-flow, or generalization breakdown.", cue: "Read the curves and activations." }
+      ],
+      techniques: [
+        { name: "Count dense parameters", when: "layer widths are supplied.", move: "Sum d_out(d_in+1) over trainable layers." },
+        { name: "Trace a forward pass", when: "weights, biases, and inputs are given.", move: "Compute z, then the activation, one layer at a time." },
+        { name: "Match outputs and losses", when: "the target type is stated.", move: "Choose the prediction encoding and compatible loss together." },
+        { name: "Apply the chain rule", when: "a gradient is requested.", move: "Multiply local derivatives along each dependency path." },
+        { name: "Perform one update", when: "a gradient and learning rate are given.", move: "Subtract learning-rate times gradient from the old parameter." },
+        { name: "Diagnose training", when: "loss curves or activations behave badly.", move: "Separate rate, initialization, saturation, dead units, and overfitting." }
+      ],
+      practiceProblems: machineLearningNeuralNetworkProblems(),
+      reviewPrompts: [
+        "How are dense-layer weight and bias shapes determined?",
+        "How are parameters counted across multiple layers?",
+        "What does each stage of a forward pass compute?",
+        "Why do all-linear deep networks collapse?",
+        "Which output-loss pair fits each target type?",
+        "What does backpropagation reuse?",
+        "Why is the gradient update subtractive?",
+        "How can a nonlinear hidden layer represent XOR?",
+        "What causes saturated or dead units?",
+        "How do optimization and overfitting failures differ?"
+      ],
+      reviewQuiz: {
+        id: "quiz-machine-learning-chapter-15-objective-review",
+        title: "ML Chapter 15 Objective Review",
+        instructions: "Complete this after studying MLPs and neural networks. The quiz checks shapes, parameter counts, activations, forward passes, output-loss matching, backpropagation, updates, XOR, and training failures.",
+        questions: machineLearningNeuralNetworkReviewQuestions()
+      },
+      readingQuestions: [
+        "Why does a 3-4-2 network have 26 parameters?",
+        "What is ReLU at a negative pre-activation?",
+        "What is sigmoid at zero?",
+        "Why is softmax suitable for exclusive multiclass labels?",
+        "Which quantities are cached for backpropagation?",
+        "What happens when the learning rate is too large?",
+        "What curve pattern indicates overfitting?"
+      ],
+      chapterSummary: [
+        "An MLP composes dense affine layers with activations.",
+        "A dense d_in-to-d_out layer has d_out(d_in+1) parameters including biases.",
+        "Forward propagation alternates affine transformations and activations.",
+        "All-identity hidden layers collapse to one affine map.",
+        "Regression, binary classification, and multiclass classification require appropriate output-loss pairs.",
+        "Backpropagation efficiently applies the chain rule to all trainable parameters.",
+        "Gradient descent subtracts a learning-rate-scaled gradient.",
+        "Nonlinear hidden features can represent XOR.",
+        "Learning rate, initialization, saturation, dead units, and overfitting are distinct failure modes."
       ],
       updatedAt
     }
@@ -19149,6 +19394,106 @@ function machineLearningPcaSvdReviewQuestions() {
   }));
 }
 
+function machineLearningNeuralNetworkProblems() {
+  return [
+    {
+      label: "Problem 1: Count all parameters",
+      concept: "Parameter count",
+      difficulty: "Foundation",
+      technique: "Count dense parameters",
+      prompt: "How many trainable parameters, including biases, are in a fully connected 3-4-2 network?",
+      solution: "The 3-to-4 layer has 4x3 weights and 4 biases: 16 parameters. The 4-to-2 layer has 2x4 weights and 2 biases: 10. Total = 26."
+    },
+    {
+      label: "Problem 2: Recover layer shapes",
+      concept: "Layer shapes",
+      difficulty: "Foundation",
+      technique: "Track dimensions",
+      prompt: "For a 5-3-1 network using column activations and z=Wa+b, state the shapes of W1, b1, W2, and b2.",
+      solution: "W1 is 3x5 and b1 is 3x1. W2 is 1x3 and b2 is 1x1. Each weight matrix has one row per destination unit and one column per source activation."
+    },
+    {
+      label: "Problem 3: Trace ReLU",
+      concept: "Forward pass",
+      difficulty: "Calculation",
+      technique: "Trace a forward pass",
+      prompt: "A single hidden unit has w=(2,-1), b=-1, input x=(3,4), and ReLU activation. Find z and a.",
+      solution: "z=2(3)-1(4)-1=1. Therefore a=max(0,1)=1."
+    },
+    {
+      label: "Problem 4: Evaluate sigmoid",
+      concept: "Activation function",
+      difficulty: "Foundation",
+      technique: "Evaluate an activation",
+      prompt: "A binary output unit receives logit z=0. What probability does sigmoid produce, and what is its derivative there?",
+      solution: "sigmoid(0)=1/2. Its derivative is sigma(z)(1-sigma(z)), so at zero it is (1/2)(1/2)=1/4."
+    },
+    {
+      label: "Problem 5: Collapse an all-linear network",
+      concept: "Linear collapse",
+      difficulty: "Concept",
+      technique: "Compose affine maps",
+      prompt: "Show why h=W1x+b1 followed by y=W2h+b2, with identity activations, is equivalent to one affine layer.",
+      solution: "Substitution gives y=W2(W1x+b1)+b2=(W2W1)x+(W2b1+b2). Thus the two layers define one affine map and do not create a nonlinear decision boundary."
+    },
+    {
+      label: "Problem 6: Match output and loss",
+      concept: "Output and loss",
+      difficulty: "Concept",
+      technique: "Match outputs and losses",
+      prompt: "Choose a standard output activation and loss for (i) real-valued regression, (ii) binary classification, and (iii) exclusive three-class classification.",
+      solution: "(i) Linear output with squared error; (ii) sigmoid with binary cross-entropy; (iii) softmax with multiclass cross-entropy."
+    },
+    {
+      label: "Problem 7: Apply a scalar chain rule",
+      concept: "Backpropagation",
+      difficulty: "Calculation",
+      technique: "Apply the chain rule",
+      prompt: "Let z=wx, a=z^2, and L=(a-y)^2. At w=2, x=3, y=30, compute dL/dw.",
+      solution: "z=6, a=36. By the chain rule, dL/dw=2(a-y) x 2z x x = 2(6) x 12 x 3 = 432."
+    },
+    {
+      label: "Problem 8: Update and diagnose",
+      concept: "Gradient update and training failure",
+      difficulty: "Mixed",
+      technique: "Perform one update",
+      prompt: "A weight is w=1.5, its gradient is 4, and eta=0.1. Find the updated weight. If loss instead oscillates and grows under repeated updates, name the first hyperparameter to inspect.",
+      solution: "w_new=1.5-0.1(4)=1.1. Oscillating or diverging loss first suggests inspecting whether the learning rate is too large."
+    }
+  ];
+}
+
+function machineLearningNeuralNetworkReviewQuestions() {
+  const metadata = {
+    "ml-nn-review-1": { targetConcept: "parameter-count", prereqsUsed: [], difficulty: 1, gateWeight: "high" },
+    "ml-nn-review-2": { targetConcept: "layer-shapes", prereqsUsed: [], difficulty: 1, gateWeight: "high" },
+    "ml-nn-review-3": { targetConcept: "activation-function", prereqsUsed: [], difficulty: 1, gateWeight: "high" },
+    "ml-nn-review-4": { targetConcept: "forward-pass", prereqsUsed: ["activation-function"], difficulty: 2, gateWeight: "high" },
+    "ml-nn-review-5": { targetConcept: "linear-collapse", prereqsUsed: ["activation-function"], difficulty: 2, gateWeight: "high" },
+    "ml-nn-review-6": { targetConcept: "output-loss-match", prereqsUsed: ["activation-function"], difficulty: 2, gateWeight: "high" },
+    "ml-nn-review-7": { targetConcept: "backpropagation", prereqsUsed: ["forward-pass"], difficulty: 2, gateWeight: "high" },
+    "ml-nn-review-8": { targetConcept: "gradient-update", prereqsUsed: ["backpropagation", "forward-pass"], difficulty: 3, gateWeight: "high" },
+    "ml-nn-review-9": { targetConcept: "xor-nonlinearity", prereqsUsed: ["linear-collapse", "activation-function"], difficulty: 3, gateWeight: "high" },
+    "ml-nn-review-10": { targetConcept: "training-failure", prereqsUsed: ["gradient-update", "activation-function"], difficulty: 3, gateWeight: "high" }
+  };
+  const questions = [
+    { id: "ml-nn-review-1", kind: "single concept", tags: ["parameter-count"], prompt: "How many parameters are in a dense 4-to-3 layer including biases?", options: [{ id: "a", text: "12" }, { id: "b", text: "15" }, { id: "c", text: "16" }, { id: "d", text: "7" }], answer: "b" },
+    { id: "ml-nn-review-2", kind: "single concept", tags: ["layer-shapes"], prompt: "With z=Wx+b, what is W's shape for 5 input features and 2 output units?", options: [{ id: "a", text: "2 by 5" }, { id: "b", text: "5 by 2" }, { id: "c", text: "5 by 5" }, { id: "d", text: "2 by 2" }], answer: "a" },
+    { id: "ml-nn-review-3", kind: "single concept", tags: ["activation-function"], prompt: "What is ReLU(-3)?", options: [{ id: "a", text: "-3" }, { id: "b", text: "0" }, { id: "c", text: "1" }, { id: "d", text: "3" }], answer: "b" },
+    { id: "ml-nn-review-4", kind: "mixed: two concepts", tags: ["forward-pass", "activation-function"], prompt: "For w=(1,2), x=(2,-1), b=1, and ReLU, what is the unit output?", options: [{ id: "a", text: "0" }, { id: "b", text: "1" }, { id: "c", text: "2" }, { id: "d", text: "3" }], answer: "b" },
+    { id: "ml-nn-review-5", kind: "mixed: two concepts", tags: ["linear-collapse", "activation-function"], prompt: "Why can stacked identity-activated dense layers not solve XOR by depth alone?", options: [{ id: "a", text: "Their composition remains one affine map." }, { id: "b", text: "They have no parameters." }, { id: "c", text: "XOR has only two inputs." }, { id: "d", text: "Identity activations always output zero." }], answer: "a" },
+    { id: "ml-nn-review-6", kind: "mixed: two concepts", tags: ["output-loss-match", "activation-function"], prompt: "Which is a standard pair for exclusive multiclass classification?", options: [{ id: "a", text: "Softmax and cross-entropy" }, { id: "b", text: "Linear output and no loss" }, { id: "c", text: "ReLU and k-means distance" }, { id: "d", text: "Identity and hinge width" }], answer: "a" },
+    { id: "ml-nn-review-7", kind: "mixed: two concepts", tags: ["backpropagation", "forward-pass"], prompt: "What core calculus rule does backpropagation organize while reusing forward intermediates?", options: [{ id: "a", text: "Chain rule" }, { id: "b", text: "Bayes rule" }, { id: "c", text: "Triangle inequality" }, { id: "d", text: "Inclusion-exclusion" }], answer: "a" },
+    { id: "ml-nn-review-8", kind: "mixed: three concepts", tags: ["gradient-update", "backpropagation", "forward-pass"], prompt: "A parameter is 2, its loss gradient is -3, and eta=0.1. What is one gradient-descent update?", options: [{ id: "a", text: "1.7" }, { id: "b", text: "2.3" }, { id: "c", text: "-0.3" }, { id: "d", text: "3.0" }], answer: "b" },
+    { id: "ml-nn-review-9", kind: "mixed: three concepts", tags: ["xor-nonlinearity", "linear-collapse", "activation-function"], prompt: "What enables an MLP to represent XOR when one affine threshold cannot?", options: [{ id: "a", text: "Nonlinear hidden features followed by an output decision" }, { id: "b", text: "More identity-only layers" }, { id: "c", text: "Removing every bias" }, { id: "d", text: "Using one constant output" }], answer: "a" },
+    { id: "ml-nn-review-10", kind: "mixed: three concepts", tags: ["training-failure", "gradient-update", "activation-function"], prompt: "Training loss falls while validation loss rises. What is the most direct diagnosis?", options: [{ id: "a", text: "Overfitting" }, { id: "b", text: "The forward pass is absent" }, { id: "c", text: "Every gradient is necessarily zero" }, { id: "d", text: "The model is linear because it has biases" }], answer: "a" }
+  ];
+  return questions.map((question) => ({
+    ...question,
+    ...(metadata[question.id] || { targetConcept: question.tags[0], prereqsUsed: question.tags.slice(1), difficulty: question.tags.length, gateWeight: "medium" })
+  }));
+}
+
 function probabilityFoundationProblems() {
   return [
     {
@@ -25716,6 +26061,30 @@ function machineLearningPcaSvdConceptGraph() {
       "pca-vs-lda": { label: "PCA versus LDA", prereqs: ["principal-direction", "explained-variance"], repairMaterial: "Review ML Chapter 14.5 and distinguish unlabeled total variance from labeled class separation.", gateWeight: "high" },
       "scaling-outliers": { label: "Scale and outlier sensitivity", prereqs: ["centering", "svd-pca-link"], repairMaterial: "Review ML Chapter 14.5 and check units, standardization, and extreme observations before PCA.", gateWeight: "high" },
       "pca-failure": { label: "PCA failure modes", prereqs: ["projection-reconstruction", "pca-vs-lda"], repairMaterial: "Review ML Chapter 14.5 and check nonlinear structure and whether variance aligns with the downstream target.", gateWeight: "medium" }
+    }
+  };
+}
+
+function machineLearningNeuralNetworkConceptGraph() {
+  return {
+    chapterId: "gate-da-machine-learning-mlp-neural-networks",
+    chapterTitle: "ML Chapter 15: Multilayer Perceptrons and Neural Networks",
+    gateWeight: "high",
+    fallbackConcepts: ["parameter-count", "forward-pass", "output-loss-match", "backpropagation"],
+    fallbackDifficultyMix: [1, 2, 2, 3],
+    fallbackInstruction: "Retest dense parameter counts, one forward pass, output-loss matching, chain-rule gradients, and one update.",
+    stableNextAction: "Track complete: use cumulative Machine Learning review after shapes, nonlinear representation, backpropagation, and training diagnosis are reliable.",
+    nodes: {
+      "parameter-count": { label: "Dense parameter count", prereqs: [], repairMaterial: "Review ML Chapter 15.1 and sum d_out(d_in+1) over trainable layers.", gateWeight: "high" },
+      "layer-shapes": { label: "Layer shapes", prereqs: [], repairMaterial: "Review ML Chapter 15.1 and give W one row per destination unit and one column per source unit.", gateWeight: "high" },
+      "activation-function": { label: "Activation functions", prereqs: [], repairMaterial: "Review ML Chapter 15.2 and evaluate ReLU, sigmoid, tanh, and identity from their definitions.", gateWeight: "high" },
+      "forward-pass": { label: "Forward propagation", prereqs: ["layer-shapes", "activation-function"], repairMaterial: "Review ML Chapter 15.2 and compute z=Wa+b before applying each activation.", gateWeight: "high" },
+      "linear-collapse": { label: "All-linear collapse", prereqs: ["activation-function", "forward-pass"], repairMaterial: "Review ML Chapter 15.2 and algebraically compose two affine maps into one.", gateWeight: "high" },
+      "output-loss-match": { label: "Output and loss matching", prereqs: ["activation-function"], repairMaterial: "Review ML Chapter 15.3 and match regression, binary, and multiclass targets to standard output-loss pairs.", gateWeight: "high" },
+      backpropagation: { label: "Backpropagation", prereqs: ["forward-pass"], repairMaterial: "Review ML Chapter 15.4 and multiply local derivatives using the chain rule.", gateWeight: "high" },
+      "gradient-update": { label: "Gradient-descent update", prereqs: ["backpropagation"], repairMaterial: "Review ML Chapter 15.4 and apply theta_new=theta_old-eta times gradient.", gateWeight: "high" },
+      "xor-nonlinearity": { label: "XOR and nonlinear representation", prereqs: ["linear-collapse", "activation-function"], repairMaterial: "Review ML Chapter 15.5 and explain why nonlinear hidden features can separate XOR.", gateWeight: "high" },
+      "training-failure": { label: "Neural training diagnosis", prereqs: ["gradient-update", "activation-function"], repairMaterial: "Review ML Chapter 15.6 and separate learning-rate, saturation, dead-unit, and overfitting symptoms.", gateWeight: "high" }
     }
   };
 }
@@ -34263,6 +34632,7 @@ function conceptGraphForSection(section) {
   if (section?.id === "gate-da-machine-learning-ensembles-random-forests-boosting") return machineLearningEnsembleConceptGraph();
   if (section?.id === "gate-da-machine-learning-clustering") return machineLearningClusteringConceptGraph();
   if (section?.id === "gate-da-machine-learning-pca-svd-dimensionality-reduction") return machineLearningPcaSvdConceptGraph();
+  if (section?.id === "gate-da-machine-learning-mlp-neural-networks") return machineLearningNeuralNetworkConceptGraph();
   return null;
 }
 
