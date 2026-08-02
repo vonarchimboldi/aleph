@@ -276,6 +276,7 @@ export default async function handler(request, response) {
               "Use the workflow prerequisite graph when provided; do not invent a prerequisite label if a supplied graph label applies.",
               "Always produce prerequisiteChecks. Start from the most basic prerequisites in the workflow graph before evaluating higher-level skills. Mark secure, shaky, missing, or not checked with evidence from the submitted work.",
               "For every non-green solution, produce concrete errorAnalysis, prerequisiteHypotheses, and diagnosticRecommendations.",
+              "For every question that is not fully correct, assign a stable and specific questionFeedback.skillTag. Reuse the same tag for the same mathematical or algorithmic concept so Aleph can carry it into next week's review test.",
               "Sunday diagnostics should confirm or falsify the prerequisite hypotheses using direct prerequisite checks and bridge problems.",
               "Set adaptivePlanSignal ratios so they sum to roughly 1. Use repair/bridge weight when prerequisite gaps are likely. The next week's material must include repairWork and bridgeWork from prerequisiteChecks before advancing to higher-level target problems.",
               "Be specific, concrete, and kind without being vague.",

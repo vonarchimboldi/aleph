@@ -1,5 +1,6 @@
 import {
   loadPlatinumProgressSnapshot,
+  loadPlatinumSubmissionsLedger,
   platinumProgressStoreStatus,
   saveLastWeeklyCheck
 } from "../_platinum-progress-store.js";
@@ -28,7 +29,8 @@ export default async function handler(request, response) {
     return response.status(200).json(result);
   }
 
-  const report = buildDailyDueWorkReport(snapshot);
+  const ledger = await loadPlatinumSubmissionsLedger();
+  const report = buildDailyDueWorkReport(snapshot, ledger.submissions || []);
   const emailResult = await maybeSendDueWorkEmail(snapshot, report);
   const result = {
     ok: true,
@@ -41,7 +43,7 @@ export default async function handler(request, response) {
   return response.status(200).json(result);
 }
 
-function buildDailyDueWorkReport(snapshot) {
+function buildDailyDueWorkReport(snapshot, submissionRecords = []) {
   const pace = snapshot.pace || {};
   const dueTasks = snapshot.tasks?.due || [];
   const overdueTasks = dueTasks.filter((task) => task.dueState === "overdue");
@@ -63,7 +65,7 @@ function buildDailyDueWorkReport(snapshot) {
     const verdict = String(material.feedbackVerdict || "").toLowerCase();
     return verdict.includes("revise") || verdict.includes("weak") || verdict.includes("incomplete") || verdict === "red" || verdict === "yellow";
   });
-  const adaptivePlan = buildAdaptiveWeeklyPlan(snapshot, feedbackReady);
+  const adaptivePlan = buildAdaptiveWeeklyPlan(snapshot, feedbackReady, submissionRecords);
 
   const alerts = [];
   if (overdueTasks.length) alerts.push(`${overdueTasks.length} overdue task(s)`);
@@ -119,7 +121,7 @@ function mergeFeedbackItems(...groups) {
   return Array.from(byId.values());
 }
 
-function buildAdaptiveWeeklyPlan(snapshot, feedbackReady) {
+function buildAdaptiveWeeklyPlan(snapshot, feedbackReady, submissionRecords = []) {
   const hypotheses = collectPrerequisiteHypotheses(feedbackReady);
   const sundayEvidence = feedbackReady.filter((material) => /review|quiz/i.test(material.materialTitle || ""));
   const ranked = rankPrerequisiteHypotheses(hypotheses, sundayEvidence);
@@ -127,6 +129,7 @@ function buildAdaptiveWeeklyPlan(snapshot, feedbackReady) {
   const confirmed = top.filter((item) => item.status === "confirmed");
   const highPriority = top.filter((item) => item.repairPriority === "high" || item.confidence === "high");
   const allocation = adaptiveAllocation({ top, confirmed, highPriority });
+  const nextReviewCarryForward = buildNextReviewCarryForward(submissionRecords);
 
   return {
     status: top.length ? "adaptive_plan_ready" : "no_prerequisite_gaps_detected",
@@ -137,7 +140,61 @@ function buildAdaptiveWeeklyPlan(snapshot, feedbackReady) {
     hypotheses: top,
     sundayDiagnosticPlan: buildSundayDiagnosticPlan(top),
     nextWeekProblemSetPlan: buildNextWeekProblemSetPlan(top, allocation),
+    nextReviewCarryForward,
     allocation
+  };
+}
+
+function buildNextReviewCarryForward(submissionRecords) {
+  const reviews = (submissionRecords || [])
+    .filter((item) => item?.patternId === "cmi-dm-dsa-review" || /cmi-dm-dsa/.test(item?.materialId || ""))
+    .sort((a, b) => (a.feedbackUpdatedAt || a.submittedAt || "").localeCompare(b.feedbackUpdatedAt || b.submittedAt || ""));
+  const unresolved = new Map();
+  reviews.forEach((review) => {
+    const outcomes = Array.isArray(review.reviewedConcepts) && review.reviewedConcepts.length
+      ? review.reviewedConcepts
+      : review.missedConcepts || [];
+    outcomes.forEach((item) => {
+      const key = String(item.concept || "").trim().toLowerCase();
+      if (!key) return;
+      const statuses = (item.statuses || []).map((status) => String(status).toLowerCase());
+      const fullyCorrect = statuses.length && statuses.every((status) => status === "correct");
+      if (fullyCorrect) {
+        unresolved.delete(key);
+      } else {
+        unresolved.set(key, { ...item, sourceReview: review });
+      }
+    });
+  });
+  const outstanding = Array.from(unresolved.values()).slice(0, 15);
+  if (!outstanding.length) {
+    return {
+      status: "no_missed_concepts_recorded",
+      sourceMaterialId: "",
+      requiredConcepts: [],
+      generationRule: "Use the normal new-week topic balance until a submitted review records missed concepts."
+    };
+  }
+  const latest = outstanding
+    .map((item) => item.sourceReview)
+    .sort((a, b) => (b.feedbackUpdatedAt || b.submittedAt || "").localeCompare(a.feedbackUpdatedAt || a.submittedAt || ""))[0];
+  const requiredConcepts = outstanding.map((item) => ({
+    concept: item.concept,
+    sourceQuestionIds: item.questionIds || [],
+    priorStatuses: item.statuses || [],
+    evidence: item.evidence || [],
+    requiredQuestionCount: 1,
+    difficultyRule: "same or slightly higher than the missed question",
+    variationRule: "test the same concept with new values, representation, or reasoning mode; do not copy the prior question"
+  }));
+  return {
+    status: "carry_forward_required",
+    sourceMaterialId: latest.materialId,
+    sourceMaterialTitle: latest.materialTitle,
+    sourceWeek: latest.week,
+    requiredConcepts,
+    requiredQuestionCount: requiredConcepts.length,
+    generationRule: "The next DM/DSA weekly review must include at least one fresh question for every unresolved concept, alongside the new-week syllabus. A later fully correct result clears that concept from mandatory repetition."
   };
 }
 
@@ -473,6 +530,14 @@ function dueWorkEmailText(learnerName, snapshot, report) {
         const required = block.requiredWork?.length ? ` Required: ${block.requiredWork.join(" | ")}` : "";
         return `- ${Math.round(block.ratio * 100)}% ${block.block}: ${block.instruction}${required}`;
       }),
+      ""
+    );
+  }
+
+  if (report.adaptivePlan?.nextReviewCarryForward?.requiredConcepts?.length) {
+    lines.push(
+      "Next DM/DSA review carry-forward:",
+      ...report.adaptivePlan.nextReviewCarryForward.requiredConcepts.map((item) => `- ${item.concept}: include ${item.requiredQuestionCount} fresh question at the same or slightly higher difficulty.`),
       ""
     );
   }

@@ -1,7 +1,7 @@
 const STORAGE_KEY = "learning-studio-data-v2";
 const LEGACY_STORAGE_KEYS = ["learning-studio-data-v1"];
 const SESSION_KEY = "aleph-session";
-const COURSE_PLAN_VERSION = "seeded-user-canonical-workspace-v143";
+const COURSE_PLAN_VERSION = "seeded-user-canonical-workspace-v144";
 const MAX_FEEDBACK_ATTACHMENT_BYTES = 3 * 1024 * 1024;
 const MAX_COMPRESSED_FEEDBACK_BYTES = 2400 * 1024;
 const MAX_FEEDBACK_PDF_PAGES = 6;
@@ -33776,6 +33776,13 @@ function cmiDiscreteDsaReviewQuiz(now, startDate, config) {
       unlockPolicy: "solutions-after-submission",
       subjectScope: ["Discrete Math", "Data Structures and Algorithms"],
       feedbackWorkflow: cmiDmDsaReviewFeedbackWorkflow(),
+      carryForwardPolicy: {
+        source: "previous submitted DM/DSA weekly review feedback",
+        triggerStatuses: ["incorrect", "partially correct", "not attempted", "unclear"],
+        conceptField: "questionFeedback.skillTag",
+        requirement: "Include at least one fresh question for every persisted missed concept in the next weekly review, at the same or slightly higher difficulty, without copying the original question.",
+        masteryExit: "Stop mandatory repetition after the concept is answered correctly on a later review."
+      },
       updatedAt: now
     }
   };
@@ -33812,7 +33819,7 @@ function cmiDmDsaReviewFeedbackWorkflow() {
       partB: "Q16-Q30: 3 marks each, 45 marks total.",
       rule: "Score the submitted work question by question using this split. Award no credit for unreadable or unattempted questions. Award partial credit only when visible reasoning earns it."
     },
-    promptUse: "Use this after reading the submitted CMI-level Discrete Math and DSA review quiz. Grade visible uploaded work across 30 questions using Q1-Q15 = 2 marks each and Q16-Q30 = 3 marks each, for 75 total marks. Classify errors by topic and mistake type, and recommend targeted repair work.",
+    promptUse: "Use this after reading the submitted CMI-level Discrete Math and DSA review quiz. Grade visible uploaded work across 30 questions using Q1-Q15 = 2 marks each and Q16-Q30 = 3 marks each, for 75 total marks. Classify errors by topic and mistake type. For every incorrect, partially correct, not attempted, or unclear question, set a stable, specific questionFeedback.skillTag naming the tested concept. Those missed concept tags must be carried into the next weekly review as fresh questions at the same or slightly higher difficulty.",
     studentSummaryHint: "Summarize readiness across Discrete Math and DSA at CMI-style difficulty, naming the first blocking skill and the highest-priority repair.",
     rubric: [
       { criterion: "Coverage and evidence", points: 1, cue: "Identify which of the 30 questions were attempted, missing, unreadable, or only partially visible." },
@@ -36966,12 +36973,63 @@ function durableSubmissionRecord(materialId, submission, overrides = {}) {
     feedbackVerdict: feedbackRecord?.verdict || "",
     feedbackScore: feedbackRecord?.score ?? null,
     feedbackMaxScore: feedbackRecord?.maxScore ?? null,
+    missedConcepts: missedConceptsFromFeedback(feedbackRecord),
+    reviewedConcepts: reviewedConceptsFromFeedback(feedbackRecord),
     reviewScore: submission?.reviewScore ?? null,
     reviewScoreMax: submission?.reviewScoreMax ?? null,
     reviewScorePercent: submission?.reviewScorePercent ?? null,
     reviewScoreUpdatedAt: submission?.reviewScoreUpdatedAt || "",
     ...overrides
   };
+}
+
+function missedConceptsFromFeedback(feedbackRecord) {
+  if (!feedbackRecord) return [];
+  const byConcept = new Map();
+  (feedbackRecord.questionFeedback || [])
+    .filter((item) => item && item.status !== "correct")
+    .forEach((item) => {
+      const concept = String(item.skillTag || "").trim();
+      if (!concept) return;
+      const current = byConcept.get(concept) || {
+        concept,
+        questionIds: [],
+        statuses: [],
+        evidence: []
+      };
+      if (item.question && !current.questionIds.includes(item.question)) current.questionIds.push(item.question);
+      if (item.status && !current.statuses.includes(item.status)) current.statuses.push(item.status);
+      const evidence = item.issue || item.summary || "";
+      if (evidence && !current.evidence.includes(evidence)) current.evidence.push(evidence);
+      byConcept.set(concept, current);
+    });
+  return Array.from(byConcept.values()).map((item) => ({
+    ...item,
+    questionIds: item.questionIds.slice(0, 12),
+    statuses: item.statuses.slice(0, 4),
+    evidence: item.evidence.slice(0, 3)
+  }));
+}
+
+function reviewedConceptsFromFeedback(feedbackRecord) {
+  if (!feedbackRecord) return [];
+  const byConcept = new Map();
+  (feedbackRecord.questionFeedback || []).forEach((item) => {
+    const concept = String(item?.skillTag || "").trim();
+    if (!concept) return;
+    const current = byConcept.get(concept) || { concept, questionIds: [], statuses: [], evidence: [] };
+    if (item.question && !current.questionIds.includes(item.question)) current.questionIds.push(item.question);
+    if (item.status && !current.statuses.includes(item.status)) current.statuses.push(item.status);
+    const evidence = item.issue || item.summary || "";
+    if (evidence && !current.evidence.includes(evidence)) current.evidence.push(evidence);
+    byConcept.set(concept, current);
+  });
+  return Array.from(byConcept.values()).map((item) => ({
+    ...item,
+    questionIds: item.questionIds.slice(0, 12),
+    statuses: item.statuses.slice(0, 4),
+    evidence: item.evidence.slice(0, 3)
+  }));
 }
 
 async function syncPatternSubmissionRecord(materialId, overrides = {}) {
@@ -37266,7 +37324,9 @@ async function savePatternFeedback(button) {
     feedbackModel: feedbackRecord?.feedbackModel || "",
     feedbackVerdict: feedbackRecord?.verdict || "",
     feedbackScore: feedbackRecord?.score ?? null,
-    feedbackMaxScore: feedbackRecord?.maxScore ?? null
+    feedbackMaxScore: feedbackRecord?.maxScore ?? null,
+    missedConcepts: missedConceptsFromFeedback(feedbackRecord),
+    reviewedConcepts: reviewedConceptsFromFeedback(feedbackRecord)
   });
   render();
 }
@@ -39008,6 +39068,8 @@ function platinumMaterialSnapshot(subject, pattern, week, options = {}) {
     feedbackVerdict: feedbackRecord?.verdict || "",
     feedbackScore: feedbackRecord?.score ?? null,
     feedbackMaxScore: feedbackRecord?.maxScore ?? null,
+    missedConcepts: missedConceptsFromFeedback(feedbackRecord),
+    reviewedConcepts: reviewedConceptsFromFeedback(feedbackRecord),
     reviewScore: submission?.reviewScore ?? null,
     reviewScoreMax: submission?.reviewScoreMax ?? null,
     reviewScorePercent: submission?.reviewScorePercent ?? null,

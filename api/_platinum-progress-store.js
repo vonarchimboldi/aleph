@@ -111,6 +111,9 @@ export async function savePlatinumSubmissionRecord(record) {
     feedbackModel: record.feedbackModel || "",
     feedbackVerdict: record.feedbackVerdict || "",
     feedbackScore: record.feedbackScore ?? null,
+    feedbackMaxScore: record.feedbackMaxScore ?? null,
+    missedConcepts: normalizeMissedConcepts(record.missedConcepts),
+    reviewedConcepts: normalizeMissedConcepts(record.reviewedConcepts),
     status: record.status || "submitted"
   };
   const key = `${normalized.userId}::${normalized.materialId}`;
@@ -132,6 +135,19 @@ export async function savePlatinumSubmissionRecord(record) {
   };
   await kvCommand(["SET", SUBMISSIONS_KEY, JSON.stringify(stored)]);
   return normalized;
+}
+
+function normalizeMissedConcepts(items) {
+  if (!Array.isArray(items)) return [];
+  return items
+    .filter((item) => item && String(item.concept || "").trim())
+    .slice(0, 30)
+    .map((item) => ({
+      concept: String(item.concept).trim().slice(0, 120),
+      questionIds: Array.isArray(item.questionIds) ? item.questionIds.map(String).slice(0, 12) : [],
+      statuses: Array.isArray(item.statuses) ? item.statuses.map(String).slice(0, 4) : [],
+      evidence: Array.isArray(item.evidence) ? item.evidence.map(String).slice(0, 3) : []
+    }));
 }
 
 export async function savePlatinumSubmissionRecords(records = []) {

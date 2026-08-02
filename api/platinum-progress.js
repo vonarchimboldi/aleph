@@ -83,6 +83,8 @@ function submissionRecordsFromSnapshot(snapshot) {
       feedbackUpdatedAt: material.feedbackUpdatedAt,
       feedbackModel: material.feedbackModel,
       feedbackVerdict: material.feedbackVerdict,
-      feedbackScore: material.feedbackScore
+      feedbackScore: material.feedbackScore,
+      missedConcepts: material.missedConcepts || [],
+      reviewedConcepts: material.reviewedConcepts || []
     }));
 }
