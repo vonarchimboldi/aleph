@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>August 2 CMI-Level Discrete Math and DSA Review Quiz</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" />
+  <link rel="stylesheet" href="/psets/material-page.css" />
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+  <script id="quiz-metadata" type="application/json">
+{
+  "id": "cmi-dm-dsa-review-2026-08-02",
+  "title": "August 2 CMI-Level Discrete Math and DSA Review Quiz",
+  "durationMinutes": 120,
+  "questionCount": 30,
+  "maxScore": 75,
+  "scoringPolicy": "Q1-Q15 are 2 marks each; Q16-Q30 are 3 marks each; total 75 marks.",
+  "examTarget": "CMI-MSDS",
+  "mcqPolicy": "multi-select-all-correct-no-partial-credit",
+  "unlockPolicy": "solutions-after-submission",
+  "varietyRubricVersion": "platinum-review-variety-rubric-v1",
+  "varietyPlan": {
+    "priorQuizComparison": "Week 5 rotates away from Week 4 generating functions, Catalan decompositions, dictionaries, and hashing. It assesses newly covered asymptotic comparison, probabilistic tail bounds, modular arithmetic and divisibility, tree representations, traversal traces, and structural induction with tree-complexity reasoning.",
+    "newConceptFamilies": ["asymptotic-comparison","polynomial-log-exponential-order","markov-chebyshev-union-bound","modular-congruence-and-inverses","gcd-divisibility","tree-representation","preorder-inorder-postorder","structural-induction","tree-height-complexity"],
+    "skillFamilies": ["limit-ratio-comparison","bound-selection","congruence-solving","euclidean-algorithm","tree-state-trace","traversal-reconstruction","inductive-proof-design","complexity-from-tree-shape"],
+    "reasoningModes": ["all-correct-selection","exact-computation","counterexample","finite-trace","construction","proof-sketch","algorithm-choice"],
+    "varietyPass": true
+  },
+  "feedbackWorkflow": {
+    "errorAnalysis": true,
+    "submissionFields": ["selectedOptions","shortAnswers","scratchWork","confidence"],
+    "diagnosticTags": ["wrong-growth-order","bound-assumption","mod-representative","missing-gcd-check","child-order","traversal-order","wrong-base-case","height-vs-nodes"],
+    "postSubmissionOutputs": ["topicScore","firstErrorPerTopic","repairDrills","nextWeekPriority"]
+  },
+  "questions": [
+    {"id":"q01","topic":"dm-asymptotics","type":"mcq","difficulty":"medium-hard","target_skill":"compare logarithmic, polynomial, and exponential growth","mistake_tags":["wrong-growth-order"]},
+    {"id":"q02","topic":"dm-asymptotics","type":"mcq","difficulty":"hard","target_skill":"distinguish O, Omega, and Theta","mistake_tags":["one-sided-bound"]},
+    {"id":"q03","topic":"dm-asymptotics","type":"mcq","difficulty":"hard","target_skill":"compare factorial and exponential functions","mistake_tags":["ratio-test"]},
+    {"id":"q04","topic":"dm-tail-bounds","type":"mcq","difficulty":"medium-hard","target_skill":"apply Markov and Chebyshev with stated information","mistake_tags":["bound-assumption"]},
+    {"id":"q05","topic":"dm-tail-bounds","type":"mcq","difficulty":"hard","target_skill":"apply a union bound without independence","mistake_tags":["independence-assumption"]},
+    {"id":"q06","topic":"dm-tail-bounds","type":"mcq","difficulty":"hard","target_skill":"recognize exponential Chernoff decay","mistake_tags":["wrong-tail-scale"]},
+    {"id":"q07","topic":"dm-modular-arithmetic","type":"mcq","difficulty":"medium-hard","target_skill":"solve a linear congruence using a modular inverse","mistake_tags":["missing-gcd-check"]},
+    {"id":"q08","topic":"dm-modular-arithmetic","type":"mcq","difficulty":"hard","target_skill":"combine divisibility, gcd, and congruence facts","mistake_tags":["invalid-cancellation"]},
+    {"id":"q09","topic":"dsa-tree-structure","type":"mcq","difficulty":"medium-hard","target_skill":"relate edges, nodes, leaves, and degrees in a tree","mistake_tags":["edge-count"]},
+    {"id":"q10","topic":"dsa-tree-structure","type":"mcq","difficulty":"hard","target_skill":"reason about full and complete binary trees","mistake_tags":["tree-family-confusion"]},
+    {"id":"q11","topic":"dsa-tree-traversal","type":"mcq","difficulty":"medium-hard","target_skill":"trace recursive traversals","mistake_tags":["traversal-order"]},
+    {"id":"q12","topic":"dsa-tree-traversal","type":"mcq","difficulty":"hard","target_skill":"reconstruct a binary tree from traversal pairs","mistake_tags":["wrong-root-split"]},
+    {"id":"q13","topic":"dsa-tree-traversal","type":"mcq","difficulty":"hard","target_skill":"connect level order with queue state","mistake_tags":["queue-order"]},
+    {"id":"q14","topic":"dsa-tree-induction-complexity","type":"mcq","difficulty":"medium-hard","target_skill":"choose structural induction hypotheses","mistake_tags":["wrong-induction-object"]},
+    {"id":"q15","topic":"dsa-tree-induction-complexity","type":"mcq","difficulty":"hard","target_skill":"separate node count from tree height in complexity","mistake_tags":["height-vs-nodes"]},
+    {"id":"q16","topic":"dm-asymptotics","type":"short-answer","difficulty":"hard","target_skill":"rank mixed growth functions with justification","mistake_tags":["wrong-growth-order"]},
+    {"id":"q17","topic":"dm-asymptotics","type":"short-answer","difficulty":"hard","target_skill":"prove a Theta bound from inequalities","mistake_tags":["missing-two-sided-proof"]},
+    {"id":"q18","topic":"dm-tail-bounds","type":"short-answer","difficulty":"hard","target_skill":"compare Markov and Chebyshev numerically","mistake_tags":["wrong-denominator"]},
+    {"id":"q19","topic":"dm-tail-bounds","type":"short-answer","difficulty":"hard","target_skill":"derive a maximum bound by union bound","mistake_tags":["independence-assumption"]},
+    {"id":"q20","topic":"dm-modular-arithmetic","type":"short-answer","difficulty":"medium-hard","target_skill":"run Euclid and back-substitute an inverse","mistake_tags":["euclid-backsubstitution"]},
+    {"id":"q21","topic":"dm-modular-arithmetic","type":"short-answer","difficulty":"hard","target_skill":"solve a system with the Chinese remainder theorem","mistake_tags":["mod-representative"]},
+    {"id":"q22","topic":"dm-modular-arithmetic","type":"short-answer","difficulty":"hard","target_skill":"prove a divisibility statement by residues","mistake_tags":["incomplete-residue-cases"]},
+    {"id":"q23","topic":"dsa-tree-structure","type":"short-answer","difficulty":"medium-hard","target_skill":"construct adjacency and parent-array representations","mistake_tags":["parent-child-direction"]},
+    {"id":"q24","topic":"dsa-tree-structure","type":"short-answer","difficulty":"hard","target_skill":"derive full-binary-tree node relations","mistake_tags":["leaf-internal-relation"]},
+    {"id":"q25","topic":"dsa-tree-traversal","type":"short-answer","difficulty":"medium-hard","target_skill":"compute three DFS traversal orders","mistake_tags":["traversal-order"]},
+    {"id":"q26","topic":"dsa-tree-traversal","type":"short-answer","difficulty":"hard","target_skill":"reconstruct a unique tree from preorder and inorder","mistake_tags":["wrong-root-split"]},
+    {"id":"q27","topic":"dsa-tree-traversal","type":"short-answer","difficulty":"hard","target_skill":"trace an iterative DFS stack exactly","mistake_tags":["push-order"]},
+    {"id":"q28","topic":"dsa-tree-induction-complexity","type":"short-answer","difficulty":"hard","target_skill":"write a structural induction proof","mistake_tags":["wrong-base-case","missing-subtree-hypothesis"]},
+    {"id":"q29","topic":"dsa-tree-induction-complexity","type":"short-answer","difficulty":"hard","target_skill":"analyze recurrence cost across all nodes","mistake_tags":["height-vs-nodes"]},
+    {"id":"q30","topic":"dsa-tree-induction-complexity","type":"short-answer","difficulty":"hard","target_skill":"construct worst and best tree shapes and compare search costs","mistake_tags":["shape-complexity"]}
+  ]
+}
+  </script>
+</head>
+<body>
+  <main class="wrap">
+    <section class="hero">
+      <h1>August 2: CMI-Level Discrete Math and DSA Review Quiz</h1>
+      <p class="sub">Two-hour Week 5 review with 30 questions: 15 multi-select MCQs followed by 15 short answers. Q1-Q15 are 2 marks each and Q16-Q30 are 3 marks each, for 75 marks total.</p>
+      <div class="meta"><span class="chip">Discrete Math W5</span><span class="chip">DSA W5</span><span class="chip">120 minutes</span><span class="chip">30 questions</span><span class="chip">75 marks</span><span class="chip">Solutions locked</span></div>
+      <p class="math-fallback">Math rendering did not load from the CDN. Refresh once, or use a network that allows KaTeX CDN files.</p>
+    </section>
+    <section class="panel accent">
+      <h2>Instructions</h2>
+      <div class="grid">
+        <ul><li>Use about 45 minutes for Q1-Q15, 60 minutes for Q16-Q30, and 15 minutes for checking.</li><li>For MCQs, select all correct options and no incorrect options. Some questions have more than one correct option.</li><li>For short answers, show the requested comparison, bound, congruence steps, trace, invariant, or proof.</li></ul>
+        <ul><li>Do not consult notes while attempting the quiz.</li><li>Mark the first step where you feel uncertain.</li><li>Worked explanations remain locked until your submission is recorded in Aleph.</li></ul>
+      </div>
+    </section>
+
+    <div class="section-label">MCQ - Discrete Math: Asymptotics</div>
+    <article class="problem" id="q01"><div class="problem-head"><div class="problem-title">1. Rank common growth rates</div><div class="tags"><span class="tag concept">MCQ</span><span class="tag">Asymptotics</span></div></div><p>Which statements are correct as \(n\to\infty\)? Select all correct options.</p><ol type="A"><li>\((\log n)^5=o(n^{1/3})\).</li><li>\(n^{10}=o(1.01^n)\).</li><li>\(2^{\log_2 n}=\Theta(n)\).</li><li>\(n\log n=\Theta(n)\).</li></ol></article>
+    <article class="problem" id="q02"><div class="problem-head"><div class="problem-title">2. One-sided versus tight bounds</div><div class="tags"><span class="tag concept">MCQ</span><span class="tag">Big-O / Theta</span></div></div><p>Let \(f(n)=3n^2+7n+4\) for positive integers \(n\). Which statements are correct?</p><ol type="A"><li>\(f(n)=O(n^2)\).</li><li>\(f(n)=\Omega(n^2)\).</li><li>\(f(n)=\Theta(n^3)\).</li><li>\(f(n)=o(n^2)\).</li></ol></article>
+    <article class="problem" id="q03"><div class="problem-head"><div class="problem-title">3. Factorial against exponentials</div><div class="tags"><span class="tag concept">MCQ</span><span class="tag">Ratio comparison</span></div></div><p>Which statements are correct?</p><ol type="A"><li>\(2^n=o(n!)\).</li><li>\(n!=O(n^n)\).</li><li>\((n+1)!/n!=n+1\).</li><li>\(n!=\Theta(2^n)\).</li></ol></article>
+
+    <div class="section-label">MCQ - Discrete Math: Tail Bounds</div>
+    <article class="problem" id="q04"><div class="problem-head"><div class="problem-title">4. Use only the information given</div><div class="tags"><span class="tag concept">MCQ</span><span class="tag">Markov / Chebyshev</span></div></div><p>A nonnegative random variable has \(E[X]=10\) and \(\operatorname{Var}(X)=9\). Which bounds are valid?</p><ol type="A"><li>\(P(X\ge50)\le1/5\) by Markov.</li><li>\(P(|X-10|\ge6)\le1/4\) by Chebyshev.</li><li>\(P(X\ge50)\le9/1600\) by Chebyshev.</li><li>Markov requires independence of repeated observations.</li></ol></article>
+    <article class="problem" id="q05"><div class="problem-head"><div class="problem-title">5. A union bound needs no independence</div><div class="tags"><span class="tag concept">MCQ</span><span class="tag">Union bound</span></div></div><p>Events \(A_1,\ldots,A_{20}\) satisfy \(P(A_i)\le0.01\). Which statements are guaranteed?</p><ol type="A"><li>\(P(\bigcup_i A_i)\le0.20\).</li><li>\(P(\bigcap_i A_i^c)\ge0.80\).</li><li>The events must be independent.</li><li>\(P(\bigcup_i A_i)=0.20\).</li></ol></article>
+    <article class="problem" id="q06"><div class="problem-head"><div class="problem-title">6. Recognize a Chernoff scale</div><div class="tags"><span class="tag concept">MCQ</span><span class="tag">Chernoff bound</span></div></div><p>Let \(X\) be a sum of independent Bernoulli variables with mean \(\mu\). Which statements describe a standard multiplicative Chernoff upper tail?</p><ol type="A"><li>For fixed \(\delta>0\), the bound decays exponentially in \(\mu\).</li><li>The threshold has form \((1+\delta)\mu\).</li><li>It uses only nonnegativity and the mean, exactly like Markov.</li><li>Independence is part of the usual hypothesis.</li></ol></article>
+
+    <div class="section-label">MCQ - Discrete Math: Modular Arithmetic and Divisibility</div>
+    <article class="problem" id="q07"><div class="problem-head"><div class="problem-title">7. Solve a linear congruence</div><div class="tags"><span class="tag concept">MCQ</span><span class="tag">Modular inverse</span></div></div><p>Which statements about \(7x\equiv5\pmod{12}\) are correct?</p><ol type="A"><li>\(7^{-1}\equiv7\pmod{12}\).</li><li>\(x\equiv11\pmod{12}\).</li><li>There is a unique solution modulo \(12\).</li><li>Cancellation is valid because \(\gcd(7,12)=1\).</li></ol></article>
+    <article class="problem" id="q08"><div class="problem-head"><div class="problem-title">8. Divisibility and cancellation</div><div class="tags"><span class="tag concept">MCQ</span><span class="tag">Congruences</span></div></div><p>Identify every valid claim about congruence operations and greatest common divisors.</p><ol type="A"><li>If \(a\equiv b\pmod m\), then \(a+c\equiv b+c\pmod m\).</li><li>From \(6x\equiv6y\pmod{15}\), one may conclude \(x\equiv y\pmod{15}\).</li><li>\(\gcd(84,30)=6\).</li><li>Every integer is congruent to exactly one member of \(\{0,1,\ldots,m-1\}\) modulo positive \(m\).</li></ol></article>
+
+    <div class="section-label">MCQ - DSA: Tree Structure and Representation</div>
+    <article class="problem" id="q09"><div class="problem-head"><div class="problem-title">9. Tree counting invariants</div><div class="tags"><span class="tag concept">MCQ</span><span class="tag">Tree structure</span></div></div><p>A finite undirected tree has \(n\ge1\) vertices. Which statements are always true?</p><ol type="A"><li>It has \(n-1\) edges.</li><li>There is a unique simple path between every pair of vertices.</li><li>Adding one edge creates exactly one cycle.</li><li>Every vertex has degree at most two.</li></ol></article>
+    <article class="problem" id="q10"><div class="problem-head"><div class="problem-title">10. Binary-tree families</div><div class="tags"><span class="tag concept">MCQ</span><span class="tag">Full / complete trees</span></div></div><p>Select every definition or node-count formula that correctly describes the named binary-tree family.</p><ol type="A"><li>In a full binary tree, every internal node has exactly two children.</li><li>A complete binary tree fills levels from left to right, with only the last level possibly incomplete.</li><li>Every full binary tree is complete.</li><li>A perfect binary tree of height \(h\) (root height 0) has \(2^{h+1}-1\) nodes.</li></ol></article>
+
+    <div class="section-label">MCQ - DSA: Tree Traversals</div>
+    <article class="problem" id="q11"><div class="problem-head"><div class="problem-title">11. Read three traversal orders</div><div class="tags"><span class="tag concept">MCQ</span><span class="tag">DFS traversals</span></div></div><p>A binary tree has root A; A's left child is B and right child C; B has children D,E. Which statements are correct?</p><ol type="A"><li>Preorder is A,B,D,E,C.</li><li>Inorder is D,B,E,A,C.</li><li>Postorder is D,E,B,C,A.</li><li>Level order is A,C,B,E,D.</li></ol></article>
+    <article class="problem" id="q12"><div class="problem-head"><div class="problem-title">12. When traversals determine a tree</div><div class="tags"><span class="tag concept">MCQ</span><span class="tag">Reconstruction</span></div></div><p>Assume all labels are distinct. Which statements are correct?</p><ol type="A"><li>Preorder plus inorder uniquely determines a binary tree.</li><li>Postorder plus inorder uniquely determines a binary tree.</li><li>Preorder alone always uniquely determines a binary tree.</li><li>The first preorder element is the root.</li></ol></article>
+    <article class="problem" id="q13"><div class="problem-head"><div class="problem-title">13. Level-order queue invariant</div><div class="tags"><span class="tag concept">MCQ</span><span class="tag">BFS queue</span></div></div><p>In standard level-order traversal, a node is removed from the queue, visited, and its existing children are enqueued left then right. Which statements are correct?</p><ol type="A"><li>Nodes are visited by nondecreasing depth.</li><li>A FIFO queue is the natural frontier structure.</li><li>Replacing the queue with a LIFO stack preserves level order for every tree.</li><li>Each node is enqueued once.</li></ol></article>
+
+    <div class="section-label">MCQ - DSA: Structural Induction and Complexity</div>
+    <article class="problem" id="q14"><div class="problem-head"><div class="problem-title">14. Structure the induction correctly</div><div class="tags"><span class="tag concept">MCQ</span><span class="tag">Structural induction</span></div></div><p>To prove that every full binary tree has one more leaf than internal nodes, which ingredients are appropriate?</p><ol type="A"><li>A base case consisting of one leaf.</li><li>Induction hypotheses for both root subtrees.</li><li>Combining the two subtree equalities and counting the new root as internal.</li><li>Assuming every tree of the same height has the same shape.</li></ol></article>
+    <article class="problem" id="q15"><div class="problem-head"><div class="problem-title">15. Shape controls height cost</div><div class="tags"><span class="tag concept">MCQ</span><span class="tag">Tree complexity</span></div></div><p>A tree algorithm does \(O(1)\) work per visited node. A root-to-leaf search visits one child at each level. Which statements are correct?</p><ol type="A"><li>A full traversal of an \(n\)-node tree is \(\Theta(n)\).</li><li>A root-to-leaf search is \(O(h)\), where \(h\) is height.</li><li>In a balanced binary tree, \(h=O(\log n)\).</li><li>Every \(n\)-node binary tree has height \(\Theta(\log n)\).</li></ol></article>
+
+    <div class="section-label">Short Answer - Discrete Math: Asymptotics</div>
+    <article class="problem" id="q16"><div class="problem-head"><div class="problem-title">16. Rank and justify mixed functions</div><div class="tags"><span class="tag concept">Short answer</span><span class="tag">Growth hierarchy</span></div></div><p>Arrange \((\log n)^3,\sqrt n,n/\log n,n\log n,3^n,n!\) from asymptotically smallest to largest. Justify each adjacent comparison with a standard limit, ratio, or growth theorem.</p><p class="response-line">Answer space:</p></article>
+    <article class="problem" id="q17"><div class="problem-head"><div class="problem-title">17. Prove a tight bound</div><div class="tags"><span class="tag concept">Short answer</span><span class="tag">Theta proof</span></div></div><p>Using the definition of \(\Theta\), prove that \(5n^2-3n+8=\Theta(n^2)\). Give explicit positive constants \(c_1,c_2,n_0\).</p><p class="response-line">Answer space:</p></article>
+
+    <div class="section-label">Short Answer - Discrete Math: Tail Bounds</div>
+    <article class="problem" id="q18"><div class="problem-head"><div class="problem-title">18. Compare two valid bounds</div><div class="tags"><span class="tag concept">Short answer</span><span class="tag">Markov / Chebyshev</span></div></div><p>A nonnegative random variable has mean \(20\) and variance \(16\). Bound \(P(X\ge40)\) using Markov. Then use Chebyshev to bound the same event via \(P(|X-20|\ge20)\). State which numerical bound is stronger.</p><p class="response-line">Answer space:</p></article>
+    <article class="problem" id="q19"><div class="problem-head"><div class="problem-title">19. Control the maximum</div><div class="tags"><span class="tag concept">Short answer</span><span class="tag">Union bound</span></div></div><p>Random variables \(X_1,\ldots,X_{100}\) satisfy \(P(X_i\ge t)\le e^{-t}\) for \(t\ge0\). Prove an upper bound for \(P(\max_i X_i\ge t)\), and find a value of \(t\) making your bound at most \(0.01\). Do not assume independence.</p><p class="response-line">Answer space:</p></article>
+
+    <div class="section-label">Short Answer - Discrete Math: Modular Arithmetic and Divisibility</div>
+    <article class="problem" id="q20"><div class="problem-head"><div class="problem-title">20. Euclid and an inverse</div><div class="tags"><span class="tag concept">Short answer</span><span class="tag">Extended Euclid</span></div></div><p>Use the Euclidean algorithm and back-substitution to compute \(\gcd(35,12)\) and an inverse of \(12\) modulo \(35\). Verify the inverse.</p><p class="response-line">Answer space:</p></article>
+    <article class="problem" id="q21"><div class="problem-head"><div class="problem-title">21. Reconstruct from two remainders</div><div class="tags"><span class="tag concept">Short answer</span><span class="tag">CRT</span></div></div><p>Find all integers \(x\) satisfying \(x\equiv2\pmod5\) and \(x\equiv3\pmod7\). Give the least nonnegative solution and the complete congruence class.</p><p class="response-line">Answer space:</p></article>
+    <article class="problem" id="q22"><div class="problem-head"><div class="problem-title">22. Divisibility by residue cases</div><div class="tags"><span class="tag concept">Short answer</span><span class="tag">Residue proof</span></div></div><p>Prove that \(n^3-n\) is divisible by \(6\) for every integer \(n\). Your proof must separately justify divisibility by \(2\) and by \(3\), then combine them.</p><p class="response-line">Answer space:</p></article>
+
+    <div class="section-label">Short Answer - DSA: Tree Structure and Representation</div>
+    <article class="problem" id="q23"><div class="problem-head"><div class="problem-title">23. Translate two representations</div><div class="tags"><span class="tag concept">Short answer</span><span class="tag">Tree representation</span></div></div><p>A rooted tree has edges \(r\!\to\!a,r\!\to\!b,a\!\to\!c,a\!\to\!d,b\!\to\!e\), with children stored alphabetically. Write its adjacency-list representation and the parent entry for every non-root node. State the space usage in terms of \(n\).</p><p class="response-line">Answer space:</p></article>
+    <article class="problem" id="q24"><div class="problem-head"><div class="problem-title">24. Derive the full-tree identity</div><div class="tags"><span class="tag concept">Short answer</span><span class="tag">Counting invariant</span></div></div><p>A nonempty full binary tree has \(I\) internal nodes and \(L\) leaves. Derive \(L=I+1\) by counting edges in two ways. Then find \(L\) and the total node count when \(I=15\).</p><p class="response-line">Answer space:</p></article>
+
+    <div class="section-label">Short Answer - DSA: Tree Traversals</div>
+    <article class="problem" id="q25"><div class="problem-head"><div class="problem-title">25. Three traversals, one tree</div><div class="tags"><span class="tag concept">Short answer</span><span class="tag">Traversal trace</span></div></div><p>A binary tree has root M; left child G and right child T; G has right child J; T has left child P and right child W. Write preorder, inorder, and postorder.</p><p class="response-line">Answer space:</p></article>
+    <article class="problem" id="q26"><div class="problem-head"><div class="problem-title">26. Reconstruct from preorder and inorder</div><div class="tags"><span class="tag concept">Short answer</span><span class="tag">Tree reconstruction</span></div></div><p>Distinct labels have preorder \(A,B,D,E,C,F\) and inorder \(D,B,E,A,C,F\). Reconstruct the binary tree by listing each node's left and right child, using EMPTY where absent. Show the root splits.</p><p class="response-line">Answer space:</p></article>
+    <article class="problem" id="q27"><div class="problem-head"><div class="problem-title">27. Iterative DFS stack discipline</div><div class="tags"><span class="tag concept">Short answer</span><span class="tag">Stack trace</span></div></div><p>Use the tree from Q25. An iterative preorder algorithm pushes the root, then repeatedly pops and visits a node, pushing its right child before its left child. Give the visit order and the stack contents (top first) after visiting M, G, and T.</p><p class="response-line">Answer space:</p></article>
+
+    <div class="section-label">Short Answer - DSA: Structural Induction and Complexity</div>
+    <article class="problem" id="q28"><div class="problem-head"><div class="problem-title">28. Structural induction on expression trees</div><div class="tags"><span class="tag concept">Short answer</span><span class="tag">Structural induction</span></div></div><p>An expression tree is either one operand leaf or an operator root with two expression-tree children. Prove by structural induction that if it has \(I\) operator nodes, it has \(I+1\) operand leaves. State the base case and both-subtree induction step.</p><p class="response-line">Answer space:</p></article>
+    <article class="problem" id="q29"><div class="problem-head"><div class="problem-title">29. Analyze a recursive traversal</div><div class="tags"><span class="tag concept">Short answer</span><span class="tag">Complexity recurrence</span></div></div><p>A procedure visits a node, recursively processes each child once, and performs \(O(1)\) additional work at the node. Give a recurrence in terms of subtree sizes and prove the total time is \(\Theta(n)\). State auxiliary recursion-stack space for a balanced tree and for a chain.</p><p class="response-line">Answer space:</p></article>
+    <article class="problem" id="q30"><div class="problem-head"><div class="problem-title">30. Same nodes, different height</div><div class="tags"><span class="tag concept">Short answer</span><span class="tag">Shape and complexity</span></div></div><p>Construct a 7-key binary-search tree of minimum possible height and another 7-key BST that is a chain. Give their heights when a leaf has height 0, and compare worst-case successful search costs. Explain the invariant that both trees still satisfy.</p><p class="response-line">Answer space:</p></article>
+  </main>
+  <script src="/psets/material-page.js"></script>
+</body>
+</html>

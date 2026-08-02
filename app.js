@@ -1,7 +1,7 @@
 const STORAGE_KEY = "learning-studio-data-v2";
 const LEGACY_STORAGE_KEYS = ["learning-studio-data-v1"];
 const SESSION_KEY = "aleph-session";
-const COURSE_PLAN_VERSION = "seeded-user-canonical-workspace-v142";
+const COURSE_PLAN_VERSION = "seeded-user-canonical-workspace-v143";
 const MAX_FEEDBACK_ATTACHMENT_BYTES = 3 * 1024 * 1024;
 const MAX_COMPRESSED_FEEDBACK_BYTES = 2400 * 1024;
 const MAX_FEEDBACK_PDF_PAGES = 6;
@@ -33706,6 +33706,16 @@ function cmiDiscreteDsaReviewQuizzes(now, startDate) {
       scopeDetails: [
         "Discrete Math groups: generating-function modeling, finite sums and linear recurrences, Catalan decompositions.",
         "DSA groups: set/map/dictionary semantics, hash collision traces, hash-table invariants and complexity."
+      ]
+    }),
+    cmiDiscreteDsaReviewQuiz(now, startDate, {
+      week: 5,
+      titleDate: "August 2",
+      dateOffset: 34,
+      materialUrl: "psets/week-05/august-02-cmi-msds-dm-dsa-review-quiz.html",
+      scopeDetails: [
+        "Discrete Math groups: asymptotic comparison, tail bounds, modular arithmetic and divisibility.",
+        "DSA groups: tree structure and representation, traversal traces, structural induction and tree complexity."
       ]
     })
   ];
