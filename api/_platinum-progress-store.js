@@ -112,6 +112,7 @@ export async function savePlatinumSubmissionRecord(record) {
     feedbackVerdict: record.feedbackVerdict || "",
     feedbackScore: record.feedbackScore ?? null,
     feedbackMaxScore: record.feedbackMaxScore ?? null,
+    questionFeedback: normalizeQuestionFeedback(record.questionFeedback),
     missedConcepts: normalizeMissedConcepts(record.missedConcepts),
     reviewedConcepts: normalizeMissedConcepts(record.reviewedConcepts),
     status: record.status || "submitted"
@@ -148,6 +149,20 @@ function normalizeMissedConcepts(items) {
       statuses: Array.isArray(item.statuses) ? item.statuses.map(String).slice(0, 4) : [],
       evidence: Array.isArray(item.evidence) ? item.evidence.map(String).slice(0, 3) : []
     }));
+}
+
+function normalizeQuestionFeedback(items) {
+  if (!Array.isArray(items)) return [];
+  return items.filter(Boolean).slice(0, 60).map((item) => ({
+    question: String(item.question || "").slice(0, 40),
+    status: String(item.status || "unclear").slice(0, 30),
+    marksAwarded: Number.isFinite(item.marksAwarded) ? item.marksAwarded : null,
+    maxMarks: Number.isFinite(item.maxMarks) ? item.maxMarks : null,
+    summary: String(item.summary || "").slice(0, 300),
+    issue: String(item.issue || "").slice(0, 300),
+    correction: String(item.correction || "").slice(0, 500),
+    skillTag: String(item.skillTag || "").trim().slice(0, 120)
+  }));
 }
 
 export async function savePlatinumSubmissionRecords(records = []) {

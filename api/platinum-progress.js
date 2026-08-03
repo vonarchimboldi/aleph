@@ -84,6 +84,8 @@ function submissionRecordsFromSnapshot(snapshot) {
       feedbackModel: material.feedbackModel,
       feedbackVerdict: material.feedbackVerdict,
       feedbackScore: material.feedbackScore,
+      feedbackMaxScore: material.feedbackMaxScore,
+      questionFeedback: material.feedbackQuestionFeedback || material.questionFeedback || [],
       missedConcepts: material.missedConcepts || [],
       reviewedConcepts: material.reviewedConcepts || []
     }));

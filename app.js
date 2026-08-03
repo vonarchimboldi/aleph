@@ -1,7 +1,7 @@
 const STORAGE_KEY = "learning-studio-data-v2";
 const LEGACY_STORAGE_KEYS = ["learning-studio-data-v1"];
 const SESSION_KEY = "aleph-session";
-const COURSE_PLAN_VERSION = "seeded-user-canonical-workspace-v146";
+const COURSE_PLAN_VERSION = "seeded-user-canonical-workspace-v147";
 const MAX_FEEDBACK_ATTACHMENT_BYTES = 3 * 1024 * 1024;
 const MAX_COMPRESSED_FEEDBACK_BYTES = 2400 * 1024;
 const MAX_FEEDBACK_PDF_PAGES = 6;
@@ -34919,6 +34919,7 @@ function render() {
   renderPlanCatalog();
   renderGateDaSummary();
   renderAssessmentDashboard();
+  renderLearnerUnderstandingDashboard();
   renderPlatinumPacePanel();
   renderGateDaWorkspace();
   renderGateDaSections();
@@ -35089,6 +35090,7 @@ function platinumOwnerRecordFromSnapshot(snapshot, sourceLabel, options = {}) {
   const overdueTasks = snapshot?.tasks?.due?.filter((task) => task.dueState === "overdue" && task.status !== "completed") || [];
   const overdueMaterials = snapshot?.materials?.due?.filter((material) => !material.submitted && material.date && material.date < (snapshot.today || todayDateString())) || [];
   const dueTodayMaterials = snapshot?.materials?.due?.filter((material) => !material.submitted && material.date === (snapshot.today || todayDateString())) || [];
+  const understanding = buildTopicUnderstanding(platinumOwnerMaterialItems(snapshot));
   return {
     id: user.id || user.email || user.name || sourceLabel,
     name: user.displayName || user.name || "Platinum learner",
@@ -35114,6 +35116,7 @@ function platinumOwnerRecordFromSnapshot(snapshot, sourceLabel, options = {}) {
     overdueMaterials: overdueMaterials.slice(0, 4),
     latestFeedback,
     reviewScores: reviewScores.slice(0, 5),
+    understanding,
     feedbackCount: feedbackItems.length,
     reviewScoreCount: reviewScores.length
   };
@@ -35264,6 +35267,7 @@ function platinumUserCardTemplate(record) {
         ${platinumUserListTemplate("Overdue Submissions", record.overdueMaterials, platinumMaterialOwnerRowTemplate)}
         ${platinumUserListTemplate("Latest Feedback", record.latestFeedback, platinumFeedbackOwnerRowTemplate)}
       </div>
+      ${instructorUnderstandingTemplate(record.understanding)}
       <div class="platinum-user-list">
         <h5>Review Quiz Scores</h5>
         <div class="platinum-user-list-grid">
@@ -35273,6 +35277,42 @@ function platinumUserCardTemplate(record) {
         </div>
       </div>
     </article>
+  `;
+}
+
+function instructorUnderstandingTemplate(understanding = emptyTopicUnderstanding()) {
+  const alerts = understanding.nextActions.slice(0, 6);
+  return `
+    <div class="instructor-understanding">
+      <div class="platinum-user-list">
+        <h5>Topic Understanding</h5>
+        <div class="instructor-topic-matrix">
+          ${understanding.subjects.map((subject) => `
+            <div class="instructor-topic-row">
+              <strong>${escapeHtml(subject.title)}</strong>
+              <span>${subject.secure} secure</span>
+              <span>${subject.shaky} shaky</span>
+              <span>${subject.needsReview} needs review</span>
+              <span>${subject.evidenceCount} evidence items</span>
+            </div>
+          `).join("")}
+        </div>
+      </div>
+      <div class="platinum-user-list">
+        <h5>Intervention Queue</h5>
+        <div class="platinum-user-list-grid">
+          ${alerts.length ? alerts.map((item) => `
+            <div class="platinum-user-row">
+              <div>
+                <strong>${escapeHtml(item.concept)}</strong>
+                <p>${escapeHtml(item.subject)} · ${escapeHtml(item.reason)}</p>
+              </div>
+              <span class="tag ${item.state === "Needs review" ? "critical" : "warning"}">${escapeHtml(item.state)}</span>
+            </div>
+          `).join("") : '<p class="platinum-user-note">No topic intervention is currently flagged.</p>'}
+        </div>
+      </div>
+    </div>
   `;
 }
 
@@ -36993,6 +37033,7 @@ function durableSubmissionRecord(materialId, submission, overrides = {}) {
     feedbackVerdict: feedbackRecord?.verdict || "",
     feedbackScore: feedbackRecord?.score ?? null,
     feedbackMaxScore: feedbackRecord?.maxScore ?? null,
+    questionFeedback: feedbackRecord?.questionFeedback || [],
     missedConcepts: missedConceptsFromFeedback(feedbackRecord),
     reviewedConcepts: reviewedConceptsFromFeedback(feedbackRecord),
     reviewScore: submission?.reviewScore ?? null,
@@ -37345,6 +37386,7 @@ async function savePatternFeedback(button) {
     feedbackVerdict: feedbackRecord?.verdict || "",
     feedbackScore: feedbackRecord?.score ?? null,
     feedbackMaxScore: feedbackRecord?.maxScore ?? null,
+    questionFeedback: feedbackRecord?.questionFeedback || [],
     missedConcepts: missedConceptsFromFeedback(feedbackRecord),
     reviewedConcepts: reviewedConceptsFromFeedback(feedbackRecord)
   });
@@ -37799,6 +37841,179 @@ function renderAssessmentDashboard() {
   });
 
   container.innerHTML = assessmentDashboardTemplate(latest, report);
+}
+
+const UNDERSTANDING_SUBJECTS = [
+  { id: "discrete-math", title: "Discrete Math", matches: ["discrete"] },
+  { id: "dsa", title: "Data Structures and Algorithms", matches: ["data structures", "dsa", "algorithm"] },
+  { id: "probability-statistics", title: "Probability and Statistics", matches: ["probability", "statistics"] }
+];
+
+function emptyTopicUnderstanding() {
+  return {
+    subjects: UNDERSTANDING_SUBJECTS.map((subject) => ({ ...subject, topics: [], evidenceCount: 0, secure: 0, shaky: 0, needsReview: 0 })),
+    nextActions: [],
+    evidenceCount: 0
+  };
+}
+
+function understandingSubjectFor(material = {}, concept = "") {
+  const haystack = `${material.subjectId || ""} ${material.subjectTitle || ""} ${material.patternTitle || ""} ${material.materialTitle || ""}`.toLowerCase();
+  const matches = UNDERSTANDING_SUBJECTS.filter((subject) => subject.matches.some((match) => haystack.includes(match)));
+  if (matches.length <= 1) return matches[0] || null;
+  const tag = String(concept).toLowerCase();
+  if (/bst|binary search tree|heap|priority queue|hash|dictionary|data structure|traversal|heapsort|array|linked list|stack|queue|graph algorithm/.test(tag)) {
+    return UNDERSTANDING_SUBJECTS.find((subject) => subject.id === "dsa");
+  }
+  if (/modular|divisib|crypt|group|algebraic structure|generating function|recurrence|catalan|combin|counting|set operation/.test(tag)) {
+    return UNDERSTANDING_SUBJECTS.find((subject) => subject.id === "discrete-math");
+  }
+  return matches[0];
+}
+
+function normalizedEvidenceStatus(status = "") {
+  const value = String(status).toLowerCase().replace(/[_-]+/g, " ");
+  if (/fully correct|\bcorrect\b/.test(value) && !/incorrect/.test(value)) return "correct";
+  if (/partial/.test(value)) return "partial";
+  return "incorrect";
+}
+
+function topicStateFromEvidence(evidence) {
+  const sorted = [...evidence].sort((a, b) => (a.date || "").localeCompare(b.date || ""));
+  const latest = sorted.at(-1);
+  const score = sorted.reduce((total, item) => total + (item.status === "correct" ? 1 : item.status === "partial" ? 0.5 : 0), 0) / sorted.length;
+  const correctCount = sorted.filter((item) => item.status === "correct").length;
+  let state = "Learning";
+  if (latest?.status === "incorrect" || score < 0.5) state = "Needs review";
+  else if (score < 0.75 || correctCount < 2) state = "Shaky";
+  else state = "Secure";
+  const recent = sorted.slice(-3);
+  const recentScore = recent.reduce((total, item) => total + (item.status === "correct" ? 1 : item.status === "partial" ? 0.5 : 0), 0) / recent.length;
+  const trend = recent.length < 2 ? "New evidence" : recentScore > score + 0.1 ? "Improving" : recentScore < score - 0.1 ? "Declining" : "Steady";
+  const confidence = sorted.length >= 6 ? "High" : sorted.length >= 3 ? "Medium" : "Low";
+  return { state, score: Math.round(score * 100), trend, confidence, latest: latest?.date || "", attempts: sorted.length };
+}
+
+function buildTopicUnderstanding(materials = []) {
+  const result = emptyTopicUnderstanding();
+  const subjectMaps = new Map(result.subjects.map((subject) => [subject.id, new Map()]));
+  const seen = new Set();
+  materials.forEach((material) => {
+    const questionFeedback = Array.isArray(material.feedbackQuestionFeedback) ? material.feedbackQuestionFeedback : [];
+    if (questionFeedback.length) {
+      questionFeedback.forEach((item) => {
+        const concept = String(item?.skillTag || "").trim();
+        if (!concept) return;
+        const subject = understandingSubjectFor(material, concept);
+        if (!subject) return;
+        const topicMap = subjectMaps.get(subject.id);
+        const key = `${material.materialId || material.materialTitle}::${item.question || concept}`;
+        if (seen.has(key)) return;
+        seen.add(key);
+        if (!topicMap.has(concept)) topicMap.set(concept, []);
+        topicMap.get(concept).push({
+          status: normalizedEvidenceStatus(item.status),
+          date: material.feedbackUpdatedAt || material.date || "",
+          question: item.question || "",
+          summary: item.issue || item.summary || "",
+          materialTitle: material.materialTitle || "Graded work"
+        });
+      });
+      return;
+    }
+    (material.reviewedConcepts || []).forEach((item) => {
+      const concept = String(item?.concept || "").trim();
+      if (!concept) return;
+      const subject = understandingSubjectFor(material, concept);
+      if (!subject) return;
+      const topicMap = subjectMaps.get(subject.id);
+      const statuses = item.statuses?.length ? item.statuses : ["incorrect"];
+      statuses.forEach((status, index) => {
+        const key = `${material.materialId || material.materialTitle}::${concept}::${index}`;
+        if (seen.has(key)) return;
+        seen.add(key);
+        if (!topicMap.has(concept)) topicMap.set(concept, []);
+        topicMap.get(concept).push({
+          status: normalizedEvidenceStatus(status),
+          date: material.feedbackUpdatedAt || material.date || "",
+          question: item.questionIds?.[index] || "",
+          summary: item.evidence?.[0] || "",
+          materialTitle: material.materialTitle || "Graded work"
+        });
+      });
+    });
+  });
+
+  result.subjects.forEach((subject) => {
+    const stateOrder = { "Needs review": 0, Shaky: 1, Learning: 2, Secure: 3 };
+    subject.topics = Array.from(subjectMaps.get(subject.id).entries()).map(([concept, evidence]) => ({ concept, evidence, ...topicStateFromEvidence(evidence) }))
+      .sort((a, b) => (stateOrder[a.state] - stateOrder[b.state]) || b.latest.localeCompare(a.latest));
+    subject.evidenceCount = subject.topics.reduce((total, topic) => total + topic.attempts, 0);
+    subject.secure = subject.topics.filter((topic) => topic.state === "Secure").length;
+    subject.shaky = subject.topics.filter((topic) => topic.state === "Shaky" || topic.state === "Learning").length;
+    subject.needsReview = subject.topics.filter((topic) => topic.state === "Needs review").length;
+  });
+  result.evidenceCount = result.subjects.reduce((total, subject) => total + subject.evidenceCount, 0);
+  result.nextActions = result.subjects.flatMap((subject) => subject.topics
+    .filter((topic) => topic.state !== "Secure")
+    .map((topic) => ({
+      subject: subject.title,
+      concept: topic.concept,
+      state: topic.state,
+      reason: topic.state === "Needs review" ? `Latest evidence was not correct; schedule a repair and retest (${topic.attempts} evidence item${topic.attempts === 1 ? "" : "s"}).` : `${topic.confidence.toLowerCase()} confidence; collect another independent correct attempt.`
+    }))).slice(0, 8);
+  return result;
+}
+
+function renderLearnerUnderstandingDashboard() {
+  const section = document.querySelector("#learner-understanding-section");
+  const container = document.querySelector("#learner-understanding-dashboard");
+  if (!section || !container) return;
+  const visible = isPlatinumPrototypeUser(state.user);
+  section.hidden = !visible;
+  if (!visible) {
+    container.innerHTML = "";
+    return;
+  }
+  const understanding = buildTopicUnderstanding(platinumMaterialSnapshots());
+  container.innerHTML = learnerUnderstandingTemplate(understanding);
+}
+
+function learnerUnderstandingTemplate(understanding) {
+  if (!understanding.evidenceCount) {
+    return '<div class="empty">No topic evidence yet. Submit work and generate question-by-question feedback to start this dashboard.</div>';
+  }
+  return `
+    <div class="understanding-dashboard">
+      <div class="understanding-subject-grid">
+        ${understanding.subjects.map((subject) => `
+          <article class="understanding-subject-card">
+            <header>
+              <div><h4>${escapeHtml(subject.title)}</h4><p>${subject.evidenceCount} graded evidence items across ${subject.topics.length} topics.</p></div>
+              <span class="tag">${subject.secure} secure</span>
+            </header>
+            ${subject.topics.length ? `<div class="understanding-topic-list">${subject.topics.slice(0, 8).map((topic) => `
+              <details class="understanding-topic">
+                <summary>
+                  <span><strong>${escapeHtml(topic.concept)}</strong><small>${escapeHtml(topic.trend)} · ${escapeHtml(topic.confidence)} confidence · ${topic.attempts} attempt${topic.attempts === 1 ? "" : "s"}</small></span>
+                  <span class="tag understanding-${topic.state.toLowerCase().replace(/\s+/g, "-")}">${escapeHtml(topic.state)}</span>
+                </summary>
+                <div class="topic-evidence-list">${topic.evidence.slice(-4).reverse().map((item) => `
+                  <p><strong>${escapeHtml(item.status)}</strong> · ${escapeHtml(item.materialTitle)}${item.question ? ` · Q${escapeHtml(item.question)}` : ""}${item.date ? ` · ${formatDate(item.date.slice(0, 10))}` : ""}<br>${escapeHtml(item.summary || "No written issue recorded.")}</p>
+                `).join("")}</div>
+              </details>
+            `).join("")}</div>` : '<p class="platinum-user-note">Not assessed yet.</p>'}
+          </article>
+        `).join("")}
+      </div>
+      <section class="understanding-next-actions">
+        <h4>What to study next</h4>
+        ${understanding.nextActions.length ? understanding.nextActions.slice(0, 5).map((item, index) => `
+          <div><span>${index + 1}</span><p><strong>${escapeHtml(item.concept)}</strong> · ${escapeHtml(item.subject)}<br><small>${escapeHtml(item.reason)}</small></p></div>
+        `).join("") : '<p>Nothing is currently flagged. Continue with the scheduled mixed review.</p>'}
+      </section>
+    </div>
+  `;
 }
 
 function assessmentDashboardTemplate(attempt, report) {

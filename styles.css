@@ -563,6 +563,124 @@ textarea {
   line-height: 1.45;
 }
 
+.understanding-dashboard,
+.instructor-understanding {
+  display: grid;
+  gap: 16px;
+}
+
+.understanding-subject-grid {
+  display: grid;
+  gap: 14px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.understanding-subject-card,
+.understanding-next-actions {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 14px;
+}
+
+.understanding-subject-card header,
+.understanding-topic summary,
+.instructor-topic-row {
+  align-items: flex-start;
+  display: flex;
+  gap: 10px;
+  justify-content: space-between;
+}
+
+.understanding-subject-card h4,
+.understanding-subject-card p,
+.understanding-next-actions h4,
+.understanding-next-actions p {
+  margin: 0;
+}
+
+.understanding-subject-card header p,
+.understanding-topic small,
+.understanding-next-actions small {
+  color: var(--muted);
+}
+
+.understanding-topic-list,
+.understanding-next-actions,
+.instructor-topic-matrix {
+  display: grid;
+  gap: 9px;
+  margin-top: 12px;
+}
+
+.understanding-topic {
+  border-top: 1px solid var(--line);
+  padding-top: 9px;
+}
+
+.understanding-topic summary {
+  cursor: pointer;
+  list-style: none;
+}
+
+.understanding-topic summary > span:first-child {
+  display: grid;
+  gap: 3px;
+}
+
+.topic-evidence-list p {
+  background: #f7f9f8;
+  border-radius: 6px;
+  font-size: 13px;
+  line-height: 1.45;
+  margin: 8px 0 0;
+  padding: 9px;
+}
+
+.understanding-next-actions > div {
+  align-items: flex-start;
+  display: flex;
+  gap: 10px;
+}
+
+.understanding-next-actions > div > span {
+  align-items: center;
+  background: var(--ink);
+  border-radius: 50%;
+  color: white;
+  display: flex;
+  flex: 0 0 25px;
+  font-size: 12px;
+  font-weight: 800;
+  height: 25px;
+  justify-content: center;
+}
+
+.tag.understanding-needs-review { background: #ffe8e3; color: #9e2f17; }
+.tag.understanding-shaky,
+.tag.understanding-learning { background: #fff4df; color: #8a4f00; }
+.tag.understanding-secure { background: #e4f5e9; color: #246b3d; }
+
+.instructor-understanding {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.instructor-topic-row {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  flex-wrap: wrap;
+  padding: 10px;
+}
+
+.instructor-topic-row strong { flex: 1 1 100%; }
+.instructor-topic-row span { color: var(--muted); font-size: 12px; }
+
+@media (max-width: 920px) {
+  .understanding-subject-grid,
+  .instructor-understanding {
+    grid-template-columns: 1fr;
+  }
+}
+
 .tag.warning {
   background: #fff4df;
   color: #8a4f00;
