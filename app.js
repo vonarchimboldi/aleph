@@ -1,7 +1,7 @@
 const STORAGE_KEY = "learning-studio-data-v2";
 const LEGACY_STORAGE_KEYS = ["learning-studio-data-v1"];
 const SESSION_KEY = "aleph-session";
-const COURSE_PLAN_VERSION = "seeded-user-canonical-workspace-v148";
+const COURSE_PLAN_VERSION = "seeded-user-canonical-workspace-v149";
 const MAX_FEEDBACK_ATTACHMENT_BYTES = 3 * 1024 * 1024;
 const MAX_COMPRESSED_FEEDBACK_BYTES = 2400 * 1024;
 const MAX_FEEDBACK_PDF_PAGES = 6;
@@ -34973,6 +34973,7 @@ function updateRoleNavigation() {
 
 function currentPlatinumOwnerSnapshot() {
   if (!isPlatinumPrototypeUser(state.user)) return null;
+  if ((normalizeSeededUser(state.user).role || "learner") !== "learner") return null;
   return buildPlatinumProgressSnapshot();
 }
 
@@ -35243,7 +35244,7 @@ function ownerSummaryMetricTemplate(label, value) {
   return `
     <article class="owner-summary-metric">
       <span>${escapeHtml(label)}</span>
-      <strong>${escapeHtml(value)}</strong>
+      <strong>${escapeHtml(String(value ?? 0))}</strong>
     </article>
   `;
 }
