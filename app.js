@@ -1,7 +1,7 @@
 const STORAGE_KEY = "learning-studio-data-v2";
 const LEGACY_STORAGE_KEYS = ["learning-studio-data-v1"];
 const SESSION_KEY = "aleph-session";
-const COURSE_PLAN_VERSION = "seeded-user-canonical-workspace-v147";
+const COURSE_PLAN_VERSION = "seeded-user-canonical-workspace-v148";
 const MAX_FEEDBACK_ATTACHMENT_BYTES = 3 * 1024 * 1024;
 const MAX_COMPRESSED_FEEDBACK_BYTES = 2400 * 1024;
 const MAX_FEEDBACK_PDF_PAGES = 6;
@@ -11,6 +11,11 @@ const PRIYANKA_PLATINUM_START_DATE = "2026-06-29";
 const PRIYANKA_PLATINUM_REBASE_ID = "june-29-2026";
 const DEFAULT_PLAN_START_DATE = "2026-06-01";
 const PLATINUM_PROGRESS_SYNC_DEBOUNCE_MS = 1500;
+const UNDERSTANDING_SUBJECTS = [
+  { id: "discrete-math", title: "Discrete Math", matches: ["discrete"] },
+  { id: "dsa", title: "Data Structures and Algorithms", matches: ["data structures", "dsa", "algorithm"] },
+  { id: "probability-statistics", title: "Probability and Statistics", matches: ["probability", "statistics"] }
+];
 
 const state = loadState();
 let selectedSubjectId = null;
@@ -37842,12 +37847,6 @@ function renderAssessmentDashboard() {
 
   container.innerHTML = assessmentDashboardTemplate(latest, report);
 }
-
-const UNDERSTANDING_SUBJECTS = [
-  { id: "discrete-math", title: "Discrete Math", matches: ["discrete"] },
-  { id: "dsa", title: "Data Structures and Algorithms", matches: ["data structures", "dsa", "algorithm"] },
-  { id: "probability-statistics", title: "Probability and Statistics", matches: ["probability", "statistics"] }
-];
 
 function emptyTopicUnderstanding() {
   return {
