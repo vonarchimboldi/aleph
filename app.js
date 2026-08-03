@@ -1,7 +1,7 @@
 const STORAGE_KEY = "learning-studio-data-v2";
 const LEGACY_STORAGE_KEYS = ["learning-studio-data-v1"];
 const SESSION_KEY = "aleph-session";
-const COURSE_PLAN_VERSION = "seeded-user-canonical-workspace-v144";
+const COURSE_PLAN_VERSION = "seeded-user-canonical-workspace-v145";
 const MAX_FEEDBACK_ATTACHMENT_BYTES = 3 * 1024 * 1024;
 const MAX_COMPRESSED_FEEDBACK_BYTES = 2400 * 1024;
 const MAX_FEEDBACK_PDF_PAGES = 6;
@@ -431,8 +431,8 @@ function buildPriyankaPlatinumPlan(now, accountTypes, sections, user = defaultUs
       title: "Probability and Statistics",
       date: endDate,
       status: "In progress",
-      details: "GATE DA Probability and Statistics with Priyanka's Platinum pacing. The active harder-variation PSB rotation runs Monday July 27 through Saturday August 1, with the six-topic Sunday review on August 2.",
-      patternWorkspaces: probabilityStatsPatternWorkspaces(4, 4),
+      details: "GATE DA Probability and Statistics with Priyanka's Platinum pacing. The active Week 6 PSB rotation runs Monday August 3 through Saturday August 8, with the six-topic Sunday review on August 9 and regression repair carried forward from Week 5 feedback.",
+      patternWorkspaces: probabilityStatsPatternWorkspaces(5, 5),
       updatedAt: now
     },
     {
@@ -470,9 +470,9 @@ function buildPriyankaPlatinumPlan(now, accountTypes, sections, user = defaultUs
       label: "Probability and Statistics",
       subjectId: "subject-probability-statistics",
       resources: "ISI PSB pattern notes and published pattern practice material",
-      completedWeeks: 4,
-      milestones: activeMilestones(probabilityStatsMilestones(), 4),
-      startWeekOffset: 4,
+      completedWeeks: 5,
+      milestones: activeMilestones(probabilityStatsMilestones(), 5),
+      startWeekOffset: 5,
       dailyProblemSets: true
     },
     {
@@ -33021,6 +33021,14 @@ function probabilityStatsMaterialUrl(sourceWeek, topic) {
       "MLE and estimation": "psets/week-05/july-30-mle-estimation.html",
       "UMP/NP tests": "psets/week-05/july-31-ump-np-tests.html",
       "regression and OLS": "psets/week-05/august-01-regression-ols.html"
+    },
+    6: {
+      "method of indicators": "psets/week-06/august-03-indicators.html",
+      "conditional expectation and tower property": "psets/week-06/august-04-conditional-expectation.html",
+      "order statistics": "psets/week-06/august-05-order-statistics.html",
+      "MLE and estimation": "psets/week-06/august-06-mle-estimation.html",
+      "UMP/NP tests": "psets/week-06/august-07-ump-np-tests.html",
+      "regression and OLS": "psets/week-06/august-08-regression-ols.html"
     }
   };
   return urls[sourceWeek]?.[topic] || "";
@@ -36414,7 +36422,8 @@ function weeklyReviewDay(group) {
     1: "psets/week-01/june-07-psb-review-quiz.html",
     3: "psets/week-03/july-19-psb-review-quiz.html",
     4: "psets/week-04/july-26-psb-review-quiz.html",
-    5: "psets/week-05/august-02-psb-review-quiz.html"
+    5: "psets/week-05/august-02-psb-review-quiz.html",
+    6: "psets/week-06/august-09-psb-review-quiz.html"
   };
   const reviewUrl = reviewUrls[Number(sourceWeek)] || "";
   return {
