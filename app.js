@@ -1,7 +1,7 @@
 const STORAGE_KEY = "learning-studio-data-v2";
 const LEGACY_STORAGE_KEYS = ["learning-studio-data-v1"];
 const SESSION_KEY = "aleph-session";
-const COURSE_PLAN_VERSION = "seeded-user-canonical-workspace-v145";
+const COURSE_PLAN_VERSION = "seeded-user-canonical-workspace-v146";
 const MAX_FEEDBACK_ATTACHMENT_BYTES = 3 * 1024 * 1024;
 const MAX_COMPRESSED_FEEDBACK_BYTES = 2400 * 1024;
 const MAX_FEEDBACK_PDF_PAGES = 6;
@@ -33724,6 +33724,17 @@ function cmiDiscreteDsaReviewQuizzes(now, startDate) {
       scopeDetails: [
         "Discrete Math groups: asymptotic comparison, tail bounds, modular arithmetic and divisibility.",
         "DSA groups: tree structure and representation, traversal traces, structural induction and tree complexity."
+      ]
+    }),
+    cmiDiscreteDsaReviewQuiz(now, startDate, {
+      week: 6,
+      titleDate: "August 9",
+      dateOffset: 41,
+      materialUrl: "psets/week-06/august-09-cmi-msds-dm-dsa-review-quiz.html",
+      scopeDetails: [
+        "Discrete Math groups: cryptography and modular algorithms, algebraic structures, basic group reasoning and proof fluency.",
+        "DSA groups: binary search trees, heaps and priority queues, heap construction, heapsort invariants and complexity.",
+        "Adaptive carry-forward: add fresh variants for every unresolved concept persisted from the previous submitted DM/DSA review before publication."
       ]
     })
   ];
