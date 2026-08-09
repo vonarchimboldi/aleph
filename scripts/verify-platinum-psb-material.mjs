@@ -9,37 +9,37 @@ const appSource = fs.readFileSync(path.join(root, "app.js"), "utf8");
 const errors = [];
 
 const activeWeek = {
-  sourceWeek: 6,
-  reviewUrl: "psets/week-06/august-09-psb-review-quiz.html",
+  sourceWeek: 7,
+  reviewUrl: "psets/week-07/august-16-psb-review-quiz.html",
   daily: [
     {
       topic: "method of indicators",
-      file: "psets/week-06/august-03-indicators.html",
+      file: "psets/week-07/august-10-indicators.html",
       required: ["indicator", "linearity", "pair", "variance"]
     },
     {
       topic: "conditional expectation and tower property",
-      file: "psets/week-06/august-04-conditional-expectation.html",
+      file: "psets/week-07/august-11-conditional-expectation.html",
       required: ["condition", "tower", "variance", "random"]
     },
     {
       topic: "order statistics",
-      file: "psets/week-06/august-05-order-statistics.html",
+      file: "psets/week-07/august-12-order-statistics.html",
       required: ["maximum", "minimum", "density", "joint"]
     },
     {
       topic: "MLE and estimation",
-      file: "psets/week-06/august-06-mle-estimation.html",
+      file: "psets/week-07/august-13-mle-estimation.html",
       required: ["likelihood", "sufficiency", "rao", "umvue", "mle"]
     },
     {
       topic: "UMP/NP tests",
-      file: "psets/week-06/august-07-ump-np-tests.html",
+      file: "psets/week-07/august-14-ump-np-tests.html",
       required: ["likelihood", "size", "power", "randomization", "ump"]
     },
     {
       topic: "regression and OLS",
-      file: "psets/week-06/august-08-regression-ols.html",
+      file: "psets/week-07/august-15-regression-ols.html",
       required: ["normal equations", "constraint", "slope", "residual", "orthogonal"]
     }
   ]
@@ -139,11 +139,11 @@ function verifyAppWiring() {
   if (!appSource.includes(`${activeWeek.sourceWeek}: "${activeWeek.reviewUrl}"`)) {
     fail(`app.js: source Week ${activeWeek.sourceWeek} missing Sunday PSB review URL.`);
   }
-  if (!appSource.includes("probabilityStatsPatternWorkspaces(5, 5)")) {
-    fail("app.js: Priyanka Platinum Probability/Stats workspace is not advanced to active Week 6.");
+  if (!appSource.includes("probabilityStatsPatternWorkspaces(6, 6)")) {
+    fail("app.js: Priyanka Platinum Probability/Stats workspace is not advanced to active Week 7.");
   }
-  if (!appSource.includes("completedWeeks: 5") || !appSource.includes("startWeekOffset: 5")) {
-    fail("app.js: Probability/Stats plan does not record five completed source weeks and Week 6 offset.");
+  if (!appSource.includes("completedWeeks: 6") || !appSource.includes("startWeekOffset: 6")) {
+    fail("app.js: Probability/Stats plan does not record six completed source weeks and Week 7 offset.");
   }
 }
 
