@@ -48,6 +48,17 @@ const quizzes = [
       "dsa-hash-collision-traces",
       "dsa-hash-invariants-complexity"
     ]
+  },
+  {
+    file: "psets/week-07/august-16-basic-dm-dsa-review-quiz.html",
+    expectedTopics: [
+      "dm-graph-vocabulary",
+      "dm-graph-coloring",
+      "dm-connectivity-trees",
+      "dsa-matrix-representation",
+      "dsa-relational-model",
+      "dsa-table-operations"
+    ]
   }
 ];
 

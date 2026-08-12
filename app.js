@@ -1,7 +1,7 @@
 const STORAGE_KEY = "learning-studio-data-v2";
 const LEGACY_STORAGE_KEYS = ["learning-studio-data-v1"];
 const SESSION_KEY = "aleph-session";
-const COURSE_PLAN_VERSION = "seeded-user-canonical-workspace-v150";
+const COURSE_PLAN_VERSION = "seeded-user-canonical-workspace-v151";
 const MAX_FEEDBACK_ATTACHMENT_BYTES = 3 * 1024 * 1024;
 const MAX_COMPRESSED_FEEDBACK_BYTES = 2400 * 1024;
 const MAX_FEEDBACK_PDF_PAGES = 6;
@@ -33749,6 +33749,20 @@ function cmiDiscreteDsaReviewQuizzes(now, startDate) {
         "DSA groups: binary search trees, heaps and priority queues, heap construction, heapsort invariants and complexity.",
         "Adaptive carry-forward: add fresh variants for every unresolved concept persisted from the previous submitted DM/DSA review before publication."
       ]
+    }),
+    cmiDiscreteDsaReviewQuiz(now, startDate, {
+      week: 7,
+      titleDate: "August 16",
+      dateOffset: 48,
+      materialUrl: "psets/week-07/august-16-basic-dm-dsa-review-quiz.html",
+      difficultyLabel: "Basic",
+      quizLabel: "Basic Discrete Math and DSA review quiz",
+      scopeDetails: [
+        "Difficulty: basic recall and elementary understanding only; no long proofs, advanced reductions, or multi-stage algorithm analysis.",
+        "Discrete Math groups: graph vocabulary and degree facts, proper coloring, connectivity, components, and tree definitions.",
+        "DSA groups: matrix dimensions and indexing, adjacency matrices, relational rows/columns/keys, selection, projection, and index purpose.",
+        "Adaptive carry-forward remains diagnostic only this week: missed concepts should be tagged for later repair without raising this quiz above basic difficulty."
+      ]
     })
   ];
 }
@@ -33758,8 +33772,11 @@ function cmiDiscreteDsaReviewQuiz(now, startDate, config) {
   const date = addDays(startDate, config.dateOffset);
   const materialUrl = config.materialUrl;
   const materialId = `review-platinum-${PRIYANKA_PLATINUM_REBASE_ID}-week-${week}-cmi-dm-dsa`;
+  const quizLabel = config.quizLabel || "CMI-level Discrete Math and DSA review quiz";
   const details = [
-    "Two-hour CMI-level review quiz for covered Platinum Discrete Math and DSA only.",
+    config.difficultyLabel === "Basic"
+      ? "Two-hour basic review quiz for this week's Platinum Discrete Math and DSA material only."
+      : "Two-hour CMI-level review quiz for covered Platinum Discrete Math and DSA only.",
     "Format: 30 questions, 15 MCQ and 15 short answer, five each across six covered topic groups.",
     "Scoring: Q1-Q15 are 2 marks each and Q16-Q30 are 3 marks each, total 75 marks.",
     ...config.scopeDetails,
@@ -33771,7 +33788,7 @@ function cmiDiscreteDsaReviewQuiz(now, startDate, config) {
   return {
     schedule: {
       id: scheduleId,
-      title: `Week ${week}: CMI-level Discrete Math and DSA review quiz`,
+      title: `Week ${week}: ${quizLabel}`,
       week,
       subject: "Discrete Math + DSA",
       kind: "Review quiz",
@@ -33783,7 +33800,7 @@ function cmiDiscreteDsaReviewQuiz(now, startDate, config) {
     task: {
       id: taskId,
       week,
-      title: `DM/DSA W${week}: Take CMI-level 30-question review quiz`,
+      title: `DM/DSA W${week}: Take ${config.difficultyLabel === "Basic" ? "basic " : "CMI-level "}30-question review quiz`,
       type: "Review quiz",
       date,
       scheduleId,
@@ -33795,7 +33812,7 @@ function cmiDiscreteDsaReviewQuiz(now, startDate, config) {
     test: {
       id: testId,
       week,
-      title: `Week ${week}: CMI-level Discrete Math and DSA review quiz`,
+      title: `Week ${week}: ${quizLabel}`,
       date,
       details,
       materialUrl,
@@ -33804,6 +33821,7 @@ function cmiDiscreteDsaReviewQuiz(now, startDate, config) {
       durationMinutes: 120,
       questionCount: 30,
       reviewScoreMax: 75,
+      difficultyBand: config.difficultyLabel === "Basic" ? "basic-recall-and-elementary-understanding" : "cmi-level",
       scoringPolicy: "Q1-Q15 are 2 marks each; Q16-Q30 are 3 marks each; total 75 marks.",
       unlockPolicy: "solutions-after-submission",
       subjectScope: ["Discrete Math", "Data Structures and Algorithms"],

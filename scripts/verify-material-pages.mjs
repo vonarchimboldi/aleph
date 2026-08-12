@@ -201,6 +201,7 @@ function duplicateErrors(items, key, label) {
   items.forEach((item) => {
     const value = item[key];
     if (!value) return;
+    if (key === "statement" && value.length < 32) return;
     const existing = seen.get(value);
     if (existing) {
       duplicateMessages.push(
