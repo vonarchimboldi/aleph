@@ -1,9 +1,10 @@
 const STORAGE_KEY = "learning-studio-data-v2";
 const LEGACY_STORAGE_KEYS = ["learning-studio-data-v1"];
 const SESSION_KEY = "aleph-session";
-const COURSE_PLAN_VERSION = "seeded-user-canonical-workspace-v151";
+const COURSE_PLAN_VERSION = "seeded-user-canonical-workspace-v152";
 const MAX_FEEDBACK_ATTACHMENT_BYTES = 3 * 1024 * 1024;
 const MAX_COMPRESSED_FEEDBACK_BYTES = 2400 * 1024;
+const MAX_FEEDBACK_REQUEST_BYTES = 4 * 1024 * 1024;
 const MAX_FEEDBACK_PDF_PAGES = 6;
 const PDFJS_MODULE_URL = "https://cdn.jsdelivr.net/npm/pdfjs-dist@4.10.38/build/pdf.mjs";
 const PDFJS_WORKER_URL = "https://cdn.jsdelivr.net/npm/pdfjs-dist@4.10.38/build/pdf.worker.mjs";
@@ -37376,10 +37377,16 @@ async function savePatternFeedback(button) {
       materialContext: buildFeedbackMaterialContext(material),
       workflow,
       solutionText,
-      uploadedFile: buildFeedbackUploadedFile(materialId, submission),
       uploadedFiles: buildFeedbackUploadedFiles(materialId, submission),
       learnerName: state.user.displayName || state.user.name
     };
+  const payloadBytes = new Blob([JSON.stringify(payload)]).size;
+  if (payloadBytes > MAX_FEEDBACK_REQUEST_BYTES) {
+    button.disabled = false;
+    button.textContent = "Generate AI feedback report";
+    alert(`Aleph compressed this upload, but the feedback request is still ${formatFileSize(payloadBytes)}. Please upload a smaller PDF/image or export the solution as text/Markdown. The safe request limit is ${formatFileSize(MAX_FEEDBACK_REQUEST_BYTES)}.`);
+    return;
+  }
   let feedbackRecord;
   let feedback;
   try {
@@ -37463,11 +37470,6 @@ function isPdfOrImageSubmission(submission) {
   const fileName = String(submission?.fileName || "").toLowerCase();
   const fileType = String(submission?.fileType || "").toLowerCase();
   return fileType.startsWith("image/") || fileType === "application/pdf" || /\.(pdf|png|jpe?g)$/i.test(fileName);
-}
-
-function buildFeedbackUploadedFile(materialId, submission) {
-  const files = buildFeedbackUploadedFiles(materialId, submission);
-  return files[0] || null;
 }
 
 function buildFeedbackUploadedFiles(materialId, submission) {
