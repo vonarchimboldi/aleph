@@ -1,7 +1,7 @@
 const STORAGE_KEY = "learning-studio-data-v2";
 const LEGACY_STORAGE_KEYS = ["learning-studio-data-v1"];
 const SESSION_KEY = "aleph-session";
-const COURSE_PLAN_VERSION = "seeded-user-canonical-workspace-v153";
+const COURSE_PLAN_VERSION = "seeded-user-canonical-workspace-v154";
 const MAX_FEEDBACK_ATTACHMENT_BYTES = 3 * 1024 * 1024;
 const MAX_COMPRESSED_FEEDBACK_BYTES = 2400 * 1024;
 const MAX_FEEDBACK_REQUEST_BYTES = 4 * 1024 * 1024;
@@ -724,6 +724,7 @@ function buildPriyankaPlatinumPlan(now, accountTypes, sections, user = defaultUs
       workflow.materialUrl = cmiReview.test.materialUrl;
     });
   });
+  tests.push(...platinumProbabilityReviewTests(now));
 
   return {
     subjects,
@@ -33776,6 +33777,41 @@ function cmiDiscreteDsaReviewQuizzes(now, startDate) {
   ];
 }
 
+function platinumProbabilityReviewTests(now) {
+  const reviews = [
+    { week: 1, date: "2026-06-28", url: "psets/week-01/june-07-psb-review-quiz.html" },
+    { week: 3, date: "2026-07-19", url: "psets/week-03/july-19-psb-review-quiz.html" },
+    { week: 4, date: "2026-07-26", url: "psets/week-04/july-26-psb-review-quiz.html" },
+    { week: 5, date: "2026-08-02", url: "psets/week-05/august-02-psb-review-quiz.html" },
+    { week: 6, date: "2026-08-09", url: "psets/week-06/august-09-psb-review-quiz.html" },
+    { week: 7, date: "2026-08-16", url: "psets/week-07/august-16-psb-review-quiz.html" },
+    { week: 8, date: "2026-08-23", url: "psets/week-08/august-23-psb-review-quiz.html" }
+  ];
+  return reviews.map((review) => {
+    const materialId = `ps-${PRIYANKA_PLATINUM_REBASE_ID}-w${review.week}-src${review.week}-sunday-review`;
+    const title = `Week ${review.week}: Probability and Statistics PSB review quiz`;
+    return {
+      id: `test-platinum-${PRIYANKA_PLATINUM_REBASE_ID}-week-${review.week}-probability-review`,
+      week: review.week,
+      sourceWeek: review.week,
+      title,
+      date: review.date,
+      details: "Published six-topic Probability and Statistics review covering indicators, conditional expectation, order statistics, estimation, hypothesis testing, and regression/OLS.",
+      materialUrl: review.url,
+      materialId,
+      workflowType: "probability-weekly-review",
+      durationMinutes: 90,
+      questionCount: 6,
+      reviewScoreMax: 6,
+      unlockPolicy: "solutions-after-submission",
+      subjectScope: ["Probability and Statistics"],
+      feedbackWorkflow: weeklyPsbReviewFeedbackWorkflow(),
+      archiveStatus: review.date < todayDateString() ? "Previous test" : "Upcoming test",
+      updatedAt: now
+    };
+  });
+}
+
 function cmiDiscreteDsaReviewQuiz(now, startDate, config) {
   const week = config.week;
   const date = addDays(startDate, config.dateOffset);
@@ -36096,7 +36132,7 @@ function renderSubjects() {
 
 function renderTests() {
   const container = document.querySelector("#tests-list");
-  const visibleTests = state.tests;
+  const visibleTests = [...state.tests].sort((a, b) => (b.date || "").localeCompare(a.date || "") || a.title.localeCompare(b.title));
   if (!visibleTests.length) {
     container.innerHTML = '<div class="empty">No test items yet.</div>';
     return;
@@ -36175,6 +36211,7 @@ function testTemplate(test) {
         </div>
         <div class="stacked-tags">
           <span class="tag">${test.date ? formatDate(test.date) : "No date"}</span>
+          ${test.archiveStatus ? `<span class="tag">${escapeHtml(test.archiveStatus)}</span>` : ""}
           ${workflowTag}
         </div>
       </div>
