@@ -24,7 +24,8 @@ let selectedSectionId = null;
 let selectedPatternMaterialId = null;
 let activeTestId = null;
 let platinumProgressSyncTimer = null;
-let cachedPlatinumProgressSnapshot = null;
+let cachedPlatinumProgressSnapshots = [];
+let cachedPlatinumSubmissionRecords = [];
 let cachedPlatinumProgressFetchedAt = "";
 const pendingUploadFiles = new Map();
 ensureCoursePlan();
@@ -726,6 +727,34 @@ function buildPriyankaPlatinumPlan(now, accountTypes, sections, user = defaultUs
   });
   tests.push(...platinumProbabilityReviewTests(now));
 
+  const dsaPracticeDayOneUrl = "DSA%20For%20GATE%20practice/month-01/day-01-searching-sorting.pdf";
+  const dsaPracticeDayOneDate = "2026-08-31";
+  const dsaPracticeDayOneScheduleId = "schedule-dsa-gate-practice-month-1-day-1";
+  schedule.push({
+    id: dsaPracticeDayOneScheduleId,
+    title: "DSA for GATE Practice M1D1: Searching, Sorting, and the Power of Order",
+    week: weekFromDate(dsaPracticeDayOneDate),
+    subject: "Data Structures and Algorithms",
+    kind: "Guided coding module",
+    date: dsaPracticeDayOneDate,
+    details: "Complete the two-hour Target Pair module: precise specification, brute force, indexed sorting, binary search, two pointers, hashing, duplicates, correctness invariants, and complexity. Open the PDF from Resources.",
+    materialUrl: dsaPracticeDayOneUrl,
+    updatedAt: now
+  });
+  tasks.push({
+    id: "task-dsa-gate-practice-month-1-day-1",
+    week: weekFromDate(dsaPracticeDayOneDate),
+    title: "DSA Practice M1D1: Complete Searching and Sorting guided module",
+    type: "Guided coding module",
+    date: dsaPracticeDayOneDate,
+    scheduleId: dsaPracticeDayOneScheduleId,
+    status: "todo",
+    done: false,
+    details: "Work through the two-hour Day 1 PDF in Resources. Attempt every checkpoint and practice problem before opening its solution appendix.",
+    materialUrl: dsaPracticeDayOneUrl,
+    updatedAt: now
+  });
+
   return {
     subjects,
     schedule,
@@ -820,6 +849,14 @@ function buildPriyankaPlatinumPlan(now, accountTypes, sections, user = defaultUs
         date: startDate,
         details: "Use Cartesian for interactive visualizations, code playback, Python practice, and end-of-topic challenges.",
         link: "https://cartesian.app/",
+        updatedAt: now
+      },
+      {
+        id: "resource-dsa-gate-practice-month-1-day-1",
+        title: "DSA for GATE Practice — Month 1, Day 1: Searching, Sorting, and the Power of Order",
+        date: dsaPracticeDayOneDate,
+        details: "Two-hour guided coding module using Target Pair to discover brute force, indexed sorting, binary search, two pointers, hashing, duplicate handling, correctness invariants, and complexity tradeoffs.",
+        link: dsaPracticeDayOneUrl,
         updatedAt: now
       },
       {
@@ -33773,6 +33810,20 @@ function cmiDiscreteDsaReviewQuizzes(now, startDate) {
         "DSA groups: matrix dimensions and indexing, adjacency matrices, relational rows/columns/keys, selection, projection, and index purpose.",
         "Adaptive carry-forward remains diagnostic only this week: missed concepts should be tagged for later repair without raising this quiz above basic difficulty."
       ]
+    }),
+    cmiDiscreteDsaReviewQuiz(now, startDate, {
+      week: 8,
+      titleDate: "August 23",
+      dateOffset: 55,
+      materialUrl: "psets/week-08/august-23-basic-dm-dsa-review-quiz.html",
+      difficultyLabel: "Basic",
+      quizLabel: "Basic Discrete Math and DSA review quiz",
+      scopeDetails: [
+        "Difficulty: basic definitions, elementary understanding, and big-picture connections only; no long proofs or difficult algorithm traces.",
+        "Discrete Math groups: matching and bipartite graphs, augmenting-path intuition, network-flow vocabulary, and max-flow min-cut meaning.",
+        "DSA groups: adjacency-list and adjacency-matrix representations, connectivity, BFS, DFS, visited sets, and traversal purpose.",
+        "Adaptive carry-forward remains diagnostic: tag missed concepts for later repair without raising this quiz above basic difficulty."
+      ]
     })
   ];
 }
@@ -35219,25 +35270,93 @@ function mergePlatinumOwnerRecords(records) {
   return Array.from(merged.values()).sort((a, b) => b.pace.overdueCount - a.pace.overdueCount || a.name.localeCompare(b.name));
 }
 
+function platinumOwnerRecordsFromSubmissions(submissions = []) {
+  const grouped = new Map();
+  submissions.forEach((submission) => {
+    const id = submission.userId || submission.learnerEmail || submission.learnerName;
+    if (!id) return;
+    if (!grouped.has(id)) grouped.set(id, []);
+    grouped.get(id).push(submission);
+  });
+  return Array.from(grouped.entries()).map(([id, items]) => {
+    const latest = items.slice().sort((a, b) =>
+      (b.updatedAt || b.submittedAt || "").localeCompare(a.updatedAt || a.submittedAt || "")
+    );
+    const feedbackItems = latest.filter((item) => item.feedbackReady);
+    const reviewScores = latest
+      .filter((item) => /review|quiz/i.test(`${item.patternTitle || ""} ${item.materialTitle || ""}`))
+      .map((item) => ({
+        title: item.materialTitle || item.patternTitle || "Review quiz",
+        subject: item.subjectTitle || "Review",
+        date: item.date || item.submittedAt || "",
+        scoreLabel: item.feedbackScore === null || item.feedbackScore === undefined
+          ? "submitted"
+          : `${item.feedbackScore}/${item.feedbackMaxScore || "?"}`
+      }));
+    return {
+      id,
+      name: latest[0]?.learnerName || id,
+      email: latest[0]?.learnerEmail || "",
+      accountTypeId: "gate-da-platinum",
+      sourceLabel: "Durable submission ledger",
+      syncedAt: latest[0]?.updatedAt || latest[0]?.submittedAt || "",
+      pace: {
+        statusLabel: "Submission history available",
+        completionRate: 0,
+        currentWeek: Math.max(...items.map((item) => Number(item.week) || 0), 0) || "-",
+        expectedCount: 0,
+        completedExpectedCount: 0,
+        overdueCount: 0,
+        dueTodayCount: 0,
+        upcomingCount: 0,
+        overdueMaterialCount: 0,
+        dueTodayMaterialCount: 0,
+        dueMaterialCount: items.length,
+        submittedDueMaterialCount: items.length
+      },
+      overdueTasks: [],
+      overdueMaterials: [],
+      latestFeedback: feedbackItems.slice(0, 5),
+      reviewScores: reviewScores.slice(0, 5),
+      understanding: buildTopicUnderstanding(items),
+      feedbackCount: feedbackItems.length,
+      reviewScoreCount: reviewScores.length
+    };
+  });
+}
+
 function platinumOwnerDashboardRecords() {
   const localSnapshot = currentPlatinumOwnerSnapshot();
   return mergePlatinumOwnerRecords([
+    ...platinumOwnerRecordsFromSubmissions(cachedPlatinumSubmissionRecords),
+    ...cachedPlatinumProgressSnapshots.map((snapshot) =>
+      platinumOwnerRecordFromSnapshot(snapshot, "Synced learner snapshot")
+    ),
     localSnapshot
       ? platinumOwnerRecordFromSnapshot(localSnapshot, "Current browser", { reviewScores: localPlatinumReviewScores() })
-      : null,
-    cachedPlatinumProgressSnapshot
-      ? platinumOwnerRecordFromSnapshot(cachedPlatinumProgressSnapshot, "Synced Platinum snapshot")
       : null
   ]);
 }
 
-async function fetchPlatinumProgressSnapshot() {
-  const response = await fetch("/api/platinum-progress", { cache: "no-store" });
-  if (!response.ok) throw new Error(`Progress endpoint returned ${response.status}`);
-  const payload = await response.json();
-  cachedPlatinumProgressSnapshot = payload.snapshot || null;
+async function fetchPlatinumProgressSnapshots() {
+  const [progressResponse, submissionsResponse] = await Promise.all([
+    fetch("/api/platinum-progress?all=1", { cache: "no-store" }),
+    fetch("/api/platinum-submissions", { cache: "no-store" })
+  ]);
+  if (!progressResponse.ok) throw new Error(`Progress endpoint returned ${progressResponse.status}`);
+  if (!submissionsResponse.ok) throw new Error(`Submissions endpoint returned ${submissionsResponse.status}`);
+  const [payload, submissionsPayload] = await Promise.all([
+    progressResponse.json(),
+    submissionsResponse.json()
+  ]);
+  cachedPlatinumProgressSnapshots = Array.isArray(payload.snapshots)
+    ? payload.snapshots
+    : payload.snapshot ? [payload.snapshot] : [];
+  cachedPlatinumSubmissionRecords = Array.isArray(submissionsPayload.submissions)
+    ? submissionsPayload.submissions
+    : [];
   cachedPlatinumProgressFetchedAt = new Date().toISOString();
-  return cachedPlatinumProgressSnapshot;
+  return cachedPlatinumProgressSnapshots;
 }
 
 function renderPlatinumUsersDashboard(options = {}) {
@@ -35255,8 +35374,8 @@ function renderPlatinumUsersDashboard(options = {}) {
     syncedAt: cachedPlatinumProgressFetchedAt
   });
 
-  if (!options.refresh && cachedPlatinumProgressSnapshot) return;
-  fetchPlatinumProgressSnapshot()
+  if (!options.refresh && (cachedPlatinumProgressSnapshots.length || cachedPlatinumSubmissionRecords.length)) return;
+  fetchPlatinumProgressSnapshots()
     .then(() => {
       const latestRecords = platinumOwnerDashboardRecords();
       container.innerHTML = platinumUsersDashboardTemplate(latestRecords, {
@@ -35303,7 +35422,7 @@ function platinumUsersDashboardTemplate(records, meta = {}) {
         ${ownerSummaryMetricTemplate("Review quiz records", totals.reviewScores)}
       </div>
       ${meta.error ? `<p class="feedback-warning">${escapeHtml(meta.error)} Showing available local data.</p>` : ""}
-      <p class="platinum-user-note">Current data source: local browser state plus the latest synced Platinum progress snapshot${meta.syncedAt ? ` fetched ${formatDateTimeLabel(meta.syncedAt)}` : ""}. Multi-user backend storage can feed this same view as more Platinum learners are added.</p>
+      <p class="platinum-user-note">Current data source: local browser state plus per-learner synced Platinum progress snapshots${meta.syncedAt ? ` fetched ${formatDateTimeLabel(meta.syncedAt)}` : ""}.</p>
       <div class="platinum-user-grid">
         ${records.map(platinumUserCardTemplate).join("")}
       </div>
@@ -39003,6 +39122,9 @@ function taskRowTemplate(task) {
   const incompleteButton = task.status === "not-completed"
     ? `<button class="small-btn" data-task-reset="${task.id}" type="button">Move to to do</button>`
     : `<button class="small-btn" data-task-incomplete="${task.id}" type="button">Not completed</button>`;
+  const materialLink = task.materialUrl
+    ? `<a class="small-btn inline-link" href="${escapeHtml(task.materialUrl)}" target="_blank" rel="noreferrer">Open material</a>`
+    : "";
   return `
     <article class="task-row task-tile" draggable="true" data-task-id="${task.id}">
       <label class="task-check">
@@ -39017,6 +39139,7 @@ function taskRowTemplate(task) {
       <div class="task-row-actions">
         <span class="tag">${escapeHtml(statusLabel(task.status))}</span>
         <span class="tag due-tag ${escapeHtml(dueState.className)}">${escapeHtml(dueState.label)}</span>
+        ${materialLink}
         ${completeButton}
         ${incompleteButton}
       </div>
@@ -39036,6 +39159,7 @@ function taskSummaryTemplate(task) {
         </div>
         <span class="tag">${dueDate ? formatDate(dueDate) : "No due date"}</span>
       </div>
+      ${task.materialUrl ? `<a href="${escapeHtml(task.materialUrl)}" target="_blank" rel="noreferrer">Open material</a>` : ""}
     </article>
   `;
 }

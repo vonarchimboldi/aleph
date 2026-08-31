@@ -59,6 +59,17 @@ const quizzes = [
       "dsa-relational-model",
       "dsa-table-operations"
     ]
+  },
+  {
+    file: "psets/week-08/august-23-basic-dm-dsa-review-quiz.html",
+    expectedTopics: [
+      "dm-matching-bipartite",
+      "dm-augmenting-paths",
+      "dm-network-flow-cut",
+      "dsa-graph-representation",
+      "dsa-bfs-connectivity",
+      "dsa-dfs-traversal"
+    ]
   }
 ];
 

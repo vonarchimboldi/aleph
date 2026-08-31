@@ -1,4 +1,6 @@
 const SNAPSHOT_KEY = "aleph:platinum:progress:primary";
+const SNAPSHOT_INDEX_KEY = "aleph:platinum:progress:index:v1";
+const SNAPSHOT_KEY_PREFIX = "aleph:platinum:progress:user:v1:";
 const LAST_CRON_KEY = "aleph:platinum:weekly-check:last";
 const SUBMISSIONS_KEY = "aleph:platinum:submissions:v1";
 
@@ -47,18 +49,57 @@ async function kvCommand(command) {
 }
 
 export async function savePlatinumProgressSnapshot(snapshot) {
+  const learnerId = platinumSnapshotLearnerId(snapshot);
   const stored = {
     ...snapshot,
     storedAt: new Date().toISOString()
   };
+  await kvCommand(["SET", snapshotKey(learnerId), JSON.stringify(stored)]);
+  const index = await loadSnapshotIndex();
+  const nextEntry = {
+    learnerId,
+    name: snapshot.user?.displayName || snapshot.user?.name || "Platinum learner",
+    email: snapshot.user?.email || "",
+    storedAt: stored.storedAt
+  };
+  const entries = index.filter((entry) => entry.learnerId !== learnerId);
+  entries.push(nextEntry);
+  await kvCommand(["SET", SNAPSHOT_INDEX_KEY, JSON.stringify(entries)]);
+  // Keep the legacy key current for older deployed clients and cron code.
   await kvCommand(["SET", SNAPSHOT_KEY, JSON.stringify(stored)]);
   return stored;
 }
 
-export async function loadPlatinumProgressSnapshot() {
-  const raw = await kvCommand(["GET", SNAPSHOT_KEY]);
+export async function loadPlatinumProgressSnapshot(learnerId = "") {
+  const raw = await kvCommand(["GET", learnerId ? snapshotKey(learnerId) : SNAPSHOT_KEY]);
   if (!raw) return null;
   return typeof raw === "string" ? JSON.parse(raw) : raw;
+}
+
+export async function loadAllPlatinumProgressSnapshots() {
+  const index = await loadSnapshotIndex();
+  const snapshots = await Promise.all(index.map((entry) => loadPlatinumProgressSnapshot(entry.learnerId)));
+  const available = snapshots.filter(Boolean);
+  if (available.length) return available;
+  const legacy = await loadPlatinumProgressSnapshot();
+  return legacy ? [legacy] : [];
+}
+
+function platinumSnapshotLearnerId(snapshot) {
+  const learnerId = snapshot?.user?.id || snapshot?.user?.email || snapshot?.user?.name;
+  if (!learnerId) throw new Error("Platinum snapshot requires a learner identifier");
+  return String(learnerId).trim();
+}
+
+function snapshotKey(learnerId) {
+  return `${SNAPSHOT_KEY_PREFIX}${encodeURIComponent(String(learnerId))}`;
+}
+
+async function loadSnapshotIndex() {
+  const raw = await kvCommand(["GET", SNAPSHOT_INDEX_KEY]);
+  if (!raw) return [];
+  const parsed = typeof raw === "string" ? JSON.parse(raw) : raw;
+  return Array.isArray(parsed) ? parsed : [];
 }
 
 export async function saveLastWeeklyCheck(result) {

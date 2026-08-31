@@ -1,4 +1,5 @@
 import {
+  loadAllPlatinumProgressSnapshots,
   loadPlatinumProgressSnapshot,
   platinumProgressStoreStatus,
   savePlatinumProgressSnapshot,
@@ -9,10 +10,15 @@ const MAX_BODY_BYTES = 250000;
 
 export default async function handler(request, response) {
   if (request.method === "GET") {
-    const snapshot = await loadPlatinumProgressSnapshot();
+    const url = new URL(request.url, `https://${request.headers.host || "aleph.local"}`);
+    const learnerId = url.searchParams.get("userId") || "";
+    const wantsRoster = url.searchParams.get("all") === "1";
+    const snapshots = wantsRoster ? await loadAllPlatinumProgressSnapshots() : [];
+    const snapshot = wantsRoster ? null : await loadPlatinumProgressSnapshot(learnerId);
     return response.status(200).json({
       store: platinumProgressStoreStatus(),
-      snapshot
+      snapshot,
+      ...(wantsRoster ? { snapshots, count: snapshots.length } : {})
     });
   }
 
