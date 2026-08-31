@@ -432,6 +432,19 @@ function buildPriyankaPlatinumPlan(now, accountTypes, sections, user = defaultUs
       updatedAt: now
     },
     {
+      id: "subject-dsa-special-prep",
+      accountTypeId: "gate-da-platinum",
+      lessonPlanId,
+      title: "DSA Special Prep",
+      date: "2026-12-31",
+      status: "In progress",
+      details: "Priyanka's four-month premium DSA practice archive. A new two-hour guided-coding module is published each weekday, followed by interview mocks on Saturday and Sunday. Previous modules remain available here for review.",
+      workspaceEyebrow: "Priyanka Premium Plan · September 2026",
+      workspaceTitle: "Daily DSA Special Prep Archive",
+      materialWorkspaces: dsaSpecialPrepMaterialWorkspaces(),
+      updatedAt: now
+    },
+    {
       id: "subject-probability-statistics",
       accountTypeId: "gate-da-platinum",
       lessonPlanId,
@@ -783,6 +796,7 @@ function buildPriyankaPlatinumPlan(now, accountTypes, sections, user = defaultUs
         subjects: [
           "Discrete Mathematics",
           "Data Structures and Algorithms",
+          "DSA Special Prep",
           "Probability and Statistics",
           "Competition Math"
         ],
@@ -33128,6 +33142,45 @@ function competitionMathMaterialWorkspaces(completedWeeks = 0) {
   ];
 }
 
+function dsaSpecialPrepMaterialWorkspaces() {
+  return [
+    {
+      id: "dsa-special-prep-september-2026",
+      title: "September: Searching and Sorting",
+      day: "Month 1",
+      focus: "Guided discovery through coding: searching, sorting, pointer patterns, sliding windows, comparison sorting, sorting applications, and cumulative interview practice.",
+      weeks: [
+        {
+          id: "dsa-special-prep-2026-09-day-01",
+          label: "Day 1",
+          week: 1,
+          sourceWeek: 1,
+          date: "2026-08-31",
+          materialTitle: "Searching, Sorting, and the Power of Order",
+          materialUrl: "DSA%20For%20GATE%20practice/month-01/day-01-searching-sorting.pdf",
+          expectedWork: "Two-hour guided module: walkthroughs, invariants, C++ implementations, checkpoints, independent exercises, and solution review.",
+          status: "Published",
+          feedbackWorkflow: {
+            id: "feedback-workflow-dsa-special-prep-day-01",
+            title: "DSA Special Prep Day 1 Review",
+            promptUse: "Review the learner's submitted code and written reasoning. Check correctness, invariant quality, boundary handling, time/space analysis, and whether the chosen method fits the stated constraints.",
+            studentSummaryHint: "Name the first incorrect assumption or implementation break, then prescribe one near-transfer coding problem.",
+            rubric: [
+              { criterion: "Problem specification", points: 2, cue: "Check that the learner distinguishes values, indices, duplicates, mutation, and no-solution behavior." },
+              { criterion: "Correctness and invariant", points: 3, cue: "Check brute force, binary search, and pointer movement against a precise invariant." },
+              { criterion: "Implementation", points: 3, cue: "Check boundaries, duplicate handling, self-pairing, overflow, and returned indices." },
+              { criterion: "Complexity and method choice", points: 2, cue: "Check time, auxiliary space, and the tradeoff among sorting, pointers, and hashing." }
+            ],
+            skills: ["dsa-searching", "dsa-sorting", "two-pointers", "binary-search", "implementation-invariants"],
+            commonFirstIssues: ["unclear-output-contract", "self-pairing", "lost-original-index", "unsafe-pointer-move", "duplicate-handling", "integer-overflow"],
+            defaultNextDrills: ["Implement exact binary search from an invariant, then solve lower-bound and duplicate-boundary variations."]
+          }
+        }
+      ]
+    }
+  ];
+}
+
 function competitionMathMaterialUrl(sourceWeek) {
   const urls = {
     1: "psets/week-01/june-01-competition-math-vietas-polynomials.html",
@@ -36520,8 +36573,8 @@ function subjectMaterialWorkspaceTemplate(subject) {
       </div>
       <section class="chapter-menu">
         <div class="chapter-menu-header">
-          <p class="eyebrow">${escapeHtml(subject.title)} material workspace</p>
-          <h4>Weekly Materials</h4>
+          <p class="eyebrow">${escapeHtml(subject.workspaceEyebrow || `${subject.title} material workspace`)}</p>
+          <h4>${escapeHtml(subject.workspaceTitle || "Weekly Materials")}</h4>
           <p>${escapeHtml(subject.details || "Choose a week to work through material, submit solutions, and record feedback.")}</p>
         </div>
         ${weeklyReviewWorkflowSection(subject)}
@@ -36852,7 +36905,7 @@ function patternWeekTemplate(pattern, week) {
     <section class="pattern-week" data-material-card="${escapeHtml(week.id)}">
       <div class="pattern-week-top">
         <div>
-          <strong>Week ${week.week}: ${escapeHtml(week.materialTitle)}</strong>
+          <strong>${escapeHtml(week.label || `Week ${week.week}`)}: ${escapeHtml(week.materialTitle)}</strong>
           <p>${formatDate(week.date)} - ${escapeHtml(week.expectedWork)}</p>
         </div>
         <span class="tag">${escapeHtml(week.status)}</span>
