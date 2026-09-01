@@ -767,6 +767,33 @@ function buildPriyankaPlatinumPlan(now, accountTypes, sections, user = defaultUs
     materialUrl: dsaPracticeDayOneUrl,
     updatedAt: now
   });
+  const dsaPracticeDayTwoUrl = "DSA%20For%20GATE%20practice/month-01/day-02-binary-search-boundaries.pdf";
+  const dsaPracticeDayTwoDate = "2026-09-01";
+  const dsaPracticeDayTwoScheduleId = "schedule-dsa-gate-practice-month-1-day-2";
+  schedule.push({
+    id: dsaPracticeDayTwoScheduleId,
+    title: "DSA for GATE Practice M1D2: Binary Search Is a Boundary-Finding Algorithm",
+    week: weekFromDate(dsaPracticeDayTwoDate),
+    subject: "DSA Special Prep",
+    kind: "Guided coding module",
+    date: dsaPracticeDayTwoDate,
+    details: "Complete the two-hour binary-search boundaries module: exact search, lower bound, upper bound, duplicate ranges, debugging, and three progressive LeetCode coding labs.",
+    materialUrl: dsaPracticeDayTwoUrl,
+    updatedAt: now
+  });
+  tasks.push({
+    id: "task-dsa-gate-practice-month-1-day-2",
+    week: weekFromDate(dsaPracticeDayTwoDate),
+    title: "DSA Practice M1D2: Complete binary-search boundaries module",
+    type: "Guided coding module",
+    date: dsaPracticeDayTwoDate,
+    scheduleId: dsaPracticeDayTwoScheduleId,
+    status: "todo",
+    done: false,
+    details: "Work through the Day 2 PDF in DSA Special Prep. Trace every interval, implement all three LeetCode labs, and answer the exit ticket before opening the appendix.",
+    materialUrl: dsaPracticeDayTwoUrl,
+    updatedAt: now
+  });
 
   return {
     subjects,
@@ -33174,6 +33201,32 @@ function dsaSpecialPrepMaterialWorkspaces() {
             skills: ["dsa-searching", "dsa-sorting", "two-pointers", "binary-search", "implementation-invariants"],
             commonFirstIssues: ["unclear-output-contract", "self-pairing", "lost-original-index", "unsafe-pointer-move", "duplicate-handling", "integer-overflow"],
             defaultNextDrills: ["Implement exact binary search from an invariant, then solve lower-bound and duplicate-boundary variations."]
+          }
+        },
+        {
+          id: "dsa-special-prep-2026-09-day-02",
+          label: "Day 2",
+          week: 1,
+          sourceWeek: 1,
+          date: "2026-09-01",
+          materialTitle: "Binary Search Is a Boundary-Finding Algorithm",
+          materialUrl: "DSA%20For%20GATE%20practice/month-01/day-02-binary-search-boundaries.pdf",
+          expectedWork: "Two-hour guided module: exact search, lower/upper bounds, duplicate ranges, debugging, LeetCode 704/35/34, consolidation, and exit ticket.",
+          status: "Published",
+          feedbackWorkflow: {
+            id: "feedback-workflow-dsa-special-prep-day-02",
+            title: "DSA Special Prep Day 2 Review",
+            promptUse: "Review the learner's binary-search code and traces. Check interval convention, invariant, progress, boundary safety, duplicates, missing targets, and logarithmic complexity.",
+            studentSummaryHint: "Name the first broken interval assumption, show the smallest failing trace, and prescribe one boundary-search repair drill.",
+            rubric: [
+              { criterion: "Interval specification", points: 2, cue: "Check whether closed or half-open endpoints and the empty interval are defined before coding." },
+              { criterion: "Invariant and correctness", points: 3, cue: "Check eliminated regions and why lower/upper-bound updates retain the first valid position." },
+              { criterion: "Implementation", points: 3, cue: "Check progress, overflow-safe midpoint, n-boundary safety, absence, and duplicate handling." },
+              { criterion: "Complexity and transfer", points: 2, cue: "Check O(log n), two-bound composition, and ability to derive count/predecessor variations." }
+            ],
+            skills: ["binary-search", "lower-bound", "upper-bound", "duplicate-boundaries", "loop-invariants"],
+            commonFirstIssues: ["mixed-interval-conventions", "non-progress-update", "off-by-one", "out-of-bounds-at-n", "linear-duplicate-scan", "unclear-predicate"],
+            defaultNextDrills: ["Implement countOccurrences as upperBound-target minus lowerBound-target, then trace five boundary cases without code."]
           }
         }
       ]

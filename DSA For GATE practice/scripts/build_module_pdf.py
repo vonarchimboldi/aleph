@@ -16,8 +16,7 @@ from reportlab.platypus import (
 )
 
 ROOT = Path(__file__).resolve().parents[1]
-SOURCE = ROOT / "month-01" / "day-01-searching-sorting.md"
-OUTPUT = ROOT / "month-01" / "day-01-searching-sorting.pdf"
+DEFAULT_SOURCE = ROOT / "month-01" / "day-01-searching-sorting.md"
 
 PAGE_W, PAGE_H = A4
 MARGIN_X = 17 * mm
@@ -33,6 +32,7 @@ PALE_GOLD = colors.HexColor("#FFF6D9")
 GOLD = colors.HexColor("#E1A928")
 GRID = colors.HexColor("#CBD5E1")
 CODE_BG = colors.HexColor("#F3F6F9")
+MODULE_FOOTER = "DSA For GATE Practice"
 
 
 def register_fonts():
@@ -174,27 +174,35 @@ def decorate_page(canvas, doc):
     canvas.line(MARGIN_X, 12 * mm, PAGE_W - MARGIN_X, 12 * mm)
     canvas.setFont(BODY_FONT, 7.5)
     canvas.setFillColor(MUTED)
-    canvas.drawString(MARGIN_X, 8 * mm, "DSA For GATE Practice · Month 1 · Day 1")
+    canvas.drawString(MARGIN_X, 8 * mm, MODULE_FOOTER)
     canvas.drawRightString(PAGE_W - MARGIN_X, 8 * mm, f"Page {doc.page}")
     canvas.restoreState()
 
 
 def build():
-    if not SOURCE.exists():
-        raise SystemExit(f"Missing source: {SOURCE}")
-    OUTPUT.parent.mkdir(parents=True, exist_ok=True)
+    global MODULE_FOOTER
+    source = Path(sys.argv[1]).resolve() if len(sys.argv) > 1 else DEFAULT_SOURCE
+    output = Path(sys.argv[2]).resolve() if len(sys.argv) > 2 else source.with_suffix(".pdf")
+    if not source.exists():
+        raise SystemExit(f"Missing source: {source}")
+    output.parent.mkdir(parents=True, exist_ok=True)
+    source_text = source.read_text(encoding="utf-8")
+    headings = [line.lstrip("# ").strip() for line in source_text.splitlines() if line.startswith("#")][:2]
+    module_identity = headings[0] if headings else source.stem
+    module_title = " — ".join(headings) if headings else source.stem
+    MODULE_FOOTER = f"DSA For GATE Practice · {module_identity}"
     doc = BaseDocTemplate(
-        str(OUTPUT), pagesize=A4,
+        str(output), pagesize=A4,
         leftMargin=MARGIN_X, rightMargin=MARGIN_X,
         topMargin=MARGIN_TOP, bottomMargin=MARGIN_BOTTOM,
-        title="Searching, Sorting, and the Power of Order",
+        title=module_title,
         author="DSA For GATE Practice",
-        subject="Month 1 Day 1 instructional module"
+        subject=f"{module_identity} instructional module"
     )
     frame = Frame(MARGIN_X, MARGIN_BOTTOM, PAGE_W - 2 * MARGIN_X, PAGE_H - MARGIN_TOP - MARGIN_BOTTOM, id="main")
     doc.addPageTemplates([PageTemplate(id="module", frames=[frame], onPage=decorate_page)])
-    doc.build(markdown_story(SOURCE.read_text(encoding="utf-8")))
-    print(OUTPUT)
+    doc.build(markdown_story(source_text))
+    print(output)
 
 
 if __name__ == "__main__":
