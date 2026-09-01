@@ -1,7 +1,7 @@
 const STORAGE_KEY = "learning-studio-data-v2";
 const LEGACY_STORAGE_KEYS = ["learning-studio-data-v1"];
 const SESSION_KEY = "aleph-session";
-const COURSE_PLAN_VERSION = "seeded-user-canonical-workspace-v154";
+const COURSE_PLAN_VERSION = "seeded-user-canonical-workspace-v155";
 const MAX_FEEDBACK_ATTACHMENT_BYTES = 3 * 1024 * 1024;
 const MAX_COMPRESSED_FEEDBACK_BYTES = 2400 * 1024;
 const MAX_FEEDBACK_REQUEST_BYTES = 4 * 1024 * 1024;
@@ -746,7 +746,7 @@ function buildPriyankaPlatinumPlan(now, accountTypes, sections, user = defaultUs
   schedule.push({
     id: dsaPracticeDayOneScheduleId,
     title: "DSA for GATE Practice M1D1: Searching, Sorting, and the Power of Order",
-    week: weekFromDate(dsaPracticeDayOneDate),
+    week: weekFromDate(dsaPracticeDayOneDate, PRIYANKA_PLATINUM_START_DATE),
     subject: "Data Structures and Algorithms",
     kind: "Guided coding module",
     date: dsaPracticeDayOneDate,
@@ -756,7 +756,7 @@ function buildPriyankaPlatinumPlan(now, accountTypes, sections, user = defaultUs
   });
   tasks.push({
     id: "task-dsa-gate-practice-month-1-day-1",
-    week: weekFromDate(dsaPracticeDayOneDate),
+    week: weekFromDate(dsaPracticeDayOneDate, PRIYANKA_PLATINUM_START_DATE),
     title: "DSA Practice M1D1: Complete Searching and Sorting guided module",
     type: "Guided coding module",
     date: dsaPracticeDayOneDate,
@@ -773,7 +773,7 @@ function buildPriyankaPlatinumPlan(now, accountTypes, sections, user = defaultUs
   schedule.push({
     id: dsaPracticeDayTwoScheduleId,
     title: "DSA for GATE Practice M1D2: Binary Search Is a Boundary-Finding Algorithm",
-    week: weekFromDate(dsaPracticeDayTwoDate),
+    week: weekFromDate(dsaPracticeDayTwoDate, PRIYANKA_PLATINUM_START_DATE),
     subject: "DSA Special Prep",
     kind: "Guided coding module",
     date: dsaPracticeDayTwoDate,
@@ -783,7 +783,7 @@ function buildPriyankaPlatinumPlan(now, accountTypes, sections, user = defaultUs
   });
   tasks.push({
     id: "task-dsa-gate-practice-month-1-day-2",
-    week: weekFromDate(dsaPracticeDayTwoDate),
+    week: weekFromDate(dsaPracticeDayTwoDate, PRIYANKA_PLATINUM_START_DATE),
     title: "DSA Practice M1D2: Complete binary-search boundaries module",
     type: "Guided coding module",
     date: dsaPracticeDayTwoDate,
@@ -34148,9 +34148,9 @@ function addDays(dateValue, days) {
   return date.toISOString().slice(0, 10);
 }
 
-function weekFromDate(dateValue) {
+function weekFromDate(dateValue, planStartDate = activePlanStartDate()) {
   if (!dateValue) return 1;
-  const start = new Date(`${activePlanStartDate()}T00:00:00`);
+  const start = new Date(`${planStartDate}T00:00:00`);
   const date = new Date(`${dateValue}T00:00:00`);
   if (Number.isNaN(date.getTime())) return 1;
   return Math.max(1, Math.floor((date - start) / 604800000) + 1);
