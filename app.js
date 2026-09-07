@@ -1,7 +1,7 @@
 const STORAGE_KEY = "learning-studio-data-v2";
 const LEGACY_STORAGE_KEYS = ["learning-studio-data-v1"];
 const SESSION_KEY = "aleph-session";
-const COURSE_PLAN_VERSION = "seeded-user-canonical-workspace-v155";
+const COURSE_PLAN_VERSION = "seeded-user-canonical-workspace-v156";
 const MAX_FEEDBACK_ATTACHMENT_BYTES = 3 * 1024 * 1024;
 const MAX_COMPRESSED_FEEDBACK_BYTES = 2400 * 1024;
 const MAX_FEEDBACK_REQUEST_BYTES = 4 * 1024 * 1024;
@@ -439,7 +439,7 @@ function buildPriyankaPlatinumPlan(now, accountTypes, sections, user = defaultUs
       date: "2026-12-31",
       status: "In progress",
       details: "Priyanka's four-month premium DSA practice archive. A new two-hour guided-coding module is published each weekday, followed by interview mocks on Saturday and Sunday. Previous modules remain available here for review.",
-      workspaceEyebrow: "Priyanka Premium Plan · September 2026",
+      workspaceEyebrow: "Priyanka Platinum Plan · September 2026",
       workspaceTitle: "Daily DSA Special Prep Archive",
       materialWorkspaces: dsaSpecialPrepMaterialWorkspaces(),
       updatedAt: now
@@ -741,6 +741,35 @@ function buildPriyankaPlatinumPlan(now, accountTypes, sections, user = defaultUs
   tests.push(...platinumProbabilityReviewTests(now));
 
   const dsaPracticeDayOneUrl = "DSA%20For%20GATE%20practice/month-01/day-01-searching-sorting.pdf";
+  sortingPatternsSprintDays().forEach((day) => {
+    const scheduleId = `schedule-${day.id}`;
+    schedule.push({
+      id: scheduleId,
+      title: day.materialTitle,
+      week: day.week,
+      subject: "DSA Special Prep",
+      kind: "Two-hour C and Python practice",
+      date: day.date,
+      details: day.expectedWork,
+      materialId: day.id,
+      materialUrl: day.materialUrl,
+      updatedAt: now
+    });
+    tasks.push({
+      id: `task-${day.id}`,
+      title: day.materialTitle,
+      week: day.week,
+      type: "Guided coding module",
+      date: day.date,
+      scheduleId,
+      status: "todo",
+      done: false,
+      details: `${day.expectedWork} Submit both languages and your invariant/runtime reasoning in DSA Special Prep; attempt the exercises before reading the solution appendix.`,
+      materialId: day.id,
+      materialUrl: day.materialUrl,
+      updatedAt: now
+    });
+  });
   const dsaPracticeDayOneDate = "2026-08-31";
   const dsaPracticeDayOneScheduleId = "schedule-dsa-gate-practice-month-1-day-1";
   schedule.push({
@@ -898,6 +927,22 @@ function buildPriyankaPlatinumPlan(now, accountTypes, sections, user = defaultUs
         date: dsaPracticeDayOneDate,
         details: "Two-hour guided coding module using Target Pair to discover brute force, indexed sorting, binary search, two pointers, hashing, duplicate handling, correctness invariants, and complexity tradeoffs.",
         link: dsaPracticeDayOneUrl,
+        updatedAt: now
+      },
+      ...sortingPatternsSprintDays().map((day) => ({
+        id: `resource-${day.id}`,
+        title: day.materialTitle,
+        date: day.date,
+        details: day.expectedWork,
+        link: day.materialUrl,
+        updatedAt: now
+      })),
+      {
+        id: "resource-dsa-sorting-patterns-reference-code",
+        title: "DSA five-day sorting and patterns: C and Python reference code",
+        date: "2026-09-07",
+        details: "Post-attempt reference functions for all five days, with build instructions. Each PDF also includes its code in the solution appendix.",
+        link: "DSA%20For%20GATE%20practice/month-01/sorting-patterns-code.zip",
         updatedAt: now
       },
       {
@@ -33169,6 +33214,47 @@ function competitionMathMaterialWorkspaces(completedWeeks = 0) {
   ];
 }
 
+function sortingPatternsSprintDays() {
+  const topics = [
+    { title: "Elementary sorts and two pointers", focus: "Bubble, selection, insertion; pair sum and in-place duplicate removal.", skills: ["bubble-sort", "selection-sort", "insertion-sort", "two-pointers"], repair: "Trace strict comparisons and the read/write boundaries on duplicate-heavy input." },
+    { title: "Why best-case runtime differs", focus: "Exact comparisons, inversions, bubble direction, operation counters, timing experiments, and fixed sliding windows.", skills: ["runtime-analysis", "best-average-worst", "inversions", "sliding-window-fixed"], repair: "Predict and instrument key comparisons on length-four sorted and reversed arrays." },
+    { title: "Merge sort, quicksort, and variable windows", focus: "Merge and partition invariants, recursion costs, duplicate pivots, and shortest positive-sum windows.", skills: ["merge-sort", "quicksort", "recurrences", "sliding-window-variable"], repair: "Draw each partition region and trace repeated shrinking before changing code." },
+    { title: "Heapsort and fast/slow pointers", focus: "Iterative sift-down, linear-time heap build, extraction, linked-list middle, cycles, and cycle-entry reasoning.", skills: ["heapsort", "heap-build", "fast-slow-pointers", "cycle-detection"], repair: "Trace a one-child heap node and a two-node linked list, checking every access." },
+    { title: "Binary search and integrated practice", focus: "Lower/upper bounds, occurrence ranges, integer square root, unique 3Sum, debugging, and six-sort synthesis.", skills: ["binary-search", "lower-upper-bound", "binary-search-on-answer", "three-sum"], repair: "Trace length-two search progress and all-equal 3Sum duplicate handling." }
+  ];
+  return topics.map((topic, index) => {
+    const day = index + 1;
+    const date = `2026-09-${String(day + 6).padStart(2, "0")}`;
+    const id = `dsa-sorting-patterns-2026-09-day-${day}`;
+    return {
+      id,
+      label: `Sprint Day ${day}`,
+      date,
+      week: weekFromDate(date, PRIYANKA_PLATINUM_START_DATE),
+      sourceWeek: 2,
+      materialTitle: `Sorting and Patterns Day ${day}: ${topic.title}`,
+      materialUrl: `DSA%20For%20GATE%20practice/month-01/sorting-patterns-day-${String(day).padStart(2, "0")}.pdf`,
+      expectedWork: `120 minutes including practice in C and Python. ${topic.focus} State invariants, test edge cases, and derive time and auxiliary-space costs.`,
+      status: "Published",
+      feedbackWorkflow: {
+        id: `feedback-workflow-${id}`,
+        title: `Sorting and Patterns Day ${day} Review`,
+        promptUse: `Review C and Python code plus written reasoning for ${topic.focus} Check costs against the actual implementation and input assumptions, including early exits and duplicate keys. Distinguish independently attempted work from reference-assisted corrections.`,
+        studentSummaryHint: "Identify the first broken invariant or boundary, give the smallest counterexample, and prescribe one short repair drill.",
+        rubric: [
+          { criterion: "Contracts and invariants", points: 3, cue: "Check input assumptions, output conventions, initialization, preservation, and termination." },
+          { criterion: "C and Python implementation", points: 3, cue: "Check both languages, safe indexing, overflow, duplicates, mutation, and storage management." },
+          { criterion: "Runtime and space reasoning", points: 3, cue: "Check operation counts, input-dependent best/average/worst behavior, auxiliary space, and measured-runtime limitations." },
+          { criterion: "Edge-case evidence", points: 1, cue: "Require explicit traces or tests and the smallest counterexample for any repaired bug." }
+        ],
+        skills: [...topic.skills, "loop-invariants", "c-implementation", "python-implementation"],
+        commonFirstIssues: ["unstated-input-assumption", "broken-invariant", "off-by-one", "integer-overflow", "incorrect-complexity-case"],
+        defaultNextDrills: [topic.repair]
+      }
+    };
+  });
+}
+
 function dsaSpecialPrepMaterialWorkspaces() {
   return [
     {
@@ -33230,6 +33316,13 @@ function dsaSpecialPrepMaterialWorkspaces() {
           }
         }
       ]
+    },
+    {
+      id: "dsa-sorting-patterns-five-day-2026-09",
+      title: "Five-day Sorting and Patterns Sprint",
+      day: "September 7-11",
+      focus: "Six sorting algorithms and four core patterns, with invariants, C/Python implementations, runtime analysis, and practice in five two-hour sessions. Download all reference code from Resources after attempting the labs.",
+      weeks: sortingPatternsSprintDays()
     }
   ];
 }
