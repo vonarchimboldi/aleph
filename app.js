@@ -1,7 +1,7 @@
 const STORAGE_KEY = "learning-studio-data-v2";
 const LEGACY_STORAGE_KEYS = ["learning-studio-data-v1"];
 const SESSION_KEY = "aleph-session";
-const COURSE_PLAN_VERSION = "seeded-user-canonical-workspace-v156";
+const COURSE_PLAN_VERSION = "seeded-user-canonical-workspace-v157";
 const MAX_FEEDBACK_ATTACHMENT_BYTES = 3 * 1024 * 1024;
 const MAX_COMPRESSED_FEEDBACK_BYTES = 2400 * 1024;
 const MAX_FEEDBACK_REQUEST_BYTES = 4 * 1024 * 1024;
@@ -741,14 +741,14 @@ function buildPriyankaPlatinumPlan(now, accountTypes, sections, user = defaultUs
   tests.push(...platinumProbabilityReviewTests(now));
 
   const dsaPracticeDayOneUrl = "DSA%20For%20GATE%20practice/month-01/day-01-searching-sorting.pdf";
-  sortingPatternsSprintDays().forEach((day) => {
+  [...sortingPatternsSprintDays(), ...dsaProblemLadderDays()].forEach((day) => {
     const scheduleId = `schedule-${day.id}`;
     schedule.push({
       id: scheduleId,
       title: day.materialTitle,
       week: day.week,
       subject: "DSA Special Prep",
-      kind: "Two-hour C and Python practice",
+      kind: day.practiceKind || "Two-hour C and Python practice",
       date: day.date,
       details: day.expectedWork,
       materialId: day.id,
@@ -759,12 +759,12 @@ function buildPriyankaPlatinumPlan(now, accountTypes, sections, user = defaultUs
       id: `task-${day.id}`,
       title: day.materialTitle,
       week: day.week,
-      type: "Guided coding module",
+      type: day.practiceKind || "Guided coding module",
       date: day.date,
       scheduleId,
       status: "todo",
       done: false,
-      details: `${day.expectedWork} Submit both languages and your invariant/runtime reasoning in DSA Special Prep; attempt the exercises before reading the solution appendix.`,
+      details: day.submissionInstructions || `${day.expectedWork} Submit both languages and your invariant/runtime reasoning in DSA Special Prep; attempt the exercises before reading the solution appendix.`,
       materialId: day.id,
       materialUrl: day.materialUrl,
       updatedAt: now
@@ -929,7 +929,7 @@ function buildPriyankaPlatinumPlan(now, accountTypes, sections, user = defaultUs
         link: dsaPracticeDayOneUrl,
         updatedAt: now
       },
-      ...sortingPatternsSprintDays().map((day) => ({
+      ...[...sortingPatternsSprintDays(), ...dsaProblemLadderDays()].map((day) => ({
         id: `resource-${day.id}`,
         title: day.materialTitle,
         date: day.date,
@@ -33255,6 +33255,49 @@ function sortingPatternsSprintDays() {
   });
 }
 
+function dsaProblemLadderDays() {
+  const topics = [
+    { difficulty: "Easy", count: 4, title: "Preserve order and define the output", focus: "Stable zero move, merge sorted arrays, common values, sorted squares.", skills: ["read-write-invariant", "merge", "two-pointers"], repair: "Trace the processed prefix on empty and duplicate-bearing arrays." },
+    { difficulty: "Medium", count: 3, title: "Decide what can be discarded", focus: "Merge reservations, count pairs below a limit, search after rotation.", skills: ["interval-merging", "pair-counting", "rotated-search"], repair: "Explain one discarded block of candidates using a concrete trace." },
+    { difficulty: "Hard", count: 2, title: "Derive a solution from familiar parts", focus: "Count inversions and find the smallest daily shipping capacity.", skills: ["inversion-counting", "merge-sort", "monotone-feasibility", "binary-search-on-answer"], repair: "Isolate the cross-half count or the greedy capacity checker before retrying the full solution." },
+    { difficulty: "Medium", count: 3, title: "Transfer and repair", focus: "Capacity checker, smallest processing speed, closest pair sum.", skills: ["greedy-feasibility", "binary-search-on-answer", "two-pointers"], repair: "State how the new feasibility test differs from shipping before coding." },
+    { difficulty: "Easy", count: 4, title: "Accuracy after difficulty", focus: "Keep at most two copies, insertion boundary, range counts, one missing label.", skills: ["in-place-compaction", "lower-upper-bound", "monotone-predicate"], repair: "Trace empty, all-equal, and end-boundary cases without a template." }
+  ];
+  return topics.map((topic, index) => {
+    const day = index + 1;
+    const date = `2026-09-${14 + index}`;
+    const id = `dsa-problem-ladder-2026-09-day-${day}`;
+    const expectedWork = `120 minutes: 10 recall, 100 solving, 10 review. ${topic.difficulty}; ${topic.count} available problems, not a quota. ${topic.focus} Use one language (C11 or Python 3) consistently and record independent versus assisted solves.`;
+    return {
+      id, date,
+      label: `Ladder Day ${day} · ${topic.difficulty}`,
+      week: weekFromDate(date, PRIYANKA_PLATINUM_START_DATE),
+      sourceWeek: 3,
+      materialTitle: `DSA Problem Ladder Day ${day} (${topic.difficulty}): ${topic.title}`,
+      materialUrl: `DSA%20For%20GATE%20practice/month-01/problem-ladder-day-${String(day).padStart(2, "0")}.pdf`,
+      expectedWork,
+      practiceKind: "Two-hour problem ladder",
+      submissionInstructions: `${expectedWork} Submit problem numbers, minutes, hints used, code, tests, correctness arguments, and time/space analysis in DSA Special Prep. Stop at 120 minutes and mark unfinished work as partial.`,
+      status: "Published",
+      feedbackWorkflow: {
+        id: `feedback-workflow-${id}`,
+        title: `DSA Problem Ladder Day ${day} Review`,
+        promptUse: `Review ${topic.focus} Accept C11 OR Python 3; do not require translation. Count a solve only when code satisfies the problem constraints, tests support correctness, and the learner explains why it works. Report attempted, independently solved, assisted, and partial separately using submitted timing and hint evidence. Do not infer independence or a solved count without evidence; do not penalize unattempted queue items as incorrect. Difficulty is relative to last week's sprint, not an official rating.`,
+        studentSummaryHint: "Summarize verified solves and assistance, the first failed assumption, and one repair drill. Keep performance counts separate from the quality rubric.",
+        rubric: [
+          { criterion: "Method and correctness", points: 4, cue: "Check the contract, invariant, safe discard or feasibility argument, and termination on attempted problems." },
+          { criterion: "Implementation and tests", points: 3, cue: "Check code in the chosen language, edge cases, duplicates, boundaries, and wide arithmetic where needed." },
+          { criterion: "Complexity", points: 2, cue: "Verify runtime and auxiliary space against each stated constraint." },
+          { criterion: "Attempt evidence", points: 1, cue: "Check minutes, hint use, independent/assisted/partial status and the final 120-minute cutoff log." }
+        ],
+        skills: [...topic.skills, "loop-invariants", "algorithm-selection", "complexity-analysis"],
+        commonFirstIssues: ["unstated-assumption", "unsafe-discard", "off-by-one", "incorrect-complexity", "missing-attempt-evidence"],
+        defaultNextDrills: [topic.repair]
+      }
+    };
+  });
+}
+
 function dsaSpecialPrepMaterialWorkspaces() {
   return [
     {
@@ -33323,6 +33366,13 @@ function dsaSpecialPrepMaterialWorkspaces() {
       day: "September 7-11",
       focus: "Six sorting algorithms and four core patterns, with invariants, C/Python implementations, runtime analysis, and practice in five two-hour sessions. Download all reference code from Resources after attempting the labs.",
       weeks: sortingPatternsSprintDays()
+    },
+    {
+      id: "dsa-problem-ladder-week-2026-09-14",
+      title: "Problem Ladder: Easy → Medium → Hard → Medium → Easy",
+      day: "September 14–18",
+      focus: "Five two-hour sessions with 16 available problems. Choose and justify the method, test edge cases, and record independent and assisted solves separately. Use C11 or Python 3 consistently; the queue is not a completion quota.",
+      weeks: dsaProblemLadderDays()
     }
   ];
 }
