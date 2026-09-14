@@ -1,7 +1,7 @@
 const STORAGE_KEY = "learning-studio-data-v2";
 const LEGACY_STORAGE_KEYS = ["learning-studio-data-v1"];
 const SESSION_KEY = "aleph-session";
-const COURSE_PLAN_VERSION = "seeded-user-canonical-workspace-v157";
+const COURSE_PLAN_VERSION = "seeded-user-canonical-workspace-v158";
 const MAX_FEEDBACK_ATTACHMENT_BYTES = 3 * 1024 * 1024;
 const MAX_COMPRESSED_FEEDBACK_BYTES = 2400 * 1024;
 const MAX_FEEDBACK_REQUEST_BYTES = 4 * 1024 * 1024;
@@ -741,7 +741,7 @@ function buildPriyankaPlatinumPlan(now, accountTypes, sections, user = defaultUs
   tests.push(...platinumProbabilityReviewTests(now));
 
   const dsaPracticeDayOneUrl = "DSA%20For%20GATE%20practice/month-01/day-01-searching-sorting.pdf";
-  [...sortingPatternsSprintDays(), ...dsaProblemLadderDays()].forEach((day) => {
+  [...sortingPatternsSprintDays(), ...dsaProblemLadderDays(), ...dsaInsightLadderDays()].forEach((day) => {
     const scheduleId = `schedule-${day.id}`;
     schedule.push({
       id: scheduleId,
@@ -929,7 +929,7 @@ function buildPriyankaPlatinumPlan(now, accountTypes, sections, user = defaultUs
         link: dsaPracticeDayOneUrl,
         updatedAt: now
       },
-      ...[...sortingPatternsSprintDays(), ...dsaProblemLadderDays()].map((day) => ({
+      ...[...sortingPatternsSprintDays(), ...dsaProblemLadderDays(), ...dsaInsightLadderDays()].map((day) => ({
         id: `resource-${day.id}`,
         title: day.materialTitle,
         date: day.date,
@@ -33298,6 +33298,106 @@ function dsaProblemLadderDays() {
   });
 }
 
+function dsaInsightLadderDays() {
+  const topics = [
+  {
+    "title": "How far does disorder spread?",
+    "difficulty": "Easy",
+    "skills": [
+      "sorting-boundaries",
+      "prefix-suffix-invariants",
+      "counterexamples"
+    ],
+    "main": "Return the shortest inclusive interval [l,r] whose sorting makes the entire integer array nondecreasing. Return [-1,-1] if it is already sorted (including empty or singleton input). Do not modify the input. Arrays may contain duplicates; n <= 200,000 and values lie between -1,000,000,000 and 1,000,000,000. Require O(n) time and O(1) auxiliary space. First develop a slower baseline for small inputs.",
+    "variation": "Instead of sorting, you may reverse one contiguous interval. Decide whether that can make the array nondecreasing, and return any valid interval, or IMPOSSIBLE. Already sorted arrays return [-1,-1]. An O(n log n) solution with O(n) storage is acceptable for this optional task. Does the shortest sorting interval always work when reversed? Give a counterexample.",
+    "repair": "Trace running maxima and minima on [1,3,2,2,4], marking the evidence that forces each endpoint."
+  },
+  {
+    "title": "Which pairs count?",
+    "difficulty": "Medium",
+    "skills": [
+      "pair-counting",
+      "cumulative-counts",
+      "duplicate-semantics"
+    ],
+    "main": "Given an unsorted integer array and inclusive bounds L <= R, count index pairs i < j satisfying L <= a[i]+a[j] <= R. Equal values at different indices represent different pairs. n <= 200,000; values and bounds lie between -1,000,000,000 and 1,000,000,000. Require O(n log n) time; sorting a copy is allowed. In C, use 64-bit arithmetic for sums and counts. State the cost of sorting and its storage separately from your scan.",
+    "variation": "Count distinct unordered VALUE pairs instead of index pairs, in O(n log n) time. A pair (x,x) is allowed only if the input contains at least two copies of x. For [1,1,2,3] and [3,4], the answer is 2; for [2,2,2] and [4,4], it is 1. Explain why simply removing duplicates and running the original routine is insufficient.",
+    "repair": "Enumerate the six index pairs of [1,1,2,3] and compare them with its distinct value pairs."
+  },
+  {
+    "title": "Select an answer you cannot list",
+    "difficulty": "Hard",
+    "skills": [
+      "implicit-order-statistics",
+      "monotone-counting",
+      "binary-search-on-answer",
+      "two-pointers"
+    ],
+    "main": "For every index pair i < j, form |a[i]-a[j]|. Return the kth smallest entry in this multiset of distances, counting equal distances separately. The rank k is one-based. Input: 2 <= n <= 200,000, integer values from -1,000,000,000 to 1,000,000,000, and 1 <= k <= n(n-1)/2. Do not build the full pair-distance list. Target time: O(n log n + n log(W+1)), where W=max(a)-min(a); O(n) auxiliary storage is allowed. Use wide counts and differences in C.",
+    "variation": "Reasoning task, not another coding quota: for [1,1,3,3], list all six distances. Explain why a counting function can jump past k and why testing whether its count equals k is wrong. Give the output for k=3. Distinguish a rank among occurrences from a rank among distinct values.",
+    "repair": "Build C(d) by hand for [1,1,3,3] at d=0,1,2 before retrying the search."
+  },
+  {
+    "title": "How far apart can you place them?",
+    "difficulty": "Medium",
+    "skills": [
+      "greedy-feasibility",
+      "exchange-argument",
+      "last-true-search",
+      "constraint-changes"
+    ],
+    "main": "Choose exactly k positions from n distinct integer coordinates to maximize the minimum distance between any two chosen positions. Input is unsorted; 2 <= k <= n <= 200,000 and coordinates lie between -1,000,000,000 and 1,000,000,000. Return the optimal integer distance. Target O(n log n + n log(W+1)) time, where W=max(x)-min(x); sorting a copy is allowed. Use wide subtraction in C.",
+    "variation": "Now two specified coordinates must be selected. No new implementation is required: give a small counterexample showing why the original greedy checker cannot simply ignore the mandatory positions, or why checking whether its one chosen set includes both positions can wrongly reject a feasible distance. State precisely what your example disproves.",
+    "repair": "Write down the direction of feasibility and trace the last-true search on an interval containing two integers."
+  },
+  {
+    "title": "Where should the split go?",
+    "difficulty": "Easy",
+    "skills": [
+      "prefix-sums",
+      "monotonicity-assumptions",
+      "algorithm-selection"
+    ],
+    "main": "Split an array of nonnegative integers into two nonempty contiguous parts. Return (t,difference), where the left part contains the first t entries and difference is the absolute difference between the two part sums. Break ties by choosing the smallest t. Input: 2 <= n <= 200,000; entries are at most 1,000,000,000. Require O(n) total time; O(1) auxiliary space is achievable. Explain also whether the candidate split positions have an order property that permits searching after preprocessing.",
+    "variation": "Allow negative entries with absolute value at most 1,000,000,000. Give a counterexample to the order property used for searching. Then provide a correct O(n)-time, O(1)-space algorithm. For [4,-5,3,2], the answer is (3,0). Does your original linear scan need any change?",
+    "repair": "List every valid split, prefix sum, and difference for [0,0,0] and [4,-5,3,2]."
+  }
+];
+  return topics.map((topic, index) => {
+    const day = index + 1;
+    const date = `2026-09-${21 + index}`;
+    const id = `dsa-insight-ladder-2026-09-day-${day}`;
+    const expectedWork = `120 minutes: 10 recall, 90 problem work, 20 explanation/review. ${topic.difficulty}: ${topic.title} One main problem and an optional variation; use C11 or Python 3. Record independent, hinted, or method-supplied insight and actual solved counts.`;
+    return {
+      id, date,
+      label: `Insight Day ${day} · ${topic.difficulty}`,
+      week: weekFromDate(date, PRIYANKA_PLATINUM_START_DATE),
+      sourceWeek: 4,
+      materialTitle: `DSA Insight Ladder Day ${day} (${topic.difficulty}): ${topic.title}`,
+      materialUrl: `DSA%20For%20GATE%20practice/month-01/insight-ladder-day-${String(day).padStart(2, "0")}.pdf`,
+      expectedWork,
+      practiceKind: "Two-hour conceptual problem ladder",
+      submissionInstructions: `${expectedWork} Submit code, tests, the key claim and proof, complexity, minutes, hints read, and main/variation status. Open the separately paginated appendix only after attempting the problem and log any assistance.`,
+      status: "Published",
+      feedbackWorkflow: {
+        id: `feedback-workflow-${id}`,
+        title: `DSA Insight Ladder Day ${day} Review`,
+        promptUse: `Main contract: ${topic.main} Optional variation: ${topic.variation} Accept C11 OR Python 3. Review the learner's derivation, attempted counterexamples, correctness proof, code, tests, and costs. Separate independent insight, insight after small hints, and implementation after the method was supplied. Do not infer independence from correct code. Count a main solve only with code meeting the contract and an explanation; record partial and unattempted separately. Report reasoning variations separately from coding solves. Do not penalize an unattempted optional variation. Reading the solution during the final 20-minute review does not convert an unfinished timed attempt to a solve. Flag missing timing/hint evidence as unknown.`,
+        studentSummaryHint: "Lead with the main attempt status and insight assistance, then the first unsupported claim, a smallest counterexample, and one repair drill.",
+        rubric: [
+          { criterion: "Conceptual insight and assumptions", points: 3, cue: "Check how the learner moved from a direct baseline to a useful representation or predicate and which assumptions it needs." },
+          { criterion: "Correctness argument", points: 3, cue: "Check necessity/sufficiency, safe elimination, greedy exchange, or monotonicity as appropriate; test the proposed claim against edge cases." },
+          { criterion: "Implementation and cost", points: 3, cue: "Check the chosen language, all output conventions, ties, duplicates, overflow, and total preprocessing plus query costs." },
+          { criterion: "Attempt evidence", points: 1, cue: "Record minutes, hints and appendix use, main status and separate variation status without inventing evidence." }
+        ],
+        skills: [...topic.skills, "conceptual-insight", "correctness-proof", "complexity-analysis"],
+        commonFirstIssues: ["unsupported-claim", "wrong-monotonicity", "duplicate-semantics", "tie-handling", "ignored-preprocessing-cost", "missing-assistance-evidence"],
+        defaultNextDrills: [topic.repair]
+      }
+    };
+  });
+}
+
 function dsaSpecialPrepMaterialWorkspaces() {
   return [
     {
@@ -33373,6 +33473,13 @@ function dsaSpecialPrepMaterialWorkspaces() {
       day: "September 14–18",
       focus: "Five two-hour sessions with 16 available problems. Choose and justify the method, test edge cases, and record independent and assisted solves separately. Use C11 or Python 3 consistently; the queue is not a completion quota.",
       weeks: dsaProblemLadderDays()
+    },
+    {
+      id: "dsa-insight-ladder-week-2026-09-21",
+      title: "Insight Ladder: Discover, Challenge, Prove",
+      day: "September 21–25",
+      focus: "Easy → Medium → Hard → Medium → Easy, with difficulty from conceptual insight. Five 120-minute sessions, each with one main problem and an optional variation. Derive the method before coding and track insight assistance separately from completed solutions.",
+      weeks: dsaInsightLadderDays()
     }
   ];
 }
