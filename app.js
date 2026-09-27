@@ -1,7 +1,7 @@
 const STORAGE_KEY = "learning-studio-data-v2";
 const LEGACY_STORAGE_KEYS = ["learning-studio-data-v1"];
 const SESSION_KEY = "aleph-session";
-const COURSE_PLAN_VERSION = "seeded-user-canonical-workspace-v158";
+const COURSE_PLAN_VERSION = "seeded-user-canonical-workspace-v162";
 const MAX_FEEDBACK_ATTACHMENT_BYTES = 3 * 1024 * 1024;
 const MAX_COMPRESSED_FEEDBACK_BYTES = 2400 * 1024;
 const MAX_FEEDBACK_REQUEST_BYTES = 4 * 1024 * 1024;
@@ -15,7 +15,9 @@ const PLATINUM_PROGRESS_SYNC_DEBOUNCE_MS = 1500;
 const UNDERSTANDING_SUBJECTS = [
   { id: "discrete-math", title: "Discrete Math", matches: ["discrete"] },
   { id: "dsa", title: "Data Structures and Algorithms", matches: ["data structures", "dsa", "algorithm"] },
-  { id: "probability-statistics", title: "Probability and Statistics", matches: ["probability", "statistics"] }
+  { id: "probability-statistics", title: "Probability and Statistics", matches: ["probability", "statistics"] },
+  { id: "linear-algebra", title: "Linear Algebra", matches: ["linear-algebra", "linear algebra"] },
+  { id: "machine-learning", title: "Machine Learning", matches: ["machine-learning", "machine learning"] }
 ];
 
 const state = loadState();
@@ -245,6 +247,7 @@ function mergeCanonicalTasks(canonicalTasks, previousTasks) {
 function isSupersededSeededPlatinumTask(task) {
   const id = String(task?.id || "");
   return /^task-(dm|dsa|ps|cm)-week-\d+-/.test(id)
+    || /^task-platinum-la-w\d+-video$/.test(id)
     || /^task-platinum-week-\d+-cross-subject-spaced-review$/.test(id);
 }
 
@@ -405,12 +408,183 @@ function slugify(value) {
     .replace(/^-|-$/g, "") || "learner";
 }
 
+function buildPlatinumMachineLearningPlan(lessonPlanId, now) {
+  const curriculum = platinumMachineLearningCurriculum();
+  const subjectId = "subject-platinum-machine-learning";
+  const patternWorkspaces = ["practice", "review"].map((kind) => ({
+    id: `platinum-ml-${kind}`, kind,
+    day: kind === "practice" ? "Practice" : "Weekly review",
+    title: `Machine Learning ${kind}`,
+    focus: "Derive, implement, evaluate on held-out data, and explain the result.",
+    weeks: curriculum.weeks.map((entry) => ({
+      id: `platinum-ml-${curriculum.materialRevision}-w${entry.week}-${kind}`,
+      week: entry.week, sourceWeek: entry.week,
+      date: kind === "practice" ? entry.practiceDue : entry.reviewDue,
+      materialTitle: `Machine Learning Week ${entry.week}: ${entry.title} — ${kind}`,
+      inlineQuestions: entry[kind],
+      readingContext: entry.readings.map((reading) => `${reading.title}: ${reading.url}`).join("\n"),
+      physicalModel: entry.physicalModel, experiment: entry.experiment,
+      prerequisite: entry.prerequisite,
+      expectedWork: kind === "practice"
+        ? "Submit the original practice problems and experiment report with derivations, code excerpts, seeds, data splits, baseline, plots, and evaluation. These are Aleph assignments, not official course homework."
+        : "Attempt both review prompts without notes, record confidence, and reattempt one earlier missed concept (Week 1: a prerequisite check). Submit separately from practice.",
+      status: "Scheduled",
+      feedbackWorkflow: {
+        id: `feedback-platinum-ml-w${entry.week}-${kind}`, title: `Machine Learning Week ${entry.week} ${kind} feedback`, maxScore: 10,
+        promptUse: `${entry.goals} Prerequisites: ${entry.prerequisite} Model: ${entry.physicalModel} Experiment: ${entry.experiment} Original questions: ${entry[kind].join(" ")} ${curriculum.feedbackPolicy} Assess only supplied evidence. Do not claim to have executed submitted code or infer results from missing outputs. Ask for enough context to assess any external exercise.`,
+        studentSummaryHint: "Identify secure ideas, the first unsupported step, leakage or evaluation errors, and one concrete repair with a fresh check.",
+        rubric: [
+          {criterion:"Mathematical model and derivation",points:3,cue:"Check dimensions, assumptions, objective, and justified steps."},
+          {criterion:"Implementation and numerical evidence",points:3,cue:"Check algorithm, gradient or residual tests, seeds, and reported outputs; do not pretend to execute code."},
+          {criterion:"Evaluation design",points:2,cue:"Separate training, validation, and test; check leakage, baselines, and metric choice."},
+          {criterion:"Interpretation and transfer",points:2,cue:"Explain geometry, limitations, uncertainty, and a changed-parameter prediction."}
+        ],
+        skills: entry.skills,
+        commonFirstIssues: ["prerequisite-gap", "dimension-mismatch", "data-leakage", "optimization-error", "unsupported-conclusion"],
+        defaultNextDrills: [entry.repair]
+      }
+    }))
+  }));
+  const schedule = [];
+  const tasks = [];
+  curriculum.weeks.forEach((entry) => {
+    const steps = [
+      ["prerequisites",entry.prerequisiteDue,"Prerequisite preparation",entry.prerequisite],
+      ["notes",entry.readingDue,"Course notes",entry.readings.map((reading)=>`${reading.title}: ${reading.url}`).join("\n") + "\n" + entry.goals],
+      ["experiment",entry.experimentDue,"Numerical experiment",entry.physicalModel + " " + entry.experiment],
+      ["practice",entry.practiceDue,"Practice and submit",curriculum.exercisePolicy],
+      ["review",entry.reviewDue,"Weekly review","Submit both weekly review prompts without notes, record confidence, and revisit an earlier missed concept."],
+      ["repair",entry.repairDue,"Feedback and 48-hour recheck",entry.repair]
+    ];
+    steps.forEach(([key,date,kind,details]) => {
+      const stem = `platinum-ml-w${entry.week}-${key}`;
+      schedule.push({id:`schedule-${stem}`,subjectId,subject:"Machine Learning",week:entry.week,
+        studyPlanId:curriculum.id,studyWeekStart:entry.startDate,studyWeekEnd:entry.endDate,
+        date,kind,title:`Machine Learning Week ${entry.week}: ${kind}`,details,updatedAt:now});
+      tasks.push({id:`task-${stem}`,subjectId,week:entry.week,studyPlanId:curriculum.id,
+        title:`ML Week ${entry.week}: ${kind}`,type:kind,date,scheduleId:`schedule-${stem}`,
+        status:"todo",done:false,details,updatedAt:now});
+    });
+  });
+  return {
+    subject:{id:subjectId,accountTypeId:"gate-da-platinum",lessonPlanId,title:"Machine Learning",
+      date:curriculum.endDate,status:"Scheduled · eight weeks",details:curriculum.pacing,curriculum,patternWorkspaces,updatedAt:now},
+    schedule,tasks,
+    resources:curriculum.sources.map((source,index)=>({id:`resource-platinum-ml-${index}`,title:source.title,
+      date:curriculum.startDate,details:"Eight-week adaptation of the Fall 2025 lecture notes. Open Machine Learning for dated assignments and original experiments.",link:source.url,updatedAt:now}))
+  };
+}
+
+function buildPlatinumLinearAlgebraPlan(lessonPlanId, now) {
+  const curriculum = platinumLinearAlgebraCurriculum();
+  const subjectId = "subject-platinum-linear-algebra";
+  const patterns = [
+    { id: "platinum-la-practice", day: "Practice", title: "Linear Algebra practice", kind: "practice", focus: "Model, predict, draw, calculate, simulate, and explain." },
+    { id: "platinum-la-review", day: "Weekly review", title: "Linear Algebra weekly review", kind: "review", focus: "Attempt without notes, report confidence, and diagnose gaps before the next week." }
+  ].map((pattern) => ({
+    ...pattern,
+    weeks: curriculum.weeks.map((entry) => {
+      const questions = entry[pattern.kind];
+      return {
+        id: `platinum-la-${curriculum.materialRevision}-w${entry.week}-${pattern.kind}`,
+        week: entry.week,
+        sourceWeek: entry.week,
+        date: pattern.kind === "practice" ? entry.practiceDue : entry.reviewDue,
+        materialTitle: `Linear Algebra Week ${entry.week}: ${entry.title} — ${pattern.kind}`,
+        inlineQuestions: questions,
+        readingContext: `${entry.mm} ${entry.hh}`,
+        physicalModel: entry.physicalModel,
+        experiment: entry.experiment,
+        expectedWork: pattern.kind === "practice"
+          ? "Submit textbook references, the physical problems, a labelled sketch, and the numerical experiment with units and model assumptions."
+          : "Answer both review prompts without notes, then reattempt one missed question from an earlier week (Week 1: explain a prerequisite you found difficult). Record confidence and corrections separately.",
+        status: "Scheduled",
+        feedbackWorkflow: {
+          id: `feedback-platinum-la-w${entry.week}-${pattern.kind}`,
+          title: `Linear Algebra Week ${entry.week} ${pattern.kind} feedback`,
+          maxScore: 10,
+          promptUse: `${entry.goals} Physical model: ${entry.physicalModel} Experiment: ${entry.experiment} Assess only the submitted work. Original questions: ${questions.join(" ")} For textbook problems, require the learner to identify the problem and supply sufficient context; do not invent its statement or a score. ${curriculum.feedbackPolicy}`,
+          studentSummaryHint: "Separate secure understanding, prerequisite gaps, and execution errors. Cite evidence and give a concrete repair followed by a fresh recheck.",
+          rubric: [
+            { criterion: "Model and hypotheses", points: 3, cue: "Define variables, units, sign conventions, physical idealizations, and theorem assumptions." },
+            { criterion: "Reasoning and computation", points: 3, cue: "Justify every substantive step and check the result." },
+            { criterion: "Physical and geometric interpretation", points: 2, cue: "Predict a changed parameter or limiting case and connect it to the model." },
+            { criterion: "Numerical evidence and transfer", points: 2, cue: "Check residuals, units, and numerical error; distinguish simulation evidence from proof and explain a repair." }
+          ],
+          skills: entry.skills,
+          commonFirstIssues: ["missing-hypothesis", "domain-codomain-mismatch", "unsupported-proof-step", "calculation-error"],
+          defaultNextDrills: [entry.repair]
+        }
+      };
+    })
+  }));
+  const archivedPatterns = patterns.map((pattern) => ({
+    ...pattern,
+    weeks: curriculum.weeks.filter((entry) => entry.legacyPractice).map((entry) => ({
+      ...pattern.weeks.find((week) => week.week === entry.week),
+      id: `platinum-la-w${entry.week}-${pattern.kind}`,
+      date: "",
+      materialTitle: `Earlier Linear Algebra Week ${entry.week} ${pattern.kind}`,
+      inlineQuestions: pattern.kind === "practice" ? entry.legacyPractice : entry.legacyReview,
+      readingContext: "Earlier provisional assignment; retained for submission history.",
+      expectedWork: "Earlier assignment retained with its original questions and saved submission.",
+      status: "Archived · earlier assignment",
+      feedbackWorkflow: undefined,
+      physicalModel: "",
+      experiment: ""
+    }))
+  }));
+  const schedule = [];
+  const tasks = [];
+  for (const entry of curriculum.weeks) {
+    const steps = [
+      ["mm", entry.mmDue, "M&M reading", entry.mm + " " + entry.goals],
+      ...entry.hhBlocks.map((block, index) => [index ? `hh-${index+1}` : "hh", block.endDate, `H&H Chapter ${block.chapter}`, `${block.startDate}–${block.endDate}: ${block.focus} ${block.sections.length ? `Sections ${block.sections.join(', ')}.` : ''}`]),
+      ["experiment", entry.experimentDue, "Physical and numerical experiment", entry.physicalModel + " " + entry.experiment],
+      ["practice", entry.practiceDue, "Practice and submit", curriculum.exercisePolicy],
+      ["review", entry.reviewDue, "Weekly review", "Open Linear Algebra in Subjects. Submit the weekly review separately from practice, with confidence and one earlier missed question reattempted."],
+      ["repair", entry.repairDue, "Feedback and repair", entry.repair + " Recheck after 48 hours; record one repair and one transfer problem, carrying unresolved gaps forward."]
+    ];
+    for (const [key, date, kind, details] of steps) {
+      const stem = `platinum-la-w${entry.week}-${key}`;
+      schedule.push({
+        id: `schedule-${stem}`, subjectId, subject: "Linear Algebra", week: entry.week,
+        studyPlanId: curriculum.id, studyWeekStart: entry.startDate, studyWeekEnd: entry.endDate, date, kind,
+        title: `Linear Algebra Week ${entry.week}: ${kind}`, details, updatedAt: now
+      });
+      tasks.push({
+        id: `task-${stem}`, subjectId, week: entry.week, studyPlanId: curriculum.id,
+        title: `LA Week ${entry.week}: ${kind}`, type: kind, date,
+        scheduleId: `schedule-${stem}`, status: "todo", done: false,
+        details: details, updatedAt: now
+      });
+    }
+  }
+  return {
+    subject: {
+      id: subjectId, accountTypeId: "gate-da-platinum", lessonPlanId,
+      title: "Linear Algebra", date: curriculum.endDate, status: "Scheduled · October–November 2026",
+      details: curriculum.pacing, curriculum, patternWorkspaces: patterns, archivedPatternWorkspaces: archivedPatterns, updatedAt: now
+    },
+    schedule, tasks,
+    resources: curriculum.sources.map((source, index) => ({
+      id: `resource-platinum-la-${index}`, title: source.title, date: "",
+      details: "Priyanka's Linear Algebra reading and physical problem plan. Video selection is deferred. Open the subject for weekly assignments.",
+      link: source.url, updatedAt: now
+    }))
+  };
+}
+
 function buildPriyankaPlatinumPlan(now, accountTypes, sections, user = defaultUser()) {
   const startDate = PRIYANKA_PLATINUM_START_DATE;
   const endDate = addDays(startDate, 90);
   const userSlug = slugify(user.name || user.id || "learner");
   const lessonPlanId = `lesson-${userSlug}-platinum`;
+  const linearAlgebraPlan = buildPlatinumLinearAlgebraPlan(lessonPlanId, now);
+  const machineLearningPlan = buildPlatinumMachineLearningPlan(lessonPlanId, now);
   const subjects = [
+    linearAlgebraPlan.subject,
+    machineLearningPlan.subject,
     {
       id: "subject-discrete-mathematics",
       accountTypeId: "gate-da-platinum",
@@ -512,9 +686,9 @@ function buildPriyankaPlatinumPlan(now, accountTypes, sections, user = defaultUs
     }
   });
 
-  const schedule = [];
+  const schedule = [...linearAlgebraPlan.schedule, ...machineLearningPlan.schedule];
   const tests = [];
-  const tasks = [];
+  const tasks = [...linearAlgebraPlan.tasks, ...machineLearningPlan.tasks];
   const feedback = [];
 
   plans.forEach((plan) => {
@@ -849,17 +1023,11 @@ function buildPriyankaPlatinumPlan(now, accountTypes, sections, user = defaultUs
         userId: user.id,
         title: `${user.displayName || user.name} GATE DA Platinum plan`,
         type: "personalized",
-        subjects: [
-          "Discrete Mathematics",
-          "Data Structures and Algorithms",
-          "DSA Special Prep",
-          "Probability and Statistics",
-          "Competition Math"
-        ],
+        subjects: subjects.map((subject) => subject.title),
         startDate,
-        endDate,
+        endDate: linearAlgebraPlan.subject.curriculum.endDate,
         status: "active",
-        details: "Personalized June-September Platinum plan for the GATE DA exam plus a Competition Math maturity track. The Probability and Statistics subject is organized as recurring PSB patterns with weekly material, solution upload, and feedback.",
+        details: "Personalized Platinum plan for the GATE DA exam plus a Competition Math maturity track. Linear Algebra runs October 1–November 30, 2026. Machine Learning covers Willett's 17 Fall 2025 lectures in eight weeks through November 25, with November wrap-up time. Both include experiments, practice, review, and feedback. Probability and Statistics uses recurring PSB patterns with weekly material, solution upload, and feedback.",
         updatedAt: now
       }
     ],
@@ -881,6 +1049,8 @@ function buildPriyankaPlatinumPlan(now, accountTypes, sections, user = defaultUs
       }
     ].concat(feedback),
     resources: [
+      ...linearAlgebraPlan.resources,
+      ...machineLearningPlan.resources,
       {
         id: "resource-cmu-discrete-mathematics",
         title: "CMU 21-228 Discrete Mathematics - Po-Shen Loh",
@@ -36800,7 +36970,7 @@ function subjectMenuCardTemplate(subject) {
         <p>${escapeHtml(subject.details || "No subject details added.")}</p>
       </div>
       <div class="subject-menu-footer">
-        <span class="tag">${countLabel}</span>
+        <span class="tag">${subject.curriculum ? `${subject.curriculum.weeks.length} study blocks · Oct–Nov` : subject.planningWorkflow ? "Weekly plan in preparation" : countLabel}</span>
         <button class="primary-btn" data-open-subject="${subject.id}" type="button">Open subject</button>
       </div>
     </article>
@@ -36808,6 +36978,12 @@ function subjectMenuCardTemplate(subject) {
 }
 
 function subjectReaderTemplate(subject) {
+  if (subject.curriculum) {
+    return subjectCurriculumWorkspaceTemplate(subject);
+  }
+  if (subject.planningWorkflow?.length) {
+    return subjectPlanningWorkspaceTemplate(subject);
+  }
   if (subject.patternWorkspaces?.length) {
     return subjectPatternWorkspaceTemplate(subject);
   }
@@ -36835,6 +37011,90 @@ function subjectReaderTemplate(subject) {
         ${canOpenSelectedSection ? '<button class="text-btn" data-chapter-back type="button">Back to chapters</button>' : ""}
       </div>
       ${canOpenSelectedSection ? sectionTemplate(selectedSection) : chapterMenuTemplate(subject, sections)}
+    </article>
+  `;
+}
+
+function subjectCurriculumWorkspaceTemplate(subject) {
+  const material = selectedPatternMaterialId ? findPatternMaterial(subject, selectedPatternMaterialId) : null;
+  if (material) return patternMaterialFeedbackPageTemplate(subject, material);
+  const curriculum = subject.curriculum;
+  const links = (resources) => resources.map((resource) => `<li><a href="${escapeHtml(resource.url)}" target="_blank" rel="noreferrer">${escapeHtml(resource.title)}</a>${resource.purpose ? ` — ${escapeHtml(resource.purpose)}` : ""}</li>`).join("");
+  return `
+    <article class="subject-reader pattern-workspace weekly-plan-workspace">
+      <div class="subject-reader-header"><button class="text-btn" data-subject-back type="button">Back to subjects</button></div>
+      <section class="chapter-menu">
+        <div class="chapter-menu-header">
+          <p class="eyebrow">Priyanka · Platinum · ${escapeHtml(subject.title)}</p>
+          <h4>${escapeHtml(curriculum.heading || "October–November: Linear Algebra in physical systems")}</h4>
+          <p>${escapeHtml(curriculum.pacing)}</p>
+          <p>${escapeHtml(curriculum.teachingApproach)}</p>
+          <p class="fine-print">${escapeHtml(curriculum.assumptions)}</p>
+        </div>
+        <details class="feedback-note"><summary>How to study, submit, and use feedback</summary>
+          <p>${escapeHtml(curriculum.exercisePolicy)}</p><p>${escapeHtml(curriculum.feedbackPolicy)}</p>
+          <ul>${links(curriculum.sources)}</ul>
+        </details>
+        <div class="week-plan-list">
+          ${curriculum.weeks.map((entry) => `
+            <details class="week-plan-card" ${(todayDateString() >= entry.startDate && todayDateString() <= entry.endDate) || (todayDateString() < curriculum.startDate && entry.week === 1) ? "open" : ""}>
+              <summary class="week-plan-summary"><div><span class="week-toggle-label">${escapeHtml(subject.title)} Week ${entry.week} · ${escapeHtml(entry.monthLabel)}</span><h5>${escapeHtml(entry.title)}</h5></div><span class="tag">${formatDate(entry.startDate)} – ${formatDate(entry.endDate)}</span></summary>
+              <div class="day-material-list">
+                <section class="feedback-context-card">
+                  <h5>Read and connect</h5>${entry.readings ? `<ul>${links(entry.readings)}</ul><p>Notes due: ${formatDate(entry.readingDue)}.</p>` : `<p>${escapeHtml(entry.mm)}</p><p>${escapeHtml(entry.hh)}</p>`}
+                  <p>${escapeHtml(entry.goals)}</p>
+                  ${entry.prerequisite ? `<h5>Prerequisite preparation · ${formatDate(entry.prerequisiteDue)}</h5><p>${escapeHtml(entry.prerequisite)}</p>` : ""}
+                  <h5>${entry.readings ? "Concrete learning problem" : "Physical model"}</h5><p>${escapeHtml(entry.physicalModel)}</p><p>${escapeHtml(entry.bridge)}</p>
+                  <h5>Predict, compute, and test</h5><p>${escapeHtml(entry.experiment)}</p>
+                  <p>Video selection is deferred. No viewing assignment is required for this block.</p>
+                  <h5>Due dates</h5><p>${entry.readings ? `Course notes: ${formatDate(entry.readingDue)}.` : `M&M: ${formatDate(entry.mmDue)}.`} Experiment: ${formatDate(entry.experimentDue)}. Practice: ${formatDate(entry.practiceDue)}. Review: ${formatDate(entry.reviewDue)}. Feedback and recheck: ${formatDate(entry.repairDue)}.${entry.hh ? " H&H follows the dated reading blocks above." : ""}</p>
+                </section>
+                ${subject.patternWorkspaces.map((pattern) => {
+                  const week = pattern.weeks.find((item) => item.week === entry.week);
+                  return `<section class="feedback-context-card"><h5>${pattern.kind === "practice" ? "Original bridge exercises" : "Weekly review prompts"}</h5>${inlineMaterialQuestionsTemplate(week)}</section>${dayMaterialTemplate({ pattern, week })}`;
+                }).join("")}
+                <section class="feedback-context-card"><h5>Feedback → next week</h5><p>${escapeHtml(entry.repair)}</p><p>Use the feedback and repair task to record corrections and one fresh recheck. Revisit unresolved gaps in the following review.</p></section>
+              </div>
+            </details>
+          `).join("")}
+        </div>
+        ${(subject.archivedPatternWorkspaces || []).some((pattern) => pattern.weeks.some((week) => patternSubmission(week.id))) ? `<details class="feedback-note"><summary>Earlier assignment submissions</summary>${subject.archivedPatternWorkspaces.flatMap((pattern) => pattern.weeks.filter((week) => patternSubmission(week.id)).map((week) => dayMaterialTemplate({pattern, week}))).join("")}</details>` : ""}
+      </section>
+    </article>
+  `;
+}
+
+function inlineMaterialQuestionsTemplate(week) {
+  if (!week.inlineQuestions?.length) return "";
+  return `<ol>${week.inlineQuestions.map((question) => `<li>${escapeHtml(question)}</li>`).join("")}</ol>`;
+}
+
+function subjectPlanningWorkspaceTemplate(subject) {
+  return `
+    <article class="subject-reader pattern-workspace weekly-plan-workspace">
+      <div class="subject-reader-header">
+        <button class="text-btn" data-subject-back type="button">Back to subjects</button>
+      </div>
+      <section class="chapter-menu">
+        <div class="chapter-menu-header">
+          <p class="eyebrow">Platinum · Planning</p>
+          <h4>${escapeHtml(subject.title)}</h4>
+          <p>${escapeHtml(subject.details)}</p>
+          <p>Weekly materials, scheduled tasks, and review quizzes will appear here as the plan is published.</p>
+        </div>
+        <div class="weekly-review-grid">
+          ${subject.planningWorkflow.map((step, index) => `
+            <article class="weekly-review-card">
+              <div>
+                <p class="eyebrow">Weekly cycle · Step ${index + 1}</p>
+                <h6>${escapeHtml(step.title)}</h6>
+                <p>${escapeHtml(step.details)}</p>
+              </div>
+              <span class="tag">Draft workflow</span>
+            </article>
+          `).join("")}
+        </div>
+      </section>
     </article>
   `;
 }
@@ -37103,7 +37363,7 @@ function dayMaterialTemplate({ pattern, week }) {
           <div class="day-material-actions">
             ${week.materialUrl
               ? `<a class="primary-btn inline-link" href="${escapeHtml(week.materialUrl)}" target="_blank" rel="noreferrer">Open material</a>`
-              : '<span class="tag">Material pending</span>'}
+              : `<span class="tag">${week.inlineQuestions ? "Exercises included above" : "Material pending"}</span>`}
             <label class="solution-upload compact-upload">
               <span>Submit solution</span>
               <input type="file" data-solution-upload="${escapeHtml(week.id)}" accept=".pdf,.txt,.md,.png,.jpg,.jpeg">
@@ -37123,7 +37383,7 @@ function dayMaterialTemplate({ pattern, week }) {
 }
 
 function findPatternMaterial(subject, materialId) {
-  for (const pattern of subject.patternWorkspaces || []) {
+  for (const pattern of [...(subject.patternWorkspaces || []), ...(subject.archivedPatternWorkspaces || [])]) {
     const week = (pattern.weeks || []).find((entry) => entry.id === materialId);
     if (week) return { pattern, week };
   }
@@ -37160,7 +37420,8 @@ function patternMaterialFeedbackPageTemplate(subject, material) {
             <p>${formatDate(week.date)} - ${escapeHtml(week.expectedWork)}</p>
             ${week.materialUrl
               ? `<a class="primary-btn inline-link" href="${escapeHtml(week.materialUrl)}" target="_blank" rel="noreferrer">Open material page</a>`
-              : '<span class="tag">Material pending</span>'}
+              : `<span class="tag">${week.inlineQuestions ? "Exercises included below" : "Material pending"}</span>`}
+            ${inlineMaterialQuestionsTemplate(week)}
           </section>
           <section class="feedback-context-card">
             <h5>Submission</h5>
@@ -38039,6 +38300,7 @@ function buildFeedbackMaterialContext(material) {
     week: week.week,
     date: week.date,
     expectedWork: week.expectedWork,
+    ...(week.inlineQuestions ? { questions: week.inlineQuestions, readings: week.readingContext, physicalModel: week.physicalModel || "", experiment: week.experiment || "", prerequisite: week.prerequisite || "" } : {}),
     materialUrl: week.materialUrl || "",
     status: week.status
   };
@@ -39149,19 +39411,29 @@ function renderList(containerId, items, type) {
 
 function renderSchedule() {
   const container = document.querySelector("#schedule-list");
-  const items = [...state.schedule].sort((a, b) => {
+  const relativeItems = state.schedule.filter((item) => item.studyPlanId);
+  const items = state.schedule.filter((item) => !item.studyPlanId).sort((a, b) => {
     const weekCompare = (a.week || weekFromDate(a.date)) - (b.week || weekFromDate(b.date));
     if (weekCompare !== 0) return weekCompare;
     return (a.date || "").localeCompare(b.date || "");
   });
 
-  if (!items.length) {
+  if (!items.length && !relativeItems.length) {
     container.innerHTML = '<div class="empty">No scheduled sessions yet.</div>';
     return;
   }
 
   const weeks = [...new Set(items.map((item) => item.week || weekFromDate(item.date)))].sort((a, b) => a - b);
-  container.innerHTML = weeks.map((week) => weekScheduleTemplate(week, items.filter((item) => (item.week || weekFromDate(item.date)) === week))).join("");
+  const relativeGroups = [...new Set(relativeItems.map((item) => `${item.studyPlanId}:${item.week}`))].map((key) => {
+    const group = relativeItems.filter((item) => `${item.studyPlanId}:${item.week}` === key);
+    const first = group[0];
+    const title = state.subjects.find((subject) => subject.id === first.subjectId)?.title || first.subject;
+    return { group, first, title };
+  }).sort((a, b) => a.first.studyWeekStart.localeCompare(b.first.studyWeekStart) || a.title.localeCompare(b.title));
+  container.innerHTML = relativeGroups.map(({group, first, title}) => `
+    <section class="week-schedule"><div class="week-schedule-header"><div><h4>${escapeHtml(title)} Week ${first.week}</h4><p>${formatDate(first.studyWeekStart)} – ${formatDate(first.studyWeekEnd)}</p></div></div>
+      ${subjectScheduleTemplate(title, group)}
+    </section>`).join("") + weeks.map((week) => weekScheduleTemplate(week, items.filter((item) => (item.week || weekFromDate(item.date)) === week))).join("");
 }
 
 function weekScheduleTemplate(week, items) {
@@ -39195,7 +39467,7 @@ function subjectScheduleTemplate(subject, items) {
               <strong>${escapeHtml(item.kind || kindFromTitle(item.title))}</strong>
               <p>${escapeHtml(item.details || "No details added.")}</p>
             </div>
-            <span class="tag">${formatDate(item.date)}</span>
+            <span class="tag">${escapeHtml(item.relativeDay || formatDate(item.date))}</span>
           </article>
         `).join("")}
       </div>
@@ -39376,23 +39648,31 @@ function renderCourseLinks() {
 function renderWeekOptions() {
   const select = document.querySelector("#week-select");
   const selected = select.value || "1";
-  const weeks = [...new Set(state.tasks.map((task) => task.week))].sort((a, b) => a - b);
-  select.innerHTML = weeks
-    .map((week) => `<option value="${week}">Week ${week}</option>`)
-    .join("");
-  select.value = weeks.includes(Number(selected)) ? selected : String(weeks[0] || 1);
+  const weeks = [...new Set(state.tasks.filter((task) => !task.studyPlanId).map((task) => task.week))].sort((a, b) => a - b);
+  const relativeOptions = state.subjects.filter((subject) => subject.curriculum).flatMap((subject) => {
+    const curriculum = subject.curriculum;
+    return [...new Set(state.tasks.filter((task) => task.studyPlanId === curriculum.id).map((task) => task.week))].sort((a, b) => a - b)
+      .map((week) => ({ value: `${curriculum.taskPrefix}:${week}`, label: `${subject.title} Week ${week} · Oct–Nov` }));
+  });
+  select.innerHTML = weeks.map((week) => `<option value="${week}">Week ${week}</option>`).join("")
+    + relativeOptions.map((option) => `<option value="${option.value}">${escapeHtml(option.label)}</option>`).join("");
+  const validValues = [...weeks.map(String), ...relativeOptions.map((option) => option.value)];
+  select.value = validValues.includes(selected) ? selected : validValues[0] || "1";
 }
 
 function renderTaskList() {
   const board = document.querySelector("#task-list-board");
   renderTaskAlerts();
-  const selectedWeek = Number(document.querySelector("#week-select").value || 1);
+  const weekSelection = document.querySelector("#week-select").value || "1";
+  const [prefix, relativeWeek] = weekSelection.split(":");
+  const curriculum = relativeWeek ? state.subjects.find((subject) => subject.curriculum?.taskPrefix === prefix)?.curriculum : null;
+  const selectedWeek = Number(relativeWeek || weekSelection);
   const groups = [
     ["todo", "To do"],
     ["completed", "Completed"],
     ["not-completed", "Not completed"]
   ];
-  const weekTasks = state.tasks.filter((task) => task.week === selectedWeek);
+  const weekTasks = state.tasks.filter((task) => task.week === selectedWeek && (relativeWeek ? curriculum && task.studyPlanId === curriculum.id : !task.studyPlanId));
 
   if (!weekTasks.length) {
     board.innerHTML = '<div class="empty">No tasks for this week.</div>';
@@ -39451,7 +39731,7 @@ function renderCurrentTasks() {
   const container = document.querySelector("#current-task-list");
   const week = currentWeekNumber();
   const tasks = state.tasks
-    .filter((task) => task.week === week)
+    .filter((task) => task.studyPlanId ? taskDueDate(task) >= todayDateString() && taskDueDate(task) <= addDays(todayDateString(), 6) : task.week === week)
     .filter((task) => task.status !== "completed")
     .sort((a, b) => taskDueSortValue(a) - taskDueSortValue(b))
     .slice(0, 6);
@@ -39470,7 +39750,7 @@ function taskRowTemplate(task) {
   const scheduleItem = linkedScheduleForTask(task);
   const dueDate = taskDueDate(task);
   const scheduleMeta = scheduleItem
-    ? `<small>Schedule: ${escapeHtml(scheduleItem.kind || kindFromTitle(scheduleItem.title))} - ${formatDate(scheduleItem.date)}</small>`
+    ? `<small>Schedule: ${escapeHtml(scheduleItem.kind || kindFromTitle(scheduleItem.title))} - ${escapeHtml(scheduleItem.relativeDay || formatDate(scheduleItem.date))}</small>`
     : "";
   const completeButton = task.status === "completed"
     ? ""
@@ -39808,6 +40088,11 @@ function platinumMaterialSnapshots() {
     (subject.patternWorkspaces || []).forEach((pattern) => {
       (pattern.weeks || []).forEach((week) => {
         materials.push(platinumMaterialSnapshot(subject, pattern, week));
+      });
+    });
+    (subject.archivedPatternWorkspaces || []).forEach((pattern) => {
+      (pattern.weeks || []).forEach((week) => {
+        if (patternSubmission(week.id)) materials.push(platinumMaterialSnapshot(subject, pattern, week, { archived: true }));
       });
     });
   });
@@ -40426,6 +40711,7 @@ function updateInstallState() {
 }
 
 function formatDate(value) {
+  if (!value) return "Date pending";
   return new Intl.DateTimeFormat(undefined, { month: "short", day: "numeric", year: "numeric" }).format(new Date(`${value}T00:00:00`));
 }
 

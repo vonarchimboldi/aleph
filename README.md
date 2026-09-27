@@ -172,11 +172,48 @@ If `PLATINUM_MONITOR_EMAIL` is set, the weekly report is sent there. Otherwise, 
 
 ## Verification
 
+Priyanka's Platinum Linear Algebra schedule runs October 1–November 30, 2026,
+with eight Thursday–Wednesday weeks and a final November 26–30 block.
+`platinum-linear-algebra.js` assigns M&M Chapters 1–6 at one chapter per week
+through November 11, followed by consolidation. H&H Chapter 1 closes by
+October 31; Chapter 2 begins November 1 and closes November 30. Week 5 has
+separate October and November reading assignments to respect the month boundary.
+The edition mapping (M&M 2018 / H&H fifth edition) awaits confirmation.
+
+Open **Subjects → Linear Algebra** for readings, physical models, numerical
+experiments, and separate practice/review submissions. Models include force
+control, paraxial optics, sensor calibration, work, coupled springs, and
+deformation. Bamberg & Sternberg informs the teaching approach; it is not an
+additional assigned book. Videos are deliberately unassigned.
+The Tasks selector includes **Linear Algebra Week 1–9**; Schedule displays
+their actual dates separately from the older plan's week numbering. Each
+block has reading, experiment, practice, review, and feedback/recheck dates.
+Study hours are unset. Earlier assignment uploads remain accessible separately
+and do not count as submissions for the revised physical problems.
+Feedback uses the existing upload/report flow. Learners or course designers
+choose repairs and next-week adjustments from the report; automatic syllabus
+rewriting is not implemented. Book exercise numbers must be selected from the
+learner's edition and included with the submission.
+
+Priyanka's Machine Learning schedule adapts all 17 lectures from Rebecca
+Willett's Fall 2025 Mathematical Foundations of Machine Learning course into
+eight weeks, October 1–November 25, 2026. The last correction is due November 26.
+`platinum-machine-learning.js` links published lecture notes; videos remain
+unassigned. Each week has a prerequisite bridge, readings, a computational
+experiment, original practice questions, a review, and a 48-hour correction.
+Open **Subjects → Machine Learning** for the eight blocks and 16 submission
+slots; **Tasks** and **Schedule** keep ML and LA week numbers separate.
+Assignments are Aleph adaptations, not official course homework.
+
 For JavaScript changes:
 
 ```bash
 node --check app.js
 node --check service-worker.js
+node --check platinum-linear-algebra.js
+node scripts/verify-platinum-linear-algebra.mjs
+node --check platinum-machine-learning.js
+node scripts/verify-platinum-machine-learning.mjs
 node scripts/verify-review-quizzes.mjs
 node scripts/judge-material-quality.mjs
 ```
