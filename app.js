@@ -1,7 +1,7 @@
 const STORAGE_KEY = "learning-studio-data-v2";
 const LEGACY_STORAGE_KEYS = ["learning-studio-data-v1"];
 const SESSION_KEY = "aleph-session";
-const COURSE_PLAN_VERSION = "seeded-user-canonical-workspace-v162";
+const COURSE_PLAN_VERSION = "seeded-user-canonical-workspace-v163";
 const MAX_FEEDBACK_ATTACHMENT_BYTES = 3 * 1024 * 1024;
 const MAX_COMPRESSED_FEEDBACK_BYTES = 2400 * 1024;
 const MAX_FEEDBACK_REQUEST_BYTES = 4 * 1024 * 1024;
@@ -492,7 +492,7 @@ function buildPlatinumLinearAlgebraPlan(lessonPlanId, now) {
         date: pattern.kind === "practice" ? entry.practiceDue : entry.reviewDue,
         materialTitle: `Linear Algebra Week ${entry.week}: ${entry.title} — ${pattern.kind}`,
         inlineQuestions: questions,
-        readingContext: `${entry.mm} ${entry.hh}`,
+        readingContext: `${entry.mm} ${entry.hh}${entry.resources.length ? ` Videos: ${entry.resources.map((video) => `${video.title}: ${video.url}`).join("; ")}. Viewing checkpoint: ${entry.videoCheckpoint}` : ""}`,
         physicalModel: entry.physicalModel,
         experiment: entry.experiment,
         expectedWork: pattern.kind === "practice"
@@ -539,6 +539,7 @@ function buildPlatinumLinearAlgebraPlan(lessonPlanId, now) {
   for (const entry of curriculum.weeks) {
     const steps = [
       ["mm", entry.mmDue, "M&M reading", entry.mm + " " + entry.goals],
+      ...(entry.resources.length ? [["berkeley-videos", entry.videoDue, "Berkeley videos and checkpoint", entry.resources.map((video) => `${video.title}: ${video.url}`).join("\n") + "\n" + curriculum.videoPolicy + "\nCheckpoint: " + entry.videoCheckpoint]] : []),
       ...entry.hhBlocks.map((block, index) => [index ? `hh-${index+1}` : "hh", block.endDate, `H&H Chapter ${block.chapter}`, `${block.startDate}–${block.endDate}: ${block.focus} ${block.sections.length ? `Sections ${block.sections.join(', ')}.` : ''}`]),
       ["experiment", entry.experimentDue, "Physical and numerical experiment", entry.physicalModel + " " + entry.experiment],
       ["practice", entry.practiceDue, "Practice and submit", curriculum.exercisePolicy],
@@ -569,7 +570,7 @@ function buildPlatinumLinearAlgebraPlan(lessonPlanId, now) {
     schedule, tasks,
     resources: curriculum.sources.map((source, index) => ({
       id: `resource-platinum-la-${index}`, title: source.title, date: "",
-      details: "Priyanka's Linear Algebra reading and physical problem plan. Video selection is deferred. Open the subject for weekly assignments.",
+      details: "Priyanka's Linear Algebra reading and physical problem plan. Selected Berkeley videos accompany Weeks 1–8. Open the subject for weekly assignments.",
       link: source.url, updatedAt: now
     }))
   };
@@ -37046,7 +37047,7 @@ function subjectCurriculumWorkspaceTemplate(subject) {
                   ${entry.prerequisite ? `<h5>Prerequisite preparation · ${formatDate(entry.prerequisiteDue)}</h5><p>${escapeHtml(entry.prerequisite)}</p>` : ""}
                   <h5>${entry.readings ? "Concrete learning problem" : "Physical model"}</h5><p>${escapeHtml(entry.physicalModel)}</p><p>${escapeHtml(entry.bridge)}</p>
                   <h5>Predict, compute, and test</h5><p>${escapeHtml(entry.experiment)}</p>
-                  <p>Video selection is deferred. No viewing assignment is required for this block.</p>
+                  ${entry.resources?.length ? `<h5>Video companion · due ${formatDate(entry.videoDue)}</h5><p>${escapeHtml(curriculum.videoPolicy)}</p><ul>${links(entry.resources)}</ul><h5>Watch, then solve</h5><p>${escapeHtml(entry.videoCheckpoint)}</p>` : `<p>${curriculum.videoPolicy ? "Consolidation: revisit an earlier video only if your feedback identifies a gap." : "Video selection is deferred. No viewing assignment is required for this block."}</p>`}
                   <h5>Due dates</h5><p>${entry.readings ? `Course notes: ${formatDate(entry.readingDue)}.` : `M&M: ${formatDate(entry.mmDue)}.`} Experiment: ${formatDate(entry.experimentDue)}. Practice: ${formatDate(entry.practiceDue)}. Review: ${formatDate(entry.reviewDue)}. Feedback and recheck: ${formatDate(entry.repairDue)}.${entry.hh ? " H&H follows the dated reading blocks above." : ""}</p>
                 </section>
                 ${subject.patternWorkspaces.map((pattern) => {

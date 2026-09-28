@@ -1,11 +1,11 @@
-// October–November 2026. Videos deliberately unassigned.
+// October–November 2026. Berkeley video companions in Weeks 1–8.
 // Original physical problems; Bamberg & Sternberg is a teaching reference.
 function platinumLinearAlgebraCurriculum() {
   return {
   "id": "priyanka-linear-algebra",
   "taskPrefix": "la",
   "startDate": "2026-10-01",
-  "assumptions": "October 1–November 30, 2026. Study weeks run Thursday–Wednesday from October 1; the final block is November 26–30. The reading map uses M&M (2018) and H&H (5th edition), pending confirmation of your copies. Study hours and textbook exercise numbers are still to be selected. Video selection is deferred; no video viewing is assigned.",
+  "assumptions": "October 1–November 30, 2026. Study weeks run Thursday–Wednesday from October 1; the final block is November 26–30. The reading map uses M&M (2018) and H&H (5th edition), pending confirmation of your copies. Study hours and textbook exercise numbers are still to be selected. Selected Berkeley Math 54 videos accompany Weeks 1–8; Week 9 is consolidation. Watch before the numerical experiment and include the viewing checkpoint with practice.",
   "pacing": "M&M: Chapters 1–6 at one chapter per week, October 1–November 11, followed by consolidation. H&H: Chapter 1 completed by October 31; Chapter 2 completed by November 30. No later H&H chapters are assigned.",
   "exercisePolicy": "Keep six M&M exercises per chapter (two computations, two proofs or counterexamples, two mixed applications) and three H&H exercises per weekly block. Record exercise numbers from your edition. Complete the two original physical problems and the numerical experiment below. Submit a labelled sketch, governing equations, hand calculation, a parameter sweep or plot, and an explanation of agreement or disagreement. A spreadsheet or a short program is sufficient; numerical agreement supports a conjecture but does not prove it.",
   "feedbackPolicy": "Review the model before the algebra: are the variables, units, sign conventions, and assumptions correct? Then assess geometric prediction, derivation, numerical checks, and physical interpretation. Submit practice and review separately. Attempt reviews without notes, record confidence, and reattempt a missed question after 48 hours and in the next week. Ask whether the learner can predict a changed parameter or a limiting case. Record one repair problem and one transfer problem; the learner or course designer selects the next assignment from that evidence.",
@@ -21,6 +21,10 @@ function platinumLinearAlgebraCurriculum() {
     {
       "title": "Bamberg & Sternberg, Volume 1 — teaching reference",
       "url": "https://www.cambridge.org/core/books/abs/course-in-mathematics-for-students-of-physics/contents/8C3DB8FAECD296277BF7745B20F426FF"
+    },
+    {
+      "title": "Alexander Paulin · Berkeley Math 54 (Spring 2022) · video source",
+      "url": "https://math.berkeley.edu/~apaulin/54%20(Spring%202022).html"
     }
   ],
   "weeks": [
@@ -32,7 +36,26 @@ function platinumLinearAlgebraCurriculum() {
       "hh": "H&H Chapter 1, §§1.1, 1.2, 1.3 (2026-10-01 to 2026-10-07): Points, vectors, matrices, and matrix action; include §1.0 orientation.",
       "goals": "Translate between equations, column combinations, and geometry; distinguish a vector space from an affine solution set. Check set/function and proof notation from the appendices or H&H Chapter 0 only as needed.",
       "bridge": "The columns of a matrix are the effects of individual controls. Its image describes reachable forces; its kernel describes changes of control that leave the net force unchanged. Physical restrictions on controls can make the feasible set smaller than a vector space.",
-      "resources": [],
+      "resources": [
+        {
+          "title": "Solving systems",
+          "url": "https://www.youtube.com/watch?v=yv6TvdjOf38",
+          "provider": "Alexander Paulin · Berkeley Math 54",
+          "kind": "video"
+        },
+        {
+          "title": "Vector spaces and maps",
+          "url": "https://www.youtube.com/watch?v=dJ26m1ls9Hk",
+          "provider": "Alexander Paulin · Berkeley Math 54",
+          "kind": "video"
+        },
+        {
+          "title": "Span, independence and dimension",
+          "url": "https://www.youtube.com/watch?v=1BxkOPPnlrE",
+          "provider": "Alexander Paulin · Berkeley Math 54",
+          "kind": "video"
+        }
+      ],
       "practice": [
         "P1. Derive A for the three actuators above. Find every control u producing (2,1) N. Draw the vector addition for three choices. Which choices remain possible if each uᵢ must be nonnegative? Explain the difference between algebraic reachability and actuator feasibility.",
         "P2. Suppose the vertical actuator breaks, leaving forces (u₁,0) and (u₃,u₃). Can you still produce (0,1) N with reversible actuators? With nonnegative controls? Now redirect the diagonal actuator to the horizontal: describe the change in rank and reachable forces."
@@ -78,7 +101,9 @@ function platinumLinearAlgebraCurriculum() {
       "experimentDue": "2026-10-05",
       "practiceDue": "2026-10-06",
       "reviewDue": "2026-10-07",
-      "repairDue": "2026-10-09"
+      "repairDue": "2026-10-09",
+      "videoDue": "2026-10-04",
+      "videoCheckpoint": "For the actuator matrix, explain which forces are reachable and why multiple controls can give the same force. Row-reduce one example and sketch its solution set."
     },
     {
       "week": 2,
@@ -88,7 +113,26 @@ function platinumLinearAlgebraCurriculum() {
       "hh": "H&H Chapter 1, §§1.4, 1.5 (2026-10-08 to 2026-10-14): Geometry, limits, and continuity.",
       "goals": "Test linearity, track domains and codomains, compose maps in the right order, and relate norms to continuity. Cover all chapter sections, including eigenvalue material where it appears in your copy.",
       "bridge": "Following a ray through successive devices makes matrix composition tangible. Read the product right to left. The model is linear only under the stated small-angle and ideal-lens assumptions; compare it with exact trigonometry to see the boundary.",
-      "resources": [],
+      "resources": [
+        {
+          "title": "Maps between coordinate spaces",
+          "url": "https://www.youtube.com/watch?v=dJJT3R94jKo",
+          "provider": "Alexander Paulin · Berkeley Math 54",
+          "kind": "video"
+        },
+        {
+          "title": "Calculating with matrices",
+          "url": "https://www.youtube.com/watch?v=ZeNorTn95DQ",
+          "provider": "Alexander Paulin · Berkeley Math 54",
+          "kind": "video"
+        },
+        {
+          "title": "When a matrix is invertible",
+          "url": "https://www.youtube.com/watch?v=r9g2dzlPFLw",
+          "provider": "Alexander Paulin · Berkeley Math 54",
+          "kind": "video"
+        }
+      ],
       "practice": [
         "P1. A parallel ray has h=0.01 m and θ=0. Take f=0.10 m and d=0.20 m. Derive and compare P(d)L(f) and L(f)P(d), calculate both outgoing states, and draw both apparatus arrangements. Explain the different outgoing heights physically.",
         "P2. Send several parallel rays through the lens and observe them on a screen a distance d later. Derive h_out=(1−d/f)h_in. Find the focusing distance and explain why equal outgoing heights do not mean the entire two-component ray transformation is singular."
@@ -133,7 +177,9 @@ function platinumLinearAlgebraCurriculum() {
       "experimentDue": "2026-10-12",
       "practiceDue": "2026-10-13",
       "reviewDue": "2026-10-14",
-      "repairDue": "2026-10-16"
+      "repairDue": "2026-10-16",
+      "videoDue": "2026-10-11",
+      "videoCheckpoint": "Compose a lens and a propagation matrix in both orders. Predict and calculate why the outgoing ray changes when the order changes."
     },
     {
       "week": 3,
@@ -143,7 +189,26 @@ function platinumLinearAlgebraCurriculum() {
       "hh": "H&H Chapter 1, §§1.6, 1.7 (2026-10-15 to 2026-10-21): The five major theorems and derivatives as linear maps.",
       "goals": "Choose bases, change coordinates, use dimension arguments, and interpret a Jacobian as a linear approximation. Review one-variable derivatives before H&H §1.7 if needed.",
       "bridge": "Changing coordinates does not move the apparatus. Moving the apparatus is an active transformation. A sensor Jacobian converts small measurement errors into approximate position errors; it is a local map, not the full nonlinear measurement law.",
-      "resources": [],
+      "resources": [
+        {
+          "title": "Kernel and image",
+          "url": "https://www.youtube.com/watch?v=DtXLvlZWiRE",
+          "provider": "Alexander Paulin · Berkeley Math 54",
+          "kind": "video"
+        },
+        {
+          "title": "Dimensions of kernel and image",
+          "url": "https://www.youtube.com/watch?v=HsCfkZMZuTU",
+          "provider": "Alexander Paulin · Berkeley Math 54",
+          "kind": "video"
+        },
+        {
+          "title": "Coordinates relative to a basis",
+          "url": "https://www.youtube.com/watch?v=0ahTb-nvyCc",
+          "provider": "Alexander Paulin · Berkeley Math 54",
+          "kind": "video"
+        }
+      ],
       "practice": [
         "P1. A force has laboratory coordinates (3,1) N. An instrument frame is rotated by 30°. Find its instrument coordinates and reconstruct the original force. Check that its magnitude is unchanged. Sketch both bases without rotating the force itself.",
         "P2. Derive the Jacobian of F(r,θ)=(r cosθ,r sinθ). At r=2 m and θ=π/4, predict the position change for Δr=0.01 m and Δθ=0.005 rad. Compare with the exact change and explain what each Jacobian column measures."
@@ -189,7 +254,9 @@ function platinumLinearAlgebraCurriculum() {
       "experimentDue": "2026-10-19",
       "practiceDue": "2026-10-20",
       "reviewDue": "2026-10-21",
-      "repairDue": "2026-10-23"
+      "repairDue": "2026-10-23",
+      "videoDue": "2026-10-18",
+      "videoCheckpoint": "Write the same displacement in two coordinate frames. For a sensor map, identify a motion that is invisible and verify the rank–nullity count."
     },
     {
       "week": 4,
@@ -199,7 +266,26 @@ function platinumLinearAlgebraCurriculum() {
       "hh": "H&H Chapter 1, §§1.8, 1.9, 1.10 (2026-10-22 to 2026-10-28): Derivative rules, differentiability criteria, and selected chapter review.",
       "goals": "Work with inner products, orthogonal projection, and orthonormal bases; connect derivative composition with matrix multiplication and justify approximation error.",
       "bridge": "The dot product measures an observable before it becomes a formula. Orthogonal residuals express what the available measurement model cannot explain. Weighted measurements require a corresponding change of inner product.",
-      "resources": [],
+      "resources": [
+        {
+          "title": "Dot products, lengths and perpendicularity",
+          "url": "https://www.youtube.com/watch?v=X2ls7z3J2gg",
+          "provider": "Alexander Paulin · Berkeley Math 54",
+          "kind": "video"
+        },
+        {
+          "title": "Projecting onto a subspace",
+          "url": "https://www.youtube.com/watch?v=EU9rWqL9CmE",
+          "provider": "Alexander Paulin · Berkeley Math 54",
+          "kind": "video"
+        },
+        {
+          "title": "Building an orthonormal basis",
+          "url": "https://www.youtube.com/watch?v=n7EvXRoEUl0",
+          "provider": "Alexander Paulin · Berkeley Math 54",
+          "kind": "video"
+        }
+      ],
       "practice": [
         "P1. A constant force F=(3,4) N acts during displacement s=(2,0) m. Calculate the work and the force component parallel to s. Rotate both coordinate descriptions by 30° and verify that the work stays the same.",
         "P2. Three equal-weight sensors report vₓ=1.0, vᵧ=2.0, and vₓ+vᵧ=3.2 in consistent units. Build A and b and find the least-squares estimate of v. Compute the residual and verify Aᵀ(Av−b)=0. Explain why each reading cannot be matched exactly."
@@ -246,7 +332,9 @@ function platinumLinearAlgebraCurriculum() {
       "experimentDue": "2026-10-26",
       "practiceDue": "2026-10-27",
       "reviewDue": "2026-10-28",
-      "repairDue": "2026-10-30"
+      "repairDue": "2026-10-30",
+      "videoDue": "2026-10-25",
+      "videoCheckpoint": "Project a force onto a displacement direction and interpret the work. Construct the projection matrix and verify both P²=P and Pᵀ=P; explain why idempotence alone does not imply an orthogonal projection."
     },
     {
       "week": 5,
@@ -256,7 +344,32 @@ function platinumLinearAlgebraCurriculum() {
       "hh": "H&H Chapter 1 (2026-10-29 to 2026-10-31): Chapter 1 completion checkpoint: close remaining reading and review corrections. H&H Chapter 2, §§2.1, 2.2 (2026-11-01 to 2026-11-04): Row reduction and solving systems; include §2.0 orientation.",
       "goals": "Distinguish singular values from eigenvalues, interpret SVD geometrically, and connect invertibility to solving systems. This is a dense M&M week: retain proof work and use the spring and sensor experiments to test the geometric claims.",
       "bridge": "The in-phase and out-of-phase motions reveal eigenvectors as independent modes. SVD describes directional sensitivity for more general maps, including rectangular sensor maps where eigenvectors are not available in the same way.",
-      "resources": [],
+      "resources": [
+        {
+          "title": "Eigenpairs and invariant directions",
+          "url": "https://www.youtube.com/watch?v=2UCphBjFyyg",
+          "provider": "Alexander Paulin · Berkeley Math 54",
+          "kind": "video"
+        },
+        {
+          "title": "Diagonal coordinates for a matrix",
+          "url": "https://www.youtube.com/watch?v=RfmfFdsMWmM",
+          "provider": "Alexander Paulin · Berkeley Math 54",
+          "kind": "video"
+        },
+        {
+          "title": "Symmetric matrices in orthogonal coordinates",
+          "url": "https://www.youtube.com/watch?v=SOQCwk2FJsw",
+          "provider": "Alexander Paulin · Berkeley Math 54",
+          "kind": "video"
+        },
+        {
+          "title": "SVD: input and output directions",
+          "url": "https://www.youtube.com/watch?v=Va8EfR_Q-YM",
+          "provider": "Alexander Paulin · Berkeley Math 54",
+          "kind": "video"
+        }
+      ],
       "practice": [
         "P1. Derive K by adding the forces of all three springs on each mass. Find its two mode directions and angular frequencies. With initial displacement (0.01,0) m and zero velocity, express the motion as a sum of modes and explain why the two masses exchange motion.",
         "P2. A calibrated sensor maps a two-component displacement in metres to y=A x, also in metres, with A=diag(1,0.01). Compare the image of a 1 mm circle and the effect of adding 0.0001 m noise to each measurement component separately. Identify the weakly observed direction using singular values."
@@ -309,7 +422,9 @@ function platinumLinearAlgebraCurriculum() {
       "experimentDue": "2026-11-02",
       "practiceDue": "2026-11-03",
       "reviewDue": "2026-11-04",
-      "repairDue": "2026-11-06"
+      "repairDue": "2026-11-06",
+      "videoDue": "2026-11-01",
+      "videoCheckpoint": "For the spring matrix, identify independent modes and interpret their eigenvalues. Then describe why a rectangular sensor map needs separate input and output directions in its SVD."
     },
     {
       "week": 6,
@@ -319,7 +434,20 @@ function platinumLinearAlgebraCurriculum() {
       "hh": "H&H Chapter 2, §§2.3, 2.4, 2.5, 2.6 (2026-11-05 to 2026-11-11): Inverses, span, kernels, images, dimension, and abstract spaces.",
       "goals": "Connect determinant, volume, and invertibility; use rank-nullity outside coordinate spaces; distinguish a characteristic-polynomial argument from a geometric one.",
       "bridge": "Determinants describe signed area change, whereas singular values describe directional stretch. Equal area change can hide very different distortions. Rank and nullspace describe which positional information a collapsed sheet loses.",
-      "resources": [],
+      "resources": [
+        {
+          "title": "Determinants and their properties",
+          "url": "https://www.youtube.com/watch?v=vIt7Mdcvu4Y",
+          "provider": "Alexander Paulin · Berkeley Math 54",
+          "kind": "video"
+        },
+        {
+          "title": "Revisit: symmetric matrices in orthogonal coordinates",
+          "url": "https://www.youtube.com/watch?v=SOQCwk2FJsw",
+          "provider": "Alexander Paulin · Berkeley Math 54",
+          "kind": "video"
+        }
+      ],
       "practice": [
         "P1. Transform all four corners of a unit square by F for γ=1 and s=2. Compute its area from the edge vectors and compare with det F. Repeat for s=−2 and s=0, describing orientation and information loss.",
         "P2. Compare A=diag(10,0.1) and B=I. Both preserve area. Map a circle under each and compute their singular values and 2-norm condition numbers. Explain why equal determinant does not imply equally stable recovery of the original point."
@@ -367,7 +495,9 @@ function platinumLinearAlgebraCurriculum() {
       "experimentDue": "2026-11-09",
       "practiceDue": "2026-11-10",
       "reviewDue": "2026-11-11",
-      "repairDue": "2026-11-13"
+      "repairDue": "2026-11-13",
+      "videoDue": "2026-11-08",
+      "videoCheckpoint": "Predict the signed area change under the deformation matrix and check it by its determinant. Use a symmetric 2×2 matrix to write a quadratic form along its eigenvector axes and classify its sign."
     },
     {
       "week": 7,
@@ -377,7 +507,20 @@ function platinumLinearAlgebraCurriculum() {
       "hh": "H&H Chapter 2, §§2.7, 2.8 (2026-11-12 to 2026-11-18): Eigenstructure and Newton iteration with its hypotheses.",
       "goals": "Use eigenvectors to predict iterates and use a Jacobian to compute a Newton correction. Separate a successful numerical step from a convergence guarantee.",
       "bridge": "Newton iteration is repeated solution of a locally linear force-balance problem. Its Jacobian is a physical tangent response. Accurate local linearization and an invertible tangent are both needed; successful iteration is not a global convergence theorem.",
-      "resources": [],
+      "resources": [
+        {
+          "title": "Linear maps and solvability",
+          "url": "https://www.youtube.com/watch?v=sEIIBaDovOc",
+          "provider": "Alexander Paulin · Berkeley Math 54",
+          "kind": "video"
+        },
+        {
+          "title": "Revisit: when a matrix is invertible",
+          "url": "https://www.youtube.com/watch?v=r9g2dzlPFLw",
+          "provider": "Alexander Paulin · Berkeley Math 54",
+          "kind": "video"
+        }
+      ],
       "practice": [
         "P1. Derive Newton’s displacement update for the nonlinear spring and perform three steps from x₀=0.10 m. At every step report x, force residual in N, and tangent stiffness in N/m. Compare with the purely linear estimate F/k and explain why the cubic term changes equilibrium.",
         "P2. Consider instead the force law F_s(x)=a x−b x³, with a=1 N/m and b=1 N/m³, at applied force 0.2 N. Locate where tangent stiffness vanishes. Explain why Newton correction becomes unreliable there and why this idealized law can have multiple equilibria."
@@ -423,7 +566,9 @@ function platinumLinearAlgebraCurriculum() {
       "experimentDue": "2026-11-16",
       "practiceDue": "2026-11-17",
       "reviewDue": "2026-11-18",
-      "repairDue": "2026-11-20"
+      "repairDue": "2026-11-20",
+      "videoDue": "2026-11-15",
+      "videoCheckpoint": "For the nonlinear spring problem, treat the Jacobian at one point as a linear map. Explain when the local correction is unique and why this alone does not establish global uniqueness. These videos review the linear tools; use H&H for the nonlinear argument."
     },
     {
       "week": 8,
@@ -433,7 +578,20 @@ function platinumLinearAlgebraCurriculum() {
       "hh": "H&H Chapter 2, §§2.9, 2.10 (2026-11-19 to 2026-11-25): Convergence rate, inverse and implicit function theorems.",
       "goals": "State local inverse/implicit-function hypotheses precisely, distinguish local from global conclusions, and connect invertible derivatives to reliable local solves.",
       "bridge": "An invertible local response can permit calibration nearby without ensuring unique calibration everywhere. Distinguish model error, sensor noise, numerical error, and global ambiguity in the final report.",
-      "resources": [],
+      "resources": [
+        {
+          "title": "Fitting inconsistent systems by least squares",
+          "url": "https://www.youtube.com/watch?v=28_74320am0",
+          "provider": "Alexander Paulin · Berkeley Math 54",
+          "kind": "video"
+        },
+        {
+          "title": "Revisit: SVD input and output directions",
+          "url": "https://www.youtube.com/watch?v=Va8EfR_Q-YM",
+          "provider": "Alexander Paulin · Berkeley Math 54",
+          "kind": "video"
+        }
+      ],
       "practice": [
         "P1. At r=2 m and θ=π/4, derive the local inverse Jacobian of the range sensor. Use it to estimate Δr and Δθ for a measured position change (0.01,−0.01) m. Compare with exact range and atan2 on a stated local angle branch.",
         "P2. The positions from (r,θ) and (r,θ+2π) agree. Explain why this does not contradict the inverse function theorem for r>0. Then examine r=0 and identify both the physical and mathematical failure."
@@ -478,7 +636,9 @@ function platinumLinearAlgebraCurriculum() {
       "experimentDue": "2026-11-23",
       "practiceDue": "2026-11-24",
       "reviewDue": "2026-11-25",
-      "repairDue": "2026-11-27"
+      "repairDue": "2026-11-27",
+      "videoDue": "2026-11-22",
+      "videoCheckpoint": "Fit the calibration model, check that the residual is perpendicular to the design-matrix columns, and explain how a small singular value makes the inferred parameters sensitive to noise."
     },
     {
       "week": 9,
@@ -530,6 +690,7 @@ function platinumLinearAlgebraCurriculum() {
   ],
   "materialRevision": "oct-nov-2026",
   "teachingApproach": "Predict → draw → calculate → simulate → explain. Start with a physical system, specify its variables, units, and assumptions, then derive its matrix. Use geometry to predict an outcome before calculating. Vary one parameter and explain what remains invariant. Finish by stating the general mathematical principle and testing where the model fails.",
-  "endDate": "2026-11-30"
+  "endDate": "2026-11-30",
+  "videoPolicy": "Use the selected lectures as companions to the books. Pause before worked calculations, predict the result, then reproduce one example without the video. Complete the weekly checkpoint and include it with practice. Replay only the relevant examples for lectures marked Revisit. These selections do not replace GATE practice; explicitly check LU, partitioned/idempotent matrices, and quadratic forms in the reading and problem sessions."
 };
 }

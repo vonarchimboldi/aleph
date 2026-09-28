@@ -30,20 +30,26 @@ curriculum.weeks.forEach((week,index) => {
   assert(week.practiceDue <= week.reviewDue);
   assert.equal(week.repairDue, context.addDays(week.reviewDue,2));
   assert(week.physicalModel && week.experiment);
-  assert.equal(week.resources.length,0);
+  assert.equal(week.resources.length > 0, index < 8);
+  if (index < 8) {
+    assert(week.videoDue >= week.startDate && week.videoDue < week.experimentDue);
+    assert(week.videoCheckpoint);
+    assert(week.resources.every(video => /^https:\/\/www.youtube.com\/watch\?v=[A-Za-z0-9_-]{11}$/.test(video.url)));
+  }
 });
 assert(!JSON.stringify(curriculum.sources).match(/youtube|3blue1brown|databook|18-06/i));
 const tasks = context.state.tasks.filter((task) => task.studyPlanId === curriculum.id);
-assert.equal(tasks.length, 55);
-assert.equal(new Set(tasks.map((task) => task.id)).size, 55);
+assert.equal(tasks.length, 63);
+assert.equal(new Set(tasks.map((task) => task.id)).size, 63);
 for (const task of tasks) {
   const linked = context.linkedScheduleForTask(task);
   assert(linked && linked.subjectId === subject.id && linked.week === task.week);
   assert.equal(context.taskDueDate(task), task.date);
   assert(task.date >= curriculum.startDate && task.date <= curriculum.endDate);
-  assert(!/video|lecture|watch/i.test(task.type));
+
   assert.doesNotThrow(() => context.taskRowTemplate(task));
 }
+assert.equal(tasks.filter(task => task.id.endsWith("-berkeley-videos")).length,8);
 const materials = subject.patternWorkspaces.flatMap((pattern) => pattern.weeks);
 assert.equal(materials.length, 18);
 assert.equal(new Set(materials.map((material) => material.id)).size, 18);
@@ -94,4 +100,4 @@ assert(!elements.get("#schedule-list").innerHTML.includes("calendar dates pendin
 assert(elements.get("#schedule-list").innerHTML.includes("Linear Algebra Week 9"));
 const index = fs.readFileSync("index.html", "utf8");
 assert(index.indexOf('src="platinum-linear-algebra.js') < index.indexOf('src="app.js'));
-console.log("PASS: Oct–Nov calendar, monthly chapter boundaries, 55 dated tasks, 48-hour rechecks, 18 submission flows, archived work, deferred videos, progress migration, and Basic isolation.");
+console.log("PASS: Oct–Nov calendar, monthly chapter boundaries, 63 dated tasks, 48-hour rechecks, 18 submission flows, archived work, eight video assignments, progress migration, and Basic isolation.");

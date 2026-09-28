@@ -1,12 +1,12 @@
-const CACHE_NAME = "learning-studio-v220";
+const CACHE_NAME = "learning-studio-v221";
 const IS_LOCAL = ["localhost", "127.0.0.1", "0.0.0.0", "::1"].includes(self.location.hostname);
 const ASSETS = [
   "./",
   "./index.html",
   "./styles.css",
-  "./platinum-linear-algebra.js?v=seeded-user-canonical-workspace-v162",
-  "./platinum-machine-learning.js?v=seeded-user-canonical-workspace-v162",
-  "./app.js?v=seeded-user-canonical-workspace-v162",
+  "./platinum-linear-algebra.js?v=seeded-user-canonical-workspace-v163",
+  "./platinum-machine-learning.js?v=seeded-user-canonical-workspace-v163",
+  "./app.js?v=seeded-user-canonical-workspace-v163",
   "./icons/icon-192.svg",
   "./icons/icon-512.svg"
 ];

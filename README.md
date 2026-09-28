@@ -184,7 +184,11 @@ Open **Subjects → Linear Algebra** for readings, physical models, numerical
 experiments, and separate practice/review submissions. Models include force
 control, paraxial optics, sensor calibration, work, coupled springs, and
 deformation. Bamberg & Sternberg informs the teaching approach; it is not an
-additional assigned book. Videos are deliberately unassigned.
+additional assigned book. Selected Alexander Paulin Berkeley Math 54 (Spring 2022)
+videos accompany Weeks 1–8, with Sunday viewing deadlines before experiments
+and a physical-model checkpoint to include with practice. Week 9 is consolidation.
+The selections complement the books; GATE-specific coverage still needs explicit
+practice on LU, partitioned/idempotent matrices, and quadratic forms.
 The Tasks selector includes **Linear Algebra Week 1–9**; Schedule displays
 their actual dates separately from the older plan's week numbering. Each
 block has reading, experiment, practice, review, and feedback/recheck dates.
