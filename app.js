@@ -1,7 +1,7 @@
 const STORAGE_KEY = "learning-studio-data-v2";
 const LEGACY_STORAGE_KEYS = ["learning-studio-data-v1"];
 const SESSION_KEY = "aleph-session";
-const COURSE_PLAN_VERSION = "seeded-user-canonical-workspace-v163";
+const COURSE_PLAN_VERSION = "seeded-user-canonical-workspace-v164";
 const MAX_FEEDBACK_ATTACHMENT_BYTES = 3 * 1024 * 1024;
 const MAX_COMPRESSED_FEEDBACK_BYTES = 2400 * 1024;
 const MAX_FEEDBACK_REQUEST_BYTES = 4 * 1024 * 1024;
@@ -494,6 +494,7 @@ function buildPlatinumLinearAlgebraPlan(lessonPlanId, now) {
         inlineQuestions: questions,
         readingContext: `${entry.mm} ${entry.hh}${entry.resources.length ? ` Videos: ${entry.resources.map((video) => `${video.title}: ${video.url}`).join("; ")}. Viewing checkpoint: ${entry.videoCheckpoint}` : ""}`,
         physicalModel: entry.physicalModel,
+        modelLesson: entry.modelLesson,
         experiment: entry.experiment,
         expectedWork: pattern.kind === "practice"
           ? "Submit textbook references, the physical problems, a labelled sketch, and the numerical experiment with units and model assumptions."
@@ -37045,9 +37046,10 @@ function subjectCurriculumWorkspaceTemplate(subject) {
                   <h5>Read and connect</h5>${entry.readings ? `<ul>${links(entry.readings)}</ul><p>Notes due: ${formatDate(entry.readingDue)}.</p>` : `<p>${escapeHtml(entry.mm)}</p><p>${escapeHtml(entry.hh)}</p>`}
                   <p>${escapeHtml(entry.goals)}</p>
                   ${entry.prerequisite ? `<h5>Prerequisite preparation · ${formatDate(entry.prerequisiteDue)}</h5><p>${escapeHtml(entry.prerequisite)}</p>` : ""}
-                  <h5>${entry.readings ? "Concrete learning problem" : "Physical model"}</h5><p>${escapeHtml(entry.physicalModel)}</p><p>${escapeHtml(entry.bridge)}</p>
+                  ${entry.modelLesson ? physicalModelLessonTemplate(entry.modelLesson) : `<h5>${entry.readings ? "Concrete learning problem" : "Physical model"}</h5><p>${escapeHtml(entry.physicalModel)}</p><p>${escapeHtml(entry.bridge)}</p>`}
                   <h5>Predict, compute, and test</h5><p>${escapeHtml(entry.experiment)}</p>
                   ${entry.resources?.length ? `<h5>Video companion · due ${formatDate(entry.videoDue)}</h5><p>${escapeHtml(curriculum.videoPolicy)}</p><ul>${links(entry.resources)}</ul><h5>Watch, then solve</h5><p>${escapeHtml(entry.videoCheckpoint)}</p>` : `<p>${curriculum.videoPolicy ? "Consolidation: revisit an earlier video only if your feedback identifies a gap." : "Video selection is deferred. No viewing assignment is required for this block."}</p>`}
+                  ${entry.suggestedVideos?.length ? `<h5>Suggested videos · Gamma Digamma</h5><p>Optional: choose an explanation for a concept you want to revisit. These do not add a deadline or replace the Berkeley assignments.</p><ul>${links(entry.suggestedVideos)}</ul>` : ""}
                   <h5>Due dates</h5><p>${entry.readings ? `Course notes: ${formatDate(entry.readingDue)}.` : `M&M: ${formatDate(entry.mmDue)}.`} Experiment: ${formatDate(entry.experimentDue)}. Practice: ${formatDate(entry.practiceDue)}. Review: ${formatDate(entry.reviewDue)}. Feedback and recheck: ${formatDate(entry.repairDue)}.${entry.hh ? " H&H follows the dated reading blocks above." : ""}</p>
                 </section>
                 ${subject.patternWorkspaces.map((pattern) => {
@@ -37063,6 +37065,19 @@ function subjectCurriculumWorkspaceTemplate(subject) {
       </section>
     </article>
   `;
+}
+
+function physicalModelLessonTemplate(lesson) {
+  return `<section class="physical-model-lesson" aria-label="From physical system to linear model">
+    <h5>${escapeHtml(lesson.question)}</h5><p>${escapeHtml(lesson.setup)}</p>
+    <h5>Choose the quantities</h5><dl class="model-quantities">${lesson.quantities.map(([symbol,meaning]) => `<div><dt>${escapeHtml(symbol)}</dt><dd>${escapeHtml(meaning)}</dd></div>`).join("")}</dl>
+    <h5>Build the equations from the apparatus</h5><p>${escapeHtml(lesson.derivation)}</p>
+    <div class="model-equations">${lesson.equations.map(equation => `<p>${escapeHtml(equation)}</p>`).join("")}</div>
+    <h5>Follow a small example</h5><p>${escapeHtml(lesson.example)}</p>
+    <h5>Read the mathematics back into the system</h5><p>${escapeHtml(lesson.interpretation)}</p>
+    <h5>Where the model stops applying</h5><p>${escapeHtml(lesson.limits)}</p>
+    <details class="feedback-note"><summary>Pause and explain</summary><p>${escapeHtml(lesson.check)}</p></details>
+  </section>`;
 }
 
 function inlineMaterialQuestionsTemplate(week) {
@@ -38301,7 +38316,7 @@ function buildFeedbackMaterialContext(material) {
     week: week.week,
     date: week.date,
     expectedWork: week.expectedWork,
-    ...(week.inlineQuestions ? { questions: week.inlineQuestions, readings: week.readingContext, physicalModel: week.physicalModel || "", experiment: week.experiment || "", prerequisite: week.prerequisite || "" } : {}),
+    ...(week.inlineQuestions ? { questions: week.inlineQuestions, ...(week.modelLesson ? { modelingExplanation: week.modelLesson } : {}), readings: week.readingContext, physicalModel: week.physicalModel || "", experiment: week.experiment || "", prerequisite: week.prerequisite || "" } : {}),
     materialUrl: week.materialUrl || "",
     status: week.status
   };

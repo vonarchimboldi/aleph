@@ -187,6 +187,9 @@ deformation. Bamberg & Sternberg informs the teaching approach; it is not an
 additional assigned book. Selected Alexander Paulin Berkeley Math 54 (Spring 2022)
 videos accompany Weeks 1–8, with Sunday viewing deadlines before experiments
 and a physical-model checkpoint to include with practice. Week 9 is consolidation.
+Each physical example now develops quantities, assumptions, equations, a small
+worked example, physical interpretation, and model limitations. Gamma Digamma
+videos from the supplied playlist are optional topic-matched suggestions.
 The selections complement the books; GATE-specific coverage still needs explicit
 practice on LU, partitioned/idempotent matrices, and quadratic forms.
 The Tasks selector includes **Linear Algebra Week 1–9**; Schedule displays

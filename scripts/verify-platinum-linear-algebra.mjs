@@ -30,6 +30,8 @@ curriculum.weeks.forEach((week,index) => {
   assert(week.practiceDue <= week.reviewDue);
   assert.equal(week.repairDue, context.addDays(week.reviewDue,2));
   assert(week.physicalModel && week.experiment);
+  assert(week.modelLesson.derivation && week.modelLesson.example && week.modelLesson.limits);
+  assert(week.suggestedVideos.every(video => video.optional && video.provider === "Gamma Digamma" && video.purpose));
   assert.equal(week.resources.length > 0, index < 8);
   if (index < 8) {
     assert(week.videoDue >= week.startDate && week.videoDue < week.experimentDue);
@@ -37,7 +39,7 @@ curriculum.weeks.forEach((week,index) => {
     assert(week.resources.every(video => /^https:\/\/www.youtube.com\/watch\?v=[A-Za-z0-9_-]{11}$/.test(video.url)));
   }
 });
-assert(!JSON.stringify(curriculum.sources).match(/youtube|3blue1brown|databook|18-06/i));
+assert(!JSON.stringify(curriculum.sources).match(/3blue1brown|databook|18-06/i));
 const tasks = context.state.tasks.filter((task) => task.studyPlanId === curriculum.id);
 assert.equal(tasks.length, 63);
 assert.equal(new Set(tasks.map((task) => task.id)).size, 63);
@@ -59,6 +61,7 @@ for (const week of materials) {
   assert.equal(context.buildFeedbackMaterialContext(material).questions.length, 2);
   assert(context.buildFeedbackMaterialContext(material).readings.includes("M&M"));
   assert(context.buildFeedbackMaterialContext(material).physicalModel);
+  assert(context.buildFeedbackMaterialContext(material).modelingExplanation.derivation);
   assert.equal(week.feedbackWorkflow.rubric.reduce((sum, entry) => sum + entry.points, 0), 10);
 }
 const html = context.subjectReaderTemplate(subject);

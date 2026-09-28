@@ -3413,3 +3413,13 @@ a {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
+
+/* Physical examples: keep quantities and derivations readable on small screens. */
+.physical-model-lesson { margin-block: 1.25rem; }
+.physical-model-lesson h5 { margin-top: 1.25rem; }
+.model-quantities { margin: 0.75rem 0; }
+.model-quantities > div { padding: 0.55rem 0; border-bottom: 1px solid #dce2e5; }
+.model-quantities dt { font-weight: 600; }
+.model-quantities dd { margin: 0.25rem 0 0; }
+.model-equations { border-left: 3px solid #788f87; padding-left: 0.8rem; overflow-wrap: anywhere; }
+.model-equations p { font-family: Georgia, serif; }
