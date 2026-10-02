@@ -1,7 +1,7 @@
 const STORAGE_KEY = "learning-studio-data-v2";
 const LEGACY_STORAGE_KEYS = ["learning-studio-data-v1"];
 const SESSION_KEY = "aleph-session";
-const COURSE_PLAN_VERSION = "seeded-user-canonical-workspace-v164";
+const COURSE_PLAN_VERSION = "seeded-user-canonical-workspace-v165";
 const MAX_FEEDBACK_ATTACHMENT_BYTES = 3 * 1024 * 1024;
 const MAX_COMPRESSED_FEEDBACK_BYTES = 2400 * 1024;
 const MAX_FEEDBACK_REQUEST_BYTES = 4 * 1024 * 1024;
@@ -614,9 +614,9 @@ function buildPriyankaPlatinumPlan(now, accountTypes, sections, user = defaultUs
       title: "DSA Special Prep",
       date: "2026-12-31",
       status: "In progress",
-      details: "Priyanka's four-month premium DSA practice archive. A new two-hour guided-coding module is published each weekday, followed by interview mocks on Saturday and Sunday. Previous modules remain available here for review.",
-      workspaceEyebrow: "Priyanka Platinum Plan · September 2026",
-      workspaceTitle: "Daily DSA Special Prep Archive",
+      details: "October 5–30: twenty 90-minute weekday Python sessions. Week 1 introduces all five structures; Weeks 2–4 deepen applications, invariants, runtime and amortized analysis. No required weekend work. Previous modules and progress remain available.",
+      workspaceEyebrow: "Priyanka Platinum Plan · October 2026",
+      workspaceTitle: "October Data Structures and Practice Archive",
       materialWorkspaces: dsaSpecialPrepMaterialWorkspaces(),
       updatedAt: now
     },
@@ -917,7 +917,7 @@ function buildPriyankaPlatinumPlan(now, accountTypes, sections, user = defaultUs
   tests.push(...platinumProbabilityReviewTests(now));
 
   const dsaPracticeDayOneUrl = "DSA%20For%20GATE%20practice/month-01/day-01-searching-sorting.pdf";
-  [...sortingPatternsSprintDays(), ...dsaProblemLadderDays(), ...dsaInsightLadderDays()].forEach((day) => {
+  [...sortingPatternsSprintDays(), ...dsaProblemLadderDays(), ...dsaInsightLadderDays(), ...dsaDataStructuresMonthDays()].forEach((day) => {
     const scheduleId = `schedule-${day.id}`;
     schedule.push({
       id: scheduleId,
@@ -1101,7 +1101,15 @@ function buildPriyankaPlatinumPlan(now, accountTypes, sections, user = defaultUs
         link: dsaPracticeDayOneUrl,
         updatedAt: now
       },
-      ...[...sortingPatternsSprintDays(), ...dsaProblemLadderDays(), ...dsaInsightLadderDays()].map((day) => ({
+      {
+        id: "resource-dsa-month2-october-plan",
+        title: "October data structures: four-week practice plan",
+        date: "2026-10-05",
+        details: "Twenty 90-minute Python sessions, October 5–30. All five structures in Week 1; applications and analysis in Weeks 2–4. Includes an attempt tracker.",
+        link: "DSA%20For%20GATE%20practice/month-02/index.html",
+        updatedAt: now
+      },
+      ...[...sortingPatternsSprintDays(), ...dsaProblemLadderDays(), ...dsaInsightLadderDays(), ...dsaDataStructuresMonthDays()].map((day) => ({
         id: `resource-${day.id}`,
         title: day.materialTitle,
         date: day.date,
@@ -33570,8 +33578,350 @@ function dsaInsightLadderDays() {
   });
 }
 
+function dsaDataStructuresMonthDays() {
+  const sessions = [
+  {
+    "day": 1,
+    "week": 1,
+    "weekday": "Monday",
+    "minutes": 90,
+    "focus": "Overview: stacks",
+    "implementation": "Implement push, pop, peek and empty on a buffer; double capacity when full. Pop does not shrink.",
+    "application": "Trace and implement a LIFO operation log; preview nesting as an application.",
+    "invariant": "The live prefix is exactly the stack, and its final entry is the top.",
+    "complexity": "Push: O(1) amortized, O(n) on a resize; pop/peek O(1). Capacity is O(n) for insertion-only growth; after many pops it tracks historical maximum size.",
+    "edge_cases": "Empty pop, singleton, duplicates, several growth boundaries.",
+    "gate_drill": "GATE DA 2024 Q16: match ADTs to operations; compare single-operation and sequence costs. Full resizing accounting returns later.",
+    "phase": "structure overview",
+    "date": "2026-10-05"
+  },
+  {
+    "day": 2,
+    "week": 1,
+    "weekday": "Tuesday",
+    "minutes": 90,
+    "focus": "Overview: queues and deques",
+    "implementation": "Implement a fixed-capacity ring queue with head and size; derive tail=(head+size)%capacity.",
+    "application": "Replay FIFO requests in a ring buffer; trace both-end deque operations without requiring a second full implementation.",
+    "invariant": "Logical item i lives at (head+i)%capacity; 0<=size<=capacity.",
+    "complexity": "O(1) worst-case endpoint operations, O(capacity) allocated storage; no list.pop(0).",
+    "edge_cases": "Full vs empty, wrap-around, capacity one, invalid operation contract.",
+    "gate_drill": "GATE DA 2024 Q32: deque trace; compare FIFO with LIFO.",
+    "phase": "structure overview",
+    "date": "2026-10-06"
+  },
+  {
+    "day": 3,
+    "week": 1,
+    "weekday": "Wednesday",
+    "minutes": 90,
+    "focus": "Overview: linked lists",
+    "implementation": "Implement Node, traversal, prepend, append with tail and one deletion case; finish empty/head/tail cases during the operation-log block. Preview doubly linked representation.",
+    "application": "Replay insert/delete operations on a singly linked list; diagram the extra prev links in a doubly linked list.",
+    "invariant": "Every live node is reachable exactly once; tail.next is None; empty head and tail agree.",
+    "complexity": "Search/delete by value O(n); prepend and append with tail O(1); deleting a known node still needs its predecessor in a singly linked list.",
+    "edge_cases": "Empty list, deleting head/tail, one node, missing key.",
+    "gate_drill": "GATE DA 2025 Q27: explain why a sorted linked list lacks constant-time midpoint access.",
+    "phase": "structure overview",
+    "date": "2026-10-07"
+  },
+  {
+    "day": 4,
+    "week": 1,
+    "weekday": "Thursday",
+    "minutes": 90,
+    "focus": "Overview: hash tables",
+    "implementation": "Implement an integer-key map with buckets: put/get/delete; force collisions using key modulo bucket count.",
+    "application": "Replay put/get/update/delete on a chained integer-key map, including collisions; preview membership and counting applications.",
+    "invariant": "Each key belongs to its hash bucket and appears at most once; updates replace its value.",
+    "complexity": "Expected O(1) map operations with suitable hashing and bounded load; O(n) worst case; application expected O(n) time and O(n) space.",
+    "edge_cases": "Colliding keys, duplicate update, absent deletion, negative integer keys under Python modulo.",
+    "gate_drill": "Original collision and load-factor trace; distinguish expected lookup bounds from worst-case collisions.",
+    "phase": "structure overview",
+    "date": "2026-10-08"
+  },
+  {
+    "day": 5,
+    "week": 1,
+    "weekday": "Friday",
+    "minutes": 90,
+    "focus": "Overview: heaps and priority queues",
+    "implementation": "Implement sift_up, sift_down, push, peek and pop in a zero-indexed array; do not call heapq yet.",
+    "application": "Replay min-priority requests with push/pop; contrast FIFO order, sorted order and heap order.",
+    "invariant": "Every parent is <= its children; after a local repair only the repair path may temporarily violate heap order.",
+    "complexity": "O(log n) comparisons/moves per push/pop; peek O(1). Dynamic-array resizing makes push O(log n) amortized overall, with occasional O(n) allocation work.",
+    "edge_cases": "Empty pop, one child, equal priorities, ascending/reversed inserts.",
+    "gate_drill": "Original heap-array MSQ; end the week by choosing between all five structures for five small tasks.",
+    "phase": "structure overview",
+    "date": "2026-10-09"
+  },
+  {
+    "day": 6,
+    "week": 2,
+    "weekday": "Monday",
+    "minutes": 90,
+    "focus": "Stacks for nesting",
+    "implementation": "Reuse Day 1 stack; implement a bracket validator without counting alone.",
+    "application": "Validate mixed nested brackets; optional transfer: evaluate a postfix expression.",
+    "invariant": "The stack contains unmatched openings in encounter order.",
+    "complexity": "O(n) time and O(n) worst-case auxiliary space.",
+    "edge_cases": "Early closing, wrong nesting, unmatched opening; empty input is accepted in our local variant.",
+    "gate_drill": "Original MCQ: why equal counts do not imply correct nesting; trace maximum active stack depth.",
+    "phase": "application and analysis",
+    "date": "2026-10-12"
+  },
+  {
+    "day": 7,
+    "week": 2,
+    "weekday": "Tuesday",
+    "minutes": 90,
+    "focus": "Monotonic stack",
+    "implementation": "Implement unresolved-index stack with explicit strict-greater comparisons.",
+    "application": "For every array position, return the index of its next strictly greater value, or -1.",
+    "invariant": "Stack indices increase; their values are non-increasing; popped indices receive their first greater successor.",
+    "complexity": "O(n) aggregate time: each index is pushed once and popped at most once; O(n) space.",
+    "edge_cases": "Increasing, decreasing, all equal, repeated peaks.",
+    "gate_drill": "Original NAT: count pushes/pops on a decreasing then increasing sequence; distinguish nested loops from quadratic work.",
+    "phase": "application and analysis",
+    "date": "2026-10-13"
+  },
+  {
+    "day": 8,
+    "week": 2,
+    "weekday": "Wednesday",
+    "minutes": 90,
+    "focus": "Queue applications: lazy transfer and amortization",
+    "implementation": "Implement lazy transfer only when the output stack is empty.",
+    "application": "Build a FIFO queue using two stacks and replay a long burst followed by alternating operations.",
+    "invariant": "Reading output top-to-bottom followed by input bottom-to-top gives FIFO order.",
+    "complexity": "An individual dequeue can be O(n); total O(m) stack primitives over m operations, O(1) amortized per operation; O(n) stored items.",
+    "edge_cases": "Transfer after peek, repeated peek, enqueue after partial drain, empty behavior.",
+    "gate_drill": "Original potential/aggregate analysis MCQ; GATE DA 2026 Q39: compare total call count with maximum active depth.",
+    "phase": "application and analysis",
+    "date": "2026-10-14"
+  },
+  {
+    "day": 9,
+    "week": 2,
+    "weekday": "Thursday",
+    "minutes": 90,
+    "focus": "Reversal without losing nodes",
+    "implementation": "Implement iterative reversal with prev, curr and saved next.",
+    "application": "Reverse a singly linked list in place; optional transfer: reverse a specified prefix.",
+    "invariant": "prev is the reversed processed prefix; curr starts the untouched suffix; their nodes partition the original list.",
+    "complexity": "O(n) time, O(1) auxiliary space; no recursive call stack.",
+    "edge_cases": "Empty, singleton, two nodes; verify no node loss, duplication or cycle.",
+    "gate_drill": "Original pointer-state MSQ: identify which update order loses the suffix.",
+    "phase": "application and analysis",
+    "date": "2026-10-15"
+  },
+  {
+    "day": 10,
+    "week": 2,
+    "weekday": "Friday",
+    "minutes": 90,
+    "focus": "Sentinels and merging lists",
+    "implementation": "Build a dummy-head merge and reconnect existing nodes.",
+    "application": "Merge two sorted linked lists without allocating a node for every output entry.",
+    "invariant": "The output prefix is sorted and complete for all consumed nodes; both remaining suffixes stay sorted.",
+    "complexity": "O(n+m) time, O(1) auxiliary space when reusing nodes, excluding a constant dummy node.",
+    "edge_cases": "One empty input, equal values, uneven lengths, tail attachment; inputs are disjoint acyclic lists.",
+    "gate_drill": "Original MCQ: stability with ties and the cost of finding an insertion position.",
+    "phase": "application and analysis",
+    "date": "2026-10-16"
+  },
+  {
+    "day": 11,
+    "week": 3,
+    "weekday": "Monday",
+    "minutes": 90,
+    "focus": "Fast/slow pointers",
+    "implementation": "Implement cycle detection; trace positions before writing the loop condition.",
+    "application": "Determine whether a linked list contains a cycle; optional: locate its entry after deriving the meeting argument.",
+    "invariant": "Fast and slow traverse the same successor relation at different speeds; in a cycle their relative position advances modulo cycle length.",
+    "complexity": "O(n) time, O(1) space, where n counts distinct reachable nodes.",
+    "edge_cases": "No cycle, self-loop, two-node cycle, long stem, cycle at head.",
+    "gate_drill": "Original NAT: number of advances before a meeting; distinguish middle-finding from cycle-detection contracts.",
+    "phase": "application and analysis",
+    "date": "2026-10-19"
+  },
+  {
+    "day": 12,
+    "week": 3,
+    "weekday": "Tuesday",
+    "minutes": 90,
+    "focus": "Hash maps for lookup and counting",
+    "implementation": "Implement a complement lookup; optional frequency-map variation.",
+    "application": "Find two distinct indices whose values sum to a target without sorting.",
+    "invariant": "Before processing index i, the map contains usable indices strictly before i.",
+    "complexity": "Expected O(n) time and O(n) space under hashing assumptions; pathological lookup can make total O(n^2).",
+    "edge_cases": "Duplicate values, same value needed twice, no pair, negative values.",
+    "gate_drill": "Original MSQ: lookup before insert vs insert before lookup; compare sorting-plus-two-pointers.",
+    "phase": "application and analysis",
+    "date": "2026-10-20"
+  },
+  {
+    "day": 13,
+    "week": 3,
+    "weekday": "Wednesday",
+    "minutes": 90,
+    "focus": "Open addressing, deletion and growth",
+    "implementation": "Implement linear probing with EMPTY/OCCUPIED/DELETED states; bound a probe by table capacity.",
+    "application": "Repair lookup after deleting a colliding key; optional transfer: rehash a small table into doubled capacity.",
+    "invariant": "Only EMPTY terminates an unsuccessful search; DELETED preserves the probe chain.",
+    "complexity": "O(1) expected operations only with appropriate hashing and controlled load/tombstones; O(n) worst case. A rebuild costs O(n) expected under the same assumptions.",
+    "edge_cases": "Delete middle of cluster, wrap-around, full table, updating a key beyond a tombstone.",
+    "gate_drill": "GATE DA 2025 Q18: linear probing; GATE DA 2024 Q21: state the uniform-hashing assumption.",
+    "phase": "application and analysis",
+    "date": "2026-10-21"
+  },
+  {
+    "day": 14,
+    "week": 3,
+    "weekday": "Thursday",
+    "minutes": 90,
+    "focus": "Prefix sums plus hashing",
+    "implementation": "Implement counts of prior prefix sums, initialized with zero seen once.",
+    "application": "Count contiguous subarrays with sum K, allowing negative values.",
+    "invariant": "Before the current prefix is inserted, counts describe all earlier prefix sums; their difference identifies a valid subarray.",
+    "complexity": "Expected O(n) time and O(n) space under hashing assumptions.",
+    "edge_cases": "K=0, all zeroes, negatives, repeated prefix sums; ask why a positive-only sliding window fails.",
+    "gate_drill": "Original NAT: hand-trace prefix counts and count occurrences rather than distinct prefix values.",
+    "phase": "application and analysis",
+    "date": "2026-10-22"
+  },
+  {
+    "day": 15,
+    "week": 3,
+    "weekday": "Friday",
+    "minutes": 90,
+    "focus": "Killer application: linked list + hashing for LRU",
+    "implementation": "Using a provided sentinel-node scaffold, implement detach and append-to-recent; then combine them with a key-to-node map for get/put. Do not use OrderedDict.",
+    "application": "Implement bounded least-recently-used caching with positive capacity. The linked-list primitive lab and cache integration share this session’s coding budget; a working scaffold is allowed.",
+    "invariant": "Map keys equal list keys; each key has one node; list order is recency; size never exceeds capacity after an operation.",
+    "complexity": "Expected O(1) get/put with hash-map assumptions and O(capacity) storage; worst-case hash lookup is not O(1).",
+    "edge_cases": "Capacity one, update existing key, get changes recency, eviction, missing get.",
+    "gate_drill": "Original cache-state trace; prove reciprocal links and map/list agreement, then explain expected O(1) get/put.",
+    "phase": "application and analysis",
+    "date": "2026-10-23"
+  },
+  {
+    "day": 16,
+    "week": 4,
+    "weekday": "Monday",
+    "minutes": 90,
+    "focus": "Bottom-up heapify and heapsort",
+    "implementation": "Extend Day 5 sifts with bottom-up heapify; adapt comparison for an in-place max-heapsort.",
+    "application": "Sort an array by moving the maximum to a growing sorted suffix and repairing the reduced heap.",
+    "invariant": "Active prefix is a max-heap; suffix is sorted and contains the removed maxima.",
+    "complexity": "Heapify O(n) via node-height counting; heapsort O(n log n), O(1) auxiliary space with iterative sifts; normally unstable.",
+    "edge_cases": "Duplicates, already sorted, reverse sorted, empty, one element.",
+    "gate_drill": "Original NAT: compare n repeated insertions with bottom-up heapify and justify the height-sum bound.",
+    "phase": "application and analysis",
+    "date": "2026-10-26"
+  },
+  {
+    "day": 17,
+    "week": 4,
+    "weekday": "Tuesday",
+    "minutes": 90,
+    "focus": "Killer application: top-k in a stream",
+    "implementation": "Maintain a size-k min-heap using Day 5 operations; heapq is permitted after the foundational implementation.",
+    "application": "Maintain the kth largest observation as values arrive, counting duplicate observations.",
+    "invariant": "Once k values exist, the heap contains k largest values seen; its root is the kth largest.",
+    "complexity": "O(log k) accepted update, O(1) rejected comparison/peek; O(n log(k+1)) total upper bound and O(k) storage.",
+    "edge_cases": "k=1, fewer than k values, duplicates, negatives, a long rejected tail.",
+    "gate_drill": "Original MCQ: why a min-heap, not a max-heap, is the correct retained frontier.",
+    "phase": "application and analysis",
+    "date": "2026-10-27"
+  },
+  {
+    "day": 18,
+    "week": 4,
+    "weekday": "Wednesday",
+    "minutes": 90,
+    "focus": "Killer application: k-way merge",
+    "implementation": "Keep one unconsumed head per nonempty sorted source in a heap; include a source tie-breaker.",
+    "application": "Merge k sorted arrays or iterators; optional: return a lazy iterator instead of a materialized result.",
+    "invariant": "The heap contains the smallest unconsumed candidate from every unfinished source.",
+    "complexity": "O(k+N log(k+1)) time including source setup; O(k) auxiliary heap space, plus O(N) output if materialized.",
+    "edge_cases": "Empty sources, all sources empty, equal values from different sources, uneven source lengths.",
+    "gate_drill": "Original NAT: bound heap size and distinguish auxiliary space from returned output.",
+    "phase": "application and analysis",
+    "date": "2026-10-28"
+  },
+  {
+    "focus": "Killer application: sliding-window maximum",
+    "implementation": "Build a deque of candidate indices; expire old indices and remove dominated values before appending.",
+    "application": "Return the maximum for every consecutive window of k values without rescanning the window.",
+    "invariant": "Candidate indices increase and their values decrease; all retained indices lie in the current window; the front is its maximum.",
+    "complexity": "O(n) aggregate time: each index is appended once and removed at most once; O(k) auxiliary deque space, plus O(n-k+1) output.",
+    "edge_cases": "k=1, k=n, equal values, increasing/decreasing sequences, maximum expiring; require 1<=k<=n.",
+    "gate_drill": "Original NAT: count removals and distinguish amortized per-update work from worst-case work in a single update.",
+    "day": 19,
+    "week": 4,
+    "weekday": "Thursday",
+    "minutes": 90,
+    "phase": "application and analysis",
+    "date": "2026-10-29"
+  },
+  {
+    "day": 20,
+    "week": 4,
+    "weekday": "Friday",
+    "minutes": 90,
+    "focus": "Cumulative interview and GATE checkpoint",
+    "implementation": "Select a structure before coding; state a brute-force baseline and why it wastes work.",
+    "application": "Near-transfer mock: merge k sorted linked lists by reusing nodes; optional fallback: implement FIFO using two stacks from memory.",
+    "invariant": "One frontier per unfinished list; consumed nodes form the sorted output; tie-breakers avoid comparing Node objects.",
+    "complexity": "O(k+N log(k+1)) time, O(k) auxiliary heap space when relinking nodes; account for initialization and empty lists.",
+    "edge_cases": "Equal node values, empty list collection, disjoint lists, one source; no cycles.",
+    "gate_drill": "Timed original mixed MCQ/MSQ/NAT set plus an explanation of one average/worst/amortized distinction.",
+    "phase": "application and analysis",
+    "date": "2026-10-30"
+  }
+];
+  return sessions.map((session) => {
+    const id = `dsa-month2-2026-10-day-${String(session.day).padStart(2, "0")}`;
+    const expectedWork = `90-minute Python session. Implement: ${session.implementation} Apply: ${session.application} Invariant: ${session.invariant} Costs: ${session.complexity}`;
+    return {
+      ...session, id, monthWeek: session.week, monthDay: session.day,
+      week: weekFromDate(session.date, PRIYANKA_PLATINUM_START_DATE), sourceWeek: session.week,
+      label: `Month 2 · Week ${session.week} · Day ${session.day}`,
+      materialTitle: `Month 2 Day ${session.day}: ${session.focus}`,
+      materialUrl: `DSA%20For%20GATE%20practice/month-02/day-${String(session.day).padStart(2, "0")}.html`,
+      expectedWork, practiceKind: "90-minute Python practice", status: "Practice brief published",
+      submissionInstructions: `${expectedWork} Submit code, boundary tests, invariant, time/space bounds, actual minutes and hints used. Record independent, assisted, partial or unattempted. Stop at 90 minutes; no required weekend work.`,
+      inlineQuestions: [{ id: `${id}-primitive`, prompt: session.implementation }, { id: `${id}-application`, prompt: session.application }],
+      readingContext: `${session.phase}. Boundaries: ${session.edge_cases}. GATE drill: ${session.gate_drill}`,
+      feedbackWorkflow: {
+        id: `feedback-workflow-${id}`, title: `Month 2 Day ${session.day} Review`,
+        promptUse: `${expectedWork} Boundary tests: ${session.edge_cases}. Accept Python 3. Distinguish worst-case, expected and amortized costs. Record assistance and partial attempts without inferring independence from correct code. Optional work is not required; respect the 90-minute budget.`,
+        studentSummaryHint: "Lead with attempt status, first broken invariant or boundary case, and one repair drill.",
+        rubric: [
+          { criterion: "Implementation and boundary handling", points: 3, cue: session.edge_cases },
+          { criterion: "Invariant and correctness", points: 3, cue: session.invariant },
+          { criterion: "Runtime and space analysis", points: 3, cue: session.complexity },
+          { criterion: "Attempt evidence", points: 1, cue: "Actual minutes, hints and independent/assisted/partial status." }
+        ],
+        skills: ["python", "data-structures", "invariants", "complexity-analysis"],
+        commonFirstIssues: ["broken-invariant", "boundary-case", "confused-cost-bound", "missing-assistance-evidence"],
+        defaultNextDrills: [session.edge_cases]
+      }
+    };
+  });
+}
+
 function dsaSpecialPrepMaterialWorkspaces() {
   return [
+    ...[1, 2, 3, 4].map((monthWeek) => ({
+      id: `dsa-month2-october-week-${monthWeek}`,
+      title: `October Week ${monthWeek}: ${["Meet all five structures", "Stacks, queues and lists", "Hashing and pointer applications", "Heaps, deques and cumulative practice"][monthWeek - 1]}`,
+      day: "Month 2 · 90-minute weekday practice",
+      focus: "Python implementations, interview applications, invariants, boundary tests and GATE reasoning. One main task per session; record assistance and partial work.",
+      planUrl: "DSA%20For%20GATE%20practice/month-02/index.html",
+      weeks: dsaDataStructuresMonthDays().filter((day) => day.monthWeek === monthWeek)
+    })),
     {
       id: "dsa-special-prep-september-2026",
       title: "September: Searching and Sorting",
@@ -37257,6 +37607,7 @@ function materialWorkspaceTemplate(workspace) {
           <p class="eyebrow">${escapeHtml(workspace.day || "Material")}</p>
           <h5>${escapeHtml(workspace.title)}</h5>
           <p>${escapeHtml(workspace.focus)}</p>
+          ${workspace.planUrl ? `<a class="primary-btn inline-link" href="${escapeHtml(workspace.planUrl)}" target="_blank" rel="noopener">Open four-week plan</a>` : ""}
         </div>
         <span class="tag">${workspace.weeks.length} material${workspace.weeks.length === 1 ? "" : "s"}</span>
       </div>
@@ -37399,7 +37750,7 @@ function dayMaterialTemplate({ pattern, week }) {
 }
 
 function findPatternMaterial(subject, materialId) {
-  for (const pattern of [...(subject.patternWorkspaces || []), ...(subject.archivedPatternWorkspaces || [])]) {
+  for (const pattern of [...(subject.patternWorkspaces || []), ...(subject.archivedPatternWorkspaces || []), ...(subject.materialWorkspaces || [])]) {
     const week = (pattern.weeks || []).find((entry) => entry.id === materialId);
     if (week) return { pattern, week };
   }
@@ -39481,6 +39832,7 @@ function subjectScheduleTemplate(subject, items) {
           <article class="schedule-row">
             <div>
               <strong>${escapeHtml(item.kind || kindFromTitle(item.title))}</strong>
+              ${item.materialUrl ? `<p><a href="${escapeHtml(item.materialUrl)}" target="_blank" rel="noopener">${escapeHtml(item.title)}</a></p>` : ""}
               <p>${escapeHtml(item.details || "No details added.")}</p>
             </div>
             <span class="tag">${escapeHtml(item.relativeDay || formatDate(item.date))}</span>
