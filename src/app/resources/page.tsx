@@ -69,11 +69,9 @@ export default async function ResourcesListPage() {
             {resources.map((r) => {
               const Icon = iconByType[r.type] ?? BookOpen;
               return (
-                <a
+                <Link
                   key={r.id}
-                  href={r.url || "#"}
-                  target={r.url ? "_blank" : undefined}
-                  rel={r.url ? "noopener noreferrer" : undefined}
+                  href={`/resources/${r.id}`}
                   className="group rounded-2xl border border-zinc-800 bg-zinc-900 p-6 transition hover:border-zinc-700 hover:bg-zinc-800"
                 >
                   <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-zinc-800 group-hover:bg-zinc-700">
@@ -81,7 +79,7 @@ export default async function ResourcesListPage() {
                   </div>
                   <h2 className="mt-4 text-lg font-semibold text-white">{r.title}</h2>
                   <p className="mt-1 text-sm text-zinc-500 capitalize">{r.type}</p>
-                </a>
+                </Link>
               );
             })}
           </div>

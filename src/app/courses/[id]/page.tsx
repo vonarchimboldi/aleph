@@ -33,7 +33,10 @@ export default async function CourseDetailPage({ params }: Props) {
             <span>{course.title}</span>
           </div>
           <h1 className="mt-2 text-3xl font-bold text-white">{course.title}</h1>
-          <p className="mt-2 text-zinc-400">{course.tagline}</p>
+          <p className="mt-2 text-zinc-400">{course.tagline || course.description}</p>
+          {course.description && course.tagline && course.tagline !== course.description && (
+            <p className="mt-2 max-w-3xl text-sm text-zinc-500">{course.description}</p>
+          )}
         </div>
 
         <div className="grid gap-8 lg:grid-cols-3">

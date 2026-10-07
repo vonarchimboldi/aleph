@@ -3,13 +3,20 @@ import { redirect } from "next/navigation";
 import type { User } from "@supabase/supabase-js";
 import { createClient } from "@/lib/supabase/server";
 import AdminShell from "@/components/admin/AdminShell";
-import { Users, ArrowRight } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 
 export default async function StudentsListPage() {
   const supabase = await createClient();
   let user: User | null = null;
   let profile: { role: string } | null = null;
-  let students: { id: string; email: string; full_name: string | null; role: string }[] | null = null;
+  let students: {
+    id: string;
+    email: string;
+    full_name: string | null;
+    role: string;
+    account_type: string;
+    created_at: string;
+  }[] | null = null;
 
   try {
     const { data: { user: u } } = await supabase.auth.getUser();
@@ -30,7 +37,7 @@ export default async function StudentsListPage() {
   try {
     const { data, error } = await supabase
       .from("profiles")
-      .select("id, email, full_name, role")
+      .select("id, email, full_name, role, account_type, created_at")
       .order("created_at", { ascending: false });
 
     if (error) throw error;
@@ -49,26 +56,48 @@ export default async function StudentsListPage() {
         </div>
 
         {students && students.length > 0 ? (
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {students.map((student) => (
-              <Link
-                key={student.id}
-                href={`/students/${student.id}`}
-                className="group rounded-2xl border border-zinc-800 bg-zinc-900 p-6 transition hover:border-zinc-700 hover:bg-zinc-800"
-              >
-                <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-zinc-800 group-hover:bg-zinc-700">
-                  <Users className="h-6 w-6 text-zinc-300" />
-                </div>
-                <h2 className="mt-4 text-lg font-semibold text-white">
-                  {student.full_name || student.email || "Unnamed student"}
-                </h2>
-                <p className="mt-1 text-sm text-zinc-500">{student.email}</p>
-                <p className="mt-2 text-sm text-zinc-400 capitalize">Role: {student.role}</p>
-                <div className="mt-4 flex items-center text-sm text-zinc-500 group-hover:text-zinc-300">
-                  Manage enrollment <ArrowRight className="ml-2 h-4 w-4" />
-                </div>
-              </Link>
-            ))}
+          <div className="overflow-hidden rounded-2xl border border-zinc-800 bg-zinc-900">
+            <div className="overflow-x-auto">
+              <table className="w-full text-left text-sm">
+                <thead className="border-b border-zinc-800 bg-zinc-950 text-zinc-400">
+                  <tr>
+                    <th className="px-4 py-3 font-medium">Name</th>
+                    <th className="px-4 py-3 font-medium">Email</th>
+                    <th className="px-4 py-3 font-medium">Role</th>
+                    <th className="px-4 py-3 font-medium">Plan</th>
+                    <th className="px-4 py-3 font-medium">Joined</th>
+                    <th className="px-4 py-3 font-medium"></th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-zinc-800">
+                  {students.map((student) => (
+                    <tr key={student.id} className="hover:bg-zinc-800/50">
+                      <td className="px-4 py-3 font-medium text-white">
+                        {student.full_name || "—"}
+                      </td>
+                      <td className="px-4 py-3 text-zinc-400">{student.email}</td>
+                      <td className="px-4 py-3">
+                        <span className="rounded-full bg-zinc-800 px-2 py-0.5 text-xs capitalize text-zinc-300">
+                          {student.role}
+                        </span>
+                      </td>
+                      <td className="px-4 py-3 text-zinc-400">{student.account_type}</td>
+                      <td className="px-4 py-3 text-zinc-500">
+                        {new Date(student.created_at).toLocaleDateString()}
+                      </td>
+                      <td className="px-4 py-3 text-right">
+                        <Link
+                          href={`/students/${student.id}`}
+                          className="inline-flex items-center gap-1 text-xs font-medium text-zinc-300 hover:text-white"
+                        >
+                          Manage <ArrowRight className="h-3 w-3" />
+                        </Link>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           </div>
         ) : (
           <div className="rounded-2xl border border-zinc-800 bg-zinc-900 p-12 text-center text-zinc-500">
