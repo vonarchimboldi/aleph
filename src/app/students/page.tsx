@@ -1,9 +1,8 @@
-import Link from "next/link";
 import { redirect } from "next/navigation";
 import type { User } from "@supabase/supabase-js";
 import { createClient } from "@/lib/supabase/server";
 import AdminShell from "@/components/admin/AdminShell";
-import { ArrowRight } from "lucide-react";
+import StudentsTable from "@/components/admin/StudentsTable";
 
 export default async function StudentsListPage() {
   const supabase = await createClient();
@@ -16,7 +15,7 @@ export default async function StudentsListPage() {
     role: string;
     account_type: string;
     created_at: string;
-  }[] | null = null;
+  }[] = [];
 
   try {
     const { data: { user: u } } = await supabase.auth.getUser();
@@ -44,7 +43,6 @@ export default async function StudentsListPage() {
     students = data ?? [];
   } catch (err) {
     console.error("[StudentsListPage] Failed to load students:", err);
-    students = [];
   }
 
   return (
@@ -55,55 +53,7 @@ export default async function StudentsListPage() {
           <p className="mt-2 text-zinc-400">Manage student enrollments and access.</p>
         </div>
 
-        {students && students.length > 0 ? (
-          <div className="overflow-hidden rounded-2xl border border-zinc-800 bg-zinc-900">
-            <div className="overflow-x-auto">
-              <table className="w-full text-left text-sm">
-                <thead className="border-b border-zinc-800 bg-zinc-950 text-zinc-400">
-                  <tr>
-                    <th className="px-4 py-3 font-medium">Name</th>
-                    <th className="px-4 py-3 font-medium">Email</th>
-                    <th className="px-4 py-3 font-medium">Role</th>
-                    <th className="px-4 py-3 font-medium">Plan</th>
-                    <th className="px-4 py-3 font-medium">Joined</th>
-                    <th className="px-4 py-3 font-medium"></th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-zinc-800">
-                  {students.map((student) => (
-                    <tr key={student.id} className="hover:bg-zinc-800/50">
-                      <td className="px-4 py-3 font-medium text-white">
-                        {student.full_name || "—"}
-                      </td>
-                      <td className="px-4 py-3 text-zinc-400">{student.email}</td>
-                      <td className="px-4 py-3">
-                        <span className="rounded-full bg-zinc-800 px-2 py-0.5 text-xs capitalize text-zinc-300">
-                          {student.role}
-                        </span>
-                      </td>
-                      <td className="px-4 py-3 text-zinc-400">{student.account_type}</td>
-                      <td className="px-4 py-3 text-zinc-500">
-                        {new Date(student.created_at).toLocaleDateString()}
-                      </td>
-                      <td className="px-4 py-3 text-right">
-                        <Link
-                          href={`/students/${student.id}`}
-                          className="inline-flex items-center gap-1 text-xs font-medium text-zinc-300 hover:text-white"
-                        >
-                          Manage <ArrowRight className="h-3 w-3" />
-                        </Link>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </div>
-        ) : (
-          <div className="rounded-2xl border border-zinc-800 bg-zinc-900 p-12 text-center text-zinc-500">
-            No students found. Students appear here after they sign up.
-          </div>
-        )}
+        <StudentsTable students={students} />
       </div>
     </AdminShell>
   );

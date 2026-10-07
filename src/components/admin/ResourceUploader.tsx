@@ -2,7 +2,7 @@
 
 import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
-import { Upload, FileText, Video, BookOpen, ExternalLink, Calculator } from "lucide-react";
+import { Upload, FileText, Video, BookOpen, ExternalLink, Calculator, Image } from "lucide-react";
 import { uploadResourceAction } from "@/lib/admin/actions";
 
 interface Course {
@@ -23,6 +23,7 @@ interface ResourceUploaderProps {
 const resourceTypes = [
   { value: "pdf", label: "PDF", icon: FileText },
   { value: "video", label: "Video", icon: Video },
+  { value: "image", label: "Image", icon: Image },
   { value: "article", label: "Article", icon: BookOpen },
   { value: "cheatsheet", label: "Cheatsheet", icon: Calculator },
   { value: "link", label: "External link", icon: ExternalLink },

@@ -3,13 +3,14 @@ import { redirect } from "next/navigation";
 import type { User } from "@supabase/supabase-js";
 import { createClient } from "@/lib/supabase/server";
 import AdminShell from "@/components/admin/AdminShell";
-import { Plus, FileText, BookOpen, Video, ExternalLink, Calculator } from "lucide-react";
+import { Plus, FileText, BookOpen, Video, ExternalLink, Calculator, Image } from "lucide-react";
 
 const iconByType: Record<string, React.ComponentType<{ className?: string }>> = {
   pdf: FileText,
   article: BookOpen,
   cheatsheet: Calculator,
   video: Video,
+  image: Image,
   link: ExternalLink,
 };
 

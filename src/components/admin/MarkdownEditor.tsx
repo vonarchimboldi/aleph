@@ -5,6 +5,7 @@ import MarkdownIt from "markdown-it";
 
 interface MarkdownEditorProps {
   label: string;
+  name?: string;
   value: string;
   onChange: (value: string) => void;
   placeholder?: string;
@@ -20,6 +21,7 @@ const md = new MarkdownIt({
 
 export default function MarkdownEditor({
   label,
+  name,
   value,
   onChange,
   placeholder,
@@ -37,6 +39,7 @@ export default function MarkdownEditor({
 
       <div className="grid gap-4 lg:grid-cols-2">
         <textarea
+          name={name}
           value={value}
           onChange={(e) => onChange(e.target.value)}
           placeholder={placeholder}
@@ -58,8 +61,9 @@ export default function MarkdownEditor({
 
       <p className="text-xs text-zinc-500">
         Use <code className="rounded bg-zinc-800 px-1">\( ... \)</code> for inline math and{" "}
-        <code className="rounded bg-zinc-800 px-1">\[ ... \]</code> for display math. Preview
-        shows markdown only; math is rendered in the learner app.
+        <code className="rounded bg-zinc-800 px-1">\[ ... \]</code> for display math. Add images
+        with <code className="rounded bg-zinc-800 px-1">![alt](url)</code>. Preview shows markdown
+        only; math/images render in the learner app.
       </p>
     </div>
   );

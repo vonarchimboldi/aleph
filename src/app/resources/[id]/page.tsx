@@ -3,7 +3,7 @@ import { notFound, redirect } from "next/navigation";
 import type { User } from "@supabase/supabase-js";
 import { createClient } from "@/lib/supabase/server";
 import AdminShell from "@/components/admin/AdminShell";
-import { ArrowLeft, ExternalLink } from "lucide-react";
+import { ArrowLeft, ExternalLink, Copy, Check } from "lucide-react";
 
 interface ResourceDetailPageProps {
   params: Promise<{ id: string }>;
@@ -80,16 +80,43 @@ export default async function ResourceDetailPage({ params }: ResourceDetailPageP
 
           <h1 className="mt-4 text-3xl font-bold text-white">{resource.title}</h1>
 
+          {resource.url && resource.type === "image" && (
+            <div className="mt-6 overflow-hidden rounded-xl border border-zinc-800 bg-zinc-950">
+              <img
+                src={resource.url}
+                alt={resource.title}
+                className="max-h-[24rem] w-full object-contain"
+              />
+            </div>
+          )}
+
           {resource.url && (
-            <a
-              href={resource.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="mt-4 inline-flex items-center gap-2 rounded-xl bg-white px-4 py-2 text-sm font-medium text-zinc-950 hover:bg-zinc-200"
-            >
-              Open resource
-              <ExternalLink className="h-4 w-4" />
-            </a>
+            <div className="mt-4 flex items-center gap-2">
+              <a
+                href={resource.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 rounded-xl bg-white px-4 py-2 text-sm font-medium text-zinc-950 hover:bg-zinc-200"
+              >
+                Open resource
+                <ExternalLink className="h-4 w-4" />
+              </a>
+            </div>
+          )}
+
+          {resource.url && (
+            <div className="mt-4">
+              <label className="block text-xs font-medium text-zinc-500">Public URL</label>
+              <input
+                readOnly
+                value={resource.url}
+                className="mt-1 w-full rounded-xl border border-zinc-700 bg-zinc-950 px-3 py-2 text-xs text-zinc-300 outline-none"
+                onClick={(e) => (e.currentTarget as HTMLInputElement).select()}
+              />
+              <p className="mt-1 text-xs text-zinc-500">
+                Copy this URL to use the image inline in section markdown.
+              </p>
+            </div>
           )}
 
           {resource.description ? (

@@ -6,6 +6,8 @@ import { createTask, createQuizQuestion } from "@/lib/admin/actions";
 import { getSectionById, getTasksBySection, getQuizBySection, getQuizQuestions } from "@/lib/admin/data";
 import FormField from "@/components/forms/FormField";
 import FormSelect from "@/components/forms/FormSelect";
+import FormMarkdownEditor from "@/components/admin/FormMarkdownEditor";
+import QuizOptionsBuilder from "@/components/admin/QuizOptionsBuilder";
 import { Plus, CheckCircle, HelpCircle } from "lucide-react";
 
 const taskLabels = [
@@ -94,9 +96,9 @@ export default async function SectionDetailPage({ params }: Props) {
                 <input type="hidden" name="section_id" value={section.id} />
                 <FormField label="Title (optional)" name="title" />
                 <FormSelect label="Label" name="label" required options={taskLabels} />
-                <FormField label="Statement" name="statement" rows={4} required />
+                <FormMarkdownEditor label="Statement" name="statement" rows={6} required />
                 <FormField label="Answer" name="answer" required />
-                <FormField label="Solution" name="solution" rows={4} required />
+                <FormMarkdownEditor label="Solution" name="solution" rows={6} required />
                 <FormField label="Hints (comma separated)" name="hints" />
                 <FormField label="Difficulty (1-3)" name="difficulty" type="number" min={1} max={3} />
                 <FormField label="Estimated Minutes" name="estimated_minutes" type="number" defaultValue={0} />
@@ -145,15 +147,10 @@ export default async function SectionDetailPage({ params }: Props) {
               <form action={createQuizQuestion} className="mt-4 space-y-4">
                 <input type="hidden" name="section_id" value={section.id} />
                 <FormSelect label="Format" name="format" required options={questionFormats} />
-                <FormField label="Prompt" name="prompt" rows={3} required />
-                <FormField
-                  label="Options (one per line, for MCQ/MSQ)"
-                  name="options"
-                  rows={4}
-                  placeholder="Option A\nOption B\nOption C\nOption D"
-                />
+                <FormMarkdownEditor label="Prompt" name="prompt" rows={5} required />
+                <QuizOptionsBuilder />
                 <FormField label="Correct Answer" name="correct_answer" required />
-                <FormField label="Explanation" name="explanation" rows={3} />
+                <FormMarkdownEditor label="Explanation" name="explanation" rows={5} />
                 <FormField label="Difficulty (1-3)" name="difficulty" type="number" min={1} max={3} />
                 <FormSelect label="Gate Weight" name="gate_weight" options={gateWeights} />
                 <FormField label="Concept ID" name="concept_id" />
