@@ -1,21 +1,43 @@
 import Link from "next/link";
+import { redirect } from "next/navigation";
+import type { User } from "@supabase/supabase-js";
 import { createClient } from "@/lib/supabase/server";
 import AdminShell from "@/components/admin/AdminShell";
 import { Users, ArrowRight } from "lucide-react";
 
 export default async function StudentsListPage() {
   const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
+  let user: User | null = null;
+  let profile: { role: string } | null = null;
+  let students: { id: string; email: string; full_name: string | null; role: string }[] | null = null;
 
-  if (!user) return null;
+  try {
+    const { data: { user: u } } = await supabase.auth.getUser();
+    user = u;
+    if (!user) redirect("/login");
 
-  const { data: students, error } = await supabase
-    .from("profiles")
-    .select("*")
-    .order("created_at", { ascending: false });
+    const { data: p } = await supabase.from("profiles").select("role").eq("id", user.id).single();
+    profile = p;
+  } catch (err) {
+    console.error("[StudentsListPage] Auth check failed:", err);
+    redirect("/login");
+  }
 
-  if (error) {
-    console.error("Failed to load students:", error);
+  if (!profile || (profile.role !== "admin" && profile.role !== "instructor")) {
+    redirect("/login");
+  }
+
+  try {
+    const { data, error } = await supabase
+      .from("profiles")
+      .select("id, email, full_name, role")
+      .order("created_at", { ascending: false });
+
+    if (error) throw error;
+    students = data ?? [];
+  } catch (err) {
+    console.error("[StudentsListPage] Failed to load students:", err);
+    students = [];
   }
 
   return (

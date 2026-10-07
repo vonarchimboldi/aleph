@@ -1,8 +1,13 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import MarkdownIt from "markdown-it";
+import fs from "fs";
+import path from "path";
 import { createClient } from "@/lib/supabase/server";
 import type { SectionType, TaskLabel, QuestionFormat } from "./types";
+
+const DSA_BASE_PATH = "/Users/akshat/Documents/Code/Personal/aleph-main-temp/DSA For GATE practice/month-01";
 
 function slugify(text: string) {
   return text
@@ -248,6 +253,369 @@ export async function unenrollStudent(formData: FormData) {
   const userId = formData.get("user_id") as string;
 
   const { error } = await supabase.from("enrollments").delete().eq("id", enrollmentId);
+
+  if (error) throw error;
+  revalidatePath(`/students/${userId}`);
+}
+
+interface CourseBundlePayload {
+  examChoice: "new" | string;
+  examTitle?: string;
+  examMonth?: string;
+  examYear?: string;
+  course: {
+    title: string;
+    tagline?: string;
+    description?: string;
+    difficulty?: string;
+    duration?: string;
+    estimated_hours?: string;
+  };
+  subject: {
+    title: string;
+    description?: string;
+  };
+  chapters: {
+    title: string;
+    slug?: string;
+    description?: string;
+    estimated_minutes?: number;
+    sections: {
+      title: string;
+      slug?: string;
+      type: SectionType;
+      estimated_minutes?: number;
+      content: string;
+    }[];
+  }[];
+  isActive: boolean;
+}
+
+interface DsaSectionSpec {
+  title: string;
+  type: SectionType;
+  file?: string;
+  minutes?: number;
+}
+
+interface DsaChapterSpec {
+  slug: string;
+  title: string;
+  number: number;
+  sections: DsaSectionSpec[];
+}
+
+const dsaChapterSpecs: DsaChapterSpec[] = [
+  {
+    slug: "dsa-practice-month-1-overview",
+    title: "Month 1 Overview",
+    number: 14,
+    sections: [
+      { title: "Month 1 guided path", type: "read", file: "FOUR_WEEK_PATH.md" },
+    ],
+  },
+  {
+    slug: "dsa-practice-week-1-search-sort",
+    title: "Week 1: Search & Sort",
+    number: 15,
+    sections: [
+      { title: "Week 1 overview", type: "summary" },
+      { title: "Day 1: Searching, Sorting, and the Power of Order", type: "read", file: "day-01-searching-sorting.md", minutes: 120 },
+      { title: "Day 2: Binary Search and Boundaries", type: "read", file: "day-02-binary-search-boundaries.md", minutes: 120 },
+      { title: "Day 2 brief", type: "summary", file: "day-02-brief.md" },
+    ],
+  },
+  {
+    slug: "dsa-practice-week-2-problem-ladder",
+    title: "Week 2: Problem Ladder",
+    number: 16,
+    sections: [
+      { title: "Week 2 rules", type: "read", file: "problem-ladder-week-2026-09-14.md" },
+      { title: "Day 1 problem ladder", type: "challenge", file: "problem-ladder-day-01.md", minutes: 120 },
+      { title: "Day 2 problem ladder", type: "challenge", file: "problem-ladder-day-02.md", minutes: 120 },
+      { title: "Day 3 problem ladder", type: "challenge", file: "problem-ladder-day-03.md", minutes: 120 },
+      { title: "Day 4 problem ladder", type: "challenge", file: "problem-ladder-day-04.md", minutes: 120 },
+      { title: "Day 5 problem ladder", type: "challenge", file: "problem-ladder-day-05.md", minutes: 120 },
+    ],
+  },
+  {
+    slug: "dsa-practice-week-4-insight-ladder",
+    title: "Week 4: Insight Ladder",
+    number: 17,
+    sections: [
+      { title: "Week 4 rules", type: "read", file: "insight-ladder-week-2026-09-21.md" },
+      { title: "Day 1 insight ladder", type: "challenge", file: "insight-ladder-day-01.md", minutes: 120 },
+      { title: "Day 2 insight ladder", type: "challenge", file: "insight-ladder-day-02.md", minutes: 120 },
+      { title: "Day 3 insight ladder", type: "challenge", file: "insight-ladder-day-03.md", minutes: 120 },
+      { title: "Day 4 insight ladder", type: "challenge", file: "insight-ladder-day-04.md", minutes: 120 },
+      { title: "Day 5 insight ladder", type: "challenge", file: "insight-ladder-day-05.md", minutes: 120 },
+    ],
+  },
+];
+
+export async function importDsaPracticeAction() {
+  const supabase = await createClient();
+  const md = new MarkdownIt({ html: false, linkify: true, typographer: true });
+
+  const { data: subject } = await supabase
+    .from("subjects")
+    .select("id")
+    .eq("slug", "data-structures-and-algorithms")
+    .single();
+
+  if (!subject) {
+    throw new Error("Subject 'data-structures-and-algorithms' not found");
+  }
+
+  // Idempotency: remove previously imported month-1 DSA practice chapters.
+  const chapterSlugs = dsaChapterSpecs.map((c) => c.slug);
+  const { data: existingChapters } = await supabase
+    .from("chapters")
+    .select("id")
+    .eq("subject_id", subject.id)
+    .in("slug", chapterSlugs);
+
+  const existingIds = existingChapters?.map((c) => c.id) ?? [];
+  if (existingIds.length > 0) {
+    await supabase.from("chapters").delete().in("id", existingIds);
+  }
+
+  let chaptersCreated = 0;
+  let sectionsCreated = 0;
+
+  for (const chapterSpec of dsaChapterSpecs) {
+    const { data: chapter, error: chapterError } = await supabase
+      .from("chapters")
+      .insert({
+        subject_id: subject.id,
+        slug: chapterSpec.slug,
+        number: chapterSpec.number,
+        title: chapterSpec.title,
+        description: null,
+        estimated_minutes: 0,
+      })
+      .select("id")
+      .single();
+
+    if (chapterError || !chapter) {
+      throw chapterError ?? new Error(`Failed to create chapter ${chapterSpec.title}`);
+    }
+
+    chaptersCreated++;
+
+    const sectionsPayload = [];
+    for (let i = 0; i < chapterSpec.sections.length; i++) {
+      const sec = chapterSpec.sections[i];
+      let content = "";
+
+      if (sec.file) {
+        const filePath = path.join(DSA_BASE_PATH, sec.file);
+        if (fs.existsSync(filePath)) {
+          const raw = fs.readFileSync(filePath, "utf8");
+          content = md.render(raw);
+        }
+      }
+
+      sectionsPayload.push({
+        chapter_id: chapter.id,
+        slug: slugify(sec.title),
+        title: sec.title,
+        type: sec.type,
+        order_index: i,
+        estimated_minutes: sec.minutes ?? 0,
+        content,
+        is_locked: false,
+      });
+    }
+
+    if (sectionsPayload.length > 0) {
+      const { error: sectionsError } = await supabase.from("sections").insert(sectionsPayload);
+      if (sectionsError) throw sectionsError;
+      sectionsCreated += sectionsPayload.length;
+    }
+  }
+
+  revalidatePath("/courses");
+  revalidatePath("/bulk-import/dsa-practice");
+  return { chaptersCreated, sectionsCreated };
+}
+
+export async function uploadResourceAction(formData: FormData) {
+  const supabase = await createClient();
+
+  const file = formData.get("file") as File | null;
+  const title = (formData.get("title") as string)?.trim();
+  const type = (formData.get("type") as string) || "pdf";
+  const description = (formData.get("description") as string)?.trim() || null;
+  const courseId = (formData.get("course_id") as string) || null;
+  const subjectId = (formData.get("subject_id") as string) || null;
+
+  if (!file || file.size === 0) {
+    throw new Error("A file is required");
+  }
+  if (!title) {
+    throw new Error("Title is required");
+  }
+
+  const sanitizedName = file.name.replace(/[^a-zA-Z0-9.-]/g, "_");
+  const path = `${Date.now()}-${crypto.randomUUID()}-${sanitizedName}`;
+
+  const { data: uploadData, error: uploadError } = await supabase.storage
+    .from("resources-public")
+    .upload(path, file, { contentType: file.type || "application/octet-stream" });
+
+  if (uploadError) throw uploadError;
+
+  const { data: urlData } = supabase.storage
+    .from("resources-public")
+    .getPublicUrl(uploadData.path);
+
+  const { data, error } = await supabase
+    .from("resources")
+    .insert({
+      title,
+      description,
+      url: urlData.publicUrl,
+      type,
+      course_id: courseId,
+      subject_id: subjectId,
+      order_index: parseInt(formData.get("order_index") as string) || 0,
+      is_active: true,
+    })
+    .select("id")
+    .single();
+
+  if (error) throw error;
+
+  revalidatePath("/resources");
+  revalidatePath("/resources/new");
+  return data.id as string;
+}
+
+export async function createCourseBundleAction(formData: FormData) {
+  const supabase = await createClient();
+  const payloadRaw = formData.get("payload") as string;
+
+  if (!payloadRaw) {
+    throw new Error("Missing bundle payload");
+  }
+
+  let payload: CourseBundlePayload;
+  try {
+    payload = JSON.parse(payloadRaw);
+  } catch {
+    throw new Error("Invalid bundle payload");
+  }
+
+  // Resolve exam id (create a new exam if requested)
+  let examId = payload.examChoice;
+  if (examId === "new") {
+    const title = payload.examTitle?.trim();
+    if (!title) {
+      throw new Error("Exam title is required");
+    }
+
+    const { data: exam, error } = await supabase
+      .from("exams")
+      .insert({
+        slug: slugify(title),
+        title,
+        month: payload.examMonth ? parseInt(payload.examMonth) : null,
+        year: payload.examYear ? parseInt(payload.examYear) : null,
+        is_active: true,
+      })
+      .select("id")
+      .single();
+
+    if (error) throw error;
+    if (!exam) throw new Error("Failed to create exam");
+    examId = exam.id;
+  }
+
+  const md = new MarkdownIt({ html: false, linkify: true, typographer: true });
+
+  const courseSlug = slugify(payload.course.title);
+  const subjectSlug = slugify(payload.subject.title);
+
+  const chaptersPayload = payload.chapters.map((chapter, chapterIdx) => ({
+    slug: chapter.slug?.trim() || slugify(chapter.title),
+    number: chapterIdx + 1,
+    title: chapter.title.trim(),
+    description: chapter.description?.trim() || null,
+    estimated_minutes: chapter.estimated_minutes || 0,
+    sections: chapter.sections.map((section, sectionIdx) => ({
+      slug: section.slug?.trim() || slugify(section.title),
+      title: section.title.trim(),
+      type: section.type,
+      order_index: sectionIdx,
+      estimated_minutes: section.estimated_minutes || 0,
+      content: md.render(section.content || ""),
+      is_locked: false,
+    })),
+  }));
+
+  const { data: courseId, error } = await supabase.rpc("create_course_bundle", {
+    p_exam_id: examId,
+    p_course: {
+      slug: courseSlug,
+      title: payload.course.title.trim(),
+      tagline: payload.course.tagline?.trim() || null,
+      description: payload.course.description?.trim() || null,
+      difficulty: payload.course.difficulty?.trim() || null,
+      duration: payload.course.duration?.trim() || null,
+      estimated_hours: parseInt(payload.course.estimated_hours || "0", 10) || 0,
+      is_active: payload.isActive,
+    },
+    p_subject: {
+      slug: subjectSlug,
+      title: payload.subject.title.trim(),
+      description: payload.subject.description?.trim() || null,
+      order_index: 0,
+      outcomes: [],
+      prerequisites: [],
+      weight_in_exam_percent: 0,
+      is_active: payload.isActive,
+    },
+    p_chapters: chaptersPayload,
+  });
+
+  if (error) throw error;
+  if (!courseId) throw new Error("Failed to create course bundle");
+
+  revalidatePath("/courses");
+  return courseId as string;
+}
+
+export async function assignEnrollmentAction(userId: string, subjectId: string) {
+  const supabase = await createClient();
+
+  const { error } = await supabase.from("enrollments").insert({
+    user_id: userId,
+    subject_id: subjectId,
+    status: "active",
+    progress_percentage: 0,
+  });
+
+  if (error) throw error;
+  revalidatePath(`/students/${userId}`);
+}
+
+export async function removeEnrollmentAction(enrollmentId: string, userId: string) {
+  const supabase = await createClient();
+
+  const { error } = await supabase.from("enrollments").delete().eq("id", enrollmentId);
+
+  if (error) throw error;
+  revalidatePath(`/students/${userId}`);
+}
+
+export async function updateAccountTypeAction(userId: string, accountType: string) {
+  const supabase = await createClient();
+
+  const { error } = await supabase
+    .from("profiles")
+    .update({ account_type: accountType })
+    .eq("id", userId);
 
   if (error) throw error;
   revalidatePath(`/students/${userId}`);

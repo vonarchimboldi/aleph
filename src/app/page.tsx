@@ -1,24 +1,28 @@
 import { redirect } from "next/navigation";
 import Link from "next/link";
+import type { User } from "@supabase/supabase-js";
 import { createClient } from "@/lib/supabase/server";
 import AdminShell from "@/components/admin/AdminShell";
-import { BookOpen, FileText, Layers, Database } from "lucide-react";
+import { BookOpen, FileText, Database, Upload, Users } from "lucide-react";
 
 export default async function AdminDashboardPage() {
   const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
+  let user: User | null = null;
+  let profile: { role: string } | null = null;
 
-  if (!user) {
+  try {
+    const { data: { user: u } } = await supabase.auth.getUser();
+    user = u;
+    if (!user) redirect("/login");
+
+    const { data: p } = await supabase.from("profiles").select("role").eq("id", user.id).single();
+    profile = p;
+  } catch (err) {
+    console.error("[AdminDashboardPage] Auth check failed:", err);
     redirect("/login");
   }
 
-  const { data: profile } = await supabase
-    .from("profiles")
-    .select("role")
-    .eq("id", user.id)
-    .single();
-
-  if (profile?.role !== "admin") {
+  if (!profile || (profile.role !== "admin" && profile.role !== "instructor")) {
     redirect("/login");
   }
 
@@ -30,20 +34,26 @@ export default async function AdminDashboardPage() {
       icon: BookOpen,
     },
     {
+      title: "Students",
+      description: "Manage student enrollments and account types.",
+      href: "/students",
+      icon: Users,
+    },
+    {
+      title: "Resources",
+      description: "Upload PDFs, videos, and reference material.",
+      href: "/resources",
+      icon: Upload,
+    },
+    {
       title: "Material Sets",
       description: "Create standalone problem sets and quizzes.",
       href: "/material-sets",
       icon: FileText,
     },
     {
-      title: "Concept Graphs",
-      description: "Edit concept nodes, prerequisites, and repair material.",
-      href: "/concept-graphs",
-      icon: Layers,
-    },
-    {
-      title: "Database",
-      description: "Run seed scripts and bulk import content.",
+      title: "Bulk Import",
+      description: "Import legacy content like DSA practice modules.",
       href: "/bulk-import",
       icon: Database,
     },
@@ -59,7 +69,7 @@ export default async function AdminDashboardPage() {
           </p>
         </div>
 
-        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {navCards.map((card) => (
             <Link
               key={card.title}
@@ -78,9 +88,21 @@ export default async function AdminDashboardPage() {
         <div className="rounded-2xl border border-zinc-800 bg-zinc-900 p-6">
           <h2 className="text-lg font-semibold text-white">Quick tips</h2>
           <ul className="mt-4 list-inside list-disc space-y-2 text-sm text-zinc-400">
-            <li>Reading content lives in the <code className="rounded bg-zinc-800 px-1 py-0.5 text-zinc-200">content/</code> directory as MDX files.</li>
-            <li>Problems, quizzes, and concept graphs live in Supabase and can be edited here.</li>
-            <li>Use <code className="rounded bg-zinc-800 px-1 py-0.5 text-zinc-200">\( ... \)</code> for inline math and <code className="rounded bg-zinc-800 px-1 py-0.5 text-zinc-200">\[ ... \]</code> for display math.</li>
+            <li>
+              Use <strong>Quick Course Builder</strong> to create a whole course, subject, and
+              chapters in one flow.
+            </li>
+            <li>
+              Write section content in markdown. Use{" "}
+              <code className="rounded bg-zinc-800 px-1 py-0.5 text-zinc-200">\( ... \)</code> for
+              inline math and{" "}
+              <code className="rounded bg-zinc-800 px-1 py-0.5 text-zinc-200">\[ ... \]</code> for
+              display math.
+            </li>
+            <li>
+              Concept graphs and insights live in the learner dashboard and are greyed out until
+              Platinum launches.
+            </li>
           </ul>
         </div>
       </div>
