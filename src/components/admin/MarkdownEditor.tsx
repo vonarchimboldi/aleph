@@ -2,8 +2,10 @@
 
 import { useMemo } from "react";
 import MarkdownIt from "markdown-it";
+import katex from "katex";
 import { AlertTriangle, OctagonAlert, Info } from "lucide-react";
 import { auditContent, type ContentIssue } from "@/lib/content/audit";
+import "katex/dist/katex.min.css";
 
 interface MarkdownEditorProps {
   label: string;
@@ -22,6 +24,58 @@ const md = new MarkdownIt({
   linkify: true,
   typographer: true,
 });
+
+// Math extraction mirrors the learner renderer (aleph_v2 KaTeXRenderer):
+// pull \[...\]/\(...\) spans out BEFORE markdown-it runs, render KaTeX, then
+// swap the spans back in. Without this, markdown-it eats the backslash
+// delimiters and math never appears in the preview.
+const MATH_DISPLAY = /\\\[([\s\S]*?)\\\]/g;
+const MATH_INLINE = /\\\(([\s\S]*?)\\\)/g;
+const CODE_SPAN = /(```[\s\S]*?```|`[^`\n]*`)/g;
+// Array-index notation like \[mid\] also uses square brackets — require real
+// TeX syntax before treating a \[...\] span as display math.
+const LOOKS_LIKE_TEX = /[\^_]|[{}]|\\[a-zA-Z]/;
+
+function renderMath(tex: string, display: boolean): string {
+  try {
+    return katex.renderToString(tex, { throwOnError: false, displayMode: display });
+  } catch {
+    return tex;
+  }
+}
+
+function extractMath(raw: string): { text: string; spans: string[] } {
+  const spans: string[] = [];
+  const stash = (tex: string, display: boolean): string => {
+    spans.push(renderMath(tex.trim(), display));
+    return `ZZMATHSPAN${spans.length - 1}ZZ`;
+  };
+
+  const text = raw
+    .split(CODE_SPAN)
+    .map((part, i) => {
+      if (i % 2 === 1) return part; // code segment — leave untouched
+      return part
+        .replace(MATH_DISPLAY, (whole, tex: string) =>
+          LOOKS_LIKE_TEX.test(tex) ? stash(tex, true) : whole
+        )
+        .replace(MATH_INLINE, (whole, tex: string) =>
+          tex.trim() ? stash(tex, false) : whole
+        );
+    })
+    .join("");
+
+  return { text, spans };
+}
+
+function renderPreview(raw: string): string {
+  const { text, spans } = extractMath(raw);
+  let html = md.render(text);
+  spans.forEach((span, i) => {
+    html = html.replace(`ZZMATHSPAN${i}ZZ`, span);
+  });
+  return html;
+}
 
 const SEVERITY_STYLES: Record<
   ContentIssue["severity"],
@@ -65,7 +119,7 @@ export default function MarkdownEditor({
   required,
   rows = 12,
 }: MarkdownEditorProps) {
-  const html = useMemo(() => md.render(value || ""), [value]);
+  const html = useMemo(() => renderPreview(value || ""), [value]);
   const issues = useMemo(() => auditContent(value), [value]);
 
   return (
