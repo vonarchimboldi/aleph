@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import AdminShell from "@/components/admin/AdminShell";
 import { createSection } from "@/lib/admin/actions";
+import AuditForm from "@/components/admin/AuditForm";
 import { getChapterById, getSectionsByChapter } from "@/lib/admin/data";
 import FormField from "@/components/forms/FormField";
 import FormSelect from "@/components/forms/FormSelect";
@@ -79,7 +80,7 @@ export default async function ChapterDetailPage({ params }: Props) {
 
           <div className="rounded-2xl border border-zinc-800 bg-zinc-900 p-6">
             <h2 className="text-lg font-semibold text-white">Add Section</h2>
-            <form action={createSection} className="mt-4 space-y-4">
+            <AuditForm action={createSection} auditFields={["content"]} className="mt-4 space-y-4">
               <input type="hidden" name="chapter_id" value={chapter.id} />
               <FormField label="Title" name="title" required />
               <FormSelect label="Type" name="type" required options={sectionTypes} />
@@ -98,7 +99,7 @@ export default async function ChapterDetailPage({ params }: Props) {
                 <Plus className="h-4 w-4" />
                 Add Section
               </button>
-            </form>
+            </AuditForm>
           </div>
         </div>
       </div>

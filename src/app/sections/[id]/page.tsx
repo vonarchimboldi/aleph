@@ -7,6 +7,7 @@ import { getSectionById, getTasksBySection, getQuizBySection, getQuizQuestions }
 import FormField from "@/components/forms/FormField";
 import FormSelect from "@/components/forms/FormSelect";
 import FormMarkdownEditor from "@/components/admin/FormMarkdownEditor";
+import AuditForm from "@/components/admin/AuditForm";
 import QuizOptionsBuilder from "@/components/admin/QuizOptionsBuilder";
 import { Plus, CheckCircle, HelpCircle } from "lucide-react";
 
@@ -92,7 +93,7 @@ export default async function SectionDetailPage({ params }: Props) {
 
             <div className="rounded-2xl border border-zinc-800 bg-zinc-900 p-6">
               <h3 className="text-lg font-semibold text-white">Add Problem</h3>
-              <form action={createTask} className="mt-4 space-y-4">
+              <AuditForm action={createTask} auditFields={["statement", "solution"]} className="mt-4 space-y-4">
                 <input type="hidden" name="section_id" value={section.id} />
                 <FormField label="Title (optional)" name="title" />
                 <FormSelect label="Label" name="label" required options={taskLabels} />
@@ -113,7 +114,7 @@ export default async function SectionDetailPage({ params }: Props) {
                   <Plus className="h-4 w-4" />
                   Add Problem
                 </button>
-              </form>
+              </AuditForm>
             </div>
           </div>
 
@@ -144,7 +145,7 @@ export default async function SectionDetailPage({ params }: Props) {
 
             <div className="rounded-2xl border border-zinc-800 bg-zinc-900 p-6">
               <h3 className="text-lg font-semibold text-white">Add Quiz Question</h3>
-              <form action={createQuizQuestion} className="mt-4 space-y-4">
+              <AuditForm action={createQuizQuestion} auditFields={["prompt", "explanation"]} className="mt-4 space-y-4">
                 <input type="hidden" name="section_id" value={section.id} />
                 <FormSelect label="Format" name="format" required options={questionFormats} />
                 <FormMarkdownEditor label="Prompt" name="prompt" rows={5} required />
@@ -165,7 +166,7 @@ export default async function SectionDetailPage({ params }: Props) {
                   <Plus className="h-4 w-4" />
                   Add Question
                 </button>
-              </form>
+              </AuditForm>
             </div>
           </div>
         </div>

@@ -1,7 +1,6 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import MarkdownIt from "markdown-it";
 import fs from "fs";
 import path from "path";
 import { createClient } from "@/lib/supabase/server";
@@ -355,7 +354,6 @@ const dsaChapterSpecs: DsaChapterSpec[] = [
 
 export async function importDsaPracticeAction() {
   const supabase = await createClient();
-  const md = new MarkdownIt({ html: false, linkify: true, typographer: true });
 
   const { data: subject } = await supabase
     .from("subjects")
@@ -411,8 +409,9 @@ export async function importDsaPracticeAction() {
       if (sec.file) {
         const filePath = path.join(DSA_BASE_PATH, sec.file);
         if (fs.existsSync(filePath)) {
-          const raw = fs.readFileSync(filePath, "utf8");
-          content = md.render(raw);
+          // Store raw markdown — the learner app renders it. Pre-rendering
+          // here was double work and stored HTML that audits flagged.
+          content = fs.readFileSync(filePath, "utf8");
         }
       }
 
@@ -532,8 +531,6 @@ export async function createCourseBundleAction(formData: FormData) {
     examId = exam.id;
   }
 
-  const md = new MarkdownIt({ html: false, linkify: true, typographer: true });
-
   const courseSlug = slugify(payload.course.title);
   const subjectSlug = slugify(payload.subject.title);
 
@@ -549,7 +546,7 @@ export async function createCourseBundleAction(formData: FormData) {
       type: section.type,
       order_index: sectionIdx,
       estimated_minutes: section.estimated_minutes || 0,
-      content: md.render(section.content || ""),
+      content: section.content || "",
       is_locked: false,
     })),
   }));
