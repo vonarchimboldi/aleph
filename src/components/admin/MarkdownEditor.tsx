@@ -15,10 +15,10 @@ interface MarkdownEditorProps {
   rows?: number;
 }
 
-// html: true matches the learner renderer exactly, so the preview shows
-// what learners will see (admin-authored content is RBAC-protected).
+// html: false matches the learner renderer exactly, so the preview shows
+// what learners will see (raw HTML in content is escaped, never injected).
 const md = new MarkdownIt({
-  html: true,
+  html: false,
   linkify: true,
   typographer: true,
 });

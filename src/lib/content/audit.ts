@@ -84,7 +84,7 @@ export function auditContent(raw: string | null | undefined, opts: AuditOptions 
     });
   }
 
-  // Real HTML in prose. Renders fine today (html: true) but is non-portable.
+  // Real HTML in prose. The learner renderer escapes raw HTML (html: false),
   const known = prose.match(KNOWN_TAG);
   if (known) {
     issues.push({
