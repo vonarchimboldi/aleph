@@ -224,3 +224,9 @@ node scripts/verify-platinum-machine-learning.mjs
 node scripts/verify-review-quizzes.mjs
 node scripts/judge-material-quality.mjs
 ```
+# DBMS exam pack
+
+The `gate-da-dbms/` library contains eight chapter PDFs, complete notes, an 80-problem practice book and a separate solutions guide. Both Basic and Platinum workspaces expose the library under Database Management and Warehousing and Resources. Existing task progress is preserved.
+
+Run `node scripts/verify-dbms-pack.mjs` to check PDF downloads, account routing and progress migration. Source references and review limitations are included in the library metadata and notes.
+

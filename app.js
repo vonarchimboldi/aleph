@@ -1,7 +1,7 @@
 const STORAGE_KEY = "learning-studio-data-v2";
 const LEGACY_STORAGE_KEYS = ["learning-studio-data-v1"];
 const SESSION_KEY = "aleph-session";
-const COURSE_PLAN_VERSION = "seeded-user-canonical-workspace-v165";
+const COURSE_PLAN_VERSION = "seeded-user-canonical-workspace-v166";
 const MAX_FEEDBACK_ATTACHMENT_BYTES = 3 * 1024 * 1024;
 const MAX_COMPRESSED_FEEDBACK_BYTES = 2400 * 1024;
 const MAX_FEEDBACK_REQUEST_BYTES = 4 * 1024 * 1024;
@@ -218,10 +218,43 @@ function buildCoursePlan(user = defaultUser()) {
   const now = new Date().toISOString();
   const accountTypes = accountTypeCatalog(now);
   const sections = gateDaBasicSections(now);
-  if (isBasicPrototypeUser(user)) {
-    return buildGateDaBasicPlan(now, accountTypes, sections, user);
-  }
-  return buildPriyankaPlatinumPlan(now, accountTypes, sections, user);
+  const basic = isBasicPrototypeUser(user);
+  const plan = basic
+    ? buildGateDaBasicPlan(now, accountTypes, sections, user)
+    : buildPriyankaPlatinumPlan(now, accountTypes, sections, user);
+  plan.subjects.push(databaseExamPackSubject(now, basic ? "gate-da-basic" : "gate-da-platinum", plan.lessonPlans[0]?.id));
+  plan.resources.push({
+    id: "resource-gate-da-dbms-exam-pack",
+    title: "DBMS exam pack: notes, 80 problems and solutions",
+    date: "2026-10-11",
+    details: "Eight chapters, 44 worked DA/CS questions, 80 original problems and four 20-mark mixed tests. Read the notes, attempt the practice, then check the separate solutions guide.",
+    link: "gate-da-dbms/index.html",
+    updatedAt: now
+  });
+  return plan;
+}
+
+function databaseExamPackSubject(now, accountTypeId, lessonPlanId) {
+  return {
+    id: "subject-gate-da-dbms", accountTypeId, lessonPlanId,
+    title: "Database Management and Warehousing",
+    details: "Exam notes, worked previous-year questions and practice. Eight chapters cover relations, SQL, dependencies, ER models, indexing, warehouses and preprocessing.",
+    sectionIds: [],
+    dbmsPack: {
+      libraryUrl: "gate-da-dbms/index.html",
+      chapters: [
+        "Relations, keys and constraints",
+        "Relational algebra and tuple calculus",
+        "SQL: rows, groups and nested questions",
+        "Dependencies, keys and normal forms",
+        "ER models: turn a story into constraints",
+        "Files, indexes and B+ trees",
+        "Warehouses, hierarchies and measures",
+        "Data types and preprocessing"
+      ]
+    },
+    updatedAt: now
+  };
 }
 
 function mergeCanonicalPlanWithProgress(canonicalPlan, previousState = {}) {
@@ -37308,7 +37341,9 @@ function subjectMenuCardTemplate(subject) {
   const patternCount = (subject.patternWorkspaces || []).length;
   const materialCount = (subject.materialWorkspaces || []).reduce((count, workspace) => count + (workspace.weeks || []).length, 0);
   const weeklyReviewCount = (subject.weeklyReviewWorkflows || []).length;
-  const countLabel = patternCount
+  const countLabel = subject.dbmsPack
+    ? `${subject.dbmsPack.chapters.length} chapters · 80 problems`
+    : patternCount
     ? `${patternCount} patterns`
     : materialCount
       ? `${materialCount} material${materialCount === 1 ? "" : "s"}`
@@ -37330,6 +37365,9 @@ function subjectMenuCardTemplate(subject) {
 }
 
 function subjectReaderTemplate(subject) {
+  if (subject.dbmsPack) {
+    return databaseExamPackTemplate(subject);
+  }
   if (subject.curriculum) {
     return subjectCurriculumWorkspaceTemplate(subject);
   }
@@ -37363,6 +37401,27 @@ function subjectReaderTemplate(subject) {
         ${canOpenSelectedSection ? '<button class="text-btn" data-chapter-back type="button">Back to chapters</button>' : ""}
       </div>
       ${canOpenSelectedSection ? sectionTemplate(selectedSection) : chapterMenuTemplate(subject, sections)}
+    </article>
+  `;
+}
+
+function databaseExamPackTemplate(subject) {
+  return `
+    <article class="subject-reader">
+      <div class="subject-reader-header"><button class="text-btn" data-subject-back type="button">Back to subjects</button></div>
+      <section class="chapter-menu">
+        <div class="chapter-menu-header">
+          <p class="eyebrow">GATE DA · Exam preparation</p>
+          <h4>${escapeHtml(subject.title)}</h4>
+          <p>Understand a small example, identify the rule, then practise. The pack has 44 worked DA/CS questions, 40 chapter problems and four fresh 20-mark tests.</p>
+          <p><a class="primary-btn" href="${escapeHtml(subject.dbmsPack.libraryUrl)}" target="_blank" rel="noopener">Open the notes and practice library</a></p>
+          <p><a href="gate-da-dbms/GATE-DA-DBMS-notes.pdf" target="_blank" rel="noopener">Complete notes · 38 pages</a> · <a href="gate-da-dbms/GATE-DA-DBMS-practice.pdf" target="_blank" rel="noopener">Practice book · 80 problems</a></p>
+          <details><summary>Solutions after your attempt</summary><p><a href="gate-da-dbms/GATE-DA-DBMS-solutions.pdf" target="_blank" rel="noopener">Complete solutions guide</a></p></details>
+        </div>
+        <div class="week-plan-list">
+          ${subject.dbmsPack.chapters.map((title, index) => `<section class="feedback-context-card"><p class="eyebrow">Chapter ${index + 1}</p><h5>${escapeHtml(title)}</h5><p><a href="gate-da-dbms/chapters/chapter-${String(index + 1).padStart(2, "0")}-notes.pdf" target="_blank" rel="noopener">Read the chapter and try its exercises</a></p></section>`).join("")}
+        </div>
+      </section>
     </article>
   `;
 }

@@ -1,0 +1,81 @@
+id,chapter,type,recipes,origin,solution_location,exposure,verification
+P01,1,Short answer,R01,Original,chapters/01/solutions.md,not tracked; learner must record,computed plus author review
+P02,1,MSQ plus variation,R02,Original,chapters/01/solutions.md,not tracked; learner must record,computed plus author review
+P03,1,NAT plus variation,R03,Original,chapters/01/solutions.md,not tracked; learner must record,computed plus author review
+P04,2,NAT plus variation,R04,Original,chapters/02/solutions.md,not tracked; learner must record,computed plus author review
+P05,2,NAT plus variation,R05,Original,chapters/02/solutions.md,not tracked; learner must record,computed plus author review
+P06,2,Short answer,R06,Original,chapters/02/solutions.md,not tracked; learner must record,computed plus author review
+P07,2,Counterexample,R07,Original,chapters/02/solutions.md,not tracked; learner must record,computed plus author review
+P08,2,NAT plus variation,R08,Original,chapters/02/solutions.md,not tracked; learner must record,computed plus author review
+P09,3,NAT plus variation,R09,Original,chapters/03/solutions.md,not tracked; learner must record,computed plus author review
+P10,3,Short answer,R10,Original,chapters/03/solutions.md,not tracked; learner must record,computed plus author review
+P11,3,Query tracing,R11,Original,chapters/03/solutions.md,not tracked; learner must record,computed plus author review
+P12,3,NAT plus variation,R12,Original,chapters/03/solutions.md,not tracked; learner must record,computed plus author review
+P13,3,Query comparison,R13,Original,chapters/03/solutions.md,not tracked; learner must record,computed plus author review
+P14,3,Query tracing,R14,Original,chapters/03/solutions.md,not tracked; learner must record,computed plus author review
+P15,4,Closure,R15,Original,chapters/04/solutions.md,not tracked; learner must record,computed plus author review
+P16,4,All keys,R16,Original,chapters/04/solutions.md,not tracked; learner must record,computed plus author review
+P17,4,NAT plus variation,R17,Original,chapters/04/solutions.md,not tracked; learner must record,computed plus author review
+P18,4,Cover and equivalence,R18,Original,chapters/04/solutions.md,not tracked; learner must record,computed plus author review
+P19,4,Normal form,R19,Original,chapters/04/solutions.md,not tracked; learner must record,computed plus author review
+P20,4,Losslessness,R20,Original,chapters/04/solutions.md,not tracked; learner must record,computed plus author review
+P21,4,Chase,R21,Original,chapters/04/solutions.md,not tracked; learner must record,computed plus author review
+P22,4,Preservation,R22,Original,chapters/04/solutions.md,not tracked; learner must record,computed plus author review
+P23,4,Construct and check,R23,Original,chapters/04/solutions.md,not tracked; learner must record,computed plus author review
+P24,5,Bounds and feasibility,R24,Original,chapters/05/solutions.md,not tracked; learner must record,computed plus author review
+P25,5,Schema mapping,R25,Original,chapters/05/solutions.md,not tracked; learner must record,computed plus author review
+P26,5,NAT plus variation,R26,Original,chapters/05/solutions.md,not tracked; learner must record,computed plus author review
+P27,6,NAT plus variation,R27,Original,chapters/06/solutions.md,not tracked; learner must record,computed plus author review
+P28,6,Multilevel index,R28,Original,chapters/06/solutions.md,not tracked; learner must record,computed plus author review
+P29,6,Capacity,R29,Original,chapters/06/solutions.md,not tracked; learner must record,computed plus author review
+P30,6,Height and occupancy,R30,Original,chapters/06/solutions.md,not tracked; learner must record,computed plus author review
+P31,6,Insertion and deletion,R31,Original,chapters/06/solutions.md,not tracked; learner must record,computed plus author review
+P32,6,Choice and cost,R32,Original,chapters/06/solutions.md,not tracked; learner must record,computed plus author review
+P33,7,Grain and multiplicity,R33,Original,chapters/07/solutions.md,not tracked; learner must record,computed plus author review
+P34,7,Classification,R34,Original,chapters/07/solutions.md,not tracked; learner must record,computed plus author review
+P35,7,CUBE and hierarchies,R35,Original,chapters/07/solutions.md,not tracked; learner must record,computed plus author review
+P36,7,Roll-up measures,R36,Original,chapters/07/solutions.md,not tracked; learner must record,computed plus author review
+P37,8,Classification and calculation,R37,Original,chapters/08/solutions.md,not tracked; learner must record,computed plus author review
+P38,8,Bins and smoothing,R38,Original,chapters/08/solutions.md,not tracked; learner must record,computed plus author review
+P39,8,Sampling,R39,Original,chapters/08/solutions.md,not tracked; learner must record,computed plus author review
+P40,8,Compression,R40,Original,chapters/08/solutions.md,not tracked; learner must record,computed plus author review
+T1Q01,mixed,MCQ,R01;R02;R03,Original,tests/mixed-solutions.md,reserve until first timed attempt,computed plus author review
+T1Q02,mixed,NAT,R04,Original,tests/mixed-solutions.md,reserve until first timed attempt,computed plus author review
+T1Q03,mixed,NAT,R10,Original,tests/mixed-solutions.md,reserve until first timed attempt,computed plus author review
+T1Q04,mixed,MCQ,R16,Original,tests/mixed-solutions.md,reserve until first timed attempt,computed plus author review
+T1Q05,mixed,MSQ,R19;R20;R22,Original,tests/mixed-solutions.md,reserve until first timed attempt,computed plus author review
+T1Q06,mixed,NAT,R24,Original,tests/mixed-solutions.md,reserve until first timed attempt,computed plus author review
+T1Q07,mixed,NAT,R29,Original,tests/mixed-solutions.md,reserve until first timed attempt,computed plus author review
+T1Q08,mixed,NAT,R35,Original,tests/mixed-solutions.md,reserve until first timed attempt,computed plus author review
+T1Q09,mixed,NAT,R37,Original,tests/mixed-solutions.md,reserve until first timed attempt,computed plus author review
+T1Q10,mixed,MSQ,R35;R36,Original,tests/mixed-solutions.md,reserve until first timed attempt,computed plus author review
+T2Q01,mixed,MSQ,R01;R02,Original,tests/mixed-solutions.md,reserve until first timed attempt,computed plus author review
+T2Q02,mixed,NAT,R06,Original,tests/mixed-solutions.md,reserve until first timed attempt,computed plus author review
+T2Q03,mixed,NAT,R13,Original,tests/mixed-solutions.md,reserve until first timed attempt,computed plus author review
+T2Q04,mixed,NAT,R12,Original,tests/mixed-solutions.md,reserve until first timed attempt,computed plus author review
+T2Q05,mixed,MCQ,R19,Original,tests/mixed-solutions.md,reserve until first timed attempt,computed plus author review
+T2Q06,mixed,NAT,R25;R26,Original,tests/mixed-solutions.md,reserve until first timed attempt,computed plus author review
+T2Q07,mixed,NAT,R27;R28,Original,tests/mixed-solutions.md,reserve until first timed attempt,computed plus author review
+T2Q08,mixed,MCQ,R34,Original,tests/mixed-solutions.md,reserve until first timed attempt,computed plus author review
+T2Q09,mixed,NAT,R38,Original,tests/mixed-solutions.md,reserve until first timed attempt,computed plus author review
+T2Q10,mixed,NAT,R40,Original,tests/mixed-solutions.md,reserve until first timed attempt,computed plus author review
+T3Q01,mixed,NAT,R03;R14,Original,tests/mixed-solutions.md,reserve until first timed attempt,computed plus author review
+T3Q02,mixed,MSQ,R04;R07,Original,tests/mixed-solutions.md,reserve until first timed attempt,computed plus author review
+T3Q03,mixed,MSQ,R10;R13,Original,tests/mixed-solutions.md,reserve until first timed attempt,computed plus author review
+T3Q04,mixed,NAT,R18,Original,tests/mixed-solutions.md,reserve until first timed attempt,computed plus author review
+T3Q05,mixed,MCQ,R20;R22,Original,tests/mixed-solutions.md,reserve until first timed attempt,computed plus author review
+T3Q06,mixed,MCQ,R24,Original,tests/mixed-solutions.md,reserve until first timed attempt,computed plus author review
+T3Q07,mixed,NAT,R31,Original,tests/mixed-solutions.md,reserve until first timed attempt,computed plus author review
+T3Q08,mixed,NAT,R35,Original,tests/mixed-solutions.md,reserve until first timed attempt,computed plus author review
+T3Q09,mixed,NAT,R39,Original,tests/mixed-solutions.md,reserve until first timed attempt,computed plus author review
+T3Q10,mixed,MCQ,R37,Original,tests/mixed-solutions.md,reserve until first timed attempt,computed plus author review
+T4Q01,mixed,NAT,R17,Original,tests/mixed-solutions.md,reserve until first timed attempt,computed plus author review
+T4Q02,mixed,NAT,R08,Original,tests/mixed-solutions.md,reserve until first timed attempt,computed plus author review
+T4Q03,mixed,NAT,R11;R14,Original,tests/mixed-solutions.md,reserve until first timed attempt,computed plus author review
+T4Q04,mixed,MSQ,R16;R19,Original,tests/mixed-solutions.md,reserve until first timed attempt,computed plus author review
+T4Q05,mixed,MCQ,R21;R22,Original,tests/mixed-solutions.md,reserve until first timed attempt,computed plus author review
+T4Q06,mixed,NAT,R25;R26,Original,tests/mixed-solutions.md,reserve until first timed attempt,computed plus author review
+T4Q07,mixed,NAT,R32,Original,tests/mixed-solutions.md,reserve until first timed attempt,computed plus author review
+T4Q08,mixed,NAT,R36,Original,tests/mixed-solutions.md,reserve until first timed attempt,computed plus author review
+T4Q09,mixed,NAT,R37,Original,tests/mixed-solutions.md,reserve until first timed attempt,computed plus author review
+T4Q10,mixed,MSQ,R38;R40,Original,tests/mixed-solutions.md,reserve until first timed attempt,computed plus author review
