@@ -1,7 +1,7 @@
 const STORAGE_KEY = "learning-studio-data-v2";
 const LEGACY_STORAGE_KEYS = ["learning-studio-data-v1"];
 const SESSION_KEY = "aleph-session";
-const COURSE_PLAN_VERSION = "seeded-user-canonical-workspace-v166";
+const COURSE_PLAN_VERSION = "seeded-user-canonical-workspace-v167";
 const MAX_FEEDBACK_ATTACHMENT_BYTES = 3 * 1024 * 1024;
 const MAX_COMPRESSED_FEEDBACK_BYTES = 2400 * 1024;
 const MAX_FEEDBACK_REQUEST_BYTES = 4 * 1024 * 1024;
@@ -37415,11 +37415,13 @@ function databaseExamPackTemplate(subject) {
           <h4>${escapeHtml(subject.title)}</h4>
           <p>Understand a small example, identify the rule, then practise. The pack has 44 worked DA/CS questions, 40 chapter problems and four fresh 20-mark tests.</p>
           <p><a class="primary-btn" href="${escapeHtml(subject.dbmsPack.libraryUrl)}" target="_blank" rel="noopener">Open the notes and practice library</a></p>
+          <p><a class="primary-btn" href="gate-da-dbms/review.html?learner=${encodeURIComponent(state.user.id)}" target="_blank" rel="noopener">Start a DBMS session · recall and progress</a></p>
+          <p>After chapter 1, begin each session with a short flashcard review. Mark completed chapters to unlock their cards, and log feedback on the notes or problems.</p>
           <p><a href="gate-da-dbms/GATE-DA-DBMS-notes.pdf" target="_blank" rel="noopener">Complete notes · 38 pages</a> · <a href="gate-da-dbms/GATE-DA-DBMS-practice.pdf" target="_blank" rel="noopener">Practice book · 80 problems</a></p>
           <details><summary>Solutions after your attempt</summary><p><a href="gate-da-dbms/GATE-DA-DBMS-solutions.pdf" target="_blank" rel="noopener">Complete solutions guide</a></p></details>
         </div>
         <div class="week-plan-list">
-          ${subject.dbmsPack.chapters.map((title, index) => `<section class="feedback-context-card"><p class="eyebrow">Chapter ${index + 1}</p><h5>${escapeHtml(title)}</h5><p><a href="gate-da-dbms/chapters/chapter-${String(index + 1).padStart(2, "0")}-notes.pdf" target="_blank" rel="noopener">Read the chapter and try its exercises</a></p></section>`).join("")}
+          ${subject.dbmsPack.chapters.map((title, index) => `<section class="feedback-context-card"><p class="eyebrow">Chapter ${index + 1}</p><h5>${escapeHtml(title)}</h5><p><a href="gate-da-dbms/review.html?learner=${encodeURIComponent(state.user.id)}&chapter=${index+1}" target="_blank" rel="noopener">Start this chapter session</a> · <a href="gate-da-dbms/chapters/chapter-${String(index + 1).padStart(2, "0")}-notes.pdf" target="_blank" rel="noopener">Chapter PDF</a></p></section>`).join("")}
         </div>
       </section>
     </article>
