@@ -1,8 +1,10 @@
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import {prepareEvidence,generateReview} from '../api/dbms-review.js';
+import {concepts} from '../api/_dbms-concepts.js';
 import {emptyProgress,adaptiveEvidence,validateProgress} from '../gate-da-dbms/review-core.mjs';
 const deck=JSON.parse(fs.readFileSync('gate-da-dbms/cards.json','utf8'));
+assert.deepEqual(concepts,deck);
 const progress=emptyProgress();progress.completed=[1];progress.reviews=[{cardId:'R02a',recipe:'R02',answer:'A foreign key must be unique.',rating:'easy'}];
 const evidence=prepareEvidence(adaptiveEvidence(deck,progress));
 assert.equal(evidence.history[0].answer,'A foreign key must be unique.');

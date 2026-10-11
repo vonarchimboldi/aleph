@@ -1,6 +1,5 @@
-import {readFileSync} from 'node:fs';
+import {concepts} from './_dbms-concepts.js';
 import {randomUUID} from 'node:crypto';
-const concepts=JSON.parse(readFileSync(new URL('../gate-da-dbms/cards.json',import.meta.url),'utf8'));
 const str={type:'string'};
 const object=properties=>({type:'object',additionalProperties:false,required:Object.keys(properties),properties});
 const list=items=>({type:'array',items});
