@@ -229,4 +229,3 @@ node scripts/judge-material-quality.mjs
 The `gate-da-dbms/` library contains eight chapter PDFs, complete notes, an 80-problem practice book and a separate solutions guide. Both Basic and Platinum workspaces expose the library under Database Management and Warehousing and Resources. Existing task progress is preserved.
 
 Run `node scripts/verify-dbms-pack.mjs` to check PDF downloads, account routing and progress migration. Source references and review limitations are included in the library metadata and notes.
-
