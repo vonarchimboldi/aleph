@@ -3,7 +3,7 @@ import { redirect } from "next/navigation";
 import type { User } from "@supabase/supabase-js";
 import { createClient } from "@/lib/supabase/server";
 import AdminShell from "@/components/admin/AdminShell";
-import { Database } from "lucide-react";
+import { Database, FileText } from "lucide-react";
 
 export default async function BulkImportAdminPage() {
   const supabase = await createClient();
@@ -35,6 +35,19 @@ export default async function BulkImportAdminPage() {
         </div>
 
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          <Link
+            href="/bulk-import/markdown"
+            className="group rounded-2xl border border-zinc-800 bg-zinc-900 p-6 transition hover:border-zinc-700 hover:bg-zinc-800"
+          >
+            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-zinc-800 group-hover:bg-zinc-700">
+              <FileText className="h-5 w-5 text-zinc-300" />
+            </div>
+            <h2 className="mt-4 text-lg font-semibold text-white">Markdown document</h2>
+            <p className="mt-2 text-sm text-zinc-400">
+              Paste any markdown doc — splits on ## headings into sections of a chapter.
+            </p>
+          </Link>
+
           <Link
             href="/bulk-import/dsa-practice"
             className="group rounded-2xl border border-zinc-800 bg-zinc-900 p-6 transition hover:border-zinc-700 hover:bg-zinc-800"

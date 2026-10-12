@@ -663,3 +663,48 @@ export async function reorderSections(chapterId: string, orderedIds: string[]) {
 
   revalidatePath(`/chapters/${chapterId}`);
 }
+
+// ---------------------------------------------------------------------------
+// Bulk markdown import (#22)
+// ---------------------------------------------------------------------------
+
+export async function bulkImportSections(
+  chapterId: string,
+  sections: { title: string; content: string }[],
+  type: SectionType,
+  estimatedMinutes: number
+) {
+  const supabase = await createClient();
+
+  const { data: chapter } = await supabase
+    .from("chapters")
+    .select("id")
+    .eq("id", chapterId)
+    .single();
+  if (!chapter) throw new Error("Chapter not found");
+  if (sections.length === 0) throw new Error("Nothing to import");
+
+  const { count } = await supabase
+    .from("sections")
+    .select("id", { count: "exact", head: true })
+    .eq("chapter_id", chapterId);
+
+  const base = count ?? 0;
+  const payload = sections.map((s, i) => ({
+    chapter_id: chapterId,
+    slug: `${slugify(s.title)}-${base + i}`,
+    title: s.title,
+    type,
+    content: s.content,
+    order_index: base + i,
+    estimated_minutes: estimatedMinutes,
+    content_path: null,
+    is_locked: false,
+  }));
+
+  const { error } = await supabase.from("sections").insert(payload);
+  if (error) throw error;
+
+  revalidatePath(`/chapters/${chapterId}`);
+  return { imported: sections.length };
+}
