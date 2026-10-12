@@ -2,7 +2,8 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import AdminShell from "@/components/admin/AdminShell";
-import { createTask, createQuizQuestion } from "@/lib/admin/actions";
+import { createTask, createQuizQuestion, updateQuizQuestionExplanation } from "@/lib/admin/actions";
+import QuestionExplanationEditor from "@/components/admin/QuestionExplanationEditor";
 import { getSectionById, getTasksBySection, getQuizBySection, getQuizQuestions } from "@/lib/admin/data";
 import FormField from "@/components/forms/FormField";
 import FormSelect from "@/components/forms/FormSelect";
@@ -138,6 +139,14 @@ export default async function SectionDetailPage({ params }: Props) {
                       <span className="rounded bg-zinc-800 px-2 py-0.5 text-xs text-zinc-400">{q.format}</span>
                     </div>
                     <p className="mt-2 text-sm text-zinc-500">{q.prompt}</p>
+                    <QuestionExplanationEditor
+                      questionId={q.id}
+                      explanation={q.explanation}
+                      onSave={async (questionId, explanation) => {
+                        "use server";
+                        await updateQuizQuestionExplanation(questionId, explanation);
+                      }}
+                    />
                   </div>
                 ))}
               </div>

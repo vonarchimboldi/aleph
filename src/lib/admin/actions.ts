@@ -708,3 +708,15 @@ export async function bulkImportSections(
   revalidatePath(`/chapters/${chapterId}`);
   return { imported: sections.length };
 }
+
+export async function updateQuizQuestionExplanation(questionId: string, explanation: string) {
+  const supabase = await createClient();
+
+  const { error } = await supabase
+    .from("quiz_questions")
+    .update({ explanation: explanation.trim() || null })
+    .eq("id", questionId);
+
+  if (error) throw error;
+  revalidatePath(`/sections/`, "layout");
+}
