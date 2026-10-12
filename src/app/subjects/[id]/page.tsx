@@ -2,10 +2,11 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import AdminShell from "@/components/admin/AdminShell";
-import { createChapter } from "@/lib/admin/actions";
+import { createChapter, reorderChapters } from "@/lib/admin/actions";
+import SortableCardList from "@/components/admin/SortableCardList";
 import { getSubjectById, getChaptersBySubject } from "@/lib/admin/data";
 import FormField from "@/components/forms/FormField";
-import { Plus, Layers } from "lucide-react";
+import { Plus } from "lucide-react";
 
 interface Props {
   params: Promise<{ id: string }>;
@@ -45,23 +46,19 @@ export default async function SubjectDetailPage({ params }: Props) {
                 No chapters yet.
               </div>
             ) : (
-              <div className="space-y-3">
-                {chapters.map((chapter) => (
-                  <Link
-                    key={chapter.id}
-                    href={`/chapters/${chapter.id}`}
-                    className="flex items-center justify-between rounded-xl border border-zinc-800 bg-zinc-900 p-4 transition hover:border-zinc-700 hover:bg-zinc-800"
-                  >
-                    <div>
-                      <h3 className="font-medium text-white">
-                        Ch {chapter.number}: {chapter.title}
-                      </h3>
-                      <p className="text-sm text-zinc-500">{chapter.estimated_minutes} min</p>
-                    </div>
-                    <Layers className="h-5 w-5 text-zinc-600" />
-                  </Link>
-                ))}
-              </div>
+              <SortableCardList
+                label="Chapters (drag to reorder)"
+                items={chapters.map((chapter) => ({
+                  id: chapter.id,
+                  title: `Ch ${chapter.number}: ${chapter.title}`,
+                  meta: `${chapter.estimated_minutes} min`,
+                  href: `/chapters/${chapter.id}`,
+                }))}
+                onReorder={async (orderedIds) => {
+                  "use server";
+                  await reorderChapters(subject.id, orderedIds);
+                }}
+              />
             )}
           </div>
 

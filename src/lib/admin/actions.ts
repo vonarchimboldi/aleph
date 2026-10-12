@@ -617,3 +617,49 @@ export async function updateAccountTypeAction(userId: string, accountType: strin
   if (error) throw error;
   revalidatePath(`/students/${userId}`);
 }
+
+// ---------------------------------------------------------------------------
+// Drag-to-reorder
+// ---------------------------------------------------------------------------
+
+/**
+ * Persist a new chapter order from drag-and-drop. Chapters are displayed by
+ * `number` (learner + admin), so both number and order_index are rewritten;
+ * the .eq("subject_id") scopes the update to the caller's own list.
+ */
+export async function reorderChapters(subjectId: string, orderedIds: string[]) {
+  const supabase = await createClient();
+
+  const results = await Promise.all(
+    orderedIds.map((id, index) =>
+      supabase
+        .from("chapters")
+        .update({ number: index + 1, order_index: index })
+        .eq("id", id)
+        .eq("subject_id", subjectId)
+    )
+  );
+  const failed = results.find((r) => r.error);
+  if (failed?.error) throw failed.error;
+
+  revalidatePath(`/subjects/${subjectId}`);
+  revalidatePath("/courses");
+}
+
+export async function reorderSections(chapterId: string, orderedIds: string[]) {
+  const supabase = await createClient();
+
+  const results = await Promise.all(
+    orderedIds.map((id, index) =>
+      supabase
+        .from("sections")
+        .update({ order_index: index })
+        .eq("id", id)
+        .eq("chapter_id", chapterId)
+    )
+  );
+  const failed = results.find((r) => r.error);
+  if (failed?.error) throw failed.error;
+
+  revalidatePath(`/chapters/${chapterId}`);
+}

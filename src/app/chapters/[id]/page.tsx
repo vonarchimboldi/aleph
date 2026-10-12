@@ -2,12 +2,13 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import AdminShell from "@/components/admin/AdminShell";
-import { createSection } from "@/lib/admin/actions";
+import { createSection, reorderSections } from "@/lib/admin/actions";
 import AuditForm from "@/components/admin/AuditForm";
+import SortableCardList from "@/components/admin/SortableCardList";
 import { getChapterById, getSectionsByChapter } from "@/lib/admin/data";
 import FormField from "@/components/forms/FormField";
 import FormSelect from "@/components/forms/FormSelect";
-import { Plus, FileText } from "lucide-react";
+import { Plus } from "lucide-react";
 
 const sectionTypes = [
   { value: "read", label: "Read" },
@@ -58,23 +59,19 @@ export default async function ChapterDetailPage({ params }: Props) {
                 No sections yet.
               </div>
             ) : (
-              <div className="space-y-3">
-                {sections.map((section) => (
-                  <Link
-                    key={section.id}
-                    href={`/sections/${section.id}`}
-                    className="flex items-center justify-between rounded-xl border border-zinc-800 bg-zinc-900 p-4 transition hover:border-zinc-700 hover:bg-zinc-800"
-                  >
-                    <div>
-                      <h3 className="font-medium text-white">{section.title}</h3>
-                      <p className="text-sm text-zinc-500">
-                        {section.type} · {section.estimated_minutes} min · {section.is_locked ? "Locked" : "Unlocked"}
-                      </p>
-                    </div>
-                    <FileText className="h-5 w-5 text-zinc-600" />
-                  </Link>
-                ))}
-              </div>
+              <SortableCardList
+                label="Sections (drag to reorder)"
+                items={sections.map((section) => ({
+                  id: section.id,
+                  title: section.title,
+                  meta: `${section.type} · ${section.estimated_minutes} min · ${section.is_locked ? "Locked" : "Unlocked"}`,
+                  href: `/sections/${section.id}`,
+                }))}
+                onReorder={async (orderedIds) => {
+                  "use server";
+                  await reorderSections(chapter.id, orderedIds);
+                }}
+              />
             )}
           </div>
 
