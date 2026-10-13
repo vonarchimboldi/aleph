@@ -3,6 +3,7 @@ import type { User } from "@supabase/supabase-js";
 import { createClient } from "@/lib/supabase/server";
 import AdminShell from "@/components/admin/AdminShell";
 import EnrollmentManager from "@/components/admin/EnrollmentManager";
+import StudentLearningAnalytics from "@/components/admin/StudentLearningAnalytics";
 
 interface StudentDetailPageProps {
   params: Promise<{ id: string }>;
@@ -86,6 +87,8 @@ export default async function StudentDetailPage({ params }: StudentDetailPagePro
           enrollments={enrollments}
           availableSubjects={subjects}
         />
+
+        <StudentLearningAnalytics studentId={student.id} />
       </div>
     </AdminShell>
   );
