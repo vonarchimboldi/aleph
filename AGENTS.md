@@ -1,4 +1,4 @@
-# AGENTS.md — aleph_v2
+# AGENTS.md — aleph (admin studio)
 
 > **Mandatory reading before writing any code.** These rules override your default training patterns.
 
@@ -6,15 +6,19 @@
 
 ## 1. Project Context
 
-**aleph_v2** is an educational platform for GATE DA exam preparation.
+**aleph** is the admin/content studio for the Aleph educational platform (GATE DA exam prep). It shares one Supabase project with the learner app in the sibling repo `../aleph_v2` (port 3000; this app runs on port 3001).
 
 - **Framework:** Next.js 16 (App Router)
 - **Language:** TypeScript 5
 - **Styling:** Tailwind CSS v4
-- **Auth:** Supabase Auth (email/password)
-- **Content:** Fumadocs (MDX)
+- **Auth:** Supabase Auth (email/password); role check in middleware + every page (admin/instructor gate, but RLS writes are admin-only — see below)
+- **Content:** Markdown rendered by markdown-it + KaTeX, stored in Supabase (`sections.content`). NOT MDX/Fumadocs.
 - **Icons:** Lucide React
 - **No ORM** — direct Supabase client with RLS
+
+> **Operator/developer guides** live in the learner repo: `../aleph_v2/docs/guides/`
+> (start at `00-start-here.md`). The admin walkthrough is `03-admin-guide.md`;
+> known traps are in `05-caveats-and-gotchas.md`. Read them before planning work.
 
 ---
 
@@ -236,4 +240,4 @@ These guidelines are working if:
 
 ---
 
-*Last updated: 2026-06-09*
+*Last updated: 2026-10-14 (identity corrected: admin studio; Fumadocs claim removed; guides/ pointer added)*
