@@ -37,3 +37,6 @@ the maintained versions of the methodology are in
 `aleph_v2/docs/content-intel/`.
 
 > Last updated 2026-10-14.
+> The original product README that lived here is preserved in git history
+> (`git show d88cdd9^:legacy/README.md`) — it describes this static prototype
+> when it was the live product (June 2026).
