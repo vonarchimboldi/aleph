@@ -1,0 +1,544 @@
+{
+  "day": 4,
+  "title": "Functions and substitution",
+  "core": [
+    "F1-3",
+    "F2-3",
+    "A4-3",
+    "F1-2",
+    "F2-2",
+    "A4-2",
+    "F2-1",
+    "A5-1"
+  ],
+  "branches": [
+    "F1-R",
+    "F1-4",
+    "F2-R",
+    "F2-4",
+    "A4-R",
+    "A4-4",
+    "A5-R",
+    "A5-4"
+  ],
+  "questions": {
+    "F1-3": {
+      "id": "F1-3",
+      "skill": "F1",
+      "level": 3,
+      "role": "ladder",
+      "minutes": 5,
+      "prompt": "Let f(x)=√(x−1) and g(x)=3−x. Find the real domain of f(g(x)).",
+      "answer": "x≤2.",
+      "steps": [
+        "The square-root input becomes 2−x.",
+        "It must be nonnegative, so x≤2."
+      ],
+      "oracle": {
+        "op": "sqrt_composition",
+        "target": "x<=2"
+      },
+      "hint": "Compute the inner output first and ask whether the outer function accepts it.",
+      "credit": [
+        "1 point: The square-root input becomes 2−x.",
+        "1 point: It must be nonnegative, so x≤2.",
+        "1 point: give x≤2. with the stated domain/conditions and a valid argument."
+      ],
+      "diagnostic": "Uncued recognition",
+      "error_hypotheses": [
+        "Reversing composition; forgetting the outer function can add a restriction",
+        "A calculation or copying slip despite a valid setup; compare with a parallel item before concluding a concept gap."
+      ],
+      "follow_up": "If the reasoning is uncertain, use F1-R without revealing this solution. If independent reasoning is sound, consider F1-4. Do not infer a gap from an unreached item."
+    },
+    "F2-3": {
+      "id": "F2-3",
+      "skill": "F2",
+      "level": 3,
+      "role": "ladder",
+      "minutes": 5,
+      "prompt": "A function on R satisfies f(x)+2f(1−x)=3x for every real x. Find f(0).",
+      "answer": "2.",
+      "steps": [
+        "At x=0, f(0)+2f(1)=0.",
+        "At x=1, f(1)+2f(0)=3.",
+        "Solving the pair gives f(0)=2, f(1)=−1."
+      ],
+      "oracle": {
+        "op": "functional_pair",
+        "target": 2
+      },
+      "hint": "Try zero, a negative input or replacing an input with its partner. Each substitution must be allowed.",
+      "credit": [
+        "1 point: At x=0, f(0)+2f(1)=0.",
+        "1 point: At x=1, f(1)+2f(0)=3.",
+        "1 point: give 2. with the stated domain/conditions and a valid argument."
+      ],
+      "diagnostic": "Uncued recognition",
+      "error_hypotheses": [
+        "Assuming an unproved formula for f; failing to exploit substituted arguments",
+        "A calculation or copying slip despite a valid setup; compare with a parallel item before concluding a concept gap."
+      ],
+      "follow_up": "If the reasoning is uncertain, use F2-R without revealing this solution. If independent reasoning is sound, consider F2-4. Do not infer a gap from an unreached item."
+    },
+    "A4-3": {
+      "id": "A4-3",
+      "skill": "A4",
+      "level": 3,
+      "role": "ladder",
+      "minutes": 5,
+      "prompt": "Find all real x satisfying x⁴ − 3x² + 2=0.",
+      "answer": "x=±1, ±√2.",
+      "steps": [
+        "View the expression as a quadratic in x².",
+        "(x²−1)(x²−2)=0.",
+        "Both nonnegative values of x² give two real square roots."
+      ],
+      "oracle": {
+        "op": "biquadratic",
+        "coeff": [
+          1,
+          -3,
+          2
+        ],
+        "target": [
+          1,
+          2
+        ]
+      },
+      "hint": "Look for a repeated expression. If you replace it, record which real values the replacement can take.",
+      "credit": [
+        "1 point: View the expression as a quadratic in x².",
+        "1 point: (x²−1)(x²−2)=0.",
+        "1 point: give x=±1, ±√2. with the stated domain/conditions and a valid argument."
+      ],
+      "diagnostic": "Uncued recognition",
+      "error_hypotheses": [
+        "Treating x² as x; losing the nonzero restriction or real feasibility of a substituted value",
+        "A calculation or copying slip despite a valid setup; compare with a parallel item before concluding a concept gap."
+      ],
+      "follow_up": "If the reasoning is uncertain, use A4-R without revealing this solution. If independent reasoning is sound, consider A4-4. Do not infer a gap from an unreached item."
+    },
+    "F1-2": {
+      "id": "F1-2",
+      "skill": "F1",
+      "level": 2,
+      "role": "ladder",
+      "minutes": 3,
+      "prompt": "Let f(x)=x²+1 and g(x)=2x−3 for all real x. Find f(g(2)) and g(f(2)).",
+      "answer": "2 and 7.",
+      "steps": [
+        "g(2)=1, so f(g(2))=2.",
+        "f(2)=5, so g(f(2))=7; composition order matters."
+      ],
+      "oracle": {
+        "op": "composition_pair",
+        "target": [
+          2,
+          7
+        ]
+      },
+      "hint": "Compute the inner output first and ask whether the outer function accepts it.",
+      "credit": [
+        "1 point: g(2)=1, so f(g(2))=2.",
+        "1 point: f(2)=5, so g(f(2))=7; composition order matters.",
+        "1 point: give 2 and 7. with the stated domain/conditions and a valid argument."
+      ],
+      "diagnostic": "Direct execution",
+      "error_hypotheses": [
+        "Reversing composition; forgetting the outer function can add a restriction",
+        "A calculation or copying slip despite a valid setup; compare with a parallel item before concluding a concept gap."
+      ],
+      "follow_up": "If the reasoning is uncertain, use F1-R without revealing this solution. If independent reasoning is sound, consider F1-4. Do not infer a gap from an unreached item."
+    },
+    "F2-2": {
+      "id": "F2-2",
+      "skill": "F2",
+      "level": 2,
+      "role": "ladder",
+      "minutes": 3,
+      "prompt": "For all real x,y, f(x+y)=f(x)+f(y), and f(1)=3. Find f(2), f(−1) and f(1/2).",
+      "answer": "6, −3, 3/2.",
+      "steps": [
+        "Repeated addition gives f(2)=6.",
+        "Since f(0)=0, f(−1)=−f(1)=−3.",
+        "Two copies of f(1/2) sum to f(1)=3."
+      ],
+      "oracle": {
+        "op": "additive_values",
+        "unit": 3,
+        "inputs": [
+          2,
+          -1,
+          "1/2"
+        ],
+        "target": [
+          6,
+          -3,
+          "3/2"
+        ]
+      },
+      "hint": "Try zero, a negative input or replacing an input with its partner. Each substitution must be allowed.",
+      "credit": [
+        "1 point: Repeated addition gives f(2)=6.",
+        "1 point: Since f(0)=0, f(−1)=−f(1)=−3.",
+        "1 point: give 6, −3, 3/2. with the stated domain/conditions and a valid argument."
+      ],
+      "diagnostic": "Direct execution",
+      "error_hypotheses": [
+        "Assuming an unproved formula for f; failing to exploit substituted arguments",
+        "A calculation or copying slip despite a valid setup; compare with a parallel item before concluding a concept gap."
+      ],
+      "follow_up": "If the reasoning is uncertain, use F2-R without revealing this solution. If independent reasoning is sound, consider F2-4. Do not infer a gap from an unreached item."
+    },
+    "A4-2": {
+      "id": "A4-2",
+      "skill": "A4",
+      "level": 2,
+      "role": "ladder",
+      "minutes": 3,
+      "prompt": "For x ≠ 0, x+1/x=3. Find x²+1/x².",
+      "answer": "7.",
+      "steps": [
+        "Square both sides to get x²+2+1/x²=9.",
+        "Subtract 2."
+      ],
+      "oracle": {
+        "op": "symmetric_square",
+        "t": 3,
+        "target": 7
+      },
+      "hint": "Look for a repeated expression. If you replace it, record which real values the replacement can take.",
+      "credit": [
+        "1 point: Square both sides to get x²+2+1/x²=9.",
+        "1 point: Subtract 2.",
+        "1 point: give 7. with the stated domain/conditions and a valid argument."
+      ],
+      "diagnostic": "Direct execution",
+      "error_hypotheses": [
+        "Treating x² as x; losing the nonzero restriction or real feasibility of a substituted value",
+        "A calculation or copying slip despite a valid setup; compare with a parallel item before concluding a concept gap."
+      ],
+      "follow_up": "If the reasoning is uncertain, use A4-R without revealing this solution. If independent reasoning is sound, consider A4-4. Do not infer a gap from an unreached item."
+    },
+    "F2-1": {
+      "id": "F2-1",
+      "skill": "F2",
+      "level": 1,
+      "role": "ladder",
+      "minutes": 2,
+      "prompt": "A real-valued function on R satisfies f(x+y)=f(x)+f(y). What do the substitutions x=y=0 and y=−x tell you about f(0) and f(−x)?",
+      "answer": "f(0)=0 and f(−x)=−f(x).",
+      "steps": [
+        "At x=y=0, f(0)=2f(0), so f(0)=0.",
+        "At y=−x, 0=f(x)+f(−x), so f(−x)=−f(x)."
+      ],
+      "oracle": null,
+      "hint": "Try zero, a negative input or replacing an input with its partner. Each substitution must be allowed.",
+      "credit": [
+        "1 point: make a valid zero substitution.",
+        "1 point: derive f(0)=0.",
+        "1 point: use y=−x to derive f(−x)=−f(x)."
+      ],
+      "diagnostic": "Knowledge/conditions",
+      "error_hypotheses": [
+        "Assuming an unproved formula for f; failing to exploit substituted arguments",
+        "A calculation or copying slip despite a valid setup; compare with a parallel item before concluding a concept gap."
+      ],
+      "follow_up": "If the reasoning is uncertain, use F2-R without revealing this solution. If independent reasoning is sound, consider F2-4. Do not infer a gap from an unreached item."
+    },
+    "A5-1": {
+      "id": "A5-1",
+      "skill": "A5",
+      "level": 1,
+      "role": "ladder",
+      "minutes": 2,
+      "prompt": "For real logarithms to base b, state the restrictions on b and on the argument. State log_b(uv) for positive u,v.",
+      "answer": "b>0, b≠1, argument>0; log_b(uv)=log_b u + log_b v.",
+      "steps": [
+        "The logarithm inverts exponentiation with a positive base other than 1.",
+        "Its real argument must be positive; the product rule follows from b^(p+q)=b^p b^q."
+      ],
+      "oracle": null,
+      "hint": "Express the quantities with one base, and record logarithm domains before transforming.",
+      "credit": [
+        "1 point: The logarithm inverts exponentiation with a positive base other than 1.",
+        "1 point: Its real argument must be positive; the product rule follows from b^(p+q)=b^p b^q.",
+        "1 point: give b>0, b≠1, argument>0; log_b(uv)=log_b u + log_b v. with the stated domain/conditions and a valid argument."
+      ],
+      "diagnostic": "Knowledge/conditions",
+      "error_hypotheses": [
+        "Combining unlike bases incorrectly; ignoring positive logarithm arguments",
+        "A calculation or copying slip despite a valid setup; compare with a parallel item before concluding a concept gap."
+      ],
+      "follow_up": "If the reasoning is uncertain, use A5-R without revealing this solution. If independent reasoning is sound, consider A5-4. Do not infer a gap from an unreached item."
+    },
+    "F1-R": {
+      "id": "F1-R",
+      "skill": "F1",
+      "level": 2,
+      "role": "repair",
+      "minutes": 5,
+      "prompt": "If f(x)=x+1 and g(x)=x², find f(g(3)) and g(f(3)).",
+      "answer": "10 and 16.",
+      "steps": [
+        "g(3)=9, then f(9)=10.",
+        "f(3)=4, then g(4)=16."
+      ],
+      "oracle": {
+        "op": "composition_repair",
+        "target": [
+          10,
+          16
+        ]
+      },
+      "hint": "Compute the inner output first and ask whether the outer function accepts it.",
+      "credit": [
+        "1 point: g(3)=9, then f(9)=10.",
+        "1 point: f(3)=4, then g(4)=16.",
+        "1 point: give 10 and 16. with the stated domain/conditions and a valid argument."
+      ],
+      "diagnostic": "Direct execution",
+      "error_hypotheses": [
+        "Reversing composition; forgetting the outer function can add a restriction",
+        "A calculation or copying slip despite a valid setup; compare with a parallel item before concluding a concept gap."
+      ],
+      "follow_up": "If the reasoning is uncertain, use F1-R without revealing this solution. If independent reasoning is sound, consider F1-4. Do not infer a gap from an unreached item."
+    },
+    "F1-4": {
+      "id": "F1-4",
+      "skill": "F1",
+      "level": 4,
+      "role": "ladder",
+      "minutes": 10,
+      "prompt": "For real x, f(x)=(x−1)/(x+1). Determine the domain of f(f(x)) and simplify it.",
+      "answer": "f(f(x))=−1/x for x≠−1,0.",
+      "steps": [
+        "The inner function requires x≠−1.",
+        "Its value must not equal −1; solving (x−1)/(x+1)=−1 gives x=0.",
+        "Simplifying the outer quotient yields −1/x, retaining both exclusions."
+      ],
+      "oracle": {
+        "op": "mobius_composition",
+        "target": {
+          "formula": "-1/x",
+          "excluded": [
+            -1,
+            0
+          ]
+        }
+      },
+      "hint": "Compute the inner output first and ask whether the outer function accepts it.",
+      "credit": [
+        "1 point: The inner function requires x≠−1.",
+        "1 point: Its value must not equal −1; solving (x−1)/(x+1)=−1 gives x=0.",
+        "1 point: give f(f(x))=−1/x for x≠−1,0. with the stated domain/conditions and a valid argument."
+      ],
+      "diagnostic": "Combination and transfer",
+      "error_hypotheses": [
+        "Reversing composition; forgetting the outer function can add a restriction",
+        "A calculation or copying slip despite a valid setup; compare with a parallel item before concluding a concept gap."
+      ],
+      "follow_up": "If the reasoning is uncertain, use F1-R without revealing this solution. If independent reasoning is sound, consider F1-4. Do not infer a gap from an unreached item."
+    },
+    "F2-R": {
+      "id": "F2-R",
+      "skill": "F2",
+      "level": 2,
+      "role": "repair",
+      "minutes": 5,
+      "prompt": "If f(x+y)=f(x)+f(y) on R and f(1)=4, find f(3) and f(−1).",
+      "answer": "12 and −4.",
+      "steps": [
+        "Repeated addition gives f(3)=3f(1).",
+        "Additivity at 1+(−1)=0 gives the negative value."
+      ],
+      "oracle": {
+        "op": "additive_values",
+        "unit": 4,
+        "inputs": [
+          3,
+          -1
+        ],
+        "target": [
+          12,
+          -4
+        ]
+      },
+      "hint": "Try zero, a negative input or replacing an input with its partner. Each substitution must be allowed.",
+      "credit": [
+        "1 point: Repeated addition gives f(3)=3f(1).",
+        "1 point: Additivity at 1+(−1)=0 gives the negative value.",
+        "1 point: give 12 and −4. with the stated domain/conditions and a valid argument."
+      ],
+      "diagnostic": "Direct execution",
+      "error_hypotheses": [
+        "Assuming an unproved formula for f; failing to exploit substituted arguments",
+        "A calculation or copying slip despite a valid setup; compare with a parallel item before concluding a concept gap."
+      ],
+      "follow_up": "If the reasoning is uncertain, use F2-R without revealing this solution. If independent reasoning is sound, consider F2-4. Do not infer a gap from an unreached item."
+    },
+    "F2-4": {
+      "id": "F2-4",
+      "skill": "F2",
+      "level": 4,
+      "role": "ladder",
+      "minutes": 10,
+      "prompt": "A function f:R→R satisfies f(x+y)=f(x)+f(y)+2xy for all real x,y, and f(1)=3. Determine f(r) for every rational r.",
+      "answer": "f(r)=r²+2r for every rational r.",
+      "steps": [
+        "Define g(x)=f(x)−x². Expanding (x+y)² shows g(x+y)=g(x)+g(y), and g(1)=2.",
+        "Additivity gives g(0)=0, g(−x)=−g(x), and g(p)=2p for every integer p. For a positive integer q, qg(p/q)=g(p)=2p.",
+        "Therefore g(p/q)=2p/q for every rational p/q, so f(r)=r²+2r."
+      ],
+      "oracle": null,
+      "hint": "Try zero, a negative input or replacing an input with its partner. Each substitution must be allowed.",
+      "credit": [
+        "1 point: subtract x² and correctly establish additivity.",
+        "1 point: derive g(p/q)=2p/q, including zero and negative numerators.",
+        "1 point: conclude f(r)=r²+2r on the stated rational domain."
+      ],
+      "diagnostic": "Combination and transfer",
+      "error_hypotheses": [
+        "Assuming an unproved formula for f; failing to exploit substituted arguments",
+        "A calculation or copying slip despite a valid setup; compare with a parallel item before concluding a concept gap."
+      ],
+      "follow_up": "If the reasoning is uncertain, use F2-R without revealing this solution. If independent reasoning is sound, consider F2-4. Do not infer a gap from an unreached item."
+    },
+    "A4-R": {
+      "id": "A4-R",
+      "skill": "A4",
+      "level": 2,
+      "role": "repair",
+      "minutes": 5,
+      "prompt": "If x+1/x=4, x ≠ 0, find x²+1/x².",
+      "answer": "14.",
+      "steps": [
+        "Square to obtain x²+2+1/x²=16.",
+        "Subtract 2."
+      ],
+      "oracle": {
+        "op": "symmetric_square",
+        "t": 4,
+        "target": 14
+      },
+      "hint": "Look for a repeated expression. If you replace it, record which real values the replacement can take.",
+      "credit": [
+        "1 point: Square to obtain x²+2+1/x²=16.",
+        "1 point: Subtract 2.",
+        "1 point: give 14. with the stated domain/conditions and a valid argument."
+      ],
+      "diagnostic": "Direct execution",
+      "error_hypotheses": [
+        "Treating x² as x; losing the nonzero restriction or real feasibility of a substituted value",
+        "A calculation or copying slip despite a valid setup; compare with a parallel item before concluding a concept gap."
+      ],
+      "follow_up": "If the reasoning is uncertain, use A4-R without revealing this solution. If independent reasoning is sound, consider A4-4. Do not infer a gap from an unreached item."
+    },
+    "A4-4": {
+      "id": "A4-4",
+      "skill": "A4",
+      "level": 4,
+      "role": "ladder",
+      "minutes": 10,
+      "prompt": "Find the number of real solutions of x⁴ − 3x³ + 4x² − 3x + 1=0.",
+      "answer": "Exactly one real solution: x=1.",
+      "steps": [
+        "Zero is not a root, so divide by x².",
+        "Set t=x+1/x to obtain t²−3t+2=0, hence t=1 or 2.",
+        "For real x, t=1 is impossible; t=2 gives x=1 only."
+      ],
+      "oracle": {
+        "op": "palindromic_quartic",
+        "coeff": [
+          1,
+          -3,
+          4,
+          -3,
+          1
+        ],
+        "target": [
+          1
+        ]
+      },
+      "hint": "Look for a repeated expression. If you replace it, record which real values the replacement can take.",
+      "credit": [
+        "1 point: Zero is not a root, so divide by x².",
+        "1 point: Set t=x+1/x to obtain t²−3t+2=0, hence t=1 or 2.",
+        "1 point: conclude Exactly one real solution: x=1. and justify the final case/domain/equality."
+      ],
+      "diagnostic": "Combination and transfer",
+      "error_hypotheses": [
+        "Treating x² as x; losing the nonzero restriction or real feasibility of a substituted value",
+        "A calculation or copying slip despite a valid setup; compare with a parallel item before concluding a concept gap."
+      ],
+      "follow_up": "If the reasoning is uncertain, use A4-R without revealing this solution. If independent reasoning is sound, consider A4-4. Do not infer a gap from an unreached item."
+    },
+    "A5-R": {
+      "id": "A5-R",
+      "skill": "A5",
+      "level": 2,
+      "role": "repair",
+      "minutes": 5,
+      "prompt": "Solve 3^(x−2)=27.",
+      "answer": "x=5.",
+      "steps": [
+        "Write 27=3³.",
+        "Equate x−2=3."
+      ],
+      "oracle": {
+        "op": "linear_exponent",
+        "offset": -2,
+        "rhs_exponent": 3,
+        "target": 5
+      },
+      "hint": "Express the quantities with one base, and record logarithm domains before transforming.",
+      "credit": [
+        "1 point: Write 27=3³.",
+        "1 point: Equate x−2=3.",
+        "1 point: give x=5. with the stated domain/conditions and a valid argument."
+      ],
+      "diagnostic": "Direct execution",
+      "error_hypotheses": [
+        "Combining unlike bases incorrectly; ignoring positive logarithm arguments",
+        "A calculation or copying slip despite a valid setup; compare with a parallel item before concluding a concept gap."
+      ],
+      "follow_up": "If the reasoning is uncertain, use A5-R without revealing this solution. If independent reasoning is sound, consider A5-4. Do not infer a gap from an unreached item."
+    },
+    "A5-4": {
+      "id": "A5-4",
+      "skill": "A5",
+      "level": 4,
+      "role": "ladder",
+      "minutes": 10,
+      "prompt": "Solve log₂(x−1)+log₂(x+1)=3 over the reals.",
+      "answer": "x=3.",
+      "steps": [
+        "The original arguments require x>1.",
+        "Combine logarithms: log₂(x²−1)=3, so x²=9.",
+        "Only x=3 satisfies the original domain."
+      ],
+      "oracle": {
+        "op": "log_pair",
+        "base": 2,
+        "power": 3,
+        "shift": 1,
+        "target": [
+          3
+        ]
+      },
+      "hint": "Express the quantities with one base, and record logarithm domains before transforming.",
+      "credit": [
+        "1 point: The original arguments require x>1.",
+        "1 point: Combine logarithms: log₂(x²−1)=3, so x²=9.",
+        "1 point: give x=3. with the stated domain/conditions and a valid argument."
+      ],
+      "diagnostic": "Combination and transfer",
+      "error_hypotheses": [
+        "Combining unlike bases incorrectly; ignoring positive logarithm arguments",
+        "A calculation or copying slip despite a valid setup; compare with a parallel item before concluding a concept gap."
+      ],
+      "follow_up": "If the reasoning is uncertain, use A5-R without revealing this solution. If independent reasoning is sound, consider A5-4. Do not infer a gap from an unreached item."
+    }
+  }
+}

@@ -1,0 +1,673 @@
+{
+  "day": 10,
+  "title": "Guarantees and delayed confirmation",
+  "core": [
+    "C5-3",
+    "D10-A1",
+    "D10-S3",
+    "D10-C2",
+    "D10-N3",
+    "D10-L1",
+    "C5-2",
+    "C5-1"
+  ],
+  "branches": [
+    "C5-R",
+    "C5-4",
+    "A1-R",
+    "A1-4",
+    "S3-R",
+    "S3-4",
+    "C2-R",
+    "C2-4",
+    "N3-R",
+    "N3-4",
+    "L1-R",
+    "L1-4"
+  ],
+  "questions": {
+    "C5-3": {
+      "id": "C5-3",
+      "skill": "C5",
+      "level": 3,
+      "role": "ladder",
+      "minutes": 5,
+      "prompt": "Five integers are chosen. Show that two differ by a multiple of 4.",
+      "answer": "Two have the same remainder on division by 4, so their difference is divisible by 4.",
+      "steps": [
+        "There are four remainder classes 0,1,2,3.",
+        "Five integers force two into the same class.",
+        "Subtract their expressions 4a+r and 4b+r."
+      ],
+      "oracle": null,
+      "hint": "Choose categories so that two objects in one category have the required property.",
+      "credit": [
+        "1 point: There are four remainder classes 0,1,2,3.",
+        "1 point: Five integers force two into the same class.",
+        "1 point: give Two have the same remainder on division by 4, so their difference is divisible by 4. with the stated domain/conditions and a valid argument."
+      ],
+      "diagnostic": "Uncued recognition",
+      "error_hypotheses": [
+        "Claiming a likely event is guaranteed; choosing boxes that do not force the desired pair",
+        "A calculation or copying slip despite a valid setup; compare with a parallel item before concluding a concept gap."
+      ],
+      "follow_up": "If the reasoning is uncertain, use C5-R without revealing this solution. If independent reasoning is sound, consider C5-4. Do not infer a gap from an unreached item."
+    },
+    "D10-A1": {
+      "id": "D10-A1",
+      "skill": "A1",
+      "level": 3,
+      "role": "delayed",
+      "minutes": 2,
+      "prompt": "Solve over the reals: (x²−16)/(x−4)=8. State restrictions.",
+      "answer": "No solution; x≠4.",
+      "steps": [
+        "The original denominator excludes 4.",
+        "Cancellation gives x+4=8; its only candidate 4 is excluded."
+      ],
+      "oracle": {
+        "op": "rational_equation",
+        "excluded": [
+          4
+        ],
+        "numerator": [
+          1,
+          0,
+          -16
+        ],
+        "denominator": [
+          1,
+          -4
+        ],
+        "rhs": 8,
+        "target": []
+      },
+      "hint": "Try the candidate in the original equation, including its denominator or square root.",
+      "credit": [
+        "1 point: The original denominator excludes 4.",
+        "1 point: Cancellation gives x+4=8; its only candidate 4 is excluded.",
+        "1 point: conclude No solution; x≠4. with valid reasoning."
+      ],
+      "diagnostic": "Uncued recognition",
+      "error_hypotheses": [
+        "Cancelling a possibly zero factor; accepting a value outside the original domain",
+        "A calculation or copying slip despite a valid setup; compare with a parallel item before concluding a concept gap."
+      ],
+      "follow_up": "If the reasoning is uncertain, use A1-R without revealing this solution. If independent reasoning is sound, consider A1-4. Do not infer a gap from an unreached item."
+    },
+    "D10-S3": {
+      "id": "D10-S3",
+      "skill": "S3",
+      "level": 3,
+      "role": "delayed",
+      "minutes": 2,
+      "prompt": "Find Σ k(k−1), k=1,…,6.",
+      "answer": "70.",
+      "steps": [
+        "Expand to k²−k.",
+        "The square sum is 91 and integer sum is 21; subtract."
+      ],
+      "oracle": {
+        "op": "sum_k_predecessor",
+        "n": 6,
+        "target": 70
+      },
+      "hint": "Expand the summand and separate the familiar sums. For a derivation, write the consecutive differences.",
+      "credit": [
+        "1 point: Expand to k²−k.",
+        "1 point: The square sum is 91 and integer sum is 21; subtract.",
+        "1 point: conclude 70. with valid reasoning."
+      ],
+      "diagnostic": "Uncued recognition",
+      "error_hypotheses": [
+        "Using the integer-sum formula for squares; confusing sum of cubes with cube of a sum",
+        "A calculation or copying slip despite a valid setup; compare with a parallel item before concluding a concept gap."
+      ],
+      "follow_up": "If the reasoning is uncertain, use S3-R without revealing this solution. If independent reasoning is sound, consider S3-4. Do not infer a gap from an unreached item."
+    },
+    "D10-C2": {
+      "id": "D10-C2",
+      "skill": "C2",
+      "level": 3,
+      "role": "delayed",
+      "minutes": 2,
+      "prompt": "Choose a three-person committee from 4 women and 3 men. How many committees have at least one woman?",
+      "answer": "34.",
+      "steps": [
+        "All committees: C(7,3)=35.",
+        "Subtract the one all-male committee."
+      ],
+      "oracle": {
+        "op": "committee_complement",
+        "women": 4,
+        "men": 3,
+        "size": 3,
+        "target": 34
+      },
+      "hint": "Describe whether positions or people are distinguished. Count the complement only within the correct sample space.",
+      "credit": [
+        "1 point: All committees: C(7,3)=35.",
+        "1 point: Subtract the one all-male committee.",
+        "1 point: conclude 34. with valid reasoning."
+      ],
+      "diagnostic": "Uncued recognition",
+      "error_hypotheses": [
+        "Counting an unordered committee as ordered; multiplying by a role count twice",
+        "A calculation or copying slip despite a valid setup; compare with a parallel item before concluding a concept gap."
+      ],
+      "follow_up": "If the reasoning is uncertain, use C2-R without revealing this solution. If independent reasoning is sound, consider C2-4. Do not infer a gap from an unreached item."
+    },
+    "D10-N3": {
+      "id": "D10-N3",
+      "skill": "N3",
+      "level": 3,
+      "role": "delayed",
+      "minutes": 2,
+      "prompt": "Find the last digit of 7^2028. Explain the cycle position.",
+      "answer": "1.",
+      "steps": [
+        "The last digits cycle 7,9,3,1.",
+        "2028 is a multiple of 4, so use the fourth position."
+      ],
+      "oracle": {
+        "op": "power_mod",
+        "base": 7,
+        "exponent": 2028,
+        "modulus": 10,
+        "target": 1
+      },
+      "hint": "List a few remainders until the pattern restarts. An exponent divisible by the period uses the last position.",
+      "credit": [
+        "1 point: The last digits cycle 7,9,3,1.",
+        "1 point: 2028 is a multiple of 4, so use the fourth position.",
+        "1 point: conclude 1. with valid reasoning."
+      ],
+      "diagnostic": "Uncued recognition",
+      "error_hypotheses": [
+        "Using cycle position zero; reducing an exponent by the divisor instead of the cycle length",
+        "A calculation or copying slip despite a valid setup; compare with a parallel item before concluding a concept gap."
+      ],
+      "follow_up": "If the reasoning is uncertain, use N3-R without revealing this solution. If independent reasoning is sound, consider N3-4. Do not infer a gap from an unreached item."
+    },
+    "D10-L1": {
+      "id": "D10-L1",
+      "skill": "L1",
+      "level": 3,
+      "role": "delayed",
+      "minutes": 2,
+      "prompt": "For integers n, assess “6 divides n implies 3 divides n” and its converse. Give a proof or counterexample for each.",
+      "answer": "Original true; converse false, for example n=3.",
+      "steps": [
+        "n=6k is also 3(2k), proving the original.",
+        "The integer 3 satisfies divisibility by 3 but not by 6."
+      ],
+      "oracle": {
+        "op": "implication_six_three",
+        "target": [
+          true,
+          false
+        ]
+      },
+      "hint": "Ask whether your example has a true premise and false conclusion. Label the direction proved.",
+      "credit": [
+        "1 point: n=6k is also 3(2k), proving the original.",
+        "1 point: The integer 3 satisfies divisibility by 3 but not by 6.",
+        "1 point: conclude Original true; converse false, for example n=3. with valid reasoning."
+      ],
+      "diagnostic": "Uncued recognition",
+      "error_hypotheses": [
+        "Proving the converse instead of the implication; offering an example that does not satisfy the premise",
+        "A calculation or copying slip despite a valid setup; compare with a parallel item before concluding a concept gap."
+      ],
+      "follow_up": "If the reasoning is uncertain, use L1-R without revealing this solution. If independent reasoning is sound, consider L1-4. Do not infer a gap from an unreached item."
+    },
+    "C5-2": {
+      "id": "C5-2",
+      "skill": "C5",
+      "level": 2,
+      "role": "ladder",
+      "minutes": 3,
+      "prompt": "Thirteen people are assigned birth months. What repeated-month fact is guaranteed?",
+      "answer": "At least two people share a birth month.",
+      "steps": [
+        "There are only 12 month categories.",
+        "Putting 13 people into 12 categories forces a repeated category."
+      ],
+      "oracle": {
+        "op": "pigeonhole",
+        "objects": 13,
+        "boxes": 12,
+        "target": 2
+      },
+      "hint": "Choose categories so that two objects in one category have the required property.",
+      "credit": [
+        "1 point: There are only 12 month categories.",
+        "1 point: Putting 13 people into 12 categories forces a repeated category.",
+        "1 point: give At least two people share a birth month. with the stated domain/conditions and a valid argument."
+      ],
+      "diagnostic": "Direct execution",
+      "error_hypotheses": [
+        "Claiming a likely event is guaranteed; choosing boxes that do not force the desired pair",
+        "A calculation or copying slip despite a valid setup; compare with a parallel item before concluding a concept gap."
+      ],
+      "follow_up": "If the reasoning is uncertain, use C5-R without revealing this solution. If independent reasoning is sound, consider C5-4. Do not infer a gap from an unreached item."
+    },
+    "C5-1": {
+      "id": "C5-1",
+      "skill": "C5",
+      "level": 1,
+      "role": "ladder",
+      "minutes": 2,
+      "prompt": "If N objects are placed in k boxes, with N,k positive integers, what lower bound can you guarantee for the largest box occupancy? Explain.",
+      "answer": "At least ceil(N/k).",
+      "steps": [
+        "If every box held fewer than ceil(N/k), the total capacity would be less than N.",
+        "Thus at least one box meets the bound; no assumption of random placement is needed."
+      ],
+      "oracle": null,
+      "hint": "Choose categories so that two objects in one category have the required property.",
+      "credit": [
+        "1 point: If every box held fewer than ceil(N/k), the total capacity would be less than N.",
+        "1 point: Thus at least one box meets the bound; no assumption of random placement is needed.",
+        "1 point: give At least ceil(N/k). with the stated domain/conditions and a valid argument."
+      ],
+      "diagnostic": "Knowledge/conditions",
+      "error_hypotheses": [
+        "Claiming a likely event is guaranteed; choosing boxes that do not force the desired pair",
+        "A calculation or copying slip despite a valid setup; compare with a parallel item before concluding a concept gap."
+      ],
+      "follow_up": "If the reasoning is uncertain, use C5-R without revealing this solution. If independent reasoning is sound, consider C5-4. Do not infer a gap from an unreached item."
+    },
+    "C5-R": {
+      "id": "C5-R",
+      "skill": "C5",
+      "level": 2,
+      "role": "repair",
+      "minutes": 5,
+      "prompt": "Nine objects go into four boxes. What occupancy must at least one box have?",
+      "answer": "At least 3.",
+      "steps": [
+        "Two per box could hold only 8 objects.",
+        "Thus one box has at least ceil(9/4)=3."
+      ],
+      "oracle": {
+        "op": "pigeonhole",
+        "objects": 9,
+        "boxes": 4,
+        "target": 3
+      },
+      "hint": "Choose categories so that two objects in one category have the required property.",
+      "credit": [
+        "1 point: Two per box could hold only 8 objects.",
+        "1 point: Thus one box has at least ceil(9/4)=3.",
+        "1 point: give At least 3. with the stated domain/conditions and a valid argument."
+      ],
+      "diagnostic": "Direct execution",
+      "error_hypotheses": [
+        "Claiming a likely event is guaranteed; choosing boxes that do not force the desired pair",
+        "A calculation or copying slip despite a valid setup; compare with a parallel item before concluding a concept gap."
+      ],
+      "follow_up": "If the reasoning is uncertain, use C5-R without revealing this solution. If independent reasoning is sound, consider C5-4. Do not infer a gap from an unreached item."
+    },
+    "C5-4": {
+      "id": "C5-4",
+      "skill": "C5",
+      "level": 4,
+      "role": "ladder",
+      "minutes": 10,
+      "prompt": "Choose any six distinct integers from 1,…,10. Prove that two chosen numbers sum to 11.",
+      "answer": "The five pairs {1,10},{2,9},{3,8},{4,7},{5,6} force a complete pair among six choices.",
+      "steps": [
+        "Partition the ten allowed numbers into five disjoint complementary pairs.",
+        "At most five numbers could be chosen while taking at most one from each pair.",
+        "Six choices therefore include both members of a pair."
+      ],
+      "oracle": {
+        "op": "pair_pigeonhole",
+        "n": 10,
+        "chosen": 6,
+        "target": true
+      },
+      "hint": "Choose categories so that two objects in one category have the required property.",
+      "credit": [
+        "1 point: Partition the ten allowed numbers into five disjoint complementary pairs.",
+        "1 point: At most five numbers could be chosen while taking at most one from each pair.",
+        "1 point: give The five pairs {1,10},{2,9},{3,8},{4,7},{5,6} force a complete pair among six choices. with the stated domain/conditions and a valid argument."
+      ],
+      "diagnostic": "Combination and transfer",
+      "error_hypotheses": [
+        "Claiming a likely event is guaranteed; choosing boxes that do not force the desired pair",
+        "A calculation or copying slip despite a valid setup; compare with a parallel item before concluding a concept gap."
+      ],
+      "follow_up": "If the reasoning is uncertain, use C5-R without revealing this solution. If independent reasoning is sound, consider C5-4. Do not infer a gap from an unreached item."
+    },
+    "A1-R": {
+      "id": "A1-R",
+      "skill": "A1",
+      "level": 2,
+      "role": "repair",
+      "minutes": 5,
+      "prompt": "Solve x(x + 2) = 0. A student divides by x and reports only −2. What is missing?",
+      "answer": "x = 0 is also a solution.",
+      "steps": [
+        "Factor form already gives x = 0 or −2.",
+        "Dividing by x silently excludes zero."
+      ],
+      "oracle": {
+        "op": "quadratic",
+        "coeff": [
+          1,
+          2,
+          0
+        ],
+        "target": [
+          -2,
+          0
+        ]
+      },
+      "hint": "Try the candidate in the original equation, including its denominator or square root.",
+      "credit": [
+        "1 point: Factor form already gives x = 0 or −2.",
+        "1 point: Dividing by x silently excludes zero.",
+        "1 point: give x = 0 is also a solution. with the stated domain/conditions and a valid argument."
+      ],
+      "diagnostic": "Direct execution",
+      "error_hypotheses": [
+        "Cancelling a possibly zero factor; accepting a value outside the original domain",
+        "A calculation or copying slip despite a valid setup; compare with a parallel item before concluding a concept gap."
+      ],
+      "follow_up": "If the reasoning is uncertain, use A1-R without revealing this solution. If independent reasoning is sound, consider A1-4. Do not infer a gap from an unreached item."
+    },
+    "A1-4": {
+      "id": "A1-4",
+      "skill": "A1",
+      "level": 4,
+      "role": "ladder",
+      "minutes": 10,
+      "prompt": "Solve over the reals: √(x + 6) = x. Explain how you reject any extra candidate.",
+      "answer": "x = 3.",
+      "steps": [
+        "The square root is nonnegative, so x ≥ 0.",
+        "Squaring gives x² − x − 6 = 0, so x is 3 or −2.",
+        "Only 3 is nonnegative and satisfies the original equation."
+      ],
+      "oracle": {
+        "op": "sqrt_equation",
+        "constant": 6,
+        "target": [
+          3
+        ]
+      },
+      "hint": "Try the candidate in the original equation, including its denominator or square root.",
+      "credit": [
+        "1 point: The square root is nonnegative, so x ≥ 0.",
+        "1 point: Squaring gives x² − x − 6 = 0, so x is 3 or −2.",
+        "1 point: give x = 3. with the stated domain/conditions and a valid argument."
+      ],
+      "diagnostic": "Combination and transfer",
+      "error_hypotheses": [
+        "Cancelling a possibly zero factor; accepting a value outside the original domain",
+        "A calculation or copying slip despite a valid setup; compare with a parallel item before concluding a concept gap."
+      ],
+      "follow_up": "If the reasoning is uncertain, use A1-R without revealing this solution. If independent reasoning is sound, consider A1-4. Do not infer a gap from an unreached item."
+    },
+    "S3-R": {
+      "id": "S3-R",
+      "skill": "S3",
+      "level": 2,
+      "role": "repair",
+      "minutes": 5,
+      "prompt": "Find 1²+2²+⋯+5², and separately find 1+2+⋯+5.",
+      "answer": "55 and 15.",
+      "steps": [
+        "The square terms sum to 1+4+9+16+25=55.",
+        "The integer terms sum to 5·6/2=15; distinguish the two tasks."
+      ],
+      "oracle": {
+        "op": "two_power_sums",
+        "n": 5,
+        "target": [
+          55,
+          15
+        ]
+      },
+      "hint": "Expand the summand and separate the familiar sums. For a derivation, write the consecutive differences.",
+      "credit": [
+        "1 point: The square terms sum to 1+4+9+16+25=55.",
+        "1 point: The integer terms sum to 5·6/2=15; distinguish the two tasks.",
+        "1 point: give 55 and 15. with the stated domain/conditions and a valid argument."
+      ],
+      "diagnostic": "Direct execution",
+      "error_hypotheses": [
+        "Using the integer-sum formula for squares; confusing sum of cubes with cube of a sum",
+        "A calculation or copying slip despite a valid setup; compare with a parallel item before concluding a concept gap."
+      ],
+      "follow_up": "If the reasoning is uncertain, use S3-R without revealing this solution. If independent reasoning is sound, consider S3-4. Do not infer a gap from an unreached item."
+    },
+    "S3-4": {
+      "id": "S3-4",
+      "skill": "S3",
+      "level": 4,
+      "role": "ladder",
+      "minutes": 10,
+      "prompt": "Without assuming the sum-of-squares formula, derive it by summing (k+1)³−k³ for k=1,…,n. You may use Σk=n(n+1)/2.",
+      "answer": "Σk²=n(n+1)(2n+1)/6.",
+      "steps": [
+        "The left side telescopes to (n+1)³−1.",
+        "Expanding each difference gives 3Σk²+3Σk+n.",
+        "Substitute the integer sum and solve: 3Σk²=(n+1)³−1−3n(n+1)/2−n."
+      ],
+      "oracle": {
+        "op": "square_sum_identity",
+        "target": "n(n+1)(2n+1)/6"
+      },
+      "hint": "Expand the summand and separate the familiar sums. For a derivation, write the consecutive differences.",
+      "credit": [
+        "1 point: The left side telescopes to (n+1)³−1.",
+        "1 point: Expanding each difference gives 3Σk²+3Σk+n.",
+        "1 point: give Σk²=n(n+1)(2n+1)/6. with the stated domain/conditions and a valid argument."
+      ],
+      "diagnostic": "Combination and transfer",
+      "error_hypotheses": [
+        "Using the integer-sum formula for squares; confusing sum of cubes with cube of a sum",
+        "A calculation or copying slip despite a valid setup; compare with a parallel item before concluding a concept gap."
+      ],
+      "follow_up": "If the reasoning is uncertain, use S3-R without revealing this solution. If independent reasoning is sound, consider S3-4. Do not infer a gap from an unreached item."
+    },
+    "C2-R": {
+      "id": "C2-R",
+      "skill": "C2",
+      "level": 2,
+      "role": "repair",
+      "minutes": 5,
+      "prompt": "From 5 distinct people choose a pair, then distinguish one as leader. How many outcomes?",
+      "answer": "20.",
+      "steps": [
+        "Choose an unordered pair in C(5,2)=10 ways.",
+        "Each pair has two possible leaders."
+      ],
+      "oracle": {
+        "op": "choose_times",
+        "n": 5,
+        "r": 2,
+        "factor": 2,
+        "target": 20
+      },
+      "hint": "Describe whether positions or people are distinguished. Count the complement only within the correct sample space.",
+      "credit": [
+        "1 point: Choose an unordered pair in C(5,2)=10 ways.",
+        "1 point: Each pair has two possible leaders.",
+        "1 point: give 20. with the stated domain/conditions and a valid argument."
+      ],
+      "diagnostic": "Direct execution",
+      "error_hypotheses": [
+        "Counting an unordered committee as ordered; multiplying by a role count twice",
+        "A calculation or copying slip despite a valid setup; compare with a parallel item before concluding a concept gap."
+      ],
+      "follow_up": "If the reasoning is uncertain, use C2-R without revealing this solution. If independent reasoning is sound, consider C2-4. Do not infer a gap from an unreached item."
+    },
+    "C2-4": {
+      "id": "C2-4",
+      "skill": "C2",
+      "level": 4,
+      "role": "ladder",
+      "minutes": 10,
+      "prompt": "From 6 women and 5 men, choose a committee of 4 with at least 2 women, then appoint one committee member as chair. How many outcomes?",
+      "answer": "1060.",
+      "steps": [
+        "The possible gender splits are 2+2, 3+1 and 4+0.",
+        "Count 15·10+20·5+15=265 committees.",
+        "Each has 4 possible chairs, giving 1060."
+      ],
+      "oracle": {
+        "op": "committee_chair",
+        "women": 6,
+        "men": 5,
+        "size": 4,
+        "minimum_women": 2,
+        "target": 1060
+      },
+      "hint": "Describe whether positions or people are distinguished. Count the complement only within the correct sample space.",
+      "credit": [
+        "1 point: The possible gender splits are 2+2, 3+1 and 4+0.",
+        "1 point: Count 15·10+20·5+15=265 committees.",
+        "1 point: conclude 1060. and justify the final case/domain/equality."
+      ],
+      "diagnostic": "Combination and transfer",
+      "error_hypotheses": [
+        "Counting an unordered committee as ordered; multiplying by a role count twice",
+        "A calculation or copying slip despite a valid setup; compare with a parallel item before concluding a concept gap."
+      ],
+      "follow_up": "If the reasoning is uncertain, use C2-R without revealing this solution. If independent reasoning is sound, consider C2-4. Do not infer a gap from an unreached item."
+    },
+    "N3-R": {
+      "id": "N3-R",
+      "skill": "N3",
+      "level": 2,
+      "role": "repair",
+      "minutes": 5,
+      "prompt": "Find the last digit of 3^12 and explain the zero-remainder case.",
+      "answer": "1.",
+      "steps": [
+        "The cycle is 3,9,7,1.",
+        "Twelve is a multiple of 4, so use the fourth digit, 1."
+      ],
+      "oracle": {
+        "op": "power_mod",
+        "base": 3,
+        "exponent": 12,
+        "modulus": 10,
+        "target": 1
+      },
+      "hint": "List a few remainders until the pattern restarts. An exponent divisible by the period uses the last position.",
+      "credit": [
+        "1 point: The cycle is 3,9,7,1.",
+        "1 point: Twelve is a multiple of 4, so use the fourth digit, 1.",
+        "1 point: give 1. with the stated domain/conditions and a valid argument."
+      ],
+      "diagnostic": "Direct execution",
+      "error_hypotheses": [
+        "Using cycle position zero; reducing an exponent by the divisor instead of the cycle length",
+        "A calculation or copying slip despite a valid setup; compare with a parallel item before concluding a concept gap."
+      ],
+      "follow_up": "If the reasoning is uncertain, use N3-R without revealing this solution. If independent reasoning is sound, consider N3-4. Do not infer a gap from an unreached item."
+    },
+    "N3-4": {
+      "id": "N3-4",
+      "skill": "N3",
+      "level": 4,
+      "role": "ladder",
+      "minutes": 10,
+      "prompt": "Find the last digit of 7^(3^2026). Explain how you locate the exponent in the relevant cycle.",
+      "answer": "7.",
+      "steps": [
+        "Powers of 7 have period 4 in their last digit.",
+        "The exponent 3^2026 leaves remainder 1 modulo 4 because 2026 is even.",
+        "Therefore the last digit is 7."
+      ],
+      "oracle": {
+        "op": "tower_last_digit",
+        "base": 7,
+        "exponent_base": 3,
+        "exponent_exponent": 2026,
+        "target": 7
+      },
+      "hint": "List a few remainders until the pattern restarts. An exponent divisible by the period uses the last position.",
+      "credit": [
+        "1 point: Powers of 7 have period 4 in their last digit.",
+        "1 point: The exponent 3^2026 leaves remainder 1 modulo 4 because 2026 is even.",
+        "1 point: conclude 7. and justify the final case/domain/equality."
+      ],
+      "diagnostic": "Combination and transfer",
+      "error_hypotheses": [
+        "Using cycle position zero; reducing an exponent by the divisor instead of the cycle length",
+        "A calculation or copying slip despite a valid setup; compare with a parallel item before concluding a concept gap."
+      ],
+      "follow_up": "If the reasoning is uncertain, use N3-R without revealing this solution. If independent reasoning is sound, consider N3-4. Do not infer a gap from an unreached item."
+    },
+    "L1-R": {
+      "id": "L1-R",
+      "skill": "L1",
+      "level": 2,
+      "role": "repair",
+      "minutes": 5,
+      "prompt": "For integers n, is “3 divides n implies 6 divides n” true? Justify.",
+      "answer": "False; n=3 is a counterexample.",
+      "steps": [
+        "A counterexample must satisfy the premise.",
+        "Three is divisible by 3 but not by 6."
+      ],
+      "oracle": {
+        "op": "counterexample_divides",
+        "n": 3,
+        "premise": 3,
+        "conclusion": 6,
+        "target": false
+      },
+      "hint": "Ask whether your example has a true premise and false conclusion. Label the direction proved.",
+      "credit": [
+        "1 point: A counterexample must satisfy the premise.",
+        "1 point: Three is divisible by 3 but not by 6.",
+        "1 point: give False; n=3 is a counterexample. with the stated domain/conditions and a valid argument."
+      ],
+      "diagnostic": "Direct execution",
+      "error_hypotheses": [
+        "Proving the converse instead of the implication; offering an example that does not satisfy the premise",
+        "A calculation or copying slip despite a valid setup; compare with a parallel item before concluding a concept gap."
+      ],
+      "follow_up": "If the reasoning is uncertain, use L1-R without revealing this solution. If independent reasoning is sound, consider L1-4. Do not infer a gap from an unreached item."
+    },
+    "L1-4": {
+      "id": "L1-4",
+      "skill": "L1",
+      "level": 4,
+      "role": "ladder",
+      "minutes": 10,
+      "prompt": "Integers a,b satisfy: ab is divisible by 6. Must at least one of a,b be divisible by 6? Give a counterexample or proof, and explain which prime-divisibility fact still holds.",
+      "answer": "No: a=2,b=3. Each prime 2 and 3 divides at least one factor, but they can divide different factors.",
+      "steps": [
+        "The product 2·3 is divisible by 6 while neither factor is.",
+        "A prime dividing a product divides a factor, but 6 is composite and the prime factors need not occur in the same factor."
+      ],
+      "oracle": {
+        "op": "counterexample_product",
+        "a": 2,
+        "b": 3,
+        "divisor": 6,
+        "target": false
+      },
+      "hint": "Ask whether your example has a true premise and false conclusion. Label the direction proved.",
+      "credit": [
+        "1 point: The product 2·3 is divisible by 6 while neither factor is.",
+        "1 point: A prime dividing a product divides a factor, but 6 is composite and the prime factors need not occur in the same factor.",
+        "1 point: give No: a=2,b=3. Each prime 2 and 3 divides at least one factor, but they can divide different factors. with the stated domain/conditions and a valid argument."
+      ],
+      "diagnostic": "Combination and transfer",
+      "error_hypotheses": [
+        "Proving the converse instead of the implication; offering an example that does not satisfy the premise",
+        "A calculation or copying slip despite a valid setup; compare with a parallel item before concluding a concept gap."
+      ],
+      "follow_up": "If the reasoning is uncertain, use L1-R without revealing this solution. If independent reasoning is sound, consider L1-4. Do not infer a gap from an unreached item."
+    }
+  }
+}

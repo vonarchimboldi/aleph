@@ -1,0 +1,63 @@
+{
+  "day": 5,
+  "core": [
+    {
+      "id": "L1-3",
+      "prompt": "A student says: “n² is even, so n is even, because squaring an even number gives an even number.” Is the claim true, and is that argument enough? Repair it."
+    },
+    {
+      "id": "L2-3",
+      "prompt": "Over the integers, compare: (A) for every x there exists y with y>x; (B) there exists y such that for every x, y>x. Which are true?"
+    },
+    {
+      "id": "N1-3",
+      "prompt": "Explain why a decimal integer is divisible by 11 iff its alternating digit sum is divisible by 11."
+    },
+    {
+      "id": "L1-2",
+      "prompt": "For integers n, assess both claims: if 4 divides n then 2 divides n; if 2 divides n then 4 divides n."
+    },
+    {
+      "id": "L2-2",
+      "prompt": "Negate precisely: “For every integer n there exists an integer m with m>n.” Is the original statement true?"
+    },
+    {
+      "id": "N1-2",
+      "prompt": "For which digit d is the decimal number 4d2 divisible by 9?"
+    },
+    {
+      "id": "L2-1",
+      "prompt": "Negate: “For every real x, P(x) holds.” Negate: “There exists a real x for which P(x) holds.”"
+    },
+    {
+      "id": "N1-1",
+      "prompt": "State the tests for divisibility by 3 and 9 for a nonnegative integer in decimal notation."
+    }
+  ],
+  "branches": [
+    {
+      "id": "L1-R",
+      "prompt": "For integers n, is “3 divides n implies 6 divides n” true? Justify."
+    },
+    {
+      "id": "L1-4",
+      "prompt": "Integers a,b satisfy: ab is divisible by 6. Must at least one of a,b be divisible by 6? Give a counterexample or proof, and explain which prime-divisibility fact still holds."
+    },
+    {
+      "id": "L2-R",
+      "prompt": "Negate “Every student solved at least one question.” Keep the student/question domains unchanged."
+    },
+    {
+      "id": "L2-4",
+      "prompt": "For real a, when is this true: for every real x there exists real y such that y²=x+a? Negate the statement and decide it for every a."
+    },
+    {
+      "id": "N1-R",
+      "prompt": "Is the decimal number 513 divisible by 9? Explain without long division."
+    },
+    {
+      "id": "N1-4",
+      "prompt": "A number written in base 8 has digits d_m…d_0. Derive a digit test for divisibility by 7 and one for divisibility by 9."
+    }
+  ]
+}

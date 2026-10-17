@@ -1,0 +1,486 @@
+{
+  "day": 7,
+  "title": "Counting without duplication",
+  "core": [
+    "C1-3",
+    "C2-3",
+    "C3-3",
+    "C1-2",
+    "C2-2",
+    "C3-2",
+    "C2-1",
+    "C3-1"
+  ],
+  "branches": [
+    "C1-R",
+    "C1-4",
+    "C2-R",
+    "C2-4",
+    "C3-R",
+    "C3-4"
+  ],
+  "questions": {
+    "C1-3": {
+      "id": "C1-3",
+      "skill": "C1",
+      "level": 3,
+      "role": "ladder",
+      "minutes": 5,
+      "prompt": "How many three-digit positive integers have an even last digit and no repeated digits?",
+      "answer": "328.",
+      "steps": [
+        "Split by last digit zero or nonzero even.",
+        "Last digit 0 gives 9·8=72. Last digit 2,4,6,8 gives 4·8·8=256.",
+        "Add the disjoint cases: 328."
+      ],
+      "oracle": {
+        "op": "digit_enumeration",
+        "digits": 3,
+        "even": true,
+        "distinct": true,
+        "target": 328
+      },
+      "hint": "Specify exactly one completed object. Check whether every first choice has the same number of continuations.",
+      "credit": [
+        "1 point: Split by last digit zero or nonzero even.",
+        "1 point: Last digit 0 gives 9·8=72. Last digit 2,4,6,8 gives 4·8·8=256.",
+        "1 point: give 328. with the stated domain/conditions and a valid argument."
+      ],
+      "diagnostic": "Uncued recognition",
+      "error_hypotheses": [
+        "Allowing a leading zero; multiplying nonconstant continuation counts without splitting cases",
+        "A calculation or copying slip despite a valid setup; compare with a parallel item before concluding a concept gap."
+      ],
+      "follow_up": "If the reasoning is uncertain, use C1-R without revealing this solution. If independent reasoning is sound, consider C1-4. Do not infer a gap from an unreached item."
+    },
+    "C2-3": {
+      "id": "C2-3",
+      "skill": "C2",
+      "level": 3,
+      "role": "ladder",
+      "minutes": 5,
+      "prompt": "A committee of 3 is chosen from 5 women and 4 men. How many committees contain at least one woman?",
+      "answer": "80.",
+      "steps": [
+        "There are C(9,3)=84 committees in all.",
+        "Exclude the C(4,3)=4 all-male committees to get 80."
+      ],
+      "oracle": {
+        "op": "committee_complement",
+        "women": 5,
+        "men": 4,
+        "size": 3,
+        "target": 80
+      },
+      "hint": "Describe whether positions or people are distinguished. Count the complement only within the correct sample space.",
+      "credit": [
+        "1 point: There are C(9,3)=84 committees in all.",
+        "1 point: Exclude the C(4,3)=4 all-male committees to get 80.",
+        "1 point: give 80. with the stated domain/conditions and a valid argument."
+      ],
+      "diagnostic": "Uncued recognition",
+      "error_hypotheses": [
+        "Counting an unordered committee as ordered; multiplying by a role count twice",
+        "A calculation or copying slip despite a valid setup; compare with a parallel item before concluding a concept gap."
+      ],
+      "follow_up": "If the reasoning is uncertain, use C2-R without revealing this solution. If independent reasoning is sound, consider C2-4. Do not infer a gap from an unreached item."
+    },
+    "C3-3": {
+      "id": "C3-3",
+      "skill": "C3",
+      "level": 3,
+      "role": "ladder",
+      "minutes": 5,
+      "prompt": "How many integers from 1 through 100 are divisible by 3 or 5?",
+      "answer": "47.",
+      "steps": [
+        "Multiples of 3: 33; multiples of 5: 20.",
+        "Their overlap is the 6 multiples of 15.",
+        "Add 33+20−6=47."
+      ],
+      "oracle": {
+        "op": "divisible_union",
+        "n": 100,
+        "divisors": [
+          3,
+          5
+        ],
+        "target": 47
+      },
+      "hint": "Place one object belonging to every relevant set into your formula and count its net contribution.",
+      "credit": [
+        "1 point: Multiples of 3: 33; multiples of 5: 20.",
+        "1 point: Their overlap is the 6 multiples of 15.",
+        "1 point: give 47. with the stated domain/conditions and a valid argument."
+      ],
+      "diagnostic": "Uncued recognition",
+      "error_hypotheses": [
+        "Double-counting intersections; subtracting a triple overlap too often",
+        "A calculation or copying slip despite a valid setup; compare with a parallel item before concluding a concept gap."
+      ],
+      "follow_up": "If the reasoning is uncertain, use C3-R without revealing this solution. If independent reasoning is sound, consider C3-4. Do not infer a gap from an unreached item."
+    },
+    "C1-2": {
+      "id": "C1-2",
+      "skill": "C1",
+      "level": 2,
+      "role": "ladder",
+      "minutes": 3,
+      "prompt": "A code has one letter from A,B,C followed by two digits from 0,…,9. Repetition is allowed. How many codes exist?",
+      "answer": "300.",
+      "steps": [
+        "There are 3 choices for the letter and 10 for each digit.",
+        "Multiply 3·10·10."
+      ],
+      "oracle": {
+        "op": "product",
+        "factors": [
+          3,
+          10,
+          10
+        ],
+        "target": 300
+      },
+      "hint": "Specify exactly one completed object. Check whether every first choice has the same number of continuations.",
+      "credit": [
+        "1 point: There are 3 choices for the letter and 10 for each digit.",
+        "1 point: Multiply 3·10·10.",
+        "1 point: give 300. with the stated domain/conditions and a valid argument."
+      ],
+      "diagnostic": "Direct execution",
+      "error_hypotheses": [
+        "Allowing a leading zero; multiplying nonconstant continuation counts without splitting cases",
+        "A calculation or copying slip despite a valid setup; compare with a parallel item before concluding a concept gap."
+      ],
+      "follow_up": "If the reasoning is uncertain, use C1-R without revealing this solution. If independent reasoning is sound, consider C1-4. Do not infer a gap from an unreached item."
+    },
+    "C2-2": {
+      "id": "C2-2",
+      "skill": "C2",
+      "level": 2,
+      "role": "ladder",
+      "minutes": 3,
+      "prompt": "From 8 distinct students, how many groups of 3 can be chosen? How many ways can president, secretary and treasurer be assigned to different students?",
+      "answer": "56 groups; 336 assignments.",
+      "steps": [
+        "The group has no order, giving C(8,3)=56.",
+        "The offices are distinct, giving 8·7·6=336."
+      ],
+      "oracle": {
+        "op": "choose_order",
+        "n": 8,
+        "r": 3,
+        "target": [
+          56,
+          336
+        ]
+      },
+      "hint": "Describe whether positions or people are distinguished. Count the complement only within the correct sample space.",
+      "credit": [
+        "1 point: The group has no order, giving C(8,3)=56.",
+        "1 point: The offices are distinct, giving 8·7·6=336.",
+        "1 point: give 56 groups; 336 assignments. with the stated domain/conditions and a valid argument."
+      ],
+      "diagnostic": "Direct execution",
+      "error_hypotheses": [
+        "Counting an unordered committee as ordered; multiplying by a role count twice",
+        "A calculation or copying slip despite a valid setup; compare with a parallel item before concluding a concept gap."
+      ],
+      "follow_up": "If the reasoning is uncertain, use C2-R without revealing this solution. If independent reasoning is sound, consider C2-4. Do not infer a gap from an unreached item."
+    },
+    "C3-2": {
+      "id": "C3-2",
+      "skill": "C3",
+      "level": 2,
+      "role": "ladder",
+      "minutes": 3,
+      "prompt": "In a class of 30, 18 study French and 15 study German; 7 study both. How many study at least one, and how many neither?",
+      "answer": "26 and 4.",
+      "steps": [
+        "The union size is 18+15−7=26.",
+        "Subtract from the class size to get 4 studying neither."
+      ],
+      "oracle": {
+        "op": "two_sets",
+        "total": 30,
+        "a": 18,
+        "b": 15,
+        "both": 7,
+        "target": [
+          26,
+          4
+        ]
+      },
+      "hint": "Place one object belonging to every relevant set into your formula and count its net contribution.",
+      "credit": [
+        "1 point: The union size is 18+15−7=26.",
+        "1 point: Subtract from the class size to get 4 studying neither.",
+        "1 point: give 26 and 4. with the stated domain/conditions and a valid argument."
+      ],
+      "diagnostic": "Direct execution",
+      "error_hypotheses": [
+        "Double-counting intersections; subtracting a triple overlap too often",
+        "A calculation or copying slip despite a valid setup; compare with a parallel item before concluding a concept gap."
+      ],
+      "follow_up": "If the reasoning is uncertain, use C3-R without revealing this solution. If independent reasoning is sound, consider C3-4. Do not infer a gap from an unreached item."
+    },
+    "C2-1": {
+      "id": "C2-1",
+      "skill": "C2",
+      "level": 1,
+      "role": "ladder",
+      "minutes": 2,
+      "prompt": "Explain the difference between choosing r people from n and assigning r distinct ordered positions to n people. State both counts for 0≤r≤n.",
+      "answer": "Unordered choice: C(n,r)=n!/[r!(n−r)!]. Ordered assignment: n!/(n−r)!.",
+      "steps": [
+        "Each chosen set has r! orders.",
+        "Multiplying the combination count by r! gives the ordered count; assume distinct people and no repeated assignment."
+      ],
+      "oracle": null,
+      "hint": "Describe whether positions or people are distinguished. Count the complement only within the correct sample space.",
+      "credit": [
+        "1 point: Each chosen set has r! orders.",
+        "1 point: Multiplying the combination count by r! gives the ordered count; assume distinct people and no repeated assignment.",
+        "1 point: give Unordered choice: C(n,r)=n!/[r!(n−r)!]. Ordered assignment: n!/(n−r)!. with the stated domain/conditions and a valid argument."
+      ],
+      "diagnostic": "Knowledge/conditions",
+      "error_hypotheses": [
+        "Counting an unordered committee as ordered; multiplying by a role count twice",
+        "A calculation or copying slip despite a valid setup; compare with a parallel item before concluding a concept gap."
+      ],
+      "follow_up": "If the reasoning is uncertain, use C2-R without revealing this solution. If independent reasoning is sound, consider C2-4. Do not infer a gap from an unreached item."
+    },
+    "C3-1": {
+      "id": "C3-1",
+      "skill": "C3",
+      "level": 1,
+      "role": "ladder",
+      "minutes": 2,
+      "prompt": "State the formula for the size of the union of two finite sets A and B. Why is there a subtraction?",
+      "answer": "|A∪B|=|A|+|B|−|A∩B|.",
+      "steps": [
+        "Elements in the intersection were counted twice in the separate totals.",
+        "Subtract one copy to count each union element once."
+      ],
+      "oracle": null,
+      "hint": "Place one object belonging to every relevant set into your formula and count its net contribution.",
+      "credit": [
+        "1 point: Elements in the intersection were counted twice in the separate totals.",
+        "1 point: Subtract one copy to count each union element once.",
+        "1 point: give |A∪B|=|A|+|B|−|A∩B|. with the stated domain/conditions and a valid argument."
+      ],
+      "diagnostic": "Knowledge/conditions",
+      "error_hypotheses": [
+        "Double-counting intersections; subtracting a triple overlap too often",
+        "A calculation or copying slip despite a valid setup; compare with a parallel item before concluding a concept gap."
+      ],
+      "follow_up": "If the reasoning is uncertain, use C3-R without revealing this solution. If independent reasoning is sound, consider C3-4. Do not infer a gap from an unreached item."
+    },
+    "C1-R": {
+      "id": "C1-R",
+      "skill": "C1",
+      "level": 2,
+      "role": "repair",
+      "minutes": 5,
+      "prompt": "A shirt has 4 colour choices and 3 size choices; every combination exists. How many combinations?",
+      "answer": "12.",
+      "steps": [
+        "Each colour has three size choices.",
+        "Multiply 4 by 3."
+      ],
+      "oracle": {
+        "op": "product",
+        "factors": [
+          4,
+          3
+        ],
+        "target": 12
+      },
+      "hint": "Specify exactly one completed object. Check whether every first choice has the same number of continuations.",
+      "credit": [
+        "1 point: Each colour has three size choices.",
+        "1 point: Multiply 4 by 3.",
+        "1 point: give 12. with the stated domain/conditions and a valid argument."
+      ],
+      "diagnostic": "Direct execution",
+      "error_hypotheses": [
+        "Allowing a leading zero; multiplying nonconstant continuation counts without splitting cases",
+        "A calculation or copying slip despite a valid setup; compare with a parallel item before concluding a concept gap."
+      ],
+      "follow_up": "If the reasoning is uncertain, use C1-R without revealing this solution. If independent reasoning is sound, consider C1-4. Do not infer a gap from an unreached item."
+    },
+    "C1-4": {
+      "id": "C1-4",
+      "skill": "C1",
+      "level": 4,
+      "role": "ladder",
+      "minutes": 10,
+      "prompt": "How many six-digit positive integers use each of 0,1,2,3,4,5 exactly once and are divisible by 5?",
+      "answer": "216.",
+      "steps": [
+        "The last digit must be 0 or 5.",
+        "If it is 0, permute the other five digits in 5!=120 ways. If it is 5, choose the first digit from 1,2,3,4, then arrange the remaining four digits in 4!=24 ways, giving 96.",
+        "The disjoint cases give 120+96=216."
+      ],
+      "oracle": {
+        "op": "permutation_divisibility",
+        "digits": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+        ],
+        "divisor": 5,
+        "target": 216
+      },
+      "hint": "Specify exactly one completed object. Check whether every first choice has the same number of continuations.",
+      "credit": [
+        "1 point: The last digit must be 0 or 5.",
+        "1 point: If it is 0, permute the other five digits in 5!=120 ways. If it is 5, choose the first digit from 1,2,3,4, then arrange the remaining four digits in 4!=24 ways, giving 96.",
+        "1 point: conclude 216. and justify the final case/domain/equality."
+      ],
+      "diagnostic": "Combination and transfer",
+      "error_hypotheses": [
+        "Allowing a leading zero; multiplying nonconstant continuation counts without splitting cases",
+        "A calculation or copying slip despite a valid setup; compare with a parallel item before concluding a concept gap."
+      ],
+      "follow_up": "If the reasoning is uncertain, use C1-R without revealing this solution. If independent reasoning is sound, consider C1-4. Do not infer a gap from an unreached item."
+    },
+    "C2-R": {
+      "id": "C2-R",
+      "skill": "C2",
+      "level": 2,
+      "role": "repair",
+      "minutes": 5,
+      "prompt": "From 5 distinct people choose a pair, then distinguish one as leader. How many outcomes?",
+      "answer": "20.",
+      "steps": [
+        "Choose an unordered pair in C(5,2)=10 ways.",
+        "Each pair has two possible leaders."
+      ],
+      "oracle": {
+        "op": "choose_times",
+        "n": 5,
+        "r": 2,
+        "factor": 2,
+        "target": 20
+      },
+      "hint": "Describe whether positions or people are distinguished. Count the complement only within the correct sample space.",
+      "credit": [
+        "1 point: Choose an unordered pair in C(5,2)=10 ways.",
+        "1 point: Each pair has two possible leaders.",
+        "1 point: give 20. with the stated domain/conditions and a valid argument."
+      ],
+      "diagnostic": "Direct execution",
+      "error_hypotheses": [
+        "Counting an unordered committee as ordered; multiplying by a role count twice",
+        "A calculation or copying slip despite a valid setup; compare with a parallel item before concluding a concept gap."
+      ],
+      "follow_up": "If the reasoning is uncertain, use C2-R without revealing this solution. If independent reasoning is sound, consider C2-4. Do not infer a gap from an unreached item."
+    },
+    "C2-4": {
+      "id": "C2-4",
+      "skill": "C2",
+      "level": 4,
+      "role": "ladder",
+      "minutes": 10,
+      "prompt": "From 6 women and 5 men, choose a committee of 4 with at least 2 women, then appoint one committee member as chair. How many outcomes?",
+      "answer": "1060.",
+      "steps": [
+        "The possible gender splits are 2+2, 3+1 and 4+0.",
+        "Count 15·10+20·5+15=265 committees.",
+        "Each has 4 possible chairs, giving 1060."
+      ],
+      "oracle": {
+        "op": "committee_chair",
+        "women": 6,
+        "men": 5,
+        "size": 4,
+        "minimum_women": 2,
+        "target": 1060
+      },
+      "hint": "Describe whether positions or people are distinguished. Count the complement only within the correct sample space.",
+      "credit": [
+        "1 point: The possible gender splits are 2+2, 3+1 and 4+0.",
+        "1 point: Count 15·10+20·5+15=265 committees.",
+        "1 point: conclude 1060. and justify the final case/domain/equality."
+      ],
+      "diagnostic": "Combination and transfer",
+      "error_hypotheses": [
+        "Counting an unordered committee as ordered; multiplying by a role count twice",
+        "A calculation or copying slip despite a valid setup; compare with a parallel item before concluding a concept gap."
+      ],
+      "follow_up": "If the reasoning is uncertain, use C2-R without revealing this solution. If independent reasoning is sound, consider C2-4. Do not infer a gap from an unreached item."
+    },
+    "C3-R": {
+      "id": "C3-R",
+      "skill": "C3",
+      "level": 2,
+      "role": "repair",
+      "minutes": 5,
+      "prompt": "Twelve students play chess, 10 play football and 4 play both. How many play at least one?",
+      "answer": "18.",
+      "steps": [
+        "Add the two membership counts to get 22.",
+        "Subtract the four double-counted students."
+      ],
+      "oracle": {
+        "op": "union_size",
+        "a": 12,
+        "b": 10,
+        "both": 4,
+        "target": 18
+      },
+      "hint": "Place one object belonging to every relevant set into your formula and count its net contribution.",
+      "credit": [
+        "1 point: Add the two membership counts to get 22.",
+        "1 point: Subtract the four double-counted students.",
+        "1 point: give 18. with the stated domain/conditions and a valid argument."
+      ],
+      "diagnostic": "Direct execution",
+      "error_hypotheses": [
+        "Double-counting intersections; subtracting a triple overlap too often",
+        "A calculation or copying slip despite a valid setup; compare with a parallel item before concluding a concept gap."
+      ],
+      "follow_up": "If the reasoning is uncertain, use C3-R without revealing this solution. If independent reasoning is sound, consider C3-4. Do not infer a gap from an unreached item."
+    },
+    "C3-4": {
+      "id": "C3-4",
+      "skill": "C3",
+      "level": 4,
+      "role": "ladder",
+      "minutes": 10,
+      "prompt": "How many integers from 1 through 200 are divisible by at least one of 2,3,5?",
+      "answer": "146.",
+      "steps": [
+        "Single counts are 100,66,40.",
+        "Subtract pair intersections 33,20,13.",
+        "Add the triple intersection floor(200/30)=6: 206−66+6=146."
+      ],
+      "oracle": {
+        "op": "divisible_union",
+        "n": 200,
+        "divisors": [
+          2,
+          3,
+          5
+        ],
+        "target": 146
+      },
+      "hint": "Place one object belonging to every relevant set into your formula and count its net contribution.",
+      "credit": [
+        "1 point: Single counts are 100,66,40.",
+        "1 point: Subtract pair intersections 33,20,13.",
+        "1 point: give 146. with the stated domain/conditions and a valid argument."
+      ],
+      "diagnostic": "Combination and transfer",
+      "error_hypotheses": [
+        "Double-counting intersections; subtracting a triple overlap too often",
+        "A calculation or copying slip despite a valid setup; compare with a parallel item before concluding a concept gap."
+      ],
+      "follow_up": "If the reasoning is uncertain, use C3-R without revealing this solution. If independent reasoning is sound, consider C3-4. Do not infer a gap from an unreached item."
+    }
+  }
+}

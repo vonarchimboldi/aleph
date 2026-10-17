@@ -1,0 +1,421 @@
+{
+  "day": 5,
+  "title": "Logic and divisibility",
+  "core": [
+    "L1-3",
+    "L2-3",
+    "N1-3",
+    "L1-2",
+    "L2-2",
+    "N1-2",
+    "L2-1",
+    "N1-1"
+  ],
+  "branches": [
+    "L1-R",
+    "L1-4",
+    "L2-R",
+    "L2-4",
+    "N1-R",
+    "N1-4"
+  ],
+  "questions": {
+    "L1-3": {
+      "id": "L1-3",
+      "skill": "L1",
+      "level": 3,
+      "role": "ladder",
+      "minutes": 5,
+      "prompt": "A student says: “n² is even, so n is even, because squaring an even number gives an even number.” Is the claim true, and is that argument enough? Repair it.",
+      "answer": "The claim is true, but that argument proves the opposite direction. If n were odd, n=2k+1 would give odd n²; hence even n² forces even n.",
+      "steps": [
+        "Separate the truth of the conclusion from the direction established.",
+        "Prove the contrapositive by expanding (2k+1)²=2(2k²+2k)+1."
+      ],
+      "oracle": null,
+      "hint": "Ask whether your example has a true premise and false conclusion. Label the direction proved.",
+      "credit": [
+        "1 point: Separate the truth of the conclusion from the direction established.",
+        "1 point: Prove the contrapositive by expanding (2k+1)²=2(2k²+2k)+1.",
+        "1 point: give The claim is true, but that argument proves the opposite direction. If n were odd, n=2k+1 would give odd n²; hence even n² forces even n. with the stated domain/conditions and a valid argument."
+      ],
+      "diagnostic": "Uncued recognition",
+      "error_hypotheses": [
+        "Proving the converse instead of the implication; offering an example that does not satisfy the premise",
+        "A calculation or copying slip despite a valid setup; compare with a parallel item before concluding a concept gap."
+      ],
+      "follow_up": "If the reasoning is uncertain, use L1-R without revealing this solution. If independent reasoning is sound, consider L1-4. Do not infer a gap from an unreached item."
+    },
+    "L2-3": {
+      "id": "L2-3",
+      "skill": "L2",
+      "level": 3,
+      "role": "ladder",
+      "minutes": 5,
+      "prompt": "Over the integers, compare: (A) for every x there exists y with y>x; (B) there exists y such that for every x, y>x. Which are true?",
+      "answer": "A true; B false.",
+      "steps": [
+        "For A choose y=x+1 separately for each x.",
+        "For B a fixed y fails when x=y, or when x=y+1."
+      ],
+      "oracle": null,
+      "hint": "Write the quantifiers in order and identify which choices may depend on earlier choices.",
+      "credit": [
+        "1 point: For A choose y=x+1 separately for each x.",
+        "1 point: For B a fixed y fails when x=y, or when x=y+1.",
+        "1 point: give A true; B false. with the stated domain/conditions and a valid argument."
+      ],
+      "diagnostic": "Uncued recognition",
+      "error_hypotheses": [
+        "Swapping quantifier order; using one fixed witness when it must depend on an input",
+        "A calculation or copying slip despite a valid setup; compare with a parallel item before concluding a concept gap."
+      ],
+      "follow_up": "If the reasoning is uncertain, use L2-R without revealing this solution. If independent reasoning is sound, consider L2-4. Do not infer a gap from an unreached item."
+    },
+    "N1-3": {
+      "id": "N1-3",
+      "skill": "N1",
+      "level": 3,
+      "role": "ladder",
+      "minutes": 5,
+      "prompt": "Explain why a decimal integer is divisible by 11 iff its alternating digit sum is divisible by 11.",
+      "answer": "Each power of 10 has the same remainder as the corresponding power of −1 modulo 11.",
+      "steps": [
+        "Write the place-value expansion from the units digit.",
+        "Since 10=11−1, powers have alternating remainders 1,−1.",
+        "Their weighted sum differs from the alternating digit sum by a multiple of 11."
+      ],
+      "oracle": null,
+      "hint": "Write the number as a sum of digits times powers of its base.",
+      "credit": [
+        "1 point: Write the place-value expansion from the units digit.",
+        "1 point: Since 10=11−1, powers have alternating remainders 1,−1.",
+        "1 point: give Each power of 10 has the same remainder as the corresponding power of −1 modulo 11. with the stated domain/conditions and a valid argument."
+      ],
+      "diagnostic": "Uncued recognition",
+      "error_hypotheses": [
+        "Remembering a digit trick without its base-dependent explanation",
+        "A calculation or copying slip despite a valid setup; compare with a parallel item before concluding a concept gap."
+      ],
+      "follow_up": "If the reasoning is uncertain, use N1-R without revealing this solution. If independent reasoning is sound, consider N1-4. Do not infer a gap from an unreached item."
+    },
+    "L1-2": {
+      "id": "L1-2",
+      "skill": "L1",
+      "level": 2,
+      "role": "ladder",
+      "minutes": 3,
+      "prompt": "For integers n, assess both claims: if 4 divides n then 2 divides n; if 2 divides n then 4 divides n.",
+      "answer": "First true; second false, for example n=2.",
+      "steps": [
+        "Write n=4k=2(2k) to prove the first.",
+        "The integer 2 satisfies the premise but not the conclusion of the second."
+      ],
+      "oracle": {
+        "op": "implication_integer",
+        "target": [
+          true,
+          false
+        ]
+      },
+      "hint": "Ask whether your example has a true premise and false conclusion. Label the direction proved.",
+      "credit": [
+        "1 point: Write n=4k=2(2k) to prove the first.",
+        "1 point: The integer 2 satisfies the premise but not the conclusion of the second.",
+        "1 point: give First true; second false, for example n=2. with the stated domain/conditions and a valid argument."
+      ],
+      "diagnostic": "Direct execution",
+      "error_hypotheses": [
+        "Proving the converse instead of the implication; offering an example that does not satisfy the premise",
+        "A calculation or copying slip despite a valid setup; compare with a parallel item before concluding a concept gap."
+      ],
+      "follow_up": "If the reasoning is uncertain, use L1-R without revealing this solution. If independent reasoning is sound, consider L1-4. Do not infer a gap from an unreached item."
+    },
+    "L2-2": {
+      "id": "L2-2",
+      "skill": "L2",
+      "level": 2,
+      "role": "ladder",
+      "minutes": 3,
+      "prompt": "Negate precisely: “For every integer n there exists an integer m with m>n.” Is the original statement true?",
+      "answer": "Negation: there exists integer n such that every integer m satisfies m≤n. The original is true, since m=n+1 works.",
+      "steps": [
+        "Reverse each quantifier in order and negate m>n to m≤n.",
+        "A witness for the original may depend on n."
+      ],
+      "oracle": null,
+      "hint": "Write the quantifiers in order and identify which choices may depend on earlier choices.",
+      "credit": [
+        "1 point: Reverse each quantifier in order and negate m>n to m≤n.",
+        "1 point: A witness for the original may depend on n.",
+        "1 point: give Negation: there exists integer n such that every integer m satisfies m≤n. The original is true, since m=n+1 works. with the stated domain/conditions and a valid argument."
+      ],
+      "diagnostic": "Direct execution",
+      "error_hypotheses": [
+        "Swapping quantifier order; using one fixed witness when it must depend on an input",
+        "A calculation or copying slip despite a valid setup; compare with a parallel item before concluding a concept gap."
+      ],
+      "follow_up": "If the reasoning is uncertain, use L2-R without revealing this solution. If independent reasoning is sound, consider L2-4. Do not infer a gap from an unreached item."
+    },
+    "N1-2": {
+      "id": "N1-2",
+      "skill": "N1",
+      "level": 2,
+      "role": "ladder",
+      "minutes": 3,
+      "prompt": "For which digit d is the decimal number 4d2 divisible by 9?",
+      "answer": "d=3.",
+      "steps": [
+        "The digit sum is 6+d.",
+        "For d between 0 and 9, its only possible multiple of 9 is 9, so d=3."
+      ],
+      "oracle": {
+        "op": "digit_missing",
+        "pattern": "4?2",
+        "divisor": 9,
+        "target": [
+          3
+        ]
+      },
+      "hint": "Write the number as a sum of digits times powers of its base.",
+      "credit": [
+        "1 point: The digit sum is 6+d.",
+        "1 point: For d between 0 and 9, its only possible multiple of 9 is 9, so d=3.",
+        "1 point: give d=3. with the stated domain/conditions and a valid argument."
+      ],
+      "diagnostic": "Direct execution",
+      "error_hypotheses": [
+        "Remembering a digit trick without its base-dependent explanation",
+        "A calculation or copying slip despite a valid setup; compare with a parallel item before concluding a concept gap."
+      ],
+      "follow_up": "If the reasoning is uncertain, use N1-R without revealing this solution. If independent reasoning is sound, consider N1-4. Do not infer a gap from an unreached item."
+    },
+    "L2-1": {
+      "id": "L2-1",
+      "skill": "L2",
+      "level": 1,
+      "role": "ladder",
+      "minutes": 2,
+      "prompt": "Negate: “For every real x, P(x) holds.” Negate: “There exists a real x for which P(x) holds.”",
+      "answer": "There exists real x for which P(x) fails; for every real x, P(x) fails.",
+      "steps": [
+        "Negation exchanges every and exists.",
+        "It also negates the property, while retaining the same domain."
+      ],
+      "oracle": null,
+      "hint": "Write the quantifiers in order and identify which choices may depend on earlier choices.",
+      "credit": [
+        "1 point: Negation exchanges every and exists.",
+        "1 point: It also negates the property, while retaining the same domain.",
+        "1 point: give There exists real x for which P(x) fails; for every real x, P(x) fails. with the stated domain/conditions and a valid argument."
+      ],
+      "diagnostic": "Knowledge/conditions",
+      "error_hypotheses": [
+        "Swapping quantifier order; using one fixed witness when it must depend on an input",
+        "A calculation or copying slip despite a valid setup; compare with a parallel item before concluding a concept gap."
+      ],
+      "follow_up": "If the reasoning is uncertain, use L2-R without revealing this solution. If independent reasoning is sound, consider L2-4. Do not infer a gap from an unreached item."
+    },
+    "N1-1": {
+      "id": "N1-1",
+      "skill": "N1",
+      "level": 1,
+      "role": "ladder",
+      "minutes": 2,
+      "prompt": "State the tests for divisibility by 3 and 9 for a nonnegative integer in decimal notation.",
+      "answer": "The integer is divisible by 3 or 9 respectively iff its digit sum is divisible by that divisor.",
+      "steps": [
+        "A decimal number is a sum of digits times powers of 10.",
+        "Since 10 leaves remainder 1 on division by either 3 or 9, the number and digit sum have the same remainder."
+      ],
+      "oracle": null,
+      "hint": "Write the number as a sum of digits times powers of its base.",
+      "credit": [
+        "1 point: A decimal number is a sum of digits times powers of 10.",
+        "1 point: Since 10 leaves remainder 1 on division by either 3 or 9, the number and digit sum have the same remainder.",
+        "1 point: give The integer is divisible by 3 or 9 respectively iff its digit sum is divisible by that divisor. with the stated domain/conditions and a valid argument."
+      ],
+      "diagnostic": "Knowledge/conditions",
+      "error_hypotheses": [
+        "Remembering a digit trick without its base-dependent explanation",
+        "A calculation or copying slip despite a valid setup; compare with a parallel item before concluding a concept gap."
+      ],
+      "follow_up": "If the reasoning is uncertain, use N1-R without revealing this solution. If independent reasoning is sound, consider N1-4. Do not infer a gap from an unreached item."
+    },
+    "L1-R": {
+      "id": "L1-R",
+      "skill": "L1",
+      "level": 2,
+      "role": "repair",
+      "minutes": 5,
+      "prompt": "For integers n, is “3 divides n implies 6 divides n” true? Justify.",
+      "answer": "False; n=3 is a counterexample.",
+      "steps": [
+        "A counterexample must satisfy the premise.",
+        "Three is divisible by 3 but not by 6."
+      ],
+      "oracle": {
+        "op": "counterexample_divides",
+        "n": 3,
+        "premise": 3,
+        "conclusion": 6,
+        "target": false
+      },
+      "hint": "Ask whether your example has a true premise and false conclusion. Label the direction proved.",
+      "credit": [
+        "1 point: A counterexample must satisfy the premise.",
+        "1 point: Three is divisible by 3 but not by 6.",
+        "1 point: give False; n=3 is a counterexample. with the stated domain/conditions and a valid argument."
+      ],
+      "diagnostic": "Direct execution",
+      "error_hypotheses": [
+        "Proving the converse instead of the implication; offering an example that does not satisfy the premise",
+        "A calculation or copying slip despite a valid setup; compare with a parallel item before concluding a concept gap."
+      ],
+      "follow_up": "If the reasoning is uncertain, use L1-R without revealing this solution. If independent reasoning is sound, consider L1-4. Do not infer a gap from an unreached item."
+    },
+    "L1-4": {
+      "id": "L1-4",
+      "skill": "L1",
+      "level": 4,
+      "role": "ladder",
+      "minutes": 10,
+      "prompt": "Integers a,b satisfy: ab is divisible by 6. Must at least one of a,b be divisible by 6? Give a counterexample or proof, and explain which prime-divisibility fact still holds.",
+      "answer": "No: a=2,b=3. Each prime 2 and 3 divides at least one factor, but they can divide different factors.",
+      "steps": [
+        "The product 2·3 is divisible by 6 while neither factor is.",
+        "A prime dividing a product divides a factor, but 6 is composite and the prime factors need not occur in the same factor."
+      ],
+      "oracle": {
+        "op": "counterexample_product",
+        "a": 2,
+        "b": 3,
+        "divisor": 6,
+        "target": false
+      },
+      "hint": "Ask whether your example has a true premise and false conclusion. Label the direction proved.",
+      "credit": [
+        "1 point: The product 2·3 is divisible by 6 while neither factor is.",
+        "1 point: A prime dividing a product divides a factor, but 6 is composite and the prime factors need not occur in the same factor.",
+        "1 point: give No: a=2,b=3. Each prime 2 and 3 divides at least one factor, but they can divide different factors. with the stated domain/conditions and a valid argument."
+      ],
+      "diagnostic": "Combination and transfer",
+      "error_hypotheses": [
+        "Proving the converse instead of the implication; offering an example that does not satisfy the premise",
+        "A calculation or copying slip despite a valid setup; compare with a parallel item before concluding a concept gap."
+      ],
+      "follow_up": "If the reasoning is uncertain, use L1-R without revealing this solution. If independent reasoning is sound, consider L1-4. Do not infer a gap from an unreached item."
+    },
+    "L2-R": {
+      "id": "L2-R",
+      "skill": "L2",
+      "level": 2,
+      "role": "repair",
+      "minutes": 5,
+      "prompt": "Negate “Every student solved at least one question.” Keep the student/question domains unchanged.",
+      "answer": "At least one student solved no questions.",
+      "steps": [
+        "Negating every introduces at least one student.",
+        "Negating at least one solved question means every question was not solved by that student."
+      ],
+      "oracle": null,
+      "hint": "Write the quantifiers in order and identify which choices may depend on earlier choices.",
+      "credit": [
+        "1 point: Negating every introduces at least one student.",
+        "1 point: Negating at least one solved question means every question was not solved by that student.",
+        "1 point: give At least one student solved no questions. with the stated domain/conditions and a valid argument."
+      ],
+      "diagnostic": "Direct execution",
+      "error_hypotheses": [
+        "Swapping quantifier order; using one fixed witness when it must depend on an input",
+        "A calculation or copying slip despite a valid setup; compare with a parallel item before concluding a concept gap."
+      ],
+      "follow_up": "If the reasoning is uncertain, use L2-R without revealing this solution. If independent reasoning is sound, consider L2-4. Do not infer a gap from an unreached item."
+    },
+    "L2-4": {
+      "id": "L2-4",
+      "skill": "L2",
+      "level": 4,
+      "role": "ladder",
+      "minutes": 10,
+      "prompt": "For real a, when is this true: for every real x there exists real y such that y²=x+a? Negate the statement and decide it for every a.",
+      "answer": "It is false for every real a. Its negation is: there exists real x such that every real y has y²≠x+a. Choose x=−a−1.",
+      "steps": [
+        "A real square is nonnegative.",
+        "For any fixed a choose x=−a−1; the required square would be −1.",
+        "This gives a counterexample for every parameter a."
+      ],
+      "oracle": null,
+      "hint": "Write the quantifiers in order and identify which choices may depend on earlier choices.",
+      "credit": [
+        "1 point: A real square is nonnegative.",
+        "1 point: For any fixed a choose x=−a−1; the required square would be −1.",
+        "1 point: give It is false for every real a. Its negation is: there exists real x such that every real y has y²≠x+a. Choose x=−a−1. with the stated domain/conditions and a valid argument."
+      ],
+      "diagnostic": "Combination and transfer",
+      "error_hypotheses": [
+        "Swapping quantifier order; using one fixed witness when it must depend on an input",
+        "A calculation or copying slip despite a valid setup; compare with a parallel item before concluding a concept gap."
+      ],
+      "follow_up": "If the reasoning is uncertain, use L2-R without revealing this solution. If independent reasoning is sound, consider L2-4. Do not infer a gap from an unreached item."
+    },
+    "N1-R": {
+      "id": "N1-R",
+      "skill": "N1",
+      "level": 2,
+      "role": "repair",
+      "minutes": 5,
+      "prompt": "Is the decimal number 513 divisible by 9? Explain without long division.",
+      "answer": "Yes, because 5+1+3=9.",
+      "steps": [
+        "The digit sum is 9.",
+        "The decimal number and this sum have the same remainder modulo 9."
+      ],
+      "oracle": {
+        "op": "divisibility",
+        "number": 513,
+        "divisor": 9,
+        "target": true
+      },
+      "hint": "Write the number as a sum of digits times powers of its base.",
+      "credit": [
+        "1 point: The digit sum is 9.",
+        "1 point: The decimal number and this sum have the same remainder modulo 9.",
+        "1 point: give Yes, because 5+1+3=9. with the stated domain/conditions and a valid argument."
+      ],
+      "diagnostic": "Direct execution",
+      "error_hypotheses": [
+        "Remembering a digit trick without its base-dependent explanation",
+        "A calculation or copying slip despite a valid setup; compare with a parallel item before concluding a concept gap."
+      ],
+      "follow_up": "If the reasoning is uncertain, use N1-R without revealing this solution. If independent reasoning is sound, consider N1-4. Do not infer a gap from an unreached item."
+    },
+    "N1-4": {
+      "id": "N1-4",
+      "skill": "N1",
+      "level": 4,
+      "role": "ladder",
+      "minutes": 10,
+      "prompt": "A number written in base 8 has digits d_m…d_0. Derive a digit test for divisibility by 7 and one for divisibility by 9.",
+      "answer": "For 7 use the ordinary digit sum; for 9 use an alternating digit sum.",
+      "steps": [
+        "The number is Σd_k8^k.",
+        "Modulo 7, 8 acts like 1; modulo 9, it acts like −1.",
+        "Hence the respective digit combinations have the same divisibility as the number."
+      ],
+      "oracle": null,
+      "hint": "Write the number as a sum of digits times powers of its base.",
+      "credit": [
+        "1 point: The number is Σd_k8^k.",
+        "1 point: Modulo 7, 8 acts like 1; modulo 9, it acts like −1.",
+        "1 point: give For 7 use the ordinary digit sum; for 9 use an alternating digit sum. with the stated domain/conditions and a valid argument."
+      ],
+      "diagnostic": "Combination and transfer",
+      "error_hypotheses": [
+        "Remembering a digit trick without its base-dependent explanation",
+        "A calculation or copying slip despite a valid setup; compare with a parallel item before concluding a concept gap."
+      ],
+      "follow_up": "If the reasoning is uncertain, use N1-R without revealing this solution. If independent reasoning is sound, consider N1-4. Do not infer a gap from an unreached item."
+    }
+  }
+}

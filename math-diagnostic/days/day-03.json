@@ -1,0 +1,63 @@
+{
+  "day": 3,
+  "core": [
+    {
+      "id": "I1-3",
+      "prompt": "Solve (x−1)/(x+2)≥0 over the reals."
+    },
+    {
+      "id": "I2-3",
+      "prompt": "Find all real x satisfying |x−1|+|x−5|=4."
+    },
+    {
+      "id": "I3-3",
+      "prompt": "Positive a,b have a+b=10. What is the greatest possible ab, and when is it attained?"
+    },
+    {
+      "id": "I1-2",
+      "prompt": "Solve −3x+2<11 over the reals."
+    },
+    {
+      "id": "I2-2",
+      "prompt": "Solve |2x−3|≤5 over the reals."
+    },
+    {
+      "id": "I3-2",
+      "prompt": "For x>0, find the minimum of x+9/x and the x attaining it."
+    },
+    {
+      "id": "I2-1",
+      "prompt": "For a>0, express |x−c|≤a as an interval and explain it as distance."
+    },
+    {
+      "id": "I3-1",
+      "prompt": "State the two-variable arithmetic–geometric mean inequality, its domain and equality condition."
+    }
+  ],
+  "branches": [
+    {
+      "id": "I1-R",
+      "prompt": "Solve −2x≥8. Explain the direction of the answer."
+    },
+    {
+      "id": "I1-4",
+      "prompt": "Find all real x for which x²≤2x+3 and (x−2)/(x+1)>0 both hold."
+    },
+    {
+      "id": "I2-R",
+      "prompt": "Solve |x−4|≤2 and describe the interval in words."
+    },
+    {
+      "id": "I2-4",
+      "prompt": "For which real t does |x−1|+|x−5|=t have exactly two real solutions x?"
+    },
+    {
+      "id": "I3-R",
+      "prompt": "Positive a,b have a+b=8. Find the maximum ab."
+    },
+    {
+      "id": "I3-4",
+      "prompt": "Positive x,y satisfy xy=4. Find the minimum of (x+y)(x+4y), with equality values."
+    }
+  ]
+}

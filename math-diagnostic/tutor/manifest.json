@@ -1,0 +1,34 @@
+{
+  "skills": 25,
+  "unique_questions": 133,
+  "scheduled_core": 80,
+  "reserve_questions": 53,
+  "days": 10,
+  "minutes_per_day": 60,
+  "status": "AUTHOR_REVIEWED_COMPUTATION_CHECKED",
+  "independent_validation": false,
+  "psychometric_calibration": false,
+  "pdfs": {
+    "verifier-rubric.pdf": {
+      "bytes": 71464,
+      "sha256": "46768f847e61575a95e114a478447d0b0a7d76497dc98022c65324a20a9d44e1"
+    },
+    "follow-up-sheets.pdf": {
+      "bytes": 112365,
+      "sha256": "f1416a3465e772fc43d664d4d57dd5493b95357b08b4c97004a22d57ed7621b3"
+    },
+    "tutor-solutions.pdf": {
+      "bytes": 217582,
+      "sha256": "c2fd2b5c6b0cd5ceeaf35fd33b0f87475ba8aaf8fe8066994df76cb903bf681a"
+    },
+    "student-book.pdf": {
+      "bytes": 109162,
+      "sha256": "b513dfe2a17b56660669331ad4a78f45675e3766b135eb10d751af178876ec2c"
+    },
+    "administration-guide.pdf": {
+      "bytes": 75663,
+      "sha256": "0698bed514b7427705aeed584096a0d98e14d17111f82cec5b3db61250ba97e4"
+    }
+  },
+  "final_checks": "../reviews/final-check.json"
+}

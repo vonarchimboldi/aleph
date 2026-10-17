@@ -1,0 +1,450 @@
+{
+  "day": 6,
+  "title": "Sequences and sums",
+  "core": [
+    "S1-3",
+    "S2-3",
+    "S3-3",
+    "S1-2",
+    "S2-2",
+    "S3-2",
+    "S2-1",
+    "S3-1"
+  ],
+  "branches": [
+    "S1-R",
+    "S1-4",
+    "S2-R",
+    "S2-4",
+    "S3-R",
+    "S3-4"
+  ],
+  "questions": {
+    "S1-3": {
+      "id": "S1-3",
+      "skill": "S1",
+      "level": 3,
+      "role": "ladder",
+      "minutes": 5,
+      "prompt": "A theatre has 20 rows. The first has 12 seats and each later row has 2 more than the previous row. How many seats are there?",
+      "answer": "620.",
+      "steps": [
+        "The last row has 12+19·2=50 seats.",
+        "Twenty rows times the average 31 gives 620."
+      ],
+      "oracle": {
+        "op": "arithmetic_n",
+        "first": 12,
+        "difference": 2,
+        "n": 20,
+        "target": 620
+      },
+      "hint": "List the first few indices and compare the first and last terms.",
+      "credit": [
+        "1 point: The last row has 12+19·2=50 seats.",
+        "1 point: Twenty rows times the average 31 gives 620.",
+        "1 point: give 620. with the stated domain/conditions and a valid argument."
+      ],
+      "diagnostic": "Uncued recognition",
+      "error_hypotheses": [
+        "Off-by-one term count; confusing last term with number of terms",
+        "A calculation or copying slip despite a valid setup; compare with a parallel item before concluding a concept gap."
+      ],
+      "follow_up": "If the reasoning is uncertain, use S1-R without revealing this solution. If independent reasoning is sound, consider S1-4. Do not infer a gap from an unreached item."
+    },
+    "S2-3": {
+      "id": "S2-3",
+      "skill": "S2",
+      "level": 3,
+      "role": "ladder",
+      "minutes": 5,
+      "prompt": "Write 0.272727… as a fraction in lowest terms.",
+      "answer": "3/11.",
+      "steps": [
+        "Let u be the decimal; multiplying by 100 shifts one repeating block.",
+        "Subtract u from 100u to get 99u=27, so u=27/99=3/11."
+      ],
+      "oracle": {
+        "op": "repeating_decimal",
+        "digits": "27",
+        "target": "3/11"
+      },
+      "hint": "Write the number of terms. Compare a finite sum with the same sum multiplied by its ratio.",
+      "credit": [
+        "1 point: Let u be the decimal; multiplying by 100 shifts one repeating block.",
+        "1 point: Subtract u from 100u to get 99u=27, so u=27/99=3/11.",
+        "1 point: give 3/11. with the stated domain/conditions and a valid argument."
+      ],
+      "diagnostic": "Uncued recognition",
+      "error_hypotheses": [
+        "Off-by-one exponent; dividing by r−1 when r=1; using a divergent infinite sum",
+        "A calculation or copying slip despite a valid setup; compare with a parallel item before concluding a concept gap."
+      ],
+      "follow_up": "If the reasoning is uncertain, use S2-R without revealing this solution. If independent reasoning is sound, consider S2-4. Do not infer a gap from an unreached item."
+    },
+    "S3-3": {
+      "id": "S3-3",
+      "skill": "S3",
+      "level": 3,
+      "role": "ladder",
+      "minutes": 5,
+      "prompt": "Find Σ k(k+1), for k=1,2,…,10.",
+      "answer": "440.",
+      "steps": [
+        "Expand k(k+1)=k²+k.",
+        "Sum squares and integers separately: 385+55=440."
+      ],
+      "oracle": {
+        "op": "sum_k_successor",
+        "n": 10,
+        "target": 440
+      },
+      "hint": "Expand the summand and separate the familiar sums. For a derivation, write the consecutive differences.",
+      "credit": [
+        "1 point: Expand k(k+1)=k²+k.",
+        "1 point: Sum squares and integers separately: 385+55=440.",
+        "1 point: give 440. with the stated domain/conditions and a valid argument."
+      ],
+      "diagnostic": "Uncued recognition",
+      "error_hypotheses": [
+        "Using the integer-sum formula for squares; confusing sum of cubes with cube of a sum",
+        "A calculation or copying slip despite a valid setup; compare with a parallel item before concluding a concept gap."
+      ],
+      "follow_up": "If the reasoning is uncertain, use S3-R without revealing this solution. If independent reasoning is sound, consider S3-4. Do not infer a gap from an unreached item."
+    },
+    "S1-2": {
+      "id": "S1-2",
+      "skill": "S1",
+      "level": 2,
+      "role": "ladder",
+      "minutes": 3,
+      "prompt": "Find 3+7+11+⋯+99.",
+      "answer": "1275.",
+      "steps": [
+        "Solve 3+4(n−1)=99 to get n=25.",
+        "The sum is 25(3+99)/2=1275."
+      ],
+      "oracle": {
+        "op": "arithmetic_sum",
+        "first": 3,
+        "last": 99,
+        "difference": 4,
+        "target": 1275
+      },
+      "hint": "List the first few indices and compare the first and last terms.",
+      "credit": [
+        "1 point: Solve 3+4(n−1)=99 to get n=25.",
+        "1 point: The sum is 25(3+99)/2=1275.",
+        "1 point: give 1275. with the stated domain/conditions and a valid argument."
+      ],
+      "diagnostic": "Direct execution",
+      "error_hypotheses": [
+        "Off-by-one term count; confusing last term with number of terms",
+        "A calculation or copying slip despite a valid setup; compare with a parallel item before concluding a concept gap."
+      ],
+      "follow_up": "If the reasoning is uncertain, use S1-R without revealing this solution. If independent reasoning is sound, consider S1-4. Do not infer a gap from an unreached item."
+    },
+    "S2-2": {
+      "id": "S2-2",
+      "skill": "S2",
+      "level": 2,
+      "role": "ladder",
+      "minutes": 3,
+      "prompt": "Find 1+3+3²+⋯+3⁷.",
+      "answer": "3280.",
+      "steps": [
+        "There are 8 terms.",
+        "The geometric formula gives (3⁸−1)/(3−1)=6560/2=3280."
+      ],
+      "oracle": {
+        "op": "geometric_sum",
+        "base": 3,
+        "n": 8,
+        "target": 3280
+      },
+      "hint": "Write the number of terms. Compare a finite sum with the same sum multiplied by its ratio.",
+      "credit": [
+        "1 point: There are 8 terms.",
+        "1 point: The geometric formula gives (3⁸−1)/(3−1)=6560/2=3280.",
+        "1 point: give 3280. with the stated domain/conditions and a valid argument."
+      ],
+      "diagnostic": "Direct execution",
+      "error_hypotheses": [
+        "Off-by-one exponent; dividing by r−1 when r=1; using a divergent infinite sum",
+        "A calculation or copying slip despite a valid setup; compare with a parallel item before concluding a concept gap."
+      ],
+      "follow_up": "If the reasoning is uncertain, use S2-R without revealing this solution. If independent reasoning is sound, consider S2-4. Do not infer a gap from an unreached item."
+    },
+    "S3-2": {
+      "id": "S3-2",
+      "skill": "S3",
+      "level": 2,
+      "role": "ladder",
+      "minutes": 3,
+      "prompt": "Calculate 1²+2²+⋯+10².",
+      "answer": "385.",
+      "steps": [
+        "Apply the square-sum formula with n=10.",
+        "Compute 10·11·21/6=385."
+      ],
+      "oracle": {
+        "op": "power_sum",
+        "n": 10,
+        "power": 2,
+        "target": 385
+      },
+      "hint": "Expand the summand and separate the familiar sums. For a derivation, write the consecutive differences.",
+      "credit": [
+        "1 point: Apply the square-sum formula with n=10.",
+        "1 point: Compute 10·11·21/6=385.",
+        "1 point: give 385. with the stated domain/conditions and a valid argument."
+      ],
+      "diagnostic": "Direct execution",
+      "error_hypotheses": [
+        "Using the integer-sum formula for squares; confusing sum of cubes with cube of a sum",
+        "A calculation or copying slip despite a valid setup; compare with a parallel item before concluding a concept gap."
+      ],
+      "follow_up": "If the reasoning is uncertain, use S3-R without revealing this solution. If independent reasoning is sound, consider S3-4. Do not infer a gap from an unreached item."
+    },
+    "S2-1": {
+      "id": "S2-1",
+      "skill": "S2",
+      "level": 1,
+      "role": "ladder",
+      "minutes": 2,
+      "prompt": "State the finite geometric sum 1+r+⋯+r^(n−1) for positive integer n. Include r=1. When does the corresponding infinite series converge?",
+      "answer": "(1−r^n)/(1−r) if r≠1; n if r=1. The infinite series converges for |r|<1, to 1/(1−r).",
+      "steps": [
+        "Multiplying the finite sum by r and subtracting cancels the interior terms.",
+        "For the infinite limit, r^n tends to zero exactly when |r|<1."
+      ],
+      "oracle": null,
+      "hint": "Write the number of terms. Compare a finite sum with the same sum multiplied by its ratio.",
+      "credit": [
+        "1 point: Multiplying the finite sum by r and subtracting cancels the interior terms.",
+        "1 point: For the infinite limit, r^n tends to zero exactly when |r|<1.",
+        "1 point: give (1−r^n)/(1−r) if r≠1; n if r=1. The infinite series converges for |r|<1, to 1/(1−r). with the stated domain/conditions and a valid argument."
+      ],
+      "diagnostic": "Knowledge/conditions",
+      "error_hypotheses": [
+        "Off-by-one exponent; dividing by r−1 when r=1; using a divergent infinite sum",
+        "A calculation or copying slip despite a valid setup; compare with a parallel item before concluding a concept gap."
+      ],
+      "follow_up": "If the reasoning is uncertain, use S2-R without revealing this solution. If independent reasoning is sound, consider S2-4. Do not infer a gap from an unreached item."
+    },
+    "S3-1": {
+      "id": "S3-1",
+      "skill": "S3",
+      "level": 1,
+      "role": "ladder",
+      "minutes": 2,
+      "prompt": "State formulas for Σk, Σk² and Σk³, where k runs from 1 to positive integer n.",
+      "answer": "n(n+1)/2; n(n+1)(2n+1)/6; [n(n+1)/2]².",
+      "steps": [
+        "State each formula with the same lower and upper limits.",
+        "Check n=1 to detect missing factors; knowing one does not imply knowing the others."
+      ],
+      "oracle": null,
+      "hint": "Expand the summand and separate the familiar sums. For a derivation, write the consecutive differences.",
+      "credit": [
+        "1 point: correct integer-sum formula and limits.",
+        "1 point: correct square-sum formula and limits.",
+        "1 point: correct cube-sum formula and limits."
+      ],
+      "diagnostic": "Knowledge/conditions",
+      "error_hypotheses": [
+        "Using the integer-sum formula for squares; confusing sum of cubes with cube of a sum",
+        "A calculation or copying slip despite a valid setup; compare with a parallel item before concluding a concept gap."
+      ],
+      "follow_up": "If the reasoning is uncertain, use S3-R without revealing this solution. If independent reasoning is sound, consider S3-4. Do not infer a gap from an unreached item."
+    },
+    "S1-R": {
+      "id": "S1-R",
+      "skill": "S1",
+      "level": 2,
+      "role": "repair",
+      "minutes": 5,
+      "prompt": "Find 5+8+11+⋯+32.",
+      "answer": "185.",
+      "steps": [
+        "There are (32−5)/3+1=10 terms.",
+        "Their mean is (5+32)/2, so the sum is 185."
+      ],
+      "oracle": {
+        "op": "arithmetic_sum",
+        "first": 5,
+        "last": 32,
+        "difference": 3,
+        "target": 185
+      },
+      "hint": "List the first few indices and compare the first and last terms.",
+      "credit": [
+        "1 point: There are (32−5)/3+1=10 terms.",
+        "1 point: Their mean is (5+32)/2, so the sum is 185.",
+        "1 point: give 185. with the stated domain/conditions and a valid argument."
+      ],
+      "diagnostic": "Direct execution",
+      "error_hypotheses": [
+        "Off-by-one term count; confusing last term with number of terms",
+        "A calculation or copying slip despite a valid setup; compare with a parallel item before concluding a concept gap."
+      ],
+      "follow_up": "If the reasoning is uncertain, use S1-R without revealing this solution. If independent reasoning is sound, consider S1-4. Do not infer a gap from an unreached item."
+    },
+    "S1-4": {
+      "id": "S1-4",
+      "skill": "S1",
+      "level": 4,
+      "role": "ladder",
+      "minutes": 10,
+      "prompt": "A list of consecutive positive integers starts at 1 and has sum 210. Delete one number and the mean of the remaining numbers becomes 10. Which number was deleted?",
+      "answer": "20.",
+      "steps": [
+        "The sum 210 gives n(n+1)/2=210, so n=20.",
+        "Nineteen remaining numbers with mean 10 sum to 190.",
+        "The removed number is 210−190=20."
+      ],
+      "oracle": {
+        "op": "delete_from_triangular",
+        "total": 210,
+        "remaining_mean": 10,
+        "target": 20
+      },
+      "hint": "List the first few indices and compare the first and last terms.",
+      "credit": [
+        "1 point: The sum 210 gives n(n+1)/2=210, so n=20.",
+        "1 point: Nineteen remaining numbers with mean 10 sum to 190.",
+        "1 point: give 20. with the stated domain/conditions and a valid argument."
+      ],
+      "diagnostic": "Combination and transfer",
+      "error_hypotheses": [
+        "Off-by-one term count; confusing last term with number of terms",
+        "A calculation or copying slip despite a valid setup; compare with a parallel item before concluding a concept gap."
+      ],
+      "follow_up": "If the reasoning is uncertain, use S1-R without revealing this solution. If independent reasoning is sound, consider S1-4. Do not infer a gap from an unreached item."
+    },
+    "S2-R": {
+      "id": "S2-R",
+      "skill": "S2",
+      "level": 2,
+      "role": "repair",
+      "minutes": 5,
+      "prompt": "Find 1+2+4+8+16+32.",
+      "answer": "63.",
+      "steps": [
+        "This is a six-term geometric sum with ratio 2.",
+        "Its sum is 2⁶−1=63."
+      ],
+      "oracle": {
+        "op": "geometric_sum",
+        "base": 2,
+        "n": 6,
+        "target": 63
+      },
+      "hint": "Write the number of terms. Compare a finite sum with the same sum multiplied by its ratio.",
+      "credit": [
+        "1 point: This is a six-term geometric sum with ratio 2.",
+        "1 point: Its sum is 2⁶−1=63.",
+        "1 point: give 63. with the stated domain/conditions and a valid argument."
+      ],
+      "diagnostic": "Direct execution",
+      "error_hypotheses": [
+        "Off-by-one exponent; dividing by r−1 when r=1; using a divergent infinite sum",
+        "A calculation or copying slip despite a valid setup; compare with a parallel item before concluding a concept gap."
+      ],
+      "follow_up": "If the reasoning is uncertain, use S2-R without revealing this solution. If independent reasoning is sound, consider S2-4. Do not infer a gap from an unreached item."
+    },
+    "S2-4": {
+      "id": "S2-4",
+      "skill": "S2",
+      "level": 4,
+      "role": "ladder",
+      "minutes": 10,
+      "prompt": "Positive integers m,n satisfy 1+2+⋯+2^(n−1)=3(1+4+⋯+4^(m−1)). Find all ordered pairs (m,n).",
+      "answer": "All pairs (m,2m), where m is any positive integer.",
+      "steps": [
+        "The left sum is 2^n−1.",
+        "The right sum is 3(4^m−1)/(4−1)=4^m−1.",
+        "Thus 2^n=4^m=2^(2m), so n=2m; every positive m works."
+      ],
+      "oracle": {
+        "op": "geometric_pair_relation",
+        "target": "n=2m, m>=1"
+      },
+      "hint": "Write the number of terms. Compare a finite sum with the same sum multiplied by its ratio.",
+      "credit": [
+        "1 point: The left sum is 2^n−1.",
+        "1 point: The right sum is 3(4^m−1)/(4−1)=4^m−1.",
+        "1 point: conclude All pairs (m,2m), where m is any positive integer. and justify the final case/domain/equality."
+      ],
+      "diagnostic": "Combination and transfer",
+      "error_hypotheses": [
+        "Off-by-one exponent; dividing by r−1 when r=1; using a divergent infinite sum",
+        "A calculation or copying slip despite a valid setup; compare with a parallel item before concluding a concept gap."
+      ],
+      "follow_up": "If the reasoning is uncertain, use S2-R without revealing this solution. If independent reasoning is sound, consider S2-4. Do not infer a gap from an unreached item."
+    },
+    "S3-R": {
+      "id": "S3-R",
+      "skill": "S3",
+      "level": 2,
+      "role": "repair",
+      "minutes": 5,
+      "prompt": "Find 1²+2²+⋯+5², and separately find 1+2+⋯+5.",
+      "answer": "55 and 15.",
+      "steps": [
+        "The square terms sum to 1+4+9+16+25=55.",
+        "The integer terms sum to 5·6/2=15; distinguish the two tasks."
+      ],
+      "oracle": {
+        "op": "two_power_sums",
+        "n": 5,
+        "target": [
+          55,
+          15
+        ]
+      },
+      "hint": "Expand the summand and separate the familiar sums. For a derivation, write the consecutive differences.",
+      "credit": [
+        "1 point: The square terms sum to 1+4+9+16+25=55.",
+        "1 point: The integer terms sum to 5·6/2=15; distinguish the two tasks.",
+        "1 point: give 55 and 15. with the stated domain/conditions and a valid argument."
+      ],
+      "diagnostic": "Direct execution",
+      "error_hypotheses": [
+        "Using the integer-sum formula for squares; confusing sum of cubes with cube of a sum",
+        "A calculation or copying slip despite a valid setup; compare with a parallel item before concluding a concept gap."
+      ],
+      "follow_up": "If the reasoning is uncertain, use S3-R without revealing this solution. If independent reasoning is sound, consider S3-4. Do not infer a gap from an unreached item."
+    },
+    "S3-4": {
+      "id": "S3-4",
+      "skill": "S3",
+      "level": 4,
+      "role": "ladder",
+      "minutes": 10,
+      "prompt": "Without assuming the sum-of-squares formula, derive it by summing (k+1)³−k³ for k=1,…,n. You may use Σk=n(n+1)/2.",
+      "answer": "Σk²=n(n+1)(2n+1)/6.",
+      "steps": [
+        "The left side telescopes to (n+1)³−1.",
+        "Expanding each difference gives 3Σk²+3Σk+n.",
+        "Substitute the integer sum and solve: 3Σk²=(n+1)³−1−3n(n+1)/2−n."
+      ],
+      "oracle": {
+        "op": "square_sum_identity",
+        "target": "n(n+1)(2n+1)/6"
+      },
+      "hint": "Expand the summand and separate the familiar sums. For a derivation, write the consecutive differences.",
+      "credit": [
+        "1 point: The left side telescopes to (n+1)³−1.",
+        "1 point: Expanding each difference gives 3Σk²+3Σk+n.",
+        "1 point: give Σk²=n(n+1)(2n+1)/6. with the stated domain/conditions and a valid argument."
+      ],
+      "diagnostic": "Combination and transfer",
+      "error_hypotheses": [
+        "Using the integer-sum formula for squares; confusing sum of cubes with cube of a sum",
+        "A calculation or copying slip despite a valid setup; compare with a parallel item before concluding a concept gap."
+      ],
+      "follow_up": "If the reasoning is uncertain, use S3-R without revealing this solution. If independent reasoning is sound, consider S3-4. Do not infer a gap from an unreached item."
+    }
+  }
+}

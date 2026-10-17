@@ -1,0 +1,87 @@
+{
+  "day": 10,
+  "core": [
+    {
+      "id": "C5-3",
+      "prompt": "Five integers are chosen. Show that two differ by a multiple of 4."
+    },
+    {
+      "id": "D10-A1",
+      "prompt": "Solve over the reals: (x²−16)/(x−4)=8. State restrictions."
+    },
+    {
+      "id": "D10-S3",
+      "prompt": "Find Σ k(k−1), k=1,…,6."
+    },
+    {
+      "id": "D10-C2",
+      "prompt": "Choose a three-person committee from 4 women and 3 men. How many committees have at least one woman?"
+    },
+    {
+      "id": "D10-N3",
+      "prompt": "Find the last digit of 7^2028. Explain the cycle position."
+    },
+    {
+      "id": "D10-L1",
+      "prompt": "For integers n, assess “6 divides n implies 3 divides n” and its converse. Give a proof or counterexample for each."
+    },
+    {
+      "id": "C5-2",
+      "prompt": "Thirteen people are assigned birth months. What repeated-month fact is guaranteed?"
+    },
+    {
+      "id": "C5-1",
+      "prompt": "If N objects are placed in k boxes, with N,k positive integers, what lower bound can you guarantee for the largest box occupancy? Explain."
+    }
+  ],
+  "branches": [
+    {
+      "id": "C5-R",
+      "prompt": "Nine objects go into four boxes. What occupancy must at least one box have?"
+    },
+    {
+      "id": "C5-4",
+      "prompt": "Choose any six distinct integers from 1,…,10. Prove that two chosen numbers sum to 11."
+    },
+    {
+      "id": "A1-R",
+      "prompt": "Solve x(x + 2) = 0. A student divides by x and reports only −2. What is missing?"
+    },
+    {
+      "id": "A1-4",
+      "prompt": "Solve over the reals: √(x + 6) = x. Explain how you reject any extra candidate."
+    },
+    {
+      "id": "S3-R",
+      "prompt": "Find 1²+2²+⋯+5², and separately find 1+2+⋯+5."
+    },
+    {
+      "id": "S3-4",
+      "prompt": "Without assuming the sum-of-squares formula, derive it by summing (k+1)³−k³ for k=1,…,n. You may use Σk=n(n+1)/2."
+    },
+    {
+      "id": "C2-R",
+      "prompt": "From 5 distinct people choose a pair, then distinguish one as leader. How many outcomes?"
+    },
+    {
+      "id": "C2-4",
+      "prompt": "From 6 women and 5 men, choose a committee of 4 with at least 2 women, then appoint one committee member as chair. How many outcomes?"
+    },
+    {
+      "id": "N3-R",
+      "prompt": "Find the last digit of 3^12 and explain the zero-remainder case."
+    },
+    {
+      "id": "N3-4",
+      "prompt": "Find the last digit of 7^(3^2026). Explain how you locate the exponent in the relevant cycle."
+    },
+    {
+      "id": "L1-R",
+      "prompt": "For integers n, is “3 divides n implies 6 divides n” true? Justify."
+    },
+    {
+      "id": "L1-4",
+      "prompt": "Integers a,b satisfy: ab is divisible by 6. Must at least one of a,b be divisible by 6? Give a counterexample or proof, and explain which prime-divisibility fact still holds."
+    }
+  ]
+}

@@ -1,0 +1,71 @@
+{
+  "day": 4,
+  "core": [
+    {
+      "id": "F1-3",
+      "prompt": "Let f(x)=√(x−1) and g(x)=3−x. Find the real domain of f(g(x))."
+    },
+    {
+      "id": "F2-3",
+      "prompt": "A function on R satisfies f(x)+2f(1−x)=3x for every real x. Find f(0)."
+    },
+    {
+      "id": "A4-3",
+      "prompt": "Find all real x satisfying x⁴ − 3x² + 2=0."
+    },
+    {
+      "id": "F1-2",
+      "prompt": "Let f(x)=x²+1 and g(x)=2x−3 for all real x. Find f(g(2)) and g(f(2))."
+    },
+    {
+      "id": "F2-2",
+      "prompt": "For all real x,y, f(x+y)=f(x)+f(y), and f(1)=3. Find f(2), f(−1) and f(1/2)."
+    },
+    {
+      "id": "A4-2",
+      "prompt": "For x ≠ 0, x+1/x=3. Find x²+1/x²."
+    },
+    {
+      "id": "F2-1",
+      "prompt": "A real-valued function on R satisfies f(x+y)=f(x)+f(y). What do the substitutions x=y=0 and y=−x tell you about f(0) and f(−x)?"
+    },
+    {
+      "id": "A5-1",
+      "prompt": "For real logarithms to base b, state the restrictions on b and on the argument. State log_b(uv) for positive u,v."
+    }
+  ],
+  "branches": [
+    {
+      "id": "F1-R",
+      "prompt": "If f(x)=x+1 and g(x)=x², find f(g(3)) and g(f(3))."
+    },
+    {
+      "id": "F1-4",
+      "prompt": "For real x, f(x)=(x−1)/(x+1). Determine the domain of f(f(x)) and simplify it."
+    },
+    {
+      "id": "F2-R",
+      "prompt": "If f(x+y)=f(x)+f(y) on R and f(1)=4, find f(3) and f(−1)."
+    },
+    {
+      "id": "F2-4",
+      "prompt": "A function f:R→R satisfies f(x+y)=f(x)+f(y)+2xy for all real x,y, and f(1)=3. Determine f(r) for every rational r."
+    },
+    {
+      "id": "A4-R",
+      "prompt": "If x+1/x=4, x ≠ 0, find x²+1/x²."
+    },
+    {
+      "id": "A4-4",
+      "prompt": "Find the number of real solutions of x⁴ − 3x³ + 4x² − 3x + 1=0."
+    },
+    {
+      "id": "A5-R",
+      "prompt": "Solve 3^(x−2)=27."
+    },
+    {
+      "id": "A5-4",
+      "prompt": "Solve log₂(x−1)+log₂(x+1)=3 over the reals."
+    }
+  ]
+}

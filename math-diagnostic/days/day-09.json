@@ -1,0 +1,63 @@
+{
+  "day": 9,
+  "core": [
+    {
+      "id": "A5-3",
+      "prompt": "Solve 4^x − 5·2^x + 4=0 over the reals."
+    },
+    {
+      "id": "S5-3",
+      "prompt": "On day k a machine produces k·2^k parts. Find the total over days 1 through 6 without listing every individual part."
+    },
+    {
+      "id": "C4-3",
+      "prompt": "Ten people each shake hands with every other person once. How many handshakes occur? Explain why counting 10·9 needs correction."
+    },
+    {
+      "id": "A5-2",
+      "prompt": "Solve 2^(x+1)=16 over the reals."
+    },
+    {
+      "id": "S5-2",
+      "prompt": "Find 1·2+2·2²+3·2³+4·2⁴."
+    },
+    {
+      "id": "C4-2",
+      "prompt": "How many shortest grid paths go from (0,0) to (3,2), using only one-unit right and up moves? Explain a correspondence."
+    },
+    {
+      "id": "S5-1",
+      "prompt": "Let T=1·r+2·r²+⋯+n·r^n. Write T−rT with like powers grouped. Do not assume r≠1."
+    },
+    {
+      "id": "C4-1",
+      "prompt": "What must you show to count one finite collection by matching it to another?"
+    }
+  ],
+  "branches": [
+    {
+      "id": "A5-R",
+      "prompt": "Solve 3^(x−2)=27."
+    },
+    {
+      "id": "A5-4",
+      "prompt": "Solve log₂(x−1)+log₂(x+1)=3 over the reals."
+    },
+    {
+      "id": "S5-R",
+      "prompt": "Compute 1·3+2·3²+3·3³."
+    },
+    {
+      "id": "S5-4",
+      "prompt": "For positive integer n, derive a formula for Σ k·2^k, k=1,…,n."
+    },
+    {
+      "id": "C4-R",
+      "prompt": "How many shortest paths from (0,0) to (2,2) use only right and up moves?"
+    },
+    {
+      "id": "C4-4",
+      "prompt": "Prove Σ k·C(n,k)=n·2^(n−1), k=0,…,n, for positive integer n, by counting pairs (S,p), where S is a subset of an n-person set and p belongs to S."
+    }
+  ]
+}

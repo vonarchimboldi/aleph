@@ -1,0 +1,628 @@
+{
+  "day": 2,
+  "title": "Algebra and equations",
+  "core": [
+    "A1-3",
+    "A2-3",
+    "A3-3",
+    "A1-2",
+    "A2-2",
+    "A3-2",
+    "A2-1",
+    "A4-1"
+  ],
+  "branches": [
+    "A1-R",
+    "A1-4",
+    "A2-R",
+    "A2-4",
+    "A3-R",
+    "A3-4",
+    "A4-R",
+    "A4-4",
+    "EX-VJ"
+  ],
+  "questions": {
+    "A1-3": {
+      "id": "A1-3",
+      "skill": "A1",
+      "level": 3,
+      "role": "ladder",
+      "minutes": 5,
+      "prompt": "Solve over the reals: (x² − 9)/(x − 3) = 6. State all restrictions.",
+      "answer": "No solution; x ≠ 3.",
+      "steps": [
+        "The denominator excludes x = 3.",
+        "For permitted x, cancel x − 3 to obtain x + 3 = 6.",
+        "The only candidate is 3, which is excluded."
+      ],
+      "oracle": {
+        "op": "rational_equation",
+        "excluded": [
+          3
+        ],
+        "numerator": [
+          1,
+          0,
+          -9
+        ],
+        "denominator": [
+          1,
+          -3
+        ],
+        "rhs": 6,
+        "target": []
+      },
+      "hint": "Try the candidate in the original equation, including its denominator or square root.",
+      "credit": [
+        "1 point: The denominator excludes x = 3.",
+        "1 point: For permitted x, cancel x − 3 to obtain x + 3 = 6.",
+        "1 point: give No solution; x ≠ 3. with the stated domain/conditions and a valid argument."
+      ],
+      "diagnostic": "Uncued recognition",
+      "error_hypotheses": [
+        "Cancelling a possibly zero factor; accepting a value outside the original domain",
+        "A calculation or copying slip despite a valid setup; compare with a parallel item before concluding a concept gap."
+      ],
+      "follow_up": "If the reasoning is uncertain, use A1-R without revealing this solution. If independent reasoning is sound, consider A1-4. Do not infer a gap from an unreached item."
+    },
+    "A2-3": {
+      "id": "A2-3",
+      "skill": "A2",
+      "level": 3,
+      "role": "ladder",
+      "minutes": 5,
+      "prompt": "Find all real roots of 2x³ − 3x² − 8x + 12 = 0.",
+      "answer": "−2, 3/2, 2.",
+      "steps": [
+        "A rational root must come from integer factors of 12 divided by factors of 2.",
+        "Factor by grouping: x²(2x − 3) − 4(2x − 3) = (2x − 3)(x − 2)(x + 2).",
+        "All three linear factors give the stated roots."
+      ],
+      "oracle": {
+        "op": "roots_factorization",
+        "coeff": [
+          2,
+          -3,
+          -8,
+          12
+        ],
+        "factors": [
+          [
+            2,
+            -3
+          ],
+          [
+            1,
+            -2
+          ],
+          [
+            1,
+            2
+          ]
+        ],
+        "target": [
+          "3/2",
+          2,
+          -2
+        ]
+      },
+      "hint": "For division by x−a, think about substituting x=a. For rational roots, inspect the leading and constant coefficients.",
+      "credit": [
+        "1 point: A rational root must come from integer factors of 12 divided by factors of 2.",
+        "1 point: Factor by grouping: x²(2x − 3) − 4(2x − 3) = (2x − 3)(x − 2)(x + 2).",
+        "1 point: give −2, 3/2, 2. with the stated domain/conditions and a valid argument."
+      ],
+      "diagnostic": "Uncued recognition",
+      "error_hypotheses": [
+        "Treating the rational-root list as a guarantee of roots; confusing P(a) with P(−a)",
+        "A calculation or copying slip despite a valid setup; compare with a parallel item before concluding a concept gap."
+      ],
+      "follow_up": "If the reasoning is uncertain, use A2-R without revealing this solution. If independent reasoning is sound, consider A2-4. Do not infer a gap from an unreached item."
+    },
+    "A3-3": {
+      "id": "A3-3",
+      "skill": "A3",
+      "level": 3,
+      "role": "ladder",
+      "minutes": 5,
+      "prompt": "The roots of x² − 5x + 3 are r and s. Find r²+s² without calculating either root.",
+      "answer": "19.",
+      "steps": [
+        "The sum is 5 and product is 3.",
+        "r²+s²=(r+s)²−2rs=25−6=19."
+      ],
+      "oracle": {
+        "op": "root_power",
+        "sum": 5,
+        "product": 3,
+        "power": 2,
+        "target": 19
+      },
+      "hint": "Expand (x−r)(x−s), or expand a square of a sum.",
+      "credit": [
+        "1 point: The sum is 5 and product is 3.",
+        "1 point: r²+s²=(r+s)²−2rs=25−6=19.",
+        "1 point: give 19. with the stated domain/conditions and a valid argument."
+      ],
+      "diagnostic": "Uncued recognition",
+      "error_hypotheses": [
+        "Wrong sign on the root sum; adding squares as the square of a sum",
+        "A calculation or copying slip despite a valid setup; compare with a parallel item before concluding a concept gap."
+      ],
+      "follow_up": "If the reasoning is uncertain, use A3-R without revealing this solution. If independent reasoning is sound, consider A3-4. Do not infer a gap from an unreached item."
+    },
+    "A1-2": {
+      "id": "A1-2",
+      "skill": "A1",
+      "level": 2,
+      "role": "ladder",
+      "minutes": 3,
+      "prompt": "Solve over the reals: x(x − 4) = 0.",
+      "answer": "x = 0 or 4.",
+      "steps": [
+        "A product is zero only if at least one factor is zero.",
+        "Solve x = 0 and x − 4 = 0; both satisfy the original equation."
+      ],
+      "oracle": {
+        "op": "quadratic",
+        "coeff": [
+          1,
+          -4,
+          0
+        ],
+        "target": [
+          0,
+          4
+        ]
+      },
+      "hint": "Try the candidate in the original equation, including its denominator or square root.",
+      "credit": [
+        "1 point: A product is zero only if at least one factor is zero.",
+        "1 point: Solve x = 0 and x − 4 = 0; both satisfy the original equation.",
+        "1 point: give x = 0 or 4. with the stated domain/conditions and a valid argument."
+      ],
+      "diagnostic": "Direct execution",
+      "error_hypotheses": [
+        "Cancelling a possibly zero factor; accepting a value outside the original domain",
+        "A calculation or copying slip despite a valid setup; compare with a parallel item before concluding a concept gap."
+      ],
+      "follow_up": "If the reasoning is uncertain, use A1-R without revealing this solution. If independent reasoning is sound, consider A1-4. Do not infer a gap from an unreached item."
+    },
+    "A2-2": {
+      "id": "A2-2",
+      "skill": "A2",
+      "level": 2,
+      "role": "ladder",
+      "minutes": 3,
+      "prompt": "Find the remainder when P(x)=2x³ − 3x + 5 is divided by x − 2.",
+      "answer": "15.",
+      "steps": [
+        "The remainder is P(2).",
+        "Compute 16 − 6 + 5 = 15."
+      ],
+      "oracle": {
+        "op": "poly_value",
+        "coeff": [
+          2,
+          0,
+          -3,
+          5
+        ],
+        "x": 2,
+        "target": 15
+      },
+      "hint": "For division by x−a, think about substituting x=a. For rational roots, inspect the leading and constant coefficients.",
+      "credit": [
+        "1 point: The remainder is P(2).",
+        "1 point: Compute 16 − 6 + 5 = 15.",
+        "1 point: give 15. with the stated domain/conditions and a valid argument."
+      ],
+      "diagnostic": "Direct execution",
+      "error_hypotheses": [
+        "Treating the rational-root list as a guarantee of roots; confusing P(a) with P(−a)",
+        "A calculation or copying slip despite a valid setup; compare with a parallel item before concluding a concept gap."
+      ],
+      "follow_up": "If the reasoning is uncertain, use A2-R without revealing this solution. If independent reasoning is sound, consider A2-4. Do not infer a gap from an unreached item."
+    },
+    "A3-2": {
+      "id": "A3-2",
+      "skill": "A3",
+      "level": 2,
+      "role": "ladder",
+      "minutes": 3,
+      "prompt": "The roots of x² − 7x + 10 are r and s. Find r+s and rs without solving for them.",
+      "answer": "7 and 10.",
+      "steps": [
+        "Read the coefficients of the monic quadratic.",
+        "The negative x-coefficient gives the sum; the constant gives the product."
+      ],
+      "oracle": {
+        "op": "vieta",
+        "coeff": [
+          1,
+          -7,
+          10
+        ],
+        "target": [
+          7,
+          10
+        ]
+      },
+      "hint": "Expand (x−r)(x−s), or expand a square of a sum.",
+      "credit": [
+        "1 point: Read the coefficients of the monic quadratic.",
+        "1 point: The negative x-coefficient gives the sum; the constant gives the product.",
+        "1 point: give 7 and 10. with the stated domain/conditions and a valid argument."
+      ],
+      "diagnostic": "Direct execution",
+      "error_hypotheses": [
+        "Wrong sign on the root sum; adding squares as the square of a sum",
+        "A calculation or copying slip despite a valid setup; compare with a parallel item before concluding a concept gap."
+      ],
+      "follow_up": "If the reasoning is uncertain, use A3-R without revealing this solution. If independent reasoning is sound, consider A3-4. Do not infer a gap from an unreached item."
+    },
+    "A2-1": {
+      "id": "A2-1",
+      "skill": "A2",
+      "level": 1,
+      "role": "ladder",
+      "minutes": 2,
+      "prompt": "State the remainder theorem, factor theorem, and rational-root restriction for an integer-coefficient polynomial with nonzero leading coefficient.",
+      "answer": "Remainder on division by x − a is P(a); x − a divides P iff P(a)=0; a rational root p/q in lowest terms has p dividing the constant term and q dividing the leading coefficient.",
+      "steps": [
+        "Substituting a leaves the constant remainder.",
+        "Zero remainder is exactly divisibility by x − a.",
+        "For a reduced rational root, clearing denominators gives the divisibility restrictions. When the constant term is zero, first factor out x."
+      ],
+      "oracle": null,
+      "hint": "For division by x−a, think about substituting x=a. For rational roots, inspect the leading and constant coefficients.",
+      "credit": [
+        "1 point: state remainder P(a) for division by x−a.",
+        "1 point: state the factor iff zero-remainder equivalence.",
+        "1 point: give the reduced rational-root divisibility restrictions, including nonzero leading coefficient."
+      ],
+      "diagnostic": "Knowledge/conditions",
+      "error_hypotheses": [
+        "Treating the rational-root list as a guarantee of roots; confusing P(a) with P(−a)",
+        "A calculation or copying slip despite a valid setup; compare with a parallel item before concluding a concept gap."
+      ],
+      "follow_up": "If the reasoning is uncertain, use A2-R without revealing this solution. If independent reasoning is sound, consider A2-4. Do not infer a gap from an unreached item."
+    },
+    "A4-1": {
+      "id": "A4-1",
+      "skill": "A4",
+      "level": 1,
+      "role": "ladder",
+      "minutes": 2,
+      "prompt": "For nonzero real x, expand (x+1/x)². What is x²+1/x² in terms of t=x+1/x?",
+      "answer": "(x+1/x)²=x²+2+1/x²; x²+1/x²=t²−2.",
+      "steps": [
+        "The cross term is 2x(1/x)=2.",
+        "Rearrange after setting t=x+1/x."
+      ],
+      "oracle": null,
+      "hint": "Look for a repeated expression. If you replace it, record which real values the replacement can take.",
+      "credit": [
+        "1 point: The cross term is 2x(1/x)=2.",
+        "1 point: Rearrange after setting t=x+1/x.",
+        "1 point: give (x+1/x)²=x²+2+1/x²; x²+1/x²=t²−2. with the stated domain/conditions and a valid argument."
+      ],
+      "diagnostic": "Knowledge/conditions",
+      "error_hypotheses": [
+        "Treating x² as x; losing the nonzero restriction or real feasibility of a substituted value",
+        "A calculation or copying slip despite a valid setup; compare with a parallel item before concluding a concept gap."
+      ],
+      "follow_up": "If the reasoning is uncertain, use A4-R without revealing this solution. If independent reasoning is sound, consider A4-4. Do not infer a gap from an unreached item."
+    },
+    "A1-R": {
+      "id": "A1-R",
+      "skill": "A1",
+      "level": 2,
+      "role": "repair",
+      "minutes": 5,
+      "prompt": "Solve x(x + 2) = 0. A student divides by x and reports only −2. What is missing?",
+      "answer": "x = 0 is also a solution.",
+      "steps": [
+        "Factor form already gives x = 0 or −2.",
+        "Dividing by x silently excludes zero."
+      ],
+      "oracle": {
+        "op": "quadratic",
+        "coeff": [
+          1,
+          2,
+          0
+        ],
+        "target": [
+          -2,
+          0
+        ]
+      },
+      "hint": "Try the candidate in the original equation, including its denominator or square root.",
+      "credit": [
+        "1 point: Factor form already gives x = 0 or −2.",
+        "1 point: Dividing by x silently excludes zero.",
+        "1 point: give x = 0 is also a solution. with the stated domain/conditions and a valid argument."
+      ],
+      "diagnostic": "Direct execution",
+      "error_hypotheses": [
+        "Cancelling a possibly zero factor; accepting a value outside the original domain",
+        "A calculation or copying slip despite a valid setup; compare with a parallel item before concluding a concept gap."
+      ],
+      "follow_up": "If the reasoning is uncertain, use A1-R without revealing this solution. If independent reasoning is sound, consider A1-4. Do not infer a gap from an unreached item."
+    },
+    "A1-4": {
+      "id": "A1-4",
+      "skill": "A1",
+      "level": 4,
+      "role": "ladder",
+      "minutes": 10,
+      "prompt": "Solve over the reals: √(x + 6) = x. Explain how you reject any extra candidate.",
+      "answer": "x = 3.",
+      "steps": [
+        "The square root is nonnegative, so x ≥ 0.",
+        "Squaring gives x² − x − 6 = 0, so x is 3 or −2.",
+        "Only 3 is nonnegative and satisfies the original equation."
+      ],
+      "oracle": {
+        "op": "sqrt_equation",
+        "constant": 6,
+        "target": [
+          3
+        ]
+      },
+      "hint": "Try the candidate in the original equation, including its denominator or square root.",
+      "credit": [
+        "1 point: The square root is nonnegative, so x ≥ 0.",
+        "1 point: Squaring gives x² − x − 6 = 0, so x is 3 or −2.",
+        "1 point: give x = 3. with the stated domain/conditions and a valid argument."
+      ],
+      "diagnostic": "Combination and transfer",
+      "error_hypotheses": [
+        "Cancelling a possibly zero factor; accepting a value outside the original domain",
+        "A calculation or copying slip despite a valid setup; compare with a parallel item before concluding a concept gap."
+      ],
+      "follow_up": "If the reasoning is uncertain, use A1-R without revealing this solution. If independent reasoning is sound, consider A1-4. Do not infer a gap from an unreached item."
+    },
+    "A2-R": {
+      "id": "A2-R",
+      "skill": "A2",
+      "level": 2,
+      "role": "repair",
+      "minutes": 5,
+      "prompt": "For 3x² − 5x + 2, test x=1 and use the result to factor the polynomial.",
+      "answer": "(x − 1)(3x − 2).",
+      "steps": [
+        "P(1)=0, so x − 1 is a factor.",
+        "Multiplication confirms (x − 1)(3x − 2)=3x² − 5x + 2."
+      ],
+      "oracle": {
+        "op": "roots_factorization",
+        "coeff": [
+          3,
+          -5,
+          2
+        ],
+        "factors": [
+          [
+            1,
+            -1
+          ],
+          [
+            3,
+            -2
+          ]
+        ],
+        "target": [
+          1,
+          "2/3"
+        ]
+      },
+      "hint": "For division by x−a, think about substituting x=a. For rational roots, inspect the leading and constant coefficients.",
+      "credit": [
+        "1 point: P(1)=0, so x − 1 is a factor.",
+        "1 point: Multiplication confirms (x − 1)(3x − 2)=3x² − 5x + 2.",
+        "1 point: give (x − 1)(3x − 2). with the stated domain/conditions and a valid argument."
+      ],
+      "diagnostic": "Direct execution",
+      "error_hypotheses": [
+        "Treating the rational-root list as a guarantee of roots; confusing P(a) with P(−a)",
+        "A calculation or copying slip despite a valid setup; compare with a parallel item before concluding a concept gap."
+      ],
+      "follow_up": "If the reasoning is uncertain, use A2-R without revealing this solution. If independent reasoning is sound, consider A2-4. Do not infer a gap from an unreached item."
+    },
+    "A2-4": {
+      "id": "A2-4",
+      "skill": "A2",
+      "level": 4,
+      "role": "ladder",
+      "minutes": 10,
+      "prompt": "P is monic with integer coefficients and P(0)=−1, P(1)=1. Can P have a rational root? Justify.",
+      "answer": "No.",
+      "steps": [
+        "A rational root of a monic integer polynomial is an integer dividing its constant term, so it could only be ±1.",
+        "P(1) ≠ 0 rules out 1. Modulo 2, evaluating at −1 and 1 gives the same parity.",
+        "P(−1) is odd because P(1)=1 is odd, so P(−1) cannot be zero."
+      ],
+      "oracle": {
+        "op": "parity_polynomial_argument",
+        "constant": -1,
+        "value_at_one": 1,
+        "target": "no"
+      },
+      "hint": "For division by x−a, think about substituting x=a. For rational roots, inspect the leading and constant coefficients.",
+      "credit": [
+        "1 point: A rational root of a monic integer polynomial is an integer dividing its constant term, so it could only be ±1.",
+        "1 point: P(1) ≠ 0 rules out 1. Modulo 2, evaluating at −1 and 1 gives the same parity.",
+        "1 point: give No. with the stated domain/conditions and a valid argument."
+      ],
+      "diagnostic": "Combination and transfer",
+      "error_hypotheses": [
+        "Treating the rational-root list as a guarantee of roots; confusing P(a) with P(−a)",
+        "A calculation or copying slip despite a valid setup; compare with a parallel item before concluding a concept gap."
+      ],
+      "follow_up": "If the reasoning is uncertain, use A2-R without revealing this solution. If independent reasoning is sound, consider A2-4. Do not infer a gap from an unreached item."
+    },
+    "A3-R": {
+      "id": "A3-R",
+      "skill": "A3",
+      "level": 2,
+      "role": "repair",
+      "minutes": 5,
+      "prompt": "Roots u,v of x² − 6x + 4 satisfy what value of u²+v²?",
+      "answer": "28.",
+      "steps": [
+        "u+v=6 and uv=4.",
+        "Their squared sum is 36−8=28."
+      ],
+      "oracle": {
+        "op": "root_power",
+        "sum": 6,
+        "product": 4,
+        "power": 2,
+        "target": 28
+      },
+      "hint": "Expand (x−r)(x−s), or expand a square of a sum.",
+      "credit": [
+        "1 point: u+v=6 and uv=4.",
+        "1 point: Their squared sum is 36−8=28.",
+        "1 point: give 28. with the stated domain/conditions and a valid argument."
+      ],
+      "diagnostic": "Direct execution",
+      "error_hypotheses": [
+        "Wrong sign on the root sum; adding squares as the square of a sum",
+        "A calculation or copying slip despite a valid setup; compare with a parallel item before concluding a concept gap."
+      ],
+      "follow_up": "If the reasoning is uncertain, use A3-R without revealing this solution. If independent reasoning is sound, consider A3-4. Do not infer a gap from an unreached item."
+    },
+    "A3-4": {
+      "id": "A3-4",
+      "skill": "A3",
+      "level": 4,
+      "role": "ladder",
+      "minutes": 10,
+      "prompt": "If r,s solve x² − 5x + 3=0, find 1/r³ + 1/s³.",
+      "answer": "80/27.",
+      "steps": [
+        "Neither root is zero because rs=3.",
+        "r³+s³=(r+s)³−3rs(r+s)=125−45=80.",
+        "Divide by (rs)³=27."
+      ],
+      "oracle": {
+        "op": "reciprocal_root_cube",
+        "sum": 5,
+        "product": 3,
+        "target": "80/27"
+      },
+      "hint": "Expand (x−r)(x−s), or expand a square of a sum.",
+      "credit": [
+        "1 point: Neither root is zero because rs=3.",
+        "1 point: r³+s³=(r+s)³−3rs(r+s)=125−45=80.",
+        "1 point: give 80/27. with the stated domain/conditions and a valid argument."
+      ],
+      "diagnostic": "Combination and transfer",
+      "error_hypotheses": [
+        "Wrong sign on the root sum; adding squares as the square of a sum",
+        "A calculation or copying slip despite a valid setup; compare with a parallel item before concluding a concept gap."
+      ],
+      "follow_up": "If the reasoning is uncertain, use A3-R without revealing this solution. If independent reasoning is sound, consider A3-4. Do not infer a gap from an unreached item."
+    },
+    "A4-R": {
+      "id": "A4-R",
+      "skill": "A4",
+      "level": 2,
+      "role": "repair",
+      "minutes": 5,
+      "prompt": "If x+1/x=4, x ≠ 0, find x²+1/x².",
+      "answer": "14.",
+      "steps": [
+        "Square to obtain x²+2+1/x²=16.",
+        "Subtract 2."
+      ],
+      "oracle": {
+        "op": "symmetric_square",
+        "t": 4,
+        "target": 14
+      },
+      "hint": "Look for a repeated expression. If you replace it, record which real values the replacement can take.",
+      "credit": [
+        "1 point: Square to obtain x²+2+1/x²=16.",
+        "1 point: Subtract 2.",
+        "1 point: give 14. with the stated domain/conditions and a valid argument."
+      ],
+      "diagnostic": "Direct execution",
+      "error_hypotheses": [
+        "Treating x² as x; losing the nonzero restriction or real feasibility of a substituted value",
+        "A calculation or copying slip despite a valid setup; compare with a parallel item before concluding a concept gap."
+      ],
+      "follow_up": "If the reasoning is uncertain, use A4-R without revealing this solution. If independent reasoning is sound, consider A4-4. Do not infer a gap from an unreached item."
+    },
+    "A4-4": {
+      "id": "A4-4",
+      "skill": "A4",
+      "level": 4,
+      "role": "ladder",
+      "minutes": 10,
+      "prompt": "Find the number of real solutions of x⁴ − 3x³ + 4x² − 3x + 1=0.",
+      "answer": "Exactly one real solution: x=1.",
+      "steps": [
+        "Zero is not a root, so divide by x².",
+        "Set t=x+1/x to obtain t²−3t+2=0, hence t=1 or 2.",
+        "For real x, t=1 is impossible; t=2 gives x=1 only."
+      ],
+      "oracle": {
+        "op": "palindromic_quartic",
+        "coeff": [
+          1,
+          -3,
+          4,
+          -3,
+          1
+        ],
+        "target": [
+          1
+        ]
+      },
+      "hint": "Look for a repeated expression. If you replace it, record which real values the replacement can take.",
+      "credit": [
+        "1 point: Zero is not a root, so divide by x².",
+        "1 point: Set t=x+1/x to obtain t²−3t+2=0, hence t=1 or 2.",
+        "1 point: conclude Exactly one real solution: x=1. and justify the final case/domain/equality."
+      ],
+      "diagnostic": "Combination and transfer",
+      "error_hypotheses": [
+        "Treating x² as x; losing the nonzero restriction or real feasibility of a substituted value",
+        "A calculation or copying slip despite a valid setup; compare with a parallel item before concluding a concept gap."
+      ],
+      "follow_up": "If the reasoning is uncertain, use A4-R without revealing this solution. If independent reasoning is sound, consider A4-4. Do not infer a gap from an unreached item."
+    },
+    "EX-VJ": {
+      "id": "EX-VJ",
+      "skill": "A3",
+      "level": 4,
+      "role": "enrichment",
+      "minutes": 10,
+      "prompt": "Optional enrichment, with no baseline penalty: positive integers a≤b satisfy a²+b²+1=3ab. For a>1, show that b′=3a−b is a positive integer less than a and that (b′,a) also solves the equation. Handle a=1 separately. Explain why repeated reduction reaches (1,1).",
+      "answer": "For a>1, 0<b′<a; a=1 gives b=1 or 2; descent reduces every solution to (1,1).",
+      "steps": [
+        "Treat b as a root of t²−3at+(a²+1)=0. Its other root b′=3a−b=(a²+1)/b is a positive integer, and root substitution gives another solution.",
+        "If a>1, equality a=b would give a²=1, impossible; so b≥a+1. Thus b′≤(a²+1)/(a+1)<a.",
+        "For a=1, b²−3b+2=0 gives b=1 or 2. The pair (1,2) reduces to (1,1). Otherwise replacing (a,b) by (b′,a) strictly decreases the positive sum, so eventually a=1."
+      ],
+      "oracle": null,
+      "hint": "Treat the equation as a quadratic in b, and find the other root using its sum and product.",
+      "credit": [
+        "1 point: Treat b as a root of t²−3at+(a²+1)=0. Its other root b′=3a−b=(a²+1)/b is a positive integer, and root substitution gives another solution.",
+        "1 point: If a>1, equality a=b would give a²=1, impossible; so b≥a+1. Thus b′≤(a²+1)/(a+1)<a.",
+        "1 point: conclude For a>1, 0<b′<a; a=1 gives b=1 or 2; descent reduces every solution to (1,1). with valid reasoning."
+      ],
+      "diagnostic": "Prior olympiad exposure / optional descent extension; never a baseline deficit.",
+      "error_hypotheses": [
+        "Wrong sign on the root sum; adding squares as the square of a sum",
+        "A calculation or copying slip despite a valid setup; compare with a parallel item before concluding a concept gap."
+      ],
+      "follow_up": "Record prior exposure. If unfamiliar, record not encountered; do not assign a foundational gap or require a retry."
+    }
+  }
+}

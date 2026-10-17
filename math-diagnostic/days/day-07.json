@@ -1,0 +1,63 @@
+{
+  "day": 7,
+  "core": [
+    {
+      "id": "C1-3",
+      "prompt": "How many three-digit positive integers have an even last digit and no repeated digits?"
+    },
+    {
+      "id": "C2-3",
+      "prompt": "A committee of 3 is chosen from 5 women and 4 men. How many committees contain at least one woman?"
+    },
+    {
+      "id": "C3-3",
+      "prompt": "How many integers from 1 through 100 are divisible by 3 or 5?"
+    },
+    {
+      "id": "C1-2",
+      "prompt": "A code has one letter from A,B,C followed by two digits from 0,…,9. Repetition is allowed. How many codes exist?"
+    },
+    {
+      "id": "C2-2",
+      "prompt": "From 8 distinct students, how many groups of 3 can be chosen? How many ways can president, secretary and treasurer be assigned to different students?"
+    },
+    {
+      "id": "C3-2",
+      "prompt": "In a class of 30, 18 study French and 15 study German; 7 study both. How many study at least one, and how many neither?"
+    },
+    {
+      "id": "C2-1",
+      "prompt": "Explain the difference between choosing r people from n and assigning r distinct ordered positions to n people. State both counts for 0≤r≤n."
+    },
+    {
+      "id": "C3-1",
+      "prompt": "State the formula for the size of the union of two finite sets A and B. Why is there a subtraction?"
+    }
+  ],
+  "branches": [
+    {
+      "id": "C1-R",
+      "prompt": "A shirt has 4 colour choices and 3 size choices; every combination exists. How many combinations?"
+    },
+    {
+      "id": "C1-4",
+      "prompt": "How many six-digit positive integers use each of 0,1,2,3,4,5 exactly once and are divisible by 5?"
+    },
+    {
+      "id": "C2-R",
+      "prompt": "From 5 distinct people choose a pair, then distinguish one as leader. How many outcomes?"
+    },
+    {
+      "id": "C2-4",
+      "prompt": "From 6 women and 5 men, choose a committee of 4 with at least 2 women, then appoint one committee member as chair. How many outcomes?"
+    },
+    {
+      "id": "C3-R",
+      "prompt": "Twelve students play chess, 10 play football and 4 play both. How many play at least one?"
+    },
+    {
+      "id": "C3-4",
+      "prompt": "How many integers from 1 through 200 are divisible by at least one of 2,3,5?"
+    }
+  ]
+}

@@ -1,0 +1,75 @@
+{
+  "day": 2,
+  "core": [
+    {
+      "id": "A1-3",
+      "prompt": "Solve over the reals: (x² − 9)/(x − 3) = 6. State all restrictions."
+    },
+    {
+      "id": "A2-3",
+      "prompt": "Find all real roots of 2x³ − 3x² − 8x + 12 = 0."
+    },
+    {
+      "id": "A3-3",
+      "prompt": "The roots of x² − 5x + 3 are r and s. Find r²+s² without calculating either root."
+    },
+    {
+      "id": "A1-2",
+      "prompt": "Solve over the reals: x(x − 4) = 0."
+    },
+    {
+      "id": "A2-2",
+      "prompt": "Find the remainder when P(x)=2x³ − 3x + 5 is divided by x − 2."
+    },
+    {
+      "id": "A3-2",
+      "prompt": "The roots of x² − 7x + 10 are r and s. Find r+s and rs without solving for them."
+    },
+    {
+      "id": "A2-1",
+      "prompt": "State the remainder theorem, factor theorem, and rational-root restriction for an integer-coefficient polynomial with nonzero leading coefficient."
+    },
+    {
+      "id": "A4-1",
+      "prompt": "For nonzero real x, expand (x+1/x)². What is x²+1/x² in terms of t=x+1/x?"
+    }
+  ],
+  "branches": [
+    {
+      "id": "A1-R",
+      "prompt": "Solve x(x + 2) = 0. A student divides by x and reports only −2. What is missing?"
+    },
+    {
+      "id": "A1-4",
+      "prompt": "Solve over the reals: √(x + 6) = x. Explain how you reject any extra candidate."
+    },
+    {
+      "id": "A2-R",
+      "prompt": "For 3x² − 5x + 2, test x=1 and use the result to factor the polynomial."
+    },
+    {
+      "id": "A2-4",
+      "prompt": "P is monic with integer coefficients and P(0)=−1, P(1)=1. Can P have a rational root? Justify."
+    },
+    {
+      "id": "A3-R",
+      "prompt": "Roots u,v of x² − 6x + 4 satisfy what value of u²+v²?"
+    },
+    {
+      "id": "A3-4",
+      "prompt": "If r,s solve x² − 5x + 3=0, find 1/r³ + 1/s³."
+    },
+    {
+      "id": "A4-R",
+      "prompt": "If x+1/x=4, x ≠ 0, find x²+1/x²."
+    },
+    {
+      "id": "A4-4",
+      "prompt": "Find the number of real solutions of x⁴ − 3x³ + 4x² − 3x + 1=0."
+    },
+    {
+      "id": "EX-VJ",
+      "prompt": "Optional enrichment, with no baseline penalty: positive integers a≤b satisfy a²+b²+1=3ab. For a>1, show that b′=3a−b is a positive integer less than a and that (b′,a) also solves the equation. Handle a=1 separately. Explain why repeated reduction reaches (1,1)."
+    }
+  ]
+}

@@ -1,0 +1,472 @@
+{
+  "day": 3,
+  "title": "Inequalities and bounds",
+  "core": [
+    "I1-3",
+    "I2-3",
+    "I3-3",
+    "I1-2",
+    "I2-2",
+    "I3-2",
+    "I2-1",
+    "I3-1"
+  ],
+  "branches": [
+    "I1-R",
+    "I1-4",
+    "I2-R",
+    "I2-4",
+    "I3-R",
+    "I3-4"
+  ],
+  "questions": {
+    "I1-3": {
+      "id": "I1-3",
+      "skill": "I1",
+      "level": 3,
+      "role": "ladder",
+      "minutes": 5,
+      "prompt": "Solve (x−1)/(x+2)≥0 over the reals.",
+      "answer": "x<−2 or x≥1.",
+      "steps": [
+        "Exclude x=−2 and mark the numerator zero at 1.",
+        "On the three intervals, signs are positive, negative, positive.",
+        "Include 1 because equality is allowed; exclude −2."
+      ],
+      "oracle": {
+        "op": "rational_sign",
+        "zero": 1,
+        "pole": -2,
+        "target": "(-inf,-2) union [1,inf)"
+      },
+      "hint": "Mark points where a factor is zero or undefined. Test one point in each interval.",
+      "credit": [
+        "1 point: Exclude x=−2 and mark the numerator zero at 1.",
+        "1 point: On the three intervals, signs are positive, negative, positive.",
+        "1 point: give x<−2 or x≥1. with the stated domain/conditions and a valid argument."
+      ],
+      "diagnostic": "Uncued recognition",
+      "error_hypotheses": [
+        "Failing to reverse order after negative division; multiplying by an expression of unknown sign",
+        "A calculation or copying slip despite a valid setup; compare with a parallel item before concluding a concept gap."
+      ],
+      "follow_up": "If the reasoning is uncertain, use I1-R without revealing this solution. If independent reasoning is sound, consider I1-4. Do not infer a gap from an unreached item."
+    },
+    "I2-3": {
+      "id": "I2-3",
+      "skill": "I2",
+      "level": 3,
+      "role": "ladder",
+      "minutes": 5,
+      "prompt": "Find all real x satisfying |x−1|+|x−5|=4.",
+      "answer": "1≤x≤5.",
+      "steps": [
+        "Between 1 and 5, the two distances add to the endpoint separation 4.",
+        "To the left or right, the sum is larger than 4.",
+        "Include both endpoints."
+      ],
+      "oracle": {
+        "op": "distance_sum",
+        "left": 1,
+        "right": 5,
+        "total": 4,
+        "target": [
+          1,
+          5
+        ]
+      },
+      "hint": "Locate the stated centres on a number line and interpret absolute values as distances.",
+      "credit": [
+        "1 point: Between 1 and 5, the two distances add to the endpoint separation 4.",
+        "1 point: To the left or right, the sum is larger than 4.",
+        "1 point: give 1≤x≤5. with the stated domain/conditions and a valid argument."
+      ],
+      "diagnostic": "Uncued recognition",
+      "error_hypotheses": [
+        "Dropping one side of the absolute-value condition; counting an interval as one solution",
+        "A calculation or copying slip despite a valid setup; compare with a parallel item before concluding a concept gap."
+      ],
+      "follow_up": "If the reasoning is uncertain, use I2-R without revealing this solution. If independent reasoning is sound, consider I2-4. Do not infer a gap from an unreached item."
+    },
+    "I3-3": {
+      "id": "I3-3",
+      "skill": "I3",
+      "level": 3,
+      "role": "ladder",
+      "minutes": 5,
+      "prompt": "Positive a,b have a+b=10. What is the greatest possible ab, and when is it attained?",
+      "answer": "25, attained at a=b=5.",
+      "steps": [
+        "(a−b)²≥0 implies (a+b)²≥4ab.",
+        "Thus ab≤25; equal values attain the bound."
+      ],
+      "oracle": {
+        "op": "fixed_sum_product",
+        "sum": 10,
+        "target": 25
+      },
+      "hint": "Consider a nonnegative square. After a bound, check when equality can hold.",
+      "credit": [
+        "1 point: (a−b)²≥0 implies (a+b)²≥4ab.",
+        "1 point: Thus ab≤25; equal values attain the bound.",
+        "1 point: give 25, attained at a=b=5. with the stated domain/conditions and a valid argument."
+      ],
+      "diagnostic": "Uncued recognition",
+      "error_hypotheses": [
+        "Applying AM–GM outside its domain; stating a bound without checking attainability",
+        "A calculation or copying slip despite a valid setup; compare with a parallel item before concluding a concept gap."
+      ],
+      "follow_up": "If the reasoning is uncertain, use I3-R without revealing this solution. If independent reasoning is sound, consider I3-4. Do not infer a gap from an unreached item."
+    },
+    "I1-2": {
+      "id": "I1-2",
+      "skill": "I1",
+      "level": 2,
+      "role": "ladder",
+      "minutes": 3,
+      "prompt": "Solve −3x+2<11 over the reals.",
+      "answer": "x>−3.",
+      "steps": [
+        "Subtract 2: −3x<9.",
+        "Divide by −3 and reverse the sign."
+      ],
+      "oracle": {
+        "op": "linear_inequality",
+        "a": -3,
+        "b": 2,
+        "rhs": 11,
+        "relation": "<",
+        "target": {
+          "boundary": -3,
+          "relation": ">"
+        }
+      },
+      "hint": "Mark points where a factor is zero or undefined. Test one point in each interval.",
+      "credit": [
+        "1 point: Subtract 2: −3x<9.",
+        "1 point: Divide by −3 and reverse the sign.",
+        "1 point: give x>−3. with the stated domain/conditions and a valid argument."
+      ],
+      "diagnostic": "Direct execution",
+      "error_hypotheses": [
+        "Failing to reverse order after negative division; multiplying by an expression of unknown sign",
+        "A calculation or copying slip despite a valid setup; compare with a parallel item before concluding a concept gap."
+      ],
+      "follow_up": "If the reasoning is uncertain, use I1-R without revealing this solution. If independent reasoning is sound, consider I1-4. Do not infer a gap from an unreached item."
+    },
+    "I2-2": {
+      "id": "I2-2",
+      "skill": "I2",
+      "level": 2,
+      "role": "ladder",
+      "minutes": 3,
+      "prompt": "Solve |2x−3|≤5 over the reals.",
+      "answer": "−1≤x≤4.",
+      "steps": [
+        "Write −5≤2x−3≤5.",
+        "Add 3 and divide by 2."
+      ],
+      "oracle": {
+        "op": "absolute_linear",
+        "a": 2,
+        "b": -3,
+        "radius": 5,
+        "target": [
+          -1,
+          4
+        ]
+      },
+      "hint": "Locate the stated centres on a number line and interpret absolute values as distances.",
+      "credit": [
+        "1 point: Write −5≤2x−3≤5.",
+        "1 point: Add 3 and divide by 2.",
+        "1 point: give −1≤x≤4. with the stated domain/conditions and a valid argument."
+      ],
+      "diagnostic": "Direct execution",
+      "error_hypotheses": [
+        "Dropping one side of the absolute-value condition; counting an interval as one solution",
+        "A calculation or copying slip despite a valid setup; compare with a parallel item before concluding a concept gap."
+      ],
+      "follow_up": "If the reasoning is uncertain, use I2-R without revealing this solution. If independent reasoning is sound, consider I2-4. Do not infer a gap from an unreached item."
+    },
+    "I3-2": {
+      "id": "I3-2",
+      "skill": "I3",
+      "level": 2,
+      "role": "ladder",
+      "minutes": 3,
+      "prompt": "For x>0, find the minimum of x+9/x and the x attaining it.",
+      "answer": "Minimum 6 at x=3.",
+      "steps": [
+        "The two positive terms have product 9.",
+        "AM–GM gives sum at least 6, with equality x=9/x, hence x=3."
+      ],
+      "oracle": {
+        "op": "amgm_reciprocal",
+        "constant": 9,
+        "target": {
+          "minimum": 6,
+          "x": 3
+        }
+      },
+      "hint": "Consider a nonnegative square. After a bound, check when equality can hold.",
+      "credit": [
+        "1 point: The two positive terms have product 9.",
+        "1 point: AM–GM gives sum at least 6, with equality x=9/x, hence x=3.",
+        "1 point: give Minimum 6 at x=3. with the stated domain/conditions and a valid argument."
+      ],
+      "diagnostic": "Direct execution",
+      "error_hypotheses": [
+        "Applying AM–GM outside its domain; stating a bound without checking attainability",
+        "A calculation or copying slip despite a valid setup; compare with a parallel item before concluding a concept gap."
+      ],
+      "follow_up": "If the reasoning is uncertain, use I3-R without revealing this solution. If independent reasoning is sound, consider I3-4. Do not infer a gap from an unreached item."
+    },
+    "I2-1": {
+      "id": "I2-1",
+      "skill": "I2",
+      "level": 1,
+      "role": "ladder",
+      "minutes": 2,
+      "prompt": "For a>0, express |x−c|≤a as an interval and explain it as distance.",
+      "answer": "c−a≤x≤c+a; x is at distance at most a from c.",
+      "steps": [
+        "Absolute difference is distance on the real line.",
+        "Both endpoints are allowed because the inequality is not strict."
+      ],
+      "oracle": null,
+      "hint": "Locate the stated centres on a number line and interpret absolute values as distances.",
+      "credit": [
+        "1 point: Absolute difference is distance on the real line.",
+        "1 point: Both endpoints are allowed because the inequality is not strict.",
+        "1 point: give c−a≤x≤c+a; x is at distance at most a from c. with the stated domain/conditions and a valid argument."
+      ],
+      "diagnostic": "Knowledge/conditions",
+      "error_hypotheses": [
+        "Dropping one side of the absolute-value condition; counting an interval as one solution",
+        "A calculation or copying slip despite a valid setup; compare with a parallel item before concluding a concept gap."
+      ],
+      "follow_up": "If the reasoning is uncertain, use I2-R without revealing this solution. If independent reasoning is sound, consider I2-4. Do not infer a gap from an unreached item."
+    },
+    "I3-1": {
+      "id": "I3-1",
+      "skill": "I3",
+      "level": 1,
+      "role": "ladder",
+      "minutes": 2,
+      "prompt": "State the two-variable arithmetic–geometric mean inequality, its domain and equality condition.",
+      "answer": "For a,b≥0, (a+b)/2≥√(ab), with equality iff a=b.",
+      "steps": [
+        "The square roots require nonnegative a,b.",
+        "(√a−√b)²≥0 proves a+b≥2√(ab); equality requires a=b."
+      ],
+      "oracle": null,
+      "hint": "Consider a nonnegative square. After a bound, check when equality can hold.",
+      "credit": [
+        "1 point: The square roots require nonnegative a,b.",
+        "1 point: (√a−√b)²≥0 proves a+b≥2√(ab); equality requires a=b.",
+        "1 point: give For a,b≥0, (a+b)/2≥√(ab), with equality iff a=b. with the stated domain/conditions and a valid argument."
+      ],
+      "diagnostic": "Knowledge/conditions",
+      "error_hypotheses": [
+        "Applying AM–GM outside its domain; stating a bound without checking attainability",
+        "A calculation or copying slip despite a valid setup; compare with a parallel item before concluding a concept gap."
+      ],
+      "follow_up": "If the reasoning is uncertain, use I3-R without revealing this solution. If independent reasoning is sound, consider I3-4. Do not infer a gap from an unreached item."
+    },
+    "I1-R": {
+      "id": "I1-R",
+      "skill": "I1",
+      "level": 2,
+      "role": "repair",
+      "minutes": 5,
+      "prompt": "Solve −2x≥8. Explain the direction of the answer.",
+      "answer": "x≤−4.",
+      "steps": [
+        "Divide by negative 2.",
+        "Reverse ≥ to ≤."
+      ],
+      "oracle": {
+        "op": "linear_inequality",
+        "a": -2,
+        "b": 0,
+        "rhs": 8,
+        "relation": ">=",
+        "target": {
+          "boundary": -4,
+          "relation": "<="
+        }
+      },
+      "hint": "Mark points where a factor is zero or undefined. Test one point in each interval.",
+      "credit": [
+        "1 point: Divide by negative 2.",
+        "1 point: Reverse ≥ to ≤.",
+        "1 point: give x≤−4. with the stated domain/conditions and a valid argument."
+      ],
+      "diagnostic": "Direct execution",
+      "error_hypotheses": [
+        "Failing to reverse order after negative division; multiplying by an expression of unknown sign",
+        "A calculation or copying slip despite a valid setup; compare with a parallel item before concluding a concept gap."
+      ],
+      "follow_up": "If the reasoning is uncertain, use I1-R without revealing this solution. If independent reasoning is sound, consider I1-4. Do not infer a gap from an unreached item."
+    },
+    "I1-4": {
+      "id": "I1-4",
+      "skill": "I1",
+      "level": 4,
+      "role": "ladder",
+      "minutes": 10,
+      "prompt": "Find all real x for which x²≤2x+3 and (x−2)/(x+1)>0 both hold.",
+      "answer": "2<x≤3.",
+      "steps": [
+        "The quadratic gives −1≤x≤3.",
+        "The rational inequality holds for x<−1 or x>2, excluding −1.",
+        "Intersect the two sets."
+      ],
+      "oracle": {
+        "op": "intersection_inequalities",
+        "target": "(2,3]"
+      },
+      "hint": "Mark points where a factor is zero or undefined. Test one point in each interval.",
+      "credit": [
+        "1 point: The quadratic gives −1≤x≤3.",
+        "1 point: The rational inequality holds for x<−1 or x>2, excluding −1.",
+        "1 point: give 2<x≤3. with the stated domain/conditions and a valid argument."
+      ],
+      "diagnostic": "Combination and transfer",
+      "error_hypotheses": [
+        "Failing to reverse order after negative division; multiplying by an expression of unknown sign",
+        "A calculation or copying slip despite a valid setup; compare with a parallel item before concluding a concept gap."
+      ],
+      "follow_up": "If the reasoning is uncertain, use I1-R without revealing this solution. If independent reasoning is sound, consider I1-4. Do not infer a gap from an unreached item."
+    },
+    "I2-R": {
+      "id": "I2-R",
+      "skill": "I2",
+      "level": 2,
+      "role": "repair",
+      "minutes": 5,
+      "prompt": "Solve |x−4|≤2 and describe the interval in words.",
+      "answer": "2≤x≤6.",
+      "steps": [
+        "The distance from 4 is at most 2.",
+        "The endpoints are 4−2 and 4+2."
+      ],
+      "oracle": {
+        "op": "absolute_linear",
+        "a": 1,
+        "b": -4,
+        "radius": 2,
+        "target": [
+          2,
+          6
+        ]
+      },
+      "hint": "Locate the stated centres on a number line and interpret absolute values as distances.",
+      "credit": [
+        "1 point: The distance from 4 is at most 2.",
+        "1 point: The endpoints are 4−2 and 4+2.",
+        "1 point: give 2≤x≤6. with the stated domain/conditions and a valid argument."
+      ],
+      "diagnostic": "Direct execution",
+      "error_hypotheses": [
+        "Dropping one side of the absolute-value condition; counting an interval as one solution",
+        "A calculation or copying slip despite a valid setup; compare with a parallel item before concluding a concept gap."
+      ],
+      "follow_up": "If the reasoning is uncertain, use I2-R without revealing this solution. If independent reasoning is sound, consider I2-4. Do not infer a gap from an unreached item."
+    },
+    "I2-4": {
+      "id": "I2-4",
+      "skill": "I2",
+      "level": 4,
+      "role": "ladder",
+      "minutes": 10,
+      "prompt": "For which real t does |x−1|+|x−5|=t have exactly two real solutions x?",
+      "answer": "t>4.",
+      "steps": [
+        "The minimum sum is 4, attained at every x in [1,5].",
+        "For t<4 there are no solutions.",
+        "For t>4 there is one solution to the left of 1 and one to the right of 5."
+      ],
+      "oracle": {
+        "op": "distance_parameter",
+        "left": 1,
+        "right": 5,
+        "target": "t>4"
+      },
+      "hint": "Locate the stated centres on a number line and interpret absolute values as distances.",
+      "credit": [
+        "1 point: The minimum sum is 4, attained at every x in [1,5].",
+        "1 point: For t<4 there are no solutions.",
+        "1 point: give t>4. with the stated domain/conditions and a valid argument."
+      ],
+      "diagnostic": "Combination and transfer",
+      "error_hypotheses": [
+        "Dropping one side of the absolute-value condition; counting an interval as one solution",
+        "A calculation or copying slip despite a valid setup; compare with a parallel item before concluding a concept gap."
+      ],
+      "follow_up": "If the reasoning is uncertain, use I2-R without revealing this solution. If independent reasoning is sound, consider I2-4. Do not infer a gap from an unreached item."
+    },
+    "I3-R": {
+      "id": "I3-R",
+      "skill": "I3",
+      "level": 2,
+      "role": "repair",
+      "minutes": 5,
+      "prompt": "Positive a,b have a+b=8. Find the maximum ab.",
+      "answer": "16 at a=b=4.",
+      "steps": [
+        "Nonnegative (a−b)² gives 4ab≤64.",
+        "Equal values attain 16."
+      ],
+      "oracle": {
+        "op": "fixed_sum_product",
+        "sum": 8,
+        "target": 16
+      },
+      "hint": "Consider a nonnegative square. After a bound, check when equality can hold.",
+      "credit": [
+        "1 point: Nonnegative (a−b)² gives 4ab≤64.",
+        "1 point: Equal values attain 16.",
+        "1 point: give 16 at a=b=4. with the stated domain/conditions and a valid argument."
+      ],
+      "diagnostic": "Direct execution",
+      "error_hypotheses": [
+        "Applying AM–GM outside its domain; stating a bound without checking attainability",
+        "A calculation or copying slip despite a valid setup; compare with a parallel item before concluding a concept gap."
+      ],
+      "follow_up": "If the reasoning is uncertain, use I3-R without revealing this solution. If independent reasoning is sound, consider I3-4. Do not infer a gap from an unreached item."
+    },
+    "I3-4": {
+      "id": "I3-4",
+      "skill": "I3",
+      "level": 4,
+      "role": "ladder",
+      "minutes": 10,
+      "prompt": "Positive x,y satisfy xy=4. Find the minimum of (x+y)(x+4y), with equality values.",
+      "answer": "36 at x=2√2, y=√2.",
+      "steps": [
+        "Expand to x²+5xy+4y²=x²+4y²+20.",
+        "Since xy=4, x²+4y²≥4xy=16.",
+        "Equality requires x=2y; together with xy=4 this gives the stated values."
+      ],
+      "oracle": {
+        "op": "amgm_mixed",
+        "product": 4,
+        "target": 36
+      },
+      "hint": "Consider a nonnegative square. After a bound, check when equality can hold.",
+      "credit": [
+        "1 point: Expand to x²+5xy+4y²=x²+4y²+20.",
+        "1 point: Since xy=4, x²+4y²≥4xy=16.",
+        "1 point: give 36 at x=2√2, y=√2. with the stated domain/conditions and a valid argument."
+      ],
+      "diagnostic": "Combination and transfer",
+      "error_hypotheses": [
+        "Applying AM–GM outside its domain; stating a bound without checking attainability",
+        "A calculation or copying slip despite a valid setup; compare with a parallel item before concluding a concept gap."
+      ],
+      "follow_up": "If the reasoning is uncertain, use I3-R without revealing this solution. If independent reasoning is sound, consider I3-4. Do not infer a gap from an unreached item."
+    }
+  }
+}

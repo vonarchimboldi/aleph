@@ -226,6 +226,14 @@ node scripts/judge-material-quality.mjs
 ```
 # DBMS exam pack
 
+## Platinum mathematical diagnostic
+
+`math-diagnostic/` publishes ten checked 60-minute sessions under the Platinum subject and resource lists. Learners see the current day's eight core questions and any tutor-selected follow-ups, save reasoning/confidence/familiarity locally, export or restore a learner-specific backup, and unlock the next day by recording completion. No deadlines or new scheduled tasks are invented. Existing study progress is preserved.
+
+Reviewer/course-designer prototype roles can open `math-diagnostic/?mode=tutor&learner=LEARNER_ID` to select at most two follow-ups, use item-level scoring anchors, and download the administration, solutions and profile files. Keep later questions and answers out of the learner workflow. The day/role controls are UI controls under Aleph's existing local prototype authentication; static files are not a secure proctored-exam access boundary. Responses and tutor scoring remain browser-local, with export for sharing; no automatic grading or ability score is claimed.
+
+Run `node scripts/verify-math-diagnostic.mjs` to check all ten daily PDFs, 80 distinct core items, solution-field separation, sequential release, backup validation, Platinum-only integration and progress migration. Source/review records remain in `/Users/abhinav/Platinum-Math-Diagnostic`. The test is author-reviewed/computation-checked, not psychometrically calibrated.
+
 The `gate-da-dbms/` library contains eight chapter PDFs, complete notes, an 80-problem practice book and a separate solutions guide. Both Basic and Platinum workspaces expose the library under Database Management and Warehousing and Resources. Existing task progress is preserved.
 
 Run `node scripts/verify-dbms-pack.mjs` to check PDF downloads, account routing and progress migration. Source references and review limitations are included in the library metadata and notes.

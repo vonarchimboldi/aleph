@@ -1,0 +1,11 @@
+{
+  "title": "High-school mathematics diagnostic",
+  "version": "2026-10-17-v1",
+  "days": 10,
+  "sessionMinutes": 60,
+  "skills": 25,
+  "coreQuestions": 80,
+  "reserveQuestions": 53,
+  "reviewStatus": "AUTHOR_REVIEWED_COMPUTATION_CHECKED",
+  "calibrated": false
+}

@@ -1,0 +1,103 @@
+{
+  "day": 1,
+  "core": [
+    {
+      "id": "A1-1",
+      "prompt": "For real x, explain why dividing both sides of an equation by x can lose a solution. Give one example."
+    },
+    {
+      "id": "A3-1",
+      "prompt": "If r and s are the roots of ax² + bx + c=0, a ≠ 0, what are r+s and rs? Explain by expanding."
+    },
+    {
+      "id": "I1-1",
+      "prompt": "What happens to an inequality when both sides are multiplied by a negative number? Give a numerical example."
+    },
+    {
+      "id": "F1-1",
+      "prompt": "What does (f∘g)(x) mean, and which inputs are allowed?"
+    },
+    {
+      "id": "L1-1",
+      "prompt": "If a statement says “P implies Q”, what are its converse and contrapositive? Which is logically equivalent to the original?"
+    },
+    {
+      "id": "S1-1",
+      "prompt": "State the nth term and sum of the first n terms of an arithmetic sequence with first term a and common difference d, for positive integer n."
+    },
+    {
+      "id": "C1-1",
+      "prompt": "When should counts of possibilities be multiplied, and when should they be added? State the disjointness condition."
+    },
+    {
+      "id": "N3-1",
+      "prompt": "List the repeating last digits of positive powers of 7. Which cycle position corresponds to an exponent divisible by 4?"
+    }
+  ],
+  "branches": [
+    {
+      "id": "A1-R",
+      "prompt": "Solve x(x + 2) = 0. A student divides by x and reports only −2. What is missing?"
+    },
+    {
+      "id": "A1-4",
+      "prompt": "Solve over the reals: √(x + 6) = x. Explain how you reject any extra candidate."
+    },
+    {
+      "id": "A3-R",
+      "prompt": "Roots u,v of x² − 6x + 4 satisfy what value of u²+v²?"
+    },
+    {
+      "id": "A3-4",
+      "prompt": "If r,s solve x² − 5x + 3=0, find 1/r³ + 1/s³."
+    },
+    {
+      "id": "I1-R",
+      "prompt": "Solve −2x≥8. Explain the direction of the answer."
+    },
+    {
+      "id": "I1-4",
+      "prompt": "Find all real x for which x²≤2x+3 and (x−2)/(x+1)>0 both hold."
+    },
+    {
+      "id": "F1-R",
+      "prompt": "If f(x)=x+1 and g(x)=x², find f(g(3)) and g(f(3))."
+    },
+    {
+      "id": "F1-4",
+      "prompt": "For real x, f(x)=(x−1)/(x+1). Determine the domain of f(f(x)) and simplify it."
+    },
+    {
+      "id": "L1-R",
+      "prompt": "For integers n, is “3 divides n implies 6 divides n” true? Justify."
+    },
+    {
+      "id": "L1-4",
+      "prompt": "Integers a,b satisfy: ab is divisible by 6. Must at least one of a,b be divisible by 6? Give a counterexample or proof, and explain which prime-divisibility fact still holds."
+    },
+    {
+      "id": "S1-R",
+      "prompt": "Find 5+8+11+⋯+32."
+    },
+    {
+      "id": "S1-4",
+      "prompt": "A list of consecutive positive integers starts at 1 and has sum 210. Delete one number and the mean of the remaining numbers becomes 10. Which number was deleted?"
+    },
+    {
+      "id": "C1-R",
+      "prompt": "A shirt has 4 colour choices and 3 size choices; every combination exists. How many combinations?"
+    },
+    {
+      "id": "C1-4",
+      "prompt": "How many six-digit positive integers use each of 0,1,2,3,4,5 exactly once and are divisible by 5?"
+    },
+    {
+      "id": "N3-R",
+      "prompt": "Find the last digit of 3^12 and explain the zero-remainder case."
+    },
+    {
+      "id": "N3-4",
+      "prompt": "Find the last digit of 7^(3^2026). Explain how you locate the exponent in the relevant cycle."
+    }
+  ]
+}

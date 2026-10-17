@@ -1,0 +1,788 @@
+{
+  "day": 1,
+  "title": "Broad starting sample",
+  "core": [
+    "A1-1",
+    "A3-1",
+    "I1-1",
+    "F1-1",
+    "L1-1",
+    "S1-1",
+    "C1-1",
+    "N3-1"
+  ],
+  "branches": [
+    "A1-R",
+    "A1-4",
+    "A3-R",
+    "A3-4",
+    "I1-R",
+    "I1-4",
+    "F1-R",
+    "F1-4",
+    "L1-R",
+    "L1-4",
+    "S1-R",
+    "S1-4",
+    "C1-R",
+    "C1-4",
+    "N3-R",
+    "N3-4"
+  ],
+  "questions": {
+    "A1-1": {
+      "id": "A1-1",
+      "skill": "A1",
+      "level": 1,
+      "role": "ladder",
+      "minutes": 2,
+      "prompt": "For real x, explain why dividing both sides of an equation by x can lose a solution. Give one example.",
+      "answer": "Division requires x ≠ 0; x² = x loses x = 0 if divided by x.",
+      "steps": [
+        "Division by zero is undefined.",
+        "Factor x² − x = x(x − 1); its roots are 0 and 1.",
+        "Dividing by x gives only x = 1, so treat x = 0 separately."
+      ],
+      "oracle": null,
+      "hint": "Try the candidate in the original equation, including its denominator or square root.",
+      "credit": [
+        "1 point: Division by zero is undefined.",
+        "1 point: Factor x² − x = x(x − 1); its roots are 0 and 1.",
+        "1 point: give Division requires x ≠ 0; x² = x loses x = 0 if divided by x. with the stated domain/conditions and a valid argument."
+      ],
+      "diagnostic": "Knowledge/conditions",
+      "error_hypotheses": [
+        "Cancelling a possibly zero factor; accepting a value outside the original domain",
+        "A calculation or copying slip despite a valid setup; compare with a parallel item before concluding a concept gap."
+      ],
+      "follow_up": "If the reasoning is uncertain, use A1-R without revealing this solution. If independent reasoning is sound, consider A1-4. Do not infer a gap from an unreached item."
+    },
+    "A3-1": {
+      "id": "A3-1",
+      "skill": "A3",
+      "level": 1,
+      "role": "ladder",
+      "minutes": 2,
+      "prompt": "If r and s are the roots of ax² + bx + c=0, a ≠ 0, what are r+s and rs? Explain by expanding.",
+      "answer": "r+s=−b/a; rs=c/a.",
+      "steps": [
+        "Expand a(x − r)(x − s)=ax² − a(r+s)x + ars.",
+        "Match coefficients with ax² + bx + c."
+      ],
+      "oracle": null,
+      "hint": "Expand (x−r)(x−s), or expand a square of a sum.",
+      "credit": [
+        "1 point: Expand a(x − r)(x − s)=ax² − a(r+s)x + ars.",
+        "1 point: Match coefficients with ax² + bx + c.",
+        "1 point: give r+s=−b/a; rs=c/a. with the stated domain/conditions and a valid argument."
+      ],
+      "diagnostic": "Knowledge/conditions",
+      "error_hypotheses": [
+        "Wrong sign on the root sum; adding squares as the square of a sum",
+        "A calculation or copying slip despite a valid setup; compare with a parallel item before concluding a concept gap."
+      ],
+      "follow_up": "If the reasoning is uncertain, use A3-R without revealing this solution. If independent reasoning is sound, consider A3-4. Do not infer a gap from an unreached item."
+    },
+    "I1-1": {
+      "id": "I1-1",
+      "skill": "I1",
+      "level": 1,
+      "role": "ladder",
+      "minutes": 2,
+      "prompt": "What happens to an inequality when both sides are multiplied by a negative number? Give a numerical example.",
+      "answer": "The direction reverses; 2<3 becomes −2>−3 after multiplication by −1.",
+      "steps": [
+        "Multiplication by a negative reverses order on the real line.",
+        "The example must reverse the direction, not merely negate the numbers."
+      ],
+      "oracle": null,
+      "hint": "Mark points where a factor is zero or undefined. Test one point in each interval.",
+      "credit": [
+        "1 point: Multiplication by a negative reverses order on the real line.",
+        "1 point: The example must reverse the direction, not merely negate the numbers.",
+        "1 point: give The direction reverses; 2<3 becomes −2>−3 after multiplication by −1. with the stated domain/conditions and a valid argument."
+      ],
+      "diagnostic": "Knowledge/conditions",
+      "error_hypotheses": [
+        "Failing to reverse order after negative division; multiplying by an expression of unknown sign",
+        "A calculation or copying slip despite a valid setup; compare with a parallel item before concluding a concept gap."
+      ],
+      "follow_up": "If the reasoning is uncertain, use I1-R without revealing this solution. If independent reasoning is sound, consider I1-4. Do not infer a gap from an unreached item."
+    },
+    "F1-1": {
+      "id": "F1-1",
+      "skill": "F1",
+      "level": 1,
+      "role": "ladder",
+      "minutes": 2,
+      "prompt": "What does (f∘g)(x) mean, and which inputs are allowed?",
+      "answer": "f(g(x)); x must be in the domain of g, and g(x) must be in the domain of f.",
+      "steps": [
+        "Apply g first and then f.",
+        "Both stages must be defined."
+      ],
+      "oracle": null,
+      "hint": "Compute the inner output first and ask whether the outer function accepts it.",
+      "credit": [
+        "1 point: Apply g first and then f.",
+        "1 point: Both stages must be defined.",
+        "1 point: give f(g(x)); x must be in the domain of g, and g(x) must be in the domain of f. with the stated domain/conditions and a valid argument."
+      ],
+      "diagnostic": "Knowledge/conditions",
+      "error_hypotheses": [
+        "Reversing composition; forgetting the outer function can add a restriction",
+        "A calculation or copying slip despite a valid setup; compare with a parallel item before concluding a concept gap."
+      ],
+      "follow_up": "If the reasoning is uncertain, use F1-R without revealing this solution. If independent reasoning is sound, consider F1-4. Do not infer a gap from an unreached item."
+    },
+    "L1-1": {
+      "id": "L1-1",
+      "skill": "L1",
+      "level": 1,
+      "role": "ladder",
+      "minutes": 2,
+      "prompt": "If a statement says “P implies Q”, what are its converse and contrapositive? Which is logically equivalent to the original?",
+      "answer": "Converse: Q implies P. Contrapositive: not Q implies not P; only the contrapositive is always equivalent.",
+      "steps": [
+        "An implication fails only when P is true and Q false.",
+        "The contrapositive has exactly that same failure case; the converse need not."
+      ],
+      "oracle": null,
+      "hint": "Ask whether your example has a true premise and false conclusion. Label the direction proved.",
+      "credit": [
+        "1 point: An implication fails only when P is true and Q false.",
+        "1 point: The contrapositive has exactly that same failure case; the converse need not.",
+        "1 point: give Converse: Q implies P. Contrapositive: not Q implies not P; only the contrapositive is always equivalent. with the stated domain/conditions and a valid argument."
+      ],
+      "diagnostic": "Knowledge/conditions",
+      "error_hypotheses": [
+        "Proving the converse instead of the implication; offering an example that does not satisfy the premise",
+        "A calculation or copying slip despite a valid setup; compare with a parallel item before concluding a concept gap."
+      ],
+      "follow_up": "If the reasoning is uncertain, use L1-R without revealing this solution. If independent reasoning is sound, consider L1-4. Do not infer a gap from an unreached item."
+    },
+    "S1-1": {
+      "id": "S1-1",
+      "skill": "S1",
+      "level": 1,
+      "role": "ladder",
+      "minutes": 2,
+      "prompt": "State the nth term and sum of the first n terms of an arithmetic sequence with first term a and common difference d, for positive integer n.",
+      "answer": "a_n=a+(n−1)d; S_n=n(2a+(n−1)d)/2.",
+      "steps": [
+        "There are n−1 steps from the first term to the nth.",
+        "Pairing first/last terms gives the mean (a+a_n)/2 times n."
+      ],
+      "oracle": null,
+      "hint": "List the first few indices and compare the first and last terms.",
+      "credit": [
+        "1 point: There are n−1 steps from the first term to the nth.",
+        "1 point: Pairing first/last terms gives the mean (a+a_n)/2 times n.",
+        "1 point: give a_n=a+(n−1)d; S_n=n(2a+(n−1)d)/2. with the stated domain/conditions and a valid argument."
+      ],
+      "diagnostic": "Knowledge/conditions",
+      "error_hypotheses": [
+        "Off-by-one term count; confusing last term with number of terms",
+        "A calculation or copying slip despite a valid setup; compare with a parallel item before concluding a concept gap."
+      ],
+      "follow_up": "If the reasoning is uncertain, use S1-R without revealing this solution. If independent reasoning is sound, consider S1-4. Do not infer a gap from an unreached item."
+    },
+    "C1-1": {
+      "id": "C1-1",
+      "skill": "C1",
+      "level": 1,
+      "role": "ladder",
+      "minutes": 2,
+      "prompt": "When should counts of possibilities be multiplied, and when should they be added? State the disjointness condition.",
+      "answer": "Multiply successive choices when each continuation count is correctly accounted for; add counts of disjoint cases.",
+      "steps": [
+        "A product counts complete choice sequences.",
+        "Addition without correction requires cases with no overlap; variable continuation counts must be summed appropriately."
+      ],
+      "oracle": null,
+      "hint": "Specify exactly one completed object. Check whether every first choice has the same number of continuations.",
+      "credit": [
+        "1 point: A product counts complete choice sequences.",
+        "1 point: Addition without correction requires cases with no overlap; variable continuation counts must be summed appropriately.",
+        "1 point: give Multiply successive choices when each continuation count is correctly accounted for; add counts of disjoint cases. with the stated domain/conditions and a valid argument."
+      ],
+      "diagnostic": "Knowledge/conditions",
+      "error_hypotheses": [
+        "Allowing a leading zero; multiplying nonconstant continuation counts without splitting cases",
+        "A calculation or copying slip despite a valid setup; compare with a parallel item before concluding a concept gap."
+      ],
+      "follow_up": "If the reasoning is uncertain, use C1-R without revealing this solution. If independent reasoning is sound, consider C1-4. Do not infer a gap from an unreached item."
+    },
+    "N3-1": {
+      "id": "N3-1",
+      "skill": "N3",
+      "level": 1,
+      "role": "ladder",
+      "minutes": 2,
+      "prompt": "List the repeating last digits of positive powers of 7. Which cycle position corresponds to an exponent divisible by 4?",
+      "answer": "7,9,3,1; a multiple of 4 uses the last position, digit 1.",
+      "steps": [
+        "Multiplying the current last digit by 7 produces the next last digit.",
+        "After four steps the digit is 1, so another multiplication restarts the cycle.",
+        "Remainder zero means position 4, not position 0."
+      ],
+      "oracle": {
+        "op": "power_cycle",
+        "base": 7,
+        "modulus": 10,
+        "length": 4,
+        "target": [
+          7,
+          9,
+          3,
+          1
+        ]
+      },
+      "hint": "List a few remainders until the pattern restarts. An exponent divisible by the period uses the last position.",
+      "credit": [
+        "1 point: Multiplying the current last digit by 7 produces the next last digit.",
+        "1 point: After four steps the digit is 1, so another multiplication restarts the cycle.",
+        "1 point: give 7,9,3,1; a multiple of 4 uses the last position, digit 1. with the stated domain/conditions and a valid argument."
+      ],
+      "diagnostic": "Knowledge/conditions",
+      "error_hypotheses": [
+        "Using cycle position zero; reducing an exponent by the divisor instead of the cycle length",
+        "A calculation or copying slip despite a valid setup; compare with a parallel item before concluding a concept gap."
+      ],
+      "follow_up": "If the reasoning is uncertain, use N3-R without revealing this solution. If independent reasoning is sound, consider N3-4. Do not infer a gap from an unreached item."
+    },
+    "A1-R": {
+      "id": "A1-R",
+      "skill": "A1",
+      "level": 2,
+      "role": "repair",
+      "minutes": 5,
+      "prompt": "Solve x(x + 2) = 0. A student divides by x and reports only −2. What is missing?",
+      "answer": "x = 0 is also a solution.",
+      "steps": [
+        "Factor form already gives x = 0 or −2.",
+        "Dividing by x silently excludes zero."
+      ],
+      "oracle": {
+        "op": "quadratic",
+        "coeff": [
+          1,
+          2,
+          0
+        ],
+        "target": [
+          -2,
+          0
+        ]
+      },
+      "hint": "Try the candidate in the original equation, including its denominator or square root.",
+      "credit": [
+        "1 point: Factor form already gives x = 0 or −2.",
+        "1 point: Dividing by x silently excludes zero.",
+        "1 point: give x = 0 is also a solution. with the stated domain/conditions and a valid argument."
+      ],
+      "diagnostic": "Direct execution",
+      "error_hypotheses": [
+        "Cancelling a possibly zero factor; accepting a value outside the original domain",
+        "A calculation or copying slip despite a valid setup; compare with a parallel item before concluding a concept gap."
+      ],
+      "follow_up": "If the reasoning is uncertain, use A1-R without revealing this solution. If independent reasoning is sound, consider A1-4. Do not infer a gap from an unreached item."
+    },
+    "A1-4": {
+      "id": "A1-4",
+      "skill": "A1",
+      "level": 4,
+      "role": "ladder",
+      "minutes": 10,
+      "prompt": "Solve over the reals: √(x + 6) = x. Explain how you reject any extra candidate.",
+      "answer": "x = 3.",
+      "steps": [
+        "The square root is nonnegative, so x ≥ 0.",
+        "Squaring gives x² − x − 6 = 0, so x is 3 or −2.",
+        "Only 3 is nonnegative and satisfies the original equation."
+      ],
+      "oracle": {
+        "op": "sqrt_equation",
+        "constant": 6,
+        "target": [
+          3
+        ]
+      },
+      "hint": "Try the candidate in the original equation, including its denominator or square root.",
+      "credit": [
+        "1 point: The square root is nonnegative, so x ≥ 0.",
+        "1 point: Squaring gives x² − x − 6 = 0, so x is 3 or −2.",
+        "1 point: give x = 3. with the stated domain/conditions and a valid argument."
+      ],
+      "diagnostic": "Combination and transfer",
+      "error_hypotheses": [
+        "Cancelling a possibly zero factor; accepting a value outside the original domain",
+        "A calculation or copying slip despite a valid setup; compare with a parallel item before concluding a concept gap."
+      ],
+      "follow_up": "If the reasoning is uncertain, use A1-R without revealing this solution. If independent reasoning is sound, consider A1-4. Do not infer a gap from an unreached item."
+    },
+    "A3-R": {
+      "id": "A3-R",
+      "skill": "A3",
+      "level": 2,
+      "role": "repair",
+      "minutes": 5,
+      "prompt": "Roots u,v of x² − 6x + 4 satisfy what value of u²+v²?",
+      "answer": "28.",
+      "steps": [
+        "u+v=6 and uv=4.",
+        "Their squared sum is 36−8=28."
+      ],
+      "oracle": {
+        "op": "root_power",
+        "sum": 6,
+        "product": 4,
+        "power": 2,
+        "target": 28
+      },
+      "hint": "Expand (x−r)(x−s), or expand a square of a sum.",
+      "credit": [
+        "1 point: u+v=6 and uv=4.",
+        "1 point: Their squared sum is 36−8=28.",
+        "1 point: give 28. with the stated domain/conditions and a valid argument."
+      ],
+      "diagnostic": "Direct execution",
+      "error_hypotheses": [
+        "Wrong sign on the root sum; adding squares as the square of a sum",
+        "A calculation or copying slip despite a valid setup; compare with a parallel item before concluding a concept gap."
+      ],
+      "follow_up": "If the reasoning is uncertain, use A3-R without revealing this solution. If independent reasoning is sound, consider A3-4. Do not infer a gap from an unreached item."
+    },
+    "A3-4": {
+      "id": "A3-4",
+      "skill": "A3",
+      "level": 4,
+      "role": "ladder",
+      "minutes": 10,
+      "prompt": "If r,s solve x² − 5x + 3=0, find 1/r³ + 1/s³.",
+      "answer": "80/27.",
+      "steps": [
+        "Neither root is zero because rs=3.",
+        "r³+s³=(r+s)³−3rs(r+s)=125−45=80.",
+        "Divide by (rs)³=27."
+      ],
+      "oracle": {
+        "op": "reciprocal_root_cube",
+        "sum": 5,
+        "product": 3,
+        "target": "80/27"
+      },
+      "hint": "Expand (x−r)(x−s), or expand a square of a sum.",
+      "credit": [
+        "1 point: Neither root is zero because rs=3.",
+        "1 point: r³+s³=(r+s)³−3rs(r+s)=125−45=80.",
+        "1 point: give 80/27. with the stated domain/conditions and a valid argument."
+      ],
+      "diagnostic": "Combination and transfer",
+      "error_hypotheses": [
+        "Wrong sign on the root sum; adding squares as the square of a sum",
+        "A calculation or copying slip despite a valid setup; compare with a parallel item before concluding a concept gap."
+      ],
+      "follow_up": "If the reasoning is uncertain, use A3-R without revealing this solution. If independent reasoning is sound, consider A3-4. Do not infer a gap from an unreached item."
+    },
+    "I1-R": {
+      "id": "I1-R",
+      "skill": "I1",
+      "level": 2,
+      "role": "repair",
+      "minutes": 5,
+      "prompt": "Solve −2x≥8. Explain the direction of the answer.",
+      "answer": "x≤−4.",
+      "steps": [
+        "Divide by negative 2.",
+        "Reverse ≥ to ≤."
+      ],
+      "oracle": {
+        "op": "linear_inequality",
+        "a": -2,
+        "b": 0,
+        "rhs": 8,
+        "relation": ">=",
+        "target": {
+          "boundary": -4,
+          "relation": "<="
+        }
+      },
+      "hint": "Mark points where a factor is zero or undefined. Test one point in each interval.",
+      "credit": [
+        "1 point: Divide by negative 2.",
+        "1 point: Reverse ≥ to ≤.",
+        "1 point: give x≤−4. with the stated domain/conditions and a valid argument."
+      ],
+      "diagnostic": "Direct execution",
+      "error_hypotheses": [
+        "Failing to reverse order after negative division; multiplying by an expression of unknown sign",
+        "A calculation or copying slip despite a valid setup; compare with a parallel item before concluding a concept gap."
+      ],
+      "follow_up": "If the reasoning is uncertain, use I1-R without revealing this solution. If independent reasoning is sound, consider I1-4. Do not infer a gap from an unreached item."
+    },
+    "I1-4": {
+      "id": "I1-4",
+      "skill": "I1",
+      "level": 4,
+      "role": "ladder",
+      "minutes": 10,
+      "prompt": "Find all real x for which x²≤2x+3 and (x−2)/(x+1)>0 both hold.",
+      "answer": "2<x≤3.",
+      "steps": [
+        "The quadratic gives −1≤x≤3.",
+        "The rational inequality holds for x<−1 or x>2, excluding −1.",
+        "Intersect the two sets."
+      ],
+      "oracle": {
+        "op": "intersection_inequalities",
+        "target": "(2,3]"
+      },
+      "hint": "Mark points where a factor is zero or undefined. Test one point in each interval.",
+      "credit": [
+        "1 point: The quadratic gives −1≤x≤3.",
+        "1 point: The rational inequality holds for x<−1 or x>2, excluding −1.",
+        "1 point: give 2<x≤3. with the stated domain/conditions and a valid argument."
+      ],
+      "diagnostic": "Combination and transfer",
+      "error_hypotheses": [
+        "Failing to reverse order after negative division; multiplying by an expression of unknown sign",
+        "A calculation or copying slip despite a valid setup; compare with a parallel item before concluding a concept gap."
+      ],
+      "follow_up": "If the reasoning is uncertain, use I1-R without revealing this solution. If independent reasoning is sound, consider I1-4. Do not infer a gap from an unreached item."
+    },
+    "F1-R": {
+      "id": "F1-R",
+      "skill": "F1",
+      "level": 2,
+      "role": "repair",
+      "minutes": 5,
+      "prompt": "If f(x)=x+1 and g(x)=x², find f(g(3)) and g(f(3)).",
+      "answer": "10 and 16.",
+      "steps": [
+        "g(3)=9, then f(9)=10.",
+        "f(3)=4, then g(4)=16."
+      ],
+      "oracle": {
+        "op": "composition_repair",
+        "target": [
+          10,
+          16
+        ]
+      },
+      "hint": "Compute the inner output first and ask whether the outer function accepts it.",
+      "credit": [
+        "1 point: g(3)=9, then f(9)=10.",
+        "1 point: f(3)=4, then g(4)=16.",
+        "1 point: give 10 and 16. with the stated domain/conditions and a valid argument."
+      ],
+      "diagnostic": "Direct execution",
+      "error_hypotheses": [
+        "Reversing composition; forgetting the outer function can add a restriction",
+        "A calculation or copying slip despite a valid setup; compare with a parallel item before concluding a concept gap."
+      ],
+      "follow_up": "If the reasoning is uncertain, use F1-R without revealing this solution. If independent reasoning is sound, consider F1-4. Do not infer a gap from an unreached item."
+    },
+    "F1-4": {
+      "id": "F1-4",
+      "skill": "F1",
+      "level": 4,
+      "role": "ladder",
+      "minutes": 10,
+      "prompt": "For real x, f(x)=(x−1)/(x+1). Determine the domain of f(f(x)) and simplify it.",
+      "answer": "f(f(x))=−1/x for x≠−1,0.",
+      "steps": [
+        "The inner function requires x≠−1.",
+        "Its value must not equal −1; solving (x−1)/(x+1)=−1 gives x=0.",
+        "Simplifying the outer quotient yields −1/x, retaining both exclusions."
+      ],
+      "oracle": {
+        "op": "mobius_composition",
+        "target": {
+          "formula": "-1/x",
+          "excluded": [
+            -1,
+            0
+          ]
+        }
+      },
+      "hint": "Compute the inner output first and ask whether the outer function accepts it.",
+      "credit": [
+        "1 point: The inner function requires x≠−1.",
+        "1 point: Its value must not equal −1; solving (x−1)/(x+1)=−1 gives x=0.",
+        "1 point: give f(f(x))=−1/x for x≠−1,0. with the stated domain/conditions and a valid argument."
+      ],
+      "diagnostic": "Combination and transfer",
+      "error_hypotheses": [
+        "Reversing composition; forgetting the outer function can add a restriction",
+        "A calculation or copying slip despite a valid setup; compare with a parallel item before concluding a concept gap."
+      ],
+      "follow_up": "If the reasoning is uncertain, use F1-R without revealing this solution. If independent reasoning is sound, consider F1-4. Do not infer a gap from an unreached item."
+    },
+    "L1-R": {
+      "id": "L1-R",
+      "skill": "L1",
+      "level": 2,
+      "role": "repair",
+      "minutes": 5,
+      "prompt": "For integers n, is “3 divides n implies 6 divides n” true? Justify.",
+      "answer": "False; n=3 is a counterexample.",
+      "steps": [
+        "A counterexample must satisfy the premise.",
+        "Three is divisible by 3 but not by 6."
+      ],
+      "oracle": {
+        "op": "counterexample_divides",
+        "n": 3,
+        "premise": 3,
+        "conclusion": 6,
+        "target": false
+      },
+      "hint": "Ask whether your example has a true premise and false conclusion. Label the direction proved.",
+      "credit": [
+        "1 point: A counterexample must satisfy the premise.",
+        "1 point: Three is divisible by 3 but not by 6.",
+        "1 point: give False; n=3 is a counterexample. with the stated domain/conditions and a valid argument."
+      ],
+      "diagnostic": "Direct execution",
+      "error_hypotheses": [
+        "Proving the converse instead of the implication; offering an example that does not satisfy the premise",
+        "A calculation or copying slip despite a valid setup; compare with a parallel item before concluding a concept gap."
+      ],
+      "follow_up": "If the reasoning is uncertain, use L1-R without revealing this solution. If independent reasoning is sound, consider L1-4. Do not infer a gap from an unreached item."
+    },
+    "L1-4": {
+      "id": "L1-4",
+      "skill": "L1",
+      "level": 4,
+      "role": "ladder",
+      "minutes": 10,
+      "prompt": "Integers a,b satisfy: ab is divisible by 6. Must at least one of a,b be divisible by 6? Give a counterexample or proof, and explain which prime-divisibility fact still holds.",
+      "answer": "No: a=2,b=3. Each prime 2 and 3 divides at least one factor, but they can divide different factors.",
+      "steps": [
+        "The product 2·3 is divisible by 6 while neither factor is.",
+        "A prime dividing a product divides a factor, but 6 is composite and the prime factors need not occur in the same factor."
+      ],
+      "oracle": {
+        "op": "counterexample_product",
+        "a": 2,
+        "b": 3,
+        "divisor": 6,
+        "target": false
+      },
+      "hint": "Ask whether your example has a true premise and false conclusion. Label the direction proved.",
+      "credit": [
+        "1 point: The product 2·3 is divisible by 6 while neither factor is.",
+        "1 point: A prime dividing a product divides a factor, but 6 is composite and the prime factors need not occur in the same factor.",
+        "1 point: give No: a=2,b=3. Each prime 2 and 3 divides at least one factor, but they can divide different factors. with the stated domain/conditions and a valid argument."
+      ],
+      "diagnostic": "Combination and transfer",
+      "error_hypotheses": [
+        "Proving the converse instead of the implication; offering an example that does not satisfy the premise",
+        "A calculation or copying slip despite a valid setup; compare with a parallel item before concluding a concept gap."
+      ],
+      "follow_up": "If the reasoning is uncertain, use L1-R without revealing this solution. If independent reasoning is sound, consider L1-4. Do not infer a gap from an unreached item."
+    },
+    "S1-R": {
+      "id": "S1-R",
+      "skill": "S1",
+      "level": 2,
+      "role": "repair",
+      "minutes": 5,
+      "prompt": "Find 5+8+11+⋯+32.",
+      "answer": "185.",
+      "steps": [
+        "There are (32−5)/3+1=10 terms.",
+        "Their mean is (5+32)/2, so the sum is 185."
+      ],
+      "oracle": {
+        "op": "arithmetic_sum",
+        "first": 5,
+        "last": 32,
+        "difference": 3,
+        "target": 185
+      },
+      "hint": "List the first few indices and compare the first and last terms.",
+      "credit": [
+        "1 point: There are (32−5)/3+1=10 terms.",
+        "1 point: Their mean is (5+32)/2, so the sum is 185.",
+        "1 point: give 185. with the stated domain/conditions and a valid argument."
+      ],
+      "diagnostic": "Direct execution",
+      "error_hypotheses": [
+        "Off-by-one term count; confusing last term with number of terms",
+        "A calculation or copying slip despite a valid setup; compare with a parallel item before concluding a concept gap."
+      ],
+      "follow_up": "If the reasoning is uncertain, use S1-R without revealing this solution. If independent reasoning is sound, consider S1-4. Do not infer a gap from an unreached item."
+    },
+    "S1-4": {
+      "id": "S1-4",
+      "skill": "S1",
+      "level": 4,
+      "role": "ladder",
+      "minutes": 10,
+      "prompt": "A list of consecutive positive integers starts at 1 and has sum 210. Delete one number and the mean of the remaining numbers becomes 10. Which number was deleted?",
+      "answer": "20.",
+      "steps": [
+        "The sum 210 gives n(n+1)/2=210, so n=20.",
+        "Nineteen remaining numbers with mean 10 sum to 190.",
+        "The removed number is 210−190=20."
+      ],
+      "oracle": {
+        "op": "delete_from_triangular",
+        "total": 210,
+        "remaining_mean": 10,
+        "target": 20
+      },
+      "hint": "List the first few indices and compare the first and last terms.",
+      "credit": [
+        "1 point: The sum 210 gives n(n+1)/2=210, so n=20.",
+        "1 point: Nineteen remaining numbers with mean 10 sum to 190.",
+        "1 point: give 20. with the stated domain/conditions and a valid argument."
+      ],
+      "diagnostic": "Combination and transfer",
+      "error_hypotheses": [
+        "Off-by-one term count; confusing last term with number of terms",
+        "A calculation or copying slip despite a valid setup; compare with a parallel item before concluding a concept gap."
+      ],
+      "follow_up": "If the reasoning is uncertain, use S1-R without revealing this solution. If independent reasoning is sound, consider S1-4. Do not infer a gap from an unreached item."
+    },
+    "C1-R": {
+      "id": "C1-R",
+      "skill": "C1",
+      "level": 2,
+      "role": "repair",
+      "minutes": 5,
+      "prompt": "A shirt has 4 colour choices and 3 size choices; every combination exists. How many combinations?",
+      "answer": "12.",
+      "steps": [
+        "Each colour has three size choices.",
+        "Multiply 4 by 3."
+      ],
+      "oracle": {
+        "op": "product",
+        "factors": [
+          4,
+          3
+        ],
+        "target": 12
+      },
+      "hint": "Specify exactly one completed object. Check whether every first choice has the same number of continuations.",
+      "credit": [
+        "1 point: Each colour has three size choices.",
+        "1 point: Multiply 4 by 3.",
+        "1 point: give 12. with the stated domain/conditions and a valid argument."
+      ],
+      "diagnostic": "Direct execution",
+      "error_hypotheses": [
+        "Allowing a leading zero; multiplying nonconstant continuation counts without splitting cases",
+        "A calculation or copying slip despite a valid setup; compare with a parallel item before concluding a concept gap."
+      ],
+      "follow_up": "If the reasoning is uncertain, use C1-R without revealing this solution. If independent reasoning is sound, consider C1-4. Do not infer a gap from an unreached item."
+    },
+    "C1-4": {
+      "id": "C1-4",
+      "skill": "C1",
+      "level": 4,
+      "role": "ladder",
+      "minutes": 10,
+      "prompt": "How many six-digit positive integers use each of 0,1,2,3,4,5 exactly once and are divisible by 5?",
+      "answer": "216.",
+      "steps": [
+        "The last digit must be 0 or 5.",
+        "If it is 0, permute the other five digits in 5!=120 ways. If it is 5, choose the first digit from 1,2,3,4, then arrange the remaining four digits in 4!=24 ways, giving 96.",
+        "The disjoint cases give 120+96=216."
+      ],
+      "oracle": {
+        "op": "permutation_divisibility",
+        "digits": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+        ],
+        "divisor": 5,
+        "target": 216
+      },
+      "hint": "Specify exactly one completed object. Check whether every first choice has the same number of continuations.",
+      "credit": [
+        "1 point: The last digit must be 0 or 5.",
+        "1 point: If it is 0, permute the other five digits in 5!=120 ways. If it is 5, choose the first digit from 1,2,3,4, then arrange the remaining four digits in 4!=24 ways, giving 96.",
+        "1 point: conclude 216. and justify the final case/domain/equality."
+      ],
+      "diagnostic": "Combination and transfer",
+      "error_hypotheses": [
+        "Allowing a leading zero; multiplying nonconstant continuation counts without splitting cases",
+        "A calculation or copying slip despite a valid setup; compare with a parallel item before concluding a concept gap."
+      ],
+      "follow_up": "If the reasoning is uncertain, use C1-R without revealing this solution. If independent reasoning is sound, consider C1-4. Do not infer a gap from an unreached item."
+    },
+    "N3-R": {
+      "id": "N3-R",
+      "skill": "N3",
+      "level": 2,
+      "role": "repair",
+      "minutes": 5,
+      "prompt": "Find the last digit of 3^12 and explain the zero-remainder case.",
+      "answer": "1.",
+      "steps": [
+        "The cycle is 3,9,7,1.",
+        "Twelve is a multiple of 4, so use the fourth digit, 1."
+      ],
+      "oracle": {
+        "op": "power_mod",
+        "base": 3,
+        "exponent": 12,
+        "modulus": 10,
+        "target": 1
+      },
+      "hint": "List a few remainders until the pattern restarts. An exponent divisible by the period uses the last position.",
+      "credit": [
+        "1 point: The cycle is 3,9,7,1.",
+        "1 point: Twelve is a multiple of 4, so use the fourth digit, 1.",
+        "1 point: give 1. with the stated domain/conditions and a valid argument."
+      ],
+      "diagnostic": "Direct execution",
+      "error_hypotheses": [
+        "Using cycle position zero; reducing an exponent by the divisor instead of the cycle length",
+        "A calculation or copying slip despite a valid setup; compare with a parallel item before concluding a concept gap."
+      ],
+      "follow_up": "If the reasoning is uncertain, use N3-R without revealing this solution. If independent reasoning is sound, consider N3-4. Do not infer a gap from an unreached item."
+    },
+    "N3-4": {
+      "id": "N3-4",
+      "skill": "N3",
+      "level": 4,
+      "role": "ladder",
+      "minutes": 10,
+      "prompt": "Find the last digit of 7^(3^2026). Explain how you locate the exponent in the relevant cycle.",
+      "answer": "7.",
+      "steps": [
+        "Powers of 7 have period 4 in their last digit.",
+        "The exponent 3^2026 leaves remainder 1 modulo 4 because 2026 is even.",
+        "Therefore the last digit is 7."
+      ],
+      "oracle": {
+        "op": "tower_last_digit",
+        "base": 7,
+        "exponent_base": 3,
+        "exponent_exponent": 2026,
+        "target": 7
+      },
+      "hint": "List a few remainders until the pattern restarts. An exponent divisible by the period uses the last position.",
+      "credit": [
+        "1 point: Powers of 7 have period 4 in their last digit.",
+        "1 point: The exponent 3^2026 leaves remainder 1 modulo 4 because 2026 is even.",
+        "1 point: conclude 7. and justify the final case/domain/equality."
+      ],
+      "diagnostic": "Combination and transfer",
+      "error_hypotheses": [
+        "Using cycle position zero; reducing an exponent by the divisor instead of the cycle length",
+        "A calculation or copying slip despite a valid setup; compare with a parallel item before concluding a concept gap."
+      ],
+      "follow_up": "If the reasoning is uncertain, use N3-R without revealing this solution. If independent reasoning is sound, consider N3-4. Do not infer a gap from an unreached item."
+    }
+  }
+}

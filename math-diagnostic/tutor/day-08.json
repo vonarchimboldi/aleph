@@ -1,0 +1,559 @@
+{
+  "day": 8,
+  "title": "Integer constraints and differences",
+  "core": [
+    "N2-3",
+    "N3-3",
+    "S4-3",
+    "N2-2",
+    "N3-2",
+    "S4-2",
+    "N2-1",
+    "S4-1"
+  ],
+  "branches": [
+    "N2-R",
+    "N2-4",
+    "N3-R",
+    "N3-4",
+    "S4-R",
+    "S4-4",
+    "N3-X1",
+    "N3-X2"
+  ],
+  "questions": {
+    "N2-3": {
+      "id": "N2-3",
+      "skill": "N2",
+      "level": 3,
+      "role": "ladder",
+      "minutes": 5,
+      "prompt": "Can 84a+30b=5 hold for integers a,b? Explain.",
+      "answer": "No.",
+      "steps": [
+        "Every integer combination of 84 and 30 is divisible by their gcd 6.",
+        "Five is not divisible by 6, so the equation is impossible."
+      ],
+      "oracle": {
+        "op": "linear_diophantine_possible",
+        "a": 84,
+        "b": 30,
+        "rhs": 5,
+        "target": false
+      },
+      "hint": "Find a divisor common to both coefficients. When scaling by a gcd, state the new pair must be coprime.",
+      "credit": [
+        "1 point: Every integer combination of 84 and 30 is divisible by their gcd 6.",
+        "1 point: Five is not divisible by 6, so the equation is impossible.",
+        "1 point: give No. with the stated domain/conditions and a valid argument."
+      ],
+      "diagnostic": "Uncued recognition",
+      "error_hypotheses": [
+        "Solving over reals instead of integers; forgetting coprimality after dividing by the gcd",
+        "A calculation or copying slip despite a valid setup; compare with a parallel item before concluding a concept gap."
+      ],
+      "follow_up": "If the reasoning is uncertain, use N2-R without revealing this solution. If independent reasoning is sound, consider N2-4. Do not infer a gap from an unreached item."
+    },
+    "N3-3": {
+      "id": "N3-3",
+      "skill": "N3",
+      "level": 3,
+      "role": "ladder",
+      "minutes": 5,
+      "prompt": "Find the remainder when 3^100 is divided by 7. Show a short cycle or repeated-power argument.",
+      "answer": "4.",
+      "steps": [
+        "Powers of 3 modulo 7 cycle through 3,2,6,4,5,1.",
+        "Since 100 leaves remainder 4 on division by 6, use the fourth value, 4."
+      ],
+      "oracle": {
+        "op": "power_mod",
+        "base": 3,
+        "exponent": 100,
+        "modulus": 7,
+        "target": 4
+      },
+      "hint": "List a few remainders until the pattern restarts. An exponent divisible by the period uses the last position.",
+      "credit": [
+        "1 point: Powers of 3 modulo 7 cycle through 3,2,6,4,5,1.",
+        "1 point: Since 100 leaves remainder 4 on division by 6, use the fourth value, 4.",
+        "1 point: give 4. with the stated domain/conditions and a valid argument."
+      ],
+      "diagnostic": "Uncued recognition",
+      "error_hypotheses": [
+        "Using cycle position zero; reducing an exponent by the divisor instead of the cycle length",
+        "A calculation or copying slip despite a valid setup; compare with a parallel item before concluding a concept gap."
+      ],
+      "follow_up": "If the reasoning is uncertain, use N3-R without revealing this solution. If independent reasoning is sound, consider N3-4. Do not infer a gap from an unreached item."
+    },
+    "S4-3": {
+      "id": "S4-3",
+      "skill": "S4",
+      "level": 3,
+      "role": "ladder",
+      "minutes": 5,
+      "prompt": "Find Σ 1/[k(k+1)] for k=1,…,20.",
+      "answer": "20/21.",
+      "steps": [
+        "Use 1/[k(k+1)]=1/k−1/(k+1).",
+        "The sum telescopes to 1−1/21."
+      ],
+      "oracle": {
+        "op": "telescoping_reciprocal",
+        "n": 20,
+        "target": "20/21"
+      },
+      "hint": "Write the first three terms and last two terms, keeping their signs.",
+      "credit": [
+        "1 point: Use 1/[k(k+1)]=1/k−1/(k+1).",
+        "1 point: The sum telescopes to 1−1/21.",
+        "1 point: give 20/21. with the stated domain/conditions and a valid argument."
+      ],
+      "diagnostic": "Uncued recognition",
+      "error_hypotheses": [
+        "Cancelling endpoints incorrectly; overlooking a shifted index",
+        "A calculation or copying slip despite a valid setup; compare with a parallel item before concluding a concept gap."
+      ],
+      "follow_up": "If the reasoning is uncertain, use S4-R without revealing this solution. If independent reasoning is sound, consider S4-4. Do not infer a gap from an unreached item."
+    },
+    "N2-2": {
+      "id": "N2-2",
+      "skill": "N2",
+      "level": 2,
+      "role": "ladder",
+      "minutes": 3,
+      "prompt": "Find gcd(252,198), showing divisions.",
+      "answer": "18.",
+      "steps": [
+        "252=198+54, 198=3·54+36.",
+        "Then 54=36+18 and 36=2·18, so the last nonzero remainder is 18."
+      ],
+      "oracle": {
+        "op": "gcd",
+        "a": 252,
+        "b": 198,
+        "target": 18
+      },
+      "hint": "Find a divisor common to both coefficients. When scaling by a gcd, state the new pair must be coprime.",
+      "credit": [
+        "1 point: 252=198+54, 198=3·54+36.",
+        "1 point: Then 54=36+18 and 36=2·18, so the last nonzero remainder is 18.",
+        "1 point: give 18. with the stated domain/conditions and a valid argument."
+      ],
+      "diagnostic": "Direct execution",
+      "error_hypotheses": [
+        "Solving over reals instead of integers; forgetting coprimality after dividing by the gcd",
+        "A calculation or copying slip despite a valid setup; compare with a parallel item before concluding a concept gap."
+      ],
+      "follow_up": "If the reasoning is uncertain, use N2-R without revealing this solution. If independent reasoning is sound, consider N2-4. Do not infer a gap from an unreached item."
+    },
+    "N3-2": {
+      "id": "N3-2",
+      "skill": "N3",
+      "level": 2,
+      "role": "ladder",
+      "minutes": 3,
+      "prompt": "Find the last digit of 7^2026.",
+      "answer": "9.",
+      "steps": [
+        "The cycle length is 4 and 2026 leaves remainder 2 on division by 4.",
+        "The second last digit in the cycle is 9."
+      ],
+      "oracle": {
+        "op": "power_mod",
+        "base": 7,
+        "exponent": 2026,
+        "modulus": 10,
+        "target": 9
+      },
+      "hint": "List a few remainders until the pattern restarts. An exponent divisible by the period uses the last position.",
+      "credit": [
+        "1 point: The cycle length is 4 and 2026 leaves remainder 2 on division by 4.",
+        "1 point: The second last digit in the cycle is 9.",
+        "1 point: give 9. with the stated domain/conditions and a valid argument."
+      ],
+      "diagnostic": "Direct execution",
+      "error_hypotheses": [
+        "Using cycle position zero; reducing an exponent by the divisor instead of the cycle length",
+        "A calculation or copying slip despite a valid setup; compare with a parallel item before concluding a concept gap."
+      ],
+      "follow_up": "If the reasoning is uncertain, use N3-R without revealing this solution. If independent reasoning is sound, consider N3-4. Do not infer a gap from an unreached item."
+    },
+    "S4-2": {
+      "id": "S4-2",
+      "skill": "S4",
+      "level": 2,
+      "role": "ladder",
+      "minutes": 3,
+      "prompt": "Find Σ[1/k−1/(k+1)] for k=1,…,9.",
+      "answer": "9/10.",
+      "steps": [
+        "The intermediate reciprocals cancel.",
+        "Only 1−1/10 remains."
+      ],
+      "oracle": {
+        "op": "telescoping_reciprocal",
+        "n": 9,
+        "target": "9/10"
+      },
+      "hint": "Write the first three terms and last two terms, keeping their signs.",
+      "credit": [
+        "1 point: The intermediate reciprocals cancel.",
+        "1 point: Only 1−1/10 remains.",
+        "1 point: give 9/10. with the stated domain/conditions and a valid argument."
+      ],
+      "diagnostic": "Direct execution",
+      "error_hypotheses": [
+        "Cancelling endpoints incorrectly; overlooking a shifted index",
+        "A calculation or copying slip despite a valid setup; compare with a parallel item before concluding a concept gap."
+      ],
+      "follow_up": "If the reasoning is uncertain, use S4-R without revealing this solution. If independent reasoning is sound, consider S4-4. Do not infer a gap from an unreached item."
+    },
+    "N2-1": {
+      "id": "N2-1",
+      "skill": "N2",
+      "level": 1,
+      "role": "ladder",
+      "minutes": 2,
+      "prompt": "Explain why gcd(a,b)=gcd(b,a−qb) for integers a,b,q, not both a,b zero.",
+      "answer": "The two pairs have exactly the same common divisors.",
+      "steps": [
+        "A divisor of a and b also divides a−qb.",
+        "A divisor of b and a−qb also divides a=(a−qb)+qb.",
+        "Thus the positive greatest common divisor is unchanged."
+      ],
+      "oracle": null,
+      "hint": "Find a divisor common to both coefficients. When scaling by a gcd, state the new pair must be coprime.",
+      "credit": [
+        "1 point: A divisor of a and b also divides a−qb.",
+        "1 point: A divisor of b and a−qb also divides a=(a−qb)+qb.",
+        "1 point: give The two pairs have exactly the same common divisors. with the stated domain/conditions and a valid argument."
+      ],
+      "diagnostic": "Knowledge/conditions",
+      "error_hypotheses": [
+        "Solving over reals instead of integers; forgetting coprimality after dividing by the gcd",
+        "A calculation or copying slip despite a valid setup; compare with a parallel item before concluding a concept gap."
+      ],
+      "follow_up": "If the reasoning is uncertain, use N2-R without revealing this solution. If independent reasoning is sound, consider N2-4. Do not infer a gap from an unreached item."
+    },
+    "S4-1": {
+      "id": "S4-1",
+      "skill": "S4",
+      "level": 1,
+      "role": "ladder",
+      "minutes": 2,
+      "prompt": "If a_k=b_(k+1)−b_k, what is Σa_k from k=1 to n? Explain which terms remain.",
+      "answer": "b_(n+1)−b_1.",
+      "steps": [
+        "Write consecutive differences in order.",
+        "Every interior b term appears once positively and once negatively, leaving the endpoints."
+      ],
+      "oracle": null,
+      "hint": "Write the first three terms and last two terms, keeping their signs.",
+      "credit": [
+        "1 point: Write consecutive differences in order.",
+        "1 point: Every interior b term appears once positively and once negatively, leaving the endpoints.",
+        "1 point: give b_(n+1)−b_1. with the stated domain/conditions and a valid argument."
+      ],
+      "diagnostic": "Knowledge/conditions",
+      "error_hypotheses": [
+        "Cancelling endpoints incorrectly; overlooking a shifted index",
+        "A calculation or copying slip despite a valid setup; compare with a parallel item before concluding a concept gap."
+      ],
+      "follow_up": "If the reasoning is uncertain, use S4-R without revealing this solution. If independent reasoning is sound, consider S4-4. Do not infer a gap from an unreached item."
+    },
+    "N2-R": {
+      "id": "N2-R",
+      "skill": "N2",
+      "level": 2,
+      "role": "repair",
+      "minutes": 5,
+      "prompt": "Find gcd(48,18), showing the remainder steps.",
+      "answer": "6.",
+      "steps": [
+        "48=2·18+12 and 18=12+6.",
+        "Then 12=2·6, so the gcd is 6."
+      ],
+      "oracle": {
+        "op": "gcd",
+        "a": 48,
+        "b": 18,
+        "target": 6
+      },
+      "hint": "Find a divisor common to both coefficients. When scaling by a gcd, state the new pair must be coprime.",
+      "credit": [
+        "1 point: 48=2·18+12 and 18=12+6.",
+        "1 point: Then 12=2·6, so the gcd is 6.",
+        "1 point: give 6. with the stated domain/conditions and a valid argument."
+      ],
+      "diagnostic": "Direct execution",
+      "error_hypotheses": [
+        "Solving over reals instead of integers; forgetting coprimality after dividing by the gcd",
+        "A calculation or copying slip despite a valid setup; compare with a parallel item before concluding a concept gap."
+      ],
+      "follow_up": "If the reasoning is uncertain, use N2-R without revealing this solution. If independent reasoning is sound, consider N2-4. Do not infer a gap from an unreached item."
+    },
+    "N2-4": {
+      "id": "N2-4",
+      "skill": "N2",
+      "level": 4,
+      "role": "ladder",
+      "minutes": 10,
+      "prompt": "Find all ordered pairs of positive integers a,b with gcd(a,b)=6 and a+b=54.",
+      "answer": "(6,48),(12,42),(24,30),(30,24),(42,12),(48,6).",
+      "steps": [
+        "Write a=6u,b=6v with u+v=9 and gcd(u,v)=1.",
+        "Since gcd(u,9−u)=gcd(u,9), u can be 1,2,4,5,7,8.",
+        "Multiply each pair by 6."
+      ],
+      "oracle": {
+        "op": "gcd_pairs",
+        "gcd": 6,
+        "sum": 54,
+        "target": [
+          [
+            6,
+            48
+          ],
+          [
+            12,
+            42
+          ],
+          [
+            24,
+            30
+          ],
+          [
+            30,
+            24
+          ],
+          [
+            42,
+            12
+          ],
+          [
+            48,
+            6
+          ]
+        ]
+      },
+      "hint": "Find a divisor common to both coefficients. When scaling by a gcd, state the new pair must be coprime.",
+      "credit": [
+        "1 point: Write a=6u,b=6v with u+v=9 and gcd(u,v)=1.",
+        "1 point: Since gcd(u,9−u)=gcd(u,9), u can be 1,2,4,5,7,8.",
+        "1 point: give (6,48),(12,42),(24,30),(30,24),(42,12),(48,6). with the stated domain/conditions and a valid argument."
+      ],
+      "diagnostic": "Combination and transfer",
+      "error_hypotheses": [
+        "Solving over reals instead of integers; forgetting coprimality after dividing by the gcd",
+        "A calculation or copying slip despite a valid setup; compare with a parallel item before concluding a concept gap."
+      ],
+      "follow_up": "If the reasoning is uncertain, use N2-R without revealing this solution. If independent reasoning is sound, consider N2-4. Do not infer a gap from an unreached item."
+    },
+    "N3-R": {
+      "id": "N3-R",
+      "skill": "N3",
+      "level": 2,
+      "role": "repair",
+      "minutes": 5,
+      "prompt": "Find the last digit of 3^12 and explain the zero-remainder case.",
+      "answer": "1.",
+      "steps": [
+        "The cycle is 3,9,7,1.",
+        "Twelve is a multiple of 4, so use the fourth digit, 1."
+      ],
+      "oracle": {
+        "op": "power_mod",
+        "base": 3,
+        "exponent": 12,
+        "modulus": 10,
+        "target": 1
+      },
+      "hint": "List a few remainders until the pattern restarts. An exponent divisible by the period uses the last position.",
+      "credit": [
+        "1 point: The cycle is 3,9,7,1.",
+        "1 point: Twelve is a multiple of 4, so use the fourth digit, 1.",
+        "1 point: give 1. with the stated domain/conditions and a valid argument."
+      ],
+      "diagnostic": "Direct execution",
+      "error_hypotheses": [
+        "Using cycle position zero; reducing an exponent by the divisor instead of the cycle length",
+        "A calculation or copying slip despite a valid setup; compare with a parallel item before concluding a concept gap."
+      ],
+      "follow_up": "If the reasoning is uncertain, use N3-R without revealing this solution. If independent reasoning is sound, consider N3-4. Do not infer a gap from an unreached item."
+    },
+    "N3-4": {
+      "id": "N3-4",
+      "skill": "N3",
+      "level": 4,
+      "role": "ladder",
+      "minutes": 10,
+      "prompt": "Find the last digit of 7^(3^2026). Explain how you locate the exponent in the relevant cycle.",
+      "answer": "7.",
+      "steps": [
+        "Powers of 7 have period 4 in their last digit.",
+        "The exponent 3^2026 leaves remainder 1 modulo 4 because 2026 is even.",
+        "Therefore the last digit is 7."
+      ],
+      "oracle": {
+        "op": "tower_last_digit",
+        "base": 7,
+        "exponent_base": 3,
+        "exponent_exponent": 2026,
+        "target": 7
+      },
+      "hint": "List a few remainders until the pattern restarts. An exponent divisible by the period uses the last position.",
+      "credit": [
+        "1 point: Powers of 7 have period 4 in their last digit.",
+        "1 point: The exponent 3^2026 leaves remainder 1 modulo 4 because 2026 is even.",
+        "1 point: conclude 7. and justify the final case/domain/equality."
+      ],
+      "diagnostic": "Combination and transfer",
+      "error_hypotheses": [
+        "Using cycle position zero; reducing an exponent by the divisor instead of the cycle length",
+        "A calculation or copying slip despite a valid setup; compare with a parallel item before concluding a concept gap."
+      ],
+      "follow_up": "If the reasoning is uncertain, use N3-R without revealing this solution. If independent reasoning is sound, consider N3-4. Do not infer a gap from an unreached item."
+    },
+    "S4-R": {
+      "id": "S4-R",
+      "skill": "S4",
+      "level": 2,
+      "role": "repair",
+      "minutes": 5,
+      "prompt": "Find (1−1/2)+(1/2−1/3)+(1/3−1/4).",
+      "answer": "3/4.",
+      "steps": [
+        "Cancel equal interior terms with opposite signs.",
+        "The endpoints give 1−1/4."
+      ],
+      "oracle": {
+        "op": "telescoping_reciprocal",
+        "n": 3,
+        "target": "3/4"
+      },
+      "hint": "Write the first three terms and last two terms, keeping their signs.",
+      "credit": [
+        "1 point: Cancel equal interior terms with opposite signs.",
+        "1 point: The endpoints give 1−1/4.",
+        "1 point: give 3/4. with the stated domain/conditions and a valid argument."
+      ],
+      "diagnostic": "Direct execution",
+      "error_hypotheses": [
+        "Cancelling endpoints incorrectly; overlooking a shifted index",
+        "A calculation or copying slip despite a valid setup; compare with a parallel item before concluding a concept gap."
+      ],
+      "follow_up": "If the reasoning is uncertain, use S4-R without revealing this solution. If independent reasoning is sound, consider S4-4. Do not infer a gap from an unreached item."
+    },
+    "S4-4": {
+      "id": "S4-4",
+      "skill": "S4",
+      "level": 4,
+      "role": "ladder",
+      "minutes": 10,
+      "prompt": "Let a_n=n(n+1)(n+2). Find a_(n+1)−a_n and hence evaluate Σ k(k+1) for k=1,…,n.",
+      "answer": "Difference 3(n+1)(n+2); sum n(n+1)(n+2)/3.",
+      "steps": [
+        "Factor the difference as (n+1)(n+2)[(n+3)−n]=3(n+1)(n+2).",
+        "Thus 3k(k+1)=a_k−a_(k−1).",
+        "Sum from 1 to n, with a_0=0."
+      ],
+      "oracle": {
+        "op": "cubic_difference_sum",
+        "target": "n(n+1)(n+2)/3"
+      },
+      "hint": "Write the first three terms and last two terms, keeping their signs.",
+      "credit": [
+        "1 point: Factor the difference as (n+1)(n+2)[(n+3)−n]=3(n+1)(n+2).",
+        "1 point: Thus 3k(k+1)=a_k−a_(k−1).",
+        "1 point: give Difference 3(n+1)(n+2); sum n(n+1)(n+2)/3. with the stated domain/conditions and a valid argument."
+      ],
+      "diagnostic": "Combination and transfer",
+      "error_hypotheses": [
+        "Cancelling endpoints incorrectly; overlooking a shifted index",
+        "A calculation or copying slip despite a valid setup; compare with a parallel item before concluding a concept gap."
+      ],
+      "follow_up": "If the reasoning is uncertain, use S4-R without revealing this solution. If independent reasoning is sound, consider S4-4. Do not infer a gap from an unreached item."
+    },
+    "N3-X1": {
+      "id": "N3-X1",
+      "skill": "N3",
+      "level": 3,
+      "role": "branch",
+      "minutes": 3,
+      "prompt": "Find the last digit of 7^2026+3^2026.",
+      "answer": "8.",
+      "steps": [
+        "Each power has last digit 9 from a four-term cycle.",
+        "Add to obtain last digit 8."
+      ],
+      "oracle": {
+        "op": "power_sum_mod",
+        "terms": [
+          [
+            7,
+            2026
+          ],
+          [
+            3,
+            2026
+          ]
+        ],
+        "modulus": 10,
+        "target": 8
+      },
+      "hint": "List a few remainders until the pattern restarts. An exponent divisible by the period uses the last position.",
+      "credit": [
+        "1 point: Each power has last digit 9 from a four-term cycle.",
+        "1 point: Add to obtain last digit 8.",
+        "1 point: conclude 8. with valid reasoning."
+      ],
+      "diagnostic": "Uncued recognition",
+      "error_hypotheses": [
+        "Using cycle position zero; reducing an exponent by the divisor instead of the cycle length",
+        "A calculation or copying slip despite a valid setup; compare with a parallel item before concluding a concept gap."
+      ],
+      "follow_up": "If the reasoning is uncertain, use N3-R without revealing this solution. If independent reasoning is sound, consider N3-4. Do not infer a gap from an unreached item."
+    },
+    "N3-X2": {
+      "id": "N3-X2",
+      "skill": "N3",
+      "level": 4,
+      "role": "branch",
+      "minutes": 4,
+      "prompt": "Find the last digit of 7^2026·3^2026.",
+      "answer": "1.",
+      "steps": [
+        "Each factor has last digit 9.",
+        "Their product has the last digit of 81, namely 1."
+      ],
+      "oracle": {
+        "op": "power_product_mod",
+        "terms": [
+          [
+            7,
+            2026
+          ],
+          [
+            3,
+            2026
+          ]
+        ],
+        "modulus": 10,
+        "target": 1
+      },
+      "hint": "List a few remainders until the pattern restarts. An exponent divisible by the period uses the last position.",
+      "credit": [
+        "1 point: Each factor has last digit 9.",
+        "1 point: Their product has the last digit of 81, namely 1.",
+        "1 point: conclude 1. with valid reasoning."
+      ],
+      "diagnostic": "Combination and transfer",
+      "error_hypotheses": [
+        "Using cycle position zero; reducing an exponent by the divisor instead of the cycle length",
+        "A calculation or copying slip despite a valid setup; compare with a parallel item before concluding a concept gap."
+      ],
+      "follow_up": "If the reasoning is uncertain, use N3-R without revealing this solution. If independent reasoning is sound, consider N3-4. Do not infer a gap from an unreached item."
+    }
+  }
+}
