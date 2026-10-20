@@ -17,7 +17,7 @@ function localStore() {
   return globalThis.__alephPlatinumProgressStore;
 }
 
-async function kvCommand(command) {
+export async function kvCommand(command) {
   const config = kvConfig();
   if (!config.configured) {
     const store = localStore();
@@ -26,6 +26,13 @@ async function kvCommand(command) {
     if (name === "SET") {
       store.set(key, value);
       return "OK";
+    }
+    if (name === "EVAL") {
+      const recordKey = command[3], expectedRevision = Number(command[4]), nextValue = command[5];
+      const current = store.get(recordKey);
+      if ((current ? JSON.parse(current).revision : 0) !== expectedRevision) return 0;
+      store.set(recordKey, nextValue);
+      return 1;
     }
     throw new Error(`Unsupported local command: ${name}`);
   }

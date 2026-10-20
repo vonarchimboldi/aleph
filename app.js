@@ -1,7 +1,7 @@
 const STORAGE_KEY = "learning-studio-data-v2";
 const LEGACY_STORAGE_KEYS = ["learning-studio-data-v1"];
 const SESSION_KEY = "aleph-session";
-const COURSE_PLAN_VERSION = "seeded-user-canonical-workspace-v168";
+const COURSE_PLAN_VERSION = "seeded-user-canonical-workspace-v169";
 const MAX_FEEDBACK_ATTACHMENT_BYTES = 3 * 1024 * 1024;
 const MAX_COMPRESSED_FEEDBACK_BYTES = 2400 * 1024;
 const MAX_FEEDBACK_REQUEST_BYTES = 4 * 1024 * 1024;
@@ -26,6 +26,7 @@ let selectedSectionId = null;
 let selectedPatternMaterialId = null;
 let activeTestId = null;
 let platinumProgressSyncTimer = null;
+let diagnosticMigrationLearner = null;
 let cachedPlatinumProgressSnapshots = [];
 let cachedPlatinumSubmissionRecords = [];
 let cachedPlatinumProgressFetchedAt = "";
@@ -35112,6 +35113,28 @@ function prototypeUsers() {
 function persist() {
   persistToLocalStorage();
   schedulePlatinumProgressSync();
+  migrateDiagnosticBrowserWork();
+}
+
+async function migrateDiagnosticBrowserWork() {
+  if (!isPlatinumPrototypeUser(state.user) || diagnosticMigrationLearner === state.user.id) return;
+  const learner = state.user.id, key = `aleph-math-diagnostic-v1:${learner}`, raw = localStorage.getItem(key);
+  if (!raw) return;
+  try {
+    const progress = JSON.parse(raw);
+    const pending = (progress.completed || []).some(day => !progress.serverReceipts?.[day]?.submittedAt) || progress.pendingSubmissions?.length;
+    if (!pending) return;
+    diagnosticMigrationLearner = learner;
+    const { createSync } = await import("./math-diagnostic/sync.mjs?v=3");
+    let lastSaved = raw;
+    const persist = () => {
+      if (localStorage.getItem(key) !== lastSaved) return;
+      lastSaved = JSON.stringify(progress); localStorage.setItem(key, lastSaved);
+    };
+    await createSync({learner, learnerName:state.user.displayName || state.user.name, progress, persist}).hydrate();
+  } catch {
+    diagnosticMigrationLearner = null;
+  }
 }
 
 function persistToLocalStorage() {
@@ -37371,7 +37394,7 @@ function subjectMenuCardTemplate(subject) {
 function subjectReaderTemplate(subject) {
   if (subject.mathDiagnostic) {
     const url = `math-diagnostic/index.html?learner=${encodeURIComponent(state.user.id)}`;
-    return `<article class="subject-reader"><div class="subject-reader-header"><button class="text-btn" data-subject-back type="button">Back to subjects</button></div><section class="chapter-menu"><p class="eyebrow">Platinum · Ten daily sessions</p><h4>High-school Mathematics Diagnostic</h4><p>Find out what you know, what you can explain and where an unfamiliar problem becomes difficult. Work for 60 minutes each day; show your reasoning and record confidence before feedback.</p><p>25 skill ladders · 80 core questions · up to two selected follow-ups per day. Later days unlock as earlier sessions are recorded.</p><p><a class="primary-btn" href="${url}" target="_blank" rel="noopener">Open my diagnostic</a></p><p>Responses save in your browser, with backup export for sharing with your tutor. No worked answers appear in the learner view.</p><p class="muted">A structured diagnostic prototype; difficulty and timing need piloting. This is not a calibrated ability score.</p>${canPreviewLockedContent()?`<p><a href="${url}&mode=tutor" target="_blank" rel="noopener">Tutor scoring and follow-up view</a></p>`:""}</section></article>`;
+    return `<article class="subject-reader"><div class="subject-reader-header"><button class="text-btn" data-subject-back type="button">Back to subjects</button></div><section class="chapter-menu"><p class="eyebrow">Platinum · Ten daily sessions</p><h4>High-school Mathematics Diagnostic</h4><p>Find out what you know, what you can explain and where an unfamiliar problem becomes difficult. Work for 60 minutes each day; show your reasoning and record confidence before feedback.</p><p>25 skill ladders · 80 core questions · up to two selected follow-ups per day. Later days unlock after earlier submissions are confirmed by the server.</p><p><a class="primary-btn" href="${url}" target="_blank" rel="noopener">Open my diagnostic</a></p><p>Responses sync to Aleph, with PDF/image upload, a submission receipt and a browser recovery copy. No worked answers appear in the learner view.</p><p class="muted">A structured diagnostic prototype; difficulty and timing need piloting. This is not a calibrated ability score.</p>${canPreviewLockedContent()?`<p><a href="${url}&mode=tutor" target="_blank" rel="noopener">Tutor scoring and follow-up view</a></p>`:""}</section></article>`;
   }
   if (subject.dbmsPack) {
     return databaseExamPackTemplate(subject);

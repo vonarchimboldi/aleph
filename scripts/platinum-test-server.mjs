@@ -3,6 +3,7 @@ import { readFile } from "node:fs/promises";
 import { dirname, extname, join, normalize } from "node:path";
 import { fileURLToPath } from "node:url";
 import generateFeedbackHandler from "../api/generate-feedback.js";
+import mathDiagnosticHandler from "../api/math-diagnostic.js";
 
 const ROOT = normalize(join(dirname(fileURLToPath(import.meta.url)), ".."));
 const PORT = Number(process.env.PORT || 8765);
@@ -28,6 +29,11 @@ const latestPlatinumSubmissions = [];
 
 const server = createServer(async (request, response) => {
   try {
+    if (request.url?.startsWith("/api/math-diagnostic")) {
+      const body = request.method === "POST" ? await readJson(request) : undefined;
+      const shim = {statusCode:200, setHeader(name,value){response.setHeader(name,value)}, status(code){this.statusCode=code;return this}, json(payload){sendJson(response,this.statusCode,payload)}};
+      return mathDiagnosticHandler({method:request.method,url:request.url,headers:request.headers,body},shim);
+    }
     if (request.url?.startsWith("/api/generate-feedback")) {
       return handleGenerateFeedback(request, response);
     }
@@ -62,7 +68,7 @@ server.listen(PORT, HOST, () => {
 async function serveStatic(request, response) {
   const parsed = new URL(request.url || "/", `http://${HOST}:${PORT}`);
   const cleanPath = decodeURIComponent(parsed.pathname).replace(/^\/+/, "");
-  const requestedPath = cleanPath && cleanPath !== "/" ? cleanPath : "index.html";
+  const requestedPath = !cleanPath ? "index.html" : cleanPath.endsWith("/") ? `${cleanPath}index.html` : cleanPath;
   const safePath = normalize(join(ROOT, requestedPath));
 
   if (!safePath.startsWith(ROOT)) {

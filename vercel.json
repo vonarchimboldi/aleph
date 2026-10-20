@@ -1,5 +1,5 @@
 {
-  "functions": { "api/dbms-review.js": { "maxDuration": 120 } },
+  "functions": { "api/dbms-review.js": { "maxDuration": 120 }, "api/math-diagnostic.js": { "maxDuration": 60 } },
   "crons": [
     {
       "path": "/api/cron/platinum-weekly-check",
