@@ -1,4 +1,5 @@
 import {readFile} from 'node:fs/promises';
+import {join} from 'node:path';
 
 export const FEEDBACK_VERSION = 'diagnostic-tutor-v1';
 const string = {type:'string'};
@@ -30,7 +31,7 @@ Give up to three prioritized next steps with observable success criteria, focuse
 Return plain readable text in the JSON schema, using Unicode math where useful. Do not include HTML, Markdown headings or TeX delimiters. Ground feedback in the submitted evidence, not assumptions.`;
 
 export async function loadRubric(day) {
-  return JSON.parse(await readFile(new URL(`../math-diagnostic/tutor/day-${String(day).padStart(2,'0')}.json`,import.meta.url),'utf8'));
+  return JSON.parse(await readFile(join(process.cwd(),'math-diagnostic','tutor',`day-${String(day).padStart(2,'0')}.json`),'utf8'));
 }
 
 export async function buildFeedbackInput(record, records, attachment, rubricLoader=loadRubric) {
