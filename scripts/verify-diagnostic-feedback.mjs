@@ -65,4 +65,6 @@ await handler({method:'GET',url:'/api/math-diagnostic-feedback?learner='+learner
 await handler({method:'GET',url:'/api/math-diagnostic-feedback?day=0',headers:{host:'localhost'}},res);assert.equal(code,400);
 process.env.CRON_SECRET='test-worker-secret';
 await cron({method:'GET',headers:{}},res);assert.equal(code,401);delete process.env.CRON_SECRET;
+for(const day of [3,4]){const guide=await loadRubric(day);await saveDay({learner,day,expectedRevision:0,action:'submit',data:{answers:{[guide.core[0]]:{answer:'Test evidence'}},selected:[]}})}
+const newest=await drainFeedback({generate:fake,limit:1});assert.equal(newest[0].day,4,'new submissions must precede refreshes of old reports');
 console.log('PASS: durable backfill; submitted-only evidence; cached reports; resubmission/cross-day invalidation; concurrent claims; stale-job rejection; retry backoff; attachment input; exact item coverage; no unassessed item IDs; safe rendering; provider failures; API validation and cron authorization. No real model calls or learner records used.');

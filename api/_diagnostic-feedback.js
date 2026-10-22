@@ -55,7 +55,7 @@ export async function processFeedback(learner,day,{generate=generateDiagnosticRe
 export async function drainFeedback({limit=2,generate,now}={}){
   assertStore();
   const ledger=await loadPlatinumSubmissionsLedger();
-  const entries=[...new Map((ledger.submissions||[]).filter(s=>/^math-diagnostic-day-\d{2}$/.test(s.materialId||'')&&s.userId).map(s=>[s.userId+':'+s.materialId,{learner:s.userId,day:Number(s.materialId.slice(-2))}])).values()];
+  const entries=[...new Map((ledger.submissions||[]).filter(s=>/^math-diagnostic-day-\d{2}$/.test(s.materialId||'')&&s.userId).map(s=>[s.userId+':'+s.materialId,{learner:s.userId,day:Number(s.materialId.slice(-2)),submittedAt:s.updatedAt||s.submittedAt||''}])).values()].sort((a,b)=>b.submittedAt.localeCompare(a.submittedAt)||b.day-a.day);
   const results=[];
   for(const entry of entries){
     const status=await feedbackStatus(entry.learner,entry.day);
