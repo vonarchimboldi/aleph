@@ -18,7 +18,7 @@ export async function feedbackStatus(learner,day){
   const version=feedbackVersion(records),job=await loadJob(learner,day);
   if(!job||job.version!==version)return {status:'queued',previousReport:job?.report||null};
   if(job.status==='generating'&&job.leaseUntil<=Date.now())return {status:'queued'};
-  return {status:job.status,report:job.status==='ready'?job.report:null,generatedAt:job.generatedAt||null,retryAt:job.retryAt||null,message:job.status==='failed'?'Your submission is safe. Feedback will be retried.':null};
+  return {status:job.status,report:job.status==='ready'?job.report:null,generatedAt:job.generatedAt||null,retryAt:job.retryAt||null,failureCode:job.status==='failed'?job.failureCode||null:null,message:job.status==='failed'?'Your submission is safe. Feedback will be retried.':null};
 }
 
 // Submitted snapshots are the durable queue. Missing/stale reports are discoverable
@@ -33,7 +33,7 @@ export async function processFeedback(learner,day,{generate=generateDiagnosticRe
     if(old.status==='generating'&&old.leaseUntil>time)return {status:'generating'};
     if(old.status==='failed'&&old.retryAt>time)return {status:'failed'};
   }
-  const claim={version,status:'generating',leaseUntil:time+150000,attempts:old?.version===version?(old.attempts||0)+1:1};
+  const claim={version,status:'generating',leaseUntil:time+210000,attempts:old?.version===version?(old.attempts||0)+1:1};
   if(!await replaceJob(learner,day,old,claim))return {status:'generating'};
   const held={...claim,revision:(old?.revision||0)+1};
   try{
@@ -45,12 +45,14 @@ export async function processFeedback(learner,day,{generate=generateDiagnosticRe
     return {status:saved?'ready':'generating'};
   }catch(error){
     // Provider output and learner content are intentionally not stored in error text.
-    await replaceJob(learner,day,held,{version,status:'failed',attempts:claim.attempts,retryAt:now()+Math.min(3600000,60000*2**Math.min(claim.attempts,6)),error:'Feedback generation failed.'});
+    const message=String(error.message||'');
+    const failureCode=error.name==='TimeoutError'?'provider_timeout':error instanceof SyntaxError?'provider_json':message.includes('reconcile all')?'cross_day_coverage':message.includes('day-specific')?'cross_day_evidence':message.includes('every submitted question')?'question_coverage':message.includes('unassessed diagnostic item')?'unassessed_reference':message.includes('report format')?'report_format':message.includes('too many next steps')?'next_steps_limit':message.includes('not configured')?'not_configured':message.includes('provider failed')?'provider_http':error.code==='ENOENT'?'rubric_file_missing':'generation_error';
+    await replaceJob(learner,day,held,{version,status:'failed',attempts:claim.attempts,retryAt:now()+Math.min(3600000,60000*2**Math.min(claim.attempts,6)),failureCode,error:'Feedback generation failed.'});
     return {status:'failed'};
   }
 }
 
-export async function drainFeedback({limit=3,generate,now}={}){
+export async function drainFeedback({limit=2,generate,now}={}){
   assertStore();
   const ledger=await loadPlatinumSubmissionsLedger();
   const entries=[...new Map((ledger.submissions||[]).filter(s=>/^math-diagnostic-day-\d{2}$/.test(s.materialId||'')&&s.userId).map(s=>[s.userId+':'+s.materialId,{learner:s.userId,day:Number(s.materialId.slice(-2))}])).values()];

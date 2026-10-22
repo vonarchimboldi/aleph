@@ -93,7 +93,7 @@ export async function generateDiagnosticReport(record,records,attachment,{fetche
   const model=process.env.OPENAI_DIAGNOSTIC_FEEDBACK_MODEL||process.env.OPENAI_FEEDBACK_MODEL||'gpt-4.1-mini';
   async function request(instructions,userContent){
     const response=await fetcher('https://api.openai.com/v1/responses',{
-      method:'POST',headers:{Authorization:`Bearer ${process.env.OPENAI_API_KEY}`,'Content-Type':'application/json'},signal:AbortSignal.timeout(42000),
+      method:'POST',headers:{Authorization:`Bearer ${process.env.OPENAI_API_KEY}`,'Content-Type':'application/json'},signal:AbortSignal.timeout(65000),
       body:JSON.stringify({model,store:false,input:[{role:'system',content:instructions},{role:'user',content:userContent}],text:{format:{type:'json_schema',name:'diagnostic_tutor_report',strict:true,schema:reportSchema}}})
     });
     if(!response.ok)throw Error(`Diagnostic feedback provider failed (${response.status}).`);
