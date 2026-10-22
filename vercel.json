@@ -1,9 +1,28 @@
 {
-  "functions": { "api/dbms-review.js": { "maxDuration": 120 }, "api/math-diagnostic.js": { "maxDuration": 60 } },
+  "functions": {
+    "api/dbms-review.js": {
+      "maxDuration": 120
+    },
+    "api/math-diagnostic.js": {
+      "maxDuration": 60
+    },
+    "api/math-diagnostic-feedback.js": {
+      "maxDuration": 120,
+      "includeFiles": "math-diagnostic/tutor/day-*.json"
+    },
+    "api/cron/diagnostic-feedback.js": {
+      "maxDuration": 300,
+      "includeFiles": "math-diagnostic/tutor/day-*.json"
+    }
+  },
   "crons": [
     {
       "path": "/api/cron/platinum-weekly-check",
       "schedule": "0 14 * * *"
+    },
+    {
+      "path": "/api/cron/diagnostic-feedback",
+      "schedule": "15 14 * * *"
     }
   ],
   "headers": [

@@ -4,6 +4,7 @@ import { dirname, extname, join, normalize } from "node:path";
 import { fileURLToPath } from "node:url";
 import generateFeedbackHandler from "../api/generate-feedback.js";
 import mathDiagnosticHandler from "../api/math-diagnostic.js";
+import diagnosticFeedbackHandler from "../api/math-diagnostic-feedback.js";
 
 const ROOT = normalize(join(dirname(fileURLToPath(import.meta.url)), ".."));
 const PORT = Number(process.env.PORT || 8765);
@@ -29,6 +30,11 @@ const latestPlatinumSubmissions = [];
 
 const server = createServer(async (request, response) => {
   try {
+    if (request.url?.startsWith("/api/math-diagnostic-feedback")) {
+      const body=request.method==='POST'?await readJson(request):undefined;
+      const shim={statusCode:200,setHeader(name,value){response.setHeader(name,value)},status(code){this.statusCode=code;return this},json(payload){sendJson(response,this.statusCode,payload)}};
+      return diagnosticFeedbackHandler({method:request.method,url:request.url,headers:request.headers,body},shim);
+    }
     if (request.url?.startsWith("/api/math-diagnostic")) {
       const body = request.method === "POST" ? await readJson(request) : undefined;
       const shim = {statusCode:200, setHeader(name,value){response.setHeader(name,value)}, status(code){this.statusCode=code;return this}, json(payload){sendJson(response,this.statusCode,payload)}};
