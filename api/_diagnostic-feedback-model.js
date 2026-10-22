@@ -1,7 +1,7 @@
 import {readFile} from 'node:fs/promises';
 import {join} from 'node:path';
 
-export const FEEDBACK_VERSION = 'diagnostic-tutor-v2';
+export const FEEDBACK_VERSION = 'diagnostic-tutor-v3';
 const string = {type:'string'};
 const strings = {type:'array',items:string};
 const object = properties => ({type:'object',additionalProperties:false,required:Object.keys(properties),properties});
@@ -29,7 +29,7 @@ Distinguish conceptual misunderstanding, missing conditions, formula recall, rec
 Analyze specific mathematical skills and higher-level mathematical habits separately. Higher-level examples include preserving equivalence and checking domains, moving between representations, deriving rather than memorizing, explaining why, recognizing structure, checking answers and transferring a method. Support every pattern and skill conclusion with supplied day/question IDs and actual evidence. Look across all supplied submitted days, acknowledge improvements and contradictions, and keep uncertain conclusions tentative. Previous-day evidence is typed text only; only this day's attachment is supplied. Do not claim to have assessed previous attachments.
 Use mistakes to teach the bigger picture of mathematics: choose one coherent lesson arising from this learner's work, explain why the idea connects topics, and give a small worked example. Do not attach a generic motivational paragraph to a list of marks.
 Give up to three prioritized next steps with observable success criteria, focused on repair and transfer rather than more of the same. Do not reveal any unsubmitted day's questions, future assessment items, or unselected follow-ups. Use fresh examples, not reserved follow-ups. Do not generate a global ability score, IQ, pass/fail judgment or psychometric claims. No total score is needed.
-The requiredCrossDayComparisons input explicitly groups repeated skills. In crossDayChecks, include exactly one entry for EVERY supplied skill key, using that exact key in skill, with evidence from every participating day. Reconcile the conflicting or corroborating responses. Per-question feedback describes the particular submitted answer; specificSkills, higherLevelSkills and the overall picture describe the CURRENT combined evidence. A blank on Day 1 does not make a skill unassessed overall if Day 2 demonstrates it. An incorrect verbal rule followed by correct applications is a discrepancy to check, not proof that the learner cannot apply the rule. Do not claim learning/improvement caused by feedback unless that exposure is documented.
+The requiredCrossDayComparisons input explicitly groups repeated skills. In crossDayChecks, fill EVERY skill key and EVERY evidenceByDay key required by the schema. Reconcile the conflicting or corroborating responses. Per-question feedback describes the particular submitted answer; specificSkills, higherLevelSkills and the overall picture describe the CURRENT combined evidence. A blank on Day 1 does not make a skill unassessed overall if Day 2 demonstrates it. An incorrect verbal rule followed by correct applications is a discrepancy to check, not proof that the learner cannot apply the rule. Do not claim learning/improvement caused by feedback unless that exposure is documented.
 Classify a response that omits an essential requested domain condition as partly correct, not fully correct. Do not invent a missing condition or proof requirement when the question did not ask for it and the work already supplies it. Correct items need no invented issue. Multiplication in counting does NOT require independent choices: conditional branch counts or constant continuation counts suffice.
 Do not infer time pressure, reasons for blanks or emotional states; say those reasons are unknown. When no follow-ups were selected, say none were assigned, not that selected follow-ups were skipped. Unselected follow-ups are not evidence of a gap.
 Name specificSkills with readable mathematical names as well as codes. Select next steps from unresolved evidence, especially disagreements between rule explanation and application; do not default to harder exercises, nested absolute values or more-variable inequalities merely because current answers are correct. Use a short explanation or fresh transfer check first. A big-picture lesson must develop one shared idea, not juxtapose unrelated corrections. For example, checking whether transformations preserve meaning can connect algebra, inequalities, domains and checking formulas with small cases.
@@ -43,6 +43,25 @@ export function crossDayComparisons(context){
   const groups=new Map();
   for(const day of context)for(const item of day.answers){const skill=item.id.split('-')[0];if(!groups.has(skill))groups.set(skill,[]);groups.get(skill).push({day:day.day,...item})}
   return [...groups].filter(([,items])=>new Set(items.map(i=>i.day)).size>1).map(([skill,items])=>({skill,items}));
+}
+
+// Named required keys make omission of a repeated skill/day impossible under
+// structured output; normalize back to the stable stored/public report shape.
+export function generationSchema(comparisons){
+  const checks={};
+  for(const comparison of comparisons){
+    const days={};
+    for(const day of new Set(comparison.items.map(i=>i.day))){
+      days['day'+day]=array(object({id:{type:'string',enum:comparison.items.filter(i=>i.day===day).map(i=>i.id)},observation:string}));
+    }
+    checks[comparison.skill]=object({evidenceByDay:object(days),conclusion:string,nextCheck:string});
+  }
+  return {...reportSchema,properties:{...reportSchema.properties,crossDayChecks:object(checks)}};
+}
+
+function normalizeGeneratedReport(report){
+  if(!report.crossDayChecks||Array.isArray(report.crossDayChecks))throw Error('Feedback did not reconcile all repeated skills.');
+  return {...report,crossDayChecks:Object.entries(report.crossDayChecks).map(([skill,c])=>({skill,evidence:Object.entries(c.evidenceByDay).flatMap(([day,items])=>items.map(item=>({day:Number(day.slice(3)),...item}))),conclusion:c.conclusion,nextCheck:c.nextCheck}))};
 }
 
 export async function buildFeedbackInput(record, records, attachment, rubricLoader=loadRubric) {
@@ -90,11 +109,12 @@ export function validateReport(report,ids,allowedEvidenceIds,comparisons=[]) {
 export async function generateDiagnosticReport(record,records,attachment,{fetcher=fetch,rubricLoader=loadRubric}={}) {
   if(!process.env.OPENAI_API_KEY)throw Error('Diagnostic feedback generation is not configured.');
   const {ids,content,comparisons}=await buildFeedbackInput(record,records,attachment,rubricLoader);
+  const schema=generationSchema(comparisons);
   const model=process.env.OPENAI_DIAGNOSTIC_FEEDBACK_MODEL||process.env.OPENAI_FEEDBACK_MODEL||'gpt-4.1-mini';
   async function request(instructions,userContent){
     const response=await fetcher('https://api.openai.com/v1/responses',{
       method:'POST',headers:{Authorization:`Bearer ${process.env.OPENAI_API_KEY}`,'Content-Type':'application/json'},signal:AbortSignal.timeout(65000),
-      body:JSON.stringify({model,store:false,input:[{role:'system',content:instructions},{role:'user',content:userContent}],text:{format:{type:'json_schema',name:'diagnostic_tutor_report',strict:true,schema:reportSchema}}})
+      body:JSON.stringify({model,store:false,input:[{role:'system',content:instructions},{role:'user',content:userContent}],text:{format:{type:'json_schema',name:'diagnostic_tutor_report',strict:true,schema}}})
     });
     if(!response.ok)throw Error(`Diagnostic feedback provider failed (${response.status}).`);
     const result=await response.json();
@@ -103,7 +123,7 @@ export async function generateDiagnosticReport(record,records,attachment,{fetche
     return JSON.parse(output);
   }
   const draft=await request(tutorInstructions,content);
-  const report=await request(tutorInstructions+'\nYou are now reviewing a draft tutor report before publication. Reassess it against the ORIGINAL learner evidence and rubric, including the attachment. Correct mathematical errors, over-credit, unsupported diagnoses, speculative reasons for blanks, generic harder-practice advice, and missing cross-day contradictions. Make the report candid, encouraging and explanatory, with one coherent mathematical lesson and concrete checks of unresolved understanding. Ensure every repeated skill is reconciled with evidence from every participating day. Return the complete corrected report, not a critique.',[...content,{type:'input_text',text:JSON.stringify({draftReport:draft})}]);
+  const report=normalizeGeneratedReport(await request(tutorInstructions+'\nYou are now reviewing a draft tutor report before publication. Reassess it against the ORIGINAL learner evidence and rubric, including the attachment. Correct mathematical errors, over-credit, unsupported diagnoses, speculative reasons for blanks, generic harder-practice advice, and missing cross-day contradictions. Make the report candid, encouraging and explanatory, with one coherent mathematical lesson and concrete checks of unresolved understanding. Ensure every repeated skill is reconciled with evidence from every participating day. Return the complete corrected report, not a critique.',[...content,{type:'input_text',text:JSON.stringify({draftReport:draft})}]));
   const allowed=new Set();
   for(const r of records.filter(r=>r.submitted)){const rubric=await rubricLoader(r.day);for(const id of [...rubric.core,...(r.submitted.selected||[])])allowed.add(id)}
   return {report:validateReport(report,ids,allowed,comparisons),model};

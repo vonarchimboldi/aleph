@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import {saveDay,loadProgress} from '../api/_math-diagnostic-store.js';
 import {feedbackStatus,processFeedback,drainFeedback,feedbackVersion} from '../api/_diagnostic-feedback.js';
-import {buildFeedbackInput,generateDiagnosticReport,loadRubric,reportSchema,validateReport} from '../api/_diagnostic-feedback-model.js';
+import {buildFeedbackInput,generateDiagnosticReport,loadRubric,reportSchema,validateReport,generationSchema} from '../api/_diagnostic-feedback-model.js';
 import handler from '../api/math-diagnostic-feedback.js';
 import cron from '../api/cron/diagnostic-feedback.js';
 import {renderFeedback} from '../math-diagnostic/feedback.mjs';
@@ -54,8 +54,8 @@ const markup=renderFeedback({...sample,headline:'<img src=x onerror=alert(1)>',o
 const records=(await loadProgress(learner)).records;
 const rec=records.find(r=>r.day===2);let payload;
 process.env.OPENAI_API_KEY='test-only-not-a-real-key';
-const generated=await generateDiagnosticReport(rec,records,null,{fetcher:async(url,options)=>{payload=JSON.parse(options.body);return {ok:true,json:async()=>({status:'completed',output_text:JSON.stringify({...reportFor((await loadRubric(2)).core),crossDayChecks:JSON.parse(payload.input[1].content[0].text).requiredCrossDayComparisons.map(c=>({skill:c.skill,evidence:c.items.map(i=>({day:i.day,id:i.id,observation:"Observed response"})),conclusion:"Reconcile the responses.",nextCheck:"Explain a fresh example."}))})})}}});
-assert.equal(generated.report.questions.length,8);assert.equal(generated.report.crossDayChecks.length,2);assert.equal(payload.store,false);assert.deepEqual(payload.text.format.schema,reportSchema);
+const generated=await generateDiagnosticReport(rec,records,null,{fetcher:async(url,options)=>{payload=JSON.parse(options.body);return {ok:true,json:async()=>({status:'completed',output_text:JSON.stringify({...reportFor((await loadRubric(2)).core),crossDayChecks:Object.fromEntries(JSON.parse(payload.input[1].content[0].text).requiredCrossDayComparisons.map(c=>[c.skill,{evidenceByDay:Object.fromEntries([...new Set(c.items.map(i=>i.day))].map(day=>["day"+day,c.items.filter(i=>i.day===day).map(i=>({id:i.id,observation:"Observed response"}))])),conclusion:"Reconcile the responses.",nextCheck:"Explain a fresh example."}]))})})}}});
+assert.equal(generated.report.questions.length,8);assert.equal(generated.report.crossDayChecks.length,2);assert.equal(payload.store,false);assert.deepEqual(payload.text.format.schema,generationSchema(JSON.parse(payload.input[1].content[0].text).requiredCrossDayComparisons));
 const input=JSON.parse(payload.input[1].content[0].text);assert.equal(input.submittedDayContext.length,2);assert(input.submittedDayContext[0].attachmentNotReviewed);assert(!JSON.stringify(input.questions).includes('I3-4'));
 await assert.rejects(generateDiagnosticReport(rec,records,null,{fetcher:async()=>({ok:false,status:429})}),/429/);
 await assert.rejects(generateDiagnosticReport(rec,records,null,{fetcher:async()=>({ok:true,json:async()=>({status:'incomplete'})})}),/finish/);
