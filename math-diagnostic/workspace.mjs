@@ -7,7 +7,12 @@ const learner=params.get('learner')||user.id||'standalone';
 const canTutor=Boolean(user.canPreviewLockedContent||['admin','course-designer','reviewer'].includes(user.role));
 const tutor=params.get('mode')==='tutor'&&canTutor;
 const key='aleph-math-diagnostic-v1:'+learner;
-const feedbackPanel=createFeedbackPanel({element:document.querySelector('#feedback'),learner});
+const feedbackPanel=createFeedbackPanel({element:document.querySelector('#feedback'),learner,canMarkRead:()=>{
+ try{
+  const profile=JSON.parse(localStorage.getItem('learning-studio-data-v2'))?.user;
+  return !canTutor&&profile?.id===learner&&!profile.mustChangePassword&&Boolean(profile.name)&&sessionStorage.getItem('aleph-session')===profile.name;
+ }catch{return false}
+}});
 let progress=blank(),day=Number(params.get('day'))||1,current=null,tutorData=null,loadNumber=0;
 try{const saved=localStorage.getItem(key);if(saved)progress=validate(JSON.parse(saved))}catch{$('#message').textContent='Saved progress could not be read. Restore a valid backup before continuing.'}
 if(!params.has('day'))day=Math.min(10,progress.completed.length+1);

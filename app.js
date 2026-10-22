@@ -27,6 +27,8 @@ let selectedPatternMaterialId = null;
 let activeTestId = null;
 let platinumProgressSyncTimer = null;
 let diagnosticMigrationLearner = null;
+let notificationsController = null;
+let notificationsModulePromise = null;
 let cachedPlatinumProgressSnapshots = [];
 let cachedPlatinumSubmissionRecords = [];
 let cachedPlatinumProgressFetchedAt = "";
@@ -35474,6 +35476,7 @@ function applyAuthState() {
   const signedIn = sessionUser === state.user.name;
   const mustChangePassword = signedIn && state.user.mustChangePassword;
   document.body.classList.toggle("is-authenticated", signedIn && !mustChangePassword);
+  syncNotificationLearner(signedIn && !mustChangePassword ? state.user.id : null);
   document.querySelector("#landing-view").classList.toggle("active", !signedIn || mustChangePassword);
   document.querySelector("#login-form").classList.toggle("hidden", signedIn);
   document.querySelector("#signup-form").classList.toggle("active", false);
@@ -36018,7 +36021,25 @@ function renderBuildState() {
 }
 
 function feedbackSurfaceCount() {
-  return state.feedback.length + generatedFeedbackEntries().length;
+  return state.feedback.length + generatedFeedbackEntries().length + (notificationsController?.count || 0);
+}
+
+function syncNotificationLearner(learner) {
+  if (notificationsController) { notificationsController.setLearner(learner); return; }
+  if (!learner) return;
+  notificationsModulePromise ||= import('./notifications.mjs?v=1');
+  notificationsModulePromise.then(({createNotificationCenter}) => {
+    const signedIn = sessionStorage.getItem(SESSION_KEY) === state.user.name && !state.user.mustChangePassword;
+    if (!signedIn) return;
+    notificationsController ||= createNotificationCenter({
+      onChange: () => {
+        document.querySelector('#feedback-count').textContent = feedbackSurfaceCount();
+        renderFeedback();
+      },
+      onOpenFeedback: () => showView('feedback')
+    });
+    notificationsController.setLearner(state.user.id);
+  }).catch(() => { notificationsModulePromise = null; });
 }
 
 function updateRoleNavigation() {
@@ -36542,7 +36563,9 @@ function renderFeedback() {
   const manualNotes = state.feedback || [];
 
   if (!generatedEntries.length && !manualNotes.length && !scoreRecords.length) {
-    container.innerHTML = '<div class="empty">No feedback items yet.</div>';
+    container.innerHTML = notificationsController?.count
+      ? '<div class="empty">Other course and quiz feedback will appear here.</div>'
+      : '<div class="empty">No feedback items yet.</div>';
     return;
   }
 

@@ -10,6 +10,18 @@ const contextOf=records=>records.filter(r=>r.submitted).sort((a,b)=>a.day-b.day)
 export function feedbackVersion(records){return createHash('sha256').update(JSON.stringify([FEEDBACK_VERSION,contextOf(records).map(r=>({day:r.day,submitted:r.submitted,lastSubmittedAt:r.lastSubmittedAt}))])).digest('hex')}
 async function loadJob(learner,day){const raw=await kvCommand(['GET',key(learner,day)]);return raw?(typeof raw==='string'?JSON.parse(raw):raw):null}
 async function replaceJob(learner,day,old,next){return Number(await kvCommand(['EVAL',CAS,1,key(learner,day),String(old?.revision||0),JSON.stringify({...next,revision:(old?.revision||0)+1})]))===1}
+const notificationIdentity=(day,job)=>({id:`diagnostic-feedback-day-${day}`,version:`${job.version}:${job.generatedAt}`});
+
+export async function diagnosticFeedbackNotifications(learner){
+  assertStore();validateIdentity(learner);
+  const {records}=await loadProgress(learner),version=feedbackVersion(records);
+  const notices=await Promise.all(contextOf(records).map(async record=>{
+    const job=await loadJob(learner,record.day);
+    if(job?.status!=='ready'||job.version!==version||!job.generatedAt)return null;
+    return {...notificationIdentity(record.day,job),type:'diagnostic-feedback',day:record.day,title:`Your Day ${record.day} feedback is ready`,description:'Review your answers, strengths and next steps.',generatedAt:job.generatedAt,href:`/math-diagnostic/?learner=${encodeURIComponent(learner)}&day=${record.day}#feedback`};
+  }));
+  return notices.filter(Boolean).sort((a,b)=>b.generatedAt.localeCompare(a.generatedAt)||b.day-a.day);
+}
 
 export async function feedbackStatus(learner,day){
   assertStore();validateIdentity(learner,day);
@@ -18,7 +30,7 @@ export async function feedbackStatus(learner,day){
   const version=feedbackVersion(records),job=await loadJob(learner,day);
   if(!job||job.version!==version)return {status:'queued',previousReport:job?.report||null};
   if(job.status==='generating'&&job.leaseUntil<=Date.now())return {status:'queued'};
-  return {status:job.status,report:job.status==='ready'?job.report:null,generatedAt:job.generatedAt||null,retryAt:job.retryAt||null,failureCode:job.status==='failed'?job.failureCode||null:null,message:job.status==='failed'?'Your submission is safe. Feedback will be retried.':null};
+  return {status:job.status,report:job.status==='ready'?job.report:null,notification:job.status==='ready'?notificationIdentity(day,job):null,generatedAt:job.generatedAt||null,retryAt:job.retryAt||null,failureCode:job.status==='failed'?job.failureCode||null:null,message:job.status==='failed'?'Your submission is safe. Feedback will be retried.':null};
 }
 
 // Submitted snapshots are the durable queue. Missing/stale reports are discoverable

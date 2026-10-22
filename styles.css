@@ -3423,3 +3423,14 @@ a {
 .model-quantities dd { margin: 0.25rem 0 0; }
 .model-equations { border-left: 3px solid #788f87; padding-left: 0.8rem; overflow-wrap: anywhere; }
 .model-equations p { font-family: Georgia, serif; }
+
+/* Feedback notifications */
+.topbar{position:relative}
+.notification-count{display:inline-flex;align-items:center;justify-content:center;min-width:1.5em;padding:0 .4em;margin-left:.35em;border-radius:999px;background:#17596a;color:#fff;font-size:.8em;font-weight:700;vertical-align:middle}
+.notifications-panel{position:absolute;right:0;top:100%;z-index:50;width:min(460px,calc(100vw - 32px));max-height:70vh;overflow:auto;box-shadow:0 12px 32px #17344126;background:#fff;color:#182635}
+.notification-row{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;padding:16px 0;border-top:1px solid #d9e3e8;min-width:0}
+.notification-row>div{min-width:0}.notification-row a{font-weight:650;color:#17596a;overflow-wrap:anywhere}.notification-row p{margin:5px 0;font-size:.92em}.notification-row small{color:#536570}.notification-row.is-unread a{font-weight:750}.notification-state{flex-shrink:0;font-size:.8em;color:#536570}.is-unread .notification-state{color:#17596a;font-weight:700}.feedback-ready-card{margin-bottom:24px;border-left:4px solid #17596a}
+#notifications-panel[hidden],#notifications-toggle[hidden],#feedback-notice-card[hidden],#diagnostic-feedback-notices[hidden],#feedback-unread-count[hidden],[data-notification-count][hidden],[data-notification-error][hidden]{display:none!important}
+@media(max-width:600px){.notifications-panel{position:fixed;top:14px;right:14px;max-height:calc(100dvh - 28px);width:calc(100vw - 28px)}.notification-row{gap:8px}.notification-count{margin-left:.2em}}
+
+.notification-announcement{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}

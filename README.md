@@ -246,6 +246,14 @@ Submitted records plus the existing submissions ledger form a durable, discovera
 
 Run `node scripts/verify-diagnostic-feedback.mjs` for submission-version isolation, retries, concurrency, cross-day refresh, backfill, attachment input, exact question coverage, output validation and safe rendering. Its model responses are test fixtures; it does not validate real model quality or use live learner records. The local test server routes the diagnostic feedback endpoint separately from `/api/math-diagnostic`.
 
+### In-app feedback notifications
+
+Ready diagnostic reports appear in a Notifications menu, an unread badge beside Feedback, a dashboard card with direct report links, and a diagnostic-report list in the Feedback view. The app checks when the learner signs in, returns to the tab or reconnects, and every 60 seconds while visible. Opening the menu or Feedback list does not mark anything read. The notification list contains report metadata and links, not answer text or report bodies. Existing ready reports are included automatically; queued, failed and obsolete reports are not announced as ready.
+
+Read status is stored on the server for the learner and exact generated report version. A learner's report is acknowledged only when its heading is visible in a foreground tab and the current signed-in browser profile belongs to that learner. Tutor previews and anonymous/shared links do not acknowledge it. A regenerated report becomes unread again; delayed acknowledgements for an older version cannot clear its unread state. Switching accounts or signing out clears the previous learner's notification display and ignores late responses. These endpoints use the existing prototype learner-identity convention; they do not introduce authenticated accounts or replace the prototype's authorization model.
+
+`GET /api/notifications?learner=LEARNER_ID` lists notifications without changing read state. `POST /api/notifications` with `{action:"read",learner,id,version}` acknowledges a current ready report version. Polling never starts model generation. `node scripts/verify-notifications.mjs` checks ready-only discovery, version-specific persistence, learner partitioning, stale acknowledgements, refresh deduplication and API validation using synthetic records. Browser checks should use synthetic accounts/responses: opening a real learner report in that learner's profile can consume a real unread notification. Use read-only metadata requests for production checks.
+
 The `gate-da-dbms/` library contains eight chapter PDFs, complete notes, an 80-problem practice book and a separate solutions guide. Both Basic and Platinum workspaces expose the library under Database Management and Warehousing and Resources. Existing task progress is preserved.
 
 Run `node scripts/verify-dbms-pack.mjs` to check PDF downloads, account routing and progress migration. Source references and review limitations are included in the library metadata and notes.

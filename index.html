@@ -183,7 +183,7 @@
         <button class="nav-item" data-view="tasks">Tasks</button>
         <button class="nav-item" data-view="schedule">Schedule</button>
         <button class="nav-item" data-view="tests">Tests</button>
-        <button class="nav-item" data-view="feedback">Feedback</button>
+        <button class="nav-item" data-view="feedback">Feedback <span id="feedback-unread-count" class="notification-count" hidden></span></button>
         <button class="nav-item hidden" data-view="platinum-users">Platinum Users</button>
         <button class="nav-item" data-view="resources">Resources</button>
         <button class="nav-item" data-view="settings">Share</button>
@@ -197,6 +197,13 @@
           <h2 id="view-title">Dashboard</h2>
         </div>
         <div class="top-actions">
+          <span class="notification-announcement" id="notifications-announcement" role="status" aria-live="polite"></span>
+          <button class="ghost-btn" id="notifications-toggle" type="button" aria-controls="notifications-panel" aria-expanded="false" hidden>Notifications <span class="notification-count" data-notification-count hidden></span></button>
+          <section class="panel notifications-panel" id="notifications-panel" aria-labelledby="notifications-heading" hidden>
+            <div class="panel-header"><h3 id="notifications-heading">Notifications</h3><button class="text-btn" type="button" data-close-notifications aria-label="Close notifications">Close</button></div>
+            <div data-notification-list></div><p class="muted" data-notification-error role="status" hidden></p>
+            <button class="text-btn" type="button" data-refresh-notifications>Refresh</button>
+          </section>
           <span class="tag" id="build-stamp">Build loading</span>
           <button class="ghost-btn" id="seed-btn" type="button">Load current plan</button>
           <button class="ghost-btn" id="reset-plan-btn" type="button">Reset current data</button>
@@ -206,6 +213,7 @@
       </header>
 
       <section class="view active" id="dashboard-view">
+        <section class="panel feedback-ready-card" id="feedback-notice-card" hidden></section>
         <div class="metrics">
           <article class="metric">
             <span id="subject-count">0</span>
@@ -404,6 +412,7 @@
       </section>
 
       <section class="view" id="feedback-view">
+        <section class="panel" id="diagnostic-feedback-notices" hidden></section>
         <section class="panel">
           <div class="panel-header">
             <h3>Plan Feedback</h3>
@@ -504,6 +513,6 @@
 
     <script src="platinum-linear-algebra.js?v=seeded-user-canonical-workspace-v169"></script>
     <script src="platinum-machine-learning.js?v=seeded-user-canonical-workspace-v169"></script>
-    <script src="app.js?v=seeded-user-canonical-workspace-v169"></script>
+    <script src="app.js?v=seeded-user-canonical-workspace-v169-notifications-v1"></script>
   </body>
 </html>
