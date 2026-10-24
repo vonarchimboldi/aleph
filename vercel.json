@@ -1,5 +1,9 @@
 {
   "functions": {
+    "api/math-diagnostic-feedback-review.js": {
+      "maxDuration": 60,
+      "includeFiles": "math-diagnostic/tutor/day-*.json"
+    },
     "api/dbms-review.js": {
       "maxDuration": 120
     },

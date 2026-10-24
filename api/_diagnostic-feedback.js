@@ -1,7 +1,7 @@
 import {createHash} from 'node:crypto';
 import {kvCommand,loadPlatinumSubmissionsLedger} from './_platinum-progress-store.js';
 import {assertStore,loadProgress,loadAttachment,validateIdentity} from './_math-diagnostic-store.js';
-import {FEEDBACK_VERSION,generateDiagnosticReport} from './_diagnostic-feedback-model.js';
+import {FEEDBACK_VERSION,generateDiagnosticReport,buildFeedbackInput,validateReport} from './_diagnostic-feedback-model.js';
 
 const PREFIX='aleph:diagnostic-feedback:v1:';
 const CAS="local v=redis.call('GET',KEYS[1]); local rev=0; if v then rev=cjson.decode(v).revision end; if rev~=tonumber(ARGV[1]) then return 0 end; redis.call('SET',KEYS[1],ARGV[2]); return 1";
@@ -31,6 +31,24 @@ export async function feedbackStatus(learner,day){
   if(!job||job.version!==version)return {status:'queued',previousReport:job?.report||null};
   if(job.status==='generating'&&job.leaseUntil<=Date.now())return {status:'queued'};
   return {status:job.status,report:job.status==='ready'?job.report:null,notification:job.status==='ready'?notificationIdentity(day,job):null,generatedAt:job.generatedAt||null,retryAt:job.retryAt||null,failureCode:job.status==='failed'?job.failureCode||null:null,message:job.status==='failed'?'Your submission is safe. Feedback will be retried.':null};
+}
+
+// Called only after the review endpoint verifies the operator's signature.
+export async function publishReviewedFeedback({learner,day,expectedGeneratedAt,report}){
+  assertStore();validateIdentity(learner,day);
+  const {records}=await loadProgress(learner),record=records.find(r=>r.day===day);
+  if(!record?.submitted)throw Object.assign(Error('Day is not submitted.'),{status:409});
+  const version=feedbackVersion(records),old=await loadJob(learner,day);
+  if(!old||old.version!==version||old.generatedAt!==expectedGeneratedAt)throw Object.assign(Error('Feedback or submitted evidence changed; review again.'),{status:409});
+  const {ids,comparisons}=await buildFeedbackInput(record,contextOf(records),null);
+  const allowed=new Set(records.filter(r=>r.submitted).flatMap(r=>Object.keys(r.submitted.answers)));
+  validateReport(report,ids,allowed,comparisons);
+  const archiveKey=key(learner,day)+':review-history:'+old.revision;
+  await kvCommand(['SET',archiveKey,JSON.stringify(old)]);
+  if(feedbackVersion((await loadProgress(learner)).records)!==version)throw Object.assign(Error('Submitted evidence changed; review again.'),{status:409});
+  const generatedAt=new Date().toISOString();
+  if(!await replaceJob(learner,day,old,{version,status:'ready',report,model:'operator-reviewed',generatedAt,attempts:old.attempts||0,previousReportKey:archiveKey}))throw Object.assign(Error('Feedback changed; review again.'),{status:409});
+  return {status:'ready',generatedAt};
 }
 
 // Submitted snapshots are the durable queue. Missing/stale reports are discoverable

@@ -1,0 +1,17 @@
+import assert from 'node:assert/strict';
+import {generateKeyPairSync,sign} from 'node:crypto';
+import handler,{verifiedPayload} from '../api/math-diagnostic-feedback-review.js';
+const pair=generateKeyPairSync('ed25519');
+const data={learner:'synthetic',day:4,expiresAt:1060000};
+const payload=JSON.stringify(data);
+const signature=sign(null,Buffer.from(payload),pair.privateKey).toString('base64');
+assert.deepEqual(verifiedPayload({payload,signature},1000000,pair.publicKey),data);
+assert.throws(()=>verifiedPayload({payload:payload+' ',signature},1000000,pair.publicKey),/Invalid signed/);
+assert.throws(()=>verifiedPayload({payload,signature},1100000,pair.publicKey),/expired/);
+assert.throws(()=>verifiedPayload({payload,signature},1,pair.publicKey),/expired/);
+assert.throws(()=>verifiedPayload({payload,signature},1000000),/Invalid signed/);
+assert.throws(()=>verifiedPayload({payload:'x'.repeat(250001),signature},1000000,pair.publicKey),/Invalid signed/);
+const response={setHeader(){},status(code){this.code=code;return this;},json(body){this.body=body;return this;}};
+await handler({method:'GET'},response);assert.equal(response.code,405);
+await handler({method:'POST',body:{payload,signature}},response);assert.equal(response.code,401);
+console.log('PASS: valid signature, tamper/expiry/oversize rejection, unrelated key rejection, POST-only and unauthorized request rejection. Synthetic data; no live writes.');
