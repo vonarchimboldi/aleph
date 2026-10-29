@@ -20,6 +20,9 @@
     },
     "api/notifications.js": {
       "maxDuration": 30
+    },
+    "api/math-remedial.js": {
+      "maxDuration": 60
     }
   },
   "crons": [
@@ -75,6 +78,15 @@
     },
     {
       "source": "/service-worker.js",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "no-store, max-age=0"
+        }
+      ]
+    },
+    {
+      "source": "/math-remedial/(.*)",
       "headers": [
         {
           "key": "Cache-Control",
