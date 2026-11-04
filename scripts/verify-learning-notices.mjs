@@ -1,0 +1,18 @@
+import assert from 'node:assert/strict';
+import {learningNotices} from '../api/_learning-notices.js';
+import {listNotifications,markNotificationRead} from '../api/_notifications.js';
+process.env.ALEPH_DIAGNOSTIC_MEMORY='1';
+assert.deepEqual(learningNotices('another-learner'),[]);
+const notices=await listNotifications('user-priyanka');
+const n=notices.notifications.find(n=>n.type==='learning-material');
+assert.equal(n.title,'Please make time for this');
+assert.equal(n.href,'/math-remedial/logic-repair.html');
+assert.equal(n.unread,true);
+assert.equal((await listNotifications('user-priyanka')).unreadCount,1);
+await assert.rejects(markNotificationRead({learner:'another-learner',id:n.id,version:n.version}),e=>e.status===409);
+await assert.rejects(markNotificationRead({learner:'user-priyanka',id:n.id,version:'old'}),e=>e.status===409);
+const ack=await markNotificationRead({learner:'user-priyanka',id:n.id,version:n.version});
+assert.equal((await listNotifications('user-priyanka')).unreadCount,0);
+assert.equal((await markNotificationRead({learner:'user-priyanka',id:n.id,version:n.version})).readAt,ack.readAt);
+assert.equal((await listNotifications('another-learner')).notifications.length,0);
+console.log('PASS: learner-specific learning notice, read-only discovery, durable idempotent acknowledgement, learner and version isolation. In-memory records only.');

@@ -36029,7 +36029,7 @@ function feedbackSurfaceCount() {
 function syncNotificationLearner(learner) {
   if (notificationsController) { notificationsController.setLearner(learner); return; }
   if (!learner) return;
-  notificationsModulePromise ||= import('./notifications.mjs?v=1');
+  notificationsModulePromise ||= import('./notifications.mjs?v=2');
   notificationsModulePromise.then(({createNotificationCenter}) => {
     const signedIn = sessionStorage.getItem(SESSION_KEY) === state.user.name && !state.user.mustChangePassword;
     if (!signedIn) return;
