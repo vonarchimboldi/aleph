@@ -285,3 +285,9 @@ Storage requires the configured KV service. Automatic email additionally require
 KV revision checks prevent lost updates. Reminder workers claim a lease and use a frozen request body plus a provider idempotency key. A durable sent marker prevents repeated sends; failed deliveries can retry. Ambiguous delivery retries stop after 23 hours, and destination changes suspend an already-pending digest for review. Existing prototype sign-in is unchanged: learner identifiers are not authenticated server sessions, and dashboard role controls do not establish server authorization.
 
 Verify with `node scripts/verify-material-tracker.mjs` (isolated in-memory storage and mock email; refuses live KV configuration). The local Platinum test server also serves the real tracker endpoint when `ALEPH_DIAGNOSTIC_MEMORY=1` is set.
+
+### Review assignments: November 9–15, 2026
+
+This week assigns Days 1–7 of Calculus Phase 1, the Skiena DSA review, and the DBMS review, with one 90-minute material from each subject per day. This is 21 assignments and 4½ study hours daily. `node scripts/assign-review-week.mjs` previews the exact week. `--apply` explicitly writes it to Priyanka's live tracker; reruns skip matching assignments and preserve completion. Importing the script has no network side effects. It stops if a material already has unfinished work assigned to another date.
+
+The learner's mandatory-completion notification states the admin's escalation policy. It explicitly distinguishes that policy from implementation status: automatic email remains pending activation, and account locking requires admin action. No automatic account-lock rule is added by the notice.

@@ -2,6 +2,14 @@
 export function learningNotices(learner) {
   if (learner !== 'user-priyanka') return [];
   return [{
+    id: 'mandatory-daily-review-2026-11-09',
+    version: '1',
+    type: 'learning-material',
+    title: 'Mandatory daily assignments: Calculus, DSA and DBMS',
+    description: 'Admin policy: You MUST complete all three assigned materials each day: Calculus, DSA review and DBMS review (90 minutes each). Incomplete assigned material will trigger an email to admin once automatic alerts are activated. Repeated failure to complete assigned material will result in your account being locked by admin. Current status: automatic email activation is pending; account locking requires admin action and is not automatic.',
+    href: '/',
+    generatedAt: '2026-11-09T05:22:16.000Z'
+  }, {
     id: 'logic-repair-2026-11-03',
     version: '1',
     type: 'learning-material',
