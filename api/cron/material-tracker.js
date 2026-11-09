@@ -1,6 +1,7 @@
 import {checkTrackerReminders} from '../_material-tracker.js';
 export default async function handler(request,response){
  response.setHeader('Cache-Control','no-store');
+ response.setHeader('X-Aleph-Tracker-Version','2026-11-09-study-agreement');
  if(request.method!=='GET'){response.setHeader('Allow','GET');return response.status(405).json({error:'Method not allowed'});}
  if(!process.env.CRON_SECRET)return response.status(503).json({error:'Reminder scheduler authentication is not configured.'});
  if(request.headers.authorization!==`Bearer ${process.env.CRON_SECRET}`)return response.status(401).json({error:'Unauthorized cron request'});

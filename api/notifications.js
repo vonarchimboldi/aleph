@@ -2,7 +2,7 @@ import {listNotifications,markNotificationRead} from './_notifications.js';
 
 export default async function handler(request,response){
   response.setHeader('Cache-Control','no-store');
-  response.setHeader('X-Aleph-Notifications-Version','2026-11-09-mandatory-reviews');
+  response.setHeader('X-Aleph-Notifications-Version','2026-11-09-study-agreement');
   if(!['GET','POST'].includes(request.method)){response.setHeader('Allow','GET, POST');return response.status(405).json({error:'Method not allowed'})}
   try{
     if(request.method==='POST'){

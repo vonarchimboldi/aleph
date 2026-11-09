@@ -1,7 +1,7 @@
 const STORAGE_KEY = "learning-studio-data-v2";
 const LEGACY_STORAGE_KEYS = ["learning-studio-data-v1"];
 const SESSION_KEY = "aleph-session";
-const COURSE_PLAN_VERSION = "seeded-user-canonical-workspace-v173";
+const COURSE_PLAN_VERSION = "seeded-user-canonical-workspace-v174";
 const MAX_FEEDBACK_ATTACHMENT_BYTES = 3 * 1024 * 1024;
 const MAX_COMPRESSED_FEEDBACK_BYTES = 2400 * 1024;
 const MAX_FEEDBACK_REQUEST_BYTES = 4 * 1024 * 1024;
@@ -37739,14 +37739,14 @@ function syncMaterialTracker() {
   const owner=canViewPlatinumUsers();
   const learner=owner?'user-priyanka':state.user.id;
   const catalog=platinumMaterialSnapshots().filter(m=>!m.archived&&m.materialUrl);
-  const context={learner,label:owner?"Priyanka's material":'Your material',catalog,onChange:()=>notificationsController?.refresh(),onUpload:materialId=>{
+  const context={learner,isAdmin:owner,label:owner?"Priyanka's material":'Your material',catalog,onChange:()=>notificationsController?.refresh(),onUpload:materialId=>{
     const found=findPatternMaterialAcrossState(materialId);
     if(!found)return;
     selectedSubjectId=found.subject.id;selectedPatternMaterialId=materialId;
     showView('subjects');renderSubjects();
   }};
   if(materialTrackerController){materialTrackerController.setContext(context);return;}
-  materialTrackerModulePromise ||= import('./material-tracker.mjs?v=1');
+  materialTrackerModulePromise ||= import('./material-tracker.mjs?v=2');
   materialTrackerModulePromise.then(({createMaterialTracker})=>{
     materialTrackerController ||= createMaterialTracker(root);
     const stillSignedIn=sessionStorage.getItem(SESSION_KEY)===state.user.name&&!state.user.mustChangePassword;

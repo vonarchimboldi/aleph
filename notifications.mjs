@@ -32,7 +32,7 @@ export function createNotificationCenter({root=document,fetcher=fetch,onChange=(
       const data=await response.json();if(token!==epoch)return;
       if(!Array.isArray(data.notifications))throw Error('Invalid notification response');
       const nextItems=data.notifications.filter(n=>{
-        try{const url=new URL(n.href,location.origin);return url.origin===location.origin&&(url.pathname==='/math-diagnostic/'||url.pathname==='/math-remedial/logic-repair.html')}catch{return false}
+        try{const url=new URL(n.href,location.origin);return url.origin===location.origin&&(url.pathname==='/'||/^\/(?:math-diagnostic|math-remedial|calculus-review|dsa-review|dbms-review|psets|gate-da-dbms|DSA%20For%20GATE%20practice)\//.test(url.pathname))}catch{return false}
       });
       const changed=!loaded||error||JSON.stringify(nextItems)!==JSON.stringify(items);
       items=nextItems;loaded=true;error=false;if(changed)draw();
@@ -45,7 +45,7 @@ export function createNotificationCenter({root=document,fetcher=fetch,onChange=(
   root.addEventListener('click',event=>{
     const link=event.target.closest?.('[data-notice-id]');
     const notice=items.find(n=>n.id===link?.dataset.noticeId&&n.version===link?.dataset.noticeVersion);
-    if(!learner||!notice||notice.type!=='learning-material'||!notice.unread)return;
+    if(!learner||!notice||!['learning-material','material-assignment','study-workflow'].includes(notice.type)||!notice.unread)return;
     // Only explicitly opening a learning notice acknowledges it. Feedback
     // reports retain their separate visible-report acknowledgement flow.
     fetcher('/api/notifications',{method:'POST',headers:{'Content-Type':'application/json'},keepalive:true,
