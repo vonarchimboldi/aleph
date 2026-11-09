@@ -1,7 +1,7 @@
 const STORAGE_KEY = "learning-studio-data-v2";
 const LEGACY_STORAGE_KEYS = ["learning-studio-data-v1"];
 const SESSION_KEY = "aleph-session";
-const COURSE_PLAN_VERSION = "seeded-user-canonical-workspace-v172";
+const COURSE_PLAN_VERSION = "seeded-user-canonical-workspace-v173";
 const MAX_FEEDBACK_ATTACHMENT_BYTES = 3 * 1024 * 1024;
 const MAX_COMPRESSED_FEEDBACK_BYTES = 2400 * 1024;
 const MAX_FEEDBACK_REQUEST_BYTES = 4 * 1024 * 1024;
@@ -28,6 +28,8 @@ let activeTestId = null;
 let platinumProgressSyncTimer = null;
 let diagnosticMigrationLearner = null;
 let notificationsController = null;
+let materialTrackerController = null;
+let materialTrackerModulePromise = null;
 let notificationsModulePromise = null;
 let cachedPlatinumProgressSnapshots = [];
 let cachedPlatinumSubmissionRecords = [];
@@ -37162,6 +37164,7 @@ function applyAuthState() {
   const mustChangePassword = signedIn && state.user.mustChangePassword;
   document.body.classList.toggle("is-authenticated", signedIn && !mustChangePassword);
   syncNotificationLearner(signedIn && !mustChangePassword ? state.user.id : null);
+  syncMaterialTracker();
   document.querySelector("#landing-view").classList.toggle("active", !signedIn || mustChangePassword);
   document.querySelector("#login-form").classList.toggle("hidden", signedIn);
   document.querySelector("#signup-form").classList.toggle("active", false);
@@ -37690,6 +37693,7 @@ function render() {
   normalizeTaskStatuses();
   renderTaskList();
   renderCurrentTasks();
+  syncMaterialTracker();
   if (views["platinum-users"]?.classList.contains("active")) renderPlatinumUsersDashboard();
 }
 
@@ -37725,6 +37729,30 @@ function syncNotificationLearner(learner) {
     });
     notificationsController.setLearner(state.user.id);
   }).catch(() => { notificationsModulePromise = null; });
+}
+
+function syncMaterialTracker() {
+  const root=document.querySelector('#daily-material-tracker');
+  if(!root)return;
+  const signedIn=sessionStorage.getItem(SESSION_KEY)===state.user.name&&!state.user.mustChangePassword;
+  if(!signedIn||!isPlatinumPrototypeUser(state.user)){materialTrackerController?.setContext(null);root.hidden=true;return;}
+  const owner=canViewPlatinumUsers();
+  const learner=owner?'user-priyanka':state.user.id;
+  const catalog=platinumMaterialSnapshots().filter(m=>!m.archived&&m.materialUrl);
+  const context={learner,label:owner?"Priyanka's material":'Your material',catalog,onChange:()=>notificationsController?.refresh(),onUpload:materialId=>{
+    const found=findPatternMaterialAcrossState(materialId);
+    if(!found)return;
+    selectedSubjectId=found.subject.id;selectedPatternMaterialId=materialId;
+    showView('subjects');renderSubjects();
+  }};
+  if(materialTrackerController){materialTrackerController.setContext(context);return;}
+  materialTrackerModulePromise ||= import('./material-tracker.mjs?v=1');
+  materialTrackerModulePromise.then(({createMaterialTracker})=>{
+    materialTrackerController ||= createMaterialTracker(root);
+    const stillSignedIn=sessionStorage.getItem(SESSION_KEY)===state.user.name&&!state.user.mustChangePassword;
+    const currentLearner=canViewPlatinumUsers()?'user-priyanka':state.user.id;
+    if(stillSignedIn&&currentLearner===learner&&isPlatinumPrototypeUser(state.user))materialTrackerController.setContext(context);
+  }).catch(()=>{materialTrackerModulePromise=null;root.hidden=false;root.textContent='Daily material could not load. Refresh to retry.';});
 }
 
 function updateRoleNavigation() {
@@ -42257,7 +42285,7 @@ function platinumTaskSnapshot(task) {
 function platinumMaterialSnapshots() {
   const materials = [];
   state.subjects.forEach((subject) => {
-    (subject.patternWorkspaces || []).forEach((pattern) => {
+    [...(subject.patternWorkspaces || []), ...(subject.materialWorkspaces || [])].forEach((pattern) => {
       (pattern.weeks || []).forEach((week) => {
         materials.push(platinumMaterialSnapshot(subject, pattern, week));
       });

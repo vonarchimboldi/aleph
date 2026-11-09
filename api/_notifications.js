@@ -1,3 +1,4 @@
+import {materialTrackerNotifications} from './_material-tracker.js';
 import {learningNotices} from './_learning-notices.js';
 import {createHash} from 'node:crypto';
 import {diagnosticFeedbackNotifications} from './_diagnostic-feedback.js';
@@ -11,7 +12,7 @@ function readKey(learner,id,version){
 
 export async function listNotifications(learner){
   assertStore();validateIdentity(learner);
-  const notices=[...learningNotices(learner),...await diagnosticFeedbackNotifications(learner)].sort((a,b)=>b.generatedAt.localeCompare(a.generatedAt));
+  const notices=[...learningNotices(learner),...await materialTrackerNotifications(learner),...await diagnosticFeedbackNotifications(learner)].sort((a,b)=>b.generatedAt.localeCompare(a.generatedAt));
   const notifications=await Promise.all(notices.map(async notice=>{
     const readAt=await kvCommand(['GET',readKey(learner,notice.id,notice.version)]);
     return {...notice,readAt:readAt||null,unread:!readAt};
@@ -22,7 +23,7 @@ export async function listNotifications(learner){
 export async function markNotificationRead({learner,id,version}={}){
   assertStore();validateIdentity(learner);
   if(typeof id!=='string'||typeof version!=='string'||id.length>100||version.length>180)throw Object.assign(Error('A notification and report version are required.'),{status:400});
-  const notice=[...learningNotices(learner),...await diagnosticFeedbackNotifications(learner)].find(n=>n.id===id&&n.version===version);
+  const notice=[...learningNotices(learner),...await materialTrackerNotifications(learner),...await diagnosticFeedbackNotifications(learner)].find(n=>n.id===id&&n.version===version);
   if(!notice)throw Object.assign(Error('This report has changed or is no longer ready. Refresh before marking it read.'),{status:409});
   const key=readKey(learner,id,version),existing=await kvCommand(['GET',key]);
   const readAt=existing||new Date().toISOString();

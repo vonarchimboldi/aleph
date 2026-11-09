@@ -23,6 +23,12 @@
     },
     "api/math-remedial.js": {
       "maxDuration": 60
+    },
+    "api/material-tracker.js": {
+      "maxDuration": 60
+    },
+    "api/cron/material-tracker.js": {
+      "maxDuration": 120
     }
   },
   "crons": [
@@ -33,6 +39,10 @@
     {
       "path": "/api/cron/diagnostic-feedback",
       "schedule": "15 14 * * *"
+    },
+    {
+      "path": "/api/cron/material-tracker",
+      "schedule": "0 7 * * *"
     }
   ],
   "headers": [
