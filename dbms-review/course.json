@@ -1,0 +1,1737 @@
+[
+  {
+    "day": 1,
+    "title": "Relations, ER models, keys, constraints and types",
+    "source": "Database System Concepts 7e §§2.1–2.4, 4.4–4.5 and6.2–6.7",
+    "goal": "Turn a business rule into keys and participation constraints, then test updates against them.",
+    "story": "\n<h2>Begin with the objects and their rules</h2><p>Suppose a college stores students and courses. A student can take many courses, and a course can have many students. Names are not reliable identities: two students may share a name. Give each student a StudentID and each course a CourseID. The relationship Enrolment records a pair of identities. If the model permits at most one enrolment per student/course pair, that pair is its key. If repeated enrolment events are allowed, an event identifier or another distinguishing attribute is needed. The story determines the key.</p>\n<p>A relation’s schema names its attributes and domains. Its current instance is the set of rows currently stored. A superkey determines a row uniquely in every permitted instance; a candidate key is a minimal superkey. The chosen primary key is one candidate, not a claim that no others exist. A current sample with distinct names does not prove a name is a key. A declared rule must justify that conclusion.</p>\n<h2>Separate cardinality from participation</h2><p>“Each order has one customer” supplies a many-orders-to-one-customer relationship. It does not mean every customer has an order. Total participation requires every entity of the relevant type to take part; it is a separate minimum requirement. For a many-to-many relationship, store a relationship table with foreign keys to the two entity tables. A multivalued attribute such as a person’s phone numbers normally needs its own table rather than a repeating cell.</p>\n<p>A foreign key requires a child value to match a referenced parent key, subject to null rules and the declared delete/update actions. In today’s exercises, child foreign keys are NOT NULL and parent deletion uses RESTRICT: you cannot remove a referenced parent until the references are dealt with. Inserting a valid new parent cannot itself make an existing child reference point to a nonexistent parent. Deleting a child also cannot create that particular referential failure. Other constraints still need checking.</p>\n<h2>Choose types for meaning, not appearance</h2><p>A phone number or postal code is usually an identifier, even when it contains digits. Numeric arithmetic can lose leading zeros. Fixed-precision DECIMAL is appropriate when exact decimal amounts matter; binary floating point need not represent values such as0.1 exactly. NOT NULL, CHECK, UNIQUE, PRIMARY KEY and FOREIGN KEY express different rules. SQL UNIQUE handling of nulls can vary by system, so questions that require a unique non-null identifier should state both uniqueness and NOT NULL.</p><p>Classical relational algebra uses sets; SQL query results usually retain duplicates unless DISTINCT or a set operation removes them. We will keep that distinction explicit on Days2–3.</p>\n",
+    "worked": [
+      [
+        "Make the relationship visible",
+        "A person may join many clubs and may have many phone numbers. Each club has many people. Map to relations; membership has at most one row per person/club pair.",
+        "Use Person(PersonID,…), Club(ClubID,…), Membership(PersonID,ClubID,…) with composite key(PersonID,ClubID), and Phone(PersonID,PhoneNumber) with a suitable pair key. Four relations separate entities, the many-to-many relationship, and the multivalued attribute. Total participation, if required, is an additional rule; it does not eliminate these structures."
+      ],
+      [
+        "Check an update, not a slogan",
+        "Customer IDs are{1,2}. Order rows(OID,CID) are(10,1),(11,1). CID is NOT NULL, a foreign key with RESTRICT. Can Customer1 be deleted?",
+        "No: both orders still reference1. Customer2 can be deleted because no order references2, assuming no other constraints. Inserting Customer3 is safe with respect to this foreign key, while inserting Order(12,3) is unsafe until parent3 exists."
+      ]
+    ],
+    "questions": [
+      {
+        "prompt": "Select every true statement under the stated relational definitions.",
+        "answer": "A and C. Candidate keys are minimal superkeys; a primary key is selected from them. A sample may happen to contain unique names without enforcing name uniqueness. A foreign key need not be unique in the child table.",
+        "skill": "key-definition",
+        "trap": "sample-versus-rule",
+        "first": "Distinguish schema constraints from the observed instance.",
+        "type": "multi-select",
+        "options": [
+          "A. Every candidate key is a superkey.",
+          "B. A child foreign-key column must always be unique.",
+          "C. A table may have several candidate keys.",
+          "D. Distinct names in today’s sample prove Name is a key."
+        ],
+        "correct": [
+          "A",
+          "C"
+        ],
+        "minutes": 3,
+        "id": "B01-Q1",
+        "source_block": "Database System Concepts 7e §§2.1–2.4, 4.4–4.5 and6.2–6.7",
+        "exam_target": "GATE-DA",
+        "daily_pattern_references": [
+          {
+            "year": 2025,
+            "question": 56
+          },
+          {
+            "year": 2026,
+            "question": 26
+          },
+          {
+            "year": 2026,
+            "question": 61
+          }
+        ],
+        "original_problem": true,
+        "exam_evidence_note": "Daily paper references establish topic families; individual practice items may test additional explicit syllabus content and are not claimed as PYQ adaptations.",
+        "expected_first_step": "Distinguish schema constraints from the observed instance.",
+        "mistake_tag": "sample-versus-rule"
+      },
+      {
+        "prompt": "Parent P(ID) has primary-key values{4,8}. Child C(CID,PID) has rows(1,4),(2,4), with primary CID and NOT NULL foreign PID using RESTRICT. Select every operation safe with respect to the foreign key; assume no other referencing tables.",
+        "answer": "A, B and D. A new parent12 cannot invalidate references; deleting a child removes a reference; unreferenced parent8 can be removed. Parent4 remains referenced.",
+        "skill": "foreign-key-update",
+        "trap": "parent-child-direction",
+        "first": "List surviving references after each operation independently.",
+        "type": "multi-select",
+        "options": [
+          "A. Insert parent12.",
+          "B. Delete child CID1.",
+          "C. Delete parent4 while both children remain.",
+          "D. Delete parent8."
+        ],
+        "correct": [
+          "A",
+          "B",
+          "D"
+        ],
+        "minutes": 4,
+        "id": "B01-Q2",
+        "source_block": "Database System Concepts 7e §§2.1–2.4, 4.4–4.5 and6.2–6.7",
+        "exam_target": "GATE-DA",
+        "daily_pattern_references": [
+          {
+            "year": 2025,
+            "question": 56
+          },
+          {
+            "year": 2026,
+            "question": 26
+          },
+          {
+            "year": 2026,
+            "question": 61
+          }
+        ],
+        "original_problem": true,
+        "exam_evidence_note": "Daily paper references establish topic families; individual practice items may test additional explicit syllabus content and are not claimed as PYQ adaptations.",
+        "expected_first_step": "List surviving references after each operation independently.",
+        "mistake_tag": "parent-child-direction"
+      },
+      {
+        "prompt": "A library has Member(MemberID,Name), Book(ISBN,Title), a many-to-many Borrows relationship with at most one active row per member/book pair, and a multivalued Email attribute of Member. Give the minimum standard normalized mapping and keys, ignoring unrelated attributes.",
+        "answer": "Four relations:Member keyed by MemberID; Book keyed by ISBN; Borrows(MemberID,ISBN) keyed by that pair; MemberEmail(MemberID,Email) keyed by the pair if duplicate emails per member are disallowed. The relationship and multivalued attribute each get a relation.",
+        "skill": "er-mapping",
+        "trap": "multivalue-in-one-cell",
+        "first": "Identify entities, many-to-many relationships, and repeated attributes separately.",
+        "type": "short-answer",
+        "options": [],
+        "correct": [],
+        "minutes": 5,
+        "id": "B01-Q3",
+        "source_block": "Database System Concepts 7e §§2.1–2.4, 4.4–4.5 and6.2–6.7",
+        "exam_target": "GATE-DA",
+        "daily_pattern_references": [
+          {
+            "year": 2025,
+            "question": 56
+          },
+          {
+            "year": 2026,
+            "question": 26
+          },
+          {
+            "year": 2026,
+            "question": 61
+          }
+        ],
+        "original_problem": true,
+        "exam_evidence_note": "Daily paper references establish topic families; individual practice items may test additional explicit syllabus content and are not claimed as PYQ adaptations.",
+        "expected_first_step": "Identify entities, many-to-many relationships, and repeated attributes separately.",
+        "mistake_tag": "multivalue-in-one-cell"
+      },
+      {
+        "prompt": "Employee(EID,Email,DeptID) has EID primary key, Email UNIQUE NOT NULL, DeptID a foreign key. What are the candidate keys implied by these declarations? Is(EID,DeptID) a candidate key?",
+        "answer": "{EID} and{Email} are candidate keys. (EID,DeptID) is a superkey but not minimal, since EID alone suffices; it is not a candidate key. No uniqueness of DeptID is implied.",
+        "skill": "minimal-key",
+        "trap": "superkey-versus-candidate",
+        "first": "Remove each extra attribute and check whether uniqueness remains.",
+        "type": "short-answer",
+        "options": [],
+        "correct": [],
+        "minutes": 5,
+        "id": "B01-Q4",
+        "source_block": "Database System Concepts 7e §§2.1–2.4, 4.4–4.5 and6.2–6.7",
+        "exam_target": "GATE-DA",
+        "daily_pattern_references": [
+          {
+            "year": 2025,
+            "question": 56
+          },
+          {
+            "year": 2026,
+            "question": 26
+          },
+          {
+            "year": 2026,
+            "question": 61
+          }
+        ],
+        "original_problem": true,
+        "exam_evidence_note": "Daily paper references establish topic families; individual practice items may test additional explicit syllabus content and are not claimed as PYQ adaptations.",
+        "expected_first_step": "Remove each extra attribute and check whether uniqueness remains.",
+        "mistake_tag": "superkey-versus-candidate"
+      },
+      {
+        "prompt": "Choose representations for a postal code that can start with0, an exact two-decimal currency amount, and a required nonnegative quantity. Explain what type alone does not enforce.",
+        "answer": "Use a character type for the postal identifier, an appropriate DECIMAL(p,2) for exact decimal currency, and a numeric/integer quantity with NOT NULL plus CHECK(quantity>=0). A numeric type alone does not require presence or nonnegativity.",
+        "skill": "data-type-constraint",
+        "trap": "digits-imply-numeric",
+        "first": "Identify identity, arithmetic and domain rules separately.",
+        "type": "short-answer",
+        "options": [],
+        "correct": [],
+        "minutes": 5,
+        "id": "B01-Q5",
+        "source_block": "Database System Concepts 7e §§2.1–2.4, 4.4–4.5 and6.2–6.7",
+        "exam_target": "GATE-DA",
+        "daily_pattern_references": [
+          {
+            "year": 2025,
+            "question": 56
+          },
+          {
+            "year": 2026,
+            "question": 26
+          },
+          {
+            "year": 2026,
+            "question": 61
+          }
+        ],
+        "original_problem": true,
+        "exam_evidence_note": "Daily paper references establish topic families; individual practice items may test additional explicit syllabus content and are not claimed as PYQ adaptations.",
+        "expected_first_step": "Identify identity, arithmetic and domain rules separately.",
+        "mistake_tag": "digits-imply-numeric"
+      }
+    ],
+    "map": [
+      [
+        "Describe",
+        "Schema versus current instance",
+        "Entities, relationship and attributes"
+      ],
+      [
+        "Identify",
+        "Minimal keys; primary choice",
+        "A unique sample is not a rule"
+      ],
+      [
+        "Constrain",
+        "Foreign keys and participation",
+        "Check parent versus child changes"
+      ],
+      [
+        "Represent",
+        "Domains and precise types",
+        "Separate repeated values into rows"
+      ]
+    ],
+    "repair": "If a key answer used only sample values, restate the allowed-instance rule. If a foreign-key operation was reversed, draw arrows from child values to parent keys.",
+    "retest": [
+      "Does total participation of students in Enrolment mean each student can take only one course?",
+      "No. Total participation requires at least one relationship; maximum cardinality is a separate constraint."
+    ],
+    "evidence": [
+      {
+        "year": 2025,
+        "question": 56,
+        "page": 30,
+        "pattern": "Join and integrity claims",
+        "url": "https://gate2026.iitg.ac.in/doc/download/2025/DA2025.pdf#page=30"
+      },
+      {
+        "year": 2026,
+        "question": 26,
+        "page": 18,
+        "pattern": "Foreign-key effects of updates",
+        "url": "https://gate2026.iitg.ac.in/doc/download/2026/QPs/DA.pdf#page=18"
+      },
+      {
+        "year": 2026,
+        "question": 61,
+        "page": 39,
+        "pattern": "ER-to-relational mapping",
+        "url": "https://gate2026.iitg.ac.in/doc/download/2026/QPs/DA.pdf#page=39"
+      }
+    ]
+  },
+  {
+    "day": 2,
+    "title": "Relational algebra and tuple calculus",
+    "source": "DSC7e §2.6; online Chapter27 §§27.1–27.2",
+    "goal": "Translate set and quantifier statements into a reproducible query result.",
+    "story": "\n<h2>Make every operator answer a small question</h2><p>Selection keeps rows satisfying a predicate. Projection keeps named columns and, in classical relational algebra, removes duplicate tuples. A Cartesian product pairs every row from one relation with every row from another. A join is a product restricted by a matching condition. A natural join equates every shared attribute name, not only the column you happen to think of as the key. Rename columns when the intended matches differ.</p>\n<p>Set union, intersection and difference require compatible relation schemas. Difference R−S means rows in R that are absent from S; reversing it changes the question. To check that all observed child IDs occur among parent IDs, form child IDs minus parent IDs and test emptiness. This is a statement about the current instance, not a proof that a declared constraint exists for every future instance.</p>\n<h2>“Some” and “every” are different query designs</h2><p>Let Enrol(Student,Course) contain(Ada,DB),(Ada,AI),(Ben,DB),(Cy,AI), and let Required(Course) contain DB and AI. Asking for students with some required course gives all three students. Asking for every required course gives only Ada. For each candidate student, search for a required course they lack. Keep the student exactly when that search finds no counterexample.</p>\n<p>In tuple-calculus notation, the every-course test has the form Student(s) AND NOT EXISTS c in Required for which no matching Enrol row exists. In logic, a universal statement can be rewritten as the absence of an existential counterexample. In algebra, one construction is to form all candidate student/course pairs, subtract actual qualifying pairs to expose missing pairs, project the failing students, then subtract those students from the candidate set.</p>\n<p>Restrict candidate tuples to explicit database relations. This keeps the query finite and avoids asking for an unlimited complement over every possible string or number. A tuple-calculus comprehension returns qualifying output tuples; multiple witnesses for one output do not duplicate it under set semantics.</p>\n<h2>The empty-requirement case checks understanding</h2><p>If Required is empty, every explicitly listed candidate student meets the every-required-course condition: there is no missing required course. This is vacuous truth. An existential “has some required course” query instead returns none. Always specify the candidate Student relation; otherwise the intended universe is ambiguous.</p>\n",
+    "worked": [
+      [
+        "Projection changes cardinality",
+        "R(A,B)={(1,x),(1,y),(2,y)}. Compare πA(R) with SELECT A FROM R.",
+        "Classical projection is the set{1,2}, size2. The ordinary SQL SELECT retains duplicate1 values and has3 rows; SELECT DISTINCT A corresponds to the set projection. The row counts differ because the semantics differ, not because one query is necessarily wrong."
+      ],
+      [
+        "Find missing pairs",
+        "Use Enrol and Required above. Explain an algebraic every-course query.",
+        "Candidate students are{Ada,Ben,Cy}. The student×required product has6 pairs. Missing pairs are(Ben,AI) and(Cy,DB). Their projected students are{Ben,Cy}; subtracting from candidates leaves{Ada}. This calculation makes the universal condition visible as absence of a missing pair."
+      ]
+    ],
+    "questions": [
+      {
+        "prompt": "Under classical set relational algebra, select every true statement.",
+        "answer": "A and C. Projection removes duplicate projected tuples. Natural join matches all common names. Neither product nor selection creates a general ordered-output guarantee; incompatible schemas cannot be unioned directly.",
+        "skill": "relational-semantics",
+        "trap": "bag-versus-set",
+        "first": "Name the result schema before counting rows.",
+        "type": "multi-select",
+        "options": [
+          "A. Projection may reduce the number of tuples.",
+          "B. Natural join always matches only the primary-key column.",
+          "C. Natural join equates every common attribute name.",
+          "D. Union is defined for arbitrary unrelated schemas without alignment."
+        ],
+        "correct": [
+          "A",
+          "C"
+        ],
+        "minutes": 3,
+        "id": "B02-Q1",
+        "source_block": "DSC7e §2.6; online Chapter27 §§27.1–27.2",
+        "exam_target": "GATE-DA",
+        "daily_pattern_references": [
+          {
+            "year": 2024,
+            "question": 26
+          },
+          {
+            "year": 2026,
+            "question": 42
+          },
+          {
+            "year": 2026,
+            "question": 59
+          }
+        ],
+        "original_problem": true,
+        "exam_evidence_note": "Daily paper references establish topic families; individual practice items may test additional explicit syllabus content and are not claimed as PYQ adaptations.",
+        "expected_first_step": "Name the result schema before counting rows.",
+        "mistake_tag": "bag-versus-set"
+      },
+      {
+        "prompt": "Student={Ada,Ben,Cy}, Enrol={(Ada,DB),(Ada,AI),(Ben,DB),(Cy,AI)}, Required={DB,AI}. Select every true statement.",
+        "answer": "A, C and D. Ada has every required course; the missing-pair students are Ben and Cy. With empty requirements, every explicit candidate passes the universal condition, while no candidate passes an existential required-course condition.",
+        "skill": "universal-query",
+        "trap": "exists-versus-forall",
+        "first": "Look for a missing required pair.",
+        "type": "multi-select",
+        "options": [
+          "A. The every-required-course result is{Ada}.",
+          "B. The some-required-course result is{Ada} only.",
+          "C. Empty Required makes all three candidates pass the every-course test.",
+          "D. Missing required pairs identify Ben and Cy as failures."
+        ],
+        "correct": [
+          "A",
+          "C",
+          "D"
+        ],
+        "minutes": 4,
+        "id": "B02-Q2",
+        "source_block": "DSC7e §2.6; online Chapter27 §§27.1–27.2",
+        "exam_target": "GATE-DA",
+        "daily_pattern_references": [
+          {
+            "year": 2024,
+            "question": 26
+          },
+          {
+            "year": 2026,
+            "question": 42
+          },
+          {
+            "year": 2026,
+            "question": 59
+          }
+        ],
+        "original_problem": true,
+        "exam_evidence_note": "Daily paper references establish topic families; individual practice items may test additional explicit syllabus content and are not claimed as PYQ adaptations.",
+        "expected_first_step": "Look for a missing required pair.",
+        "mistake_tag": "exists-versus-forall"
+      },
+      {
+        "prompt": "R(A,B)={(1,x),(2,y)} and S(A,B,C)={(1,z,7),(2,y,9)}. Give R natural-join S and explain why matching A alone is wrong.",
+        "answer": "The only output is(A=2,B=y,C=9). The A=1 rows disagree on shared B, so they do not join. A-only matching would add a spurious tuple relative to natural-join semantics.",
+        "skill": "natural-join-columns",
+        "trap": "implicit-condition",
+        "first": "List all common attribute names.",
+        "type": "short-answer",
+        "options": [],
+        "correct": [],
+        "minutes": 5,
+        "id": "B02-Q3",
+        "source_block": "DSC7e §2.6; online Chapter27 §§27.1–27.2",
+        "exam_target": "GATE-DA",
+        "daily_pattern_references": [
+          {
+            "year": 2024,
+            "question": 26
+          },
+          {
+            "year": 2026,
+            "question": 42
+          },
+          {
+            "year": 2026,
+            "question": 59
+          }
+        ],
+        "original_problem": true,
+        "exam_evidence_note": "Daily paper references establish topic families; individual practice items may test additional explicit syllabus content and are not claimed as PYQ adaptations.",
+        "expected_first_step": "List all common attribute names.",
+        "mistake_tag": "implicit-condition"
+      },
+      {
+        "prompt": "X(ID,Group)={(1,A),(2,B),(3,B)} and Y(ID,Score)={(1,4),(1,7),(2,0)}. A safe tuple-calculus query returns x from X when some y in Y has matching ID and Score>1. Give the output tuples and count.",
+        "answer": "Only(1,A) qualifies, so the count is1. There are two witnesses for ID1, but the output is a set of x tuples, not one row per witness.",
+        "skill": "calculus-existential",
+        "trap": "witness-multiplicity",
+        "first": "Test each candidate X tuple independently.",
+        "type": "short-answer",
+        "options": [],
+        "correct": [],
+        "minutes": 5,
+        "id": "B02-Q4",
+        "source_block": "DSC7e §2.6; online Chapter27 §§27.1–27.2",
+        "exam_target": "GATE-DA",
+        "daily_pattern_references": [
+          {
+            "year": 2024,
+            "question": 26
+          },
+          {
+            "year": 2026,
+            "question": 42
+          },
+          {
+            "year": 2026,
+            "question": 59
+          }
+        ],
+        "original_problem": true,
+        "exam_evidence_note": "Daily paper references establish topic families; individual practice items may test additional explicit syllabus content and are not claimed as PYQ adaptations.",
+        "expected_first_step": "Test each candidate X tuple independently.",
+        "mistake_tag": "witness-multiplicity"
+      },
+      {
+        "prompt": "Child IDs are{2,3}; Parent IDs are{1,2,3,4}. Write a set-difference emptiness test for inclusion, then show what changes when Parent ID3 is removed.",
+        "answer": "Test ChildIDs−ParentIDs=empty. Initially it is empty. After removing3 it equals{3}, identifying the missing referenced ID. Reversing the difference would instead report unused parents.",
+        "skill": "constraint-as-query",
+        "trap": "difference-direction",
+        "first": "Start from the set whose members must all find a match.",
+        "type": "short-answer",
+        "options": [],
+        "correct": [],
+        "minutes": 5,
+        "id": "B02-Q5",
+        "source_block": "DSC7e §2.6; online Chapter27 §§27.1–27.2",
+        "exam_target": "GATE-DA",
+        "daily_pattern_references": [
+          {
+            "year": 2024,
+            "question": 26
+          },
+          {
+            "year": 2026,
+            "question": 42
+          },
+          {
+            "year": 2026,
+            "question": 59
+          }
+        ],
+        "original_problem": true,
+        "exam_evidence_note": "Daily paper references establish topic families; individual practice items may test additional explicit syllabus content and are not claimed as PYQ adaptations.",
+        "expected_first_step": "Start from the set whose members must all find a match.",
+        "mistake_tag": "difference-direction"
+      }
+    ],
+    "map": [
+      [
+        "Operators",
+        "Rows, columns and matching",
+        "State set semantics explicitly"
+      ],
+      [
+        "Translate",
+        "Some → witness",
+        "Every → no counterexample"
+      ],
+      [
+        "Count",
+        "Output tuples, not witnesses",
+        "Natural join matches all shared names"
+      ],
+      [
+        "Check domain",
+        "Explicit candidate relations",
+        "Empty requirements test quantifiers"
+      ]
+    ],
+    "repair": "For quantifier errors, enumerate candidates and missing pairs in a small table. For join errors, underline every shared column before pairing rows.",
+    "retest": [
+      "If Student={Ann,Bob} and Required is empty, how many pass every-required-course and some-required-course queries?",
+      "Every:2; some:0, using the explicit two-student candidate set."
+    ],
+    "evidence": [
+      {
+        "year": 2024,
+        "question": 26,
+        "page": 16,
+        "pattern": "Set-difference inclusion",
+        "url": "https://gate2026.iitg.ac.in/doc/download/2024/DA24S1.pdf#page=16"
+      },
+      {
+        "year": 2026,
+        "question": 42,
+        "page": 27,
+        "pattern": "Relational expression evaluation",
+        "url": "https://gate2026.iitg.ac.in/doc/download/2026/QPs/DA.pdf#page=27"
+      },
+      {
+        "year": 2026,
+        "question": 59,
+        "page": 38,
+        "pattern": "Tuple-calculus output counting",
+        "url": "https://gate2026.iitg.ac.in/doc/download/2026/QPs/DA.pdf#page=38"
+      }
+    ]
+  },
+  {
+    "day": 3,
+    "title": "SQL: joins, groups, NULL and correlated queries",
+    "source": "DSC7e §§3.3–3.8 and4.1",
+    "goal": "Compute query outputs from the actual rows while tracking duplicate and null behavior.",
+    "story": "\n<h2>Follow the rows through the query</h2><p>For the queries here, think in this logical order: FROM/JOIN forms candidate rows, WHERE keeps rows whose condition is TRUE, GROUP BY forms groups, HAVING filters groups, SELECT builds output columns, then DISTINCT/ordering may apply. This is a reasoning model for results, not a claim that the engine must physically execute in that order.</p>\n<p>Ordinary SELECT keeps duplicates. A join can multiply rows: if a customer has three matching orders, the customer appears in three joined rows. A left join also retains an unmatched left row, with nulls in the right columns. COUNT(*) counts every result row; COUNT(right_key) counts only non-null right keys. Their difference matters on those unmatched rows.</p>\n<h2>NULL is not a hidden ordinary value</h2><p>NULL represents missing or unknown information. Ordinary comparisons to NULL yield UNKNOWN rather than TRUE or FALSE. WHERE and HAVING keep only TRUE. Use IS NULL to test nullness. COUNT(column), SUM and AVG ignore null inputs; COUNT(*) does not. AVG divides by the count of non-null inputs, not the number of stored rows. SUM or AVG over no non-null inputs is NULL, not automatically zero.</p>\n<p>NOT IN is dangerous when its subquery can return NULL. If no equality matches but one comparison is unknown, the negated membership test is still not TRUE, and the row is filtered. A correlated NOT EXISTS query can express the intended anti-match more directly, but explicitly decide whether null keys should qualify before calling the two queries equivalent.</p>\n<h2>Groups and correlated subqueries are different levels</h2><p>WHERE filters individual rows before grouping. HAVING tests an aggregate property of a group. A correlated subquery contains a reference to the outer row, so its relevant comparison set can change for each row. To evaluate it on paper, write the outer ID and the subquery result side by side. This prevents the mistake of computing one global average when the query asks for a department average.</p><p>Always state ties and comparison direction. “Above average,” “at least average,” and “strictly more rows above than below” can select different records. ORDER BY is needed when output order matters; without it, a correct result set does not imply a guaranteed presentation order.</p>\n",
+    "worked": [
+      [
+        "Count the right objects",
+        "Sale(ID,Dept,Amount) has(1,A,10),(2,A,20),(3,B,20),(4,B,NULL),(5,C,5). Compute COUNT(*), COUNT(Amount), SUM(Amount), AVG(Amount).",
+        "The counts are5 and4. SUM is55, and AVG is55/4=13.75. The missing amount contributes neither a numeric value nor an extra denominator term to AVG."
+      ],
+      [
+        "A correlated comparison",
+        "For those sales, select rows whose Amount exceeds the average Amount of their own department.",
+        "Department averages are A15,B20,C5. Only ID2 has amount strictly above its local average. The null amount at ID4 fails the comparison. ID3 equals, rather than exceeds, B’s average; a global average would answer another question."
+      ]
+    ],
+    "questions": [
+      {
+        "prompt": "Select every true SQL statement for the semantics reviewed here.",
+        "answer": "A and C. COUNT(expr) ignores nulls; WHERE filters rows and HAVING filters groups. Ordinary comparison to NULL is unknown, and output order is not guaranteed without ORDER BY.",
+        "skill": "sql-null-groups",
+        "trap": "unknown-versus-false",
+        "first": "Track whether the expression refers to rows or groups.",
+        "type": "multi-select",
+        "options": [
+          "A. COUNT(Amount) excludes null Amount values.",
+          "B. NULL=NULL evaluates TRUE in ordinary SQL comparison.",
+          "C. HAVING can filter an aggregate condition on a group.",
+          "D. A SELECT without ORDER BY guarantees primary-key order."
+        ],
+        "correct": [
+          "A",
+          "C"
+        ],
+        "minutes": 3,
+        "id": "B03-Q1",
+        "source_block": "DSC7e §§3.3–3.8 and4.1",
+        "exam_target": "GATE-DA",
+        "daily_pattern_references": [
+          {
+            "year": 2024,
+            "question": 31
+          },
+          {
+            "year": 2025,
+            "question": 33
+          },
+          {
+            "year": 2026,
+            "question": 51
+          },
+          {
+            "year": 2026,
+            "question": 60
+          }
+        ],
+        "original_problem": true,
+        "exam_evidence_note": "Daily paper references establish topic families; individual practice items may test additional explicit syllabus content and are not claimed as PYQ adaptations.",
+        "expected_first_step": "Track whether the expression refers to rows or groups.",
+        "mistake_tag": "unknown-versus-false"
+      },
+      {
+        "prompt": "Customer IDs are1,2. Orders has(OID,CID)=(10,1),(11,1). After Customer LEFT JOIN Orders on matching CID, select every true statement.",
+        "answer": "A, B and D. Two matches for customer1 and a null-extended row for customer2 give3 rows. COUNT(OID)=2; COUNT(*)=3. The unmatched customer has not disappeared.",
+        "skill": "outer-join-count",
+        "trap": "rows-versus-nonnull-values",
+        "first": "Write the null-extended row.",
+        "type": "multi-select",
+        "options": [
+          "A. The join has3 rows.",
+          "B. COUNT(Orders.OID)=2.",
+          "C. Customer2 disappears.",
+          "D. COUNT(*)=3."
+        ],
+        "correct": [
+          "A",
+          "B",
+          "D"
+        ],
+        "minutes": 4,
+        "id": "B03-Q2",
+        "source_block": "DSC7e §§3.3–3.8 and4.1",
+        "exam_target": "GATE-DA",
+        "daily_pattern_references": [
+          {
+            "year": 2024,
+            "question": 31
+          },
+          {
+            "year": 2025,
+            "question": 33
+          },
+          {
+            "year": 2026,
+            "question": 51
+          },
+          {
+            "year": 2026,
+            "question": 60
+          }
+        ],
+        "original_problem": true,
+        "exam_evidence_note": "Daily paper references establish topic families; individual practice items may test additional explicit syllabus content and are not claimed as PYQ adaptations.",
+        "expected_first_step": "Write the null-extended row.",
+        "mistake_tag": "rows-versus-nonnull-values"
+      },
+      {
+        "prompt": "For Sale rows(1,A,10),(2,A,20),(3,B,20),(4,B,NULL),(5,C,5), give the result of SELECT Dept,COUNT(*),SUM(Amount) FROM Sale GROUP BY Dept HAVING SUM(Amount)>=20.",
+        "answer": "Two rows:(A,2,30) and(B,2,20), in unspecified order. C has total5 and fails HAVING. B’s null row counts toward COUNT(*) but not SUM.",
+        "skill": "group-aggregate",
+        "trap": "wrong-denominator",
+        "first": "Build each group before testing HAVING.",
+        "type": "short-answer",
+        "options": [],
+        "correct": [],
+        "minutes": 5,
+        "id": "B03-Q3",
+        "source_block": "DSC7e §§3.3–3.8 and4.1",
+        "exam_target": "GATE-DA",
+        "daily_pattern_references": [
+          {
+            "year": 2024,
+            "question": 31
+          },
+          {
+            "year": 2025,
+            "question": 33
+          },
+          {
+            "year": 2026,
+            "question": 51
+          },
+          {
+            "year": 2026,
+            "question": 60
+          }
+        ],
+        "original_problem": true,
+        "exam_evidence_note": "Daily paper references establish topic families; individual practice items may test additional explicit syllabus content and are not claimed as PYQ adaptations.",
+        "expected_first_step": "Build each group before testing HAVING.",
+        "mistake_tag": "wrong-denominator"
+      },
+      {
+        "prompt": "For the same Sale table, give IDs selected by SELECT s.ID FROM Sale s WHERE s.Amount > (SELECT AVG(t.Amount) FROM Sale t WHERE t.Dept=s.Dept). Explain every department.",
+        "answer": "Only ID2. A average15 permits20; B average20 permits neither20 norNULL under strict >; C average5 permits no row.",
+        "skill": "correlated-query",
+        "trap": "global-versus-local-average",
+        "first": "Recompute the inner aggregate for the outer row’s department.",
+        "type": "short-answer",
+        "options": [],
+        "correct": [],
+        "minutes": 5,
+        "id": "B03-Q4",
+        "source_block": "DSC7e §§3.3–3.8 and4.1",
+        "exam_target": "GATE-DA",
+        "daily_pattern_references": [
+          {
+            "year": 2024,
+            "question": 31
+          },
+          {
+            "year": 2025,
+            "question": 33
+          },
+          {
+            "year": 2026,
+            "question": 51
+          },
+          {
+            "year": 2026,
+            "question": 60
+          }
+        ],
+        "original_problem": true,
+        "exam_evidence_note": "Daily paper references establish topic families; individual practice items may test additional explicit syllabus content and are not claimed as PYQ adaptations.",
+        "expected_first_step": "Recompute the inner aggregate for the outer row’s department.",
+        "mistake_tag": "global-versus-local-average"
+      },
+      {
+        "prompt": "Evaluate SELECT x FROM V WHERE x NOT IN (SELECT y FROM W) when V has non-null values1,2 and W has y values2,NULL. Contrast with NOT EXISTS using W.y=V.x.",
+        "answer": "NOT IN returns no rows:2 has a matching value and1 faces an unknown comparison due toNULL. The correlated NOT EXISTS anti-match returns1, since no W row makes y=1 TRUE. No claim of equivalence is valid without accounting for nulls.",
+        "skill": "null-antijoin",
+        "trap": "not-in-null-trap",
+        "first": "Apply three-valued logic to each candidate.",
+        "type": "short-answer",
+        "options": [],
+        "correct": [],
+        "minutes": 5,
+        "id": "B03-Q5",
+        "source_block": "DSC7e §§3.3–3.8 and4.1",
+        "exam_target": "GATE-DA",
+        "daily_pattern_references": [
+          {
+            "year": 2024,
+            "question": 31
+          },
+          {
+            "year": 2025,
+            "question": 33
+          },
+          {
+            "year": 2026,
+            "question": 51
+          },
+          {
+            "year": 2026,
+            "question": 60
+          }
+        ],
+        "original_problem": true,
+        "exam_evidence_note": "Daily paper references establish topic families; individual practice items may test additional explicit syllabus content and are not claimed as PYQ adaptations.",
+        "expected_first_step": "Apply three-valued logic to each candidate.",
+        "mistake_tag": "not-in-null-trap"
+      }
+    ],
+    "map": [
+      [
+        "Rows first",
+        "Join multiplicity; outer rows",
+        "SQL usually keeps duplicates"
+      ],
+      [
+        "Groups next",
+        "COUNT/SUM/AVG inputs",
+        "WHERE rows; HAVING groups"
+      ],
+      [
+        "Unknown values",
+        "IS NULL; comparisons UNKNOWN",
+        "Only TRUE survives filtering"
+      ],
+      [
+        "Correlate",
+        "Inner context changes per outer row",
+        "Enumerate candidates before counting"
+      ]
+    ],
+    "repair": "If a count is wrong, materialize the intermediate joined rows and circle nulls. If a correlated result is wrong, write the inner value for each outer ID.",
+    "retest": [
+      "If a group has amounts NULL,NULL, what are COUNT(*), COUNT(Amount), SUM(Amount)?",
+      "2,0,NULL respectively."
+    ],
+    "evidence": [
+      {
+        "year": 2024,
+        "question": 31,
+        "page": 19,
+        "pattern": "SQL result count",
+        "url": "https://gate2026.iitg.ac.in/doc/download/2024/DA24S1.pdf#page=19"
+      },
+      {
+        "year": 2025,
+        "question": 33,
+        "page": 18,
+        "pattern": "Aggregate subquery",
+        "url": "https://gate2026.iitg.ac.in/doc/download/2025/DA2025.pdf#page=18"
+      },
+      {
+        "year": 2026,
+        "question": 51,
+        "page": 34,
+        "pattern": "Nested SQL reasoning",
+        "url": "https://gate2026.iitg.ac.in/doc/download/2026/QPs/DA.pdf#page=34"
+      },
+      {
+        "year": 2026,
+        "question": 60,
+        "page": 38,
+        "pattern": "Correlated count comparison",
+        "url": "https://gate2026.iitg.ac.in/doc/download/2026/QPs/DA.pdf#page=38"
+      }
+    ]
+  },
+  {
+    "day": 4,
+    "title": "Functional dependencies, keys and normalization",
+    "source": "DSC7e §§7.2–7.6; §7.7/online28 for higher-form follow-up",
+    "goal": "Derive keys and assess normal forms from dependencies, then test what a decomposition preserves.",
+    "story": "\n<h2>A dependency is a rule across all permitted rows</h2><p>X→Y means that whenever two rows agree on attributes X, they must also agree on Y. A single agreeing pair does not prove the rule; a disagreeing pair can refute it. To compute X’s closure, start with X and repeatedly add the right side of any dependency whose left side is already present. Stop when no attribute can be added. X is a superkey if the closure contains the whole schema; it is a candidate key if no proper subset is also a superkey.</p>\n<p>An attribute absent from every dependency’s right side must be supplied in each key, unless the full theory includes additional dependencies not listed. This is a useful search reduction, not a replacement for checking closure and minimality. We use exactly the stated dependencies and their logical consequences, and assume atomic attributes unless a question says otherwise.</p>\n<h2>Normal forms ask different questions</h2><p>1NF is the atomic-domain starting convention used here. 2NF excludes a non-prime attribute’s dependency on a proper subset of a candidate key. Prime means belonging to some candidate key, not necessarily to the chosen primary key. 3NF requires, for every nontrivial dependency X→A in the closure of the dependency set, either X is a superkey or A is prime. BCNF removes the prime-attribute exception: every nontrivial determinant must be a superkey. A relation can therefore be in3NF but not BCNF.</p>\n<p>Losslessness and dependency preservation concern a decomposition, not just each component’s normal form. A lossless decomposition reconstructs every permitted original relation by joining its projections without spurious rows. For a binary decomposition R₁,R₂ under functional dependencies, losslessness holds when the intersection functionally determines R₁ or R₂. Dependency preservation means the projected component constraints together imply the original dependencies, so they can be enforced without recombining relations. Neither property automatically gives the other.</p>\n<h2>Know the boundary of the first pass</h2><p>Independent multivalued facts can create redundancy even in BCNF. For a Person–Hobby–Language table, if hobbies and languages vary independently for each person, a multivalued dependency can require all hobby/language combinations. A4NF decomposition separates PersonHobby and PersonLanguage. Independence is a semantic assumption; a small sample alone cannot establish it. Higher join-dependency/5NF practice belongs to the later-week extension when the selected syllabus interpretation or observed needs require it. Today’s diagnostic concentrates on FD closure through BCNF and binary decomposition.</p>\n",
+    "worked": [
+      [
+        "Prove a candidate key is minimal",
+        "R(A,B,C,D), F={A→B,B→C}. Find the candidate keys.",
+        "D never appears on a right side, so any key must contain D. No dependency produces A, so A is also mandatory. (AD)+ adds B then C, giving all four attributes. Removing A or D loses a required attribute, so AD is the sole candidate key. A+ is ABC, not the whole schema."
+      ],
+      [
+        "3NF does not imply BCNF",
+        "R(A,B,C), F={AB→C,C→B}. Analyze keys and the dependency C→B.",
+        "AB and AC are candidate keys. Thus every attribute is prime. C alone determines BC, not A, so it is not a superkey. C→B satisfies the3NF prime-right-side exception but violates BCNF. Decomposing into CB and AC is lossless because the intersection C determines CB, but AB→C is not preserved by the component FDs."
+      ]
+    ],
+    "questions": [
+      {
+        "prompt": "Select every true claim under standard FD-based definitions.",
+        "answer": "A and C. A candidate key must be minimal. BCNF is stricter than3NF. A sample does not prove a universal dependency, and a lossless decomposition can fail dependency preservation.",
+        "skill": "fd-normal-form-logic",
+        "trap": "sufficient-versus-necessary",
+        "first": "Separate relation properties from decomposition properties.",
+        "type": "multi-select",
+        "options": [
+          "A. A candidate key is a minimal superkey.",
+          "B. Every3NF relation is in BCNF.",
+          "C. Every BCNF relation is in3NF.",
+          "D. Every lossless decomposition preserves all dependencies."
+        ],
+        "correct": [
+          "A",
+          "C"
+        ],
+        "minutes": 3,
+        "id": "B04-Q1",
+        "source_block": "DSC7e §§7.2–7.6; §7.7/online28 for higher-form follow-up",
+        "exam_target": "GATE-DA",
+        "daily_pattern_references": [
+          {
+            "year": 2024,
+            "question": 46
+          },
+          {
+            "year": 2025,
+            "question": 16
+          },
+          {
+            "year": 2025,
+            "question": 57
+          },
+          {
+            "year": 2026,
+            "question": 17
+          }
+        ],
+        "original_problem": true,
+        "exam_evidence_note": "Daily paper references establish topic families; individual practice items may test additional explicit syllabus content and are not claimed as PYQ adaptations.",
+        "expected_first_step": "Separate relation properties from decomposition properties.",
+        "mistake_tag": "sufficient-versus-necessary"
+      },
+      {
+        "prompt": "R(A,B,C,D), F={A→B,B→C}, atomic domains. Select every true statement.",
+        "answer": "A, B and D. A+=ABC, and AD is the sole key because A,D cannot be derived. A→B is a partial dependency of non-prime B on the proper subset A of key AD, so2NF fails.",
+        "skill": "closure-and-2nf",
+        "trap": "missing-key-attribute",
+        "first": "Compute closure and minimality before classifying.",
+        "type": "multi-select",
+        "options": [
+          "A. A+={A,B,C}.",
+          "B. AD is a candidate key.",
+          "C. A alone is a superkey.",
+          "D. The relation fails2NF."
+        ],
+        "correct": [
+          "A",
+          "B",
+          "D"
+        ],
+        "minutes": 4,
+        "id": "B04-Q2",
+        "source_block": "DSC7e §§7.2–7.6; §7.7/online28 for higher-form follow-up",
+        "exam_target": "GATE-DA",
+        "daily_pattern_references": [
+          {
+            "year": 2024,
+            "question": 46
+          },
+          {
+            "year": 2025,
+            "question": 16
+          },
+          {
+            "year": 2025,
+            "question": 57
+          },
+          {
+            "year": 2026,
+            "question": 17
+          }
+        ],
+        "original_problem": true,
+        "exam_evidence_note": "Daily paper references establish topic families; individual practice items may test additional explicit syllabus content and are not claimed as PYQ adaptations.",
+        "expected_first_step": "Compute closure and minimality before classifying.",
+        "mistake_tag": "missing-key-attribute"
+      },
+      {
+        "prompt": "R(A,B,C,D,E), F={A→B,B→C,CD→E}. Find all candidate keys and justify required attributes.",
+        "answer": "A and D occur on no right side, so both are required. (AD)+ gives B,C, then E through CD→E. AD is minimal and every key must contain it, so it is the only candidate key.",
+        "skill": "candidate-key-search",
+        "trap": "stopping-closure-too-early",
+        "first": "Find mandatory attributes, then iterate dependencies to a fixed point.",
+        "type": "short-answer",
+        "options": [],
+        "correct": [],
+        "minutes": 5,
+        "id": "B04-Q3",
+        "source_block": "DSC7e §§7.2–7.6; §7.7/online28 for higher-form follow-up",
+        "exam_target": "GATE-DA",
+        "daily_pattern_references": [
+          {
+            "year": 2024,
+            "question": 46
+          },
+          {
+            "year": 2025,
+            "question": 16
+          },
+          {
+            "year": 2025,
+            "question": 57
+          },
+          {
+            "year": 2026,
+            "question": 17
+          }
+        ],
+        "original_problem": true,
+        "exam_evidence_note": "Daily paper references establish topic families; individual practice items may test additional explicit syllabus content and are not claimed as PYQ adaptations.",
+        "expected_first_step": "Find mandatory attributes, then iterate dependencies to a fixed point.",
+        "mistake_tag": "stopping-closure-too-early"
+      },
+      {
+        "prompt": "R(A,B,C) has F={A→B}. Is the decomposition into AB and AC lossless and dependency-preserving? Are both components in BCNF under their projected dependencies?",
+        "answer": "Yes to all three. Intersection A determines AB, so the decomposition is lossless. A→B is checked within AB, so preserved. In AB,A is a key; AC has no nontrivial projected FD, so both are BCNF.",
+        "skill": "binary-decomposition",
+        "trap": "component-nf-versus-reconstruction",
+        "first": "Test intersection closure and locate each original dependency.",
+        "type": "short-answer",
+        "options": [],
+        "correct": [],
+        "minutes": 5,
+        "id": "B04-Q4",
+        "source_block": "DSC7e §§7.2–7.6; §7.7/online28 for higher-form follow-up",
+        "exam_target": "GATE-DA",
+        "daily_pattern_references": [
+          {
+            "year": 2024,
+            "question": 46
+          },
+          {
+            "year": 2025,
+            "question": 16
+          },
+          {
+            "year": 2025,
+            "question": 57
+          },
+          {
+            "year": 2026,
+            "question": 17
+          }
+        ],
+        "original_problem": true,
+        "exam_evidence_note": "Daily paper references establish topic families; individual practice items may test additional explicit syllabus content and are not claimed as PYQ adaptations.",
+        "expected_first_step": "Test intersection closure and locate each original dependency.",
+        "mistake_tag": "component-nf-versus-reconstruction"
+      },
+      {
+        "prompt": "For R(A,B,C), F={AB→C,C→B}, explain why CB,AC is lossless but does not preserve AB→C. Give component data satisfying their projected FDs whose join violates AB→C.",
+        "answer": "C determines CB, so the intersection criterion gives losslessness for original legal instances. For non-preservation, take CB={(c1,b1),(c2,b1)} and AC={(a1,c1),(a1,c2)}. They satisfy C→B in CB and no nontrivial FD in AC, but their join has the same AB=(a1,b1) with two C values. Local enforcement does not enforce AB→C.",
+        "skill": "preservation-counterexample",
+        "trap": "lossless-implies-preserved",
+        "first": "Distinguish reconstructing a legal instance from enforcing legality on arbitrary component updates.",
+        "type": "short-answer",
+        "options": [],
+        "correct": [],
+        "minutes": 5,
+        "id": "B04-Q5",
+        "source_block": "DSC7e §§7.2–7.6; §7.7/online28 for higher-form follow-up",
+        "exam_target": "GATE-DA",
+        "daily_pattern_references": [
+          {
+            "year": 2024,
+            "question": 46
+          },
+          {
+            "year": 2025,
+            "question": 16
+          },
+          {
+            "year": 2025,
+            "question": 57
+          },
+          {
+            "year": 2026,
+            "question": 17
+          }
+        ],
+        "original_problem": true,
+        "exam_evidence_note": "Daily paper references establish topic families; individual practice items may test additional explicit syllabus content and are not claimed as PYQ adaptations.",
+        "expected_first_step": "Distinguish reconstructing a legal instance from enforcing legality on arbitrary component updates.",
+        "mistake_tag": "lossless-implies-preserved"
+      }
+    ],
+    "map": [
+      [
+        "Dependencies",
+        "Rules over all legal instances",
+        "Counterexample refutes; sample cannot prove"
+      ],
+      [
+        "Keys",
+        "Closure to a fixed point",
+        "Cover all attributes; test minimality"
+      ],
+      [
+        "Normal forms",
+        "Prime attribute exception in3NF",
+        "BCNF removes the exception"
+      ],
+      [
+        "Decomposition",
+        "Lossless reconstruction",
+        "Local enforcement is a separate property"
+      ]
+    ],
+    "repair": "If a key is incomplete, list attributes never derivable from the given FDs. If preservation is confused with losslessness, build a two-row component counterexample.",
+    "retest": [
+      "In R(A,B,C) with A→B and B→C, why is A a key but B not?",
+      "A+ gives ABC; B+ gives only BC and cannot recover A."
+    ],
+    "evidence": [
+      {
+        "year": 2024,
+        "question": 46,
+        "page": 29,
+        "pattern": "FD implication",
+        "url": "https://gate2026.iitg.ac.in/doc/download/2024/DA24S1.pdf#page=29"
+      },
+      {
+        "year": 2025,
+        "question": 16,
+        "page": 11,
+        "pattern": "Dependency preservation",
+        "url": "https://gate2026.iitg.ac.in/doc/download/2025/DA2025.pdf#page=11"
+      },
+      {
+        "year": 2025,
+        "question": 57,
+        "page": 31,
+        "pattern": "Keys and normal forms",
+        "url": "https://gate2026.iitg.ac.in/doc/download/2025/DA2025.pdf#page=31"
+      },
+      {
+        "year": 2026,
+        "question": 17,
+        "page": 12,
+        "pattern": "Candidate-key enumeration",
+        "url": "https://gate2026.iitg.ac.in/doc/download/2026/QPs/DA.pdf#page=12"
+      }
+    ]
+  },
+  {
+    "day": 5,
+    "title": "Files, index choice and B+ tree calculations",
+    "source": "DSC7e §§13.2–13.3,14.1–14.5; selected14.9 bitmap support",
+    "goal": "Translate a page layout into an inequality and choose an index from the query predicate.",
+    "story": "\n<h2>Count physical units, not just records</h2><p>A file stores records in pages or blocks. If records cannot straddle pages and headers are ignored, one page holds floor(page_bytes/record_bytes) records. The number of pages is the ceiling of record_count divided by that capacity. Taking one ceiling of total bytes divided by page size can be wrong because it lets fractions of records share unused space across pages.</p>\n<p>A heap file supports simple insertion but does not sort its records by the searched field. A sorted file makes range scans natural but updates need care. An index is a separate access structure: it can reduce the pages searched while still requiring data-page reads for the matching records. Do not equate an index lookup with fetching the complete result for free.</p>\n<h2>Write the node’s contents before dividing</h2><p>A B+ tree internal node with p child pointers has p−1 separator keys. With page size B, pointer size P and key size K, and no header, its layout requires pP+(p−1)K≤B. Solve for the largest integer p. A leaf has a different layout involving key/data-pointer entries and usually a next-leaf pointer; use the leaf’s stated convention instead of reusing the internal formula.</p><p>Separators guide search; record pointers are stored at leaves in the usual B+ model used here. Leaves are linked to support range scans. After a leaf split, the first key of the new right leaf is copied to the parent as a separator while remaining in the leaf. Internal-node splitting uses a different promotion convention. State capacity, insertion policy and split rule before tracing an update.</p>\n<h2>Match the index to the predicate</h2><p>Hash indexes suit equality lookup but do not in general provide ordered range scanning. Ordered B+ indexes support equality and ranges. A composite ordered index on(A,B) orders first by A, then B inside each A region. A condition on A, or on A with a B range, can use contiguous key regions. A B-only predicate does not generally become one selective contiguous range; it may require scanning or implementation-specific techniques.</p><p>A clustered layout can place neighboring matching records on fewer data pages than an unclustered layout. Count cached root pages, index pages and data pages using the assumptions supplied. Bitmap indexes can help low-cardinality analytical attributes, but their benefit depends on workload and update behavior; “one index is always best” is not a valid universal rule.</p>\n",
+    "worked": [
+      [
+        "Internal fanout is an inequality",
+        "An internal page has1000 bytes, 8-byte child pointers, 8-byte keys and no header. Find maximum p.",
+        "The layout is8p+8(p−1)≤1000, or16p≤1008. Thus p≤63 and the maximum is63 pointers, with62 keys. Ignoring the extra pointer would change the answer."
+      ],
+      [
+        "Leaf split needs a convention",
+        "A leaf allows3 keys and currently has[5,9,13]. Insert11. Split four sorted entries evenly into two leaves, copy the right minimum upward.",
+        "The entries are[5,9,11,13]. Leaves become[5,9] and[11,13]. The parent receives separator11;11 also remains in the right leaf. This is leaf-copy behavior, not removing11 from the leaf as in an internal promotion."
+      ]
+    ],
+    "questions": [
+      {
+        "prompt": "Select every true statement under the standard models just reviewed.",
+        "answer": "A and C. Hashing is not an ordered-range guarantee. An internal node has one more child pointer than separator keys. Index lookup can still require data fetches, and composite ordering is not symmetric in the columns.",
+        "skill": "index-role",
+        "trap": "index-search-is-complete-fetch",
+        "first": "Identify equality/range requirements and actual node contents.",
+        "type": "multi-select",
+        "options": [
+          "A. A B+ tree can support ordered range scans.",
+          "B. Hash indexes generally preserve key order for range scans.",
+          "C. An internal node with p child pointers has p−1 separator keys.",
+          "D. An index on(A,B) is equivalent in ordering to one on(B,A)."
+        ],
+        "correct": [
+          "A",
+          "C"
+        ],
+        "minutes": 3,
+        "id": "B05-Q1",
+        "source_block": "DSC7e §§13.2–13.3,14.1–14.5; selected14.9 bitmap support",
+        "exam_target": "GATE-DA",
+        "daily_pattern_references": [
+          {
+            "year": 2024,
+            "question": 55
+          },
+          {
+            "year": 2026,
+            "question": 32
+          },
+          {
+            "year": 2026,
+            "question": 41
+          }
+        ],
+        "original_problem": true,
+        "exam_evidence_note": "Daily paper references establish topic families; individual practice items may test additional explicit syllabus content and are not claimed as PYQ adaptations.",
+        "expected_first_step": "Identify equality/range requirements and actual node contents.",
+        "mistake_tag": "index-search-is-complete-fetch"
+      },
+      {
+        "prompt": "An ordered index on(CustomerID,Date) is used without special skip-scan features. Select every valid statement.",
+        "answer": "A and C. Fixing CustomerID produces a region ordered by Date; a leading-column range also respects primary ordering. Date-only matches may be spread among many CustomerID regions, and row fetch cost depends on layout.",
+        "skill": "composite-index",
+        "trap": "column-order-symmetry",
+        "first": "Read lexicographic order from left to right.",
+        "type": "multi-select",
+        "options": [
+          "A. CustomerID=7 with a Date interval forms a contiguous key interval.",
+          "B. Any Date-only range is always one selective contiguous interval.",
+          "C. Leading CustomerID restrictions can guide ordered search.",
+          "D. Every index scan returns full records with zero data-page reads."
+        ],
+        "correct": [
+          "A",
+          "C"
+        ],
+        "minutes": 4,
+        "id": "B05-Q2",
+        "source_block": "DSC7e §§13.2–13.3,14.1–14.5; selected14.9 bitmap support",
+        "exam_target": "GATE-DA",
+        "daily_pattern_references": [
+          {
+            "year": 2024,
+            "question": 55
+          },
+          {
+            "year": 2026,
+            "question": 32
+          },
+          {
+            "year": 2026,
+            "question": 41
+          }
+        ],
+        "original_problem": true,
+        "exam_evidence_note": "Daily paper references establish topic families; individual practice items may test additional explicit syllabus content and are not claimed as PYQ adaptations.",
+        "expected_first_step": "Read lexicographic order from left to right.",
+        "mistake_tag": "column-order-symmetry"
+      },
+      {
+        "prompt": "Internal pages have1024 bytes, 8-byte child pointers and12-byte keys. No headers. Find maximum child pointers and keys.",
+        "answer": "8p+12(p−1)≤1024 gives20p≤1036, so p=51 child pointers and50 keys. At p=52 the node would require1028 bytes, which exceeds the page.",
+        "skill": "fanout-layout",
+        "trap": "rounding-and-extra-pointer",
+        "first": "Write bytes for p pointers and p−1 keys.",
+        "type": "short-answer",
+        "options": [],
+        "correct": [],
+        "minutes": 5,
+        "id": "B05-Q3",
+        "source_block": "DSC7e §§13.2–13.3,14.1–14.5; selected14.9 bitmap support",
+        "exam_target": "GATE-DA",
+        "daily_pattern_references": [
+          {
+            "year": 2024,
+            "question": 55
+          },
+          {
+            "year": 2026,
+            "question": 32
+          },
+          {
+            "year": 2026,
+            "question": 41
+          }
+        ],
+        "original_problem": true,
+        "exam_evidence_note": "Daily paper references establish topic families; individual practice items may test additional explicit syllabus content and are not claimed as PYQ adaptations.",
+        "expected_first_step": "Write bytes for p pointers and p−1 keys.",
+        "mistake_tag": "rounding-and-extra-pointer"
+      },
+      {
+        "prompt": "A file has26 fixed180-byte records,1000-byte pages, no headers and no record spanning pages. How many pages? Separately, a leaf has512 bytes, 6-byte keys,10-byte record pointers, and an8-byte next-leaf pointer; what is its maximum number of entries?",
+        "answer": "The file capacity is floor(1000/180)=5 records/page, so ceil(26/5)=6 pages. For leaf entries m:16m+8≤512, so m≤31.5 and maximum31. Rounding total file bytes once would incorrectly give5 pages.",
+        "skill": "record-leaf-capacity",
+        "trap": "reusing-the-wrong-layout",
+        "first": "Account for indivisible records and the leaf-only sibling pointer.",
+        "type": "short-answer",
+        "options": [],
+        "correct": [],
+        "minutes": 5,
+        "id": "B05-Q4",
+        "source_block": "DSC7e §§13.2–13.3,14.1–14.5; selected14.9 bitmap support",
+        "exam_target": "GATE-DA",
+        "daily_pattern_references": [
+          {
+            "year": 2024,
+            "question": 55
+          },
+          {
+            "year": 2026,
+            "question": 32
+          },
+          {
+            "year": 2026,
+            "question": 41
+          }
+        ],
+        "original_problem": true,
+        "exam_evidence_note": "Daily paper references establish topic families; individual practice items may test additional explicit syllabus content and are not claimed as PYQ adaptations.",
+        "expected_first_step": "Account for indivisible records and the leaf-only sibling pointer.",
+        "mistake_tag": "reusing-the-wrong-layout"
+      },
+      {
+        "prompt": "A B+ search path has root, one internal page and a target leaf. Root is already cached; other pages are not. A range then visits two additional leaves and three distinct uncached data pages. Count page reads, assuming no prefetch or other caching.",
+        "answer": "One internal plus the first leaf gives2 reads. Two additional leaves give2 more; three distinct data pages give3 more. Total7. The cached root costs no read in this model.",
+        "skill": "io-accounting",
+        "trap": "cached-root-and-data-pages",
+        "first": "Separate index path, continuation leaves and fetched data.",
+        "type": "short-answer",
+        "options": [],
+        "correct": [],
+        "minutes": 5,
+        "id": "B05-Q5",
+        "source_block": "DSC7e §§13.2–13.3,14.1–14.5; selected14.9 bitmap support",
+        "exam_target": "GATE-DA",
+        "daily_pattern_references": [
+          {
+            "year": 2024,
+            "question": 55
+          },
+          {
+            "year": 2026,
+            "question": 32
+          },
+          {
+            "year": 2026,
+            "question": 41
+          }
+        ],
+        "original_problem": true,
+        "exam_evidence_note": "Daily paper references establish topic families; individual practice items may test additional explicit syllabus content and are not claimed as PYQ adaptations.",
+        "expected_first_step": "Separate index path, continuation leaves and fetched data.",
+        "mistake_tag": "cached-root-and-data-pages"
+      }
+    ],
+    "map": [
+      [
+        "Storage",
+        "Unspanned records and block capacity",
+        "Floor capacity; ceiling page count"
+      ],
+      [
+        "Layout",
+        "Internal pointers versus leaf entries",
+        "Include headers/sibling pointers if stated"
+      ],
+      [
+        "Access",
+        "Equality versus ordered range",
+        "Composite leading-column order"
+      ],
+      [
+        "Cost",
+        "Index pages and data pages",
+        "Caching changes the count"
+      ]
+    ],
+    "repair": "For a fanout miss, draw the alternating pointer/key layout. For file size, compute records/page first. For I/O, list each distinct uncached page read.",
+    "retest": [
+      "A leaf holds3 keys and[2,6,10]; insert8 and split evenly. What separator is copied up?",
+      "Leaves[2,6] and[8,10]; copy separator8 upward, keeping it in the right leaf."
+    ],
+    "evidence": [
+      {
+        "year": 2024,
+        "question": 55,
+        "page": 37,
+        "pattern": "Index choice from predicates",
+        "url": "https://gate2026.iitg.ac.in/doc/download/2024/DA24S1.pdf#page=37"
+      },
+      {
+        "year": 2026,
+        "question": 32,
+        "page": 21,
+        "pattern": "B+ internal-node capacity",
+        "url": "https://gate2026.iitg.ac.in/doc/download/2026/QPs/DA.pdf#page=21"
+      },
+      {
+        "year": 2026,
+        "question": 41,
+        "page": 26,
+        "pattern": "B+ insertion and splitting",
+        "url": "https://gate2026.iitg.ac.in/doc/download/2026/QPs/DA.pdf#page=26"
+      }
+    ]
+  },
+  {
+    "day": 6,
+    "title": "Warehouses, OLAP, hierarchies and measures",
+    "source": "DSC7e §§11.2–11.3,5.5; Han–Kamber–Pei3e Chapters4–5 selectively",
+    "goal": "Define the fact grain, distinguish cuboids from result rows, and aggregate measures correctly.",
+    "story": "\n<h2>Declare what one fact row means</h2><p>A fact table records measurements at a specified grain, such as one product sold at one store on one date. Dimension tables describe product, store and time. Changing the grain changes what can be added without double counting. A star schema connects dimensions directly to the fact; a snowflake design further normalizes dimension hierarchies. Neither name determines the correct grain for you.</p>\n<p>A hierarchy orders detail levels, such as City→State→Country→ALL. Roll-up moves toward coarser groups; drill-down moves toward detail. Slicing fixes a dimension value, while dicing selects a subregion using conditions or sets. Pivoting changes the presentation orientation, not the underlying total. State the hierarchy instead of assuming that every attribute is naturally comparable.</p>\n<h2>Two different things are counted in cube questions</h2><p>A cuboid is one selected aggregation level for each dimension. With d dimensions and only detail/ALL choices, there are2ᵈ cuboids. If dimension i has Lᵢ usable levels including ALL, and one level per independent hierarchy is chosen, the number of cuboids is the product of the Lᵢ. This is not the number of rows in a fully materialized cube.</p>\n<p>For two dimensions with m and n distinct detail values, when every combination occurs and the only levels are detail and ALL, GROUP BY CUBE returns mn detail rows, m first-dimension subtotals, n second-dimension subtotals and one grand total. The row count is(m+1)(n+1). Missing combinations and filters can change row counts even though the cuboid types remain the same.</p>\n<h2>Not every measure can be added in every direction</h2><p>Revenue and units sold are typically additive across independent dimensions. An inventory snapshot may be additive across stores but not across dates: adding today’s stock to yesterday’s stock does not give current stock. A rate or average cannot normally be summed. To combine averages correctly, keep sufficient statistics such as sum and count.</p><p>Distributive aggregates such as SUM and COUNT can be combined using the same fixed aggregate on partitions. Algebraic aggregates such as AVG can be reconstructed from a fixed collection like SUM and COUNT. An exact MEDIAN is holistic under the conventional classification: fixed-size partition summaries do not generally determine the exact combined median. These categories describe how much information aggregation must retain.</p>\n",
+    "worked": [
+      [
+        "Cube rows are not cube types",
+        "Product has2 values and Region has3, every combination occurs. Only detail and ALL levels are used. Count cuboids and GROUP BY CUBE rows.",
+        "There are2²=4 cuboids. Their row counts are6 detail rows,2 product subtotals,3 region subtotals and1 grand total:12 rows. The four aggregation types and twelve output rows answer different questions."
+      ],
+      [
+        "Keep sum and count",
+        "One group has10 records averaging20; another has30 averaging40. What is the combined average?",
+        "Recover totals:10×20=200 and30×40=1200. Combined average=(200+1200)/(10+30)=35. Taking(20+40)/2=30 would give the groups equal weight even though their record counts differ."
+      ]
+    ],
+    "questions": [
+      {
+        "prompt": "Select every true statement for City→State→Country→ALL.",
+        "answer": "A and C. Country to State adds detail; City to Country reduces detail. Slicing fixes a dimension value, and a fact grain is a semantic choice rather than whatever row count happens to be in a sample.",
+        "skill": "olap-operation",
+        "trap": "rollup-versus-drilldown",
+        "first": "Identify whether the destination is more or less detailed.",
+        "type": "multi-select",
+        "options": [
+          "A. City to Country is a roll-up.",
+          "B. Country to State is a roll-up.",
+          "C. Country to State is a drill-down.",
+          "D. Slicing always means summing all dimensions into the grand total."
+        ],
+        "correct": [
+          "A",
+          "C"
+        ],
+        "minutes": 3,
+        "id": "B06-Q1",
+        "source_block": "DSC7e §§11.2–11.3,5.5; Han–Kamber–Pei3e Chapters4–5 selectively",
+        "exam_target": "GATE-DA",
+        "daily_pattern_references": [
+          {
+            "year": 2025,
+            "question": 46
+          },
+          {
+            "year": 2026,
+            "question": 18
+          },
+          {
+            "year": 2026,
+            "question": 43
+          }
+        ],
+        "original_problem": true,
+        "exam_evidence_note": "Daily paper references establish topic families; individual practice items may test additional explicit syllabus content and are not claimed as PYQ adaptations.",
+        "expected_first_step": "Identify whether the destination is more or less detailed.",
+        "mistake_tag": "rollup-versus-drilldown"
+      },
+      {
+        "prompt": "Select every true measure statement under the conventional aggregation classification.",
+        "answer": "A, B and D. SUM can combine partition totals; AVG requires weights or sum/count; snapshot stock should not be summed across dates as current stock. Exact median is not generally obtained by taking a median of partition medians.",
+        "skill": "measure-aggregation",
+        "trap": "average-of-averages",
+        "first": "Ask what sufficient information survives grouping.",
+        "type": "multi-select",
+        "options": [
+          "A. SUM is distributive.",
+          "B. AVG can be recovered from total sum and count.",
+          "C. Exact combined median always equals the median of group medians.",
+          "D. Inventory snapshots can be semi-additive: additive over stores but not time."
+        ],
+        "correct": [
+          "A",
+          "B",
+          "D"
+        ],
+        "minutes": 4,
+        "id": "B06-Q2",
+        "source_block": "DSC7e §§11.2–11.3,5.5; Han–Kamber–Pei3e Chapters4–5 selectively",
+        "exam_target": "GATE-DA",
+        "daily_pattern_references": [
+          {
+            "year": 2025,
+            "question": 46
+          },
+          {
+            "year": 2026,
+            "question": 18
+          },
+          {
+            "year": 2026,
+            "question": 43
+          }
+        ],
+        "original_problem": true,
+        "exam_evidence_note": "Daily paper references establish topic families; individual practice items may test additional explicit syllabus content and are not claimed as PYQ adaptations.",
+        "expected_first_step": "Ask what sufficient information survives grouping.",
+        "mistake_tag": "average-of-averages"
+      },
+      {
+        "prompt": "A dense fact table has dimensions D1 with2 values and D2 with4 values. Only detail and ALL levels are used. How many cuboids and GROUP BY CUBE(D1,D2) rows? Show each group size.",
+        "answer": "4 cuboids. Output sizes are8 detail rows,2 D1 subtotals,4 D2 subtotals and1 grand total, totaling15. Equivalently(2+1)(4+1)=15.",
+        "skill": "cube-cardinality",
+        "trap": "cuboids-versus-tuples",
+        "first": "Count each grouping set separately.",
+        "type": "short-answer",
+        "options": [],
+        "correct": [],
+        "minutes": 5,
+        "id": "B06-Q3",
+        "source_block": "DSC7e §§11.2–11.3,5.5; Han–Kamber–Pei3e Chapters4–5 selectively",
+        "exam_target": "GATE-DA",
+        "daily_pattern_references": [
+          {
+            "year": 2025,
+            "question": 46
+          },
+          {
+            "year": 2026,
+            "question": 18
+          },
+          {
+            "year": 2026,
+            "question": 43
+          }
+        ],
+        "original_problem": true,
+        "exam_evidence_note": "Daily paper references establish topic families; individual practice items may test additional explicit syllabus content and are not claimed as PYQ adaptations.",
+        "expected_first_step": "Count each grouping set separately.",
+        "mistake_tag": "cuboids-versus-tuples"
+      },
+      {
+        "prompt": "Dimension Location has levels City,State,Country,ALL; Time has Month,Year,ALL. Choose one level per dimension, with independent simple hierarchies. How many cuboids? What operation changes Country/Year to State/Year?",
+        "answer": "4×3=12 cuboids. Changing Country to State while holding Year adds detail, so it is drill-down. The ALL levels are included in the counts already.",
+        "skill": "hierarchy-product",
+        "trap": "all-level-off-by-one",
+        "first": "List the available levels before multiplying.",
+        "type": "short-answer",
+        "options": [],
+        "correct": [],
+        "minutes": 5,
+        "id": "B06-Q4",
+        "source_block": "DSC7e §§11.2–11.3,5.5; Han–Kamber–Pei3e Chapters4–5 selectively",
+        "exam_target": "GATE-DA",
+        "daily_pattern_references": [
+          {
+            "year": 2025,
+            "question": 46
+          },
+          {
+            "year": 2026,
+            "question": 18
+          },
+          {
+            "year": 2026,
+            "question": 43
+          }
+        ],
+        "original_problem": true,
+        "exam_evidence_note": "Daily paper references establish topic families; individual practice items may test additional explicit syllabus content and are not claimed as PYQ adaptations.",
+        "expected_first_step": "List the available levels before multiplying.",
+        "mistake_tag": "all-level-off-by-one"
+      },
+      {
+        "prompt": "Partition1 has5 records with SUM(Amount)=100; partition2 has15 records with SUM(Amount)=600. Compute combined AVG and explain which summaries suffice.",
+        "answer": "Combined sum700 and count20 give AVG35. SUM and COUNT suffice; averages20 and40 alone do not determine the combined average unless the counts are also available.",
+        "skill": "algebraic-measure",
+        "trap": "unweighted-partition-average",
+        "first": "Combine sums and counts, not averages directly.",
+        "type": "short-answer",
+        "options": [],
+        "correct": [],
+        "minutes": 5,
+        "id": "B06-Q5",
+        "source_block": "DSC7e §§11.2–11.3,5.5; Han–Kamber–Pei3e Chapters4–5 selectively",
+        "exam_target": "GATE-DA",
+        "daily_pattern_references": [
+          {
+            "year": 2025,
+            "question": 46
+          },
+          {
+            "year": 2026,
+            "question": 18
+          },
+          {
+            "year": 2026,
+            "question": 43
+          }
+        ],
+        "original_problem": true,
+        "exam_evidence_note": "Daily paper references establish topic families; individual practice items may test additional explicit syllabus content and are not claimed as PYQ adaptations.",
+        "expected_first_step": "Combine sums and counts, not averages directly.",
+        "mistake_tag": "unweighted-partition-average"
+      }
+    ],
+    "map": [
+      [
+        "Grain",
+        "Meaning of one fact row",
+        "Dimensions describe that observation"
+      ],
+      [
+        "Navigate",
+        "Roll-up/coarser; drill-down/finer",
+        "Slice and dice restrict the region"
+      ],
+      [
+        "Count",
+        "Cuboids are grouping types",
+        "Rows also depend on cardinalities"
+      ],
+      [
+        "Aggregate",
+        "Distributive/algebraic/holistic",
+        "Check additivity across each dimension"
+      ]
+    ],
+    "repair": "If cube counts are wrong, draw the four grouping sets for two dimensions. If an average is wrong, reconstruct numerator and denominator for every group.",
+    "retest": [
+      "A dense2×2 cube with detail/ALL levels has how many cuboids and result rows?",
+      "4 cuboids,9 rows:4+2+2+1."
+    ],
+    "evidence": [
+      {
+        "year": 2025,
+        "question": 46,
+        "page": 25,
+        "pattern": "GROUP BY CUBE row count",
+        "url": "https://gate2026.iitg.ac.in/doc/download/2025/DA2025.pdf#page=25"
+      },
+      {
+        "year": 2026,
+        "question": 18,
+        "page": 12,
+        "pattern": "OLAP hierarchy operation",
+        "url": "https://gate2026.iitg.ac.in/doc/download/2026/QPs/DA.pdf#page=12"
+      },
+      {
+        "year": 2026,
+        "question": 43,
+        "page": 28,
+        "pattern": "Hierarchy/cuboid count",
+        "url": "https://gate2026.iitg.ac.in/doc/download/2026/QPs/DA.pdf#page=28"
+      }
+    ]
+  },
+  {
+    "day": 7,
+    "title": "Preprocessing: normalization, discretization, sampling and compression",
+    "source": "Han–Kamber–Pei3e Chapter3; DSC7e §4.5 types and§11.2 analytical context",
+    "goal": "Choose a transformation from its goal, preserve its assumptions, and distinguish numerical scaling from schema normalization.",
+    "story": "\n<h2>Ask what information should survive</h2><p>A transformation changes how data is represented. Scaling preserves numeric ordering under a positive affine map; discretization replaces detailed values with bins; sampling keeps a selected subset or draws; compression changes storage representation and may or may not preserve exact recoverability. These operations solve different problems. “Normalize” is overloaded: numeric normalization rescales values; relational normalization decomposes schemas using dependencies. Neither is a substitute for the other.</p>\n<h2>Scaling needs reference statistics</h2><p>Min–max scaling to[0,1] uses z=(x−min)/(max−min), assuming max&gt;min. Z-score standardization uses z=(x−mean)/standard_deviation, assuming a positive standard deviation. State whether supplied statistics are population or sample estimates if computing them; today’s questions supply the standard deviation directly. An input outside the reference min/max can transform outside[0,1]. That is not an arithmetic contradiction.</p><p>For prediction, fit scaling parameters using the training data, then reuse them on later data. Recomputing them using the test set changes the mapping and can leak information. If an attribute is constant, the standard formulas divide by zero; an explicit constant-feature policy is needed.</p>\n<h2>Bins and samples need boundaries and a model</h2><p>Equal-width discretization divides a numeric interval into intervals of equal numeric length. Equal-frequency discretization aims for similar record counts, which need not produce equal widths; ties require a stated policy. Always specify which bin contains a boundary value. Replacing a number by its bin usually loses its exact original value.</p><p>Simple random sampling, stratified sampling and sampling with replacement use different probability models. Without replacement, a record can appear at most once in the selected sample. With replacement, repeated records are possible. Stratification samples within declared groups; it does not by itself make a combined unweighted estimate correct if sampling fractions differ. Preserve weights when the question requires a population estimate.</p>\n<h2>Compression requires a decoding story</h2><p>Lossless compression permits exact reconstruction; lossy methods trade information for a reduced representation. Run-length encoding stores consecutive runs as(symbol,count), so it helps long runs and can expand alternating data. Dictionary and delta encodings exploit other patterns; a storage saving cannot be asserted without specifying the encoding sizes and overhead. A sample or a bin label is not generally an exact substitute for the full original data.</p><p>This final day also consolidates the full section: a well-normalized schema says little about whether a feature is standardized; a valid SQL result says little about whether its numerical average was reaggregated correctly. Translate the intended question first.</p>\n",
+    "worked": [
+      [
+        "Use the right statistics",
+        "An attribute has reference min10,max50,mean30,std10. Transform x=40 by min–max and z-score methods.",
+        "Min–max gives(40−10)/(50−10)=0.75. Z-score gives(40−30)/10=1. The outputs differ because the first measures position in a reference range and the second measures standard-deviation displacement from a mean."
+      ],
+      [
+        "Compression can expand",
+        "Encode AAABBCC using one byte per symbol and one byte per run count, ignoring headers. Compare ABAB.",
+        "AAABBCC has7 input bytes and3 runs, so encoding takes6 bytes. ABAB has4 bytes and4 runs, so its encoding takes8 bytes. The method is lossless in both cases; compressibility depends on the data pattern and the specified representation."
+      ]
+    ],
+    "questions": [
+      {
+        "prompt": "Select every true claim about the transformations.",
+        "answer": "A and C. A positive scale preserves order; bins usually discard exact values. Numerical scaling is different from schema normalization. A constant attribute needs a policy because its scale denominator can be zero.",
+        "skill": "transformation-goal",
+        "trap": "normalization-homonym",
+        "first": "State whether the object is a numeric feature or a relation schema.",
+        "type": "multi-select",
+        "options": [
+          "A. Min–max scaling with a positive denominator preserves ordering.",
+          "B. Z-score scaling establishes BCNF for a relation.",
+          "C. Replacing values by bin labels is generally lossy.",
+          "D. Standard z-score division always works when standard deviation is0."
+        ],
+        "correct": [
+          "A",
+          "C"
+        ],
+        "minutes": 3,
+        "id": "B07-Q1",
+        "source_block": "Han–Kamber–Pei3e Chapter3; DSC7e §4.5 types and§11.2 analytical context",
+        "exam_target": "GATE-DA",
+        "daily_pattern_references": [
+          {
+            "year": 2024,
+            "question": 27
+          }
+        ],
+        "original_problem": true,
+        "exam_evidence_note": "Daily paper references establish topic families; individual practice items may test additional explicit syllabus content and are not claimed as PYQ adaptations.",
+        "expected_first_step": "State whether the object is a numeric feature or a relation schema.",
+        "mistake_tag": "normalization-homonym"
+      },
+      {
+        "prompt": "Select every true statement under explicit sampling/compression models.",
+        "answer": "A, B and D. Replacement permits repeated draws. Exact recoverability defines losslessness. RLE may expand alternating data. Unequal sampling fractions generally need weights for population estimation.",
+        "skill": "sampling-compression",
+        "trap": "unstated-probability-or-byte-model",
+        "first": "Identify replacement, sampling fractions and decoding rules.",
+        "type": "multi-select",
+        "options": [
+          "A. Sampling with replacement permits the same record to be drawn twice.",
+          "B. A lossless code permits exact decoding.",
+          "C. Run-length encoding always uses fewer bytes than its input.",
+          "D. Unequal stratified sampling fractions can require weights."
+        ],
+        "correct": [
+          "A",
+          "B",
+          "D"
+        ],
+        "minutes": 4,
+        "id": "B07-Q2",
+        "source_block": "Han–Kamber–Pei3e Chapter3; DSC7e §4.5 types and§11.2 analytical context",
+        "exam_target": "GATE-DA",
+        "daily_pattern_references": [
+          {
+            "year": 2024,
+            "question": 27
+          }
+        ],
+        "original_problem": true,
+        "exam_evidence_note": "Daily paper references establish topic families; individual practice items may test additional explicit syllabus content and are not claimed as PYQ adaptations.",
+        "expected_first_step": "Identify replacement, sampling fractions and decoding rules.",
+        "mistake_tag": "unstated-probability-or-byte-model"
+      },
+      {
+        "prompt": "Reference min20,max100,mean60,std20. Compute min–max and z-score outputs for x=80. Then compute the min–max output for x=120 using the same reference parameters.",
+        "answer": "For80:min–max(80−20)/80=0.75; z-score(80−60)/20=1. For120:min–max=100/80=1.25. Outside-range input can yield a value above1 when reference parameters stay fixed.",
+        "skill": "scaling-calculation",
+        "trap": "recomputing-reference-extrema",
+        "first": "Substitute into the named formula without changing the supplied statistics.",
+        "type": "short-answer",
+        "options": [],
+        "correct": [],
+        "minutes": 5,
+        "id": "B07-Q3",
+        "source_block": "Han–Kamber–Pei3e Chapter3; DSC7e §4.5 types and§11.2 analytical context",
+        "exam_target": "GATE-DA",
+        "daily_pattern_references": [
+          {
+            "year": 2024,
+            "question": 27
+          }
+        ],
+        "original_problem": true,
+        "exam_evidence_note": "Daily paper references establish topic families; individual practice items may test additional explicit syllabus content and are not claimed as PYQ adaptations.",
+        "expected_first_step": "Substitute into the named formula without changing the supplied statistics.",
+        "mistake_tag": "recomputing-reference-extrema"
+      },
+      {
+        "prompt": "Bins are[0,10),[10,20),[20,30]. Assign values0,10,19,20,30. Does this assignment retain their exact original numeric values?",
+        "answer": "The bin labels are1,2,2,3,3. The shared boundaries10 and20 belong to the right bins;30 is included in the last bin by its closed endpoint. Bin labels alone cannot reconstruct exact values, so the transformation is lossy.",
+        "skill": "bin-boundary",
+        "trap": "endpoint-ambiguity",
+        "first": "Read the interval brackets before assigning.",
+        "type": "short-answer",
+        "options": [],
+        "correct": [],
+        "minutes": 5,
+        "id": "B07-Q4",
+        "source_block": "Han–Kamber–Pei3e Chapter3; DSC7e §4.5 types and§11.2 analytical context",
+        "exam_target": "GATE-DA",
+        "daily_pattern_references": [
+          {
+            "year": 2024,
+            "question": 27
+          }
+        ],
+        "original_problem": true,
+        "exam_evidence_note": "Daily paper references establish topic families; individual practice items may test additional explicit syllabus content and are not claimed as PYQ adaptations.",
+        "expected_first_step": "Read the interval brackets before assigning.",
+        "mistake_tag": "endpoint-ambiguity"
+      },
+      {
+        "prompt": "RLE stores each symbol and count in one byte each, with no header and all counts fitting one byte. Compare encoded sizes for AAAABBBBCC and ABAB. Explain recoverability.",
+        "answer": "AAAABBBBCC has10 raw bytes and3 runs, so6 encoded bytes. ABAB has4 raw bytes and4 runs, so8 encoded bytes. Both are exactly recoverable from the runs, but only the first is smaller under this byte model.",
+        "skill": "compression-cost",
+        "trap": "lossless-does-not-imply-shorter",
+        "first": "Count runs, then apply the stated byte costs.",
+        "type": "short-answer",
+        "options": [],
+        "correct": [],
+        "minutes": 5,
+        "id": "B07-Q5",
+        "source_block": "Han–Kamber–Pei3e Chapter3; DSC7e §4.5 types and§11.2 analytical context",
+        "exam_target": "GATE-DA",
+        "daily_pattern_references": [
+          {
+            "year": 2024,
+            "question": 27
+          }
+        ],
+        "original_problem": true,
+        "exam_evidence_note": "Daily paper references establish topic families; individual practice items may test additional explicit syllabus content and are not claimed as PYQ adaptations.",
+        "expected_first_step": "Count runs, then apply the stated byte costs.",
+        "mistake_tag": "lossless-does-not-imply-shorter"
+      }
+    ],
+    "map": [
+      [
+        "Purpose",
+        "Scale; bin; sample; encode",
+        "Do not confuse feature and schema normalization"
+      ],
+      [
+        "Parameters",
+        "Reference min/max or mean/std",
+        "Handle constants and data leakage"
+      ],
+      [
+        "Information",
+        "Lossless decoding versus lossy reduction",
+        "Bins and samples need explicit conventions"
+      ],
+      [
+        "Evidence",
+        "Calculate with the given model",
+        "Report boundaries, probabilities and byte costs"
+      ]
+    ],
+    "repair": "For scaling errors, write the formula name and denominator before substituting. For binning, mark each endpoint. For compression, count encoded units before claiming a saving.",
+    "retest": [
+      "Reference min0,max10: what is the scaled value of12? Is it invalid solely because it exceeds1?",
+      "It is1.2. That is possible for a new input outside the reference range; it is not by itself an arithmetic error."
+    ],
+    "evidence": [
+      {
+        "year": 2024,
+        "question": 27,
+        "page": 17,
+        "pattern": "Z-score transformation",
+        "url": "https://gate2026.iitg.ac.in/doc/download/2024/DA24S1.pdf#page=17"
+      }
+    ]
+  }
+]

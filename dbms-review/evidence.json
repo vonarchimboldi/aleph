@@ -1,0 +1,191 @@
+[
+  {
+    "day": 1,
+    "source": "Database System Concepts 7e §§2.1–2.4, 4.4–4.5 and6.2–6.7",
+    "paperExamples": [
+      {
+        "year": 2025,
+        "question": 56,
+        "page": 30,
+        "pattern": "Join and integrity claims",
+        "url": "https://gate2026.iitg.ac.in/doc/download/2025/DA2025.pdf#page=30"
+      },
+      {
+        "year": 2026,
+        "question": 26,
+        "page": 18,
+        "pattern": "Foreign-key effects of updates",
+        "url": "https://gate2026.iitg.ac.in/doc/download/2026/QPs/DA.pdf#page=18"
+      },
+      {
+        "year": 2026,
+        "question": 61,
+        "page": 39,
+        "pattern": "ER-to-relational mapping",
+        "url": "https://gate2026.iitg.ac.in/doc/download/2026/QPs/DA.pdf#page=39"
+      }
+    ]
+  },
+  {
+    "day": 2,
+    "source": "DSC7e §2.6; online Chapter27 §§27.1–27.2",
+    "paperExamples": [
+      {
+        "year": 2024,
+        "question": 26,
+        "page": 16,
+        "pattern": "Set-difference inclusion",
+        "url": "https://gate2026.iitg.ac.in/doc/download/2024/DA24S1.pdf#page=16"
+      },
+      {
+        "year": 2026,
+        "question": 42,
+        "page": 27,
+        "pattern": "Relational expression evaluation",
+        "url": "https://gate2026.iitg.ac.in/doc/download/2026/QPs/DA.pdf#page=27"
+      },
+      {
+        "year": 2026,
+        "question": 59,
+        "page": 38,
+        "pattern": "Tuple-calculus output counting",
+        "url": "https://gate2026.iitg.ac.in/doc/download/2026/QPs/DA.pdf#page=38"
+      }
+    ]
+  },
+  {
+    "day": 3,
+    "source": "DSC7e §§3.3–3.8 and4.1",
+    "paperExamples": [
+      {
+        "year": 2024,
+        "question": 31,
+        "page": 19,
+        "pattern": "SQL result count",
+        "url": "https://gate2026.iitg.ac.in/doc/download/2024/DA24S1.pdf#page=19"
+      },
+      {
+        "year": 2025,
+        "question": 33,
+        "page": 18,
+        "pattern": "Aggregate subquery",
+        "url": "https://gate2026.iitg.ac.in/doc/download/2025/DA2025.pdf#page=18"
+      },
+      {
+        "year": 2026,
+        "question": 51,
+        "page": 34,
+        "pattern": "Nested SQL reasoning",
+        "url": "https://gate2026.iitg.ac.in/doc/download/2026/QPs/DA.pdf#page=34"
+      },
+      {
+        "year": 2026,
+        "question": 60,
+        "page": 38,
+        "pattern": "Correlated count comparison",
+        "url": "https://gate2026.iitg.ac.in/doc/download/2026/QPs/DA.pdf#page=38"
+      }
+    ]
+  },
+  {
+    "day": 4,
+    "source": "DSC7e §§7.2–7.6; §7.7/online28 for higher-form follow-up",
+    "paperExamples": [
+      {
+        "year": 2024,
+        "question": 46,
+        "page": 29,
+        "pattern": "FD implication",
+        "url": "https://gate2026.iitg.ac.in/doc/download/2024/DA24S1.pdf#page=29"
+      },
+      {
+        "year": 2025,
+        "question": 16,
+        "page": 11,
+        "pattern": "Dependency preservation",
+        "url": "https://gate2026.iitg.ac.in/doc/download/2025/DA2025.pdf#page=11"
+      },
+      {
+        "year": 2025,
+        "question": 57,
+        "page": 31,
+        "pattern": "Keys and normal forms",
+        "url": "https://gate2026.iitg.ac.in/doc/download/2025/DA2025.pdf#page=31"
+      },
+      {
+        "year": 2026,
+        "question": 17,
+        "page": 12,
+        "pattern": "Candidate-key enumeration",
+        "url": "https://gate2026.iitg.ac.in/doc/download/2026/QPs/DA.pdf#page=12"
+      }
+    ]
+  },
+  {
+    "day": 5,
+    "source": "DSC7e §§13.2–13.3,14.1–14.5; selected14.9 bitmap support",
+    "paperExamples": [
+      {
+        "year": 2024,
+        "question": 55,
+        "page": 37,
+        "pattern": "Index choice from predicates",
+        "url": "https://gate2026.iitg.ac.in/doc/download/2024/DA24S1.pdf#page=37"
+      },
+      {
+        "year": 2026,
+        "question": 32,
+        "page": 21,
+        "pattern": "B+ internal-node capacity",
+        "url": "https://gate2026.iitg.ac.in/doc/download/2026/QPs/DA.pdf#page=21"
+      },
+      {
+        "year": 2026,
+        "question": 41,
+        "page": 26,
+        "pattern": "B+ insertion and splitting",
+        "url": "https://gate2026.iitg.ac.in/doc/download/2026/QPs/DA.pdf#page=26"
+      }
+    ]
+  },
+  {
+    "day": 6,
+    "source": "DSC7e §§11.2–11.3,5.5; Han–Kamber–Pei3e Chapters4–5 selectively",
+    "paperExamples": [
+      {
+        "year": 2025,
+        "question": 46,
+        "page": 25,
+        "pattern": "GROUP BY CUBE row count",
+        "url": "https://gate2026.iitg.ac.in/doc/download/2025/DA2025.pdf#page=25"
+      },
+      {
+        "year": 2026,
+        "question": 18,
+        "page": 12,
+        "pattern": "OLAP hierarchy operation",
+        "url": "https://gate2026.iitg.ac.in/doc/download/2026/QPs/DA.pdf#page=12"
+      },
+      {
+        "year": 2026,
+        "question": 43,
+        "page": 28,
+        "pattern": "Hierarchy/cuboid count",
+        "url": "https://gate2026.iitg.ac.in/doc/download/2026/QPs/DA.pdf#page=28"
+      }
+    ]
+  },
+  {
+    "day": 7,
+    "source": "Han–Kamber–Pei3e Chapter3; DSC7e §4.5 types and§11.2 analytical context",
+    "paperExamples": [
+      {
+        "year": 2024,
+        "question": 27,
+        "page": 17,
+        "pattern": "Z-score transformation",
+        "url": "https://gate2026.iitg.ac.in/doc/download/2024/DA24S1.pdf#page=17"
+      }
+    ]
+  }
+]

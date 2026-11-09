@@ -1,7 +1,7 @@
 const STORAGE_KEY = "learning-studio-data-v2";
 const LEGACY_STORAGE_KEYS = ["learning-studio-data-v1"];
 const SESSION_KEY = "aleph-session";
-const COURSE_PLAN_VERSION = "seeded-user-canonical-workspace-v171";
+const COURSE_PLAN_VERSION = "seeded-user-canonical-workspace-v172";
 const MAX_FEEDBACK_ATTACHMENT_BYTES = 3 * 1024 * 1024;
 const MAX_COMPRESSED_FEEDBACK_BYTES = 2400 * 1024;
 const MAX_FEEDBACK_REQUEST_BYTES = 4 * 1024 * 1024;
@@ -1223,6 +1223,668 @@ function skienaReviewMaterialWorkspaces() {
 // SKIENA_REVIEW_CATALOG_END
 
 
+
+// DBMS_REVIEW_CATALOG_START
+function dbmsReviewMaterialWorkspaces() {
+ const entries=[
+  {
+    "id": "dbms-review-topic-01",
+    "day": "Week1 · Day1",
+    "title": "Relations, ER models, keys, constraints and types",
+    "focus": "Turn a business rule into keys and participation constraints, then test updates against them.",
+    "weeks": [
+      {
+        "id": "dbms-review-day-01",
+        "label": "Day1",
+        "week": 1,
+        "sourceWeek": 1,
+        "date": "",
+        "materialTitle": "Relations, ER models, keys, constraints and types",
+        "materialUrl": "dbms-review/day-01.html",
+        "expectedWork": "After DBMS Round1: concept exposition, two worked examples, five original exam-pattern questions, worked review and mind map. Record original work; export/upload separately. No calendar start assigned.",
+        "status": "Published",
+        "inlineQuestions": [
+          "B01-Q1: Select every true statement under the stated relational definitions. A. Every candidate key is a superkey. B. A child foreign-key column must always be unique. C. A table may have several candidate keys. D. Distinct names in today’s sample prove Name is a key.",
+          "B01-Q2: Parent P(ID) has primary-key values{4,8}. Child C(CID,PID) has rows(1,4),(2,4), with primary CID and NOT NULL foreign PID using RESTRICT. Select every operation safe with respect to the foreign key; assume no other referencing tables. A. Insert parent12. B. Delete child CID1. C. Delete parent4 while both children remain. D. Delete parent8.",
+          "B01-Q3: A library has Member(MemberID,Name), Book(ISBN,Title), a many-to-many Borrows relationship with at most one active row per member/book pair, and a multivalued Email attribute of Member. Give the minimum standard normalized mapping and keys, ignoring unrelated attributes. ",
+          "B01-Q4: Employee(EID,Email,DeptID) has EID primary key, Email UNIQUE NOT NULL, DeptID a foreign key. What are the candidate keys implied by these declarations? Is(EID,DeptID) a candidate key? ",
+          "B01-Q5: Choose representations for a postal code that can start with0, an exact two-decimal currency amount, and a required nonnegative quantity. Explain what type alone does not enforce. "
+        ],
+        "prerequisite": "DBMS Round1 review readiness; completion not inferred.",
+        "readingContext": "Database System Concepts 7e §§2.1–2.4, 4.4–4.5 and6.2–6.7",
+        "modelLesson": {
+          "gradingKeys": {
+            "B01-Q1": "A and C. Candidate keys are minimal superkeys; a primary key is selected from them. A sample may happen to contain unique names without enforcing name uniqueness. A foreign key need not be unique in the child table.",
+            "B01-Q2": "A, B and D. A new parent12 cannot invalidate references; deleting a child removes a reference; unreferenced parent8 can be removed. Parent4 remains referenced.",
+            "B01-Q3": "Four relations:Member keyed by MemberID; Book keyed by ISBN; Borrows(MemberID,ISBN) keyed by that pair; MemberEmail(MemberID,Email) keyed by the pair if duplicate emails per member are disallowed. The relationship and multivalued attribute each get a relation.",
+            "B01-Q4": "{EID} and{Email} are candidate keys. (EID,DeptID) is a superkey but not minimal, since EID alone suffices; it is not a candidate key. No uniqueness of DeptID is implied.",
+            "B01-Q5": "Use a character type for the postal identifier, an appropriate DECIMAL(p,2) for exact decimal currency, and a numeric/integer quantity with NOT NULL plus CHECK(quantity>=0). A numeric type alone does not require presence or nonnegativity."
+          },
+          "diagnosticTags": {
+            "B01-Q1": {
+              "skill": "key-definition",
+              "trap": "sample-versus-rule",
+              "firstStep": "Distinguish schema constraints from the observed instance."
+            },
+            "B01-Q2": {
+              "skill": "foreign-key-update",
+              "trap": "parent-child-direction",
+              "firstStep": "List surviving references after each operation independently."
+            },
+            "B01-Q3": {
+              "skill": "er-mapping",
+              "trap": "multivalue-in-one-cell",
+              "firstStep": "Identify entities, many-to-many relationships, and repeated attributes separately."
+            },
+            "B01-Q4": {
+              "skill": "minimal-key",
+              "trap": "superkey-versus-candidate",
+              "firstStep": "Remove each extra attribute and check whether uniqueness remains."
+            },
+            "B01-Q5": {
+              "skill": "data-type-constraint",
+              "trap": "digits-imply-numeric",
+              "firstStep": "Identify identity, arithmetic and domain rules separately."
+            }
+          },
+          "repair": "If a key answer used only sample values, restate the allowed-instance rule. If a foreign-key operation was reversed, draw arrows from child values to parent keys.",
+          "freshCheck": [
+            "Does total participation of students in Enrolment mean each student can take only one course?",
+            "No. Total participation requires at least one relationship; maximum cardinality is a separate constraint."
+          ],
+          "examPatternReferences": [
+            {
+              "year": 2025,
+              "question": 56,
+              "page": 30,
+              "pattern": "Join and integrity claims",
+              "url": "https://gate2026.iitg.ac.in/doc/download/2025/DA2025.pdf#page=30"
+            },
+            {
+              "year": 2026,
+              "question": 26,
+              "page": 18,
+              "pattern": "Foreign-key effects of updates",
+              "url": "https://gate2026.iitg.ac.in/doc/download/2026/QPs/DA.pdf#page=18"
+            },
+            {
+              "year": 2026,
+              "question": 61,
+              "page": 39,
+              "pattern": "ER-to-relational mapping",
+              "url": "https://gate2026.iitg.ac.in/doc/download/2026/QPs/DA.pdf#page=39"
+            }
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "dbms-review-topic-02",
+    "day": "Week1 · Day2",
+    "title": "Relational algebra and tuple calculus",
+    "focus": "Translate set and quantifier statements into a reproducible query result.",
+    "weeks": [
+      {
+        "id": "dbms-review-day-02",
+        "label": "Day2",
+        "week": 1,
+        "sourceWeek": 1,
+        "date": "",
+        "materialTitle": "Relational algebra and tuple calculus",
+        "materialUrl": "dbms-review/day-02.html",
+        "expectedWork": "After DBMS Round1: concept exposition, two worked examples, five original exam-pattern questions, worked review and mind map. Record original work; export/upload separately. No calendar start assigned.",
+        "status": "Published",
+        "inlineQuestions": [
+          "B02-Q1: Under classical set relational algebra, select every true statement. A. Projection may reduce the number of tuples. B. Natural join always matches only the primary-key column. C. Natural join equates every common attribute name. D. Union is defined for arbitrary unrelated schemas without alignment.",
+          "B02-Q2: Student={Ada,Ben,Cy}, Enrol={(Ada,DB),(Ada,AI),(Ben,DB),(Cy,AI)}, Required={DB,AI}. Select every true statement. A. The every-required-course result is{Ada}. B. The some-required-course result is{Ada} only. C. Empty Required makes all three candidates pass the every-course test. D. Missing required pairs identify Ben and Cy as failures.",
+          "B02-Q3: R(A,B)={(1,x),(2,y)} and S(A,B,C)={(1,z,7),(2,y,9)}. Give R natural-join S and explain why matching A alone is wrong. ",
+          "B02-Q4: X(ID,Group)={(1,A),(2,B),(3,B)} and Y(ID,Score)={(1,4),(1,7),(2,0)}. A safe tuple-calculus query returns x from X when some y in Y has matching ID and Score>1. Give the output tuples and count. ",
+          "B02-Q5: Child IDs are{2,3}; Parent IDs are{1,2,3,4}. Write a set-difference emptiness test for inclusion, then show what changes when Parent ID3 is removed. "
+        ],
+        "prerequisite": "DBMS Round1 review readiness; completion not inferred.",
+        "readingContext": "DSC7e §2.6; online Chapter27 §§27.1–27.2",
+        "modelLesson": {
+          "gradingKeys": {
+            "B02-Q1": "A and C. Projection removes duplicate projected tuples. Natural join matches all common names. Neither product nor selection creates a general ordered-output guarantee; incompatible schemas cannot be unioned directly.",
+            "B02-Q2": "A, C and D. Ada has every required course; the missing-pair students are Ben and Cy. With empty requirements, every explicit candidate passes the universal condition, while no candidate passes an existential required-course condition.",
+            "B02-Q3": "The only output is(A=2,B=y,C=9). The A=1 rows disagree on shared B, so they do not join. A-only matching would add a spurious tuple relative to natural-join semantics.",
+            "B02-Q4": "Only(1,A) qualifies, so the count is1. There are two witnesses for ID1, but the output is a set of x tuples, not one row per witness.",
+            "B02-Q5": "Test ChildIDs−ParentIDs=empty. Initially it is empty. After removing3 it equals{3}, identifying the missing referenced ID. Reversing the difference would instead report unused parents."
+          },
+          "diagnosticTags": {
+            "B02-Q1": {
+              "skill": "relational-semantics",
+              "trap": "bag-versus-set",
+              "firstStep": "Name the result schema before counting rows."
+            },
+            "B02-Q2": {
+              "skill": "universal-query",
+              "trap": "exists-versus-forall",
+              "firstStep": "Look for a missing required pair."
+            },
+            "B02-Q3": {
+              "skill": "natural-join-columns",
+              "trap": "implicit-condition",
+              "firstStep": "List all common attribute names."
+            },
+            "B02-Q4": {
+              "skill": "calculus-existential",
+              "trap": "witness-multiplicity",
+              "firstStep": "Test each candidate X tuple independently."
+            },
+            "B02-Q5": {
+              "skill": "constraint-as-query",
+              "trap": "difference-direction",
+              "firstStep": "Start from the set whose members must all find a match."
+            }
+          },
+          "repair": "For quantifier errors, enumerate candidates and missing pairs in a small table. For join errors, underline every shared column before pairing rows.",
+          "freshCheck": [
+            "If Student={Ann,Bob} and Required is empty, how many pass every-required-course and some-required-course queries?",
+            "Every:2; some:0, using the explicit two-student candidate set."
+          ],
+          "examPatternReferences": [
+            {
+              "year": 2024,
+              "question": 26,
+              "page": 16,
+              "pattern": "Set-difference inclusion",
+              "url": "https://gate2026.iitg.ac.in/doc/download/2024/DA24S1.pdf#page=16"
+            },
+            {
+              "year": 2026,
+              "question": 42,
+              "page": 27,
+              "pattern": "Relational expression evaluation",
+              "url": "https://gate2026.iitg.ac.in/doc/download/2026/QPs/DA.pdf#page=27"
+            },
+            {
+              "year": 2026,
+              "question": 59,
+              "page": 38,
+              "pattern": "Tuple-calculus output counting",
+              "url": "https://gate2026.iitg.ac.in/doc/download/2026/QPs/DA.pdf#page=38"
+            }
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "dbms-review-topic-03",
+    "day": "Week1 · Day3",
+    "title": "SQL: joins, groups, NULL and correlated queries",
+    "focus": "Compute query outputs from the actual rows while tracking duplicate and null behavior.",
+    "weeks": [
+      {
+        "id": "dbms-review-day-03",
+        "label": "Day3",
+        "week": 1,
+        "sourceWeek": 1,
+        "date": "",
+        "materialTitle": "SQL: joins, groups, NULL and correlated queries",
+        "materialUrl": "dbms-review/day-03.html",
+        "expectedWork": "After DBMS Round1: concept exposition, two worked examples, five original exam-pattern questions, worked review and mind map. Record original work; export/upload separately. No calendar start assigned.",
+        "status": "Published",
+        "inlineQuestions": [
+          "B03-Q1: Select every true SQL statement for the semantics reviewed here. A. COUNT(Amount) excludes null Amount values. B. NULL=NULL evaluates TRUE in ordinary SQL comparison. C. HAVING can filter an aggregate condition on a group. D. A SELECT without ORDER BY guarantees primary-key order.",
+          "B03-Q2: Customer IDs are1,2. Orders has(OID,CID)=(10,1),(11,1). After Customer LEFT JOIN Orders on matching CID, select every true statement. A. The join has3 rows. B. COUNT(Orders.OID)=2. C. Customer2 disappears. D. COUNT(*)=3.",
+          "B03-Q3: For Sale rows(1,A,10),(2,A,20),(3,B,20),(4,B,NULL),(5,C,5), give the result of SELECT Dept,COUNT(*),SUM(Amount) FROM Sale GROUP BY Dept HAVING SUM(Amount)>=20. ",
+          "B03-Q4: For the same Sale table, give IDs selected by SELECT s.ID FROM Sale s WHERE s.Amount > (SELECT AVG(t.Amount) FROM Sale t WHERE t.Dept=s.Dept). Explain every department. ",
+          "B03-Q5: Evaluate SELECT x FROM V WHERE x NOT IN (SELECT y FROM W) when V has non-null values1,2 and W has y values2,NULL. Contrast with NOT EXISTS using W.y=V.x. "
+        ],
+        "prerequisite": "DBMS Round1 review readiness; completion not inferred.",
+        "readingContext": "DSC7e §§3.3–3.8 and4.1",
+        "modelLesson": {
+          "gradingKeys": {
+            "B03-Q1": "A and C. COUNT(expr) ignores nulls; WHERE filters rows and HAVING filters groups. Ordinary comparison to NULL is unknown, and output order is not guaranteed without ORDER BY.",
+            "B03-Q2": "A, B and D. Two matches for customer1 and a null-extended row for customer2 give3 rows. COUNT(OID)=2; COUNT(*)=3. The unmatched customer has not disappeared.",
+            "B03-Q3": "Two rows:(A,2,30) and(B,2,20), in unspecified order. C has total5 and fails HAVING. B’s null row counts toward COUNT(*) but not SUM.",
+            "B03-Q4": "Only ID2. A average15 permits20; B average20 permits neither20 norNULL under strict >; C average5 permits no row.",
+            "B03-Q5": "NOT IN returns no rows:2 has a matching value and1 faces an unknown comparison due toNULL. The correlated NOT EXISTS anti-match returns1, since no W row makes y=1 TRUE. No claim of equivalence is valid without accounting for nulls."
+          },
+          "diagnosticTags": {
+            "B03-Q1": {
+              "skill": "sql-null-groups",
+              "trap": "unknown-versus-false",
+              "firstStep": "Track whether the expression refers to rows or groups."
+            },
+            "B03-Q2": {
+              "skill": "outer-join-count",
+              "trap": "rows-versus-nonnull-values",
+              "firstStep": "Write the null-extended row."
+            },
+            "B03-Q3": {
+              "skill": "group-aggregate",
+              "trap": "wrong-denominator",
+              "firstStep": "Build each group before testing HAVING."
+            },
+            "B03-Q4": {
+              "skill": "correlated-query",
+              "trap": "global-versus-local-average",
+              "firstStep": "Recompute the inner aggregate for the outer row’s department."
+            },
+            "B03-Q5": {
+              "skill": "null-antijoin",
+              "trap": "not-in-null-trap",
+              "firstStep": "Apply three-valued logic to each candidate."
+            }
+          },
+          "repair": "If a count is wrong, materialize the intermediate joined rows and circle nulls. If a correlated result is wrong, write the inner value for each outer ID.",
+          "freshCheck": [
+            "If a group has amounts NULL,NULL, what are COUNT(*), COUNT(Amount), SUM(Amount)?",
+            "2,0,NULL respectively."
+          ],
+          "examPatternReferences": [
+            {
+              "year": 2024,
+              "question": 31,
+              "page": 19,
+              "pattern": "SQL result count",
+              "url": "https://gate2026.iitg.ac.in/doc/download/2024/DA24S1.pdf#page=19"
+            },
+            {
+              "year": 2025,
+              "question": 33,
+              "page": 18,
+              "pattern": "Aggregate subquery",
+              "url": "https://gate2026.iitg.ac.in/doc/download/2025/DA2025.pdf#page=18"
+            },
+            {
+              "year": 2026,
+              "question": 51,
+              "page": 34,
+              "pattern": "Nested SQL reasoning",
+              "url": "https://gate2026.iitg.ac.in/doc/download/2026/QPs/DA.pdf#page=34"
+            },
+            {
+              "year": 2026,
+              "question": 60,
+              "page": 38,
+              "pattern": "Correlated count comparison",
+              "url": "https://gate2026.iitg.ac.in/doc/download/2026/QPs/DA.pdf#page=38"
+            }
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "dbms-review-topic-04",
+    "day": "Week1 · Day4",
+    "title": "Functional dependencies, keys and normalization",
+    "focus": "Derive keys and assess normal forms from dependencies, then test what a decomposition preserves.",
+    "weeks": [
+      {
+        "id": "dbms-review-day-04",
+        "label": "Day4",
+        "week": 1,
+        "sourceWeek": 1,
+        "date": "",
+        "materialTitle": "Functional dependencies, keys and normalization",
+        "materialUrl": "dbms-review/day-04.html",
+        "expectedWork": "After DBMS Round1: concept exposition, two worked examples, five original exam-pattern questions, worked review and mind map. Record original work; export/upload separately. No calendar start assigned.",
+        "status": "Published",
+        "inlineQuestions": [
+          "B04-Q1: Select every true claim under standard FD-based definitions. A. A candidate key is a minimal superkey. B. Every3NF relation is in BCNF. C. Every BCNF relation is in3NF. D. Every lossless decomposition preserves all dependencies.",
+          "B04-Q2: R(A,B,C,D), F={A→B,B→C}, atomic domains. Select every true statement. A. A+={A,B,C}. B. AD is a candidate key. C. A alone is a superkey. D. The relation fails2NF.",
+          "B04-Q3: R(A,B,C,D,E), F={A→B,B→C,CD→E}. Find all candidate keys and justify required attributes. ",
+          "B04-Q4: R(A,B,C) has F={A→B}. Is the decomposition into AB and AC lossless and dependency-preserving? Are both components in BCNF under their projected dependencies? ",
+          "B04-Q5: For R(A,B,C), F={AB→C,C→B}, explain why CB,AC is lossless but does not preserve AB→C. Give component data satisfying their projected FDs whose join violates AB→C. "
+        ],
+        "prerequisite": "DBMS Round1 review readiness; completion not inferred.",
+        "readingContext": "DSC7e §§7.2–7.6; §7.7/online28 for higher-form follow-up",
+        "modelLesson": {
+          "gradingKeys": {
+            "B04-Q1": "A and C. A candidate key must be minimal. BCNF is stricter than3NF. A sample does not prove a universal dependency, and a lossless decomposition can fail dependency preservation.",
+            "B04-Q2": "A, B and D. A+=ABC, and AD is the sole key because A,D cannot be derived. A→B is a partial dependency of non-prime B on the proper subset A of key AD, so2NF fails.",
+            "B04-Q3": "A and D occur on no right side, so both are required. (AD)+ gives B,C, then E through CD→E. AD is minimal and every key must contain it, so it is the only candidate key.",
+            "B04-Q4": "Yes to all three. Intersection A determines AB, so the decomposition is lossless. A→B is checked within AB, so preserved. In AB,A is a key; AC has no nontrivial projected FD, so both are BCNF.",
+            "B04-Q5": "C determines CB, so the intersection criterion gives losslessness for original legal instances. For non-preservation, take CB={(c1,b1),(c2,b1)} and AC={(a1,c1),(a1,c2)}. They satisfy C→B in CB and no nontrivial FD in AC, but their join has the same AB=(a1,b1) with two C values. Local enforcement does not enforce AB→C."
+          },
+          "diagnosticTags": {
+            "B04-Q1": {
+              "skill": "fd-normal-form-logic",
+              "trap": "sufficient-versus-necessary",
+              "firstStep": "Separate relation properties from decomposition properties."
+            },
+            "B04-Q2": {
+              "skill": "closure-and-2nf",
+              "trap": "missing-key-attribute",
+              "firstStep": "Compute closure and minimality before classifying."
+            },
+            "B04-Q3": {
+              "skill": "candidate-key-search",
+              "trap": "stopping-closure-too-early",
+              "firstStep": "Find mandatory attributes, then iterate dependencies to a fixed point."
+            },
+            "B04-Q4": {
+              "skill": "binary-decomposition",
+              "trap": "component-nf-versus-reconstruction",
+              "firstStep": "Test intersection closure and locate each original dependency."
+            },
+            "B04-Q5": {
+              "skill": "preservation-counterexample",
+              "trap": "lossless-implies-preserved",
+              "firstStep": "Distinguish reconstructing a legal instance from enforcing legality on arbitrary component updates."
+            }
+          },
+          "repair": "If a key is incomplete, list attributes never derivable from the given FDs. If preservation is confused with losslessness, build a two-row component counterexample.",
+          "freshCheck": [
+            "In R(A,B,C) with A→B and B→C, why is A a key but B not?",
+            "A+ gives ABC; B+ gives only BC and cannot recover A."
+          ],
+          "examPatternReferences": [
+            {
+              "year": 2024,
+              "question": 46,
+              "page": 29,
+              "pattern": "FD implication",
+              "url": "https://gate2026.iitg.ac.in/doc/download/2024/DA24S1.pdf#page=29"
+            },
+            {
+              "year": 2025,
+              "question": 16,
+              "page": 11,
+              "pattern": "Dependency preservation",
+              "url": "https://gate2026.iitg.ac.in/doc/download/2025/DA2025.pdf#page=11"
+            },
+            {
+              "year": 2025,
+              "question": 57,
+              "page": 31,
+              "pattern": "Keys and normal forms",
+              "url": "https://gate2026.iitg.ac.in/doc/download/2025/DA2025.pdf#page=31"
+            },
+            {
+              "year": 2026,
+              "question": 17,
+              "page": 12,
+              "pattern": "Candidate-key enumeration",
+              "url": "https://gate2026.iitg.ac.in/doc/download/2026/QPs/DA.pdf#page=12"
+            }
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "dbms-review-topic-05",
+    "day": "Week1 · Day5",
+    "title": "Files, index choice and B+ tree calculations",
+    "focus": "Translate a page layout into an inequality and choose an index from the query predicate.",
+    "weeks": [
+      {
+        "id": "dbms-review-day-05",
+        "label": "Day5",
+        "week": 1,
+        "sourceWeek": 1,
+        "date": "",
+        "materialTitle": "Files, index choice and B+ tree calculations",
+        "materialUrl": "dbms-review/day-05.html",
+        "expectedWork": "After DBMS Round1: concept exposition, two worked examples, five original exam-pattern questions, worked review and mind map. Record original work; export/upload separately. No calendar start assigned.",
+        "status": "Published",
+        "inlineQuestions": [
+          "B05-Q1: Select every true statement under the standard models just reviewed. A. A B+ tree can support ordered range scans. B. Hash indexes generally preserve key order for range scans. C. An internal node with p child pointers has p−1 separator keys. D. An index on(A,B) is equivalent in ordering to one on(B,A).",
+          "B05-Q2: An ordered index on(CustomerID,Date) is used without special skip-scan features. Select every valid statement. A. CustomerID=7 with a Date interval forms a contiguous key interval. B. Any Date-only range is always one selective contiguous interval. C. Leading CustomerID restrictions can guide ordered search. D. Every index scan returns full records with zero data-page reads.",
+          "B05-Q3: Internal pages have1024 bytes, 8-byte child pointers and12-byte keys. No headers. Find maximum child pointers and keys. ",
+          "B05-Q4: A file has26 fixed180-byte records,1000-byte pages, no headers and no record spanning pages. How many pages? Separately, a leaf has512 bytes, 6-byte keys,10-byte record pointers, and an8-byte next-leaf pointer; what is its maximum number of entries? ",
+          "B05-Q5: A B+ search path has root, one internal page and a target leaf. Root is already cached; other pages are not. A range then visits two additional leaves and three distinct uncached data pages. Count page reads, assuming no prefetch or other caching. "
+        ],
+        "prerequisite": "DBMS Round1 review readiness; completion not inferred.",
+        "readingContext": "DSC7e §§13.2–13.3,14.1–14.5; selected14.9 bitmap support",
+        "modelLesson": {
+          "gradingKeys": {
+            "B05-Q1": "A and C. Hashing is not an ordered-range guarantee. An internal node has one more child pointer than separator keys. Index lookup can still require data fetches, and composite ordering is not symmetric in the columns.",
+            "B05-Q2": "A and C. Fixing CustomerID produces a region ordered by Date; a leading-column range also respects primary ordering. Date-only matches may be spread among many CustomerID regions, and row fetch cost depends on layout.",
+            "B05-Q3": "8p+12(p−1)≤1024 gives20p≤1036, so p=51 child pointers and50 keys. At p=52 the node would require1028 bytes, which exceeds the page.",
+            "B05-Q4": "The file capacity is floor(1000/180)=5 records/page, so ceil(26/5)=6 pages. For leaf entries m:16m+8≤512, so m≤31.5 and maximum31. Rounding total file bytes once would incorrectly give5 pages.",
+            "B05-Q5": "One internal plus the first leaf gives2 reads. Two additional leaves give2 more; three distinct data pages give3 more. Total7. The cached root costs no read in this model."
+          },
+          "diagnosticTags": {
+            "B05-Q1": {
+              "skill": "index-role",
+              "trap": "index-search-is-complete-fetch",
+              "firstStep": "Identify equality/range requirements and actual node contents."
+            },
+            "B05-Q2": {
+              "skill": "composite-index",
+              "trap": "column-order-symmetry",
+              "firstStep": "Read lexicographic order from left to right."
+            },
+            "B05-Q3": {
+              "skill": "fanout-layout",
+              "trap": "rounding-and-extra-pointer",
+              "firstStep": "Write bytes for p pointers and p−1 keys."
+            },
+            "B05-Q4": {
+              "skill": "record-leaf-capacity",
+              "trap": "reusing-the-wrong-layout",
+              "firstStep": "Account for indivisible records and the leaf-only sibling pointer."
+            },
+            "B05-Q5": {
+              "skill": "io-accounting",
+              "trap": "cached-root-and-data-pages",
+              "firstStep": "Separate index path, continuation leaves and fetched data."
+            }
+          },
+          "repair": "For a fanout miss, draw the alternating pointer/key layout. For file size, compute records/page first. For I/O, list each distinct uncached page read.",
+          "freshCheck": [
+            "A leaf holds3 keys and[2,6,10]; insert8 and split evenly. What separator is copied up?",
+            "Leaves[2,6] and[8,10]; copy separator8 upward, keeping it in the right leaf."
+          ],
+          "examPatternReferences": [
+            {
+              "year": 2024,
+              "question": 55,
+              "page": 37,
+              "pattern": "Index choice from predicates",
+              "url": "https://gate2026.iitg.ac.in/doc/download/2024/DA24S1.pdf#page=37"
+            },
+            {
+              "year": 2026,
+              "question": 32,
+              "page": 21,
+              "pattern": "B+ internal-node capacity",
+              "url": "https://gate2026.iitg.ac.in/doc/download/2026/QPs/DA.pdf#page=21"
+            },
+            {
+              "year": 2026,
+              "question": 41,
+              "page": 26,
+              "pattern": "B+ insertion and splitting",
+              "url": "https://gate2026.iitg.ac.in/doc/download/2026/QPs/DA.pdf#page=26"
+            }
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "dbms-review-topic-06",
+    "day": "Week1 · Day6",
+    "title": "Warehouses, OLAP, hierarchies and measures",
+    "focus": "Define the fact grain, distinguish cuboids from result rows, and aggregate measures correctly.",
+    "weeks": [
+      {
+        "id": "dbms-review-day-06",
+        "label": "Day6",
+        "week": 1,
+        "sourceWeek": 1,
+        "date": "",
+        "materialTitle": "Warehouses, OLAP, hierarchies and measures",
+        "materialUrl": "dbms-review/day-06.html",
+        "expectedWork": "After DBMS Round1: concept exposition, two worked examples, five original exam-pattern questions, worked review and mind map. Record original work; export/upload separately. No calendar start assigned.",
+        "status": "Published",
+        "inlineQuestions": [
+          "B06-Q1: Select every true statement for City→State→Country→ALL. A. City to Country is a roll-up. B. Country to State is a roll-up. C. Country to State is a drill-down. D. Slicing always means summing all dimensions into the grand total.",
+          "B06-Q2: Select every true measure statement under the conventional aggregation classification. A. SUM is distributive. B. AVG can be recovered from total sum and count. C. Exact combined median always equals the median of group medians. D. Inventory snapshots can be semi-additive: additive over stores but not time.",
+          "B06-Q3: A dense fact table has dimensions D1 with2 values and D2 with4 values. Only detail and ALL levels are used. How many cuboids and GROUP BY CUBE(D1,D2) rows? Show each group size. ",
+          "B06-Q4: Dimension Location has levels City,State,Country,ALL; Time has Month,Year,ALL. Choose one level per dimension, with independent simple hierarchies. How many cuboids? What operation changes Country/Year to State/Year? ",
+          "B06-Q5: Partition1 has5 records with SUM(Amount)=100; partition2 has15 records with SUM(Amount)=600. Compute combined AVG and explain which summaries suffice. "
+        ],
+        "prerequisite": "DBMS Round1 review readiness; completion not inferred.",
+        "readingContext": "DSC7e §§11.2–11.3,5.5; Han–Kamber–Pei3e Chapters4–5 selectively",
+        "modelLesson": {
+          "gradingKeys": {
+            "B06-Q1": "A and C. Country to State adds detail; City to Country reduces detail. Slicing fixes a dimension value, and a fact grain is a semantic choice rather than whatever row count happens to be in a sample.",
+            "B06-Q2": "A, B and D. SUM can combine partition totals; AVG requires weights or sum/count; snapshot stock should not be summed across dates as current stock. Exact median is not generally obtained by taking a median of partition medians.",
+            "B06-Q3": "4 cuboids. Output sizes are8 detail rows,2 D1 subtotals,4 D2 subtotals and1 grand total, totaling15. Equivalently(2+1)(4+1)=15.",
+            "B06-Q4": "4×3=12 cuboids. Changing Country to State while holding Year adds detail, so it is drill-down. The ALL levels are included in the counts already.",
+            "B06-Q5": "Combined sum700 and count20 give AVG35. SUM and COUNT suffice; averages20 and40 alone do not determine the combined average unless the counts are also available."
+          },
+          "diagnosticTags": {
+            "B06-Q1": {
+              "skill": "olap-operation",
+              "trap": "rollup-versus-drilldown",
+              "firstStep": "Identify whether the destination is more or less detailed."
+            },
+            "B06-Q2": {
+              "skill": "measure-aggregation",
+              "trap": "average-of-averages",
+              "firstStep": "Ask what sufficient information survives grouping."
+            },
+            "B06-Q3": {
+              "skill": "cube-cardinality",
+              "trap": "cuboids-versus-tuples",
+              "firstStep": "Count each grouping set separately."
+            },
+            "B06-Q4": {
+              "skill": "hierarchy-product",
+              "trap": "all-level-off-by-one",
+              "firstStep": "List the available levels before multiplying."
+            },
+            "B06-Q5": {
+              "skill": "algebraic-measure",
+              "trap": "unweighted-partition-average",
+              "firstStep": "Combine sums and counts, not averages directly."
+            }
+          },
+          "repair": "If cube counts are wrong, draw the four grouping sets for two dimensions. If an average is wrong, reconstruct numerator and denominator for every group.",
+          "freshCheck": [
+            "A dense2×2 cube with detail/ALL levels has how many cuboids and result rows?",
+            "4 cuboids,9 rows:4+2+2+1."
+          ],
+          "examPatternReferences": [
+            {
+              "year": 2025,
+              "question": 46,
+              "page": 25,
+              "pattern": "GROUP BY CUBE row count",
+              "url": "https://gate2026.iitg.ac.in/doc/download/2025/DA2025.pdf#page=25"
+            },
+            {
+              "year": 2026,
+              "question": 18,
+              "page": 12,
+              "pattern": "OLAP hierarchy operation",
+              "url": "https://gate2026.iitg.ac.in/doc/download/2026/QPs/DA.pdf#page=12"
+            },
+            {
+              "year": 2026,
+              "question": 43,
+              "page": 28,
+              "pattern": "Hierarchy/cuboid count",
+              "url": "https://gate2026.iitg.ac.in/doc/download/2026/QPs/DA.pdf#page=28"
+            }
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "dbms-review-topic-07",
+    "day": "Week1 · Day7",
+    "title": "Preprocessing: normalization, discretization, sampling and compression",
+    "focus": "Choose a transformation from its goal, preserve its assumptions, and distinguish numerical scaling from schema normalization.",
+    "weeks": [
+      {
+        "id": "dbms-review-day-07",
+        "label": "Day7",
+        "week": 1,
+        "sourceWeek": 1,
+        "date": "",
+        "materialTitle": "Preprocessing: normalization, discretization, sampling and compression",
+        "materialUrl": "dbms-review/day-07.html",
+        "expectedWork": "After DBMS Round1: concept exposition, two worked examples, five original exam-pattern questions, worked review and mind map. Record original work; export/upload separately. No calendar start assigned.",
+        "status": "Published",
+        "inlineQuestions": [
+          "B07-Q1: Select every true claim about the transformations. A. Min–max scaling with a positive denominator preserves ordering. B. Z-score scaling establishes BCNF for a relation. C. Replacing values by bin labels is generally lossy. D. Standard z-score division always works when standard deviation is0.",
+          "B07-Q2: Select every true statement under explicit sampling/compression models. A. Sampling with replacement permits the same record to be drawn twice. B. A lossless code permits exact decoding. C. Run-length encoding always uses fewer bytes than its input. D. Unequal stratified sampling fractions can require weights.",
+          "B07-Q3: Reference min20,max100,mean60,std20. Compute min–max and z-score outputs for x=80. Then compute the min–max output for x=120 using the same reference parameters. ",
+          "B07-Q4: Bins are[0,10),[10,20),[20,30]. Assign values0,10,19,20,30. Does this assignment retain their exact original numeric values? ",
+          "B07-Q5: RLE stores each symbol and count in one byte each, with no header and all counts fitting one byte. Compare encoded sizes for AAAABBBBCC and ABAB. Explain recoverability. "
+        ],
+        "prerequisite": "DBMS Round1 review readiness; completion not inferred.",
+        "readingContext": "Han–Kamber–Pei3e Chapter3; DSC7e §4.5 types and§11.2 analytical context",
+        "modelLesson": {
+          "gradingKeys": {
+            "B07-Q1": "A and C. A positive scale preserves order; bins usually discard exact values. Numerical scaling is different from schema normalization. A constant attribute needs a policy because its scale denominator can be zero.",
+            "B07-Q2": "A, B and D. Replacement permits repeated draws. Exact recoverability defines losslessness. RLE may expand alternating data. Unequal sampling fractions generally need weights for population estimation.",
+            "B07-Q3": "For80:min–max(80−20)/80=0.75; z-score(80−60)/20=1. For120:min–max=100/80=1.25. Outside-range input can yield a value above1 when reference parameters stay fixed.",
+            "B07-Q4": "The bin labels are1,2,2,3,3. The shared boundaries10 and20 belong to the right bins;30 is included in the last bin by its closed endpoint. Bin labels alone cannot reconstruct exact values, so the transformation is lossy.",
+            "B07-Q5": "AAAABBBBCC has10 raw bytes and3 runs, so6 encoded bytes. ABAB has4 raw bytes and4 runs, so8 encoded bytes. Both are exactly recoverable from the runs, but only the first is smaller under this byte model."
+          },
+          "diagnosticTags": {
+            "B07-Q1": {
+              "skill": "transformation-goal",
+              "trap": "normalization-homonym",
+              "firstStep": "State whether the object is a numeric feature or a relation schema."
+            },
+            "B07-Q2": {
+              "skill": "sampling-compression",
+              "trap": "unstated-probability-or-byte-model",
+              "firstStep": "Identify replacement, sampling fractions and decoding rules."
+            },
+            "B07-Q3": {
+              "skill": "scaling-calculation",
+              "trap": "recomputing-reference-extrema",
+              "firstStep": "Substitute into the named formula without changing the supplied statistics."
+            },
+            "B07-Q4": {
+              "skill": "bin-boundary",
+              "trap": "endpoint-ambiguity",
+              "firstStep": "Read the interval brackets before assigning."
+            },
+            "B07-Q5": {
+              "skill": "compression-cost",
+              "trap": "lossless-does-not-imply-shorter",
+              "firstStep": "Count runs, then apply the stated byte costs."
+            }
+          },
+          "repair": "For scaling errors, write the formula name and denominator before substituting. For binning, mark each endpoint. For compression, count encoded units before claiming a saving.",
+          "freshCheck": [
+            "Reference min0,max10: what is the scaled value of12? Is it invalid solely because it exceeds1?",
+            "It is1.2. That is possible for a new input outside the reference range; it is not by itself an arithmetic error."
+          ],
+          "examPatternReferences": [
+            {
+              "year": 2024,
+              "question": 27,
+              "page": 17,
+              "pattern": "Z-score transformation",
+              "url": "https://gate2026.iitg.ac.in/doc/download/2024/DA24S1.pdf#page=17"
+            }
+          ]
+        }
+      }
+    ]
+  }
+];
+ return entries.map(entry=>({...entry,weeks:entry.weeks.map(week=>({...week,feedbackWorkflow:baseFeedbackWorkflow({
+ id:`feedback-workflow-${week.id}`,title:`DBMS review: ${entry.title}`,
+ promptUse:"Grade five original numbered questions,10 diagnostic points. Q1-Q2 get2 each only for the exact correct option set; Q3-Q5 get1 for result and1 for the requested reason. Use supplied grading keys and assumptions, not historical answer keys for different questions. Distinguish original attempts from corrections and support exposure. Find the first broken step: schema versus sample, key minimality, parent/child direction, set/bag/null semantics, existential/universal translation, closure/decomposition, layout/rounding, aggregation grain, or transformation parameters. Give one targeted repair and a fresh independent check. Do not infer DBMS Round1 completion, mastery or independent authorship from submission. Do not send a learner message automatically.",
+ studentSummaryHint:"State what the original attempt shows, its first reasoning break and the fresh check needed.",
+ prerequisiteGraph:{topic:entry.title,skills:{"schema-and-instance":{label:"Schema versus instance",prereqs:["relations","keys","constraints"],diagnostic:"Give a tiny legal instance and a counterexample to the proposed rule."},"query-semantics":{label:"Query meaning",prereqs:["quantifiers","sets-bags","null-logic"],diagnostic:"Enumerate the candidate rows and keep only those meeting the stated semantics."},"cost-and-grain":{label:"Layout or grain",prereqs:["units","rounding","aggregation"],diagnostic:"Name what each counted object or stored byte represents."}}},
+ skills:[{id:"interpretation",label:"Reads schema and assumptions"},{id:"semantics",label:"Uses the correct query/constraint semantics"},{id:"execution",label:"Computes closures, rows or costs"},{id:"transfer",label:"Explains a fresh case"}],
+ rubric:[{criterion:"Q1 exact multi-select",points:2,cue:"All and only correct options."},{criterion:"Q2 exact multi-select",points:2,cue:"All and only correct options."},{criterion:"Q3 result and reason",points:2,cue:"One point each."},{criterion:"Q4 result and reason",points:2,cue:"One point each."},{criterion:"Q5 result and reason",points:2,cue:"One point each."}],maxScore:10,
+ commonIssues:["Confuses a sample with a schema constraint.","Loses duplicates or mishandles NULL.","Treats losslessness and preservation as identical.","Uses the wrong node layout, aggregation grain or reference statistics."],
+ defaultNextDrills:[{skill:"targeted-repair",difficulty:"refresher",instruction:week.modelLesson.repair}]
+ })}))}));
+}
+// DBMS_REVIEW_CATALOG_END
+
 function ensureCoursePlan() {
   if (state.coursePlanVersion === COURSE_PLAN_VERSION) return;
   const user = normalizeSeededUser(state.user || defaultUser());
@@ -1244,6 +1906,8 @@ function buildCoursePlan(user = defaultUser()) {
   if (!basic) {
     plan.subjects.push({id:"subject-platinum-math-diagnostic",accountTypeId:"gate-da-platinum",lessonPlanId:plan.lessonPlans[0]?.id,title:"High-school Mathematics Diagnostic",details:"Ten daily 60-minute sessions. Diagnose knowledge, execution, recognition and combination across 25 skill ladders. Eight core questions daily plus up to two tutor-selected follow-ups.",sectionIds:[],mathDiagnostic:true,updatedAt:now});
     plan.subjects.push({id:"subject-platinum-math-remedial",accountTypeId:"gate-da-platinum",lessonPlanId:plan.lessonPlans[0]?.id,title:"Mathematics Foundations and Remediation",details:"After the diagnostic: ten daily 90-minute sessions,45 minutes foundations plus45 minutes targeted repair. Logical language, series, number theory, algebra, functions and relations.",sectionIds:[],mathRemedial:true,updatedAt:now});
+    plan.subjects.push({id:"subject-platinum-dbms-review",accountTypeId:"gate-da-platinum",lessonPlanId:plan.lessonPlans[0]?.id,title:"DBMS: three-week review",details:"After DBMS Round1: seven first-week review lessons based on Database System Concepts7e and selected Han preprocessing/warehouse material. GATE DA problem-family practice, worked review and mind maps. Weeks2–3 are outlined; no dates assigned.",sectionIds:[],materialWorkspaces:dbmsReviewMaterialWorkspaces(),workspaceEyebrow:"GATE DA2027 · Database System Concepts7e",workspaceTitle:"Week1 · DBMS review and exam-pattern practice",updatedAt:now});
+    plan.resources.push({id:"resource-platinum-dbms-review",title:"Three-week DBMS review — Week1",date:"2026-11-08",details:"Seven concept/exam-pattern lessons,35 original diagnostic questions, worked review and maps. Book/syllabus/paper overlap and later-week outline included.",link:"dbms-review/index.html",updatedAt:now});
     plan.subjects.push({id:"subject-platinum-skiena-review",accountTypeId:"gate-da-platinum",lessonPlanId:plan.lessonPlans[0]?.id,title:"DSA: three-week Skiena review",details:"Week1: seven GATE DA/Skiena overlap review lessons with exposition, diagnostics, feedback and mind maps. Weeks2–3: mixed applications then evidence-driven remedy. No calendar start assigned.",sectionIds:[],materialWorkspaces:skienaReviewMaterialWorkspaces(),workspaceEyebrow:"Skiena ADM 3e · GATE DA primary; CMI pseudocode secondary",workspaceTitle:"Week1 · Seven-day review and diagnostics",updatedAt:now});
     plan.resources.push({id:"resource-platinum-skiena-review",title:"Three-week DSA review — Skiena, Week1",date:"2026-11-08",details:"Seven review lessons, thirty-five diagnostic questions, worked feedback and mind maps. Exam/book intersection and later-week plan included.",link:"dsa-review/index.html",updatedAt:now});
     plan.subjects.push({id:"subject-platinum-calculus-review",accountTypeId:"gate-da-platinum",lessonPlanId:plan.lessonPlans[0]?.id,title:"Calculus: 30-day review",details:"Phase 1: ten refresher study days with exposition, worked examples, five practice problems and mind maps. Phases 2 and 3: exam problem types, then feedback-driven review and remedy. No calendar start assigned.",sectionIds:[],materialWorkspaces:calculusReviewMaterialWorkspaces(),workspaceEyebrow:"Three phases · ten study days each",workspaceTitle:"Phase 1 · Calculus refresher",updatedAt:now});
