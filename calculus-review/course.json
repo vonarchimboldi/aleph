@@ -1,0 +1,1099 @@
+[
+  {
+    "day": 1,
+    "title": "Computing limits",
+    "goal": "Choose a method from the expression, and distinguish a limit from a value.",
+    "prereq": "Factoring, fractions, conjugates, radians.",
+    "opening": "What is wrong with saying that 0/0 is the answer to a limit?",
+    "story": "\n<h2>What are we trying to find?</h2>\n<p>Imagine watching the values of a function while its input approaches a point. A limit asks what output those nearby values approach. It does not require the function to be defined at the point itself. For example, a missing point in a graph can still have a definite height that the surrounding graph approaches.</p>\n<p>Start by substitution. If the expression is continuous at the target and is defined there, substitution settles the problem. If it produces 0/0, you have learned that both numerator and denominator vanish. You have not learned the ratio of their rates of vanishing. We need to reveal that ratio by rewriting the expression.</p>\n<h2>Choose the rewrite for a reason</h2>\n<p>A polynomial quotient suggests factoring. A difference of square roots suggests its conjugate, because multiplying a sum and a difference removes the roots. Trigonometric expressions near zero suggest the standard limit \\(\\lim_{t\\to0}\\sin t/t=1\\), with angles measured in radians. At infinity, divide by the largest relevant power to compare growth.</p>\n<p>For two-sided limits, inspect both sides. The function \\(|x|/x\\) equals 1 for positive x and −1 for negative x. No single number describes both approaches to zero. Writing “the denominator tends to zero” does not tell you whether a quotient diverges, has a finite limit, or has different one-sided behaviors.</p>\n<p>One useful bound is \\(-x^2\\le x^2\\sin(1/x)\\le x^2\\) for nonzero x. Both outer quantities tend to zero, so the middle one does too. This squeeze argument does not require the oscillating sine factor to have a limit.</p>\n<p>L’Hôpital’s rule is a conditional tool, not permission to differentiate every numerator and denominator. For the version used here, the quotient must have a 0/0 or infinity/infinity form, the functions must be differentiable in a deleted neighborhood on the side considered, the denominator derivative must be nonzero there, and the derivative quotient must have an applicable limit. Try an algebraic rewrite first in this refresher.</p>\n\n<h2>The full map of single-variable limit questions</h2><p>There are two different choices to make. First: does the input approach a finite point, +∞, or −∞? Second: does the output approach a finite number, grow without bound, or fail to settle? A one-sided question also specifies which approach is allowed. “Infinite limit” and “limit at infinity” are not synonyms: the first describes the output; the second describes the input.</p>\n<p>Here is the coverage checklist, using Stewart’s single-variable limits and indeterminate-forms sections as a scope reference: graph/table reading; numerical evidence versus proof; limit laws and direct substitution; factoring and cancellation; conjugates; one-sided, absolute-value and piecewise limits; squeeze and oscillation; continuity and removable discontinuities; finite-input infinite limits and vertical asymptotes; limits at positive and negative infinity, horizontal asymptotes and growth; all seven standard indeterminate forms; derivative-definition limits; and the precise epsilon–delta definition. This is a reference library across the common types, not a claim that one example exhausts every possible problem.</p>\n<h2>Why an indeterminate form asks for another step</h2><p>The forms 0/0 and ∞/∞ describe competing quantities. Forms 0·∞ and ∞−∞ must be rewritten into a quotient or simplified by a common denominator or conjugate. For 0⁰, 1^∞, and ∞⁰, take a logarithm of a positive expression and study the resulting product. These labels do not assign values: the same form can lead to different limits.</p><p>For L’Hôpital’s rule, keep the differentiability and denominator-derivative conditions stated above. Its input must first be an eligible quotient. A form like 1^∞ does not allow you to differentiate the base and exponent separately.</p>\n<h2>What epsilon–delta adds to the picture</h2><p>To say f(x) approaches L as x approaches a means this: for every tolerance ε&gt;0 on the output, there is a tolerance δ&gt;0 on the input such that 0&lt;|x−a|&lt;δ forces |f(x)−L|&lt;ε. The output tolerance is chosen first; our δ may depend on it. The input is then allowed to be any point satisfying the restriction. This order of choices matters.</p><p>A table of values can suggest a limit, but finitely many samples cannot rule out a spike or oscillation between samples. A proof gives control over every sufficiently close input. The worked examples below show how to get that control or how to expose its failure.</p>\n",
+    "worked": [
+      [
+        "A hole in a rational function",
+        "Find \\(\\lim_{x\\to2}(x^2-4)/(x-2)\\).",
+        "<p>Substitution gives 0/0. Factor the numerator: \\(x^2-4=(x-2)(x+2)\\). For x near 2 but not equal to 2, cancellation is legitimate, so the quotient equals x+2. Its nearby values therefore approach 4. The original quotient remains undefined at 2; the limit is nevertheless 4.</p>"
+      ],
+      [
+        "Why a conjugate helps",
+        "Find \\(\\lim_{x\\to0}(\\sqrt{1+x}-1)/x\\).",
+        "<p>The square root is defined near zero, and substitution gives 0/0. Multiply numerator and denominator by \\(\\sqrt{1+x}+1\\):</p>\\[\\frac{\\sqrt{1+x}-1}{x}=\\frac{x}{x(\\sqrt{1+x}+1)}=\\frac1{\\sqrt{1+x}+1}\\quad(x\\ne0).\\]<p>The new denominator tends to 2, so the limit is 1/2. We cancelled only away from zero, which is exactly where a limit examines the function.</p>"
+      ],
+      [
+        "Read the approach, not just the plotted point",
+        "A graph follows y=x+1 for x≠1, but its filled point at x=1 is (1,7). Find its limit and its value at 1.",
+        "<p>The nearby graph approaches height 2 from both sides, so the limit is 2. The filled point gives f(1)=7. The function is discontinuous at 1. Changing only the point value can repair continuity without changing the surrounding limit.</p>"
+      ],
+      [
+        "A piecewise continuity parameter",
+        "Let f(x)=ax+1 for x&lt;1, and f(x)=x²+2 for x≥1. Find a making f continuous at 1.",
+        "<p>The left limit is a+1; the right limit and the value are 3. Matching these gives a=2. We needed both one-sided limits and the actual point value to agree.</p>"
+      ],
+      [
+        "A finite input with an infinite output",
+        "Find the one-sided limits of 1/(x−2) at 2 and compare them with those of 1/(x−2)².",
+        "<p>For 1/(x−2), the left limit is −∞ and the right is +∞, so there is no common two-sided limit even in the extended sense. For 1/(x−2)², both sides approach +∞. In both cases x=2 is a vertical asymptote; infinity describes unbounded behavior, not an ordinary real function value.</p>"
+      ],
+      [
+        "Negative infinity and the absolute value hidden in a square root",
+        "Find the limits of √(x²+1)/x as x→+∞ and as x→−∞.",
+        "<p>Write √(x²+1)=|x|√(1+1/x²). The quotient is (|x|/x)√(1+1/x²). The second factor tends to 1, while the first is +1 on the positive side and −1 on the negative side. The answers are 1 and −1. Replacing √(x²) with x on negative inputs would lose the sign.</p>"
+      ],
+      [
+        "Infinity minus infinity: reveal the cancellation",
+        "Find lim as x→+∞ of √(x²+x)−x.",
+        "<p>Multiply by the conjugate: the difference equals x/[√(x²+x)+x]. For positive x, divide top and bottom by x to obtain 1/[√(1+1/x)+1], which tends to 1/2. The form ∞−∞ did not mean zero.</p>"
+      ],
+      [
+        "Zero times infinity: make an eligible quotient",
+        "Find lim as x→0+ of x ln x.",
+        "<p>Write ln x/(1/x), an ∞/∞ quotient in magnitude on x>0. L’Hôpital gives (1/x)/(−1/x²)=−x→0. Equivalently set t=1/x and compare ln t with t. The limit is 0 from below.</p>"
+      ],
+      [
+        "Exponential versus polynomial growth",
+        "Find lim as x→+∞ of x²/eˣ.",
+        "<p>This is ∞/∞. Two justified applications of L’Hôpital give first 2x/eˣ and then 2/eˣ, whose limit is 0. This expresses the faster growth of the exponential, not cancellation of infinities.</p>"
+      ],
+      [
+        "The form 1 to infinity",
+        "Find lim as x→0 of (1+x)^(1/x), with x>−1 and x≠0.",
+        "<p>Let y=(1+x)^(1/x)>0. Then ln y=ln(1+x)/x. This quotient is 0/0, and L’Hôpital gives 1/(1+x)→1. Continuity of exp then gives y→e. Taking logarithms turned the power into a quotient.</p>"
+      ],
+      [
+        "The form zero to zero",
+        "Find lim as x→0+ of xˣ.",
+        "<p>For y=xˣ, ln y=x ln x→0 by the earlier example. Thus y→exp(0)=1. This limit does not define a universal arithmetic value for 0⁰.</p>"
+      ],
+      [
+        "The form infinity to zero",
+        "Find lim as x→+∞ of x^(1/x).",
+        "<p>Its logarithm is (ln x)/x, an ∞/∞ quotient whose derivative ratio is 1/x→0. Exponentiating gives limit 1.</p>"
+      ],
+      [
+        "A quotient is still indeterminate after one rewrite",
+        "Find lim as x→0 of (1−cos x)/x².",
+        "<p>Use 1−cos x=2sin²(x/2). The quotient becomes one half times [sin(x/2)/(x/2)]². The bracket tends to 1, giving 1/2. This uses the standard trigonometric limit with the correct scale.</p>"
+      ],
+      [
+        "An oscillation that cannot be squeezed to one value",
+        "Does sin(1/x) have a limit at zero?",
+        "<p>Take xₙ=1/(π/2+2πn) and yₙ=1/(3π/2+2πn). Both sequences of inputs tend to zero, but their outputs are 1 and −1. The two incompatible limiting outputs rule out a limit. In contrast, multiplication by x² shrinks the oscillation to zero.</p>"
+      ],
+      [
+        "A derivative hidden in a limit",
+        "For differentiable f, evaluate lim as h→0 of [f(a+2h)−f(a)]/h.",
+        "<p>Set t=2h. The quotient is 2[f(a+t)−f(a)]/t, so its limit is 2f′(a). The denominator must match the actual increment before invoking the derivative definition.</p>"
+      ],
+      [
+        "A complete epsilon–delta proof",
+        "Prove directly that 3x+2 approaches 8 as x approaches 2.",
+        "<p>Let ε>0 be arbitrary and choose δ=ε/3. If 0&lt;|x−2|&lt;δ, then |(3x+2)−8|=3|x−2|&lt;3δ=ε. The choice works for every allowed nearby input, which is what a numerical table cannot establish.</p>"
+      ]
+    ],
+    "problems": [
+      [
+        "Compute (a) lim at x=2 of (x²−4)/(x−2), (b) lim at x=0 of (√(9+x)−3)/x, and (c) lim at x=0 of sin(5x)/(2x). State the recognition cue for each.",
+        "(a) Factor and cancel away from 2: answer 4. (b) Conjugate gives 1/[√(9+x)+3]: answer 1/6. (c) Match the argument 5x in the standard sine ratio: answer 5/2.",
+        "limit-rewrite-selection"
+      ],
+      [
+        "Find (a) the two one-sided limits of |x|/x at zero, (b) the two one-sided limits of 1/x², and (c) the limit of √(x²+4)/x as x→−∞.",
+        "(a) Left −1, right 1, so no two-sided limit. (b) Both +∞; no finite real limit. (c) √(x²+4)/x=(|x|/x)√(1+4/x²)→−1.",
+        "input-output-and-sides"
+      ],
+      [
+        "Compute (a) lim at x→+∞ of √(x²+4x)−x, (b) lim at x→0+ of x ln x, and (c) lim at x→0 of (1+2x)^(1/x). Identify the original forms.",
+        "(a) ∞−∞: conjugate and divide by positive x to get 4/[√(1+4/x)+1]→2. (b) 0·(−∞): rewrite as ln x/(1/x), giving limit 0. (c) 1^∞: its logarithm ln(1+2x)/x tends to 2, so answer e².",
+        "indeterminate-form-conversion"
+      ],
+      [
+        "Explain why x sin(1/x) has limit zero but sin(1/x) does not. Then give a δ that proves 5x−1 approaches 9 as x approaches 2.",
+        "The first has absolute value at most |x|, so squeeze gives zero. The second has approaches giving outputs 1 and −1. For the linear proof, choose δ=ε/5 because |(5x−1)−9|=5|x−2|.",
+        "squeeze-and-definition"
+      ],
+      [
+        "Compute (a) lim at x=0 of (1−cos 2x)/x² and (b) lim at h=0 of [f(a+3h)−f(a)]/h for differentiable f. Can a finite table prove either limit?",
+        "(a) Rewrite using 2sin²x to obtain 2. (b) Set t=3h and obtain 3f′(a). A table is evidence, not a proof for all sufficiently close inputs.",
+        "trig-derivative-transfer"
+      ]
+    ],
+    "exit": [
+      "Without notes, find \\(\\lim_{x\\to0}(\\sqrt{4+x}-2)/x\\). Explain which equality requires x≠0.",
+      "Multiply by the conjugate to get \\(1/(\\sqrt{4+x}+2)\\) for x≠0. The limit is 1/4. Cancelling x requires x≠0."
+    ],
+    "repair": "If 0/0 was treated as a number, return to the first worked example. If the two-sided limit was guessed from one side, draw a sign table. Reattempt with (x²−16)/(x−4) at 4; answer 8.",
+    "map": {
+      "center": "Limits",
+      "branches": [
+        [
+          "What approaches?",
+          "Finite point; +∞; −∞",
+          "Check left and right"
+        ],
+        [
+          "What happens to output?",
+          "Finite value; unbounded",
+          "Oscillation or incompatible sides"
+        ],
+        [
+          "Reveal structure",
+          "Factor; conjugate; squeeze",
+          "Match trig/derivative increments"
+        ],
+        [
+          "Indeterminate forms",
+          "Rewrite products/differences",
+          "Log powers; eligible L’Hôpital"
+        ],
+        [
+          "Justify the conclusion",
+          "Laws and hypotheses",
+          "ε–δ controls every nearby input"
+        ]
+      ]
+    }
+  },
+  {
+    "day": 2,
+    "title": "Computing integrals",
+    "goal": "Recognize substitution, integration by parts, and partial fractions, then check by differentiation.",
+    "prereq": "Derivative rules, chain rule, logarithms and algebraic division.",
+    "opening": "Differentiate ln(1+x²). Which factor appears because of the chain rule?",
+    "story": "\n<h2>Integration asks for accumulated change</h2><p>An antiderivative F of f satisfies F′=f. An indefinite integral asks for all such functions: \\(\\int f(x)\\,dx=F(x)+C\\). The constant matters because differentiation erases constants. A definite integral adds signed contributions over an interval. When f is continuous, the fundamental theorem gives \\(\\int_a^b f(x)\\,dx=F(b)-F(a)\\).</p>\n<p>Do not choose a technique by the length of the expression. Look for structure. If you see a function together with its derivative, substitution may reverse the chain rule. If a product contains a factor that simplifies when differentiated, integration by parts may help. If the integrand is rational, compare degrees and factor the denominator before trying partial fractions.</p>\n<p>The substitution u=g(x) includes \\(du=g'(x)\\,dx\\). A missing constant multiplier must be accounted for. In a definite integral you can change the bounds into u-values and remain in u throughout; do not mix old x-bounds with a new variable.</p>\n<p>Integration by parts reverses the product rule: since \\((uv)'=u'v+uv'\\), integrating and rearranging gives \\(\\int u\\,dv=uv-\\int v\\,du\\). This is useful only when the new integral is easier. “Choose u” is a decision about simplification, not a ritual.</p>\n<p>Improper integrals require a limit. An antiderivative cannot be evaluated across a singularity as though the integrand were continuous. For example, \\(\\int_0^1 1/x\\,dx=\\lim_{\\varepsilon\\downarrow0}(-\\ln\\varepsilon)=+\\infty\\). The integral diverges.</p>\n<h2>A small toolbox to recognize before choosing a method</h2><p>For p≠−1, the antiderivative of xᵖ is xᵖ⁺¹/(p+1). For p=−1, use ln|x| on an interval not crossing zero. The antiderivatives of eˣ, cos x, and sin x are eˣ, sin x, and −cos x. Also, 1/(1+x²) integrates to arctan x. Check each by differentiating.</p><p>A trigonometric power may need an identity first. For example, sin²x=(1−cos2x)/2. Therefore its integral from 0 to π is [x/2−sin2x/4] from 0 to π, which equals π/2. This is a rewrite followed by elementary integration, rather than a new integration technique.</p>\n\n<h2>Three kinds of integral, and why the distinctions matter</h2><p>An indefinite integral is a family of antiderivatives, with +C on each connected interval. A proper definite integral is a number obtained by accumulation over a finite interval where the integrand is bounded and integrable. An improper integral is defined by limits because an endpoint is infinite or the integrand is unbounded. The same-looking antiderivative computation has different obligations in these three settings.</p>\n<p>For improper integrals there are two standard sources: an infinite interval, such as ∫₁^∞x⁻²dx, and an unbounded integrand, such as ∫₀¹(1/√x)dx. A singularity inside an interval must be split into two one-sided improper integrals, and both must converge separately. Symmetric cancellation is a Cauchy principal value, not ordinary improper convergence.</p>\n<h2>A strategy tree for integration</h2><p>First simplify algebra and check the domain. Then ask whether substitution reverses a chain rule, whether parts simplifies a product, whether trigonometric identities reveal a substitution, whether a quadratic radical suggests trigonometric substitution, or whether a rational expression calls for polynomial division followed by partial fractions. In partial fractions, repeated linear factors need every power, and an irreducible quadratic needs a linear numerator. Some integrals have no elementary antiderivative; a numerical approximation or a definite-integral identity may still answer the question.</p>\n<p>Useful definite-integral symmetries: an odd integrand on [−a,a] integrates to zero, while an even integrand gives twice the integral from 0 to a. Under x↦a+b−x the endpoints swap, which often pairs a complicated integrand with a simpler complement. These are properties of signed integration; use absolute differences for geometric area.</p>\n<h2>The Leibniz rule: two related ideas</h2><p>If only the endpoints depend on a parameter t, the fundamental theorem and chain rule give G′(t)=f(b(t))b′(t)−f(a(t))a′(t). If the integrand also depends on t, an extra contribution comes from its change throughout the interval:</p>\n\\[\\frac{d}{dt}\\int_{a(t)}^{b(t)}f(x,t)\\,dx=f(b(t),t)b'(t)-f(a(t),t)a'(t)+\\int_{a(t)}^{b(t)}\\frac{\\partial f}{\\partial t}(x,t)\\,dx.\\]\n<p>On a finite domain, continuity of f and its parameter partial derivative on a rectangle containing the relevant ranges, together with continuously differentiable endpoints, is a convenient sufficient condition. Improper domains require stronger control, such as an integrable bound on the derivative locally in t. Do not exchange differentiation and integration simply because the notation permits it.</p><p>The “Leibniz trick,” or differentiation under the integral sign, chooses a parameter so that differentiating makes a difficult integral easier. Recover the original integral by integrating the resulting parameter derivative and using a known parameter value. The worked example below carries out all three steps.</p>\n",
+    "worked": [
+      [
+        "Reverse a chain rule",
+        "Compute \\(\\int_0^1 2x/(1+x^2)\\,dx\\).",
+        "<p>The denominator has derivative 2x, exactly the numerator. Put u=1+x², so du=2x dx. At x=0, u=1; at x=1, u=2. The integral becomes \\(\\int_1^2du/u=\\ln2\\). Differentiating ln(1+x²) confirms the substitution.</p>"
+      ],
+      [
+        "Simplify one factor",
+        "Compute \\(\\int xe^x\\,dx\\).",
+        "<p>Differentiate x to simplify it, and integrate eˣ without making it more complicated. Set u=x and dv=eˣdx, giving du=dx and v=eˣ. Then \\(\\int xe^x dx=xe^x-\\int e^x dx=(x-1)e^x+C\\). Differentiating gives eˣ+(x−1)eˣ=xeˣ.</p>"
+      ],
+      [
+        "Trigonometric powers: save a derivative factor",
+        "Compute ∫sin³x cos x dx.",
+        "<p>Write the integrand as (sin x)³ times cos x. Put u=sin x, du=cos x dx. The integral is u⁴/4+C=sin⁴x/4+C. For an even power without an available derivative factor, a half-angle identity may be more useful.</p>"
+      ],
+      [
+        "A quadratic radical suggests trigonometric substitution",
+        "Compute ∫dx/√(4−x²) on (−2,2).",
+        "<p>Put x=2sinθ with θ in (−π/2,π/2), so dx=2cosθ dθ and √(4−x²)=2cosθ. The quotient becomes dθ. Thus the answer is arcsin(x/2)+C. The interval makes cosθ positive, which justifies dropping an absolute value.</p>"
+      ],
+      [
+        "Divide before partial fractions",
+        "Compute ∫x²/(x²+1) dx.",
+        "<p>Polynomial division gives x²/(x²+1)=1−1/(x²+1). Integrating yields x−arctan x+C. Trying to fit the original improper rational fraction directly into partial fractions would hide this simpler decomposition.</p>"
+      ],
+      [
+        "An infinite endpoint",
+        "Compute ∫₁^∞x⁻²dx.",
+        "<p>By definition this is the limit as R→∞ of [−1/x] from 1 to R, namely 1−1/R→1. The finite value is obtained only after the limit. More generally ∫₁^∞x⁻ᵖdx converges exactly when p>1.</p>"
+      ],
+      [
+        "An interior pole cannot be cancelled away",
+        "Does ∫₋₁¹1/x dx converge as an improper integral?",
+        "<p>Split at zero. The integral from −1 to −ε is ln ε→−∞; the integral from ε to 1 is −ln ε→+∞. Since neither side converges finitely, the improper integral diverges. The symmetric principal value is zero, but it is a different definition.</p>"
+      ],
+      [
+        "Definite integration by symmetry",
+        "Compute ∫₋₂²(x³+cos x)dx.",
+        "<p>The x³ part is odd and integrates to zero. Cosine is even, so the remaining contribution is twice ∫₀²cos x dx=2sin2. Symmetry removed work; it did not replace the domain check.</p>"
+      ],
+      [
+        "Moving endpoints",
+        "Differentiate G(t)=∫ₜ^(t²)e^(x²)dx.",
+        "<p>The integrand is continuous, so the endpoint form of Leibniz applies. The upper contribution is e^(t⁴)·2t and the lower contribution is e^(t²)·1, with a minus sign. Thus G′(t)=2t e^(t⁴)−e^(t²). No elementary antiderivative of e^(x²) was needed.</p>"
+      ],
+      [
+        "The parameter trick, completed",
+        "Evaluate ∫₀¹(x−1)/ln x dx, interpreting both endpoint values by continuity.",
+        "<p>Define F(a)=∫₀¹(xᵃ−1)/ln x dx for a≥0. The identity (xᵃ−1)/ln x=∫₀ᵃxᵗdt explains the removable value a at x=1. Differentiate with respect to a: F′(a)=∫₀¹xᵃdx=1/(a+1). Locally for a≥0 the derivative integrand is bounded by 1; near a=0 one can extend to a>−1/2 and bound by (1/√x), which is integrable. Thus the exchange is justified. Integrating the parameter derivative gives F(a)=ln(a+1)+C. Since F(0)=0, C=0. The requested value is F(1)=ln2.</p>"
+      ],
+      [
+        "Numerical integration when an antiderivative is unavailable",
+        "Use the midpoint rule with two equal subintervals to approximate ∫₀¹e^(−x²)dx.",
+        "<p>The width is h=1/2 and the midpoints are 1/4 and 3/4. The estimate is [e^(−1/16)+e^(−9/16)]/2, approximately 0.7546. This is an approximation, not an exact antiderivative. Since |f″|=|(4x²−2)e^(−x²)|≤2 on [0,1], the composite midpoint error is at most 2/(24·2²)=1/48.</p>"
+      ]
+    ],
+    "problems": [
+      [
+        "Compute indefinite integrals (a) ∫2x/(1+x²)dx and (b) ∫x ln x dx for x>0; verify by differentiation.",
+        "(a) ln(1+x²)+C by substitution. (b) Parts with u=ln x and dv=x dx gives (x²/2)ln x−x²/4+C; differentiation recovers x ln x.",
+        "indefinite-substitution-parts"
+      ],
+      [
+        "Compute (a) ∫₀¹dx/[(x+1)(x+2)] and (b) ∫₋₁¹(x³+x²)dx.",
+        "(a) Partial fractions give ln(4/3). (b) The odd x³ part cancels; twice ∫₀¹x²dx gives 2/3.",
+        "proper-definite-integrals"
+      ],
+      [
+        "Decide and evaluate when finite: (a) ∫₁^∞x⁻³dx, (b) ∫₀¹(1/√x)dx, (c) ∫₋₁¹x⁻²dx.",
+        "(a) Limit of [−1/(2x²)]₁ᴿ is 1/2. (b) Limit of [2√x]ε¹ is 2. (c) Each side at zero diverges to +∞, so the improper integral diverges.",
+        "improper-three-locations"
+      ],
+      [
+        "Compute ∫sin³x cos x dx and ∫dx/√(9−x²) on (−3,3). State the substitutions and domains.",
+        "The first uses u=sin x and gives sin⁴x/4+C. The second uses x=3sinθ with θ∈(−π/2,π/2) and gives arcsin(x/3)+C.",
+        "trig-techniques"
+      ],
+      [
+        "(a) Differentiate ∫₀^(t²)sin(x²)dx. (b) For F(a)=∫₀¹(xᵃ−1)/ln x dx, use the parameter derivative and F(0)=0 to evaluate F(2). State a justification for differentiating.",
+        "(a) Chain rule plus FTC gives 2t sin(t⁴). (b) F′(a)=1/(a+1), so F(2)=ln3. An integrable local dominating bound for xᵃ around each a≥0 justifies differentiation, as in the worked example.",
+        "leibniz-both-forms"
+      ]
+    ],
+    "exit": [
+      "Compute \\(\\int_0^1xe^{x^2}\\,dx\\) and verify an antiderivative.",
+      "Use u=x² and du=2x dx. The answer is (e−1)/2. The derivative of e^(x²)/2 is xe^(x²)."
+    ],
+    "repair": "If a substitution loses a factor, differentiate the proposed answer. If bounds were mixed, write a two-row x/u table. Fresh repair: integrate 3x²/(1+x³) from 0 to 1; answer ln 2.",
+    "map": {
+      "center": "Integrals",
+      "branches": [
+        [
+          "Indefinite",
+          "Recover an antiderivative",
+          "Differentiate; include +C"
+        ],
+        [
+          "Proper definite",
+          "Signed accumulation on [a,b]",
+          "FTC; symmetry; substitution bounds"
+        ],
+        [
+          "Improper",
+          "Infinity or an unbounded integrand",
+          "Split singularities; take limits"
+        ],
+        [
+          "Choose a method",
+          "Substitution; parts; trig; fractions",
+          "Approximate if no elementary form"
+        ],
+        [
+          "Parameter viewpoint",
+          "Moving bounds: FTC + chain rule",
+          "Leibniz trick: justify the exchange"
+        ]
+      ]
+    }
+  },
+  {
+    "day": 3,
+    "title": "Areas between curves",
+    "goal": "Translate a drawn region into nonnegative slice lengths and split where the ordering changes.",
+    "prereq": "Intersections, definite integrals, signs.",
+    "opening": "Is the definite integral of a negative function a negative geometric area?",
+    "story": "\n<h2>Start with a thin strip</h2><p>Imagine slicing a region vertically. At horizontal position x, the strip extends from a lower graph to an upper graph. Its height is upper value minus lower value; its small area is that height times its width. Adding those strips gives an integral.</p>\n\\[A=\\int_a^b\\bigl(f_{\\mathrm{upper}}(x)-f_{\\mathrm{lower}}(x)\\bigr)\\,dx.\\]\n<p>The subtraction order is geometry, not a rule determined by the names f and g. First solve their intersection equation. Between consecutive intersections, test a point to find which graph is higher. If the order changes, split the integral. Equivalently, area is the integral of the absolute difference, but that notation does not remove the need to understand its sign.</p>\n<p>A signed integral can cancel contributions from different regions. Geometric area cannot cancel. For instance, the integral of x from −1 to 1 is zero, but the region between its graph and the x-axis has area 1. The left triangle and the right triangle each contribute a positive half.</p>\n<p>Sometimes horizontal slices are simpler. Then integrate right boundary minus left boundary with respect to y. Choose the slicing direction that describes the whole region with the fewest changes. Check that the intersections really enclose a bounded region; intersecting curves alone need not determine the region intended by a question.</p>",
+    "worked": [
+      [
+        "One region, no change in ordering",
+        "Find the area between y=x and y=x².",
+        "<p>Solve x=x²: x=0 or 1. On (0,1), x>x²; at x=1/2 the values are 1/2 and 1/4. Thus \\(A=\\int_0^1(x-x^2)dx=[x^2/2-x^3/3]_0^1=1/6\\). This positive result matches the picture of a narrow region inside the unit square.</p>"
+      ],
+      [
+        "Two pieces that cancel if treated as signed",
+        "Find the total bounded area between y=x and y=x³.",
+        "<p>Intersections satisfy x³=x, so they occur at −1, 0, 1. On (−1,0), x³ is above x; on (0,1), x is above x³. The areas are equal by symmetry. Therefore \\(A=2\\int_0^1(x-x^3)dx=2(1/2-1/4)=1/2\\). Integrating x−x³ straight from −1 to 1 would incorrectly give zero for the total area.</p>"
+      ]
+    ],
+    "problems": [
+      [
+        "Find the area between y=2x and y=x².",
+        "Intersections are 0 and 2, with 2x above x² between them. Integrate \\(2x-x^2\\) from 0 to 2 to obtain 4/3.",
+        "intersections-order"
+      ],
+      [
+        "Find the area between y=4−x² and the x-axis.",
+        "The bounded region runs from −2 to 2 and lies above the axis. Its area is \\([4x-x^3/3]_{-2}^2=32/3\\).",
+        "axis-region"
+      ],
+      [
+        "Find the area between y=x and the x-axis on [−2,1].",
+        "Split at zero: \\(\\int_{-2}^0(-x)dx+\\int_0^1x dx=2+1/2=5/2\\).",
+        "signed-versus-area"
+      ],
+      [
+        "Find the total bounded area between y=2x and y=x³. Identify the upper graph in each component.",
+        "Intersections solve x(x²−2)=0, giving −√2, 0, √2. On (−√2,0), x³ is above 2x; on (0,√2), 2x is above x³. Symmetry gives twice the integral of 2x−x³ from 0 to √2: 2[ x²−x⁴/4 ]₀^√2=2.",
+        "order-change-transfer"
+      ],
+      [
+        "Find the area bounded by x=y² and x=2−y.",
+        "Intersections satisfy y²+y−2=0, so y=−2 or 1. The right curve is 2−y on this interval. Integrate \\(2-y-y^2\\) from −2 to 1 to get 9/2. Horizontal slices avoid splitting a square-root graph into branches.",
+        "horizontal-slices"
+      ]
+    ],
+    "exit": [
+      "Find the area enclosed by y=3x and y=x², labeling intersections and upper curve.",
+      "Intersections 0 and 3; upper curve 3x. Area \\(\\int_0^3(3x-x^2)dx=9/2\\)."
+    ],
+    "repair": "If a result is negative, revisit slice height before taking an absolute value of the final answer. If intersections are missing, solve the full factored equation. Fresh repair: y=x and y=2x² enclose area 1/24.",
+    "map": {
+      "center": "Area",
+      "branches": [
+        [
+          "Describe the region",
+          "Find all intersections",
+          "Check it is bounded"
+        ],
+        [
+          "Choose slices",
+          "Vertical: upper minus lower",
+          "Horizontal: right minus left"
+        ],
+        [
+          "Respect signs",
+          "Split at ordering changes",
+          "Geometric area cannot cancel"
+        ],
+        [
+          "Accumulate",
+          "Integrate nonnegative slice length",
+          "Use symmetry only when justified"
+        ],
+        [
+          "Check the result",
+          "Units squared; positive magnitude",
+          "Compare with a rough rectangle"
+        ]
+      ]
+    }
+  },
+  {
+    "day": 4,
+    "title": "Applications of the Intermediate Value Theorem",
+    "goal": "Use continuity to prove existence, then supply a separate argument if uniqueness is needed.",
+    "prereq": "Continuity, evaluating signs, elementary derivatives for optional uniqueness.",
+    "opening": "Does a sign change prove a zero when the function has a jump?",
+    "story": "\n<h2>A graph cannot cross a height without meeting it—if it stays connected</h2><p>Imagine a continuous temperature record that starts below 20 and ends above 20. It must equal 20 somewhere in between. The intermediate value theorem, or IVT, is this statement for a continuous real function on a closed interval.</p>\n<p>Precisely: if f is continuous on [a,b], every value k between f(a) and f(b) occurs as f(c) for some c in [a,b]. If k lies strictly between the endpoint values, a solution lies in (a,b). To prove a zero, it is convenient to show f(a)f(b)&lt;0.</p>\n<p>This is an existence theorem. It does not tell you the exact location or the number of solutions. A function may cross zero three times while changing sign between its endpoints. To show uniqueness, use additional information, such as strict monotonicity.</p>\n<p>The theorem’s continuity requirement is essential. On [−1,1], the function equal to −1 for x&lt;0 and 1 for x≥0 changes sign but never equals zero. The graph jumps over the target. Also, no sign change does not mean there is no root: x² has a zero at 0 even though it is positive at both −1 and 1.</p>\n<p>For a parameter question, construct the function whose zero expresses the desired equation. To solve f(x)=g(x), study h(x)=f(x)−g(x). To prove a fixed point f(c)=c, study h(x)=f(x)−x. These are translations from the question into the form the theorem can use.</p><p>The following twelve examples are an original IVT application ladder. For each, identify the continuous function, the interval, the target, and the endpoint information before reading the argument. Examples 8–10 are extensions. The aim is to learn how to construct the function to which IVT applies.</p>",
+    "worked": [
+      [
+        "1 · A polynomial root in a specified interval",
+        "Prove x³+x−1 has a root in (0,1).",
+        "<p>Its polynomial left side is continuous on [0,1]; its endpoint values are −1 and 1. IVT supplies an interior zero. We have proved existence, not uniqueness.</p>"
+      ],
+      [
+        "2 · A transcendental crossing",
+        "Prove cos x=x has a solution in (0,1).",
+        "<p>Set h(x)=cos x−x. It is continuous, h(0)=1>0, and h(1)=cos1−1&lt;0. IVT gives a zero of h, which is the original equality. The useful function was the difference.</p>"
+      ],
+      [
+        "3 · Every target value of an odd polynomial",
+        "For any real k, show x³+x=k has a real solution.",
+        "<p>Fix k and put h(x)=x³+x−k. Choose R>|k|+1. Then h(R)>0 and h(−R)&lt;0. Continuity gives a zero between −R and R. The interval may depend on the chosen target k.</p>"
+      ],
+      [
+        "4 · A fixed point of a self-map",
+        "If continuous f maps [0,1] into [0,1], prove f(c)=c somewhere.",
+        "<p>Use h(x)=f(x)−x. Its endpoint values satisfy h(0)≥0 and h(1)≤0. If an endpoint is zero we are done; otherwise strict opposite signs give an interior zero. A non-strict sign condition allows an endpoint solution.</p>"
+      ],
+      [
+        "5 · Two roots require two brackets",
+        "Prove x²+x−1 has two distinct real zeros using IVT.",
+        "<p>The values at −2,0,1 are 1,−1,1. Continuity yields one root in (−2,0) and another in (0,1). The disjoint intervals ensure distinctness. No conclusion about “exactly two” follows from these two IVT applications alone; the quadratic degree can supply an upper bound.</p>"
+      ],
+      [
+        "6 · A parameter family without solving it",
+        "For every real a, prove x³+ax−1 has a real root.",
+        "<p>Fix a and choose R>|a|+2. Then R³−|a|R−1>0. Hence h(R)>0 and h(−R)&lt;0 for h(x)=x³+ax−1. The polynomial is continuous, so some zero lies between them. Explicit algebraic root formulas are unnecessary.</p>"
+      ],
+      [
+        "7 · Bisection retains a certified root",
+        "Bracket a root of x³+x−1 on [0,1], then take one bisection.",
+        "<p>The endpoint signs are opposite. At 1/2 the value is 1/8+1/2−1=−3/8. The retained interval [1/2,1] still has opposite signs and continuity, so IVT certifies a root there. The midpoint decision is based on sign, not on which endpoint looks visually nearer.</p>"
+      ],
+      [
+        "8 · Equal endpoint values and a shifted argument",
+        "If continuous f on [0,2] satisfies f(0)=f(2), prove some c∈[0,1] has f(c)=f(c+1).",
+        "<p>Let h(x)=f(x)−f(x+1) on [0,1]. Then h(0)=f(0)−f(1) and h(1)=f(1)−f(2)=−h(0). If these are zero, an endpoint works; otherwise use IVT. The auxiliary function exposes opposite signs that were not visible in f alone.</p>"
+      ],
+      [
+        "9 · Equal temperatures at opposite points",
+        "A temperature T is continuous around a circle. Show there are opposite points with equal temperature.",
+        "<p>Parameterize the circle with a continuous 2π-periodic T(θ). Let h(θ)=T(θ)−T(θ+π). Then h(π)=−h(0). IVT on [0,π] gives a zero, including an endpoint if applicable. This is a one-dimensional argument, not a claim about discontinuous temperature assignments.</p>"
+      ],
+      [
+        "10 · Averages of a continuous function are attained",
+        "If f is continuous on [a,b], a&lt;b, show some c has f(c)=(1/(b−a))∫ₐᵇf(x)dx.",
+        "<p>Continuity on a compact interval gives a minimum m and maximum M. Integrating m≤f≤M and dividing by b−a puts the average between m and M. IVT then makes f attain that average somewhere. This uses the extreme value theorem and integral bounds as well as IVT; it is not the derivative MVT.</p>"
+      ],
+      [
+        "11 · A root missed by endpoint sign change",
+        "Why does f(x)=x² on [−1,1] show that opposite endpoint signs are not necessary for a root?",
+        "<p>Both endpoint values are 1, yet f(0)=0. Opposite signs plus continuity are sufficient. The converse “no sign change, no zero” is false. This example trains the direction of the implication.</p>"
+      ],
+      [
+        "12 · Failure when the graph can jump",
+        "Why do the endpoint values of 1/x on [−1,1] not prove a zero?",
+        "<p>The function is undefined at zero and is not continuous on the interval. It takes values −1 and 1 at the endpoints but never equals zero. The missing hypothesis is precisely what would have prevented jumping across the target.</p>"
+      ]
+    ],
+    "problems": [
+      [
+        "Prove x⁵+x−3 has a zero in (1,2).",
+        "The polynomial is continuous. At 1 it is −1; at 2 it is 31. Zero lies strictly between them, so IVT gives a root in (1,2).",
+        "ivt-hypotheses"
+      ],
+      [
+        "Prove e^(−x)=x has a solution in (0,1).",
+        "Let h(x)=e^(−x)−x. It is continuous, h(0)=1>0 and h(1)=e⁻¹−1&lt;0. IVT gives a zero of h, hence the required equality.",
+        "equation-translation"
+      ],
+      [
+        "Give a continuous function with a zero on [1,3] but positive values at both endpoints.",
+        "f(x)=(x−2)² works: both endpoint values are 1 and f(2)=0. Opposite endpoint signs are sufficient, not necessary.",
+        "converse-counterexample"
+      ],
+      [
+        "On [−1,1], let g(x)=−2 for x&lt;0 and g(x)=2 for x≥0. Do its endpoint signs guarantee a zero? Explain.",
+        "No. The function is discontinuous at zero, so IVT does not apply. Its only values are −2 and 2, neither of which is zero.",
+        "continuity-hypothesis"
+      ],
+      [
+        "Prove x+ln x=0 has exactly one positive root.",
+        "On [1/e,1], h(x)=x+ln x is continuous, with h(1/e)=1/e−1&lt;0 and h(1)=1>0, giving existence. Its derivative 1+1/x>0 on (0,∞), so it is strictly increasing and the positive root is unique.",
+        "existence-uniqueness"
+      ]
+    ],
+    "exit": [
+      "A student says “f(0)&lt;0&lt;f(1), so there is exactly one root.” Identify both missing justifications.",
+      "Continuity on [0,1] is needed for the IVT existence argument. Uniqueness needs a separate condition or proof, such as strict monotonicity."
+    ],
+    "repair": "If existence was read as uniqueness, compare x and x(x²−1/4) on [−1,1]: both change endpoint sign, but have different numbers of zeros. If continuity was omitted, retry the 1/x counterexample.",
+    "map": {
+      "center": "IVT",
+      "branches": [
+        [
+          "Hypothesis",
+          "Continuity on one interval",
+          "Target between endpoint values"
+        ],
+        [
+          "Translate the question",
+          "Root: h=f−k; crossing: h=f−g",
+          "Fixed point: h=f−x"
+        ],
+        [
+          "Conclusion",
+          "At least one attained target",
+          "Not a formula or uniqueness claim"
+        ],
+        [
+          "Applications",
+          "Brackets; symmetry; fixed points",
+          "Averages; parameter families"
+        ],
+        [
+          "Boundary of the theorem",
+          "Jumps can skip values",
+          "No sign change can still have roots"
+        ]
+      ]
+    }
+  },
+  {
+    "day": 5,
+    "title": "Applications of the Mean Value Theorem",
+    "goal": "Turn derivative information into bounds on total change; check endpoints and differentiability.",
+    "prereq": "Derivative as slope, continuity, interval notation.",
+    "opening": "For f(x)=x² on [1,3], what is the slope of the chord between the endpoints?",
+    "story": "\n<h2>Average change and instantaneous change</h2><p>Suppose a journey covers 100 kilometres in two hours. Its average speed is 50 kilometres per hour. Under suitable smoothness, some instantaneous speed must equal that average. For a graph, the mean value theorem says that some tangent has the same slope as the chord joining the endpoints.</p>\n<p>If f is continuous on [a,b] and differentiable on (a,b), with a&lt;b, there is c in (a,b) satisfying:</p>\n\\[f'(c)=\\frac{f(b)-f(a)}{b-a}.\\]\n<p>The closed interval appears with continuity because endpoint values determine the chord. The open interval appears with differentiability because the tangent point is interior. Endpoint derivatives are not required. Rolle’s theorem is the special case f(a)=f(b), where the chord is horizontal and some interior derivative is zero.</p>\n<p>The useful move is often to rearrange the conclusion: \\(f(b)-f(a)=f'(c)(b-a)\\). If every derivative value is between m and M, the total change lies between m(b−a) and M(b−a). If |f′|≤L, then \\(|f(b)-f(a)|\\le L|b-a|\\). This controls output errors using input errors.</p>\n<p>To derive strict increase from f′&gt;0, choose any two distinct points a&lt;b. MVT makes f(b)−f(a) a positive derivative times a positive length. This is why a derivative sign proves monotonicity on an interval. If f′=0 throughout an interval, the same argument gives equal endpoint values for every pair, so f is constant there.</p>\n<p>A corner can invalidate the theorem. For |x| on [−1,1], the chord slope is zero, but the derivative is −1 on the left and 1 on the right, and does not exist at zero. There is no interior point with derivative zero.</p><h2>Your twelve-video route</h2><p>The linked playlist is a twelve-lesson sequence, not twelve isolated worked problems. Below, every lesson is paired with an original companion example aligned to its title. The titles, order, and links were verified from playlist metadata; these examples are not claimed as transcripts of problems shown in the videos. Watch selectively, pause, and reconstruct the argument on paper.</p><ol><li><a href=\"https://www.youtube.com/watch?v=heqUCdcgVYA\">5.1 The MVT... who cares?</a></li><li><a href=\"https://www.youtube.com/watch?v=_z8OglXFIq8\">5.2 The Local Extreme Value Theorem</a></li><li><a href=\"https://www.youtube.com/watch?v=SWb2T0ad6lw\">5.3 Proof of the Local Extreme Value Theorem</a></li><li><a href=\"https://www.youtube.com/watch?v=_giwkVIFeGY\">5.4 Finding the maximum and minimum of a function</a></li><li><a href=\"https://www.youtube.com/watch?v=n8Nhn7N_rkE\">5.5 Rolle's Theorem</a></li><li><a href=\"https://www.youtube.com/watch?v=5TKUOC06JzM\">5.6 How many zeroes does a function have?</a></li><li><a href=\"https://www.youtube.com/watch?v=DKFV3KMDKHc\">5.7 The Mean Value Theorem</a></li><li><a href=\"https://www.youtube.com/watch?v=xL5qJSZie5Y\">5.8 Proof of the Mean Value Theorem</a></li><li><a href=\"https://www.youtube.com/watch?v=l10mJLuG-U4\">5.9 Zero-derivative implies constant</a></li><li><a href=\"https://www.youtube.com/watch?v=15-oyDZT2aE\">5.10 Why integration is possible</a></li><li><a href=\"https://www.youtube.com/watch?v=HlzVrFcqi04\">5.11 Monotonicity of functions</a></li><li><a href=\"https://www.youtube.com/watch?v=HsMHLIwKmFo\">5.12 Finding the intervals where a function is increasing or decreasing</a></li></ol>",
+    "worked": [
+      [
+        "1 · Why the theorem matters",
+        "If f is differentiable on R and f′(x)=0 everywhere, can f(0) and f(1) differ?",
+        "<p>MVT on [0,1] gives f(1)−f(0)=f′(c)·1=0. The derivative contains local slope information; the theorem translates it into a statement about two separated values. Differentiability on an interval is crucial.</p>"
+      ],
+      [
+        "2 · Local extrema need not characterize zero derivatives",
+        "Compare f(x)=x², g(x)=x³, and h(x)=|x| at zero.",
+        "<p>x² has a local minimum and derivative zero. x³ has derivative zero but no local extremum. |x| has a local minimum but no derivative. The theorem says a differentiable interior local extremum has derivative zero; it does not reverse that implication or remove differentiability.</p>"
+      ],
+      [
+        "3 · Why an interior extremum has zero derivative",
+        "Let differentiable f have a local maximum at c. Why is f′(c)=0?",
+        "<p>For small h>0, [f(c+h)−f(c)]/h≤0. For small h&lt;0, the same nonpositive numerator divided by a negative number gives a quotient ≥0. If the two-sided derivative exists, it must be both ≤0 and ≥0, hence zero. At an interval endpoint there may be only one allowed side.</p>"
+      ],
+      [
+        "4 · Find the actual global extrema",
+        "Find the extrema of x³−3x on [−2,2].",
+        "<p>The function is continuous on a compact interval, so extrema exist. Interior critical points solve 3x²−3=0, giving ±1. Check those and endpoints: f(−2)=−2, f(−1)=2, f(1)=−2, f(2)=2. Thus maximum 2 at −1 and 2; minimum −2 at −2 and 1. Critical points alone would miss endpoint ties.</p>"
+      ],
+      [
+        "5 · Rolle’s theorem",
+        "Find c for f(x)=x²−4 on [−2,2].",
+        "<p>Continuity and differentiability hold, and endpoint values agree at zero. Rolle gives an interior zero derivative. Since f′=2x, that point is c=0. The equal endpoints, not zeros specifically, are the relevant condition.</p>"
+      ],
+      [
+        "6 · Count zeros by counting possible turns",
+        "Prove x³−3x+4 has exactly one real zero.",
+        "<p>The values at −3 and −2 are −14 and 2, so IVT gives a root in (−3,−2). The derivative is 3(x²−1), positive for x&lt;−1, negative on (−1,1), positive for x>1. At the turning points the values are 6 and 2. Hence the function is positive for x≥−1 and strictly increasing on (−∞,−1), so the bracketed root is unique. Rolle also says two roots would force a derivative zero between them; it supplies upper-bound logic, while IVT supplies existence.</p>"
+      ],
+      [
+        "7 · Locate the MVT point",
+        "For f(x)=x² on [1,3], find the tangent slope promised by MVT.",
+        "<p>The chord slope is (9−1)/(3−1)=4. Solve f′(c)=2c=4, giving c=2 inside the interval. The theorem first guarantees such a c from its hypotheses; solving the equation then identifies it.</p>"
+      ],
+      [
+        "8 · Prove MVT by subtracting the chord",
+        "How does Rolle’s theorem prove MVT for f on [a,b]?",
+        "<p>Let m=[f(b)−f(a)]/(b−a) and h(x)=f(x)−f(a)−m(x−a). This subtracts the chord, making h(a)=h(b)=0. It preserves continuity and interior differentiability. Rolle gives h′(c)=0; since h′=f′−m, we obtain f′(c)=m. The auxiliary function was designed to match the theorem’s endpoint hypothesis.</p>"
+      ],
+      [
+        "9 · Zero derivative and a disconnected-domain trap",
+        "Why can 1 for x>0 and −1 for x&lt;0 have derivative zero without being one constant?",
+        "<p>The domain is R without zero, which is not an interval. MVT proves constancy separately on each interval (−∞,0) and (0,∞), but cannot be applied between a negative and a positive input across the missing point.</p>"
+      ],
+      [
+        "10 · Why antiderivatives differ only by a constant",
+        "If F′=f and G′=f on the same interval, show the relation between F and G.",
+        "<p>For H=F−G, H′=0. MVT between any two points makes H constant, so F=G+C on that interval. This explains the +C in indefinite integrals. It does not, on its own, prove that every function possesses an antiderivative.</p>"
+      ],
+      [
+        "11 · From derivative sign to monotonicity",
+        "Prove x+arctan x is strictly increasing on R.",
+        "<p>Its derivative is 1+1/(1+x²)>0. Given any a&lt;b, MVT gives f(b)−f(a)=f′(c)(b−a)>0. This quantifies why a local slope condition controls all pairs of inputs on the interval.</p>"
+      ],
+      [
+        "12 · An interval sign chart",
+        "Find intervals of increase and decrease of f(x)=x³−3x.",
+        "<p>The derivative is 3(x−1)(x+1). It is positive on (−∞,−1), negative on (−1,1), and positive on (1,∞). MVT converts those signs into increasing, decreasing, increasing intervals. At −1 there is a local maximum; at 1 a local minimum. Zero derivative at a boundary point does not defeat strict increase on an adjacent interval.</p>"
+      ]
+    ],
+    "problems": [
+      [
+        "Find the MVT point for f(x)=x³ on [0,1].",
+        "The chord slope is 1 and f′(c)=3c². The interior solution is c=1/√3; the negative algebraic solution is outside (0,1).",
+        "mvt-location"
+      ],
+      [
+        "Apply Rolle’s theorem to f(x)=(x−1)(x−3) on [1,3], and find c.",
+        "The polynomial is continuous and differentiable and both endpoint values are zero. Its derivative is 2x−4, so the interior point is c=2.",
+        "rolle-hypotheses"
+      ],
+      [
+        "For |x−1| on [0,2], which MVT hypothesis fails? Compare the chord slope with the existing derivative values.",
+        "The function is continuous but not differentiable at the interior point 1. The chord slope is zero, while existing derivative values are −1 or 1, never zero.",
+        "corner-counterexample"
+      ],
+      [
+        "If 2≤f′(x)≤5 on [0,3] and f(0)=1, bound f(3). Assume differentiability on a containing open interval.",
+        "MVT gives f(3)−1=3f′(c), between 6 and 15. Therefore 7≤f(3)≤16. The derivative bounds control total change, not f(3) directly.",
+        "derivative-bound"
+      ],
+      [
+        "For 0&lt;a&lt;b, prove \\((b-a)/b\\le\\ln b-\\ln a\\le(b-a)/a\\).",
+        "MVT for ln gives ln b−ln a=(b−a)/c for a&lt;c&lt;b. Since 1/b&lt;1/c&lt;1/a, the stated non-strict bounds follow (indeed the inequalities are strict).",
+        "log-bound"
+      ]
+    ],
+    "exit": [
+      "Use MVT to prove \\(|\\arctan b-\\arctan a|\\le|b-a|\\).",
+      "The derivative is 1/(1+x²), whose absolute value is at most 1. Apply MVT between a and b, handle a=b separately, and take absolute values."
+    ],
+    "repair": "If the theorem was applied across a corner, list the hypotheses before calculating. If derivative and function values were confused, draw a rectangle with height f′(c) and width b−a. Fresh repair: |√b−√a|≤(b−a)/2 for 1≤a&lt;b.",
+    "videoSources": [
+      {
+        "id": "heqUCdcgVYA",
+        "label": "5.1 The MVT... who cares? 3 minutes, 56 seconds",
+        "title": "5.1 The MVT... who cares?"
+      },
+      {
+        "id": "_z8OglXFIq8",
+        "label": "5.2 The Local Extreme Value Theorem 6 minutes, 38 seconds",
+        "title": "5.2 The Local Extreme Value Theorem"
+      },
+      {
+        "id": "SWb2T0ad6lw",
+        "label": "5.3 Proof of the Local Extreme Value Theorem 3 minutes, 23 seconds",
+        "title": "5.3 Proof of the Local Extreme Value Theorem"
+      },
+      {
+        "id": "_giwkVIFeGY",
+        "label": "5.4 Finding the maximum and minimum of a function 4 minutes, 8 seconds",
+        "title": "5.4 Finding the maximum and minimum of a function"
+      },
+      {
+        "id": "n8Nhn7N_rkE",
+        "label": "5.5 Rolle's Theorem 5 minutes, 17 seconds",
+        "title": "5.5 Rolle's Theorem"
+      },
+      {
+        "id": "5TKUOC06JzM",
+        "label": "5.6 How many zeroes does a function have? 6 minutes, 7 seconds",
+        "title": "5.6 How many zeroes does a function have?"
+      },
+      {
+        "id": "DKFV3KMDKHc",
+        "label": "5.7 The Mean Value Theorem 5 minutes, 15 seconds",
+        "title": "5.7 The Mean Value Theorem"
+      },
+      {
+        "id": "xL5qJSZie5Y",
+        "label": "5.8 Proof of the Mean Value Theorem 5 minutes, 26 seconds",
+        "title": "5.8 Proof of the Mean Value Theorem"
+      },
+      {
+        "id": "l10mJLuG-U4",
+        "label": "5.9 Zero-derivative implies constant 6 minutes, 34 seconds",
+        "title": "5.9 Zero-derivative implies constant"
+      },
+      {
+        "id": "15-oyDZT2aE",
+        "label": "5.10 Why integration is possible 3 minutes, 46 seconds",
+        "title": "5.10 Why integration is possible"
+      },
+      {
+        "id": "HlzVrFcqi04",
+        "label": "5.11 Monotonicity of functions 5 minutes",
+        "title": "5.11 Monotonicity of functions"
+      },
+      {
+        "id": "HsMHLIwKmFo",
+        "label": "5.12 Finding the intervals where a function is increasing or decreasing 6 minutes, 35 seconds",
+        "title": "5.12 Finding the intervals where a function is increasing or decreasing"
+      }
+    ],
+    "map": {
+      "center": "MVT",
+      "branches": [
+        [
+          "Prepare",
+          "Interior extremum → zero derivative",
+          "Check corners and endpoints"
+        ],
+        [
+          "Build the theorem",
+          "Equal endpoints → Rolle",
+          "Subtract chord → MVT"
+        ],
+        [
+          "Bridge scales",
+          "Derivative at c = chord slope",
+          "Slope bounds → value bounds"
+        ],
+        [
+          "Consequences",
+          "Zero derivative → constant",
+          "Equal derivatives → +C"
+        ],
+        [
+          "Shape and roots",
+          "Derivative sign → monotonicity",
+          "IVT existence; Rolle upper bounds"
+        ]
+      ]
+    }
+  },
+  {
+    "day": 6,
+    "title": "Convexity and concavity",
+    "goal": "Connect chord geometry, derivative monotonicity, curvature, and optimization without reversing signs.",
+    "prereq": "First and second derivatives, weighted averages, domain intervals.",
+    "opening": "Sketch x² and −x². Which graph lies below a chord joining two points?",
+    "story": "\n<h2>Reading companion: Spivak’s geometric route</h2><p>Read Michael Spivak, Calculus, fourth edition, Chapter 11 appendix, “Convexity and Concavity,” pp. 219–229. This is an original companion, not a reproduction of the chapter or its exercises. The chapter’s route compares chords and tangents, relates them to changing slopes, and then uses curvature to interpret graphs. Its convention calls the strict chord property “convex”; it later calls the non-strict property “weakly convex.” Our notes use the common modern convention: “convex” allows equality and “strictly convex” excludes it at interior chord points. Keep this dictionary beside the reading.</p>\n<h2>First draw the comparison we want to make</h2><p>Pick two graph points (a,f(a)) and (b,f(b)), with a&lt;b, and join them by a straight segment. At an intermediate input x, the segment has height ℓ(x), while the curve has height f(x). The whole question is which height is larger. A convex graph lies at or below the segment. A concave graph lies at or above it. An upward bowl such as x² is convex even where it is decreasing.</p>\n<p>Write x=(1−t)a+tb, with 0≤t≤1. The chord’s height is the matching weighted average (1−t)f(a)+tf(b). Therefore convexity means:</p>\n\\[f((1-t)a+tb)\\le(1-t)f(a)+tf(b).\\]\n<p>For strict convexity, replace ≤ by &lt; when a≠b and 0&lt;t&lt;1. Equality is unavoidable at the endpoints. Concavity reverses the inequality; multiplying a concave function by −1 makes it convex.</p>\n<h2>Secant slopes are another representation of that picture</h2><p>For a&lt;x&lt;b, let m₁ be the slope from a to x and m₂ the slope from x to b. The curve lying below the full chord is equivalent to m₁≤m₂. To see the algebra, multiply by the positive lengths x−a and b−x, expand, and rearrange:</p>\n\\[(b-a)f(x)\\le(b-x)f(a)+(x-a)f(b).\\]\n<p>Divide by b−a to recover exactly the chord height comparison. The full-chord slope is a weighted average of m₁ and m₂, so it lies between them. A geometric statement about heights has become an ordered statement about slopes.</p>\n<h2>Let the secants approach a tangent</h2><p>If f is differentiable, shrinking a secant toward x turns its slope into f′(x). The secant inequalities then give, for a&lt;b:</p>\n\\[f'(a)\\le\\frac{f(b)-f(a)}{b-a}\\le f'(b).\\]\n<p>In particular f′ is nondecreasing. Rearranging the left inequality shows f(b)≥f(a)+f′(a)(b−a): the graph lies above the tangent at a. On the other side of a, the sign of b−a reverses the needed slope comparison, and the same supporting-line inequality results. A convex curve lies below its chords but above its tangents. These are compatible because a tangent is a limiting local line, not a chord joining two separated graph points.</p>\n<h2>Why increasing slopes imply the chord picture</h2><p>Now suppose f is differentiable and f′ is nondecreasing. Apply MVT separately to [a,x] and [x,b]. It identifies their secant slopes as f′(u) and f′(v), with a&lt;u&lt;x&lt;v&lt;b. Since f′ is nondecreasing, f′(u)≤f′(v). Thus m₁≤m₂, which we already translated into the chord inequality. This supplies the converse without needing a second derivative.</p>\n<p>There is also a converse from supporting tangents. If every tangent lies below the graph, write the supporting inequality once from a to b and once from b to a. After division by b−a, the chord slope is sandwiched between f′(a) and f′(b). Hence f′ is nondecreasing, and the preceding argument proves convexity.</p>\n<h2>The second derivative is a shortcut through the same chain</h2><p>If f is twice differentiable and f″≥0 on an interval, MVT applied to f′ makes f′ nondecreasing. That gives convexity by the earlier argument. If f″&gt;0, it gives strictly increasing slopes and strict convexity. A strict inequality f″&gt;0 everywhere is sufficient, not necessary: x⁴ is strictly convex even though f″(0)=0.</p><p>Curvature alone does not tell you whether values increase or decrease. The first derivative answers that question. For −ln x on x&gt;0, f′=−1/x&lt;0 and f″=1/x²&gt;0: the graph decreases while bending upward. At an inflection, the graph changes concavity in the usual smooth examples. A zero of f″ merely supplies a candidate; it is not a guarantee.</p>\n<h2>What the geometry buys us</h2><p>If f is convex and differentiable and f′(c)=0, the supporting-line inequality becomes f(x)≥f(c), proving a global minimum on the interval. Strict convexity ensures at most one minimizer. An affine function is both convex and concave and can have a whole interval of minima, so dropping “strict” changes the uniqueness claim.</p><p>A useful consequence of chord geometry is the midpoint inequality, the two-point case of Jensen’s inequality. For concave ln it yields ln((a+b)/2)≥(ln a+ln b)/2; exponentiating gives the arithmetic–geometric mean inequality. The direction of the chord comparison determines the direction of the resulting numerical bound.</p>\n",
+    "worked": [
+      [
+        "Separate rising from bending",
+        "Classify ln x on (0,∞).",
+        "<p>The first derivative 1/x is positive, so the function increases. The second derivative −1/x² is negative, so the function is strictly concave. Increasing output and decreasing slopes are compatible: each further step still adds output, but adds less than the previous step.</p>"
+      ],
+      [
+        "An inflection requires a sign change",
+        "Find the concavity intervals of f(x)=x³−3x.",
+        "<p>Differentiate twice: f′=3x²−3 and f″=6x. Thus f″&lt;0 for x&lt;0 and f″&gt;0 for x&gt;0. The function is concave on (−∞,0) and convex on (0,∞). Curvature changes at the graph point (0,0), so it is an inflection point. The stationary points ±1 answer a different question.</p>"
+      ]
+    ],
+    "problems": [
+      [
+        "For f(x)=x², verify both the chord inequality and supporting tangent inequality by computing their differences.",
+        "The chord gap is (1−t)a²+tb²−[(1−t)a+tb]²=t(1−t)(a−b)²≥0, strictly positive when a≠b and 0&lt;t&lt;1. The tangent gap at a is x²−[a²+2a(x−a)]=(x−a)²≥0.",
+        "geometry-algebra-translation"
+      ],
+      [
+        "Use MVT on [a,x] and [x,b] to prove that a differentiable function with nondecreasing derivative is convex.",
+        "MVT gives the two secant slopes as f′(u) and f′(v) with u&lt;v. Monotonicity makes the first no larger. Multiplying by the positive lengths and rearranging yields (b−a)f(x)≤(b−x)f(a)+(x−a)f(b), the chord inequality.",
+        "secant-proof"
+      ],
+      [
+        "Classify −ln x on (0,∞) as increasing/decreasing and convex/concave. Write its supporting tangent at x=1.",
+        "f′=−1/x&lt;0 gives decrease; f″=1/x²>0 gives strict convexity. At 1 the value is zero and slope −1, so the tangent is 1−x and −ln x≥1−x. Equivalently ln x≤x−1.",
+        "slope-curvature-tangent"
+      ],
+      [
+        "Explain why x⁴ is strictly convex but has no inflection at zero. Compare it with x³.",
+        "For x⁴, f′=4x³ is strictly increasing, so the MVT secant argument gives strict convexity. Its second derivative 12x² does not change sign at zero. For x³, f″=6x changes sign from negative to positive there, so zero is an inflection point.",
+        "strictness-inflection"
+      ],
+      [
+        "Use concavity of ln to derive AM≥GM for positive a,b. State the equality case and why it follows.",
+        "Apply the concave midpoint inequality, then exponentiate to get (a+b)/2≥√(ab). Strict concavity makes equality possible only when a=b. The domain a,b>0 is necessary for the logarithms.",
+        "jensen-transfer"
+      ]
+    ],
+    "exit": [
+      "Find intervals of convexity/concavity and any inflection point of x³−6x².",
+      "f″=6x−12. It is concave for x&lt;2 and convex for x>2. Curvature changes at x=2, where f(2)=−16, giving inflection point (2,−16)."
+    ],
+    "repair": "If curvature was inferred from f′, compute f″ explicitly. If f″=0 was taken as sufficient for inflection, contrast x³ with x⁴. Fresh repair: −ln x is decreasing and convex on x>0.",
+    "map": {
+      "center": "Convexity",
+      "branches": [
+        [
+          "Chord geometry",
+          "Convex below chords",
+          "Concave reverses the inequality"
+        ],
+        [
+          "Secant translation",
+          "Left slope ≤ right slope",
+          "Full chord lies between them"
+        ],
+        [
+          "Tangent view",
+          "Nondecreasing derivative",
+          "Graph above supporting tangents"
+        ],
+        [
+          "Second derivative",
+          "f″≥0 gives convexity",
+          "f″=0 alone gives no inflection"
+        ],
+        [
+          "Consequences",
+          "Stationary convex point → minimum",
+          "Strictness → uniqueness; Jensen"
+        ]
+      ]
+    }
+  },
+  {
+    "day": 7,
+    "title": "Convergence of series",
+    "goal": "Separate terms from partial sums and select a convergence test with valid hypotheses.",
+    "prereq": "Geometric sums, sequence limits, positivity and integral comparison.",
+    "opening": "The terms 1/n tend to zero. Does that alone prove that their sum is finite?",
+    "story": "\n<h2>A series is a sequence of totals</h2><p>Writing a₁+a₂+… indefinitely is not a finite addition. Form the partial sums \\(S_N=\\sum_{n=1}^N a_n\\). The series converges when this sequence of totals approaches a finite real number. The terms aₙ and the totals Sₙ answer different questions.</p>\n<p>For a convergent series, aₙ must tend to zero because aₙ=Sₙ−Sₙ₋₁. The converse is false: harmonic terms 1/n tend to zero, but the harmonic series diverges. Grouping terms from n=2ᵏ+1 to 2ᵏ⁺¹ gives 2ᵏ terms, each at least 1/2ᵏ⁺¹. Every block adds at least 1/2, preventing finite total accumulation.</p>\n<p>A geometric series \\(\\sum_{n=0}^\\infty r^n\\) converges to 1/(1−r) exactly when |r|&lt;1. The p-series \\(\\sum_{n=1}^\\infty1/n^p\\) converges exactly when p&gt;1. These provide comparison standards. For nonnegative terms, if 0≤aₙ≤bₙ eventually and Σbₙ converges, so does Σaₙ. To prove divergence, bound below by a known divergent nonnegative series.</p>\n<p>The ratio test is useful with factorials and exponentials: compute the limiting ratio of absolute consecutive terms. A limit below 1 proves absolute convergence; above 1 proves divergence. A limit equal to 1 is inconclusive. The root test makes the same distinction using the limit superior of |aₙ|^(1/n). Neither test replaces checking endpoint cases in power series.</p>\n<p>For alternating terms, the alternating-series test requires the positive magnitudes to decrease eventually and tend to zero. It then proves convergence, with error at most the next omitted magnitude. Absolute convergence means Σ|aₙ| converges; it implies convergence. Conditional convergence means the signed series converges while the absolute series diverges.</p>\n<h2>Two more recognition examples</h2><p>For Σ(n/(2n+1))ⁿ, the nth root of the positive nth term is n/(2n+1), tending to 1/2. The root test proves convergence. Exponents involving n often suggest this test.</p><p>For Σ1/(n ln n), starting at n=2, a ratio test gives 1 and stalls. The positive function 1/(x ln x) is decreasing for x≥2, so the integral test applies. Its integral from 2 to R is ln(ln R)−ln(ln2), which grows without bound. The series diverges. State positivity, continuity, and eventual decrease before using this integral comparison.</p>\n",
+    "worked": [
+      [
+        "A comparison that respects direction",
+        "Decide \\(\\sum_{n=1}^\\infty1/(n^2+n)\\).",
+        "<p>The terms are positive and at most 1/n², so comparison proves convergence. We can do more: 1/[n(n+1)]=1/n−1/(n+1). The Nth partial sum telescopes to 1−1/(N+1), which tends to 1. The series converges and its sum is 1.</p>"
+      ],
+      [
+        "Convergent is not the same as absolutely convergent",
+        "Classify \\(\\sum_{n=1}^\\infty(-1)^{n+1}/n\\).",
+        "<p>The magnitudes 1/n decrease to zero, so the alternating-series test gives convergence. The absolute series is the harmonic series and diverges. Therefore convergence is conditional. A ratio limit of 1 would not settle either series.</p>"
+      ]
+    ],
+    "problems": [
+      [
+        "Decide \\(\\sum_{n=0}^\\infty(2/3)^n\\) and find its sum.",
+        "This is geometric with |r|=2/3&lt;1. Its sum is 1/(1−2/3)=3.",
+        "geometric"
+      ],
+      [
+        "Decide \\(\\sum_{n=1}^\\infty n/(n+1)\\).",
+        "The terms tend to 1, not zero, so the necessary condition fails and the series diverges. No more elaborate test is needed.",
+        "term-test"
+      ],
+      [
+        "Decide \\(\\sum_{n=1}^\\infty1/n^{3/2}\\).",
+        "This is a p-series with p=3/2>1, so it converges.",
+        "p-series"
+      ],
+      [
+        "Decide \\(\\sum_{n=1}^\\infty n/2^n\\) using the ratio test.",
+        "The ratio is (n+1)/(2n), tending to 1/2&lt;1. Thus the positive series converges. Its sum is not required for this test.",
+        "ratio-test"
+      ],
+      [
+        "Decide \\(\\sum_{n=1}^\\infty(-1)^n/\\sqrt n\\). Is convergence absolute?",
+        "The magnitudes decrease to zero, so the alternating test proves convergence. The absolute series is a p-series with p=1/2≤1, which diverges. Convergence is conditional.",
+        "conditional-convergence"
+      ]
+    ],
+    "exit": [
+      "Decide \\(\\sum_{n=1}^\\infty n^2/3^n\\), and state what your test proves.",
+      "The ratio is ((n+1)/n)²/3, tending to 1/3&lt;1. The series converges absolutely (its terms are already positive)."
+    ],
+    "repair": "If aₙ→0 was treated as sufficient, compare partial sums of the harmonic series with the grouped lower bound. If comparison was reversed, write the two nonnegative sequences in order. Fresh repair: Σ1/(n²+1) converges by comparison with Σ1/n².",
+    "map": {
+      "center": "Series",
+      "branches": [
+        [
+          "Object",
+          "Terms versus partial sums",
+          "Convergence means finite total limit"
+        ],
+        [
+          "First filter",
+          "Terms must tend to zero",
+          "This alone is not sufficient"
+        ],
+        [
+          "Positive terms",
+          "Comparison; integral; p-series",
+          "Ratio/root below 1 work"
+        ],
+        [
+          "Signed terms",
+          "Alternating test needs decrease to 0",
+          "Absolute implies convergence"
+        ],
+        [
+          "Limits of tests",
+          "Ratio/root equal 1: inconclusive",
+          "Choose another comparison"
+        ]
+      ]
+    }
+  },
+  {
+    "day": 8,
+    "title": "Power series and Taylor expansions",
+    "goal": "Find a convergence interval including endpoints, and separate finite Taylor approximation from infinite-series equality.",
+    "prereq": "Series tests, derivatives, factorials, geometric series.",
+    "opening": "Why does the geometric expansion of 1/(1−x) need a restriction on x?",
+    "story": "\n<h2>A family of series, one for each input</h2><p>In a power series \\(\\sum_{n=0}^\\infty a_n(x-c)^n\\), c is a fixed center and x is the input. Fix x and you have an ordinary numerical series. The set of x-values for which it converges is the question. Usually a ratio or root test gives a radius R: absolute convergence inside |x−c|&lt;R and divergence outside. Check each endpoint separately; the radius alone does not decide them.</p>\n<p>The geometric series is our starting model: \\(1/(1-x)=1+x+x^2+\\cdots\\) only for |x|&lt;1. On that open interval, termwise differentiation and integration are valid for power series. They generate useful expansions, but boundary behavior must be checked again. Differentiation preserves the radius, not necessarily endpoint inclusion.</p>\n<p>A Taylor polynomial matches a function’s derivatives at a center. At zero the quadratic polynomial is \\(T_2(x)=f(0)+f'(0)x+f''(0)x^2/2\\). The coefficient 1/2 is needed because differentiating x² twice produces 2. In general the coefficient of xⁿ is f⁽ⁿ⁾(0)/n!.</p>\n<p>A polynomial approximation is a finite statement with an error. Taylor’s theorem, when f has n+1 continuous derivatives on the segment between the center and x, writes \\(f(x)=T_n(x)+f^{(n+1)}(\\xi)x^{n+1}/(n+1)!\\) for an intermediate ξ when centered at zero. Bounding that derivative gives a numerical error bound.</p>\n<p>Having derivatives of every order does not by itself prove equality with an infinite Taylor series. Equality requires the remainder to tend to zero. For eˣ this can be shown on every bounded interval because factorial growth dominates the bounded derivative factor. In this refresher, justify approximation accuracy instead of silently replacing a function by an infinite sum.</p>\n<h2>Keep a few expansions connected to their origins</h2><p>At zero, eˣ begins 1+x+x²/2!+x³/3!; sin x begins x−x³/3!; cos x begins 1−x²/2!. Their coefficients come from repeated derivatives at zero, and their Taylor remainders tend to zero for every fixed real x. The logarithm ln(1+x) begins x−x²/2+x³/3 and its power series is valid for |x|&lt;1 (endpoint questions are separate). The geometric expansion of 1/(1−x) is valid for |x|&lt;1. These domain statements are part of the formulas.</p>\n",
+    "worked": [
+      [
+        "Endpoints ask two different questions",
+        "Find the convergence interval of \\(\\sum_{n=1}^\\infty x^n/n\\).",
+        "<p>For x≠0 the ratio of absolute consecutive terms is |x|n/(n+1), tending to |x|. Thus convergence is absolute for |x|&lt;1 and fails for |x|&gt;1. At x=1 we get the divergent harmonic series. At x=−1 we get a convergent alternating harmonic series. The interval is [−1,1); the radius is 1.</p>"
+      ],
+      [
+        "A polynomial with a certified error",
+        "Approximate e^(0.1) through the quadratic term.",
+        "<p>All derivatives of eˣ at zero are 1, so T₂(0.1)=1+0.1+0.1²/2=1.105. Taylor’s remainder has magnitude at most e^(0.1)(0.1)³/6. Using the safe bound e^(0.1)&lt;2 gives error less than 1/3000. The approximation and its guaranteed accuracy are separate outputs.</p>"
+      ]
+    ],
+    "problems": [
+      [
+        "Find the radius and interval of convergence of \\(\\sum_{n=0}^\\infty(x-2)^n/3^n\\).",
+        "It is geometric with r=(x−2)/3, so |x−2|&lt;3: interval (−1,5), radius 3. At −1 the terms alternate ±1; at 5 they are 1. Neither endpoint has terms tending to zero.",
+        "radius-endpoints"
+      ],
+      [
+        "Find the interval of convergence of \\(\\sum_{n=1}^\\infty x^n/n^2\\).",
+        "The ratio gives radius 1. At either endpoint the absolute series is Σ1/n², so both converge absolutely. Interval [−1,1].",
+        "endpoint-absolute"
+      ],
+      [
+        "Write the Taylor polynomial of degree 3 for sin x at zero.",
+        "The derivatives at zero are 0,1,0,−1, giving x−x³/6. This is a finite polynomial, so no convergence interval is needed merely to write it.",
+        "taylor-coefficients"
+      ],
+      [
+        "Find \\(\\lim_{x\\to0}(e^x-1-x)/x^2\\) using Taylor’s theorem.",
+        "Write eˣ=1+x+x²/2+R₂(x), with R₂(x)/x²→0 because its magnitude is bounded by a constant times |x|³ near zero. The limit is 1/2.",
+        "taylor-limit"
+      ],
+      [
+        "Integrate the geometric series to obtain an expansion for −ln(1−x), and state a domain where the derivation is valid.",
+        "For |x|&lt;1 integrate termwise from 0 to x: \\(-\\ln(1-x)=\\sum_{n=0}^\\infty x^{n+1}/(n+1)\\). The constant is zero because both sides vanish at zero. Endpoint equality needs a separate argument.",
+        "termwise-integration"
+      ]
+    ],
+    "exit": [
+      "Find the interval of convergence of \\(\\sum_{n=1}^\\infty (x-1)^n/(n2^n)\\).",
+      "Let r=(x−1)/2. The ratio gives |r|&lt;1, or −1&lt;x&lt;3. At x=−1 it is alternating harmonic and converges; at x=3 it is harmonic and diverges. Interval [−1,3)."
+    ],
+    "repair": "If endpoint checks were omitted, substitute actual endpoint numbers into the series. If a Taylor coefficient missed n!, differentiate the proposed polynomial at the center. Fresh repair: eˣ has cubic polynomial 1+x+x²/2+x³/6.",
+    "map": {
+      "center": "Power and Taylor",
+      "branches": [
+        [
+          "Power series",
+          "Fix x to obtain a numerical series",
+          "Center and coefficients are fixed"
+        ],
+        [
+          "Convergence",
+          "Find radius",
+          "Check endpoints independently"
+        ],
+        [
+          "Construct expansions",
+          "Geometric series and calculus",
+          "Termwise operations inside radius"
+        ],
+        [
+          "Taylor polynomial",
+          "Match derivatives at a center",
+          "Coefficient divides by factorial"
+        ],
+        [
+          "Error and equality",
+          "Bound finite remainder",
+          "Infinite equality needs remainder →0"
+        ]
+      ]
+    }
+  },
+  {
+    "day": 9,
+    "title": "Monotone convergence and Bolzano–Weierstrass: foundations",
+    "goal": "Distinguish a convergent sequence from a convergent subsequence and prove monotone convergence using a least upper bound.",
+    "prereq": "Order inequalities, real numbers, limits, induction.",
+    "opening": "Does a bounded real sequence have to converge? Give an example or a proof.",
+    "story": "\n<h2>Being trapped is not the same as settling</h2><p>A sequence is a list a₁,a₂,… indexed by positive integers. Convergence to L means that every requested tolerance ε&gt;0 eventually traps all later terms within distance ε of L. The word “all” matters. For (−1)ⁿ, infinitely many terms equal 1 and infinitely many equal −1. The sequence is bounded but does not converge.</p>\n<p>A subsequence chooses terms at increasing indices n₁&lt;n₂&lt;…. Choosing the even indices of (−1)ⁿ gives the constant subsequence 1; odd indices give −1. A convergent subsequence can exist even when the original sequence fails to settle.</p>\n<h2>Monotone convergence adds a direction of travel</h2><p>A sequence is nondecreasing if aₙ₊₁≥aₙ for every n. If it is also bounded above, it converges. Its limit is the supremum, or least upper bound, of its terms. A nonincreasing sequence bounded below also converges, to its infimum.</p>\n<p>Here is the proof for the increasing case. Let L be the supremum of the set of terms. No term exceeds L. Given any ε&gt;0, L−ε cannot be an upper bound, because it is smaller than the least upper bound. Therefore some term aₙ₀ exceeds L−ε. Monotonicity keeps every later term at least that large, while L remains an upper bound. Thus all later terms satisfy L−ε&lt;aₙ≤L. That is convergence to L.</p>\n<p>Notice the roles: boundedness supplies a finite supremum; monotonicity makes entry into a small neighborhood permanent. Without boundedness, aₙ=n increases forever without a finite limit. Without monotonicity, bounded oscillation is possible.</p>\n<h2>Bolzano–Weierstrass promises less, under fewer assumptions</h2><p>Every bounded real sequence has a convergent subsequence. It does not promise convergence of the whole sequence. To picture why, enclose all terms in a closed interval and bisect it. At least one half contains infinitely many indexed terms. Keep such a half and repeat. Choose a later indexed term in each retained interval. The nested intervals have lengths tending to zero and share a point L; the chosen subsequence approaches L. An unbounded sequence may still have a convergent subsequence, but boundedness guarantees one.</p>\n<p>Here “monotone convergence” concerns real sequences. It is not the measure-theoretic monotone convergence theorem for integrals.</p>",
+    "worked": [
+      [
+        "Establish convergence before solving for a limit",
+        "Let a₁=1 and \\(a_{n+1}=\\sqrt{2+a_n}\\). Prove convergence and find its limit.",
+        "<p>First prove by induction that 1≤aₙ≤2. If this holds for aₙ, then √3≤aₙ₊₁≤2, so the bounds persist. Next compare aₙ₊₁ and aₙ. Both are nonnegative; squaring shows aₙ₊₁≥aₙ exactly when 2+aₙ≥aₙ², or (2−aₙ)(aₙ+1)≥0. Our bounds make this true. The sequence is nondecreasing and bounded, so it converges to a real L in [1,2]. Continuity of the square root permits L=√(2+L), hence (L−2)(L+1)=0. Only L=2 fits the bounds. Solving the equation was the final step, not the proof of convergence.</p>"
+      ],
+      [
+        "One sequence, two subsequential limits",
+        "Analyze aₙ=(−1)ⁿ+1/n.",
+        "<p>The sequence is bounded. On even indices a₂ₖ=1+1/(2k) tends to 1. On odd indices a₂ₖ₋₁=−1+1/(2k−1) tends to −1. If the whole sequence converged, every subsequence would have that same limit. The two different limits therefore prove divergence of the full sequence.</p>"
+      ]
+    ],
+    "problems": [
+      [
+        "Prove aₙ=1−1/n converges using monotonicity and boundedness, and find its limit.",
+        "aₙ₊₁−aₙ=1/[n(n+1)]>0, and aₙ&lt;1. Monotone convergence applies; the direct expression gives limit 1.",
+        "monotone-bound"
+      ],
+      [
+        "Give a nondecreasing sequence with no finite limit. Which hypothesis is missing?",
+        "aₙ=n is nondecreasing but not bounded above. Monotone convergence requires the appropriate finite bound.",
+        "missing-bound"
+      ],
+      [
+        "Give a bounded divergent sequence and two convergent subsequences.",
+        "Use (−1)ⁿ. Even terms give limit 1; odd terms give limit −1. Boundedness guarantees a subsequence, not full convergence.",
+        "subsequence-distinction"
+      ],
+      [
+        "For a₁=0 and aₙ₊₁=(aₙ+2)/2, prove convergence and find the limit.",
+        "Inductively 0≤aₙ&lt;2. The difference aₙ₊₁−aₙ=(2−aₙ)/2>0. Hence convergence follows. Taking limits gives L=(L+2)/2, so L=2.",
+        "recurrence-proof"
+      ],
+      [
+        "If a real sequence converges to L, explain why every subsequence converges to L.",
+        "For any ε>0 choose N so all n≥N have |aₙ−L|&lt;ε. Increasing positive indices nₖ satisfy nₖ≥k, so for k≥N their selected terms meet the same bound.",
+        "subsequence-proof"
+      ]
+    ],
+    "exit": [
+      "Explain why the fixed-point equation L=√(2+L), by itself, does not prove convergence of the recurrence in the worked example.",
+      "The equation states a condition on a limit if one exists. Boundedness and monotonicity first prove existence. Only afterward may continuity justify passing to the limit and selecting the admissible root."
+    ],
+    "repair": "If boundedness was confused with convergence, revisit even and odd subsequences. If a recurrence was solved without proof of convergence, separate bounds, monotonicity, existence, and limit identification. Fresh repair: aₙ=n/(n+1) is increasing, bounded above by 1, and converges to 1.",
+    "map": {
+      "center": "Sequence theorems",
+      "branches": [
+        [
+          "Whole-sequence limit",
+          "All sufficiently late terms",
+          "Every tolerance must work"
+        ],
+        [
+          "Monotone convergence",
+          "Direction plus finite bound",
+          "Limit is supremum/infimum"
+        ],
+        [
+          "Bolzano–Weierstrass",
+          "Bounded real sequence",
+          "Some convergent subsequence"
+        ],
+        [
+          "Recurrence workflow",
+          "Prove bounds and monotonicity",
+          "Only then solve the limit equation"
+        ],
+        [
+          "Counterexamples",
+          "Bounded oscillation need not settle",
+          "Unbounded may still have a subsequence"
+        ]
+      ]
+    }
+  },
+  {
+    "day": 10,
+    "title": "Monotone convergence and Bolzano–Weierstrass: applications",
+    "goal": "Use sequence theorems in recurrences, partial sums, bisection, and a cumulative refresher check.",
+    "prereq": "Day 9 theorem statements; Days 1–8 methods.",
+    "opening": "State exactly what boundedness alone guarantees, and what monotonicity adds.",
+    "story": "\n<h2>The same theorem can appear under different names</h2><p>A recurrence is a sequence defined by a rule. A positive series is also a sequence problem: its partial sums are nondecreasing. Bisection builds two endpoint sequences. Recognizing which quantities form a sequence lets you use the same convergence ideas in several settings.</p>\n<p>For a nonnegative series, every new term increases or preserves the partial sum. Therefore the series converges precisely when its partial sums are bounded above. “The terms are bounded” is not enough: harmonic terms are at most 1, yet their totals grow without bound. Be explicit about what is bounded.</p>\n<p>In bisection, start with continuous f and f(a₁)&lt;0&lt;f(b₁). Test the midpoint. If it is a root, stop. Otherwise keep a half interval with opposite endpoint signs. The left endpoints form a nondecreasing sequence; the right endpoints form a nonincreasing sequence. Both are bounded. Their interval lengths halve at each step, so their limits agree at a common L. Continuity then makes f(L)=0. This connects Day 4 existence with a constructive approximation method.</p>\n<p>A useful strengthening of Bolzano–Weierstrass is this: if a bounded real sequence has only one possible subsequential limit L, then the whole sequence converges to L. If it did not, some ε&gt;0 would leave infinitely many terms at least ε away from L. Choose those terms as a subsequence. It is bounded, so Bolzano–Weierstrass gives a convergent further subsequence. Its limit still stays at least ε away from L, contradicting the assumed uniqueness. Boundedness is essential to this argument.</p>\n<p>Today is the second pass through these theorems, deliberately preserving the repeated topic in the plan. Use it to explain hypotheses and construct counterexamples, not merely repeat theorem names. The mixed questions also provide the baseline for later review; an exposed solution should be marked as supported practice.</p>",
+    "worked": [
+      [
+        "Partial sums turn a series into monotone convergence",
+        "Prove Σ1/[n(n+1)] converges by bounded partial sums.",
+        "<p>Every term is positive, so Sₙ is nondecreasing. Decompose 1/[n(n+1)]=1/n−1/(n+1). Summing through N cancels all interior fractions and gives Sₙ=1−1/(N+1)&lt;1. The increasing partial sums are bounded above, so monotone convergence proves a finite limit. The explicit expression identifies it as 1.</p>"
+      ],
+      [
+        "Bisection makes existence quantitative",
+        "Approximate the positive root of x²−2 on [1,2] for two bisections.",
+        "<p>f is continuous and has signs − and + at 1 and 2. First midpoint 1.5 gives f=0.25&gt;0, so retain [1,1.5]. Next midpoint 1.25 gives f=−0.4375&lt;0, so retain [1.25,1.5]. The root lies inside that interval. Its midpoint estimate is 1.375 with error at most half the interval width, 0.125. After k bisections the retained width is 2^(−k); a midpoint estimate has error at most 2^(−k−1).</p>"
+      ]
+    ],
+    "problems": [
+      [
+        "Let a₁=1 and aₙ₊₁=2−1/aₙ. Find the sequence and discuss whether a fixed-point equation is needed.",
+        "a₁=1 gives a₂=1 and induction gives aₙ=1 for every n. The sequence is constant and converges to 1. The recurrence is well-defined since no term is zero. A direct invariant is simpler than solving a general limit equation.",
+        "recurrence-invariant"
+      ],
+      [
+        "Let aₙ=2+(-1)ⁿ/n. Is it monotone? Does it converge?",
+        "It alternates above and below 2, so is not monotone. Since |aₙ−2|=1/n→0, it converges to 2. Monotone convergence is a sufficient theorem, not a necessary description of every convergent sequence.",
+        "theorem-not-necessary"
+      ],
+      [
+        "Prove that the partial sums of Σ1/2ⁿ, n≥1, are bounded and nondecreasing; identify their limit.",
+        "All terms are positive. The geometric finite sum is Sₙ=1−2^(−N)&lt;1. Monotone convergence applies, and the expression gives limit 1.",
+        "partial-sum-bound"
+      ],
+      [
+        "Start bisection for x³+x−1 on [0,1]. Give the interval after two midpoint tests and a midpoint error bound.",
+        "At 1/2 the value is −3/8, so retain [1/2,1]. At 3/4 it is 11/64>0, so retain [1/2,3/4]. Midpoint is 5/8 and guaranteed error at most 1/8. Continuity supplies root existence within each bracket.",
+        "ivt-sequence-bridge"
+      ],
+      [
+        "A bounded real sequence has subsequences tending to 1 and −1. What can be concluded about convergence of the full sequence?",
+        "The full sequence cannot converge, because all subsequences of a convergent sequence share its limit. The existence of those two subsequences alone does not exclude additional subsequential limits.",
+        "subsequence-inference"
+      ]
+    ],
+    "exit": [
+      "Give (i) a bounded divergent sequence, (ii) an unbounded sequence with a convergent subsequence, and (iii) a bounded nondecreasing sequence. State which theorem applies to each.",
+      "(i) (−1)ⁿ: Bolzano–Weierstrass guarantees a convergent subsequence, not full convergence. (ii) a₂ₖ=0, a₂ₖ₋₁=k: a convergent subsequence exists, but not through the boundedness hypothesis. (iii) 1−1/n: monotone convergence gives full convergence to 1; Bolzano–Weierstrass also applies, but is weaker here."
+    ],
+    "repair": "Choose one missed problem from Days 1–8 and reattempt without the earlier solution. Record the first broken step and make a nearby fresh problem before entering Phase 2. Do not replace the planned Phase 3 review with an assumption that all gaps are already repaired.",
+    "map": {
+      "center": "Consolidation",
+      "branches": [
+        [
+          "Partial sums",
+          "Nonnegative terms → increasing sums",
+          "Bounded sums → convergent series"
+        ],
+        [
+          "Bisection",
+          "Continuous function; sign bracket",
+          "Nested endpoints converge together"
+        ],
+        [
+          "Subsequence logic",
+          "Two distinct limits rule out convergence",
+          "A single subsequence is weaker"
+        ],
+        [
+          "Select a method",
+          "Translate the object first",
+          "Check the theorem’s hypotheses"
+        ],
+        [
+          "Carry into Phase 2",
+          "Record first broken step",
+          "Fresh transfer check after repair"
+        ]
+      ]
+    }
+  }
+]

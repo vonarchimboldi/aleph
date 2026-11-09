@@ -1,7 +1,7 @@
 const STORAGE_KEY = "learning-studio-data-v2";
 const LEGACY_STORAGE_KEYS = ["learning-studio-data-v1"];
 const SESSION_KEY = "aleph-session";
-const COURSE_PLAN_VERSION = "seeded-user-canonical-workspace-v169";
+const COURSE_PLAN_VERSION = "seeded-user-canonical-workspace-v170";
 const MAX_FEEDBACK_ATTACHMENT_BYTES = 3 * 1024 * 1024;
 const MAX_COMPRESSED_FEEDBACK_BYTES = 2400 * 1024;
 const MAX_FEEDBACK_REQUEST_BYTES = 4 * 1024 * 1024;
@@ -208,6 +208,518 @@ function normalizePatternSubmissions(submissions = []) {
   });
 }
 
+
+
+
+
+
+// CALCULUS_REVIEW_CATALOG_START
+function calculusReviewMaterialWorkspaces() {
+ const entries = [
+  {
+    "id": "calculus-phase1-topic-01",
+    "day": "Phase 1 · Day 1",
+    "title": "Computing limits",
+    "focus": "Choose a method from the expression, and distinguish a limit from a value.",
+    "weeks": [
+      {
+        "id": "calculus-phase1-day-01",
+        "label": "Day 1",
+        "week": 1,
+        "sourceWeek": 1,
+        "date": "",
+        "materialTitle": "Computing limits",
+        "materialUrl": "calculus-review/day-01.html",
+        "expectedWork": "Refresher: exposition, selected worked examples, five practice problems, independent exit check, correction and concept map. Relative study day; no deadline assigned.",
+        "status": "Published",
+        "inlineQuestions": [
+          "C01-OPEN: What is wrong with saying that 0/0 is the answer to a limit?",
+          "C01-P1: Compute (a) lim at x=2 of (x²−4)/(x−2), (b) lim at x=0 of (√(9+x)−3)/x, and (c) lim at x=0 of sin(5x)/(2x). State the recognition cue for each.",
+          "C01-P2: Find (a) the two one-sided limits of |x|/x at zero, (b) the two one-sided limits of 1/x², and (c) the limit of √(x²+4)/x as x→−∞.",
+          "C01-P3: Compute (a) lim at x→+∞ of √(x²+4x)−x, (b) lim at x→0+ of x ln x, and (c) lim at x→0 of (1+2x)^(1/x). Identify the original forms.",
+          "C01-P4: Explain why x sin(1/x) has limit zero but sin(1/x) does not. Then give a δ that proves 5x−1 approaches 9 as x approaches 2.",
+          "C01-P5: Compute (a) lim at x=0 of (1−cos 2x)/x² and (b) lim at h=0 of [f(a+3h)−f(a)]/h for differentiable f. Can a finite table prove either limit?",
+          "C01-EXIT: Without notes, find \\(\\lim_{x\\to0}(\\sqrt{4+x}-2)/x\\). Explain which equality requires x≠0."
+        ],
+        "prerequisite": "Factoring, fractions, conjugates, radians.",
+        "readingContext": "Phase 1 of a 30-day calculus review. Phase 2 is exam problem types; Phase 3 is evidence-driven remedy.",
+        "modelLesson": {
+          "gradingKeys": {
+            "C01-P1": "(a) Factor and cancel away from 2: answer 4. (b) Conjugate gives 1/[√(9+x)+3]: answer 1/6. (c) Match the argument 5x in the standard sine ratio: answer 5/2.",
+            "C01-P2": "(a) Left −1, right 1, so no two-sided limit. (b) Both +∞; no finite real limit. (c) √(x²+4)/x=(|x|/x)√(1+4/x²)→−1.",
+            "C01-P3": "(a) ∞−∞: conjugate and divide by positive x to get 4/[√(1+4/x)+1]→2. (b) 0·(−∞): rewrite as ln x/(1/x), giving limit 0. (c) 1^∞: its logarithm ln(1+2x)/x tends to 2, so answer e².",
+            "C01-P4": "The first has absolute value at most |x|, so squeeze gives zero. The second has approaches giving outputs 1 and −1. For the linear proof, choose δ=ε/5 because |(5x−1)−9|=5|x−2|.",
+            "C01-P5": "(a) Rewrite using 2sin²x to obtain 2. (b) Set t=3h and obtain 3f′(a). A table is evidence, not a proof for all sufficiently close inputs.",
+            "C01-EXIT": "Multiply by the conjugate to get \\(1/(\\sqrt{4+x}+2)\\) for x≠0. The limit is 1/4. Cancelling x requires x≠0."
+          },
+          "methodTags": {
+            "C01-P1": "limit-rewrite-selection",
+            "C01-P2": "input-output-and-sides",
+            "C01-P3": "indeterminate-form-conversion",
+            "C01-P4": "squeeze-and-definition",
+            "C01-P5": "trig-derivative-transfer"
+          },
+          "repair": "If 0/0 was treated as a number, return to the first worked example. If the two-sided limit was guessed from one side, draw a sign table. Reattempt with (x²−16)/(x−4) at 4; answer 8."
+        }
+      }
+    ]
+  },
+  {
+    "id": "calculus-phase1-topic-02",
+    "day": "Phase 1 · Day 2",
+    "title": "Computing integrals",
+    "focus": "Recognize substitution, integration by parts, and partial fractions, then check by differentiation.",
+    "weeks": [
+      {
+        "id": "calculus-phase1-day-02",
+        "label": "Day 2",
+        "week": 1,
+        "sourceWeek": 1,
+        "date": "",
+        "materialTitle": "Computing integrals",
+        "materialUrl": "calculus-review/day-02.html",
+        "expectedWork": "Refresher: exposition, selected worked examples, five practice problems, independent exit check, correction and concept map. Relative study day; no deadline assigned.",
+        "status": "Published",
+        "inlineQuestions": [
+          "C02-OPEN: Differentiate ln(1+x²). Which factor appears because of the chain rule?",
+          "C02-P1: Compute indefinite integrals (a) ∫2x/(1+x²)dx and (b) ∫x ln x dx for x>0; verify by differentiation.",
+          "C02-P2: Compute (a) ∫₀¹dx/[(x+1)(x+2)] and (b) ∫₋₁¹(x³+x²)dx.",
+          "C02-P3: Decide and evaluate when finite: (a) ∫₁^∞x⁻³dx, (b) ∫₀¹(1/√x)dx, (c) ∫₋₁¹x⁻²dx.",
+          "C02-P4: Compute ∫sin³x cos x dx and ∫dx/√(9−x²) on (−3,3). State the substitutions and domains.",
+          "C02-P5: (a) Differentiate ∫₀^(t²)sin(x²)dx. (b) For F(a)=∫₀¹(xᵃ−1)/ln x dx, use the parameter derivative and F(0)=0 to evaluate F(2). State a justification for differentiating.",
+          "C02-EXIT: Compute \\(\\int_0^1xe^{x^2}\\,dx\\) and verify an antiderivative."
+        ],
+        "prerequisite": "Derivative rules, chain rule, logarithms and algebraic division.",
+        "readingContext": "Phase 1 of a 30-day calculus review. Phase 2 is exam problem types; Phase 3 is evidence-driven remedy.",
+        "modelLesson": {
+          "gradingKeys": {
+            "C02-P1": "(a) ln(1+x²)+C by substitution. (b) Parts with u=ln x and dv=x dx gives (x²/2)ln x−x²/4+C; differentiation recovers x ln x.",
+            "C02-P2": "(a) Partial fractions give ln(4/3). (b) The odd x³ part cancels; twice ∫₀¹x²dx gives 2/3.",
+            "C02-P3": "(a) Limit of [−1/(2x²)]₁ᴿ is 1/2. (b) Limit of [2√x]ε¹ is 2. (c) Each side at zero diverges to +∞, so the improper integral diverges.",
+            "C02-P4": "The first uses u=sin x and gives sin⁴x/4+C. The second uses x=3sinθ with θ∈(−π/2,π/2) and gives arcsin(x/3)+C.",
+            "C02-P5": "(a) Chain rule plus FTC gives 2t sin(t⁴). (b) F′(a)=1/(a+1), so F(2)=ln3. An integrable local dominating bound for xᵃ around each a≥0 justifies differentiation, as in the worked example.",
+            "C02-EXIT": "Use u=x² and du=2x dx. The answer is (e−1)/2. The derivative of e^(x²)/2 is xe^(x²)."
+          },
+          "methodTags": {
+            "C02-P1": "indefinite-substitution-parts",
+            "C02-P2": "proper-definite-integrals",
+            "C02-P3": "improper-three-locations",
+            "C02-P4": "trig-techniques",
+            "C02-P5": "leibniz-both-forms"
+          },
+          "repair": "If a substitution loses a factor, differentiate the proposed answer. If bounds were mixed, write a two-row x/u table. Fresh repair: integrate 3x²/(1+x³) from 0 to 1; answer ln 2."
+        }
+      }
+    ]
+  },
+  {
+    "id": "calculus-phase1-topic-03",
+    "day": "Phase 1 · Day 3",
+    "title": "Areas between curves",
+    "focus": "Translate a drawn region into nonnegative slice lengths and split where the ordering changes.",
+    "weeks": [
+      {
+        "id": "calculus-phase1-day-03",
+        "label": "Day 3",
+        "week": 1,
+        "sourceWeek": 1,
+        "date": "",
+        "materialTitle": "Areas between curves",
+        "materialUrl": "calculus-review/day-03.html",
+        "expectedWork": "Refresher: exposition, selected worked examples, five practice problems, independent exit check, correction and concept map. Relative study day; no deadline assigned.",
+        "status": "Published",
+        "inlineQuestions": [
+          "C03-OPEN: Is the definite integral of a negative function a negative geometric area?",
+          "C03-P1: Find the area between y=2x and y=x².",
+          "C03-P2: Find the area between y=4−x² and the x-axis.",
+          "C03-P3: Find the area between y=x and the x-axis on [−2,1].",
+          "C03-P4: Find the total bounded area between y=2x and y=x³. Identify the upper graph in each component.",
+          "C03-P5: Find the area bounded by x=y² and x=2−y.",
+          "C03-EXIT: Find the area enclosed by y=3x and y=x², labeling intersections and upper curve."
+        ],
+        "prerequisite": "Intersections, definite integrals, signs.",
+        "readingContext": "Phase 1 of a 30-day calculus review. Phase 2 is exam problem types; Phase 3 is evidence-driven remedy.",
+        "modelLesson": {
+          "gradingKeys": {
+            "C03-P1": "Intersections are 0 and 2, with 2x above x² between them. Integrate \\(2x-x^2\\) from 0 to 2 to obtain 4/3.",
+            "C03-P2": "The bounded region runs from −2 to 2 and lies above the axis. Its area is \\([4x-x^3/3]_{-2}^2=32/3\\).",
+            "C03-P3": "Split at zero: \\(\\int_{-2}^0(-x)dx+\\int_0^1x dx=2+1/2=5/2\\).",
+            "C03-P4": "Intersections solve x(x²−2)=0, giving −√2, 0, √2. On (−√2,0), x³ is above 2x; on (0,√2), 2x is above x³. Symmetry gives twice the integral of 2x−x³ from 0 to √2: 2[ x²−x⁴/4 ]₀^√2=2.",
+            "C03-P5": "Intersections satisfy y²+y−2=0, so y=−2 or 1. The right curve is 2−y on this interval. Integrate \\(2-y-y^2\\) from −2 to 1 to get 9/2. Horizontal slices avoid splitting a square-root graph into branches.",
+            "C03-EXIT": "Intersections 0 and 3; upper curve 3x. Area \\(\\int_0^3(3x-x^2)dx=9/2\\)."
+          },
+          "methodTags": {
+            "C03-P1": "intersections-order",
+            "C03-P2": "axis-region",
+            "C03-P3": "signed-versus-area",
+            "C03-P4": "order-change-transfer",
+            "C03-P5": "horizontal-slices"
+          },
+          "repair": "If a result is negative, revisit slice height before taking an absolute value of the final answer. If intersections are missing, solve the full factored equation. Fresh repair: y=x and y=2x² enclose area 1/24."
+        }
+      }
+    ]
+  },
+  {
+    "id": "calculus-phase1-topic-04",
+    "day": "Phase 1 · Day 4",
+    "title": "Applications of the Intermediate Value Theorem",
+    "focus": "Use continuity to prove existence, then supply a separate argument if uniqueness is needed.",
+    "weeks": [
+      {
+        "id": "calculus-phase1-day-04",
+        "label": "Day 4",
+        "week": 1,
+        "sourceWeek": 1,
+        "date": "",
+        "materialTitle": "Applications of the Intermediate Value Theorem",
+        "materialUrl": "calculus-review/day-04.html",
+        "expectedWork": "Refresher: exposition, selected worked examples, five practice problems, independent exit check, correction and concept map. Relative study day; no deadline assigned.",
+        "status": "Published",
+        "inlineQuestions": [
+          "C04-OPEN: Does a sign change prove a zero when the function has a jump?",
+          "C04-P1: Prove x⁵+x−3 has a zero in (1,2).",
+          "C04-P2: Prove e^(−x)=x has a solution in (0,1).",
+          "C04-P3: Give a continuous function with a zero on [1,3] but positive values at both endpoints.",
+          "C04-P4: On [−1,1], let g(x)=−2 for x&lt;0 and g(x)=2 for x≥0. Do its endpoint signs guarantee a zero? Explain.",
+          "C04-P5: Prove x+ln x=0 has exactly one positive root.",
+          "C04-EXIT: A student says “f(0)&lt;0&lt;f(1), so there is exactly one root.” Identify both missing justifications."
+        ],
+        "prerequisite": "Continuity, evaluating signs, elementary derivatives for optional uniqueness.",
+        "readingContext": "Phase 1 of a 30-day calculus review. Phase 2 is exam problem types; Phase 3 is evidence-driven remedy.",
+        "modelLesson": {
+          "gradingKeys": {
+            "C04-P1": "The polynomial is continuous. At 1 it is −1; at 2 it is 31. Zero lies strictly between them, so IVT gives a root in (1,2).",
+            "C04-P2": "Let h(x)=e^(−x)−x. It is continuous, h(0)=1>0 and h(1)=e⁻¹−1<0. IVT gives a zero of h, hence the required equality.",
+            "C04-P3": "f(x)=(x−2)² works: both endpoint values are 1 and f(2)=0. Opposite endpoint signs are sufficient, not necessary.",
+            "C04-P4": "No. The function is discontinuous at zero, so IVT does not apply. Its only values are −2 and 2, neither of which is zero.",
+            "C04-P5": "On [1/e,1], h(x)=x+ln x is continuous, with h(1/e)=1/e−1<0 and h(1)=1>0, giving existence. Its derivative 1+1/x>0 on (0,∞), so it is strictly increasing and the positive root is unique.",
+            "C04-EXIT": "Continuity on [0,1] is needed for the IVT existence argument. Uniqueness needs a separate condition or proof, such as strict monotonicity."
+          },
+          "methodTags": {
+            "C04-P1": "ivt-hypotheses",
+            "C04-P2": "equation-translation",
+            "C04-P3": "converse-counterexample",
+            "C04-P4": "continuity-hypothesis",
+            "C04-P5": "existence-uniqueness"
+          },
+          "repair": "If existence was read as uniqueness, compare x and x(x²−1/4) on [−1,1]: both change endpoint sign, but have different numbers of zeros. If continuity was omitted, retry the 1/x counterexample."
+        }
+      }
+    ]
+  },
+  {
+    "id": "calculus-phase1-topic-05",
+    "day": "Phase 1 · Day 5",
+    "title": "Applications of the Mean Value Theorem",
+    "focus": "Turn derivative information into bounds on total change; check endpoints and differentiability.",
+    "weeks": [
+      {
+        "id": "calculus-phase1-day-05",
+        "label": "Day 5",
+        "week": 1,
+        "sourceWeek": 1,
+        "date": "",
+        "materialTitle": "Applications of the Mean Value Theorem",
+        "materialUrl": "calculus-review/day-05.html",
+        "expectedWork": "Refresher: exposition, selected worked examples, five practice problems, independent exit check, correction and concept map. Relative study day; no deadline assigned.",
+        "status": "Published",
+        "inlineQuestions": [
+          "C05-OPEN: For f(x)=x² on [1,3], what is the slope of the chord between the endpoints?",
+          "C05-P1: Find the MVT point for f(x)=x³ on [0,1].",
+          "C05-P2: Apply Rolle’s theorem to f(x)=(x−1)(x−3) on [1,3], and find c.",
+          "C05-P3: For |x−1| on [0,2], which MVT hypothesis fails? Compare the chord slope with the existing derivative values.",
+          "C05-P4: If 2≤f′(x)≤5 on [0,3] and f(0)=1, bound f(3). Assume differentiability on a containing open interval.",
+          "C05-P5: For 0&lt;a&lt;b, prove \\((b-a)/b\\le\\ln b-\\ln a\\le(b-a)/a\\).",
+          "C05-EXIT: Use MVT to prove \\(|\\arctan b-\\arctan a|\\le|b-a|\\)."
+        ],
+        "prerequisite": "Derivative as slope, continuity, interval notation.",
+        "readingContext": "Phase 1 of a 30-day calculus review. Phase 2 is exam problem types; Phase 3 is evidence-driven remedy.",
+        "modelLesson": {
+          "gradingKeys": {
+            "C05-P1": "The chord slope is 1 and f′(c)=3c². The interior solution is c=1/√3; the negative algebraic solution is outside (0,1).",
+            "C05-P2": "The polynomial is continuous and differentiable and both endpoint values are zero. Its derivative is 2x−4, so the interior point is c=2.",
+            "C05-P3": "The function is continuous but not differentiable at the interior point 1. The chord slope is zero, while existing derivative values are −1 or 1, never zero.",
+            "C05-P4": "MVT gives f(3)−1=3f′(c), between 6 and 15. Therefore 7≤f(3)≤16. The derivative bounds control total change, not f(3) directly.",
+            "C05-P5": "MVT for ln gives ln b−ln a=(b−a)/c for a<c<b. Since 1/b<1/c<1/a, the stated non-strict bounds follow (indeed the inequalities are strict).",
+            "C05-EXIT": "The derivative is 1/(1+x²), whose absolute value is at most 1. Apply MVT between a and b, handle a=b separately, and take absolute values."
+          },
+          "methodTags": {
+            "C05-P1": "mvt-location",
+            "C05-P2": "rolle-hypotheses",
+            "C05-P3": "corner-counterexample",
+            "C05-P4": "derivative-bound",
+            "C05-P5": "log-bound"
+          },
+          "repair": "If the theorem was applied across a corner, list the hypotheses before calculating. If derivative and function values were confused, draw a rectangle with height f′(c) and width b−a. Fresh repair: |√b−√a|≤(b−a)/2 for 1≤a&lt;b."
+        }
+      }
+    ]
+  },
+  {
+    "id": "calculus-phase1-topic-06",
+    "day": "Phase 1 · Day 6",
+    "title": "Convexity and concavity",
+    "focus": "Connect chord geometry, derivative monotonicity, curvature, and optimization without reversing signs.",
+    "weeks": [
+      {
+        "id": "calculus-phase1-day-06",
+        "label": "Day 6",
+        "week": 1,
+        "sourceWeek": 1,
+        "date": "",
+        "materialTitle": "Convexity and concavity",
+        "materialUrl": "calculus-review/day-06.html",
+        "expectedWork": "Refresher: exposition, selected worked examples, five practice problems, independent exit check, correction and concept map. Relative study day; no deadline assigned.",
+        "status": "Published",
+        "inlineQuestions": [
+          "C06-OPEN: Sketch x² and −x². Which graph lies below a chord joining two points?",
+          "C06-P1: For f(x)=x², verify both the chord inequality and supporting tangent inequality by computing their differences.",
+          "C06-P2: Use MVT on [a,x] and [x,b] to prove that a differentiable function with nondecreasing derivative is convex.",
+          "C06-P3: Classify −ln x on (0,∞) as increasing/decreasing and convex/concave. Write its supporting tangent at x=1.",
+          "C06-P4: Explain why x⁴ is strictly convex but has no inflection at zero. Compare it with x³.",
+          "C06-P5: Use concavity of ln to derive AM≥GM for positive a,b. State the equality case and why it follows.",
+          "C06-EXIT: Find intervals of convexity/concavity and any inflection point of x³−6x²."
+        ],
+        "prerequisite": "First and second derivatives, weighted averages, domain intervals.",
+        "readingContext": "Phase 1 of a 30-day calculus review. Phase 2 is exam problem types; Phase 3 is evidence-driven remedy.",
+        "modelLesson": {
+          "gradingKeys": {
+            "C06-P1": "The chord gap is (1−t)a²+tb²−[(1−t)a+tb]²=t(1−t)(a−b)²≥0, strictly positive when a≠b and 0<t<1. The tangent gap at a is x²−[a²+2a(x−a)]=(x−a)²≥0.",
+            "C06-P2": "MVT gives the two secant slopes as f′(u) and f′(v) with u<v. Monotonicity makes the first no larger. Multiplying by the positive lengths and rearranging yields (b−a)f(x)≤(b−x)f(a)+(x−a)f(b), the chord inequality.",
+            "C06-P3": "f′=−1/x<0 gives decrease; f″=1/x²>0 gives strict convexity. At 1 the value is zero and slope −1, so the tangent is 1−x and −ln x≥1−x. Equivalently ln x≤x−1.",
+            "C06-P4": "For x⁴, f′=4x³ is strictly increasing, so the MVT secant argument gives strict convexity. Its second derivative 12x² does not change sign at zero. For x³, f″=6x changes sign from negative to positive there, so zero is an inflection point.",
+            "C06-P5": "Apply the concave midpoint inequality, then exponentiate to get (a+b)/2≥√(ab). Strict concavity makes equality possible only when a=b. The domain a,b>0 is necessary for the logarithms.",
+            "C06-EXIT": "f″=6x−12. It is concave for x<2 and convex for x>2. Curvature changes at x=2, where f(2)=−16, giving inflection point (2,−16)."
+          },
+          "methodTags": {
+            "C06-P1": "geometry-algebra-translation",
+            "C06-P2": "secant-proof",
+            "C06-P3": "slope-curvature-tangent",
+            "C06-P4": "strictness-inflection",
+            "C06-P5": "jensen-transfer"
+          },
+          "repair": "If curvature was inferred from f′, compute f″ explicitly. If f″=0 was taken as sufficient for inflection, contrast x³ with x⁴. Fresh repair: −ln x is decreasing and convex on x>0."
+        }
+      }
+    ]
+  },
+  {
+    "id": "calculus-phase1-topic-07",
+    "day": "Phase 1 · Day 7",
+    "title": "Convergence of series",
+    "focus": "Separate terms from partial sums and select a convergence test with valid hypotheses.",
+    "weeks": [
+      {
+        "id": "calculus-phase1-day-07",
+        "label": "Day 7",
+        "week": 1,
+        "sourceWeek": 1,
+        "date": "",
+        "materialTitle": "Convergence of series",
+        "materialUrl": "calculus-review/day-07.html",
+        "expectedWork": "Refresher: exposition, selected worked examples, five practice problems, independent exit check, correction and concept map. Relative study day; no deadline assigned.",
+        "status": "Published",
+        "inlineQuestions": [
+          "C07-OPEN: The terms 1/n tend to zero. Does that alone prove that their sum is finite?",
+          "C07-P1: Decide \\(\\sum_{n=0}^\\infty(2/3)^n\\) and find its sum.",
+          "C07-P2: Decide \\(\\sum_{n=1}^\\infty n/(n+1)\\).",
+          "C07-P3: Decide \\(\\sum_{n=1}^\\infty1/n^{3/2}\\).",
+          "C07-P4: Decide \\(\\sum_{n=1}^\\infty n/2^n\\) using the ratio test.",
+          "C07-P5: Decide \\(\\sum_{n=1}^\\infty(-1)^n/\\sqrt n\\). Is convergence absolute?",
+          "C07-EXIT: Decide \\(\\sum_{n=1}^\\infty n^2/3^n\\), and state what your test proves."
+        ],
+        "prerequisite": "Geometric sums, sequence limits, positivity and integral comparison.",
+        "readingContext": "Phase 1 of a 30-day calculus review. Phase 2 is exam problem types; Phase 3 is evidence-driven remedy.",
+        "modelLesson": {
+          "gradingKeys": {
+            "C07-P1": "This is geometric with |r|=2/3<1. Its sum is 1/(1−2/3)=3.",
+            "C07-P2": "The terms tend to 1, not zero, so the necessary condition fails and the series diverges. No more elaborate test is needed.",
+            "C07-P3": "This is a p-series with p=3/2>1, so it converges.",
+            "C07-P4": "The ratio is (n+1)/(2n), tending to 1/2<1. Thus the positive series converges. Its sum is not required for this test.",
+            "C07-P5": "The magnitudes decrease to zero, so the alternating test proves convergence. The absolute series is a p-series with p=1/2≤1, which diverges. Convergence is conditional.",
+            "C07-EXIT": "The ratio is ((n+1)/n)²/3, tending to 1/3<1. The series converges absolutely (its terms are already positive)."
+          },
+          "methodTags": {
+            "C07-P1": "geometric",
+            "C07-P2": "term-test",
+            "C07-P3": "p-series",
+            "C07-P4": "ratio-test",
+            "C07-P5": "conditional-convergence"
+          },
+          "repair": "If aₙ→0 was treated as sufficient, compare partial sums of the harmonic series with the grouped lower bound. If comparison was reversed, write the two nonnegative sequences in order. Fresh repair: Σ1/(n²+1) converges by comparison with Σ1/n²."
+        }
+      }
+    ]
+  },
+  {
+    "id": "calculus-phase1-topic-08",
+    "day": "Phase 1 · Day 8",
+    "title": "Power series and Taylor expansions",
+    "focus": "Find a convergence interval including endpoints, and separate finite Taylor approximation from infinite-series equality.",
+    "weeks": [
+      {
+        "id": "calculus-phase1-day-08",
+        "label": "Day 8",
+        "week": 1,
+        "sourceWeek": 1,
+        "date": "",
+        "materialTitle": "Power series and Taylor expansions",
+        "materialUrl": "calculus-review/day-08.html",
+        "expectedWork": "Refresher: exposition, selected worked examples, five practice problems, independent exit check, correction and concept map. Relative study day; no deadline assigned.",
+        "status": "Published",
+        "inlineQuestions": [
+          "C08-OPEN: Why does the geometric expansion of 1/(1−x) need a restriction on x?",
+          "C08-P1: Find the radius and interval of convergence of \\(\\sum_{n=0}^\\infty(x-2)^n/3^n\\).",
+          "C08-P2: Find the interval of convergence of \\(\\sum_{n=1}^\\infty x^n/n^2\\).",
+          "C08-P3: Write the Taylor polynomial of degree 3 for sin x at zero.",
+          "C08-P4: Find \\(\\lim_{x\\to0}(e^x-1-x)/x^2\\) using Taylor’s theorem.",
+          "C08-P5: Integrate the geometric series to obtain an expansion for −ln(1−x), and state a domain where the derivation is valid.",
+          "C08-EXIT: Find the interval of convergence of \\(\\sum_{n=1}^\\infty (x-1)^n/(n2^n)\\)."
+        ],
+        "prerequisite": "Series tests, derivatives, factorials, geometric series.",
+        "readingContext": "Phase 1 of a 30-day calculus review. Phase 2 is exam problem types; Phase 3 is evidence-driven remedy.",
+        "modelLesson": {
+          "gradingKeys": {
+            "C08-P1": "It is geometric with r=(x−2)/3, so |x−2|<3: interval (−1,5), radius 3. At −1 the terms alternate ±1; at 5 they are 1. Neither endpoint has terms tending to zero.",
+            "C08-P2": "The ratio gives radius 1. At either endpoint the absolute series is Σ1/n², so both converge absolutely. Interval [−1,1].",
+            "C08-P3": "The derivatives at zero are 0,1,0,−1, giving x−x³/6. This is a finite polynomial, so no convergence interval is needed merely to write it.",
+            "C08-P4": "Write eˣ=1+x+x²/2+R₂(x), with R₂(x)/x²→0 because its magnitude is bounded by a constant times |x|³ near zero. The limit is 1/2.",
+            "C08-P5": "For |x|<1 integrate termwise from 0 to x: \\(-\\ln(1-x)=\\sum_{n=0}^\\infty x^{n+1}/(n+1)\\). The constant is zero because both sides vanish at zero. Endpoint equality needs a separate argument.",
+            "C08-EXIT": "Let r=(x−1)/2. The ratio gives |r|<1, or −1<x<3. At x=−1 it is alternating harmonic and converges; at x=3 it is harmonic and diverges. Interval [−1,3)."
+          },
+          "methodTags": {
+            "C08-P1": "radius-endpoints",
+            "C08-P2": "endpoint-absolute",
+            "C08-P3": "taylor-coefficients",
+            "C08-P4": "taylor-limit",
+            "C08-P5": "termwise-integration"
+          },
+          "repair": "If endpoint checks were omitted, substitute actual endpoint numbers into the series. If a Taylor coefficient missed n!, differentiate the proposed polynomial at the center. Fresh repair: eˣ has cubic polynomial 1+x+x²/2+x³/6."
+        }
+      }
+    ]
+  },
+  {
+    "id": "calculus-phase1-topic-09",
+    "day": "Phase 1 · Day 9",
+    "title": "Monotone convergence and Bolzano–Weierstrass: foundations",
+    "focus": "Distinguish a convergent sequence from a convergent subsequence and prove monotone convergence using a least upper bound.",
+    "weeks": [
+      {
+        "id": "calculus-phase1-day-09",
+        "label": "Day 9",
+        "week": 1,
+        "sourceWeek": 1,
+        "date": "",
+        "materialTitle": "Monotone convergence and Bolzano–Weierstrass: foundations",
+        "materialUrl": "calculus-review/day-09.html",
+        "expectedWork": "Refresher: exposition, selected worked examples, five practice problems, independent exit check, correction and concept map. Relative study day; no deadline assigned.",
+        "status": "Published",
+        "inlineQuestions": [
+          "C09-OPEN: Does a bounded real sequence have to converge? Give an example or a proof.",
+          "C09-P1: Prove aₙ=1−1/n converges using monotonicity and boundedness, and find its limit.",
+          "C09-P2: Give a nondecreasing sequence with no finite limit. Which hypothesis is missing?",
+          "C09-P3: Give a bounded divergent sequence and two convergent subsequences.",
+          "C09-P4: For a₁=0 and aₙ₊₁=(aₙ+2)/2, prove convergence and find the limit.",
+          "C09-P5: If a real sequence converges to L, explain why every subsequence converges to L.",
+          "C09-EXIT: Explain why the fixed-point equation L=√(2+L), by itself, does not prove convergence of the recurrence in the worked example."
+        ],
+        "prerequisite": "Order inequalities, real numbers, limits, induction.",
+        "readingContext": "Phase 1 of a 30-day calculus review. Phase 2 is exam problem types; Phase 3 is evidence-driven remedy.",
+        "modelLesson": {
+          "gradingKeys": {
+            "C09-P1": "aₙ₊₁−aₙ=1/[n(n+1)]>0, and aₙ<1. Monotone convergence applies; the direct expression gives limit 1.",
+            "C09-P2": "aₙ=n is nondecreasing but not bounded above. Monotone convergence requires the appropriate finite bound.",
+            "C09-P3": "Use (−1)ⁿ. Even terms give limit 1; odd terms give limit −1. Boundedness guarantees a subsequence, not full convergence.",
+            "C09-P4": "Inductively 0≤aₙ<2. The difference aₙ₊₁−aₙ=(2−aₙ)/2>0. Hence convergence follows. Taking limits gives L=(L+2)/2, so L=2.",
+            "C09-P5": "For any ε>0 choose N so all n≥N have |aₙ−L|<ε. Increasing positive indices nₖ satisfy nₖ≥k, so for k≥N their selected terms meet the same bound.",
+            "C09-EXIT": "The equation states a condition on a limit if one exists. Boundedness and monotonicity first prove existence. Only afterward may continuity justify passing to the limit and selecting the admissible root."
+          },
+          "methodTags": {
+            "C09-P1": "monotone-bound",
+            "C09-P2": "missing-bound",
+            "C09-P3": "subsequence-distinction",
+            "C09-P4": "recurrence-proof",
+            "C09-P5": "subsequence-proof"
+          },
+          "repair": "If boundedness was confused with convergence, revisit even and odd subsequences. If a recurrence was solved without proof of convergence, separate bounds, monotonicity, existence, and limit identification. Fresh repair: aₙ=n/(n+1) is increasing, bounded above by 1, and converges to 1."
+        }
+      }
+    ]
+  },
+  {
+    "id": "calculus-phase1-topic-10",
+    "day": "Phase 1 · Day 10",
+    "title": "Monotone convergence and Bolzano–Weierstrass: applications",
+    "focus": "Use sequence theorems in recurrences, partial sums, bisection, and a cumulative refresher check.",
+    "weeks": [
+      {
+        "id": "calculus-phase1-day-10",
+        "label": "Day 10",
+        "week": 1,
+        "sourceWeek": 1,
+        "date": "",
+        "materialTitle": "Monotone convergence and Bolzano–Weierstrass: applications",
+        "materialUrl": "calculus-review/day-10.html",
+        "expectedWork": "Refresher: exposition, selected worked examples, five practice problems, independent exit check, correction and concept map. Relative study day; no deadline assigned.",
+        "status": "Published",
+        "inlineQuestions": [
+          "C10-OPEN: State exactly what boundedness alone guarantees, and what monotonicity adds.",
+          "C10-P1: Let a₁=1 and aₙ₊₁=2−1/aₙ. Find the sequence and discuss whether a fixed-point equation is needed.",
+          "C10-P2: Let aₙ=2+(-1)ⁿ/n. Is it monotone? Does it converge?",
+          "C10-P3: Prove that the partial sums of Σ1/2ⁿ, n≥1, are bounded and nondecreasing; identify their limit.",
+          "C10-P4: Start bisection for x³+x−1 on [0,1]. Give the interval after two midpoint tests and a midpoint error bound.",
+          "C10-P5: A bounded real sequence has subsequences tending to 1 and −1. What can be concluded about convergence of the full sequence?",
+          "C10-EXIT: Give (i) a bounded divergent sequence, (ii) an unbounded sequence with a convergent subsequence, and (iii) a bounded nondecreasing sequence. State which theorem applies to each."
+        ],
+        "prerequisite": "Day 9 theorem statements; Days 1–8 methods.",
+        "readingContext": "Phase 1 of a 30-day calculus review. Phase 2 is exam problem types; Phase 3 is evidence-driven remedy.",
+        "modelLesson": {
+          "gradingKeys": {
+            "C10-P1": "a₁=1 gives a₂=1 and induction gives aₙ=1 for every n. The sequence is constant and converges to 1. The recurrence is well-defined since no term is zero. A direct invariant is simpler than solving a general limit equation.",
+            "C10-P2": "It alternates above and below 2, so is not monotone. Since |aₙ−2|=1/n→0, it converges to 2. Monotone convergence is a sufficient theorem, not a necessary description of every convergent sequence.",
+            "C10-P3": "All terms are positive. The geometric finite sum is Sₙ=1−2^(−N)<1. Monotone convergence applies, and the expression gives limit 1.",
+            "C10-P4": "At 1/2 the value is −3/8, so retain [1/2,1]. At 3/4 it is 11/64>0, so retain [1/2,3/4]. Midpoint is 5/8 and guaranteed error at most 1/8. Continuity supplies root existence within each bracket.",
+            "C10-P5": "The full sequence cannot converge, because all subsequences of a convergent sequence share its limit. The existence of those two subsequences alone does not exclude additional subsequential limits.",
+            "C10-EXIT": "(i) (−1)ⁿ: Bolzano–Weierstrass guarantees a convergent subsequence, not full convergence. (ii) a₂ₖ=0, a₂ₖ₋₁=k: a convergent subsequence exists, but not through the boundedness hypothesis. (iii) 1−1/n: monotone convergence gives full convergence to 1; Bolzano–Weierstrass also applies, but is weaker here."
+          },
+          "methodTags": {
+            "C10-P1": "recurrence-invariant",
+            "C10-P2": "theorem-not-necessary",
+            "C10-P3": "partial-sum-bound",
+            "C10-P4": "ivt-sequence-bridge",
+            "C10-P5": "subsequence-inference"
+          },
+          "repair": "Choose one missed problem from Days 1–8 and reattempt without the earlier solution. Record the first broken step and make a nearby fresh problem before entering Phase 2. Do not replace the planned Phase 3 review with an assumption that all gaps are already repaired."
+        }
+      }
+    ]
+  }
+];
+ return entries.map(entry => ({...entry, weeks: entry.weeks.map(week => ({...week,
+ feedbackWorkflow: baseFeedbackWorkflow({
+  id: `feedback-workflow-${week.id}`, title: `Calculus refresher: ${entry.title}`,
+  promptUse: "Grade the submitted work against the numbered prompts and supplied grading keys. Distinguish independent opening/exit checks from work after hints or exposed solutions. Identify the first broken step: concept, method selection, theorem hypothesis, algebra/calculation, logical direction, or transfer. Give one targeted remedy and a fresh nearby check; do not infer mastery or independent authorship from polished text or submission alone. Use uncertainty when support metadata is blank. Preserve per-question method tags for Phase 3 planning. No automatic learner message is authorized.",
+  studentSummaryHint: "Summarize what the work demonstrates, the support used, and the unresolved check.",
+  prerequisiteGraph: {topic:entry.title,skills:{
+   "algebra-and-domain":{label:"Algebra and domain",prereqs:["signs","factoring","fractions"],diagnostic:"Use one short algebra-only step from a missed problem."},
+   "theorem-hypotheses":{label:"Theorem hypotheses",prereqs:["continuity","quantifiers","implication-direction"],diagnostic:"State the hypotheses and give a counterexample when one is removed."},
+   "method-selection":{label:"Method selection",prereqs:["recognition","setup"],diagnostic:"Explain why this method applies before calculating."}
+  }},
+  skills:[{id:"method-selection",label:"Chooses and explains a method"},{id:"theorem-hypotheses",label:"Checks hypotheses and logical direction"},{id:"execution",label:"Executes accurately"},{id:"transfer",label:"Solves a fresh check"}],
+  rubric:[{criterion:"Method and setup",points:3,cue:"Recognizes the structure and sets up correctly."},{criterion:"Hypotheses and reasoning",points:3,cue:"Justifies applicability, domains and implications."},{criterion:"Execution",points:2,cue:"Calculates or proves accurately."},{criterion:"Interpretation and transfer",points:2,cue:"States the result and distinguishes supported from independent work."}],
+  commonIssues:["A theorem applied without its hypotheses.","A sufficient condition mistaken for a necessary one.","A correct answer copied from a revealed example is treated as independent transfer.","A local computation is not connected to the question."],
+  defaultNextDrills:[{skill:"transfer",difficulty:"refresher",instruction:week.modelLesson.repair}]
+ })
+ }))}));
+}
+// CALCULUS_REVIEW_CATALOG_END
+
+
+
+
+
 function ensureCoursePlan() {
   if (state.coursePlanVersion === COURSE_PLAN_VERSION) return;
   const user = normalizeSeededUser(state.user || defaultUser());
@@ -229,6 +741,8 @@ function buildCoursePlan(user = defaultUser()) {
   if (!basic) {
     plan.subjects.push({id:"subject-platinum-math-diagnostic",accountTypeId:"gate-da-platinum",lessonPlanId:plan.lessonPlans[0]?.id,title:"High-school Mathematics Diagnostic",details:"Ten daily 60-minute sessions. Diagnose knowledge, execution, recognition and combination across 25 skill ladders. Eight core questions daily plus up to two tutor-selected follow-ups.",sectionIds:[],mathDiagnostic:true,updatedAt:now});
     plan.subjects.push({id:"subject-platinum-math-remedial",accountTypeId:"gate-da-platinum",lessonPlanId:plan.lessonPlans[0]?.id,title:"Mathematics Foundations and Remediation",details:"After the diagnostic: ten daily 90-minute sessions,45 minutes foundations plus45 minutes targeted repair. Logical language, series, number theory, algebra, functions and relations.",sectionIds:[],mathRemedial:true,updatedAt:now});
+    plan.subjects.push({id:"subject-platinum-calculus-review",accountTypeId:"gate-da-platinum",lessonPlanId:plan.lessonPlans[0]?.id,title:"Calculus: 30-day review",details:"Phase 1: ten refresher study days with exposition, worked examples, five practice problems and mind maps. Phases 2 and 3: exam problem types, then feedback-driven review and remedy. No calendar start assigned.",sectionIds:[],materialWorkspaces:calculusReviewMaterialWorkspaces(),workspaceEyebrow:"Three phases · ten study days each",workspaceTitle:"Phase 1 · Calculus refresher",updatedAt:now});
+    plan.resources.push({id:"resource-platinum-calculus-review",title:"Calculus: 30-day review — Phase 1",date:"2026-11-08",details:"Limits; integrals and Leibniz; areas; twelve IVT and MVT examples; Spivak convexity companion; series, Taylor and sequence convergence. Relative study days.",link:"calculus-review/index.html",updatedAt:now});
     plan.resources.push({id:"resource-platinum-math-remedial",title:"Ten-day mathematics foundations and remediation",date:"2026-10-29",details:"Complete the diagnostic first. Each day starts with retrieval before teaching; work saves on the server and subsequent days open after submission.",link:"math-remedial/index.html",updatedAt:now});
     plan.resources.push({id:"resource-platinum-math-diagnostic",title:"Ten-day mathematics diagnostic",date:"2026-10-17",details:"One day at a time: 80 core questions, 53 reserve probes and recorded reasoning/confidence. Start from the diagnostic subject to keep your learner record linked.",link:"math-diagnostic/index.html",updatedAt:now});
   }
@@ -37419,7 +37933,7 @@ function subjectMenuCardTemplate(subject) {
 function subjectReaderTemplate(subject) {
   if (subject.mathRemedial) {
     const url = `math-remedial/index.html?learner=${encodeURIComponent(state.user.id)}`;
-    return `<article class="subject-reader"><div class="subject-reader-header"><button class="text-btn" data-subject-back type="button">Back to subjects</button></div><section class="chapter-menu"><p class="eyebrow">After your diagnostic · Ten90-minute sessions</p><h4>Mathematics Foundations and Remediation</h4><p>45 minutes of foundations and45 minutes of diagnostic-led repair daily. Start with retrieval before teaching, then work through explanations, examples and fresh checks. Stop at90 minutes and record anything not reached.</p><p><a class="primary-btn" href="${url}" target="_blank" rel="noopener">Open my remedial course</a></p><p>Complete all ten diagnostic days first. Responses and attachments save on Aleph; submitting each day opens the next. Tutor solutions stay separate. Automatic remedial feedback is not yet available; submitted work is available for tutor review. Calculus begins after this programme is complete.</p><p class="muted">Author-reviewed and computation-checked; timing remains provisional.</p></section></article>`;
+    return `<article class="subject-reader"><div class="subject-reader-header"><button class="text-btn" data-subject-back type="button">Back to subjects</button></div><section class="chapter-menu"><p class="eyebrow">After your diagnostic · Ten90-minute sessions</p><h4>Mathematics Foundations and Remediation</h4><p>45 minutes of foundations and45 minutes of diagnostic-led repair daily. Start with retrieval before teaching, then work through explanations, examples and fresh checks. Stop at90 minutes and record anything not reached.</p><p><a class="primary-btn" href="${url}" target="_blank" rel="noopener">Open my remedial course</a></p><p>Complete all ten diagnostic days first. Responses and attachments save on Aleph; submitting each day opens the next. Tutor solutions stay separate. Automatic remedial feedback is not yet available; submitted work is available for tutor review. The separate Calculus: 30-day review is available in Subjects; retain targeted foundation repairs where needed.</p><p class="muted">Author-reviewed and computation-checked; timing remains provisional.</p></section></article>`;
   }
   if (subject.mathDiagnostic) {
     const url = `math-diagnostic/index.html?learner=${encodeURIComponent(state.user.id)}`;
