@@ -1,7 +1,7 @@
 const STORAGE_KEY = "learning-studio-data-v2";
 const LEGACY_STORAGE_KEYS = ["learning-studio-data-v1"];
 const SESSION_KEY = "aleph-session";
-const COURSE_PLAN_VERSION = "seeded-user-canonical-workspace-v170";
+const COURSE_PLAN_VERSION = "seeded-user-canonical-workspace-v171";
 const MAX_FEEDBACK_ATTACHMENT_BYTES = 3 * 1024 * 1024;
 const MAX_COMPRESSED_FEEDBACK_BYTES = 2400 * 1024;
 const MAX_FEEDBACK_REQUEST_BYTES = 4 * 1024 * 1024;
@@ -720,6 +720,509 @@ function calculusReviewMaterialWorkspaces() {
 
 
 
+
+
+// SKIENA_REVIEW_CATALOG_START
+function skienaReviewMaterialWorkspaces() {
+ const entries=[
+  {
+    "id": "skiena-review-topic-01",
+    "day": "Week1 · Day 1",
+    "title": "Analysis, Python traces and search",
+    "focus": "Separate exact counts from growth bounds, and explain why a search interval shrinks.",
+    "weeks": [
+      {
+        "id": "skiena-review-day-01",
+        "label": "Day 1",
+        "week": 1,
+        "sourceWeek": 1,
+        "date": "",
+        "materialTitle": "Analysis, Python traces and search",
+        "materialUrl": "dsa-review/day-01.html",
+        "expectedWork": "Read exposition, attempt five diagnostic questions, record the original attempt, review worked feedback, reconstruct the concept map, then upload. Relative study day; no deadline.",
+        "status": "Published",
+        "inlineQuestions": [
+          "D01-Q1: Select every true statement about worst-case costs. A. Binary search on an ordered array uses O(log n) comparisons. B. A triangular nested loop is always Θ(n). C. A Θ(n) algorithm is also O(n²). D. A Python list slice of length k always uses O(1) extra space.",
+          "D01-Q2: On a=[2,4,4,9], lower_bound uses lo=0, hi=len(a); while lo<hi: mid=(lo+hi)//2; if a[mid]<t: lo=mid+1; else: hi=mid. Select every true result. A. For t=4 it returns 1. B. For t=5 it returns 3. C. On an empty array it reads a[0]. D. For t=10 it returns 4.",
+          "D01-Q3: For n=8, count iterations of j=1; while j<n: j*=2. Give the count for general positive n and its growth. ",
+          "D01-Q4: Python: a=[1,2]; b=a; c=a[:]; b.append(3); c[0]=9. Give a,b,c and explain why. ",
+          "D01-Q5: Linear search returns immediately on the first match. For distinct length-n input, count target comparisons in the first-position success and absent-target cases. Explain why a single average cannot be inferred. "
+        ],
+        "prerequisite": "Python sequence/index semantics and the selected Skiena reading anchor.",
+        "readingContext": "ADM 3e Chapters 1–2; Chapter 5 binary search",
+        "modelLesson": {
+          "gradingKeys": {
+            "D01-Q1": "A and C. Binary search uses sorted order to discard candidates; an upper bound need not be tight. The triangular count is quadratic, and copying k Python list entries needs Θ(k) space.",
+            "D01-Q2": "A, B and D. Targets 4,5,10 give indices 1,3,4. An empty array starts with lo=hi=0 and never enters the loop.",
+            "D01-Q3": "For n=8: j is 1,2,4 at loop entry, so 3 iterations. For positive n the count is ceil(log₂n), with zero when n=1. Growth is Θ(log n) for growing n.",
+            "D01-Q4": "a and b both reference [1,2,3]. c is a separate shallow list and becomes [9,2]. Appending changes the aliased list; assigning c[0] changes only the copy.",
+            "D01-Q5": "First-position success uses 1 comparison; absence uses n. Average cost requires a probability model over targets/positions or cases; it is not fixed by the code alone."
+          },
+          "diagnosticTags": {
+            "D01-Q1": {
+              "skill": "bounds-versus-count",
+              "trap": "loose-upper-bound",
+              "firstStep": "Separate the exact count, the input precondition, and the bound."
+            },
+            "D01-Q2": {
+              "skill": "binary-boundaries",
+              "trap": "duplicate-and-sentinel",
+              "firstStep": "Trace the half-open interval; distinguish a returned insertion index from an existing element."
+            },
+            "D01-Q3": {
+              "skill": "doubling-loop",
+              "trap": "value-versus-iteration",
+              "firstStep": "List j values at loop entry."
+            },
+            "D01-Q4": {
+              "skill": "python-aliasing",
+              "trap": "alias-versus-copy",
+              "firstStep": "Draw list objects separately from variable names."
+            },
+            "D01-Q5": {
+              "skill": "case-analysis",
+              "trap": "average-without-model",
+              "firstStep": "Identify which execution path is being counted."
+            }
+          },
+          "retest": [
+            "Find lower_bound of 6 in [0,6,6,8], then of 9.",
+            "Indices 1 and 4. The latter is a sentinel insertion index."
+          ],
+          "repair": "For a boundary miss, trace length 0, 1 and 2 before generalizing. For a count miss, list loop-entry values instead of multiplying loop names."
+        }
+      }
+    ]
+  },
+  {
+    "id": "skiena-review-topic-02",
+    "day": "Week1 · Day 2",
+    "title": "Arrays, linked lists, stacks and queues",
+    "focus": "Choose a representation from its operations and protect its state invariant.",
+    "weeks": [
+      {
+        "id": "skiena-review-day-02",
+        "label": "Day 2",
+        "week": 1,
+        "sourceWeek": 1,
+        "date": "",
+        "materialTitle": "Arrays, linked lists, stacks and queues",
+        "materialUrl": "dsa-review/day-02.html",
+        "expectedWork": "Read exposition, attempt five diagnostic questions, record the original attempt, review worked feedback, reconstruct the concept map, then upload. Relative study day; no deadline.",
+        "status": "Published",
+        "inlineQuestions": [
+          "D02-Q1: Select every true statement under the standard array/list-node model. A. Reading a[i] is O(1). B. Deleting the tail of a singly linked list is always O(1), even without a predecessor link. C. Deleting the successor of a known linked-list node is O(1). D. Inserting at the front of a packed array is always O(1).",
+          "D02-Q2: A stack starts empty. Execute push(2), push(5), pop(), push(7). A queue starts empty and executes enqueue(2), enqueue(5), dequeue(), enqueue(7). Select every true statement. A. The stack removes 5. B. The queue removes 5. C. Both final structures contain 2 and 7. D. The queue finishes front-to-back as [5,7].",
+          "D02-Q3: For capacity 5, head=4, size=3, list the occupied indices in removal order and the next insertion index. ",
+          "D02-Q4: A bracket checker sees ([)]. State the first failing character and the stack immediately before it. ",
+          "D02-Q5: In 2→4→9, p refers to node 4 and z is a new node 7. Explain the bug in p.next=z; z.next=p.next, and repair it. "
+        ],
+        "prerequisite": "Python sequence/index semantics and the selected Skiena reading anchor.",
+        "readingContext": "ADM 3e Chapter 3: elementary data structures",
+        "modelLesson": {
+          "gradingKeys": {
+            "D02-Q1": "A and C. Indexed array access is constant time. Deleting after a known predecessor needs a fixed link change. A singly linked tail still needs its predecessor for deletion, and middle array insertion shifts entries.",
+            "D02-Q2": "A and D. The stack removes 5 and ends bottom-to-top [2,7]; the queue removes 2 and ends front-to-back [5,7].",
+            "D02-Q3": "Occupied indices 4,0,1. Next insertion (4+3) mod5=2. The queue is not full because size=3<5.",
+            "D02-Q4": "The third character, ), fails. The stack is bottom-to-top [(,[]. Its top [ requires ], not ). Merely counting opening and closing brackets would miss the nesting error.",
+            "D02-Q5": "After the first assignment p.next is z. The second sets z.next=z, making a self-loop and losing the original successor 9. Repair by setting z.next=p.next before p.next=z, or by saving the old successor first."
+          },
+          "diagnosticTags": {
+            "D02-Q1": {
+              "skill": "operation-preconditions",
+              "trap": "hidden-search-cost",
+              "firstStep": "Ask whether a node or its index was supplied."
+            },
+            "D02-Q2": {
+              "skill": "discipline-trace",
+              "trap": "same-operations-different-order",
+              "firstStep": "Record the removal rule before tracing."
+            },
+            "D02-Q3": {
+              "skill": "circular-queue",
+              "trap": "wrap-around",
+              "firstStep": "Enumerate offsets from head."
+            },
+            "D02-Q4": {
+              "skill": "stack-invariant",
+              "trap": "count-versus-nesting",
+              "firstStep": "Use unmatched openings as the stack meaning."
+            },
+            "D02-Q5": {
+              "skill": "pointer-order",
+              "trap": "lost-successor",
+              "firstStep": "Track references after each assignment."
+            }
+          },
+          "retest": [
+            "What happens when a bracket scan ends with ([ still on the stack?",
+            "It fails: unmatched opening brackets remain even though no closing mismatch occurred."
+          ],
+          "repair": "For a pointer error, draw every reference after each line. For queue errors, write head and size after every operation. Do not repair only the final output."
+        }
+      }
+    ]
+  },
+  {
+    "id": "skiena-review-topic-03",
+    "day": "Week1 · Day 3",
+    "title": "Dictionaries: hashing, binary search trees and traversal",
+    "focus": "Distinguish expected costs from guarantees, and membership lookup from ordered queries.",
+    "weeks": [
+      {
+        "id": "skiena-review-day-03",
+        "label": "Day 3",
+        "week": 1,
+        "sourceWeek": 1,
+        "date": "",
+        "materialTitle": "Dictionaries: hashing, binary search trees and traversal",
+        "materialUrl": "dsa-review/day-03.html",
+        "expectedWork": "Read exposition, attempt five diagnostic questions, record the original attempt, review worked feedback, reconstruct the concept map, then upload. Relative study day; no deadline.",
+        "status": "Published",
+        "inlineQuestions": [
+          "D03-Q1: Select every true statement. A. BST search takes O(h) for height h. B. Hashing prevents all collisions. C. Expected O(1) hash lookup guarantees worst-case O(1). D. Tombstones can preserve an open-addressing probe chain.",
+          "D03-Q2: A BST contains distinct keys. Select every true statement. A. Inorder traversal returns sorted keys. B. Comparing each node only with its children always verifies a BST. C. Sorted insertion can create linear height. D. Every binary min-heap is a BST.",
+          "D03-Q3: Indices0…4, h(k)=k mod5, linear probing. Insert 1,6,11, then delete6 correctly. Trace lookup of11. ",
+          "D03-Q4: Insert4,2,6,1,3,5,7 into an empty BST. Give preorder and inorder, with left child visited before right. ",
+          "D03-Q5: You need repeated minimum-key removal and sorted-range queries. Explain why a plain hash table alone does not directly provide both efficiently; suggest appropriate structures. "
+        ],
+        "prerequisite": "Python sequence/index semantics and the selected Skiena reading anchor.",
+        "readingContext": "ADM 3e Chapter 3; Chapter 6: hashing",
+        "modelLesson": {
+          "gradingKeys": {
+            "D03-Q1": "A and D. Balanced height gives logarithmic BST operations. Tombstones keep searches from ending too early. Collisions can occur even with a low load factor; expected and worst-case costs differ.",
+            "D03-Q2": "A and C. Inorder visits keys in order. Inserting1,2,3,4 into an ordinary unbalanced BST creates a right chain. A parent-child-only check is insufficient for the whole-subtree invariant, and a heap is not a BST.",
+            "D03-Q3": "Insertions occupy1,2,3. Deletion leaves a tombstone at2. Lookup probes1 (key1),2 (tombstone; continue),3 (key11; found).",
+            "D03-Q4": "Preorder:4,2,1,3,6,5,7. Inorder:1,2,3,4,5,6,7. The distinction is whether the node is visited before or between its subtree visits.",
+            "D03-Q5": "Hashing organizes by bucket rather than key order, so minimum/range queries may need scans. A min-heap supports repeated minimum extraction; a balanced BST supports ordered range traversal and updates. Choice depends on whether both capabilities must share one representation."
+          },
+          "diagnosticTags": {
+            "D03-Q1": {
+              "skill": "dictionary-guarantees",
+              "trap": "expected-versus-worst",
+              "firstStep": "Separate the abstract operation from its probabilistic assumptions."
+            },
+            "D03-Q2": {
+              "skill": "tree-invariant",
+              "trap": "local-versus-global-order",
+              "firstStep": "Compare each claim with the full-subtree condition."
+            },
+            "D03-Q3": {
+              "skill": "hash-probe-trace",
+              "trap": "premature-termination",
+              "firstStep": "Use the insertion probe sequence for search."
+            },
+            "D03-Q4": {
+              "skill": "tree-traversal",
+              "trap": "visit-position",
+              "firstStep": "Write traversal rules before expanding subtrees."
+            },
+            "D03-Q5": {
+              "skill": "representation-choice",
+              "trap": "lookup-is-not-order",
+              "firstStep": "Name the required operations and their ordering information."
+            }
+          },
+          "retest": [
+            "Root10 has left5, and node5 has right12. Is the tree a BST?",
+            "No.12 lies in the left subtree of10 but exceeds10, even though it is correctly to the right of5."
+          ],
+          "repair": "For a hashing miss, trace probe positions including tombstones. For a BST miss, check the entire ancestor bounds rather than parent-child pairs."
+        }
+      }
+    ]
+  },
+  {
+    "id": "skiena-review-topic-04",
+    "day": "Week1 · Day 4",
+    "title": "Elementary sorting and the meaning of stability",
+    "focus": "Trace selection, insertion and bubble sort using a stated implementation and count the requested operation.",
+    "weeks": [
+      {
+        "id": "skiena-review-day-04",
+        "label": "Day 4",
+        "week": 1,
+        "sourceWeek": 1,
+        "date": "",
+        "materialTitle": "Elementary sorting and the meaning of stability",
+        "materialUrl": "dsa-review/day-04.html",
+        "expectedWork": "Read exposition, attempt five diagnostic questions, record the original attempt, review worked feedback, reconstruct the concept map, then upload. Relative study day; no deadline.",
+        "status": "Published",
+        "inlineQuestions": [
+          "D04-Q1: For the stated implementations, select every true claim. A. Selection sort makes n(n−1)/2 key comparisons. B. Early-exit bubble always uses Θ(n²) comparisons, even on sorted input. C. Insertion using strict > is stable. D. The stated swap-based selection sort is stable.",
+          "D04-Q2: Let [1,2,3,4] be already sorted. Count only comparisons between array keys, not loop-index checks. Select every correct count. A. Selection:6. B. Insertion:3. C. Early-exit bubble:6. D. Insertion:0.",
+          "D04-Q3: After the first two outer iterations of insertion sort on [4,1,3,2], what is the array? Count shifts in those iterations. ",
+          "D04-Q4: Give the number of inversions in [3,1,2]. Explain how many adjacent swaps are needed to sort it if only inverted adjacent pairs are swapped. ",
+          "D04-Q5: A programmer removes the swapped flag from early-exit bubble but keeps n−1 shrinking passes. On sorted input of length n, what changes and what does not? "
+        ],
+        "prerequisite": "Python sequence/index semantics and the selected Skiena reading anchor.",
+        "readingContext": "ADM 3e Chapter 4; Python implementations supplement the exam list",
+        "modelLesson": {
+          "gradingKeys": {
+            "D04-Q1": "A and C. Selection always scans all suffixes, and strict-shift insertion preserves equal-key order. The specified bubble can stop after a linear first pass, and selection may be unstable.",
+            "D04-Q2": "A and B. Selection compares3+2+1=6 pairs. Insertion makes one failed key comparison for each of the final3 items. Bubble has3 adjacent checks in its no-swap first pass and stops.",
+            "D04-Q3": "Insert1 into[4]:[1,4,3,2],1 shift. Then insert3 into[1,4]:[1,3,4,2],1 further shift. Total2 shifts.",
+            "D04-Q4": "There are2 inversions:(3,1) and(3,2). Each inverted adjacent swap reduces the inversion count by exactly1, so exactly2 such swaps sort it.",
+            "D04-Q5": "Output correctness remains, and no swaps occur. Key comparisons rise from n−1 to n(n−1)/2, changing best-case work from linear to quadratic for this implementation."
+          },
+          "diagnosticTags": {
+            "D04-Q1": {
+              "skill": "sort-properties",
+              "trap": "algorithm-name-without-convention",
+              "firstStep": "Apply the implementation conditions, not a memorized slogan."
+            },
+            "D04-Q2": {
+              "skill": "exact-key-count",
+              "trap": "counting-index-tests",
+              "firstStep": "Define the counted primitive first."
+            },
+            "D04-Q3": {
+              "skill": "insertion-trace",
+              "trap": "shift-versus-comparison",
+              "firstStep": "Identify which sorted prefix exists before each iteration."
+            },
+            "D04-Q4": {
+              "skill": "inversion-invariant",
+              "trap": "global-pair-versus-adjacent",
+              "firstStep": "List index pairs with a left value exceeding the right value."
+            },
+            "D04-Q5": {
+              "skill": "implementation-perturbation",
+              "trap": "correct-output-versus-cost",
+              "firstStep": "Separate sorting correctness from the stopping rule."
+            }
+          },
+          "retest": [
+            "Why does changing insertion’s shift condition from > to ≥ threaten stability?",
+            "It shifts equal keys too, so a later equal record can be inserted before earlier equal records."
+          ],
+          "repair": "If stability is misunderstood, attach letters to equal keys. For counts, keep swaps, shifts and key comparisons in separate columns."
+        }
+      }
+    ]
+  },
+  {
+    "id": "skiena-review-topic-05",
+    "day": "Week1 · Day 5",
+    "title": "Divide and conquer, mergesort, quicksort and heaps",
+    "focus": "Explain partition/merge invariants and choose a recurrence from the code’s work.",
+    "weeks": [
+      {
+        "id": "skiena-review-day-05",
+        "label": "Day 5",
+        "week": 1,
+        "sourceWeek": 1,
+        "date": "",
+        "materialTitle": "Divide and conquer, mergesort, quicksort and heaps",
+        "materialUrl": "dsa-review/day-05.html",
+        "expectedWork": "Read exposition, attempt five diagnostic questions, record the original attempt, review worked feedback, reconstruct the concept map, then upload. Relative study day; no deadline.",
+        "status": "Published",
+        "inlineQuestions": [
+          "D05-Q1: Select every true claim. A. Standard mergesort takes Θ(n log n) worst-case time. B. Every quicksort execution takes Θ(n log n). C. Repeated extreme pivots can make quicksort Θ(n²). D. A min-heap array is always globally sorted.",
+          "D05-Q2: For a min-heap array [1,3,2,8,5,4], select every true statement. A. It satisfies the min-heap invariant. B. Binary search is guaranteed to find any key in it. C. Its inorder traversal must be sorted. D. After extract-min, the root is2.",
+          "D05-Q3: Merge sorted [1,5,7] and[2,3,8]. Give the output and the exact number of key comparisons. ",
+          "D05-Q4: Lomuto-partition [3,1,4,2] with last pivot2 and ≤ as the left test. Give the resulting array and pivot index. ",
+          "D05-Q5: Compare T(n)=2T(n/2)+n and U(n)=U(n−1)+n, with constant base cases. Explain the growth by total work, not only a named theorem. "
+        ],
+        "prerequisite": "Python sequence/index semantics and the selected Skiena reading anchor.",
+        "readingContext": "ADM 3e Chapters 4–5; Chapter 4 priority queues",
+        "modelLesson": {
+          "gradingKeys": {
+            "D05-Q1": "A and C. Balanced merge recursion has linear work per level. Extreme quicksort pivots can give quadratic worst-case work. Bottom-up heap construction has linear tight cost, and a heap does not globally sort its array.",
+            "D05-Q2": "A and D. Every parent≤children. Key2 is at index2. Root extraction moves4 to root, swaps with smaller child2, and leaves[2,3,4,8,5]. BST inorder reasoning does not apply.",
+            "D05-Q3": "Output[1,2,3,5,7,8]. Comparisons are1vs2,5vs2,5vs3,5vs8,7vs8:5. The last8 is copied.",
+            "D05-Q4": "Scan3:no move; scan1:swap to get[1,3,4,2]; scan4:no move; swap pivot with index1, giving[1,2,4,3]. Pivot index1; the right side is not yet sorted.",
+            "D05-Q5": "T has log₂n levels and Θ(n) work per level:Θ(n log n). U accumulates n+(n−1)+…+1:Θ(n²). Balanced splitting and repeatedly removing one item create different recursion shapes."
+          },
+          "diagnosticTags": {
+            "D05-Q1": {
+              "skill": "recurrence-and-structure",
+              "trap": "balanced-versus-guaranteed",
+              "firstStep": "Separate recurrence shape from the data structure invariant."
+            },
+            "D05-Q2": {
+              "skill": "heap-trace",
+              "trap": "heap-versus-search-tree",
+              "firstStep": "Use array child indices and sift toward the smaller child."
+            },
+            "D05-Q3": {
+              "skill": "merge-count",
+              "trap": "tail-copy-versus-comparison",
+              "firstStep": "Keep one pointer per input and record each paired comparison."
+            },
+            "D05-Q4": {
+              "skill": "partition-invariant",
+              "trap": "partition-is-not-sort",
+              "firstStep": "Track the boundary of entries≤pivot."
+            },
+            "D05-Q5": {
+              "skill": "recurrence-design",
+              "trap": "all-recursion-is-logarithmic",
+              "firstStep": "Draw the subproblem sizes and sum work."
+            }
+          },
+          "retest": [
+            "A quicksort with last-element pivot receives sorted distinct input. What split repeats?",
+            "Sizes n−1 and0 repeat, producing quadratic worst-case work."
+          ],
+          "repair": "For recurrence errors, draw a recursion tree before simplifying. For partition errors, label the processed left region and unprocessed suffix after every scan."
+        }
+      }
+    ]
+  },
+  {
+    "id": "skiena-review-topic-06",
+    "day": "Week1 · Day 6",
+    "title": "Graph representations, BFS and DFS",
+    "focus": "Make graph traces deterministic and distinguish reachability, traversal order and unweighted distance.",
+    "weeks": [
+      {
+        "id": "skiena-review-day-06",
+        "label": "Day 6",
+        "week": 1,
+        "sourceWeek": 1,
+        "date": "",
+        "materialTitle": "Graph representations, BFS and DFS",
+        "materialUrl": "dsa-review/day-06.html",
+        "expectedWork": "Read exposition, attempt five diagnostic questions, record the original attempt, review worked feedback, reconstruct the concept map, then upload. Relative study day; no deadline.",
+        "status": "Published",
+        "inlineQuestions": [
+          "D06-Q1: Select every true statement for a finite graph stored as adjacency lists. A. Adjacency lists use O(V+E) storage. B. Every adjacency matrix uses O(V+E) space. C. BFS finds shortest path lengths measured in edge count. D. DFS always finds a shortest path first.",
+          "D06-Q2: In an undirected graph, BFS marks vertices when enqueued. Select every true statement. A. Each vertex enters the queue at most once. B. Neighbor order never changes a BFS parent tree. C. The same outer-loop traversal automatically counts directed strongly connected components. D. Repeating from unvisited vertices counts undirected components.",
+          "D06-Q3: Undirected edges A–B,A–D,B–C,C–D,C–E. Starting A with alphabetical neighbors, give BFS visitation order and distances to C and E. ",
+          "D06-Q4: For the same graph and alphabetical neighbors, give recursive DFS discovery order from A. Does that order alone establish a shortest route from A to E? ",
+          "D06-Q5: An undirected graph has vertices0…5 and edges0–1,1–2,3–4, with5 isolated. How many BFS starts are needed to visit everything from an initially empty visited set? Compare list and matrix full-traversal cost. "
+        ],
+        "prerequisite": "Python sequence/index semantics and the selected Skiena reading anchor.",
+        "readingContext": "ADM 3e Chapter 7: graph traversal",
+        "modelLesson": {
+          "gradingKeys": {
+            "D06-Q1": "A and C. Lists scale with vertices plus stored edges. BFS supplies shortest edge counts in an unweighted graph. Matrices take quadratic storage, and DFS need not discover a shortest path first.",
+            "D06-Q2": "A and D. Each vertex is enqueued at most once. Starting BFS at every unvisited vertex counts connected components for undirected graphs. It does not count strongly connected components of arbitrary digraphs, and list ordering can select different tied parents.",
+            "D06-Q3": "Order A,B,D,C,E. Distances:C=2,E=3. When D is processed, C is already enqueued from B, so it is not added again.",
+            "D06-Q4": "Order A,B,C,D,E. DFS visits D from C before returning to C and visiting E. The order alone does not prove shortest paths; DFS follows a branch rather than layers.",
+            "D06-Q5": "Three starts:components{0,1,2},{3,4},{5}. With adjacency lists the complete traversal is Θ(V+E); scanning full matrix rows costs Θ(V²). Isolated vertices still count in V."
+          },
+          "diagnosticTags": {
+            "D06-Q1": {
+              "skill": "graph-model-cost",
+              "trap": "representation-independent-cost",
+              "firstStep": "State the representation and the path metric."
+            },
+            "D06-Q2": {
+              "skill": "discovery-and-components",
+              "trap": "undirected-versus-directed",
+              "firstStep": "Separate discovered from processed and identify graph direction."
+            },
+            "D06-Q3": {
+              "skill": "bfs-state-trace",
+              "trap": "duplicate-discovery",
+              "firstStep": "Write queue and discovered set after each removal."
+            },
+            "D06-Q4": {
+              "skill": "dfs-backtrack",
+              "trap": "visit-order-versus-distance",
+              "firstStep": "Expand a recursive call and return before moving to the next neighbor."
+            },
+            "D06-Q5": {
+              "skill": "component-and-cost",
+              "trap": "omitting-isolated-vertices",
+              "firstStep": "List all vertices before following edges."
+            }
+          },
+          "retest": [
+            "Can two valid BFS runs have different parents but identical distances?",
+            "Yes. When two shortest paths tie, neighbor order can select a different discovering parent; shortest edge counts remain the same."
+          ],
+          "repair": "For a graph trace miss, record queue/call stack and discovered set together. For complexity, count neighbor entries inspected in the chosen representation."
+        }
+      }
+    ]
+  },
+  {
+    "id": "skiena-review-topic-07",
+    "day": "Week1 · Day 7",
+    "title": "Shortest paths and the week’s cumulative check",
+    "focus": "Choose a shortest-path method from its edge assumptions, then revisit earlier invariants.",
+    "weeks": [
+      {
+        "id": "skiena-review-day-07",
+        "label": "Day 7",
+        "week": 1,
+        "sourceWeek": 1,
+        "date": "",
+        "materialTitle": "Shortest paths and the week’s cumulative check",
+        "materialUrl": "dsa-review/day-07.html",
+        "expectedWork": "Read exposition, attempt five diagnostic questions, record the original attempt, review worked feedback, reconstruct the concept map, then upload. Relative study day; no deadline.",
+        "status": "Published",
+        "inlineQuestions": [
+          "D07-Q1: Select every true statement. A. BFS suffices when every edge has the same positive weight. B. Dijkstra is always correct whenever the graph has no negative cycle. C. Nonnegative weights justify ordinary Dijkstra finalization. D. Choosing a heap automatically makes any greedy distance algorithm correct.",
+          "D07-Q2: Cumulative: select every true statement under the implementations reviewed this week. A. A deleted linear-probing slot can always become never-used empty. B. Picking the left record on equal merge keys preserves cross-half stability. C. A returned lower_bound index n must be dereferenced. D. Marking on BFS enqueue avoids duplicate discoveries in the queue.",
+          "D07-Q3: Directed edges S→A:6,S→B:2,B→A:1,A→T:2,B→T:9. Give the Dijkstra finalization order and shortest distance/path to T. All weights are positive. ",
+          "D07-Q4: Directed edges S→A:1,S→B:4,B→A:−5,A→T:1. Explain the wrong finalized-once Dijkstra result for T and the true shortest distance. ",
+          "D07-Q5: Mixed transfer: for sorted a=[1,2,2,5], give lower_bound(2), lower_bound(6), and the first step you would inspect if a merge of tagged equal keys reverses their order. Explain both answers. "
+        ],
+        "prerequisite": "Python sequence/index semantics and the selected Skiena reading anchor.",
+        "readingContext": "ADM 3e Chapter 8; cumulative Chapters 2–7",
+        "modelLesson": {
+          "gradingKeys": {
+            "D07-Q1": "A and C. BFS minimizes edge count in unweighted graphs. Dijkstra’s usual correctness requires nonnegative edge weights. The negative-edge example has no cycle but still breaks finalization. A heap minimum is not necessarily the final distance without an appropriate invariant.",
+            "D07-Q2": "B and D. Stable merging chooses left first on ties; enqueue-time marking avoids duplicate queue insertions. Linear probing cannot replace a deleted entry by a never-used empty slot without risking false absence. Lower_bound may validly return n.",
+            "D07-Q3": "Finalize S,B,A,T. After S:A6,B2; after B:A3,T11; after A:T5. Distance to T is5 along S→B→A→T.",
+            "D07-Q4": "Finalizing A at1 updates T to2; T can be finalized before B. Processing B later gives a route to A of−1, which would give T distance0. The ordinary finalized-once procedure can retain the wrong result2; the true distance is0 via S→B→A→T.",
+            "D07-Q5": "The indices are1 and4. Equality must keep searching left, while4 is an insertion sentinel. For merge stability inspect the tie-breaking branch: choosing a right-half equal key before an earlier left-half equal key reverses their cross-half order."
+          },
+          "diagnosticTags": {
+            "D07-Q1": {
+              "skill": "shortest-path-assumptions",
+              "trap": "no-negative-cycle-is-not-enough",
+              "firstStep": "State the path metric and edge-sign assumption."
+            },
+            "D07-Q2": {
+              "skill": "cumulative-invariant-choice",
+              "trap": "familiar-name-versus-invariant",
+              "firstStep": "Check the preserved state claim for each structure."
+            },
+            "D07-Q3": {
+              "skill": "dijkstra-relaxation",
+              "trap": "first-seen-is-not-final",
+              "firstStep": "Update tentative distances before selecting the next minimum."
+            },
+            "D07-Q4": {
+              "skill": "negative-edge-counterexample",
+              "trap": "premature-finalization",
+              "firstStep": "Trace finalization and compare with an explicitly valid later route."
+            },
+            "D07-Q5": {
+              "skill": "search-sort-transfer",
+              "trap": "equality-and-stability",
+              "firstStep": "Translate “first” and “stable” into the relevant invariant."
+            }
+          },
+          "retest": [
+            "With S→A weight10,S→B weight1,B→A weight1, does BFS minimize total weight?",
+            "No. The one-edge route costs10, while the two-edge route costs2. BFS minimizes edges, not arbitrary positive weights."
+          ],
+          "repair": "Group errors by model choice, state update, representation cost, boundary, or justification. In Week2 select mixed problems around the largest confirmed gap; in Week3 use a delayed new-input check."
+        }
+      }
+    ]
+  }
+];
+ return entries.map(entry=>({...entry,weeks:entry.weeks.map(week=>({...week,feedbackWorkflow:baseFeedbackWorkflow({
+ id:`feedback-workflow-${week.id}`,title:`Skiena review: ${entry.title}`,
+ promptUse:"Grade five numbered questions against the supplied keys, ten marks total. Q1-Q2 are multi-select, two points each only for the exact correct set. Q3-Q5 are two points each: result/trace and requested explanation, one point each. Use original recorded responses as diagnostic evidence; grade later corrections separately. Distinguish independent work from hints/prior exposure. Classify the first error by model, representation, invariant/state update, boundary/equality, cost model or unsupported reasoning. Give one targeted drill and a fresh transfer check. Do not infer mastery from submission, or call material CMI syllabus merely because GATE covers it.",
+ studentSummaryHint:"State what the original attempt demonstrates, its support, and the first repair.",
+ prerequisiteGraph:{topic:entry.title,skills:{"code-state":{label:"Code state",prereqs:["indices","variables","control-flow"],diagnostic:"Trace a small state table."},"invariants":{label:"Invariant and termination",prereqs:["precondition","case-split"],diagnostic:"Name what stays true and what decreases."},"cost-model":{label:"Operation and case model",prereqs:["exact-count","growth-bound"],diagnostic:"Count the specified primitive before giving Θ."}}},
+ skills:[{id:"model",label:"Reads the specification"},{id:"state",label:"Traces and preserves state"},{id:"analysis",label:"Explains cost and boundaries"},{id:"transfer",label:"Justifies a new case"}],
+ rubric:[{criterion:"Q1 exact multi-select",points:2,cue:"All and only correct options."},{criterion:"Q2 exact multi-select",points:2,cue:"All and only correct options."},{criterion:"Q3 result and explanation",points:2,cue:"One point each."},{criterion:"Q4 result and explanation",points:2,cue:"One point each."},{criterion:"Q5 result and explanation",points:2,cue:"One point each."}],maxScore:10,
+ commonIssues:["Uses intended rather than actual code behavior.","Omits an empty, duplicate or boundary case.","Confuses expected and worst-case cost.","Reports a final state without the requested reason."],
+ defaultNextDrills:[{skill:"targeted-repair",difficulty:"refresher",instruction:week.modelLesson.repair}]
+ })}))}));
+}
+// SKIENA_REVIEW_CATALOG_END
+
+
 function ensureCoursePlan() {
   if (state.coursePlanVersion === COURSE_PLAN_VERSION) return;
   const user = normalizeSeededUser(state.user || defaultUser());
@@ -741,6 +1244,8 @@ function buildCoursePlan(user = defaultUser()) {
   if (!basic) {
     plan.subjects.push({id:"subject-platinum-math-diagnostic",accountTypeId:"gate-da-platinum",lessonPlanId:plan.lessonPlans[0]?.id,title:"High-school Mathematics Diagnostic",details:"Ten daily 60-minute sessions. Diagnose knowledge, execution, recognition and combination across 25 skill ladders. Eight core questions daily plus up to two tutor-selected follow-ups.",sectionIds:[],mathDiagnostic:true,updatedAt:now});
     plan.subjects.push({id:"subject-platinum-math-remedial",accountTypeId:"gate-da-platinum",lessonPlanId:plan.lessonPlans[0]?.id,title:"Mathematics Foundations and Remediation",details:"After the diagnostic: ten daily 90-minute sessions,45 minutes foundations plus45 minutes targeted repair. Logical language, series, number theory, algebra, functions and relations.",sectionIds:[],mathRemedial:true,updatedAt:now});
+    plan.subjects.push({id:"subject-platinum-skiena-review",accountTypeId:"gate-da-platinum",lessonPlanId:plan.lessonPlans[0]?.id,title:"DSA: three-week Skiena review",details:"Week1: seven GATE DA/Skiena overlap review lessons with exposition, diagnostics, feedback and mind maps. Weeks2–3: mixed applications then evidence-driven remedy. No calendar start assigned.",sectionIds:[],materialWorkspaces:skienaReviewMaterialWorkspaces(),workspaceEyebrow:"Skiena ADM 3e · GATE DA primary; CMI pseudocode secondary",workspaceTitle:"Week1 · Seven-day review and diagnostics",updatedAt:now});
+    plan.resources.push({id:"resource-platinum-skiena-review",title:"Three-week DSA review — Skiena, Week1",date:"2026-11-08",details:"Seven review lessons, thirty-five diagnostic questions, worked feedback and mind maps. Exam/book intersection and later-week plan included.",link:"dsa-review/index.html",updatedAt:now});
     plan.subjects.push({id:"subject-platinum-calculus-review",accountTypeId:"gate-da-platinum",lessonPlanId:plan.lessonPlans[0]?.id,title:"Calculus: 30-day review",details:"Phase 1: ten refresher study days with exposition, worked examples, five practice problems and mind maps. Phases 2 and 3: exam problem types, then feedback-driven review and remedy. No calendar start assigned.",sectionIds:[],materialWorkspaces:calculusReviewMaterialWorkspaces(),workspaceEyebrow:"Three phases · ten study days each",workspaceTitle:"Phase 1 · Calculus refresher",updatedAt:now});
     plan.resources.push({id:"resource-platinum-calculus-review",title:"Calculus: 30-day review — Phase 1",date:"2026-11-08",details:"Limits; integrals and Leibniz; areas; twelve IVT and MVT examples; Spivak convexity companion; series, Taylor and sequence convergence. Relative study days.",link:"calculus-review/index.html",updatedAt:now});
     plan.resources.push({id:"resource-platinum-math-remedial",title:"Ten-day mathematics foundations and remediation",date:"2026-10-29",details:"Complete the diagnostic first. Each day starts with retrieval before teaching; work saves on the server and subsequent days open after submission.",link:"math-remedial/index.html",updatedAt:now});
