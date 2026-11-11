@@ -74,3 +74,10 @@ await emailAction({action:'configure',payload,signature:sign(null,Buffer.from(pa
 let sent=0;const options={now:new Date('2026-11-10T13:00:00Z'),env:{RESEND_API_KEY:'mock',FROM_EMAIL:'test@example.invalid',CRON_SECRET:'mock'},fetcher:async(url,request)=>{sent++;const body=JSON.parse(request.body);assert(body.text.includes('Easy:'));assert(body.text.includes('Hard:'));assert(body.text.includes('Feedback requested:'));assert(body.subject.includes('daily study update'));return {ok:true,json:async()=>({id:'synthetic-digest'})};}};
 await checkTrackerReminders(options);await checkTrackerReminders(options);assert.equal(sent,1);
 console.log('PASS: completed-day reflection digest with actual work, easy/hard and mentor feedback needs; durable once-daily delivery. Mock email only.');
+
+// Short no-change answers are valid; substantive reflection fields remain detailed.
+const currentEmail=await trackerState(emailLearner,dayOne);emailRevision=currentEmail.revision;
+await assert.rejects(emailAction({...reflect,easy:'Easy',nextStep:'Nothing.',tomorrowProposal:'No change.',unfinished:[],understanding:[{assignmentId:eid,score:4}]}),/specific explanation/);
+const amended=await emailAction({...reflect,nextStep:'Nothing.',tomorrowProposal:'No change.',unfinished:[],understanding:[{assignmentId:eid,score:4}]});
+assert.equal(amended.study.reflections[0].nextStep,'Nothing.');assert.equal(amended.study.reflections[0].tomorrowProposal,'No change.');assert.equal(amended.study.reflections[0].history.length,1);
+console.log('PASS: concise no-change answers submit; easy/hard and other substantive fields retain detailed validation and prior check-ins remain in history.');

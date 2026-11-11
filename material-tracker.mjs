@@ -1,7 +1,7 @@
-import {createStudyWorkflow} from './study-workflow.mjs?v=1';
+import {createStudyWorkflow} from './study-workflow.mjs?v=2';
 const escape=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 export function createMaterialTracker(root){
- const studyUI=createStudyWorkflow();
+ const studyUI=createStudyWorkflow(),formResults=new Map();
  let context=null,state=null,error='',busy=false,epoch=0,timer=null,lastCatalog='',draft={date:'',material:'',minutes:'90'},selectedDay='';
  function catalogue(){return context?.catalog||[];}
  function remember(){const form=root.querySelector('.material-assign-form');if(form){draft={date:form.elements.dueDate.value,material:form.elements.material.value,minutes:form.elements.minutes.value};}}
@@ -20,11 +20,26 @@ export function createMaterialTracker(root){
   root.querySelectorAll('[data-reschedule]').forEach(b=>b.onclick=()=>{const f=[...root.querySelectorAll('[data-reschedule-form]')].find(f=>f.dataset.rescheduleForm===b.dataset.reschedule);f.hidden=!f.hidden;});
   root.querySelectorAll('[data-reschedule-form]').forEach(f=>f.onsubmit=e=>{e.preventDefault();change({action:'reschedule',id:f.dataset.rescheduleForm,dueDate:f.elements.newDate.value});});
   root.querySelectorAll('[data-upload]').forEach(b=>b.onclick=()=>context.onUpload(b.dataset.upload));
-  studyUI.render(root.querySelector('[data-study-workflow]'),{state,context:{...context,onStudyDay:day=>{selectedDay=day;render();}},change,selectedDay:selected});
+  studyUI.render(root.querySelector('[data-study-workflow]'),{state,context:{...context,onStudyDay:day=>{selectedDay=day;render();},onStudyDraft:id=>formResults.delete(id)},change,selectedDay:selected});
+  for(const form of root.querySelectorAll('[data-study-form]')){
+   const result=formResults.get(form.dataset.studyForm),status=form.querySelector('[data-study-form-status]');
+   if(result&&status){status.setAttribute('role',result.ok?'status':'alert');status.textContent=result.message;}
+   if(busy)form.querySelector('[type="submit"]').disabled=true;
+  }
  }
  async function request(options){const r=await fetch(`/api/material-tracker?learner=${encodeURIComponent(context.learner)}`,{cache:'no-store',...options});const body=await r.json();if(!r.ok)throw Error(body.error||'Assignments could not be saved.');return body;}
  async function refresh(){if(!context||busy)return;const token=++epoch;try{const next=await request();if(token!==epoch)return;state=next;error='';render();}catch(e){if(token!==epoch)return;error=e.message;render();}}
- async function change(input){if(busy||!state)return false;let success=false;busy=true;error='';render();const token=++epoch;try{const next=await request({method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({learner:context.learner,expectedRevision:state.revision,adminToken:context.isAdmin?studyUI.adminToken(context.learner):undefined,...input})});if(token!==epoch)return;state=next;success=true;error='Saved.';context.onChange?.();}catch(e){if(token===epoch){error=e.message;try{const next=await request();if(token===epoch)state=next;}catch{}}}finally{if(token===epoch){busy=false;render();}}return success;}
+ async function change(input,{formId}={}){if(busy||!state)return false;let success=false;if(formId)formResults.set(formId,{ok:true,message:'Saving…'});busy=true;error='';render();const token=++epoch;try{const next=await request({method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({learner:context.learner,expectedRevision:state.revision,adminToken:context.isAdmin?studyUI.adminToken(context.learner):undefined,...input})});if(token!==epoch)return;state=next;success=true;error='Saved.';context.onChange?.();}catch(e){if(token===epoch){error=e.message;try{const next=await request();if(token===epoch)state=next;}catch{}}}finally{if(token===epoch){
+  if(formId)formResults.set(formId,{ok:success,message:success?(input.action==='study-reflect'?'Daily check-in saved.':'Saved.'):error||'Could not save. Your draft is still here; please try again.'});
+  busy=false;render();
+ }}
+  if(formId){
+   const form=[...root.querySelectorAll('[data-study-form]')].find(f=>f.dataset.studyForm===formId);
+   const status=form?.querySelector('[data-study-form-status]');
+   if(status){status.setAttribute('role',success?'status':'alert');status.textContent=success?(input.action==='study-reflect'?'Daily check-in saved.':'Saved.'):error||'Could not save. Your draft is still here; please try again.';const section=form.closest('details');if(section&&!section.open)section.querySelector('summary').click();if(!success)status.scrollIntoView({block:'center'});}
+  }
+  return success;}
+
  const onFocus=()=>{if(context&&document.visibilityState!=='hidden')refresh();};window.addEventListener('focus',onFocus);document.addEventListener('visibilitychange',onFocus);
- return {setContext(next){const identity=next?.learner,previous=context?.learner,previousAdmin=context?.isAdmin;const signature=next?JSON.stringify(next.catalog.map(m=>m.materialId)):'';context=next;if(identity!==previous||next?.isAdmin!==previousAdmin){studyUI.reset(previous);epoch++;state=null;error='';draft={date:'',material:'',minutes:'90'};selectedDay='';busy=false;clearInterval(timer);timer=null;if(next){refresh();timer=setInterval(refresh,60000);}render();}else if(signature!==lastCatalog)render();lastCatalog=signature;},refresh,destroy(){studyUI.reset(context?.learner);context=null;epoch++;clearInterval(timer);window.removeEventListener('focus',onFocus);document.removeEventListener('visibilitychange',onFocus);render();}};
+ return {setContext(next){const identity=next?.learner,previous=context?.learner,previousAdmin=context?.isAdmin;const signature=next?JSON.stringify(next.catalog.map(m=>m.materialId)):'';context=next;if(identity!==previous||next?.isAdmin!==previousAdmin){studyUI.reset(previous);formResults.clear();epoch++;state=null;error='';draft={date:'',material:'',minutes:'90'};selectedDay='';busy=false;clearInterval(timer);timer=null;if(next){refresh();timer=setInterval(refresh,60000);}render();}else if(signature!==lastCatalog)render();lastCatalog=signature;},refresh,destroy(){studyUI.reset(context?.learner);context=null;epoch++;clearInterval(timer);window.removeEventListener('focus',onFocus);document.removeEventListener('visibilitychange',onFocus);render();}};
 }

@@ -9,7 +9,7 @@ export function createStudyWorkflow(){
   const nextKey='aleph-study-drafts:'+context.learner+':'+(admin?'mentor':'learner');if(nextKey!==draftKey){draftKey=nextKey;drafts.clear();try{for(const [k,v]of JSON.parse(sessionStorage.getItem(draftKey)||'[]'))drafts.set(k,v);}catch{}}
   if(!s){root.innerHTML=admin?'<h3>Study agreement</h3><p>A two-week agreement has not started.</p>':'';return;}
   const view=s.days.find(d=>d.day===day),plan=view?.plan,reflection=s.reflections.find(r=>r.day===day),items=(plan?.assignments||[]),active=state.assignments;
-  const form=(id,body,button)=>`<form data-study-form="${id}" class="study-form">${body}<button class="primary-btn" type="submit">${esc(button)}</button></form>`;
+  const form=(id,body,button)=>`<form data-study-form="${id}" class="study-form">${body}<p data-study-form-status role="status" aria-live="polite"></p><button class="primary-btn" type="submit">${esc(button)}</button></form>`;
   const draft=(id,name,fallback='')=>drafts.get(id)?.[name]??fallback;
   const area=(id,name,label,fallback='',hint='',min=20)=>`<label>${esc(label)}<textarea name="${name}" required minlength="${min}" maxlength="4000" rows="3" placeholder="${esc(hint)}">${esc(draft(id,name,fallback))}</textarea></label>`;
   const number=(id,name,label,fallback,min=0,max=720)=>input(name,label,draft(id,name,fallback),'number',`min="${min}" max="${max}"`);
@@ -45,7 +45,7 @@ export function createStudyWorkflow(){
   if(!admin&&day<=state.today&&items.length){
    const id='reflect:'+day;
    const rowFields=items.map(a=>{const log=s.logs.find(l=>l.day===day&&l.assignmentId===a.id),done=state.assignments.find(x=>x.id===a.id)?.completedAt,doneByDay=done&&new Intl.DateTimeFormat('en-CA',{timeZone:'America/Toronto',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date(done))<=day;return `<fieldset><legend>${esc(a.title)}</legend><p>${log?.minutes||0} minutes logged · ${doneByDay?'Complete by this day':'Not complete by this day'}</p>`+number(id,'understanding:'+a.id,'Current understanding (1–5)',reflection?.snapshot.find(x=>x.id===a.id)?.understanding||3,1,5)+(!doneByDay?area(id,'unfinished:'+a.id,'What remains unfinished and why?',reflection?.snapshot.find(x=>x.id===a.id)?.unfinishedReason||''):'')+'</fieldset>';}).join('');
-   body+=details('4. Required evening check-in and reflection',form(id,`<p>About five minutes. Save work logs first. Give concrete examples; a checkbox or “done” is not enough. This reflection does not automatically complete assignments.</p>${rowFields}`+area(id,'workDone','What did you actually do?',reflection?.workDone||'','Name a problem, method or result; compare it with what you planned.',30)+area(id,'easy','What was easy, and why?',reflection?.easy||'','What could you explain or solve independently? Give an example.')+area(id,'hard','What was hard, and what did you try?',reflection?.hard||'','Name the exact step, confusion or recurring error.')+area(id,'evidence','What is the evidence of your understanding?',reflection?.evidence||'','What can you reproduce without notes? Where is your confidence still untested?')+area(id,'nextStep','What will you change next time?',reflection?.nextStep||'','Choose one concrete action based on today’s evidence.')+area(id,'mentorFeedback','What feedback do you want from your mentor?',reflection?.mentorFeedback||'','Ask a specific question about a solution, method, priorities or working relationship.')+area(id,'tomorrowProposal','What should stay or change tomorrow?',reflection?.tomorrowProposal||'','Give your own proposal and its effect on the overall workload.'),reflection?'Save an amended check-in':'Submit daily check-in'),!reflection);
+   body+=details('4. Required evening check-in and reflection',form(id,`<p>About five minutes. Save work logs first. Give concrete examples; a checkbox or “done” is not enough. This reflection does not automatically complete assignments.</p>${rowFields}`+area(id,'workDone','What did you actually do?',reflection?.workDone||'','Name a problem, method or result; compare it with what you planned.',30)+area(id,'easy','What was easy, and why?',reflection?.easy||'','What could you explain or solve independently? Give an example.')+area(id,'hard','What was hard, and what did you try?',reflection?.hard||'','Name the exact step, confusion or recurring error.')+area(id,'evidence','What is the evidence of your understanding?',reflection?.evidence||'','What can you reproduce without notes? Where is your confidence still untested?')+area(id,'nextStep','What will you change next time?',reflection?.nextStep||'','Choose one concrete action, or say that no change is needed.',1)+area(id,'mentorFeedback','What feedback do you want from your mentor?',reflection?.mentorFeedback||'','Ask a specific question about a solution, method, priorities or working relationship.')+area(id,'tomorrowProposal','What should stay or change tomorrow?',reflection?.tomorrowProposal||'','Propose a change, or say that the plan should stay the same.',1),reflection?'Save an amended check-in':'Submit daily check-in'),!reflection);
   }
   if(reflection){
    body+=details('Recorded daily reflection',`<p>Received ${esc(reflection.submittedAt)} · ${reflection.history.length} earlier versions retained</p>`+['workDone','easy','hard','evidence','nextStep','mentorFeedback','tomorrowProposal'].map(k=>textBlock(({workDone:'Work done',easy:'Easy',hard:'Hard',evidence:'Evidence',nextStep:'Next action',mentorFeedback:'Feedback requested',tomorrowProposal:'Tomorrow’s proposal'})[k],reflection[k])).join(''));
@@ -72,9 +72,28 @@ export function createStudyWorkflow(){
    const id=f.dataset.studyForm;
    // Restore drafts, including select fields, after server polling or validation errors.
    const saved=drafts.get(id);if(saved)for(const [name,value]of Object.entries(saved)){const el=f.elements.namedItem(name);if(el){if(el.type==='checkbox')el.checked=value;else el.value=value;}}
-   const capture=()=>{const values={};for(const el of f.elements)if(el.name)values[el.name]=el.type==='checkbox'?el.checked:el.value;drafts.set(id,values);try{sessionStorage.setItem(draftKey,JSON.stringify([...drafts]));}catch{}};f.oninput=capture;f.onchange=capture;
+   const clearErrors=()=>{for(const el of f.elements){if(el.setCustomValidity)el.setCustomValidity('');el.removeAttribute('aria-invalid');el.removeAttribute('aria-describedby');}f.querySelectorAll('[data-study-field-error]').forEach(e=>e.remove());};
+   const validate=()=>{
+    clearErrors();let first=null,count=0;
+    for(const el of f.elements){
+     if(!el.willValidate)continue;
+     if(el.matches('textarea,input[type="text"]')){
+      const length=el.value.trim().length;
+      if(el.required&&!length)el.setCustomValidity('This field is required.');
+      else if(length&&el.minLength>0&&length<el.minLength)el.setCustomValidity(`Please add at least ${el.minLength} characters (currently ${length}).`);
+     }
+     if(el.checkValidity())continue;
+     count++;first ||= el;el.setAttribute('aria-invalid','true');
+     const message=document.createElement('p');message.dataset.studyFieldError='';message.className='study-field-error';message.id='study-error-'+encodeURIComponent(id+'-'+el.name);message.textContent=el.validationMessage;el.setAttribute('aria-describedby',message.id);el.insertAdjacentElement('afterend',message);
+    }
+    if(first){const status=f.querySelector('[data-study-form-status]');status.setAttribute('role','alert');status.textContent=`Please fix the ${count===1?'highlighted field':'highlighted fields'} before submitting.`;first.focus();first.scrollIntoView({block:'center'});return false;}
+    return true;
+   };
+   // Validate explicitly so errors are visible beside fields, including restored drafts.
+   f.noValidate=true;
+   const capture=()=>{ const values={};for(const el of f.elements)if(el.name)values[el.name]=el.type==='checkbox'?el.checked:el.value;drafts.set(id,values);try{sessionStorage.setItem(draftKey,JSON.stringify([...drafts]));}catch{}};f.oninput=e=>{capture();context.onStudyDraft?.(id);const status=f.querySelector('[data-study-form-status]');status.textContent='';status.setAttribute('role','status');const el=e.target;if(el?.setCustomValidity){el.setCustomValidity('');el.removeAttribute('aria-invalid');el.removeAttribute('aria-describedby');el.nextElementSibling?.matches('[data-study-field-error]')&&el.nextElementSibling.remove();}};f.onchange=capture;
    f.querySelector('[data-log-assignment]')?.addEventListener('change',e=>{chosenAssignment=e.target.value;const saved=s.logs.find(l=>l.day===day&&l.assignmentId===chosenAssignment);f.elements.minutes.value=saved?.minutes||0;f.elements.detail.value=saved?.detail||'';capture();});
-   f.onsubmit=async e=>{e.preventDefault();capture();const v=drafts.get(id),[kind,key]=id.split(':');let data;
+   f.onsubmit=async e=>{e.preventDefault();capture();if(!validate())return;const v=drafts.get(id),[kind,key]=id.split(':');let data;
     if(kind==='accept')data={action:'study-accept',day,planVersion:plan.version,availableMinutes:Number(v.availableMinutes),purpose:v.purpose,startCue:v.startCue,firstStep:v.firstStep,termsAccepted:v.termsAccepted,estimates:items.map(a=>({assignmentId:a.id,minutes:Number(v['estimate:'+a.id]),confidence:Number(v['confidence:'+a.id])}))};
     if(kind==='issue')data={action:'study-raise',day,category:v.category,assignmentId:v.assignmentId,problem:v.problem,tried:v.tried,helpNeeded:v.helpNeeded};
     if(kind==='change')data={action:'study-request',assignmentId:v.assignmentId,kind:v.kind,newDueDate:v.newDueDate,newMinutes:Number(v.newMinutes),scope:v.scope,reason:v.reason};
@@ -86,7 +105,7 @@ export function createStudyWorkflow(){
     if(kind==='followup')data={action:'study-feedback-followup',day,whatChanged:v.whatChanged,evidence:v.evidence};
     if(kind==='weekly')data={action:'study-weekly',weekEnd:key,...v};
     if(kind==='review')data={action:'study-weekly-review',weekEnd:key,reviewMinutes:Number(v.reviewMinutes),mentorFeedback:v.mentorFeedback,agreedNextWeek:v.agreedNextWeek};
-    const button=f.querySelector('[type="submit"]');button.disabled=true;const ok=await change(data);if(ok){drafts.delete(id);try{sessionStorage.setItem(draftKey,JSON.stringify([...drafts]));}catch{}}if(button.isConnected)button.disabled=false;
+    const button=f.querySelector('[type="submit"]');button.disabled=true;const ok=await change(data,{formId:id});if(ok){drafts.delete(id);try{sessionStorage.setItem(draftKey,JSON.stringify([...drafts]));}catch{}}if(button.isConnected)button.disabled=false;
    };
   });
  }

@@ -1,7 +1,7 @@
 import {trackerState,mutateTracker} from './_material-tracker.js';
 export default async function handler(request,response){
  response.setHeader('Cache-Control','no-store');
- response.setHeader('X-Aleph-Tracker-Version','2026-11-09-study-agreement');
+ response.setHeader('X-Aleph-Tracker-Version','2026-11-11-checkin-validation');
  if(!['GET','POST'].includes(request.method)){response.setHeader('Allow','GET, POST');return response.status(405).json({error:'Method not allowed'});}
  try{
   if(request.method==='GET'){const url=new URL(request.url,`https://${request.headers.host||'aleph.local'}`);return response.status(200).json(await trackerState(url.searchParams.get('learner')));}

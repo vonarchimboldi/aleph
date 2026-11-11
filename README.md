@@ -307,3 +307,9 @@ The reviewer dashboard shows reports, requests, reflections, timing and Sunday r
 Assignment, agreement and feedback notices now pass through the notification client's same-origin material-link allowlist. Opening a workflow or assignment notice records its own read marker; it does not accept a plan, approve a request or complete work. The existing daily email job includes the previous day's study report when configured, even when all assignments are finished. Automatic sending still requires the server's scheduler secret and email configuration; dashboard notices work independently. No real email is sent by tests.
 
 Run `node scripts/verify-study-workflow.mjs` for synthetic agreement, capacity, permission, immutable-history, reflection, late-change, Sunday review and feedback-loop checks. Existing tracker, notification and curriculum checks remain separate.
+
+### Check-in validation
+
+The two change questions accept concise responses such as “Nothing.” or “No change.”; they remain required. Detailed reflection fields (work done, easy/hard aspects, evidence and mentor feedback) retain their minimum explanation lengths. Forms validate restored drafts as well as newly typed text, highlight invalid fields with an accessible inline message, and keep server errors or save confirmations beside the submit button through refreshes. Failed validation does not submit or clear a draft. A conflict refreshes server state and preserves the entered reflection for retry.
+
+Regression checks: `node scripts/verify-study-workflow.mjs` and `node scripts/verify-checkin-browser.mjs`. The browser regression recreates the short-answer failure, checks field errors and a revision conflict, submits successfully and verifies persistence after reload. It uses synthetic in-memory records and intercepts all browser requests. It does not change live learner records or send email. Optional local browser paths are `ALEPH_PLAYWRIGHT_PATH` and `ALEPH_CHROME_PATH`.
