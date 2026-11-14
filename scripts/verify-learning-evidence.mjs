@@ -1,0 +1,26 @@
+import assert from 'node:assert/strict';
+import {generateKeyPairSync} from 'node:crypto';
+import {feedbackQuality,reconcileFeedback,learningOverview} from '../learning-model.mjs';
+import {mutateTracker,trackerState} from '../api/_material-tracker.js';
+import {mintStudyAdminToken} from './study-admin.mjs';
+import {savePlatinumSubmissionRecord,loadPlatinumSubmissionsLedger} from '../api/_platinum-progress-store.js';
+process.env.ALEPH_DIAGNOSTIC_MEMORY='1';
+const {privateKey,publicKey}=generateKeyPairSync('ed25519');const learner='synthetic-learning-evidence',now=new Date('2026-11-14T17:00:00Z');let revision=0;
+const token=mintStudyAdminToken(privateKey,learner,now.getTime());
+async function act(input){const r=await mutateTracker({learner,expectedRevision:revision,...input},now,publicKey);revision=r.revision;return r;}
+await act({action:'study-start',adminToken:token});
+const evidence={action:'study-learning-evidence',subject:'dsa',topic:'recurrence',question:'synthetic Q1',reasoning:'I counted the work on each recursion level and added all levels.',difficulty:'The work per level was linear, not quadratic.',nextAction:'Solve a new recurrence without reading its worked answer.',confidence:3,stage:'initial',support:'independent',outcome:'correct',retestDate:'2026-11-17'};
+await act(evidence);let state=await trackerState(learner,now);assert.equal(state.learning.find(s=>s.id==='dsa').topics[0].verified,0);
+await assert.rejects(act({...evidence,source:'mentor'}),e=>e.status===401);
+await assert.rejects(act({...evidence,subject:'bogus'}),/subject/);
+await assert.rejects(act({...evidence,retestDate:'2026-02-30'}),/valid/);
+await assert.rejects(act({...evidence,reasoning:'done'}),/specific/);
+await assert.rejects(act({...evidence,minutes:-1}),/minutes/);
+await act({...evidence,source:'mentor',adminToken:token});await act({...evidence,source:'mentor',adminToken:token});state=await trackerState(learner,now);assert.equal(state.learning.find(s=>s.id==='dsa').topics[0].verified,1,'Repeating the same problem is one check');
+await act({...evidence,source:'mentor',adminToken:token,question:'synthetic fresh Q2',stage:'transfer'});state=await trackerState(learner,now);assert.equal(state.learning.find(s=>s.id==='dsa').topics[0].status,'Demonstrated on repeated checks');
+const previous=state.learning.find(s=>s.id==='dsa').evidence[0];await act({...evidence,source:'mentor',adminToken:token,question:'synthetic fresh Q3',stage:'retest',outcome:'needs-work',reassesses:previous.id});state=await trackerState(learner,new Date('2026-11-18T17:00:00Z'));assert(state.learning.find(s=>s.id==='dsa').followups.some(e=>e.id===previous.id),'A failed retest does not close remediation');
+await act({...evidence,question:'synthetic learner Q4'});state=await trackerState(learner,now);assert.equal(state.learning.find(s=>s.id==='dsa').topics[0].status,'Needs work','A self-report cannot erase a mentor-observed difficulty');
+const questions=[{question:'Q1',status:'correct',marksAwarded:2,maxMarks:2,skillTag:'a'},{question:'Q2',status:'not attempted',marksAwarded:0,maxMarks:2,skillTag:'b'}];const rec={score:10,maxScore:10,questionFeedback:questions};const fixed=reconcileFeedback(rec);assert.equal(fixed.score,2);assert.equal(fixed.maxScore,4);assert.equal(fixed.originalScore,10);assert(fixed.assessmentQuality.requiresReview);assert(!feedbackQuality({questionFeedback:[questions[1]]}).assessable);assert.equal(learningOverview([{materialId:'skiena-review-day-01',questionFeedback:questions}],[], '2026-11-14').find(s=>s.id==='dsa').topics[0].verified,0);
+await savePlatinumSubmissionRecord({userId:learner,materialId:'synthetic-learning',feedbackReady:true,feedbackUpdatedAt:'2026-11-14T10:00:00Z',questionFeedback:questions});await savePlatinumSubmissionRecord({userId:learner,materialId:'synthetic-learning',feedbackReady:true,feedbackUpdatedAt:'2026-11-14T11:00:00Z',questionFeedback:[questions[0]]});assert.equal((await loadPlatinumSubmissionsLedger()).submissions.find(s=>s.materialId==='synthetic-learning').feedbackHistory.length,1);
+await savePlatinumSubmissionRecord({userId:learner,materialId:'synthetic-learning',feedbackReady:true,feedbackUpdatedAt:'2026-11-14T12:00:00Z',questionFeedback:questions});assert.equal((await loadPlatinumSubmissionsLedger()).submissions.find(s=>s.materialId==='synthetic-learning').feedbackHistory.length,2);
+console.log('PASS: self-report vs signed mentor checks, distinct problems, validation, unresolved failed retests, no upload-to-mastery inference, deterministic score reconciliation and feedback history. Synthetic data only.');

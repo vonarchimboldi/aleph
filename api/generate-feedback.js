@@ -1,3 +1,4 @@
+import {reconcileFeedback} from '../learning-model.mjs';
 const FEEDBACK_SCHEMA = {
   type: "object",
   additionalProperties: false,
@@ -322,7 +323,7 @@ export default async function handler(request, response) {
   }
 
   try {
-    const feedbackRecord = JSON.parse(outputText);
+    const feedbackRecord = reconcileFeedback(JSON.parse(outputText));
     return response.status(200).json({
       feedbackRecord,
       feedback: summarizeFeedback(feedbackRecord),

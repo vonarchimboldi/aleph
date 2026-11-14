@@ -157,6 +157,7 @@ export async function savePlatinumSubmissionRecord(record) {
     feedbackReady: Boolean(record.feedbackReady),
     feedbackUpdatedAt: record.feedbackUpdatedAt || "",
     feedbackModel: record.feedbackModel || "",
+    assessmentQuality: record.assessmentQuality || null,
     feedbackVerdict: record.feedbackVerdict || "",
     feedbackScore: record.feedbackScore ?? null,
     feedbackMaxScore: record.feedbackMaxScore ?? null,
@@ -169,9 +170,13 @@ export async function savePlatinumSubmissionRecord(record) {
   const submissions = Array.isArray(ledger.submissions) ? ledger.submissions : [];
   const existingIndex = submissions.findIndex((entry) => `${entry.userId}::${entry.materialId}` === key);
   if (existingIndex >= 0) {
+    const previous=submissions[existingIndex];
+    const history=[...(previous.feedbackHistory||[])];
+    if(previous.feedbackReady&&JSON.stringify(previous.questionFeedback)!==JSON.stringify(normalized.questionFeedback)&&normalized.feedbackReady){history.push({at:previous.feedbackUpdatedAt,score:previous.feedbackScore,maxScore:previous.feedbackMaxScore,questions:previous.questionFeedback});}
     submissions[existingIndex] = {
       ...submissions[existingIndex],
       ...normalized,
+      feedbackHistory:history.slice(-50),
       submittedAt: submissions[existingIndex].submittedAt || normalized.submittedAt
     };
   } else {
@@ -202,7 +207,7 @@ function normalizeMissedConcepts(items) {
 function normalizeQuestionFeedback(items) {
   if (!Array.isArray(items)) return [];
   return items.filter(Boolean).slice(0, 60).map((item) => ({
-    question: String(item.question || "").slice(0, 40),
+    question: String(item.question || "").slice(0, 600),
     status: String(item.status || "unclear").slice(0, 30),
     marksAwarded: Number.isFinite(item.marksAwarded) ? item.marksAwarded : null,
     maxMarks: Number.isFinite(item.maxMarks) ? item.maxMarks : null,

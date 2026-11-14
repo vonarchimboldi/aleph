@@ -1,3 +1,4 @@
+import {appendLearningEvidence} from './_learning-evidence.js';
 import {randomUUID,verify} from 'node:crypto';
 const ZONE='America/Toronto';
 const failure=(message,status=400)=>Object.assign(Error(message),{status});
@@ -117,6 +118,7 @@ export function applyStudyAction(record,input,now,publicKey){
  }else if(action==='study-weekly-review'){
   requireStudyAdmin(input,record.learner,now,publicKey);const review=s.weeklyReviews.find(w=>w.weekEnd===input.weekEnd);if(!review)throw failure('The learner must prepare the review first.');if(input.weekEnd>today)throw failure('A future conversation cannot be recorded as held.');if(review.reviewedAt)throw failure('This review is already recorded.',409);
   Object.assign(review,{reviewedAt:at,mentorFeedback:words(input.mentorFeedback,'Mentor feedback'),agreedNextWeek:words(input.agreedNextWeek,'Agreed next steps'),reviewMinutes:minutes(input.reviewMinutes,'Review duration',120,1)});audit(s,action,now,{weekEnd:review.weekEnd});
+ }else if(action==='study-learning-evidence'){appendLearningEvidence(record,input,now,publicKey);
  }else throw failure('Unknown study action.');
  s.updatedAt=at;
 }

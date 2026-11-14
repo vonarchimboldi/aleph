@@ -1,3 +1,4 @@
+import {learningOverview} from '../learning-model.mjs';
 import {isStudyAction,applyStudyAction,guardStudyMutation,syncStudyPlans,studyView,studyNotifications,studyDigest} from './_study-workflow.js';
 import {randomUUID,createHash,verify} from 'node:crypto';
 import {kvCommand,loadPlatinumSubmissionsLedger} from './_platinum-progress-store.js';
@@ -20,7 +21,7 @@ function date(value){if(typeof value!=='string'||!/^\d{4}-\d{2}-\d{2}$/.test(val
 function text(value,max){if(typeof value!=='string'||!value.trim()||value.length>max)throw fail('Material title and identifier are required.');return value.replace(/[\r\n]/g,' ').trim();}
 export function localMaterialUrl(value){
  if(typeof value!=='string'||value.length>600)throw fail('Choose a valid Aleph material link.');
- let url;try{url=new URL(value,'https://aleph-alpha.io/');}catch{throw fail('Choose a valid Aleph material link.');}if(url.origin!=='https://aleph-alpha.io'||!/^\/(?:calculus-review|dsa-review|dbms-review|math-remedial|math-diagnostic|psets|gate-da-dbms|DSA%20For%20GATE%20practice)\//.test(url.pathname))throw fail('Choose a published Aleph material.');
+ let url;try{url=new URL(value,'https://aleph-alpha.io/');}catch{throw fail('Choose a valid Aleph material link.');}if(url.origin!=='https://aleph-alpha.io'||!/^\/(?:ai-review|calculus-review|dsa-review|dbms-review|math-remedial|math-diagnostic|psets|gate-da-dbms|DSA%20For%20GATE%20practice)\//.test(url.pathname))throw fail('Choose a published Aleph material.');
  return url.pathname+url.search+url.hash;
 }
 export async function mutateTracker(input,now=new Date(),publicKey=REVIEW_PUBLIC_KEY){
@@ -73,7 +74,7 @@ export async function trackerState(learner,now=new Date()){
  const [record,ledger]=await Promise.all([loadTracker(learner),loadPlatinumSubmissionsLedger()]);const email=emailConfig(record);
  const assignments=resolvedAssignments(record,ledger.submissions||[],now);
  const at=email.email.lastIndexOf('@');const masked=email.email?email.email[0]+'***'+email.email.slice(at):'';
- return {learner,revision:record.revision,today:trackerDay(now),timeZone:TRACKER_TIMEZONE,assignments,study:studyView(record,resolvedAssignments(record,ledger.submissions||[],now,{includeCancelled:true}),now),alerts:{enabled:email.enabled,recipientConfigured:Boolean(email.email),recipient:masked,providerConfigured:email.providerConfigured,cronConfigured:email.cronConfigured,ready:email.enabled&&Boolean(email.email)&&email.providerConfigured&&email.cronConfigured},counts:{today:assignments.filter(a=>a.dueDate===trackerDay(now)).length,overdue:assignments.filter(a=>a.status==='overdue').length,completed:assignments.filter(a=>a.status==='completed').length}};
+ return {learning:learningOverview((ledger.submissions||[]).filter(r=>r.userId===learner),record.study?.learningEvidence||[],trackerDay(now)),learner,revision:record.revision,today:trackerDay(now),timeZone:TRACKER_TIMEZONE,assignments,study:studyView(record,resolvedAssignments(record,ledger.submissions||[],now,{includeCancelled:true}),now),alerts:{enabled:email.enabled,recipientConfigured:Boolean(email.email),recipient:masked,providerConfigured:email.providerConfigured,cronConfigured:email.cronConfigured,ready:email.enabled&&Boolean(email.email)&&email.providerConfigured&&email.cronConfigured},counts:{today:assignments.filter(a=>a.dueDate===trackerDay(now)).length,overdue:assignments.filter(a=>a.status==='overdue').length,completed:assignments.filter(a=>a.status==='completed').length}};
 }
 function overdueStart(dueDate){
  const next=new Date(dueDate+'T00:00:00Z');next.setUTCDate(next.getUTCDate()+1);const day=next.toISOString().slice(0,10);next.setUTCHours(6);while(trackerDay(new Date(next.getTime()-3600000))===day)next.setTime(next.getTime()-3600000);return next.toISOString();
