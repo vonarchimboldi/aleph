@@ -21,7 +21,7 @@ function date(value){if(typeof value!=='string'||!/^\d{4}-\d{2}-\d{2}$/.test(val
 function text(value,max){if(typeof value!=='string'||!value.trim()||value.length>max)throw fail('Material title and identifier are required.');return value.replace(/[\r\n]/g,' ').trim();}
 export function localMaterialUrl(value){
  if(typeof value!=='string'||value.length>600)throw fail('Choose a valid Aleph material link.');
- let url;try{url=new URL(value,'https://aleph-alpha.io/');}catch{throw fail('Choose a valid Aleph material link.');}if(url.origin!=='https://aleph-alpha.io'||!/^\/(?:ai-review|calculus-review|dsa-review|dbms-review|math-remedial|math-diagnostic|psets|gate-da-dbms|DSA%20For%20GATE%20practice)\//.test(url.pathname))throw fail('Choose a published Aleph material.');
+ let url;try{url=new URL(value,'https://aleph-alpha.io/');}catch{throw fail('Choose a valid Aleph material link.');}if(url.origin!=='https://aleph-alpha.io'||!/^\/(?:review-round2|ai-review|calculus-review|dsa-review|dbms-review|math-remedial|math-diagnostic|psets|gate-da-dbms|DSA%20For%20GATE%20practice)\//.test(url.pathname))throw fail('Choose a published Aleph material.');
  return url.pathname+url.search+url.hash;
 }
 export async function mutateTracker(input,now=new Date(),publicKey=REVIEW_PUBLIC_KEY){
