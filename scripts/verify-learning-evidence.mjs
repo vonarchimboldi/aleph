@@ -1,9 +1,11 @@
+import fs from 'node:fs';
 import assert from 'node:assert/strict';
 import {generateKeyPairSync} from 'node:crypto';
 import {feedbackQuality,reconcileFeedback,learningOverview} from '../learning-model.mjs';
 import {mutateTracker,trackerState} from '../api/_material-tracker.js';
 import {mintStudyAdminToken} from './study-admin.mjs';
 import {savePlatinumSubmissionRecord,loadPlatinumSubmissionsLedger} from '../api/_platinum-progress-store.js';
+assert.equal(fs.readFileSync('learning-model.mjs','utf8'),fs.readFileSync('api/_learning-model.js','utf8'),'Browser/server learning rules must match');
 process.env.ALEPH_DIAGNOSTIC_MEMORY='1';
 const {privateKey,publicKey}=generateKeyPairSync('ed25519');const learner='synthetic-learning-evidence',now=new Date('2026-11-14T17:00:00Z');let revision=0;
 const token=mintStudyAdminToken(privateKey,learner,now.getTime());

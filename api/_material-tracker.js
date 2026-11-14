@@ -1,4 +1,4 @@
-import {learningOverview} from '../learning-model.mjs';
+import {learningOverview} from './_learning-model.js';
 import {isStudyAction,applyStudyAction,guardStudyMutation,syncStudyPlans,studyView,studyNotifications,studyDigest} from './_study-workflow.js';
 import {randomUUID,createHash,verify} from 'node:crypto';
 import {kvCommand,loadPlatinumSubmissionsLedger} from './_platinum-progress-store.js';

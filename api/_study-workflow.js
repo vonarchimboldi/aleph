@@ -1,5 +1,7 @@
+import {requireStudyAdmin} from './_study-admin-auth.js';
+export {requireStudyAdmin} from './_study-admin-auth.js';
 import {appendLearningEvidence} from './_learning-evidence.js';
-import {randomUUID,verify} from 'node:crypto';
+import {randomUUID} from 'node:crypto';
 const ZONE='America/Toronto';
 const failure=(message,status=400)=>Object.assign(Error(message),{status});
 export const studyDay=now=>new Intl.DateTimeFormat('en-CA',{timeZone:ZONE,year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date(now));
@@ -9,9 +11,7 @@ function minutes(value,label,max=900,min=0){if(!Number.isInteger(value)||value<m
 function rating(value,label){if(!Number.isInteger(value)||value<1||value>5)throw failure(label+' must be a whole number from 1 to 5.');return value;}
 function validDay(value){if(typeof value!=='string'||!/^\d{4}-\d{2}-\d{2}$/.test(value)||!Number.isFinite(Date.parse(value+'T12:00:00Z'))||new Date(value+'T12:00:00Z').toISOString().slice(0,10)!==value)throw failure('Choose a valid date.');return value;}
 const plusDays=(day,n)=>{const d=new Date(day+'T12:00:00Z');d.setUTCDate(d.getUTCDate()+n);return d.toISOString().slice(0,10);};
-export function requireStudyAdmin(input,learner,now,publicKey){
- try{const [payload,signature,...extra]=String(input.adminToken||'').split('.');if(extra.length||!payload||!signature)throw Error();const raw=Buffer.from(payload,'base64url');if(!verify(null,raw,publicKey,Buffer.from(signature,'base64url')))throw Error();const grant=JSON.parse(raw);const time=new Date(now).getTime();if(grant.purpose!=='aleph-study-admin-v1'||grant.learner!==learner||!Number.isFinite(grant.issuedAt)||!Number.isFinite(grant.expiresAt)||grant.issuedAt>time||grant.expiresAt<=time||grant.expiresAt-grant.issuedAt>86400000)throw Error();return true;}catch{throw failure('Authorize admin actions with a valid admin access file.',401);}
-}
+
 export const isStudyAction=action=>typeof action==='string'&&action.startsWith('study-');
 function assignmentsFor(record,day){return record.assignments.filter(a=>!a.cancelledAt&&a.dueDate===day).map(a=>({id:a.id,materialId:a.materialId,title:a.title,subject:a.subject,minutes:a.minutes,dueDate:a.dueDate,scope:a.scope||'Complete the published material'}));}
 function newPlan(record,day,now){return {day,version:1,assignments:assignmentsFor(record,day),proposedAt:stamp(now),adminAgreedAt:stamp(now),learnerAgreedAt:null,estimates:[],revisions:[]};}

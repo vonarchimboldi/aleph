@@ -1,4 +1,4 @@
-import {reconcileFeedback} from '../learning-model.mjs';
+import {reconcileFeedback} from './_learning-model.js';
 const FEEDBACK_SCHEMA = {
   type: "object",
   additionalProperties: false,
