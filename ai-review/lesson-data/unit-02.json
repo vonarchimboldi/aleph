@@ -1,0 +1,85 @@
+{
+  "unit": 2,
+  "title": "Choosing a route with an estimate",
+  "intro": "In the first lesson, uniform-cost search chose the route with the lowest cost so far. Now suppose you also have an estimate of how much further each route must travel. We will see how that estimate can help, and how it can mislead.",
+  "sections": [
+    {
+      "title": "1. Separate the cost paid from the cost still ahead",
+      "text": [
+        "Imagine travelling from S to G. A partial route has already cost something. Call that amount g. You may also have an estimate of the remaining cost to G. Call that estimate h. A heuristic is the rule that produces h.",
+        "The estimate is not an extra road cost. It is information used to choose what to examine next. For example, a straight-line distance can estimate road distance because roads cannot make a route shorter than the straight line.",
+        "For every frontier item, keep the route used to reach it and its g value. If two different routes reach the same place, their g values can differ."
+      ],
+      "example": "<p>One route to A has already cost 3, and the estimate from A to G is 4. Its estimated total is 3+4=7. Another route to B has already cost 6, with estimated remainder 2. Its estimated total is 8.</p>",
+      "question": "A route to X has g=5 and h=3. A route to Y has g=2 and h=5. Which has the smaller remaining estimate? Which has the smaller estimated total?",
+      "answer": "X has the smaller remaining estimate: 3 rather than 5. Y has the smaller estimated total: 2+5=7 rather than 5+3=8.",
+      "graded": null
+    },
+    {
+      "title": "2. Greedy search looks only at the remaining estimate",
+      "text": [
+        "Greedy best-first search removes the frontier item with the smallest h. It is attracted to a place that appears close to the goal. It does not include the cost already paid in that choice.",
+        "Use this graph for the rest of the lesson: S→A costs 2, S→G costs 7, and A→G costs 2. The estimates are h(S)=4, h(A)=2 and h(G)=0. All step costs are positive.",
+        "After expanding S, greedy search sees A with estimate 2 and G with estimate 0. It chooses G and returns the direct route, costing 7. The goal looks closest because its remaining distance is zero, even though the route already paid a high cost."
+      ],
+      "example": "<table><tr><th>Frontier item</th><th>Cost so far g</th><th>Estimate h</th></tr><tr><td>A</td><td>2</td><td>2</td></tr><tr><td>G</td><td>7</td><td>0</td></tr></table>",
+      "question": "Why does choosing the smallest h not necessarily give the cheapest complete route?",
+      "answer": "It ignores the cost already paid. A route may be near the goal only because it has already spent a large amount.",
+      "graded": null
+    },
+    {
+      "title": "3. A* combines both pieces of information",
+      "text": [
+        "A* orders frontier items by f=g+h. The letter f names the estimated total cost through that item. The method adds the cost already paid to the estimated cost still ahead.",
+        "On our graph, A initially has f=2+2=4. The direct route to G has f=7+0=7. A* therefore expands A first. This discovers a route to G with cost 2+2=4.",
+        "Update G to its better route, or retain both entries and ignore an outdated expensive entry later. When the goal is removed as the best frontier item, return the cost of that route. Do not stop merely because a goal was generated."
+      ],
+      "example": "<table><tr><th>Action</th><th>Best remaining entries</th></tr><tr><td>Expand S</td><td>A: g=2,h=2,f=4; G: g=7,h=0,f=7</td></tr><tr><td>Expand A</td><td>G improves to g=4,h=0,f=4</td></tr><tr><td>Remove G</td><td>Return S→A→G, cost 4</td></tr></table>",
+      "question": null,
+      "answer": null,
+      "graded": 1
+    },
+    {
+      "title": "4. An admissible estimate never overstates the remaining cost",
+      "text": [
+        "An admissible heuristic gives an estimate no larger than the true cheapest remaining cost. We use nonnegative estimates and h(G)=0 in these examples.",
+        "On our graph, the true remaining costs are 4 from S, 2 from A and 0 from G. The estimates 4,2,0 are therefore admissible. The estimates 4,1,0 would also be admissible.",
+        "Why does underestimating help? For an admissible estimate, g+h is a lower bound on what that route could cost after completion. A cheaper possible solution must have some unfinished route with a bound no larger than that solution. Expanding the smallest bound keeps us from dismissing it too early."
+      ],
+      "example": "<p>If the true cheapest remainder from A is 2, h(A)=1 is allowed. The value h(A)=10 is an overestimate. With that value, A can look too expensive even when its route would beat the current goal.</p>",
+      "question": "If the true remaining cost from a state is 6, which estimates in {0,4,6,9} are admissible?",
+      "answer": "0,4 and 6 are admissible because none exceeds 6. The estimate 9 is not.",
+      "graded": null
+    },
+    {
+      "title": "5. Consistency checks estimates across a single step",
+      "text": [
+        "Consistency asks for more than a separate bound at each state. For every edge n→m, it requires h(n)≤cost(n,m)+h(m). This says the estimate at n must not exceed the cost of taking one step to m plus the estimate from there.",
+        "Consider estimates h(S)=4,h(A)=1,h(G)=0. All three are admissible. But on S→A, consistency would require 4≤2+1. That is false. Admissibility alone does not imply consistency.",
+        "With a consistent heuristic, standard graph A* can finish a state when it removes its best route. If a heuristic is admissible but inconsistent, a later route may improve a state already processed. An implementation may need to reopen that state. The correctness claim depends on this implementation detail."
+      ],
+      "example": "<p>Check all edges separately. S→A requires 4≤3, which fails. A→G requires 1≤2, which holds. S→G requires 4≤7, which also holds. One failed edge is enough to show inconsistency.</p>",
+      "question": null,
+      "answer": null,
+      "graded": 2
+    },
+    {
+      "title": "6. Connect A* to what you already know",
+      "text": [
+        "If h is zero everywhere, f=g. The ordering rule becomes uniform-cost search. A useful heuristic can save work, but its use does not change the actual cost of a path.",
+        "Before tracing an exam problem, write the graph, tie rule, repeated-state rule and moment of goal testing. Then keep separate g, h and f columns. This prevents a numerical error from hiding a misunderstanding of the method."
+      ],
+      "example": "<p>With h=0 on the worked graph, A still has priority 2 and the direct G has priority 7. Expanding A finds the cheaper G route of cost 4.</p>",
+      "question": null,
+      "answer": null,
+      "graded": 3
+    }
+  ],
+  "remember": [
+    "g is the cost paid along a particular route.",
+    "h estimates the cost remaining.",
+    "Greedy chooses by h. A* chooses by g+h.",
+    "Admissibility compares h with the true remainder. Consistency compares estimates across every edge."
+  ],
+  "review": "On a later day, draw a new three- or four-state graph. Compare UCS, greedy and A* without opening this page. Explain each frontier update before checking the result."
+}

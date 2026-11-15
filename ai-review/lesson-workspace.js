@@ -1,0 +1,14 @@
+(()=>{
+ 'use strict';
+ const root=document.querySelector('[data-ai-unit]');if(!root)return;
+ let user='guest';try{user=JSON.parse(localStorage.getItem('learning-studio-data-v2')||'{}')?.user?.id||'guest';}catch{}
+ const key=`aleph-ai-study-v1:${user}:${root.dataset.aiUnit}`,status=root.querySelector('[data-save-status]');
+ let saved={version:1,responses:{},help:{},firstChecks:{}};
+ try{const prior=JSON.parse(localStorage.getItem(key)||'null');if(prior&&prior.version===1&&prior.responses&&prior.help&&prior.firstChecks)saved=prior;}catch{status.textContent='Earlier notes could not be read. Export a copy of your current work.';}
+ const notes=[...root.querySelectorAll('[data-response]')],help=[...root.querySelectorAll('[data-help]')];
+ function persist(){try{localStorage.setItem(key,JSON.stringify(saved));status.textContent='Notes saved on this browser. Export and upload to Aleph when ready.';}catch{status.textContent='Local saving failed. Export your work before leaving.';}}
+ for(const el of notes){el.value=typeof saved.responses[el.dataset.response]==='string'?saved.responses[el.dataset.response]:'';el.addEventListener('input',()=>{saved.responses[el.dataset.response]=el.value;persist();});}
+ for(const el of help){if([...el.options].some(o=>o.value===saved.help[el.dataset.help]))el.value=saved.help[el.dataset.help];el.addEventListener('change',()=>{saved.help[el.dataset.help]=el.value;persist();});}
+ for(const el of root.querySelectorAll('[data-check]'))el.addEventListener('toggle',()=>{if(!el.open)return;const id=el.dataset.check;if(!saved.firstChecks[id])saved.firstChecks[id]={openedAt:new Date().toISOString(),response:saved.responses[id]||'',help:saved.help[id]||'Not recorded'};const field=help.find(x=>x.dataset.help===id);if(field){field.value='Worked answer used';saved.help[id]=field.value;}persist();});
+ root.querySelector('[data-export]')?.addEventListener('click',()=>{const main=notes.filter(x=>/-Q\d+$/.test(x.dataset.response)),extra=notes.filter(x=>!/-Q\d+$/.test(x.dataset.response));const format=el=>{const id=el.dataset.response,first=saved.firstChecks[id];return `${id}\nLatest answer: ${el.value||'(not recorded)'}\nHelp: ${saved.help[id]||'Not recorded'}\nFirst opened check: ${first?JSON.stringify(first):'Not opened in this record'}`;};const text=[`AI unit ${root.dataset.aiUnit}`,`Exported ${new Date().toISOString()}`,'MAIN NUMBERED PRACTICE — preserve these IDs for feedback',...main.map(format),'ADDITIONAL LEARNING PRACTICE — not part of the three-question score',...extra.map(format),'This export is a local study record, not a server submission or mastery assessment.'].join('\n\n');const url=URL.createObjectURL(new Blob([text],{type:'text/plain;charset=utf-8'})),a=document.createElement('a');a.href=url;a.download=`ai-unit-${root.dataset.aiUnit}-practice.txt`;a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);});
+})();

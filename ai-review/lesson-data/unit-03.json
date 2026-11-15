@@ -1,0 +1,85 @@
+{
+  "unit": 3,
+  "title": "Choosing a move when an opponent chooses next",
+  "intro": "A route-finding problem lets you choose every step. In a game, your opponent chooses some of the next steps. We will build a rule that accounts for both players, then see when part of a game tree can be skipped.",
+  "sections": [
+    {
+      "title": "1. Give every outcome the same point of view",
+      "text": [
+        "Suppose two players take turns, and a larger final score is better for the first player. Call that player MAX. Call the opponent MIN because the opponent prefers a smaller score for MAX.",
+        "A leaf is a finished outcome at the end of a branch. Its utility is the score assigned to that outcome. Keep every score from MAX’s point of view, including scores below a MIN turn.",
+        "At a MAX turn, select the largest available child value. At a MIN turn, select the smallest. This rule assumes the opponent chooses the move best for them in this deterministic, two-player, zero-sum setting."
+      ],
+      "example": "<p>If MAX can finish at scores 2 or 7, MAX chooses 7. If MIN chooses between those same scores, MIN chooses 2. We keep the score scale fixed rather than changing its sign at each turn.</p>",
+      "question": "A MIN node has leaf scores 6,1,4. What value should it pass to its parent? Why?",
+      "answer": "It passes 1. MIN can force the smallest score for MAX by choosing that child.",
+      "graded": null
+    },
+    {
+      "title": "2. Work upward from the leaves",
+      "text": [
+        "Now place a MAX node at the root. It has two children L and R. Each child is a MIN node. L has leaf scores 3 and 5. R has leaf scores 2 and 9.",
+        "First solve each decision where the outcomes are already known. L passes up min(3,5)=3. R passes up min(2,9)=2. The root then chooses max(3,2)=3.",
+        "This repeated minimum-or-maximum calculation is minimax. The value 3 means MAX can secure that score under the stated tree and optimal play. MAX should choose L even though R contains the largest individual leaf, 9. MIN would prevent MAX from receiving that leaf."
+      ],
+      "example": "<pre>             MAX\n          /       \\\n       L: MIN    R: MIN\n       /   \\      /   \\\n      3     5    2     9</pre>",
+      "question": null,
+      "answer": null,
+      "graded": 1
+    },
+    {
+      "title": "3. Keep the best choice already available",
+      "text": [
+        "Search the tree left to right. Once L returns 3, MAX already has an option worth 3. A new branch matters only if it can beat that option.",
+        "The bound called alpha records the best lower bound MAX can secure along the current search path. At this root, alpha becomes 3.",
+        "Begin examining R. Its first leaf is 2. Because R is a MIN node, finding more children can keep its value at 2 or reduce it. The value of R can never rise above 2 after this observation."
+      ],
+      "example": "<p>Compare the two facts: MAX can already get 3 from L. R can give at most 2. The second leaf of R cannot change which root move is best.</p>",
+      "question": "If the unseen leaf under R were 100 instead of 9, could R beat L? Explain.",
+      "answer": "No. R would still choose min(2,100)=2. If the unseen leaf were smaller than 2, R would become even worse for MAX.",
+      "graded": null
+    },
+    {
+      "title": "4. Use the bounds to stop a branch",
+      "text": [
+        "The bound called beta records the best upper bound MIN can enforce along the current path. After R sees leaf 2, its beta is 2. The root’s alpha is 3.",
+        "When alpha≥beta, the current branch cannot improve the relevant earlier decision. Stop exploring that branch. This is alpha–beta pruning. Pruning saves work while preserving the root’s minimax value.",
+        "A partially explored node may give a bound rather than its exact value. Here we know R is at most 2. That is enough to choose L, even if the skipped leaf could make R smaller."
+      ],
+      "example": "<table><tr><th>What we know</th><th>Bound</th></tr><tr><td>MAX’s completed option L</td><td>At least 3</td></tr><tr><td>R after its first leaf</td><td>At most 2</td></tr><tr><td>Decision</td><td>Skip R’s remaining leaf</td></tr></table>",
+      "question": null,
+      "answer": null,
+      "graded": 2
+    },
+    {
+      "title": "5. Order changes the work, not the game value",
+      "text": [
+        "Swap the order of R’s leaves, so it shows 9 before 2. After seeing 9, MIN’s current upper bound is 9. MAX’s existing option is still 3.",
+        "The inequality 3≥9 is false. R might still beat L, so we must inspect its second leaf. That leaf is 2, and R finally returns 2. MAX still chooses L with value 3.",
+        "Good move ordering often allows earlier cutoffs. It does not change the minimax result of a fully evaluated finite tree. For each cutoff, state both bounds and name the earlier decision that makes the remaining work unnecessary."
+      ],
+      "example": "<p>Left-to-right examination of leaves 2,9 permits a cutoff after 2. Examination of 9,2 needs both. The opponent has the same two options in either order.</p>",
+      "question": null,
+      "answer": null,
+      "graded": 3
+    },
+    {
+      "title": "6. Check the full idea on a new tree",
+      "text": [
+        "Try a MAX root whose MIN children have leaves (4,7) and (6,2). First compute the result without pruning. Then trace left-to-right alpha–beta.",
+        "The first child returns 4, setting alpha to 4. The second child first sees 6, so no cutoff follows yet. It must inspect 2 and returns 2. The root value is 4. This example needs every leaf in that order."
+      ],
+      "example": "<p>Now put 2 first under the second child. It immediately gives beta=2≤alpha=4, so the remaining 6 can be skipped.</p>",
+      "question": "What must you show when claiming that a leaf can be skipped?",
+      "answer": "Identify the available alternative, the current lower and upper bounds, and why no unseen child in this branch can improve the earlier choice.",
+      "graded": null
+    }
+  ],
+  "remember": [
+    "MAX chooses a larger utility. MIN chooses a smaller one.",
+    "Solve a finite tree upward from its leaves.",
+    "Alpha and beta bound choices along the current path.",
+    "A cutoff needs a reason based on bounds, not a guess about the hidden leaves."
+  ],
+  "review": "On another day, ask your tutor for a different game tree. Compute its value before tracing pruning. Change the child order and compare the leaves inspected."
+}

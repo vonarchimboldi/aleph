@@ -1,0 +1,87 @@
+{
+  "unit": 5,
+  "title": "Using a probability model when we know something",
+  "intro": "A probability model describes which combinations of events are likely. A Bayesian network organizes that information into smaller tables. We will build the meaning of independence first, then see what the arrows let us conclude.",
+  "sections": [
+    {
+      "title": "1. Read a probability as a part of a whole",
+      "text": [
+        "Let A=1 mean an event occurs and A=0 mean it does not. P(A=1)=0.2 says the model gives that event probability one fifth. Since these two possibilities exhaust the outcomes, P(A=0)=0.8.",
+        "A joint probability describes events together. P(A=1,B=1) is the chance that both occur. A conditional probability restricts attention to cases meeting given information. The bar in P(B=1|A=1) means “given A=1.”",
+        "For a conditioning event with positive probability, P(B|A)=P(A,B)/P(A). We divide by the probability of the cases we are keeping."
+      ],
+      "example": "<p>Among 100 equally weighted cases, suppose 20 have A=1 and 16 of those also have B=1. Then P(A=1,B=1)=16/100. Among the 20 A cases, 16 have B, so P(B=1|A=1)=16/20=0.8.</p>",
+      "question": "If 8 of the other 80 cases have B=1, what is P(B=1|A=0)?",
+      "answer": "8/80=0.1. The denominator is the number of A=0 cases, not all 100 cases.",
+      "graded": null
+    },
+    {
+      "title": "2. Independence means the information does not change the probability",
+      "text": [
+        "A and B are independent when learning A does not change the probability of B. One equivalent condition is P(A,B)=P(A)P(B), for all combinations of their values.",
+        "Conditional independence asks the same question after some other information is fixed. A and C are independent given B when, within each relevant fixed value of B, knowing A adds no information about C.",
+        "This does not require A and C to be independent before B is known. An additional observation can remove a relationship or create one."
+      ],
+      "example": "<p>Suppose a model says the chance of C depends only on B. Among cases with B=1, the chance of C=1 is 0.9 for both A=0 and A=1. Then learning A within that group does not change the probability of C.</p>",
+      "question": "What comparison would show that A still gives information about C after B=1 is known?",
+      "answer": "If P(C=1|A=1,B=1) and P(C=1|A=0,B=1) differ, A changes the probability within that fixed B group.",
+      "graded": null
+    },
+    {
+      "title": "3. A Bayesian network stores local conditional tables",
+      "text": [
+        "A Bayesian network is a directed graph with no directed cycles, together with probability tables. An arrow into a node names one of that node’s parents. The node’s table gives probabilities conditional on its parents.",
+        "For the chain A→B→C, store P(A), P(B|A) and P(C|B). Multiply the appropriate entries to obtain a joint probability: P(A,B,C)=P(A)P(B|A)P(C|B).",
+        "This model states that C needs B’s value in its table, but not A’s value once B is given. Therefore A and C are conditionally independent given B."
+      ],
+      "example": "<p>Take P(A=1)=0.2, P(B=1|A=1)=0.8 and P(C=1|B=1)=0.9. The joint event A=1,B=1,C=1 has probability 0.2×0.8×0.9=0.144. Each factor describes one part of the same complete assignment.</p>",
+      "question": null,
+      "answer": null,
+      "graded": 1
+    },
+    {
+      "title": "4. Learn the three basic path shapes",
+      "text": [
+        "A chain A→B→C can carry information between A and C. Giving B blocks that path. In a fork A←B→C, B is a shared parent. Giving B also blocks the path between the children.",
+        "A collider has arrows meeting at the middle: A→C←B. With no evidence at C or its descendants, this path is blocked. Giving C, or a descendant of C, can activate it.",
+        "When a path is blocked, it cannot transmit the dependence represented by that path. In a larger graph, inspect every path between the two variables. Graph separation, called d-separation, guarantees conditional independence when all those paths are blocked."
+      ],
+      "example": "<table><tr><th>Path</th><th>Condition that blocks it</th></tr><tr><td>A→B→C</td><td>Give B</td></tr><tr><td>A←B→C</td><td>Give B</td></tr><tr><td>A→C←B</td><td>Leave C and its descendants unobserved</td></tr></table>",
+      "question": "In the fork A←B→C, why can learning B remove the need to learn A when predicting C?",
+      "answer": "The model already supplies C’s distribution given B. Within a fixed B group, learning the other child A provides no additional information through this path.",
+      "graded": null
+    },
+    {
+      "title": "5. See why observing a collider can change the answer",
+      "text": [
+        "Use two independent fair binary variables A and B. Let C=1 exactly when at least one of A or B equals 1. The four pairs (0,0),(0,1),(1,0),(1,1) each have probability one quarter.",
+        "Before observing C, learning B does not change A’s probability. Now observe C=1. The pair (0,0) is excluded. Three equally likely pairs remain.",
+        "If B=0 as well, only (1,0) remains, so A must be 1. If B=1, the possible pairs are (0,1) and (1,1), so A has probability one half. Given C, B now changes what we believe about A.",
+        "Observing a descendant can supply information about C too. For example, if a child D copies C exactly, learning D=1 has the same effect as learning C=1. An active path means independence is not guaranteed by the graph. Particular table values can still produce independence."
+      ],
+      "example": "<p>The pattern is A→C←B, with optional child C→D. The numerical example explains the collider rule using actual cases instead of only an arrow diagram.</p>",
+      "question": null,
+      "answer": null,
+      "graded": 2
+    },
+    {
+      "title": "6. Count only the probabilities that are free to vary",
+      "text": [
+        "A binary variable has two probabilities that sum to one. Once P(A=1) is chosen, P(A=0) is fixed. It therefore needs one free scalar probability.",
+        "For a binary B with binary parent A, there are two parent cases. Choose P(B=1|A=0) and P(B=1|A=1). The complementary probabilities are fixed in each case.",
+        "The small A→B model therefore needs one number for A and two numbers for B. Counting every displayed table entry would count some numbers that are determined by others."
+      ],
+      "example": "<table><tr><th>Table row</th><th>Choose</th><th>Then fixed</th></tr><tr><td>A</td><td>P(A=1)=0.2</td><td>P(A=0)=0.8</td></tr><tr><td>B given A=0</td><td>P(B=1|A=0)=0.1</td><td>P(B=0|A=0)=0.9</td></tr><tr><td>B given A=1</td><td>P(B=1|A=1)=0.8</td><td>P(B=0|A=1)=0.2</td></tr></table>",
+      "question": null,
+      "answer": null,
+      "graded": 3
+    }
+  ],
+  "remember": [
+    "Conditioning means restricting to the given information and renormalizing.",
+    "A network multiplies one local probability for each variable.",
+    "Chains and forks behave differently from colliders when the middle is observed.",
+    "Count free probabilities after accounting for each row’s sum-to-one rule."
+  ],
+  "review": "On a later day, draw a chain, fork and collider without these notes. State an independence claim for each, then check one claim using a small probability table."
+}

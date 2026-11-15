@@ -1,0 +1,68 @@
+[
+  {
+    "unit": 2,
+    "sections": 6,
+    "scoredQuestionIds": [
+      "AI02-Q1",
+      "AI02-Q2",
+      "AI02-Q3"
+    ],
+    "warmups": 3,
+    "additionalPractice": 2
+  },
+  {
+    "unit": 3,
+    "sections": 6,
+    "scoredQuestionIds": [
+      "AI03-Q1",
+      "AI03-Q2",
+      "AI03-Q3"
+    ],
+    "warmups": 3,
+    "additionalPractice": 2
+  },
+  {
+    "unit": 4,
+    "sections": 6,
+    "scoredQuestionIds": [
+      "AI04-Q1",
+      "AI04-Q2",
+      "AI04-Q3"
+    ],
+    "warmups": 3,
+    "additionalPractice": 2
+  },
+  {
+    "unit": 5,
+    "sections": 6,
+    "scoredQuestionIds": [
+      "AI05-Q1",
+      "AI05-Q2",
+      "AI05-Q3"
+    ],
+    "warmups": 3,
+    "additionalPractice": 2
+  },
+  {
+    "unit": 6,
+    "sections": 6,
+    "scoredQuestionIds": [
+      "AI06-Q1",
+      "AI06-Q2",
+      "AI06-Q3"
+    ],
+    "warmups": 3,
+    "additionalPractice": 2
+  },
+  {
+    "unit": 7,
+    "sections": 6,
+    "scoredQuestionIds": [
+      "AI07-Q1",
+      "AI07-Q2",
+      "AI07-Q3"
+    ],
+    "warmups": 3,
+    "additionalPractice": 2
+  }
+]

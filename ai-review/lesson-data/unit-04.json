@@ -1,0 +1,86 @@
+{
+  "unit": 4,
+  "title": "Writing down what must be true",
+  "intro": "Logic helps us separate a statement from the reasons that support it. We will start with true and false statements, then build implication, valid inference and statements about every or some object.",
+  "sections": [
+    {
+      "title": "1. Give simple statements names",
+      "text": [
+        "A proposition is a statement that has a truth value. Let P mean “the integer n is divisible by 4” and Q mean “n is even.” For a particular n, each statement is either true or false.",
+        "The symbol ¬ means not. The symbol ∧ means and. The symbol ∨ means or, including the possibility that both parts are true. For example, P∧Q is true only when both P and Q are true.",
+        "An interpretation assigns a truth value to each named proposition. A compound statement can then be checked from those assignments."
+      ],
+      "example": "<table><tr><th>P</th><th>Q</th><th>P∧Q</th><th>P∨Q</th></tr><tr><td>True</td><td>True</td><td>True</td><td>True</td></tr><tr><td>True</td><td>False</td><td>False</td><td>True</td></tr><tr><td>False</td><td>True</td><td>False</td><td>True</td></tr><tr><td>False</td><td>False</td><td>False</td><td>False</td></tr></table>",
+      "question": "Take P=false and Q=true. What are ¬P, P∧Q and P∨Q?",
+      "answer": "¬P is true. P∧Q is false. P∨Q is true.",
+      "graded": null
+    },
+    {
+      "title": "2. Understand what an implication rules out",
+      "text": [
+        "P→Q reads “if P, then Q.” It rules out the case where P is true and Q is false. It makes no demand that P itself must be true.",
+        "For the divisibility example, n=8 makes both parts true. The number n=6 makes P false and Q true. That second case does not violate “divisible by 4 implies even.”",
+        "The expression ¬P∨Q has the same truth table as P→Q. It fails only when P is true and Q is false. This equivalence is useful when we rewrite logical statements."
+      ],
+      "example": "<table><tr><th>P</th><th>Q</th><th>P→Q</th></tr><tr><td>True</td><td>True</td><td>True</td></tr><tr><td>True</td><td>False</td><td>False</td></tr><tr><td>False</td><td>True</td><td>True</td></tr><tr><td>False</td><td>False</td><td>True</td></tr></table>",
+      "question": "Does P→Q together with Q force P to be true? Find an assignment that settles the question.",
+      "answer": "No. Set P=false,Q=true. Both premises are true, while P is false. This assignment is a counterexample to the proposed inference.",
+      "graded": null
+    },
+    {
+      "title": "3. Test whether a conclusion follows",
+      "text": [
+        "A set of premises entails a conclusion when every interpretation making the premises true also makes the conclusion true. An interpretation satisfying the premises is called a model of them.",
+        "To disprove entailment, find one model with true premises and a false conclusion. To prove a small entailment, check all possible assignments or explain why the conclusion cannot be false.",
+        "From P→Q and P, Q follows. If Q were false while P were true, the implication would be false. This inference is called modus ponens."
+      ],
+      "example": "<p>Try the same method when the premises are P→Q and ¬Q. Suppose P were true. The implication would force Q, which conflicts with ¬Q. Therefore P must be false.</p>",
+      "question": null,
+      "answer": null,
+      "graded": 1
+    },
+    {
+      "title": "4. Add objects and the word every",
+      "text": [
+        "Propositional names describe whole statements. A predicate describes a property of an object or a relationship between objects. For example, R(x,y) might mean “person x knows person y.”",
+        "The domain is the set of objects under discussion. The symbol ∀ means “for every object in the domain.” The symbol ∃ means “there exists at least one object in the domain.”",
+        "A witness is an object that makes an existence statement true. To check ∃y R(x,y) for a fixed x, find at least one y related to that x."
+      ],
+      "example": "<p>On domain {1,2}, let R(x,y) mean x=y. For x=1, y=1 is a witness. For x=2, y=2 is a witness.</p>",
+      "question": "On that domain and relation, does ∀x∃y R(x,y) hold? Explain each witness.",
+      "answer": "Yes. For every x we can choose y=x. The chosen y can depend on x.",
+      "graded": null
+    },
+    {
+      "title": "5. Quantifier order changes what is required",
+      "text": [
+        "The statement ∀x∃y R(x,y) allows a different witness y for each x. The statement ∃y∀x R(x,y) requires one y that works for every x.",
+        "Using equality on {1,2}, each x has its own equal partner. But y=1 fails for x=2, and y=2 fails for x=1. No single witness works for everyone.",
+        "Negating “every object has a partner” gives “some object has no partner.” In symbols, ¬∀x∃y R(x,y) is equivalent to ∃x∀y ¬R(x,y). Move through the quantifiers one at a time and reverse every/existence when negating."
+      ],
+      "example": "<p>“Every student read some book” permits different books. “There is a book every student read” requires a shared book. They are different claims even if they sound similar.</p>",
+      "question": null,
+      "answer": null,
+      "graded": 2
+    },
+    {
+      "title": "6. Use resolution to combine two clauses",
+      "text": [
+        "A literal is a proposition or its negation. A clause is an or-statement built from literals. Consider the clauses (¬P∨Q) and (P∨R). The first says P being true requires Q. The second says P being false requires R.",
+        "Either P is true or it is false. If true, Q must be true. If false, R must be true. Therefore Q∨R must be true. This inference is called resolution on P.",
+        "The new clause is called the resolvent. It is a consequence of the original clauses. It can contain less information than both original clauses together."
+      ],
+      "example": "<p>Set P=true,Q=false,R=true. The resolvent Q∨R is true, but the first original clause ¬P∨Q is false. This shows why the inference cannot simply be reversed.</p>",
+      "question": null,
+      "answer": null,
+      "graded": 3
+    }
+  ],
+  "remember": [
+    "An implication fails only when its first part is true and its second is false.",
+    "Entailment requires every model of the premises to satisfy the conclusion.",
+    "A countermodel needs true premises and a false conclusion.",
+    "With quantifiers, ask whether witnesses may vary or one witness must work for everyone."
+  ],
+  "review": "Later, translate a new everyday statement into symbols and check a proposed inference with a tiny domain. Mix implication and quantifier questions so you must decide which tool fits."
+}
