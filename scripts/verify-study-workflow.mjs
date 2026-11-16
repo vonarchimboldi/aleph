@@ -81,3 +81,13 @@ await assert.rejects(emailAction({...reflect,easy:'Easy',nextStep:'Nothing.',tom
 const amended=await emailAction({...reflect,nextStep:'Nothing.',tomorrowProposal:'No change.',unfinished:[],understanding:[{assignmentId:eid,score:4}]});
 assert.equal(amended.study.reflections[0].nextStep,'Nothing.');assert.equal(amended.study.reflections[0].tomorrowProposal,'No change.');assert.equal(amended.study.reflections[0].history.length,1);
 console.log('PASS: concise no-change answers submit; easy/hard and other substantive fields retain detailed validation and prior check-ins remain in history.');
+
+// Missing mentor assignments must not prevent an honest learner check-in.
+const emptyLearner='synthetic-missing-plan',emptyNow=new Date('2026-11-16T14:00:00Z');
+let empty=await mutateTracker({learner:emptyLearner,expectedRevision:0,action:'study-start',adminToken:mintStudyAdminToken(privateKey,emptyLearner,emptyNow.getTime())},emptyNow,publicKey);
+empty=await mutateTracker({...reflect,learner:emptyLearner,expectedRevision:empty.revision,day:'2026-11-16',unfinished:[],understanding:[]},emptyNow,publicKey);
+assert.equal(empty.study.reflections[0].planMissing,true);assert.deepEqual(empty.study.reflections[0].snapshot,[]);assert.equal(empty.assignments.length,0);
+const emptyView=await trackerState(emptyLearner,emptyNow);assert.equal(emptyView.study.summary.uncommunicatedMisses,0);assert.equal(emptyView.study.summary.missingCheckIns,0);
+await assert.rejects(mutateTracker({...reflect,learner:emptyLearner,expectedRevision:empty.revision,day:'2026-11-17'},emptyNow,publicKey),/future/);
+await assert.rejects(mutateTracker({...reflect,learner:emptyLearner,expectedRevision:empty.revision,day:'2026-11-15'},emptyNow,publicKey),/two-week/);
+console.log('PASS: missing-plan check-ins accepted without fabricated assignments or penalties; date boundaries retained.');

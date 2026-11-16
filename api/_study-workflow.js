@@ -93,7 +93,7 @@ export function applyStudyAction(record,input,now,publicKey){
   const others=s.logs.filter(l=>l.day===day&&l.assignmentId!==a.id).reduce((n,l)=>n+l.minutes,0);if(others+spent>1440)throw failure('Daily work logs cannot exceed 24 hours.');
   saveVersion(s.logs,{assignmentId:a.id,day,minutes:spent,detail,recordedAt:at},l=>l.assignmentId===a.id&&l.day===day);audit(s,action,now,{assignmentId:a.id,day});
  }else if(action==='study-reflect'){
-  const day=range(s,input.day,now),p=asOfPlan(s,day,today);if(!p?.assignments.length&&!s.logs.some(l=>l.day===day))throw failure('No planned or logged work for this day.');
+  const day=range(s,input.day,now),p=asOfPlan(s,day,today);
   const snapshot=(p?.assignments||[]).map(a=>{
    const assignment=record.assignments.find(x=>x.id===a.id);const completion=input.resolvedAssignments?.find(x=>x.id===a.id)?.completedAt;
    const completedByDay=Boolean(completion&&studyDay(completion)<=day);const log=s.logs.find(l=>l.day===day&&l.assignmentId===a.id);
@@ -103,7 +103,7 @@ export function applyStudyAction(record,input,now,publicKey){
    return {...a,understanding,completedByDay,completedAt:completion||null,actualMinutes:log?.minutes||0,workDone:log?.detail||'',unfinishedReason:reason,cancelledAt:assignment?.cancelledAt||null};
   });
   const previous=s.reflections.find(r=>r.day===day);
-  const reflection={...(previous?.mentorResponse?{mentorResponse:previous.mentorResponse}:{}),...(previous?.feedbackFollowup?{feedbackFollowup:previous.feedbackFollowup}:{}),day,submittedAt:at,planVersion:p?.version||null,snapshot,workDone:words(input.workDone,'What did you do? Give a concrete example.',30),easy:words(input.easy,'What felt easy, and what evidence shows you understood it?'),hard:words(input.hard,'Where exactly did you struggle? What did you try?'),evidence:words(input.evidence,'What can you now explain or solve without help?'),nextStep:words(input.nextStep,'What will you do differently next time?',1),mentorFeedback:words(input.mentorFeedback,'What specific feedback do you want from your mentor?'),tomorrowProposal:words(input.tomorrowProposal,'What should stay or change in tomorrow’s plan?',1)};
+  const reflection={...(previous?.mentorResponse?{mentorResponse:previous.mentorResponse}:{}),...(previous?.feedbackFollowup?{feedbackFollowup:previous.feedbackFollowup}:{}),day,submittedAt:at,planVersion:p?.version||null,planMissing:!p?.assignments.length,snapshot,workDone:words(input.workDone,'What did you do? Give a concrete example.',30),easy:words(input.easy,'What felt easy, and what evidence shows you understood it?'),hard:words(input.hard,'Where exactly did you struggle? What did you try?'),evidence:words(input.evidence,'What can you now explain or solve without help?'),nextStep:words(input.nextStep,'What will you do differently next time?',1),mentorFeedback:words(input.mentorFeedback,'What specific feedback do you want from your mentor?'),tomorrowProposal:words(input.tomorrowProposal,'What should stay or change in tomorrow’s plan?',1)};
   saveVersion(s.reflections,reflection,r=>r.day===day);audit(s,action,now,{day});
  }else if(action==='study-reflection-feedback'){
   requireStudyAdmin(input,record.learner,now,publicKey);const r=s.reflections.find(r=>r.day===input.day);if(!r)throw failure('Daily reflection not found.',404);if(r.mentorResponse)throw failure('Feedback has already been supplied for this reflection.',409);
