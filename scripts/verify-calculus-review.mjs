@@ -23,9 +23,9 @@ const source=fs.readFileSync('app.js','utf8'),c=vm.createContext({console,URL,se
 for(const file of ['platinum-linear-algebra.js','platinum-machine-learning.js'])vm.runInContext(fs.readFileSync(file,'utf8'),c);
 vm.runInContext(source.slice(0,source.indexOf('const state = loadState();'))+source.slice(source.indexOf('function loadState()')),c);
 const plan=c.buildCoursePlan();const subject=plan.subjects.find(s=>s.id==='subject-platinum-calculus-review');assert(subject);
-const slots=subject.materialWorkspaces.flatMap(w=>w.weeks);assert.equal(slots.length,10);
+const allSlots=subject.materialWorkspaces.flatMap(w=>w.weeks);assert.equal(allSlots.length,20);const slots=allSlots.filter(w=>w.id.startsWith("calculus-phase1-"));assert.equal(slots.length,10);
 c.state={user:c.defaultUser(),...plan,patternSubmissions:[]};
-const html=c.subjectReaderTemplate(subject);assert.equal((html.match(/data-solution-upload=/g)||[]).length,10);
+const html=c.subjectReaderTemplate(subject);assert.equal((html.match(/data-solution-upload=/g)||[]).length,20);
 assert(!c.buildCoursePlan(c.basicGateDaUser()).subjects.some(s=>s.id===subject.id));
 for(const slot of slots){
  assert.equal(slot.date,'');assert.equal(slot.inlineQuestions.length,7);
@@ -45,4 +45,4 @@ assert(Math.abs(simpson(x=>1/((x+1)*(x+2)),0,1)-Math.log(4/3))<1e-10);
 assert(Math.abs(simpson(x=>x===0?0:x===1?1:(x-1)/Math.log(x),0,1)-Math.log(2))<1e-4);
 assert.equal((.75**3+.75-1),11/64);
 assert(Math.abs(.2**5/120-1/375000)<1e-20);
-console.log('PASS: ten rendered lessons, five practices and exit keys each, twelve IVT/MVT companions, maps, ten feedback/upload slots, no calendar changes, prior progress preserved, representative computations. Synthetic state only.');
+console.log('PASS: ten rendered lessons, five practices and exit keys each, twelve IVT/MVT companions, maps, ten Phase 1 feedback/upload slots plus ten Round 2 slots, no calendar changes, prior progress preserved, representative computations. Synthetic state only.');
