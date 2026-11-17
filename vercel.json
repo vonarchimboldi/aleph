@@ -32,6 +32,9 @@
     },
     "api/calculus-round2.js": {
       "maxDuration": 300
+    },
+    "api/cron/calculus-review.js": {
+      "maxDuration": 300
     }
   },
   "crons": [
@@ -46,6 +49,10 @@
     {
       "path": "/api/cron/material-tracker",
       "schedule": "0 7 * * *"
+    },
+    {
+      "path": "/api/cron/calculus-review",
+      "schedule": "15 * * * *"
     }
   ],
   "headers": [
@@ -100,6 +107,15 @@
     },
     {
       "source": "/math-remedial/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "no-store, max-age=0"
+        }
+      ]
+    },
+    {
+      "source": "/calculus-review/round2/(.*)",
       "headers": [
         {
           "key": "Cache-Control",
