@@ -29,6 +29,9 @@
     },
     "api/cron/material-tracker.js": {
       "maxDuration": 120
+    },
+    "api/calculus-round2.js": {
+      "maxDuration": 300
     }
   },
   "crons": [
