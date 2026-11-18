@@ -169,7 +169,7 @@ const FEEDBACK_SCHEMA = {
       items: {
         type: "object",
         additionalProperties: false,
-        required: ["question", "status", "marksAwarded", "maxMarks", "summary", "issue", "correction", "skillTag"],
+        required: ["question", "status", "marksAwarded", "maxMarks", "summary", "issue", "correction", "skillTag", "errorCategory", "evidence", "confidence", "missingPrerequisite", "retest"],
         properties: {
           question: { type: "string" },
           status: { type: "string", enum: ["correct", "partially correct", "incorrect", "not attempted", "unclear"] },
@@ -178,7 +178,12 @@ const FEEDBACK_SCHEMA = {
           summary: { type: "string" },
           issue: { type: "string" },
           correction: { type: "string" },
-          skillTag: { type: "string" }
+          skillTag: { type: "string" },
+          errorCategory: {type:"string",enum:["calculation","misunderstood-question","concept","prerequisite","method","reasoning","time","unclassified","none"]},
+          evidence: {type:"string"},
+          confidence: {type:"string",enum:["low","medium","high"]},
+          missingPrerequisite: {type:"string"},
+          retest: {type:"string"}
         }
       }
     },
@@ -274,6 +279,7 @@ export default async function handler(request, response) {
               "Do not invent work the student did not do.",
               "First parse or transcribe the learner's submitted content from solutionText and any attached PDF/image. Then evaluate only the parsed visible work. If the content is unreadable or incomplete, say so explicitly.",
               "Separate conceptual gaps from execution mistakes.",
+              "For EACH question classify the first difficulty using errorCategory: calculation means the method was sound but arithmetic/algebra/execution failed; misunderstood-question means a wrong requested quantity, domain or quantifier; concept means an incorrect definition or theorem; prerequisite means a specific earlier skill needs repair. Use method or reasoning where appropriate. Blank, absent and unreadable work stays unclassified, never proof of a concept/prerequisite gap. Correct work uses none. Quote a visible learner step in evidence, state confidence, identify a specific prerequisite only when supported, and give one fresh retest. If the same evidence has several possible causes, describe the uncertainty and a small diagnostic that separates them.",
               "Use the workflow prerequisite graph when provided; do not invent a prerequisite label if a supplied graph label applies.",
               "Always produce prerequisiteChecks. Start from the most basic prerequisites in the workflow graph before evaluating higher-level skills. Mark secure, shaky, missing, or not checked with evidence from the submitted work.",
               "For every non-green solution, produce concrete errorAnalysis, prerequisiteHypotheses, and diagnosticRecommendations.",
