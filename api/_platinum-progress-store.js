@@ -215,7 +215,7 @@ function normalizeQuestionFeedback(items) {
     issue: String(item.issue || "").slice(0, 300),
     correction: String(item.correction || "").slice(0, 500),
     skillTag: String(item.skillTag || "").trim().slice(0, 120),
-    errorCategory: String(item.errorCategory || "unclassified").slice(0, 60),
+    errorCategory: String(item.status === "correct" ? "none" : item.errorCategory || "unclassified").slice(0, 60),
     evidence: String(item.evidence || "").slice(0, 1600),
     confidence: String(item.confidence || "").slice(0, 20),
     missingPrerequisite: String(item.missingPrerequisite || "").slice(0, 400),

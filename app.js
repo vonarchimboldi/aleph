@@ -1,7 +1,7 @@
 const STORAGE_KEY = "learning-studio-data-v2";
 const LEGACY_STORAGE_KEYS = ["learning-studio-data-v1"];
 const SESSION_KEY = "aleph-session";
-const COURSE_PLAN_VERSION = "seeded-user-canonical-workspace-v179";
+const COURSE_PLAN_VERSION = "seeded-user-canonical-workspace-v180";
 const MAX_FEEDBACK_ATTACHMENT_BYTES = 3 * 1024 * 1024;
 const MAX_COMPRESSED_FEEDBACK_BYTES = 2400 * 1024;
 const MAX_FEEDBACK_REQUEST_BYTES = 4 * 1024 * 1024;
@@ -40167,6 +40167,7 @@ function savePatternSolutionUpload(input) {
     calculusClientKey: "",
     calculusReceiptSecret: "",
     calculusReceipt: null,
+    ...(materialId.startsWith("calculus-phase2-day-") ? {feedbackRecord:null,feedback:"",feedbackReportText:"",feedbackUpdatedAt:""} : {}),
     uploadedAt: new Date().toISOString()
   };
   upsertPatternSubmission(materialId, {
