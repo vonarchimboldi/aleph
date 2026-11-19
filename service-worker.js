@@ -4,9 +4,9 @@ const ASSETS = [
   "./",
   "./index.html",
   "./styles.css",
-  "./platinum-linear-algebra.js?v=seeded-user-canonical-workspace-v180",
-  "./platinum-machine-learning.js?v=seeded-user-canonical-workspace-v180",
-  "./app.js?v=seeded-user-canonical-workspace-v180",
+  "./platinum-linear-algebra.js?v=seeded-user-canonical-workspace-v181",
+  "./platinum-machine-learning.js?v=seeded-user-canonical-workspace-v181",
+  "./app.js?v=seeded-user-canonical-workspace-v181",
   "./icons/icon-192.svg",
   "./icons/icon-512.svg"
 ];

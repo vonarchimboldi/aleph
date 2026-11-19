@@ -1,7 +1,7 @@
 const STORAGE_KEY = "learning-studio-data-v2";
 const LEGACY_STORAGE_KEYS = ["learning-studio-data-v1"];
 const SESSION_KEY = "aleph-session";
-const COURSE_PLAN_VERSION = "seeded-user-canonical-workspace-v180";
+const COURSE_PLAN_VERSION = "seeded-user-canonical-workspace-v181";
 const MAX_FEEDBACK_ATTACHMENT_BYTES = 3 * 1024 * 1024;
 const MAX_COMPRESSED_FEEDBACK_BYTES = 2400 * 1024;
 const MAX_FEEDBACK_REQUEST_BYTES = 4 * 1024 * 1024;
@@ -39709,6 +39709,7 @@ function patternWeekTemplate(pattern, week) {
         <summary>Optional notes for feedback</summary>
         <textarea data-solution-text="${escapeHtml(week.id)}" rows="4" placeholder="Add any handwritten context that the upload may not capture.">${escapeHtml(submission?.solutionText || "")}</textarea>
       </details>
+      ${week.id.startsWith("calculus-phase2-day-") && submission?.calculusReceipt ? `<p><a class="primary-btn inline-link" href="${escapeHtml(week.materialUrl)}" target="_blank" rel="noopener">Open unlocked worked solutions</a></p>` : ""}
       ${feedbackWorkflowTemplate(workflow, feedbackRecord)}
       <button class="small-btn" data-save-pattern-feedback type="button" ${canGenerateFeedbackForSubmission(submission) ? "" : "disabled"}>${isUploadActivelyProcessing(submission) ? "Processing upload..." : "Generate AI feedback report"}</button>
     </section>
@@ -39717,6 +39718,7 @@ function patternWeekTemplate(pattern, week) {
 
 function canGenerateFeedbackForSubmission(submission) {
   if (!submission?.fileName) return false;
+  if (submission.calculusReceipt && submission.calculusReceiptUploadAt === submission.uploadedAt) return true;
   if (isUploadActivelyProcessing(submission) || submission.feedbackBlocked) return false;
   return Boolean(submission.solutionText || submission.fileDataUrl || pendingUploadFiles.has(submission.materialId));
 }
@@ -39974,7 +39976,12 @@ function prerequisiteChecksTemplate(checks = []) {
 }
 
 function patternSubmission(materialId) {
-  return (state.patternSubmissions || []).find((entry) => entry.materialId === materialId);
+  const current=(state.patternSubmissions || []).find(entry=>entry.materialId===materialId);
+  if(!materialId.startsWith("calculus-phase2-day-"))return current;
+  try {const receipt=JSON.parse(localStorage.getItem(`aleph-calc-r2-receipt:${state.user.id}:${Number(materialId.slice(-2))}`)||'null');
+   if(receipt?.attemptId&&receipt?.token&&(!current?.uploadedAt||(receipt.submittedAt&&receipt.submittedAt>=current.uploadedAt))){const at=receipt.submittedAt||current?.uploadedAt||'';return {...current,materialId,fileName:current?.fileName||receipt.fileName||'Saved answer submission',uploadedAt:at,calculusReceipt:receipt,calculusReceiptUploadAt:at,feedbackBlocked:false,uploadProcessing:false};}
+  }catch{}
+  return current;
 }
 
 function submissionSummary(submission) {
@@ -40201,6 +40208,11 @@ function savePatternSolutionUpload(input) {
     reader.readAsText(file);
     return;
   }
+  if (materialId.startsWith("calculus-phase2-day-")) {
+    pendingUploadFiles.set(materialId,{fileName:file.name,fileType:file.type,originalFile:file,processing:false});
+    upsertPatternSubmission(materialId,{...baseUpdates,uploadProcessing:false,feedbackUploadReady:true,storageWarning:"Saving the complete original file; no pages are omitted."});
+    finishPatternUpload(materialId,true);return;
+  }
   const reader = new FileReader();
   reader.onload = async () => {
     const fileDataUrl = String(reader.result || "");
@@ -40365,6 +40377,7 @@ async function savePatternFeedback(button) {
     alert("Aleph is still processing this upload. Try again when the feedback button is enabled.");
     return;
   }
+  if (materialId.startsWith("calculus-phase2-day-") && submission.calculusReceipt && submission.calculusReceiptUploadAt === submission.uploadedAt) return saveCalculusRoundTwoFeedback(button,materialId,submission,materialTextInputValue(materialId,card));
   if (submission.feedbackBlocked) {
     alert(submission.storageWarning || "This upload is not available for automatic feedback. Upload a smaller PDF/image or a text/Markdown answer file.");
     return;
@@ -40447,10 +40460,10 @@ async function saveCalculusRoundTwoFeedback(button, materialId, submission, note
  button.disabled=true;button.textContent='Saving answers and reviewing…';
  try {
   let receipt=submission.calculusReceipt;
-  if(!receipt||submission.calculusReceiptUploadAt!==submission.uploadedAt){submission.calculusClientKey||=crypto.randomUUID();submission.calculusReceiptSecret||=crypto.randomUUID().replaceAll('-','')+crypto.randomUUID().replaceAll('-','');persist();const b=await request('submit',{idempotencyKey:submission.calculusClientKey,receiptSecret:submission.calculusReceiptSecret,solutionText:submission.solutionText||notes||'',files:buildFeedbackUploadedFiles(materialId,submission),support:'unknown'});receipt={attemptId:b.attemptId,token:b.token};upsertPatternSubmission(materialId,{calculusReceipt:receipt,calculusReceiptUploadAt:submission.uploadedAt,storageWarning:'Answers saved on the server. Open the packet to see unlocked solutions. AI error review is pending.'});localStorage.setItem(receiptKey,JSON.stringify(receipt));persist();}
+  if(!receipt||submission.calculusReceiptUploadAt!==submission.uploadedAt){submission.calculusClientKey||=crypto.randomUUID();submission.calculusReceiptSecret||=crypto.randomUUID().replaceAll('-','')+crypto.randomUUID().replaceAll('-','');persist();const pending=typeof pendingUploadFiles!=='undefined'?pendingUploadFiles.get(materialId):null;let files;const progress=message=>{button.textContent=message;};if(pending?.originalFile)files=[await AlephCalcUploads.uploadFile(pending.originalFile,request,{contextKey:learner+':'+day,onProgress:progress})];else if(pending?.fileDataUrl||submission.fileDataUrl)files=[await AlephCalcUploads.uploadDataUrl({fileName:submission.fileName,fileType:submission.fileType,fileDataUrl:pending?.fileDataUrl||submission.fileDataUrl},request,{contextKey:learner+':'+day,onProgress:progress})];else files=buildFeedbackUploadedFiles(materialId,submission);const b=await request('submit',{idempotencyKey:submission.calculusClientKey,receiptSecret:submission.calculusReceiptSecret,solutionText:submission.solutionText||notes||'',files,support:'unknown'});receipt={attemptId:b.attemptId,token:b.token,submittedAt:b.submittedAt,fileName:submission.fileName};upsertPatternSubmission(materialId,{calculusReceipt:receipt,calculusReceiptUploadAt:submission.uploadedAt,storageWarning:'Answers saved on the server. Open the packet to see unlocked solutions. AI error review is pending.'});localStorage.setItem(receiptKey,JSON.stringify(receipt));persist();}
   const result=await request('review',receipt),report=result.review;
-  const feedbackRecord={verdict:report.questions.every(q=>q.outcome==='correct')?'green':'yellow',studentSummary:report.summary,whatTheyGotRight:report.questions.filter(q=>q.outcome==='correct').map(q=>q.id+': '+q.explanation),stillNotUnderstood:report.questions.filter(q=>['incorrect','partial'].includes(q.outcome)).map(q=>q.id+': '+q.explanation),errorsDespiteKnowing:report.questions.filter(q=>q.category==='calculation').map(q=>q.evidence),errorAnalysis:report.questions.filter(q=>!['none','unclassified'].includes(q.category)).map(q=>({errorType:q.category,observedError:q.firstWrongStep,likelyPrerequisite:q.missingPrerequisite,confidence:q.confidence,evidence:q.evidence,repairPriority:'medium'})),questionFeedback:report.questions.map(q=>({question:q.id,status:({partial:'partially correct',unattempted:'not attempted'})[q.outcome]||q.outcome,summary:q.explanation,issue:q.firstWrongStep,correction:q.repair,skillTag:q.id,errorCategory:q.category,evidence:q.evidence,confidence:q.confidence,missingPrerequisite:q.missingPrerequisite,retest:q.retest})),feedbackModel:report.model,narrativeFeedback:{overall:report.summary,understood:'See question-level evidence.',shaky:'See tentative diagnoses and their confidence.',missing:report.limitations.join(' '),improvementPlan:report.questions.filter(q=>q.repair).slice(0,3).map(q=>q.repair).join(' ')}};
-  upsertPatternSubmission(materialId,{feedbackRecord,feedbackReportText:formatFeedbackReportText(feedbackRecord),feedback:report.summary,feedbackUpdatedAt:new Date().toISOString(),storageWarning:'Answers and error analysis saved. Open the packet for unlocked worked solutions.'});persist();await syncPatternSubmissionRecord(materialId);render();
+  const feedbackRecord={score:report.score,maxScore:report.maxScore,scoringPolicy:report.scoringPolicy,assessedQuestions:report.assessedQuestions,totalQuestions:report.totalQuestions,verdict:report.questions.every(q=>q.outcome==='correct')?'green':'yellow',studentSummary:report.summary,whatTheyGotRight:report.questions.filter(q=>q.outcome==='correct').map(q=>q.id+': '+q.explanation),stillNotUnderstood:report.questions.filter(q=>['incorrect','partial'].includes(q.outcome)).map(q=>q.id+': '+q.explanation),errorsDespiteKnowing:report.questions.filter(q=>q.category==='calculation').map(q=>q.evidence),errorAnalysis:report.questions.filter(q=>!['none','unclassified'].includes(q.category)).map(q=>({errorType:q.category,observedError:q.firstWrongStep,likelyPrerequisite:q.missingPrerequisite,confidence:q.confidence,evidence:q.evidence,repairPriority:'medium'})),questionFeedback:report.questions.map(q=>({question:q.id,status:({partial:'partially correct',unattempted:'not attempted'})[q.outcome]||q.outcome,summary:q.explanation,issue:q.firstWrongStep,correction:q.repair,skillTag:q.id,marksAwarded:q.outcome==='correct'?2:q.outcome==='partial'?1:q.outcome==='incorrect'?0:null,maxMarks:['correct','partial','incorrect'].includes(q.outcome)?2:null,errorCategory:q.category,evidence:q.evidence,confidence:q.confidence,missingPrerequisite:q.missingPrerequisite,retest:q.retest})),feedbackModel:report.model,narrativeFeedback:{overall:report.summary,understood:'See question-level evidence.',shaky:'See tentative diagnoses and their confidence.',missing:report.limitations.join(' '),improvementPlan:report.questions.filter(q=>q.repair).slice(0,3).map(q=>q.repair).join(' ')}};
+  upsertPatternSubmission(materialId,{feedbackRecord,feedbackReportText:formatFeedbackReportText(feedbackRecord),feedback:(report.maxScore?`${report.score}/${report.maxScore} assessed review points · ${report.assessedQuestions}/20 questions assessed. `:'')+report.summary,feedbackUpdatedAt:new Date().toISOString(),storageWarning:'Answers and error analysis saved. Open the packet for unlocked worked solutions.'});persist();await syncPatternSubmissionRecord(materialId);render();
  } catch(error){upsertPatternSubmission(materialId,{storageWarning:error.message+' Your saved original attempt is preserved; retry feedback.'});persist();render();}
 }
 
