@@ -1,0 +1,17 @@
+import fs from 'node:fs';
+import vm from 'node:vm';
+import assert from 'node:assert/strict';
+const source=fs.readFileSync(new URL('../app.js',import.meta.url),'utf8');
+const context={escapeHtml:s=>String(s??''),feedbackModelTemplate:()=>'',narrativeFeedbackTemplate:r=>r.studentSummary||'',prerequisiteChecksTemplate:()=>'',questionFeedbackTemplate:q=>q.map(x=>x.question+': '+x.summary).join(' ')};
+vm.createContext(context);
+for(const [start,end] of [['function feedbackWorkflowTemplate(','function isReviewMaterial('],['function feedbackMaxScore(','function feedbackModelTemplate(']])vm.runInContext(source.slice(source.indexOf(start),source.indexOf(end)),context);
+const record={score:28,maxScore:28,assessedQuestions:14,totalQuestions:20,scoringPolicy:'Unassessed questions excluded.',studentSummary:'Saved Calculus review',questionFeedback:[{question:'C2-021',summary:'Correct working.'}]};
+const html=context.feedbackWorkflowTemplate({id:'calculus-test'},record);
+assert(html.includes('Question-by-question review'));
+assert(html.includes('28/28'));
+assert(html.includes('14 / 20 questions assessed'));
+assert(html.includes('C2-021: Correct working.'));
+assert(!html.includes('No feedback generated yet'));
+assert(!html.includes('Awaiting review'));
+assert(context.feedbackWorkflowTemplate({id:'empty'},null).includes('Awaiting review'));
+console.log('PASS: Calculus reports without studentReport render score, coverage and question feedback; empty records remain awaiting review.');

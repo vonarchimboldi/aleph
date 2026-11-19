@@ -39762,17 +39762,18 @@ function defaultFeedbackWorkflow(pattern, week) {
 }
 
 function feedbackWorkflowTemplate(workflow, feedbackRecord) {
+  const hasReport = Boolean(feedbackRecord?.studentReport || feedbackRecord?.questionFeedback?.length);
   return `
     <section class="structured-feedback" data-feedback-workflow="${escapeHtml(workflow.id)}">
       <div class="structured-feedback-header">
         <div>
           <p class="eyebrow">Feedback</p>
-          <h6>${feedbackRecord?.studentReport ? "Question-by-question review" : "Ready to generate feedback"}</h6>
-          <p>${feedbackRecord?.studentReport ? "Review each question on this page, then use the repair plan at the end." : "Upload the solution, then generate feedback on the same page."}</p>
+          <h6>${hasReport ? "Question-by-question review" : "Ready to generate feedback"}</h6>
+          <p>${hasReport ? "Review each question on this page, then use the repair plan at the end." : "Upload the solution, then generate feedback on the same page."}</p>
         </div>
-        <span class="tag">${feedbackRecord?.studentReport ? "Generated" : "Awaiting review"}</span>
+        <span class="tag">${hasReport ? "Generated" : "Awaiting review"}</span>
       </div>
-      ${feedbackRecord?.studentReport ? generatedFeedbackReportTemplate(feedbackRecord) : '<p class="feedback-placeholder">No feedback generated yet. Upload the learner solution and run the generator.</p>'}
+      ${hasReport ? generatedFeedbackReportTemplate(feedbackRecord) : '<p class="feedback-placeholder">No feedback generated yet. Upload the learner solution and run the generator.</p>'}
     </section>
   `;
 }
@@ -39846,6 +39847,7 @@ function generatedFeedbackReportTemplate(record) {
       <div class="feedback-spec-title">${escapeHtml(report.headline || "Generated feedback report")}</div>
       ${feedbackModelTemplate(record)}
       ${scoreLine}
+      ${Number.isFinite(record.assessedQuestions) ? `<p>${escapeHtml(record.assessedQuestions)} / ${escapeHtml(record.totalQuestions || 20)} questions assessed. ${escapeHtml(record.scoringPolicy || "")}</p>` : ""}
       ${narrativeFeedbackTemplate(record)}
       ${prerequisiteChecksTemplate(record.prerequisiteChecks)}
       ${questionFeedbackTemplate(record.questionFeedback)}
