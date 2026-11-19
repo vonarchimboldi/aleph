@@ -36862,9 +36862,11 @@ function storageSafeState(sourceState) {
       ...submission,
       fileDataUrl: "",
       uploadProcessing: false,
-      feedbackUploadReady: Boolean(submission.solutionText),
-      feedbackBlocked: !submission.solutionText && isPdfOrImageSubmission(submission),
-      storageWarning: submission.solutionText
+      feedbackUploadReady: Boolean(submission.solutionText || submission.calculusReceipt),
+      feedbackBlocked: !submission.calculusReceipt && !submission.solutionText && isPdfOrImageSubmission(submission),
+      storageWarning: submission.calculusReceipt
+        ? submission.storageWarning || "Answers saved on the server."
+        : submission.solutionText
         ? submission.storageWarning || ""
         : submission.fileName
           ? "The uploaded file was too large for browser persistence. Reupload it before generating AI feedback, or upload text/Markdown."
@@ -43048,4 +43050,29 @@ function mathHtml(value) {
     .replaceAll("@@SIGMA@@", "&sigma;")
     .replaceAll("@@SUM@@", "&Sigma;");
   return html;
+}
+
+// Recover completed server reviews after a lost response or an older browser error.
+const calculusReviewRecovery = new Set();
+async function recoverSavedCalculusReviews() {
+  if (!state.user?.id) return;
+  for (let day=1;day<=10;day++) {
+    const materialId='calculus-phase2-day-'+String(day).padStart(2,'0');
+    const submission=patternSubmission(materialId), receipt=submission?.calculusReceipt;
+    if (!receipt?.attemptId || !receipt.token || submission.calculusReceiptUploadAt!==submission.uploadedAt) continue;
+    const key=state.user.id+':'+receipt.attemptId;
+    if (calculusReviewRecovery.has(key)) continue;
+    calculusReviewRecovery.add(key);
+    try {
+      const response=await fetch('/api/calculus-round2',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'solutions',learner:state.user.id,day,...receipt})});
+      const saved=await response.json();
+      if (!response.ok || saved.reviewStatus!=='completed') {calculusReviewRecovery.delete(key);continue;}
+      await saveCalculusRoundTwoFeedback({},materialId,submission,'');
+    } catch {calculusReviewRecovery.delete(key);}
+  }
+}
+if (typeof window !== 'undefined') {
+window.addEventListener('focus',recoverSavedCalculusReviews);
+window.addEventListener('storage',event=>{if(event.key?.startsWith('aleph-calc-r2-receipt:'))recoverSavedCalculusReviews();});
+setTimeout(recoverSavedCalculusReviews,1500);
 }
