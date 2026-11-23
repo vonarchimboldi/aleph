@@ -1,0 +1,359 @@
+[
+  {
+    "title": "Choosing a search rule and defending the stopping point",
+    "skill": "search-uninformed",
+    "feedback": "Your Round 1 feedback accepted your UCS trace, cycle argument and BFS count. This time the graph and counting assumptions change. We want to see whether you can choose the rule before a heading tells you which one to use.",
+    "recall": "Without notes, explain what BFS, UCS and DFS each choose next. State when each can safely stop in the problem you are solving.",
+    "cycles": [
+      {
+        "question": "If the goal is already in the queue, why keep searching?",
+        "text": "A route planner sees a direct road to the destination, but finding a route is different from finding the cheapest route. The frontier is the collection of routes found but not yet examined. Uniform-cost search, or UCS, removes the route with the smallest cost already paid. We call that cost g. In a finite graph with positive road costs, testing the goal when its cheapest entry is removed allows cheaper unfinished routes their turn first. Ignore old queue entries when a better route to the same state has replaced them.",
+        "worked": "Suppose S→G costs 12, S→A costs 3, and A→G costs 4. Removing S produces A:3 and G:12. Removing A improves G to 7. The next useful removal is G:7. Stopping when G first appeared would have returned 12 instead of 7.",
+        "prompt": "S→G costs 8, S→B costs 2, B→G costs 3. Write the useful UCS removals and cost.",
+        "answer": "S, B, G; the costs removed are 0, 2 and 5.",
+        "repair": "Draw each partial route and add its road costs before putting it into the frontier."
+      },
+      {
+        "question": "When does counting roads answer the cost question?",
+        "text": "Breadth-first search, or BFS, removes states in increasing number of roads from the start. A queue gives earlier discoveries their turn first. If every road costs the same positive amount, fewer roads also means lower total cost. With unequal costs that implication fails. For counting questions, say whether you count generated states or removed states, whether the root counts, and whether the first goal itself counts.",
+        "worked": "In a complete ternary tree with root depth zero and all goals at depth two, BFS removes 1 root and 3 depth-one nodes before touching a goal. Including the first goal gives 5 removals. Generating all nine depth-two nodes is a different event.",
+        "prompt": "A complete binary tree has its first goals at depth two. How many removals include the first goal?",
+        "answer": "1+2+1=4. The last 1 is the first goal, not the whole goal layer.",
+        "repair": "List the layers before using a geometric sum."
+      }
+    ],
+    "questions": [
+      {
+        "prompt": "Directed roads: S→A costs 2, S→B costs 1, S→G costs 10, A→G costs 3, B→A costs 2, B→G costs 8. Use UCS graph search with best-cost updates, goal on removal, positive costs, and alphabetic ties. List useful removals, the final route and cost. Explain why discovery of G is insufficient.",
+        "answer": "S:0, B:1, A:2, G:5; route S→A→G. B offers A:3 (discard) and G:9 (improves10); A improves G to5. Discovery is insufficient while a cheaper unfinished route remains. Ignore stale G entries.",
+        "skill": "search-uninformed"
+      },
+      {
+        "prompt": "On the same roads, BFS uses alphabetic successor order, marks states when enqueued and tests the goal on removal. Give its removal order through the goal and its returned route cost. Does it minimize this cost?",
+        "answer": "After S enqueue A,B,G. Remove A then B then G; no duplicates enqueued. Order S,A,B,G. Returned direct route costs10, not the cheapest5. BFS minimizes edge count here, not weighted cost.",
+        "skill": "search-uninformed"
+      },
+      {
+        "prompt": "A full binary tree has root depth0, every leaf at depth4 and every leaf is a goal. How many BFS removals include the first goal? How many non-goals have been removed? Then explain how a reachable cycle S→A→S can defeat DFS without visited-state checks.",
+        "answer": "Removals1+2+4+8+1=16; non-goals15. DFS can follow the cycle indefinitely if that successor is always pursued before other branches. Visited checks prevent revisiting those states in a finite graph.",
+        "skill": "search-uninformed"
+      },
+      {
+        "prompt": "Without notes: in A→B→C with no other edges, is A independent of C given B according to the graph? Explain which path is blocked.",
+        "answer": "Yes: conditioning on non-collider B blocks the sole chain path. This is a graph-guaranteed conditional independence.",
+        "skill": "conditional-independence"
+      },
+      {
+        "prompt": "Without notes: likelihood weights for samples X=1,0,1 are 0.2,0.5,0.1. Estimate P(X=1|evidence) and name the denominator.",
+        "answer": "(0.2+0.1)/(0.2+0.5+0.1)=0.3/0.8=0.375. Denominator is total sample weight, not sample count.",
+        "skill": "sampling"
+      }
+    ]
+  },
+  {
+    "title": "Using heuristic estimates without losing the cheapest route",
+    "skill": "search-informed",
+    "feedback": "Round 1 feedback accepted your greedy/A* trace and your distinction between admissibility and consistency. We will now test consistency edge by edge and see why some graph searches need to reopen a state.",
+    "recall": "Recall the separate meanings of g, h and f in A*. Then state the difference between an estimate that never overestimates and estimates that fit together across every edge.",
+    "cycles": [
+      {
+        "question": "What does an estimate add to the cost already paid?",
+        "text": "A* ranks a frontier route by f=g+h. The quantity g is the known cost from the start. The estimate h predicts the remaining cost. Greedy best-first search uses h alone, so a promising-looking destination can distract it from an expensive journey. An admissible h never exceeds the true cheapest remaining cost. Consistency is a stronger local check: across a road u→v of cost c, require h(u)≤c+h(v). Set h(goal)=0.",
+        "worked": "If S→A costs2, A→G costs4 and S→G costs9, take h(A)=4 and h(G)=0. Greedy chooses G after S because its h is zero. A* compares A at f=6 with G at f=9 and first chooses A. Its next G entry costs6.",
+        "prompt": "For that graph, can h(S)=7 be admissible? Can h(S)=6 be consistent on both outgoing edges?",
+        "answer": "7 is not admissible because the cheapest remaining cost is6. With6, the tests are6≤2+4 and6≤9+0, both true.",
+        "repair": "Compute the actual cheapest route first. Keep the g and h columns separate."
+      },
+      {
+        "question": "Why might a state need a second turn?",
+        "text": "An admissible but inconsistent estimate can delay a cheap route to a state until after that state has already been expanded. A graph-search implementation that permanently closes the state may then miss the best solution. Reopening means expanding it again when a better g is found. This is an algorithm rule, not a change in the meaning of the heuristic.",
+        "worked": "Take S→A:4, S→B:1, B→A:1, A→G:4, with h(S)=0,h(A)=0,h(B)=5,h(G)=0. The estimates do not overestimate: B really is5 from G. A is expanded at g4 before B at f6. B later finds A at g2. Reopening A gives G at6; permanently closing A leaves the earlier G at8.",
+        "prompt": "Which edge violates consistency in the worked graph?",
+        "answer": "B→A: h(B)=5 is greater than1+h(A)=1.",
+        "repair": "Write the inequality for one edge at a time; do not substitute a path cost for an edge cost."
+      }
+    ],
+    "questions": [
+      {
+        "prompt": "S→A:2, S→B:1, A→G:5, B→G:9. Let h(S)=6,h(A)=4,h(B)=1,h(G)=0. Use graph search with best-g updates, goals tested on removal and alphabetic ties. Trace greedy and A* and give their goal costs.",
+        "answer": "Greedy: S,B,G, returns10. A*: S then B(f2), A(f6), G(f7), returns7 through A; B first offers G10. State g,h,f when ranking.",
+        "skill": "search-informed"
+      },
+      {
+        "prompt": "For Q1, list the true cheapest remaining cost at every state. Is h admissible? Is it consistent? Give every edge inequality that matters.",
+        "answer": "True costs S7,A5,B9,G0; all estimates admissible. S→A:6≤2+4 true; S→B:6≤1+1 false; A→G:4≤5 true; B→G:1≤9 true. Thus inconsistent.",
+        "skill": "search-informed"
+      },
+      {
+        "prompt": "S→A:5, S→B:1, B→A:1, A→G:5. Set h(S)=0,h(A)=0,h(B)=6,h(G)=0. Trace A* with reopening and with permanent closing. Explain the result rather than just quoting a guarantee.",
+        "answer": "A expanded at g5,f5, offers G10; B at g1,f7 finds A atg2. Reopen A then improve G to7. Permanent closing ignores the better A and returns10. Heuristic admissible but B→A violates6≤1.",
+        "skill": "search-informed"
+      },
+      {
+        "prompt": "Without notes: for premises P→Q and Q, does P follow? Give a truth assignment that settles the claim.",
+        "answer": "No. P=false,Q=true satisfies both premises but makes P false. This is affirming the consequent.",
+        "skill": "logic"
+      },
+      {
+        "prompt": "Two unnormalized posterior entries are0.12 and0.18. Normalize them and state what information their sum gives when they exhaust the query states for one fixed evidence event.",
+        "answer": "Total0.30 is the evidence probability if these are the joint weights for all query states. Posterior0.4 and0.6.",
+        "skill": "variable-elimination"
+      }
+    ]
+  },
+  {
+    "title": "Reading an opponent’s choices and tracing a cutoff",
+    "skill": "search-adversarial",
+    "feedback": "Round 1 feedback accepted the minimax values, the cutoff and the effect of leaf order. We will increase the depth slightly and ask you to distinguish an exact value from a bound returned after pruning.",
+    "recall": "From memory: whose preference does a MAX node represent, whose preference does a MIN node represent, and what comparison permits an alpha–beta cutoff?",
+    "cycles": [
+      {
+        "question": "Why can a smaller number be the correct choice?",
+        "text": "Terminal numbers measure the outcome from MAX’s point of view. MAX chooses the largest available outcome; MIN chooses the smallest because the opponent is trying to reduce MAX’s outcome. Work upward from the leaves. A value at an internal node describes what can be forced under best play, not an average over possible moves.",
+        "worked": "A MAX root has MIN children L and R. L has leaves4,7 and R has leaves3,9. L returns4, R returns3, so the root chooses L and guarantees4. The tempting9 is unavailable against a MIN player who can choose3.",
+        "prompt": "Change L to leaves2,8 and R to5,6. Which branch does MAX choose?",
+        "answer": "L returns2, R returns5; root chooses R with5.",
+        "repair": "Write MAX or MIN beside each node before comparing numbers."
+      },
+      {
+        "question": "What exactly have we learned when we stop early?",
+        "text": "Alpha is a lower bound MAX already knows it can secure; beta is an upper bound MIN can impose. A cutoff is justified when the branch cannot beat an alternative already available. At a MIN node reached with alpha4, seeing a child value3 is enough: the node’s final minimum is at most3. We may not know its exact minimum, but MAX already has4 elsewhere. Never report an unexamined leaf’s value as if it had been calculated.",
+        "worked": "After L has returned4 in the first example, visit R. Its first leaf is3, so beta becomes3. Since beta≤alpha, skip9. R is known to be at most3; the complete tree happens to make it exactly3, but the cutoff itself only needs the bound.",
+        "prompt": "If the unexamined leaf had been−20 instead of9, would the root decision change?",
+        "answer": "No. R would be−20, still worse for MAX than L=4. This is why an upper bound was enough.",
+        "repair": "Ask which player could still choose a worse outcome before treating a cutoff value as exact."
+      }
+    ],
+    "questions": [
+      {
+        "prompt": "A MAX root has three MIN children in order L,M,R, with leaves L=(6,8), M=(7,4), R=(5,9). Evaluate all minimax values. Then trace left-to-right alpha–beta from alpha=−infinity,beta=+infinity, showing which leaves are examined and skipped.",
+        "answer": "Values L6,M4,R5; root6 chooses L. Examine6,8 then7,4 then5. After L alpha6; M first7 gives no cutoff,4 triggers cutoff but has no remaining leaf; R first5 permits skipping9.",
+        "skill": "search-adversarial"
+      },
+      {
+        "prompt": "For Q1 change only R to leaves(9,5), keeping child order. Does the root value change? How many terminal leaves are now examined? Explain.",
+        "answer": "Root stays6. All six leaves examined: R first9 exceeds alpha6 so cannot cut off until5, by which point none remain. Order changes work, not minimax value.",
+        "skill": "search-adversarial"
+      },
+      {
+        "prompt": "A MAX root has already obtained value7 from its first branch. Its second branch is MIN, with first observed leaf5 and an unseen leaf z, where z can be any real number. Give the strongest bound justified now for that MIN node, explain the cutoff, and say whether its exact value is known.",
+        "answer": "MIN value=min(5,z)≤5. Since MAX can already get7, this branch cannot improve the decision; prune z. Exact value unknown without z.",
+        "skill": "search-adversarial"
+      },
+      {
+        "prompt": "Without notes: UCS sees frontier A at cost3 and G at cost8. All future edge costs are positive. Can it stop solely because G has been discovered? Explain.",
+        "answer": "No; A may lead to G at total below8. Expand the smallest-cost unfinished route and test goal on removal.",
+        "skill": "search-uninformed"
+      },
+      {
+        "prompt": "For independent binary roots A,B and binary child C with parents A,B, count free probabilities. Explain why one probability is enough for each binary conditional row.",
+        "answer": "1+1+4=6. Each row sums to1, so its second entry is determined by the first.",
+        "skill": "conditional-independence"
+      }
+    ]
+  },
+  {
+    "title": "Proving a conclusion or finding a counterexample",
+    "skill": "logic",
+    "feedback": "Round 1 feedback accepted modus tollens, a quantifier counterexample and resolution. We will remove the familiar wording and ask you to decide whether a proposed inference is actually forced.",
+    "recall": "Without notes, write when P→Q is false. Explain what a counterexample to entailment must make true and what it must make false.",
+    "cycles": [
+      {
+        "question": "How can one small example defeat a large claim?",
+        "text": "An entailment says every interpretation satisfying the premises also satisfies the conclusion. To disprove it, find one interpretation where all premises hold and the conclusion fails. An implication P→Q is false only when P is true and Q is false. It does not say that Q can happen only because of P.",
+        "worked": "“If the alarm is armed, the light is on. The light is on. Therefore the alarm is armed.” Set armed=false and light=true. Both premises hold while the conclusion fails. In contrast, if the light is off, an armed alarm would contradict the implication, so the alarm must be unarmed.",
+        "prompt": "If P→Q and ¬Q are true, can P be true?",
+        "answer": "No. P=true would force Q=true, contradicting ¬Q.",
+        "repair": "Try the four truth assignments for P,Q. Cross out any row violating a premise."
+      },
+      {
+        "question": "Can everyone have a helper without sharing the same helper?",
+        "text": "In a finite group, ∀x∃y R(x,y) means each person x has at least one suitable y; the choice may depend on x. In ∃y∀x R(x,y), one y has to work for everybody. Quantifiers therefore describe who gets to choose first. To negate “every person has some helper,” we need one person with no helper: ∃x∀y ¬R(x,y).",
+        "worked": "For two people a,b, let R mean “is the same person as.” Each person has someone identical to themself, so ∀x∃y R holds. No single person is identical to both, so ∃y∀x R fails.",
+        "prompt": "If R(x,y) means x<y on the integers, does ∀x∃y R hold?",
+        "answer": "Yes. For every chosen x, take y=x+1. There is no single integer larger than all integers.",
+        "repair": "Write a two-row table showing which y works for each x before manipulating symbols."
+      }
+    ],
+    "questions": [
+      {
+        "prompt": "Premises are P→Q, Q→R and ¬R. Does ¬P follow? Give a proof. Does ¬Q follow too?",
+        "answer": "Yes to both. If Q were true, Q→R would force R, contradiction; hence ¬Q. If P were true, P→Q would force Q, contradiction; hence ¬P.",
+        "skill": "logic"
+      },
+      {
+        "prompt": "Domain {a,b}; R={(a,a),(a,b),(b,b)}. Evaluate ∀x∃y R(x,y) and ∃y∀x R(x,y). Then negate ∀x∃y R(x,y) in symbols and plain language.",
+        "answer": "Both true: choose y=a for x=a and y=b for x=b; common witness y=b also works for both. Negation ∃x∀y ¬R(x,y): some x has no related y. Quantifier orders need not differ in truth on every structure.",
+        "skill": "logic"
+      },
+      {
+        "prompt": "Resolve clauses (P∨Q) and (¬P∨R). Give the resolvent. Does that resolvent entail the conjunction of the original clauses? Give an assignment proving your answer.",
+        "answer": "Resolvent Q∨R. Converse fails: P=true,Q=true,R=false makes resolvent true and ¬P∨R false. Resolution preserves a consequence; it is not generally an equivalence.",
+        "skill": "logic"
+      },
+      {
+        "prompt": "Without notes: on a sole path A→C←B→D, are A and D graph-separated with no observations? What changes after observing C?",
+        "answer": "No observations: collider C blocks the path, so graph implies A independent D. Observing C opens it and B remains an unobserved non-collider; independence is no longer guaranteed.",
+        "skill": "conditional-independence"
+      },
+      {
+        "prompt": "A MIN node has seen8 and still has one unseen child; alpha inherited from MAX is6. Is a cutoff justified now? If its next child is4, what then?",
+        "answer": "At8 no: unseen child may be smaller, but current beta8>alpha6 does not yet rule out an improvement. At4 beta4≤alpha6, so a cutoff is justified for any remaining children.",
+        "skill": "search-adversarial"
+      }
+    ]
+  },
+  {
+    "title": "Following every path in a Bayesian network",
+    "skill": "conditional-independence",
+    "feedback": "Round 1 feedback explicitly suggested a new chain, a fork and a larger parameter count as retests. Those are included here, followed by a network with two paths so that remembering one pattern is not enough.",
+    "recall": "Draw a chain, a fork and a collider from memory. For each, describe what observing its middle node changes. Use “graph guarantees independence” rather than claiming every open path produces dependence.",
+    "cycles": [
+      {
+        "question": "Does blocking one route block all the routes?",
+        "text": "A Bayesian network represents a joint probability as one conditional distribution per variable, given its parents. To test a graph-implied conditional independence, inspect every undirected path between the two variables. A chain or fork is blocked by observing a middle non-collider. A collider, where two arrowheads meet, blocks a path unless the collider or a descendant is observed. Independence is guaranteed when all paths are blocked. An open path only removes that guarantee; special probability values can still produce independence.",
+        "worked": "In A→B→D and A→C→D, observing B blocks the first route from A to D. The route through C remains open. Observing both B and C blocks both. Looking at only one of the two routes would give the wrong conclusion.",
+        "prompt": "In A←B→C, with no other edges, what happens after B is observed?",
+        "answer": "The fork is blocked, so the graph guarantees A and C independent given B.",
+        "repair": "Draw paths without arrow direction first, then classify each middle node using the arrowheads."
+      },
+      {
+        "question": "How many probabilities must we actually specify?",
+        "text": "For a variable with r possible values, each conditional row has r−1 free numbers because the row sums to one. The number of rows is the product of its parents’ numbers of possible values. Roots have one row. Count one variable at a time before adding. This counts unrestricted conditional tables, not a model with extra parameter sharing.",
+        "worked": "A binary root U needs1 free number. A three-valued root V needs2. A binary child W with both parents has2×3=6 rows and1 free number per row. Total1+2+6=9.",
+        "prompt": "How many free numbers does a three-valued child with one binary parent need?",
+        "answer": "Two rows times two free numbers per row gives4.",
+        "repair": "Write the number of rows separately from the number of entries in each row."
+      }
+    ],
+    "questions": [
+      {
+        "prompt": "For the sole chain A→D→E, factor P(A,D,E) and state the independence guaranteed after D is observed. For the sole fork A←D→E, repeat both tasks.",
+        "answer": "Chain P(A)P(D|A)P(E|D); fork P(D)P(A|D)P(E|D). Both imply A independent E given D. The factorizations differ even though this conditional independence agrees.",
+        "skill": "conditional-independence"
+      },
+      {
+        "prompt": "Network edges A→C, B→C, C→D; A and B are roots. Is A independent of B graphically with no observations, given C, and given D? Explain the role of D.",
+        "answer": "Unconditionally yes: sole path A→C←B is blocked. Given C no graph guarantee. Given D no guarantee because observing descendant D opens collider C. Do not claim dependence for every possible conditional table.",
+        "skill": "conditional-independence"
+      },
+      {
+        "prompt": "Network edges A→B→D and A→C→D, with no other edges. Is A independent of D given B? Given {B,C}? All variables binary except C, which has three values. Count free parameters for the whole network.",
+        "answer": "Given B alone no graph guarantee because A→C→D remains open; given B,C all paths blocked. Counts A1; B has2 rows×1=2; C has2 rows×2=4; D has2×3 rows×1=6; total13.",
+        "skill": "conditional-independence"
+      },
+      {
+        "prompt": "Without notes: write A* priority f and state which test of a heuristic compares adjacent states. Can an admissible heuristic fail that test?",
+        "answer": "f=g+h. Consistency checks h(u)≤cost(u,v)+h(v) for each edge. Yes, admissibility can hold while consistency fails.",
+        "skill": "search-informed"
+      },
+      {
+        "prompt": "Without notes: negate ∃y∀x R(x,y). Say it in ordinary language.",
+        "answer": "∀y∃x ¬R(x,y): every candidate y fails for at least one x.",
+        "skill": "logic"
+      }
+    ]
+  },
+  {
+    "title": "Computing a posterior and controlling intermediate tables",
+    "skill": "variable-elimination",
+    "feedback": "The corrected Round 1 submission was accepted on marginalization, normalization and factor scopes. An earlier upload contained unrelated DBMS work; that is a submission mismatch, not evidence that you lack a probability prerequisite. Today checks fresh arithmetic and the effect of elimination order.",
+    "recall": "Without notes, explain the difference between fixing an evidence variable, summing over a hidden variable and normalizing a query distribution.",
+    "cycles": [
+      {
+        "question": "What changes when we learn that an event happened?",
+        "text": "Consider a binary cause A and binary observation E. Before observing E, P(A) is the prior. For E=1, multiply each prior by the likelihood of that evidence under that value of A. These products are joint weights, not yet conditional probabilities. Their sum is the evidence probability. Divide each by that sum to obtain a posterior whose entries add to one.",
+        "worked": "Let P(A=1)=0.4, P(E=1|A=1)=0.7 and P(E=1|A=0)=0.2. The weights are0.4×0.7=0.28 and0.6×0.2=0.12. Their sum is0.40, so P(A=1|E=1)=0.28/0.40=0.7.",
+        "prompt": "If the two joint weights were0.09 and0.21, what posterior would they give?",
+        "answer": "0.3 and0.7, after dividing by0.30.",
+        "repair": "Draw two rows labelled A=1 and A=0. Keep prior, likelihood and product in separate columns."
+      },
+      {
+        "question": "Why can the same answer require a much larger table?",
+        "text": "A factor is a table indexed by a set of variables, called its scope. Multiplying factors uses the union of their scopes. Summing out a hidden variable removes that variable from the resulting scope. Different elimination orders can create different temporary tables even though exact arithmetic gives the same final query distribution. Count the product table before the sum as well as the table after it.",
+        "worked": "For factors f(U,V),g(V,W),h(W), all variables binary, eliminating V first requires a product over U,V,W with8 entries and leaves a factor over U,W with4. Factor h(W) does not involve V and can wait. Eliminating W first instead combines g and h on V,W with4 entries and leaves2 entries on V.",
+        "prompt": "If U has3 values while V,W remain binary, how many entries has the product f(U,V)g(V,W)?",
+        "answer": "3×2×2=12 before summing V; the output on U,W has6.",
+        "repair": "List each scope as a set before multiplying cardinalities."
+      }
+    ],
+    "questions": [
+      {
+        "prompt": "P(A=1)=0.3, P(E=1|A=1)=0.8, P(E=1|A=0)=0.2. Compute P(E=1) and P(A=1|E=1). Show both unnormalized weights and check the normalized pair sums to1.",
+        "answer": "Weights0.24 and0.14, evidence0.38, posterior A1=12/19 and A0=7/19. Sum1.",
+        "skill": "variable-elimination"
+      },
+      {
+        "prompt": "For chain A→B→C, P(A=1)=0.5; P(B=1|A=1)=0.8, P(B=1|A=0)=0.2; P(C=1|B=1)=0.9, P(C=1|B=0)=0.1. Observe C=1. Sum out B explicitly and compute P(A=1|C=1).",
+        "answer": "For A1 likelihood0.8×0.9+0.2×0.1=0.74; A0 likelihood0.2×0.9+0.8×0.1=0.26. Joint weights0.37,0.13, evidence0.50, posterior0.74.",
+        "skill": "variable-elimination"
+      },
+      {
+        "prompt": "Factors f(A,B),g(B,C),h(C,D), all variables binary, query A, no evidence. Compare elimination orders B,C,D and D,C,B. List each multiplied scope and each output scope, and the largest temporary product table.",
+        "answer": "B-first: product ABC(8)→AC(4), then ACD(8)→AD(4), then AD(4)→A(2); peak8. D-first: CD(4)→C(2), then BC(4)→B(2), then AB(4)→A(2); peak4. Same final marginal, different storage work.",
+        "skill": "variable-elimination"
+      },
+      {
+        "prompt": "Without notes: a MAX root has MIN children with leaves(4,9) and(3,8). Evaluate the root and trace left-to-right pruning.",
+        "answer": "First child4; second sees3≤alpha4, so skip8; root4.",
+        "skill": "search-adversarial"
+      },
+      {
+        "prompt": "Without notes: for A→B←C with B→D, does observing D leave the collider path between A and C blocked? Explain.",
+        "answer": "No. D is a descendant of collider B, so observing D opens that path. Graphical independence is no longer guaranteed.",
+        "skill": "conditional-independence"
+      }
+    ]
+  },
+  {
+    "title": "Choosing an inference method and checking a whole week of recall",
+    "skill": "sampling",
+    "feedback": "Round 1 feedback accepted rejection counts, likelihood weights and a Gibbs update. Today compares those methods on the same evidence problem, then mixes older search and logic skills without announcing the method in the question.",
+    "recall": "Without notes, explain what rejection sampling discards, what likelihood weighting fixes, and which variables Gibbs sampling is allowed to update.",
+    "cycles": [
+      {
+        "question": "What should count in the denominator?",
+        "text": "Rejection sampling draws complete assignments from the prior network and keeps only those matching the evidence. Estimate a conditional probability using only accepted samples. Likelihood weighting fixes evidence values instead of resampling them, and weights each sampled assignment by the probabilities of those evidence values given their sampled parents. Then the denominator is total weight. These procedures estimate the same posterior using different bookkeeping.",
+        "worked": "If200 prior draws contain8 evidence matches and3 of those also satisfy the query, rejection gives3/8, not3/200. If three weighted samples have query values1,0,1 and weights0.2,0.6,0.1, likelihood weighting gives0.3/0.9=1/3. The number of rows alone is not the correct denominator.",
+        "prompt": "If evidence probability is0.002, how many matches do you expect in5000 prior draws? Is that count guaranteed?",
+        "answer": "Expected10; not guaranteed. Realized count is random.",
+        "repair": "Label each sample accepted/rejected or write its weight before calculating a proportion."
+      },
+      {
+        "question": "Why is a Gibbs update local?",
+        "text": "Gibbs sampling keeps a current assignment for every variable. Evidence values remain fixed. One non-evidence variable at a time is redrawn conditional on all the others. In a Bayesian network, only its own conditional factor and its children’s factors depend on its proposed value. The other factors cancel when the candidate weights are normalized. This explains the Markov blanket rule rather than treating it as a list to memorize.",
+        "worked": "In A→B→C with B=b fixed, an update of A uses weights P(A=a)P(B=b|A=a). The factor P(C|B=b) is the same for every candidate a and cancels. B is never resampled because it is observed. If P(A=1)=0.5 and likelihoods for B=b are0.6 versus0.2, weights0.3 and0.1 give P(A=1|others)=0.75.",
+        "prompt": "If B instead were unobserved and we updated B with A,C fixed, which factors would determine the two weights?",
+        "answer": "P(B=b|A)P(C|B=b), one weight for each candidate b, then normalize.",
+        "repair": "Write the full joint factorization and cross out factors that do not change with the variable being updated."
+      }
+    ],
+    "questions": [
+      {
+        "prompt": "In2000 independent prior samples,24 match the evidence and9 of these have query X=1. Compute the rejection estimate. Separately, if P(evidence)=0.01, give the expected number of accepted samples and explain why it can differ from24.",
+        "answer": "Estimate9/24=0.375. Expected count20, with random realized variation; expectation is not a guaranteed count.",
+        "skill": "sampling"
+      },
+      {
+        "prompt": "Likelihood-weighted samples have X values1,0,1,0 and weights0.02,0.08,0.06,0.04. Estimate P(X=1|evidence). Why would averaging X without weights give a different result?",
+        "answer": "Query weight0.08,total0.20,estimate0.4. Unweighted average0.5 ignores the different compatibility of sampled assignments with evidence.",
+        "skill": "sampling"
+      },
+      {
+        "prompt": "In A→B→C with B=1 fixed, P(A=1)=0.25; P(B=1|A=1)=0.9 and P(B=1|A=0)=0.1. Find the Gibbs update distribution of A and say whether B is resampled. Explain why C drops out.",
+        "answer": "Weights0.225,0.075,total0.30; A1=0.75,A0=0.25. B fixed. P(C|B=1) is constant across A candidates and cancels whenever the current conditioned state has positive probability.",
+        "skill": "sampling"
+      },
+      {
+        "prompt": "Roads S→G:9, S→A:2, A→G:4. A friend returns the first discovered goal. Is that enough to justify a minimum-cost answer? Give the cheapest cost and an appropriate search rule for positive costs.",
+        "answer": "No; discovered direct route9 loses to6 through A. UCS with best-cost updates and goal on removal justifies6; A* with a valid heuristic and appropriate graph handling also acceptable.",
+        "skill": "search-uninformed"
+      },
+      {
+        "prompt": "Premises are P→Q and ¬P. A friend concludes ¬Q. Is the argument valid? If not, provide a counterexample.",
+        "answer": "Invalid. P=false,Q=true satisfies both premises but falsifies ¬Q.",
+        "skill": "logic"
+      }
+    ]
+  }
+]

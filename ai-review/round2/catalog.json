@@ -1,0 +1,317 @@
+[
+  {
+    "id": "ai-round2-topic-01",
+    "day": "AI Pass 2 · Day 1",
+    "title": "Choosing a search rule and defending the stopping point",
+    "focus": "Your Round 1 feedback accepted your UCS trace, cycle argument and BFS count. This time the graph and counting assumptions change. We want to see whether you can choose the rule before a heading tells you which one to use.",
+    "weeks": [
+      {
+        "id": "ai-round2-day-01",
+        "label": "Pass 2 · Day 1",
+        "week": 2,
+        "sourceWeek": 2,
+        "date": "",
+        "materialTitle": "AI Pass 2 Day 1: Choosing a search rule and defending the stopping point",
+        "materialUrl": "ai-review/round2/day-01.html",
+        "expectedWork": "90 minutes: 10 recall, 15 worked teaching/repair, 40 independent mixed practice, 20 error review, 5 handoff. Preserve first attempts, confidence, time and help; upload exported notes plus handwritten working.",
+        "status": "Published",
+        "inlineQuestions": [
+          "AIR2-01-Q1: Directed roads: S→A costs 2, S→B costs 1, S→G costs 10, A→G costs 3, B→A costs 2, B→G costs 8. Use UCS graph search with best-cost updates, goal on removal, positive costs, and alphabetic ties. List useful removals, the final route and cost. Explain why discovery of G is insufficient.",
+          "AIR2-01-Q2: On the same roads, BFS uses alphabetic successor order, marks states when enqueued and tests the goal on removal. Give its removal order through the goal and its returned route cost. Does it minimize this cost?",
+          "AIR2-01-Q3: A full binary tree has root depth0, every leaf at depth4 and every leaf is a goal. How many BFS removals include the first goal? How many non-goals have been removed? Then explain how a reachable cycle S→A→S can defeat DFS without visited-state checks.",
+          "AIR2-01-Q4: Without notes: in A→B→C with no other edges, is A independent of C given B according to the graph? Explain which path is blocked.",
+          "AIR2-01-Q5: Without notes: likelihood weights for samples X=1,0,1 are 0.2,0.5,0.1. Estimate P(X=1|evidence) and name the denominator."
+        ],
+        "modelLesson": {
+          "gradingKeys": {
+            "AIR2-01-Q1": "S:0, B:1, A:2, G:5; route S→A→G. B offers A:3 (discard) and G:9 (improves10); A improves G to5. Discovery is insufficient while a cheaper unfinished route remains. Ignore stale G entries.",
+            "AIR2-01-Q2": "After S enqueue A,B,G. Remove A then B then G; no duplicates enqueued. Order S,A,B,G. Returned direct route costs10, not the cheapest5. BFS minimizes edge count here, not weighted cost.",
+            "AIR2-01-Q3": "Removals1+2+4+8+1=16; non-goals15. DFS can follow the cycle indefinitely if that successor is always pursued before other branches. Visited checks prevent revisiting those states in a finite graph.",
+            "AIR2-01-Q4": "Yes: conditioning on non-collider B blocks the sole chain path. This is a graph-guaranteed conditional independence.",
+            "AIR2-01-Q5": "(0.2+0.1)/(0.2+0.5+0.1)=0.3/0.8=0.375. Denominator is total sample weight, not sample count."
+          },
+          "methodTags": {
+            "AIR2-01-Q1": "search-uninformed",
+            "AIR2-01-Q2": "search-uninformed",
+            "AIR2-01-Q3": "search-uninformed",
+            "AIR2-01-Q4": "conditional-independence",
+            "AIR2-01-Q5": "sampling"
+          },
+          "skillTag": "search-uninformed",
+          "roundOneEvidence": "Your Round 1 feedback accepted your UCS trace, cycle argument and BFS count. This time the graph and counting assumptions change. We want to see whether you can choose the rule before a heading tells you which one to use.",
+          "repair": "Locate the first failed step; classify calculation, misunderstood question, conceptual gap, prerequisite gap, method selection or retrieval. Keep missing/unreadable evidence separate. Give a smaller repair then a fresh unaided retest. Record timing, help and solution exposure separately."
+        }
+      }
+    ]
+  },
+  {
+    "id": "ai-round2-topic-02",
+    "day": "AI Pass 2 · Day 2",
+    "title": "Using heuristic estimates without losing the cheapest route",
+    "focus": "Round 1 feedback accepted your greedy/A* trace and your distinction between admissibility and consistency. We will now test consistency edge by edge and see why some graph searches need to reopen a state.",
+    "weeks": [
+      {
+        "id": "ai-round2-day-02",
+        "label": "Pass 2 · Day 2",
+        "week": 2,
+        "sourceWeek": 2,
+        "date": "",
+        "materialTitle": "AI Pass 2 Day 2: Using heuristic estimates without losing the cheapest route",
+        "materialUrl": "ai-review/round2/day-02.html",
+        "expectedWork": "90 minutes: 10 recall, 15 worked teaching/repair, 40 independent mixed practice, 20 error review, 5 handoff. Preserve first attempts, confidence, time and help; upload exported notes plus handwritten working.",
+        "status": "Published",
+        "inlineQuestions": [
+          "AIR2-02-Q1: S→A:2, S→B:1, A→G:5, B→G:9. Let h(S)=6,h(A)=4,h(B)=1,h(G)=0. Use graph search with best-g updates, goals tested on removal and alphabetic ties. Trace greedy and A* and give their goal costs.",
+          "AIR2-02-Q2: For Q1, list the true cheapest remaining cost at every state. Is h admissible? Is it consistent? Give every edge inequality that matters.",
+          "AIR2-02-Q3: S→A:5, S→B:1, B→A:1, A→G:5. Set h(S)=0,h(A)=0,h(B)=6,h(G)=0. Trace A* with reopening and with permanent closing. Explain the result rather than just quoting a guarantee.",
+          "AIR2-02-Q4: Without notes: for premises P→Q and Q, does P follow? Give a truth assignment that settles the claim.",
+          "AIR2-02-Q5: Two unnormalized posterior entries are0.12 and0.18. Normalize them and state what information their sum gives when they exhaust the query states for one fixed evidence event."
+        ],
+        "modelLesson": {
+          "gradingKeys": {
+            "AIR2-02-Q1": "Greedy: S,B,G, returns10. A*: S then B(f2), A(f6), G(f7), returns7 through A; B first offers G10. State g,h,f when ranking.",
+            "AIR2-02-Q2": "True costs S7,A5,B9,G0; all estimates admissible. S→A:6≤2+4 true; S→B:6≤1+1 false; A→G:4≤5 true; B→G:1≤9 true. Thus inconsistent.",
+            "AIR2-02-Q3": "A expanded at g5,f5, offers G10; B at g1,f7 finds A atg2. Reopen A then improve G to7. Permanent closing ignores the better A and returns10. Heuristic admissible but B→A violates6≤1.",
+            "AIR2-02-Q4": "No. P=false,Q=true satisfies both premises but makes P false. This is affirming the consequent.",
+            "AIR2-02-Q5": "Total0.30 is the evidence probability if these are the joint weights for all query states. Posterior0.4 and0.6."
+          },
+          "methodTags": {
+            "AIR2-02-Q1": "search-informed",
+            "AIR2-02-Q2": "search-informed",
+            "AIR2-02-Q3": "search-informed",
+            "AIR2-02-Q4": "logic",
+            "AIR2-02-Q5": "variable-elimination"
+          },
+          "skillTag": "search-informed",
+          "roundOneEvidence": "Round 1 feedback accepted your greedy/A* trace and your distinction between admissibility and consistency. We will now test consistency edge by edge and see why some graph searches need to reopen a state.",
+          "repair": "Locate the first failed step; classify calculation, misunderstood question, conceptual gap, prerequisite gap, method selection or retrieval. Keep missing/unreadable evidence separate. Give a smaller repair then a fresh unaided retest. Record timing, help and solution exposure separately."
+        }
+      }
+    ]
+  },
+  {
+    "id": "ai-round2-topic-03",
+    "day": "AI Pass 2 · Day 3",
+    "title": "Reading an opponent’s choices and tracing a cutoff",
+    "focus": "Round 1 feedback accepted the minimax values, the cutoff and the effect of leaf order. We will increase the depth slightly and ask you to distinguish an exact value from a bound returned after pruning.",
+    "weeks": [
+      {
+        "id": "ai-round2-day-03",
+        "label": "Pass 2 · Day 3",
+        "week": 2,
+        "sourceWeek": 2,
+        "date": "",
+        "materialTitle": "AI Pass 2 Day 3: Reading an opponent’s choices and tracing a cutoff",
+        "materialUrl": "ai-review/round2/day-03.html",
+        "expectedWork": "90 minutes: 10 recall, 15 worked teaching/repair, 40 independent mixed practice, 20 error review, 5 handoff. Preserve first attempts, confidence, time and help; upload exported notes plus handwritten working.",
+        "status": "Published",
+        "inlineQuestions": [
+          "AIR2-03-Q1: A MAX root has three MIN children in order L,M,R, with leaves L=(6,8), M=(7,4), R=(5,9). Evaluate all minimax values. Then trace left-to-right alpha–beta from alpha=−infinity,beta=+infinity, showing which leaves are examined and skipped.",
+          "AIR2-03-Q2: For Q1 change only R to leaves(9,5), keeping child order. Does the root value change? How many terminal leaves are now examined? Explain.",
+          "AIR2-03-Q3: A MAX root has already obtained value7 from its first branch. Its second branch is MIN, with first observed leaf5 and an unseen leaf z, where z can be any real number. Give the strongest bound justified now for that MIN node, explain the cutoff, and say whether its exact value is known.",
+          "AIR2-03-Q4: Without notes: UCS sees frontier A at cost3 and G at cost8. All future edge costs are positive. Can it stop solely because G has been discovered? Explain.",
+          "AIR2-03-Q5: For independent binary roots A,B and binary child C with parents A,B, count free probabilities. Explain why one probability is enough for each binary conditional row."
+        ],
+        "modelLesson": {
+          "gradingKeys": {
+            "AIR2-03-Q1": "Values L6,M4,R5; root6 chooses L. Examine6,8 then7,4 then5. After L alpha6; M first7 gives no cutoff,4 triggers cutoff but has no remaining leaf; R first5 permits skipping9.",
+            "AIR2-03-Q2": "Root stays6. All six leaves examined: R first9 exceeds alpha6 so cannot cut off until5, by which point none remain. Order changes work, not minimax value.",
+            "AIR2-03-Q3": "MIN value=min(5,z)≤5. Since MAX can already get7, this branch cannot improve the decision; prune z. Exact value unknown without z.",
+            "AIR2-03-Q4": "No; A may lead to G at total below8. Expand the smallest-cost unfinished route and test goal on removal.",
+            "AIR2-03-Q5": "1+1+4=6. Each row sums to1, so its second entry is determined by the first."
+          },
+          "methodTags": {
+            "AIR2-03-Q1": "search-adversarial",
+            "AIR2-03-Q2": "search-adversarial",
+            "AIR2-03-Q3": "search-adversarial",
+            "AIR2-03-Q4": "search-uninformed",
+            "AIR2-03-Q5": "conditional-independence"
+          },
+          "skillTag": "search-adversarial",
+          "roundOneEvidence": "Round 1 feedback accepted the minimax values, the cutoff and the effect of leaf order. We will increase the depth slightly and ask you to distinguish an exact value from a bound returned after pruning.",
+          "repair": "Locate the first failed step; classify calculation, misunderstood question, conceptual gap, prerequisite gap, method selection or retrieval. Keep missing/unreadable evidence separate. Give a smaller repair then a fresh unaided retest. Record timing, help and solution exposure separately."
+        }
+      }
+    ]
+  },
+  {
+    "id": "ai-round2-topic-04",
+    "day": "AI Pass 2 · Day 4",
+    "title": "Proving a conclusion or finding a counterexample",
+    "focus": "Round 1 feedback accepted modus tollens, a quantifier counterexample and resolution. We will remove the familiar wording and ask you to decide whether a proposed inference is actually forced.",
+    "weeks": [
+      {
+        "id": "ai-round2-day-04",
+        "label": "Pass 2 · Day 4",
+        "week": 2,
+        "sourceWeek": 2,
+        "date": "",
+        "materialTitle": "AI Pass 2 Day 4: Proving a conclusion or finding a counterexample",
+        "materialUrl": "ai-review/round2/day-04.html",
+        "expectedWork": "90 minutes: 10 recall, 15 worked teaching/repair, 40 independent mixed practice, 20 error review, 5 handoff. Preserve first attempts, confidence, time and help; upload exported notes plus handwritten working.",
+        "status": "Published",
+        "inlineQuestions": [
+          "AIR2-04-Q1: Premises are P→Q, Q→R and ¬R. Does ¬P follow? Give a proof. Does ¬Q follow too?",
+          "AIR2-04-Q2: Domain {a,b}; R={(a,a),(a,b),(b,b)}. Evaluate ∀x∃y R(x,y) and ∃y∀x R(x,y). Then negate ∀x∃y R(x,y) in symbols and plain language.",
+          "AIR2-04-Q3: Resolve clauses (P∨Q) and (¬P∨R). Give the resolvent. Does that resolvent entail the conjunction of the original clauses? Give an assignment proving your answer.",
+          "AIR2-04-Q4: Without notes: on a sole path A→C←B→D, are A and D graph-separated with no observations? What changes after observing C?",
+          "AIR2-04-Q5: A MIN node has seen8 and still has one unseen child; alpha inherited from MAX is6. Is a cutoff justified now? If its next child is4, what then?"
+        ],
+        "modelLesson": {
+          "gradingKeys": {
+            "AIR2-04-Q1": "Yes to both. If Q were true, Q→R would force R, contradiction; hence ¬Q. If P were true, P→Q would force Q, contradiction; hence ¬P.",
+            "AIR2-04-Q2": "Both true: choose y=a for x=a and y=b for x=b; common witness y=b also works for both. Negation ∃x∀y ¬R(x,y): some x has no related y. Quantifier orders need not differ in truth on every structure.",
+            "AIR2-04-Q3": "Resolvent Q∨R. Converse fails: P=true,Q=true,R=false makes resolvent true and ¬P∨R false. Resolution preserves a consequence; it is not generally an equivalence.",
+            "AIR2-04-Q4": "No observations: collider C blocks the path, so graph implies A independent D. Observing C opens it and B remains an unobserved non-collider; independence is no longer guaranteed.",
+            "AIR2-04-Q5": "At8 no: unseen child may be smaller, but current beta8>alpha6 does not yet rule out an improvement. At4 beta4≤alpha6, so a cutoff is justified for any remaining children."
+          },
+          "methodTags": {
+            "AIR2-04-Q1": "logic",
+            "AIR2-04-Q2": "logic",
+            "AIR2-04-Q3": "logic",
+            "AIR2-04-Q4": "conditional-independence",
+            "AIR2-04-Q5": "search-adversarial"
+          },
+          "skillTag": "logic",
+          "roundOneEvidence": "Round 1 feedback accepted modus tollens, a quantifier counterexample and resolution. We will remove the familiar wording and ask you to decide whether a proposed inference is actually forced.",
+          "repair": "Locate the first failed step; classify calculation, misunderstood question, conceptual gap, prerequisite gap, method selection or retrieval. Keep missing/unreadable evidence separate. Give a smaller repair then a fresh unaided retest. Record timing, help and solution exposure separately."
+        }
+      }
+    ]
+  },
+  {
+    "id": "ai-round2-topic-05",
+    "day": "AI Pass 2 · Day 5",
+    "title": "Following every path in a Bayesian network",
+    "focus": "Round 1 feedback explicitly suggested a new chain, a fork and a larger parameter count as retests. Those are included here, followed by a network with two paths so that remembering one pattern is not enough.",
+    "weeks": [
+      {
+        "id": "ai-round2-day-05",
+        "label": "Pass 2 · Day 5",
+        "week": 2,
+        "sourceWeek": 2,
+        "date": "",
+        "materialTitle": "AI Pass 2 Day 5: Following every path in a Bayesian network",
+        "materialUrl": "ai-review/round2/day-05.html",
+        "expectedWork": "90 minutes: 10 recall, 15 worked teaching/repair, 40 independent mixed practice, 20 error review, 5 handoff. Preserve first attempts, confidence, time and help; upload exported notes plus handwritten working.",
+        "status": "Published",
+        "inlineQuestions": [
+          "AIR2-05-Q1: For the sole chain A→D→E, factor P(A,D,E) and state the independence guaranteed after D is observed. For the sole fork A←D→E, repeat both tasks.",
+          "AIR2-05-Q2: Network edges A→C, B→C, C→D; A and B are roots. Is A independent of B graphically with no observations, given C, and given D? Explain the role of D.",
+          "AIR2-05-Q3: Network edges A→B→D and A→C→D, with no other edges. Is A independent of D given B? Given {B,C}? All variables binary except C, which has three values. Count free parameters for the whole network.",
+          "AIR2-05-Q4: Without notes: write A* priority f and state which test of a heuristic compares adjacent states. Can an admissible heuristic fail that test?",
+          "AIR2-05-Q5: Without notes: negate ∃y∀x R(x,y). Say it in ordinary language."
+        ],
+        "modelLesson": {
+          "gradingKeys": {
+            "AIR2-05-Q1": "Chain P(A)P(D|A)P(E|D); fork P(D)P(A|D)P(E|D). Both imply A independent E given D. The factorizations differ even though this conditional independence agrees.",
+            "AIR2-05-Q2": "Unconditionally yes: sole path A→C←B is blocked. Given C no graph guarantee. Given D no guarantee because observing descendant D opens collider C. Do not claim dependence for every possible conditional table.",
+            "AIR2-05-Q3": "Given B alone no graph guarantee because A→C→D remains open; given B,C all paths blocked. Counts A1; B has2 rows×1=2; C has2 rows×2=4; D has2×3 rows×1=6; total13.",
+            "AIR2-05-Q4": "f=g+h. Consistency checks h(u)≤cost(u,v)+h(v) for each edge. Yes, admissibility can hold while consistency fails.",
+            "AIR2-05-Q5": "∀y∃x ¬R(x,y): every candidate y fails for at least one x."
+          },
+          "methodTags": {
+            "AIR2-05-Q1": "conditional-independence",
+            "AIR2-05-Q2": "conditional-independence",
+            "AIR2-05-Q3": "conditional-independence",
+            "AIR2-05-Q4": "search-informed",
+            "AIR2-05-Q5": "logic"
+          },
+          "skillTag": "conditional-independence",
+          "roundOneEvidence": "Round 1 feedback explicitly suggested a new chain, a fork and a larger parameter count as retests. Those are included here, followed by a network with two paths so that remembering one pattern is not enough.",
+          "repair": "Locate the first failed step; classify calculation, misunderstood question, conceptual gap, prerequisite gap, method selection or retrieval. Keep missing/unreadable evidence separate. Give a smaller repair then a fresh unaided retest. Record timing, help and solution exposure separately."
+        }
+      }
+    ]
+  },
+  {
+    "id": "ai-round2-topic-06",
+    "day": "AI Pass 2 · Day 6",
+    "title": "Computing a posterior and controlling intermediate tables",
+    "focus": "The corrected Round 1 submission was accepted on marginalization, normalization and factor scopes. An earlier upload contained unrelated DBMS work; that is a submission mismatch, not evidence that you lack a probability prerequisite. Today checks fresh arithmetic and the effect of elimination order.",
+    "weeks": [
+      {
+        "id": "ai-round2-day-06",
+        "label": "Pass 2 · Day 6",
+        "week": 2,
+        "sourceWeek": 2,
+        "date": "",
+        "materialTitle": "AI Pass 2 Day 6: Computing a posterior and controlling intermediate tables",
+        "materialUrl": "ai-review/round2/day-06.html",
+        "expectedWork": "90 minutes: 10 recall, 15 worked teaching/repair, 40 independent mixed practice, 20 error review, 5 handoff. Preserve first attempts, confidence, time and help; upload exported notes plus handwritten working.",
+        "status": "Published",
+        "inlineQuestions": [
+          "AIR2-06-Q1: P(A=1)=0.3, P(E=1|A=1)=0.8, P(E=1|A=0)=0.2. Compute P(E=1) and P(A=1|E=1). Show both unnormalized weights and check the normalized pair sums to1.",
+          "AIR2-06-Q2: For chain A→B→C, P(A=1)=0.5; P(B=1|A=1)=0.8, P(B=1|A=0)=0.2; P(C=1|B=1)=0.9, P(C=1|B=0)=0.1. Observe C=1. Sum out B explicitly and compute P(A=1|C=1).",
+          "AIR2-06-Q3: Factors f(A,B),g(B,C),h(C,D), all variables binary, query A, no evidence. Compare elimination orders B,C,D and D,C,B. List each multiplied scope and each output scope, and the largest temporary product table.",
+          "AIR2-06-Q4: Without notes: a MAX root has MIN children with leaves(4,9) and(3,8). Evaluate the root and trace left-to-right pruning.",
+          "AIR2-06-Q5: Without notes: for A→B←C with B→D, does observing D leave the collider path between A and C blocked? Explain."
+        ],
+        "modelLesson": {
+          "gradingKeys": {
+            "AIR2-06-Q1": "Weights0.24 and0.14, evidence0.38, posterior A1=12/19 and A0=7/19. Sum1.",
+            "AIR2-06-Q2": "For A1 likelihood0.8×0.9+0.2×0.1=0.74; A0 likelihood0.2×0.9+0.8×0.1=0.26. Joint weights0.37,0.13, evidence0.50, posterior0.74.",
+            "AIR2-06-Q3": "B-first: product ABC(8)→AC(4), then ACD(8)→AD(4), then AD(4)→A(2); peak8. D-first: CD(4)→C(2), then BC(4)→B(2), then AB(4)→A(2); peak4. Same final marginal, different storage work.",
+            "AIR2-06-Q4": "First child4; second sees3≤alpha4, so skip8; root4.",
+            "AIR2-06-Q5": "No. D is a descendant of collider B, so observing D opens that path. Graphical independence is no longer guaranteed."
+          },
+          "methodTags": {
+            "AIR2-06-Q1": "variable-elimination",
+            "AIR2-06-Q2": "variable-elimination",
+            "AIR2-06-Q3": "variable-elimination",
+            "AIR2-06-Q4": "search-adversarial",
+            "AIR2-06-Q5": "conditional-independence"
+          },
+          "skillTag": "variable-elimination",
+          "roundOneEvidence": "The corrected Round 1 submission was accepted on marginalization, normalization and factor scopes. An earlier upload contained unrelated DBMS work; that is a submission mismatch, not evidence that you lack a probability prerequisite. Today checks fresh arithmetic and the effect of elimination order.",
+          "repair": "Locate the first failed step; classify calculation, misunderstood question, conceptual gap, prerequisite gap, method selection or retrieval. Keep missing/unreadable evidence separate. Give a smaller repair then a fresh unaided retest. Record timing, help and solution exposure separately."
+        }
+      }
+    ]
+  },
+  {
+    "id": "ai-round2-topic-07",
+    "day": "AI Pass 2 · Day 7",
+    "title": "Choosing an inference method and checking a whole week of recall",
+    "focus": "Round 1 feedback accepted rejection counts, likelihood weights and a Gibbs update. Today compares those methods on the same evidence problem, then mixes older search and logic skills without announcing the method in the question.",
+    "weeks": [
+      {
+        "id": "ai-round2-day-07",
+        "label": "Pass 2 · Day 7",
+        "week": 2,
+        "sourceWeek": 2,
+        "date": "",
+        "materialTitle": "AI Pass 2 Day 7: Choosing an inference method and checking a whole week of recall",
+        "materialUrl": "ai-review/round2/day-07.html",
+        "expectedWork": "90 minutes: 10 recall, 15 worked teaching/repair, 40 independent mixed practice, 20 error review, 5 handoff. Preserve first attempts, confidence, time and help; upload exported notes plus handwritten working.",
+        "status": "Published",
+        "inlineQuestions": [
+          "AIR2-07-Q1: In2000 independent prior samples,24 match the evidence and9 of these have query X=1. Compute the rejection estimate. Separately, if P(evidence)=0.01, give the expected number of accepted samples and explain why it can differ from24.",
+          "AIR2-07-Q2: Likelihood-weighted samples have X values1,0,1,0 and weights0.02,0.08,0.06,0.04. Estimate P(X=1|evidence). Why would averaging X without weights give a different result?",
+          "AIR2-07-Q3: In A→B→C with B=1 fixed, P(A=1)=0.25; P(B=1|A=1)=0.9 and P(B=1|A=0)=0.1. Find the Gibbs update distribution of A and say whether B is resampled. Explain why C drops out.",
+          "AIR2-07-Q4: Roads S→G:9, S→A:2, A→G:4. A friend returns the first discovered goal. Is that enough to justify a minimum-cost answer? Give the cheapest cost and an appropriate search rule for positive costs.",
+          "AIR2-07-Q5: Premises are P→Q and ¬P. A friend concludes ¬Q. Is the argument valid? If not, provide a counterexample."
+        ],
+        "modelLesson": {
+          "gradingKeys": {
+            "AIR2-07-Q1": "Estimate9/24=0.375. Expected count20, with random realized variation; expectation is not a guaranteed count.",
+            "AIR2-07-Q2": "Query weight0.08,total0.20,estimate0.4. Unweighted average0.5 ignores the different compatibility of sampled assignments with evidence.",
+            "AIR2-07-Q3": "Weights0.225,0.075,total0.30; A1=0.75,A0=0.25. B fixed. P(C|B=1) is constant across A candidates and cancels whenever the current conditioned state has positive probability.",
+            "AIR2-07-Q4": "No; discovered direct route9 loses to6 through A. UCS with best-cost updates and goal on removal justifies6; A* with a valid heuristic and appropriate graph handling also acceptable.",
+            "AIR2-07-Q5": "Invalid. P=false,Q=true satisfies both premises but falsifies ¬Q."
+          },
+          "methodTags": {
+            "AIR2-07-Q1": "sampling",
+            "AIR2-07-Q2": "sampling",
+            "AIR2-07-Q3": "sampling",
+            "AIR2-07-Q4": "search-uninformed",
+            "AIR2-07-Q5": "logic"
+          },
+          "skillTag": "sampling",
+          "roundOneEvidence": "Round 1 feedback accepted rejection counts, likelihood weights and a Gibbs update. Today compares those methods on the same evidence problem, then mixes older search and logic skills without announcing the method in the question.",
+          "repair": "Locate the first failed step; classify calculation, misunderstood question, conceptual gap, prerequisite gap, method selection or retrieval. Keep missing/unreadable evidence separate. Give a smaller repair then a fresh unaided retest. Record timing, help and solution exposure separately."
+        }
+      }
+    ]
+  }
+]
