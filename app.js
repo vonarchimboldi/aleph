@@ -37769,7 +37769,7 @@ function syncMaterialTracker() {
     showView('subjects');renderSubjects();
   }};
   if(materialTrackerController){materialTrackerController.setContext(context);return;}
-  materialTrackerModulePromise ||= import('./material-tracker.mjs?v=5');
+  materialTrackerModulePromise ||= import('./material-tracker.mjs?v=6');
   materialTrackerModulePromise.then(({createMaterialTracker})=>{
     materialTrackerController ||= createMaterialTracker(root);
     const stillSignedIn=sessionStorage.getItem(SESSION_KEY)===state.user.name&&!state.user.mustChangePassword;

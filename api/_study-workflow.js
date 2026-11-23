@@ -13,12 +13,18 @@ function validDay(value){if(typeof value!=='string'||!/^\d{4}-\d{2}-\d{2}$/.test
 const plusDays=(day,n)=>{const d=new Date(day+'T12:00:00Z');d.setUTCDate(d.getUTCDate()+n);return d.toISOString().slice(0,10);};
 
 export const isStudyAction=action=>typeof action==='string'&&action.startsWith('study-');
+// The initial trial end is historical metadata, not an expiry for daily reporting.
+export function studyHorizon(record,now){
+ const s=record.study;if(!s)return null;
+ return [s.endDate,plusDays(studyDay(now),13),...record.assignments.filter(a=>!a.cancelledAt).map(a=>a.dueDate)].sort().at(-1);
+}
+
 function assignmentsFor(record,day){return record.assignments.filter(a=>!a.cancelledAt&&a.dueDate===day).map(a=>({id:a.id,materialId:a.materialId,title:a.title,subject:a.subject,minutes:a.minutes,dueDate:a.dueDate,scope:a.scope||'Complete the published material'}));}
 function newPlan(record,day,now){return {day,version:1,assignments:assignmentsFor(record,day),proposedAt:stamp(now),adminAgreedAt:stamp(now),learnerAgreedAt:null,estimates:[],revisions:[]};}
 function asOfPlan(s,day,today){const p=s.plans.find(p=>p.day===day);if(!p||day>=today)return p;return [...p.revisions,p].filter(r=>studyDay(r.proposedAt)<=day).sort((a,b)=>b.version-a.version)[0]||null;}
 export function syncStudyPlans(record,now,reason='Admin changed the plan'){
  const s=record.study;if(!s)return;
- for(let day=s.startDate;day<=s.endDate;day=plusDays(day,1)){
+ for(let day=s.startDate;day<=studyHorizon(record,now);day=plusDays(day,1)){
   const items=assignmentsFor(record,day);let p=s.plans.find(p=>p.day===day);
   if(!p){if(items.length)s.plans.push(newPlan(record,day,now));continue;}
   if(JSON.stringify(items)!==JSON.stringify(p.assignments)){
@@ -34,7 +40,7 @@ export function guardStudyMutation(record,input,now,publicKey){
   if(!logs.length)throw failure('Record time spent and specific work done before marking this assignment complete.');
  }
 }
-function range(s,day,now,{future=false}={}){validDay(day);if(day<s.startDate||day>s.endDate)throw failure('Choose a day in the two-week agreement.');if(!future&&day>studyDay(now))throw failure('A future day cannot be reported as already completed.');return day;}
+function range(s,day,now,{future=false}={}){validDay(day);if(day<s.startDate)throw failure('Choose a day on or after the study agreement starts.');if(!future&&day>studyDay(now))throw failure('A future day cannot be reported as already completed.');return day;}
 function item(record,id){const a=record.assignments.find(a=>a.id===id&&!a.cancelledAt);if(!a)throw failure('Assignment not found.',404);return a;}
 function audit(s,type,now,detail){s.events.push({id:randomUUID(),type,at:stamp(now),...detail});}
 function saveVersion(list,record,match){const old=list.find(match);if(old){const {history,...snapshot}=old;Object.assign(old,record,{version:old.version+1,history:[...(old.history||[]),snapshot]});return old;}const next={...record,version:1,history:[]};list.push(next);return next;}
@@ -45,7 +51,8 @@ export function applyStudyAction(record,input,now,publicKey){
   const startDate=validDay(input.startDate||today);if(startDate<today)throw failure('The agreement cannot create retrospective obligations.');
   record.study={version:'1',startDate,endDate:plusDays(startDate,13),startedAt:at,termsAcceptedAt:null,plans:[],issues:[],requests:[],logs:[],reflections:[],weeklyReviews:[],commitments:[],events:[]};syncStudyPlans(record,now,'Two-week trial begins');audit(record.study,action,now,{startDate});return;
  }
- const s=record.study;if(!s)throw failure('The two-week study agreement has not started.',409);
+ const s=record.study;if(!s)throw failure('The study agreement has not started.',409);
+ syncStudyPlans(record,now,'Synchronize ongoing daily assignments');
  if(action==='study-accept'){
   const day=range(s,input.day,now,{future:true});const p=s.plans.find(p=>p.day===day);if(!p||!p.assignments.length)throw failure('No proposed assignments for that day.');
   if(day<today)throw failure('Past plans cannot be retroactively accepted. Submit an honest late check-in instead.');
@@ -105,6 +112,19 @@ export function applyStudyAction(record,input,now,publicKey){
   const previous=s.reflections.find(r=>r.day===day);
   const reflection={...(previous?.mentorResponse?{mentorResponse:previous.mentorResponse}:{}),...(previous?.feedbackFollowup?{feedbackFollowup:previous.feedbackFollowup}:{}),day,submittedAt:at,planVersion:p?.version||null,planMissing:!p?.assignments.length,snapshot,workDone:words(input.workDone,'What did you do? Give a concrete example.',30),easy:words(input.easy,'What felt easy, and what evidence shows you understood it?'),hard:words(input.hard,'Where exactly did you struggle? What did you try?'),evidence:words(input.evidence,'What can you now explain or solve without help?'),nextStep:words(input.nextStep,'What will you do differently next time?',1),mentorFeedback:words(input.mentorFeedback,'What specific feedback do you want from your mentor?'),tomorrowProposal:words(input.tomorrowProposal,'What should stay or change in tomorrow’s plan?',1)};
   saveVersion(s.reflections,reflection,r=>r.day===day);audit(s,action,now,{day});
+ }else if(action==='study-import-update'){
+  requireStudyAdmin(input,record.learner,now,publicKey);
+  const day=range(s,input.day,now),originalReport=words(input.originalReport,'Original forwarded update',30,12000);
+  if(input.startedLocalTime&&!/^([01]\d|2[0-3]):[0-5]\d$/.test(input.startedLocalTime))throw failure('Use HH:MM for the reported local start time.');
+  if(!Array.isArray(input.entries)||input.entries.length<1||input.entries.length>20)throw failure('Include the reported subjects.');
+  const entries=input.entries.map(e=>({subject:words(e.subject,'Subject',2,160),title:words(e.title,'Material title',2,300),minutes:e.minutes==null?null:minutes(e.minutes,'Reported time',720),detail:words(e.detail,'Reported work',20,4000)}));
+  const reportedTotalMinutes=minutes(input.reportedTotalMinutes,'Reported total time',1440);
+  const specifiedMinutes=entries.reduce((n,e)=>n+(e.minutes??0),0);
+  if(specifiedMinutes>reportedTotalMinutes)throw failure('Subject times exceed the reported total.');
+  s.reportedUpdates ||= [];
+  if(s.reportedUpdates.some(r=>r.day===day&&r.originalReport===originalReport))return;
+  saveVersion(s.reportedUpdates,{day,recordedAt:at,source:'mentor-imported-learner-report',startedLocalTime:input.startedLocalTime||null,reportedTotalMinutes,unallocatedMinutes:reportedTotalMinutes-specifiedMinutes,entries,originalReport,verified:false},r=>r.day===day);
+  audit(s,action,now,{day,source:'mentor-imported-learner-report'});
  }else if(action==='study-reflection-feedback'){
   requireStudyAdmin(input,record.learner,now,publicKey);const r=s.reflections.find(r=>r.day===input.day);if(!r)throw failure('Daily reflection not found.',404);if(r.mentorResponse)throw failure('Feedback has already been supplied for this reflection.',409);
   r.mentorResponse={at,reflectionVersion:r.version,feedback:words(input.feedback,'Specific mentor feedback'),nextAction:words(input.nextAction,'Agreed action to try')};audit(s,action,now,{day:r.day});
@@ -124,16 +144,16 @@ export function applyStudyAction(record,input,now,publicKey){
 }
 function communicated(s,id,dueDate){const records=[...s.issues.filter(i=>['workload','blocker'].includes(i.category)&&(i.assignmentId===id||(!i.assignmentId&&i.day===dueDate))),...s.requests.filter(r=>r.assignmentId===id)];return records.some(r=>studyDay(r.createdAt)<=dueDate)?'before-deadline':records.length?'after-deadline':'none';}
 export function studyView(record,resolved,now){
- const s=record.study;if(!s)return null;const today=studyDay(now);
+ if(!record.study)return null;record={...record,study:structuredClone(record.study)};syncStudyPlans(record,now);const s=record.study,today=studyDay(now);
  const days=[];
- for(let day=s.startDate;day<=s.endDate;day=plusDays(day,1)){
-  const p=asOfPlan(s,day,today),reflection=s.reflections.find(r=>r.day===day),logs=s.logs.filter(l=>l.day===day);
+ for(let day=s.startDate;day<=studyHorizon(record,now);day=plusDays(day,1)){
+  const p=asOfPlan(s,day,today),reflection=s.reflections.find(r=>r.day===day),update=s.reportedUpdates?.find(r=>r.day===day),logs=s.logs.filter(l=>l.day===day);
   const metrics=(p?.assignments||[]).map(a=>{const current=resolved.find(x=>x.id===a.id),done=current?.completedAt;return {...a,estimateMinutes:p.estimates.find(e=>e.assignmentId===a.id)?.minutes??a.minutes,predictedUnderstanding:p.estimates.find(e=>e.assignmentId===a.id)?.confidence||null,assessedUnderstanding:reflection?.snapshot.find(x=>x.id===a.id)?.understanding||null,actualMinutes:s.logs.filter(l=>l.assignmentId===a.id).reduce((n,l)=>n+l.minutes,0),completedAt:done||null,late:Boolean(done&&studyDay(done)>day),communication:communicated(s,a.id,day)};});
   const accepted=a=>(s.commitments||[]).some(c=>c.assignmentId===a.id&&c.dueDate===day&&studyDay(c.agreedAt)<=day&&(!c.releasedAt||studyDay(c.releasedAt)>day));
-  days.push({day,plan:p||null,assignments:metrics,loggedMinutes:logs.reduce((n,l)=>n+l.minutes,0),reflectionSubmittedAt:reflection?.submittedAt||null,reflectionLate:Boolean(reflection&&studyDay(reflection.history?.[0]?.submittedAt||reflection.submittedAt)>day),missingCheckIn:day<today&&Boolean(p?.assignments.length)&&!reflection,uncommunicatedMisses:day<today?metrics.filter(a=>accepted(a)&&(!a.completedAt||a.late)&&a.communication!=='before-deadline').length:0});
+  days.push({day,plan:p||null,assignments:metrics,loggedMinutes:logs.reduce((n,l)=>n+l.minutes,0),reportedMinutes:update?.reportedTotalMinutes??null,importedUpdate:update||null,needsReflectionDetails:Boolean(update&&!reflection),reflectionSubmittedAt:reflection?.submittedAt||update?.recordedAt||null,reflectionLate:Boolean(reflection&&studyDay(reflection.history?.[0]?.submittedAt||reflection.submittedAt)>day),missingCheckIn:day<today&&Boolean(p?.assignments.length)&&!reflection&&!update,uncommunicatedMisses:day<today?metrics.filter(a=>accepted(a)&&(!a.completedAt||a.late)&&a.communication!=='before-deadline').length:0});
  }
  const sundays=days.filter(d=>new Date(d.day+'T12:00:00Z').getUTCDay()===0).map(d=>({day:d.day,review:s.weeklyReviews.find(w=>w.weekEnd===d.day)||null}));
- return {...s,days,sundays,summary:{uncommunicatedMisses:days.reduce((n,d)=>n+d.uncommunicatedMisses,0),missingCheckIns:days.filter(d=>d.missingCheckIn).length,lateCompletions:days.flatMap(d=>d.assignments).filter(a=>a.late).length,pendingChanges:s.requests.filter(r=>r.status==='pending').length,unansweredIssues:s.issues.filter(i=>!i.response).length}};
+ return {...s,trialEndDate:s.endDate,endDate:studyHorizon(record,now),ongoing:true,days,sundays,summary:{uncommunicatedMisses:days.reduce((n,d)=>n+d.uncommunicatedMisses,0),missingCheckIns:days.filter(d=>d.missingCheckIn).length,pendingReflectionDetails:days.filter(d=>d.needsReflectionDetails).length,lateCompletions:days.flatMap(d=>d.assignments).filter(a=>a.late).length,pendingChanges:s.requests.filter(r=>r.status==='pending').length,unansweredIssues:s.issues.filter(i=>!i.response).length}};
 }
 export function studyNotifications(record,resolved,viewer,now,precomputed=null){
  const s=precomputed||studyView(record,resolved,now);if(!s)return [];const admin=viewer==='user-reviewer',today=studyDay(now),notes=[];
@@ -160,7 +180,7 @@ export function studyNotifications(record,resolved,viewer,now,precomputed=null){
 export function studyDigest(record,resolved,now){
  const s=studyView(record,resolved,now);if(!s)return [];
  const yesterday=plusDays(studyDay(now),-1);if(yesterday<s.startDate||yesterday>s.endDate)return [];
- const reflection=s.reflections.find(r=>r.day===yesterday),day=s.days.find(d=>d.day===yesterday);
- if(!day?.assignments.length&&!reflection)return [];
- return ['',`Study check-in for ${yesterday}`,`Reflection: ${reflection?'received'+(day.reflectionLate?' late':''):'not submitted'}`,`Reported time: ${day.loggedMinutes} minutes`,`Missed commitments without prior communication: ${day.uncommunicatedMisses}`,...(reflection?[`Work done: ${reflection.workDone}`,`Easy: ${reflection.easy}`,`Hard: ${reflection.hard}`,`Evidence of understanding: ${reflection.evidence}`,`Next action: ${reflection.nextStep}`,`Feedback requested: ${reflection.mentorFeedback}`,`Tomorrow’s proposal: ${reflection.tomorrowProposal}`]:[]),'Reported completion and time are learner reports, not independently verified mastery.'];
+ const reflection=s.reflections.find(r=>r.day===yesterday),day=s.days.find(d=>d.day===yesterday),update=day?.importedUpdate;
+ if(!day?.assignments.length&&!reflection&&!update)return [];
+ return ['',`Study check-in for ${yesterday}`,`Reflection: ${reflection?'received'+(day.reflectionLate?' late':''):update?'forwarded update received; reflection details still needed':'not submitted'}`,`Logged time: ${day.loggedMinutes} minutes`,...(update?[`Forwarded reported total: ${update.reportedTotalMinutes} minutes; ${update.unallocatedMinutes} minutes not allocated to a subject.`,update.originalReport]:[]),`Missed commitments without prior communication: ${day.uncommunicatedMisses}`,...(reflection?[`Work done: ${reflection.workDone}`,`Easy: ${reflection.easy}`,`Hard: ${reflection.hard}`,`Evidence of understanding: ${reflection.evidence}`,`Next action: ${reflection.nextStep}`,`Feedback requested: ${reflection.mentorFeedback}`,`Tomorrow’s proposal: ${reflection.tomorrowProposal}`]:[]),'Reported completion and time are learner reports, not independently verified mastery.'];
 }

@@ -1,4 +1,4 @@
-import {createStudyWorkflow} from './study-workflow.mjs?v=4';
+import {createStudyWorkflow} from './study-workflow.mjs?v=5';
 const escape=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 export function createMaterialTracker(root){
  const studyUI=createStudyWorkflow(),formResults=new Map();

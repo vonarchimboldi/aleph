@@ -89,5 +89,5 @@ empty=await mutateTracker({...reflect,learner:emptyLearner,expectedRevision:empt
 assert.equal(empty.study.reflections[0].planMissing,true);assert.deepEqual(empty.study.reflections[0].snapshot,[]);assert.equal(empty.assignments.length,0);
 const emptyView=await trackerState(emptyLearner,emptyNow);assert.equal(emptyView.study.summary.uncommunicatedMisses,0);assert.equal(emptyView.study.summary.missingCheckIns,0);
 await assert.rejects(mutateTracker({...reflect,learner:emptyLearner,expectedRevision:empty.revision,day:'2026-11-17'},emptyNow,publicKey),/future/);
-await assert.rejects(mutateTracker({...reflect,learner:emptyLearner,expectedRevision:empty.revision,day:'2026-11-15'},emptyNow,publicKey),/two-week/);
+await assert.rejects(mutateTracker({...reflect,learner:emptyLearner,expectedRevision:empty.revision,day:'2026-11-15'},emptyNow,publicKey),/on or after/);
 console.log('PASS: missing-plan check-ins accepted without fabricated assignments or penalties; date boundaries retained.');
