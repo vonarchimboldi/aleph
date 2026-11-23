@@ -9,9 +9,9 @@ export function november24Assignments(){
  const rows=[];
  for(let i=0;i<7;i++){
   const dueDate=`2026-11-${24+i}`;
-  for(const [subject,w] of [['AI · Pass 2',ai[i].weeks[0]],['DSA · Round 2 delayed / transfer',dsa[i].weeks.find(w=>w.id.endsWith('-round2-transfer'))],...(i<5?[['Calculus: 30-day review',calc[i+5].weeks[0]]]:[])]){
+  for(const [subject,w] of [['AI · Pass 2',ai[i].weeks[0]],['DSA · Round 3',dsa[i].weeks.find(w=>w.id.endsWith('-round2-transfer'))],...(i<5?[['Calculus: 30-day review',calc[i+5].weeks[0]]]:[])]){
    assert(w?.id&&w.materialUrl);assert(fs.existsSync(new URL('../'+w.materialUrl,import.meta.url)));
-   rows.push({materialId:w.id,title:w.materialTitle,subject,href:'/'+w.materialUrl,dueDate,minutes:90});
+   rows.push({materialId:w.id,title:subject==='DSA · Round 3'?`DSA Round 3 Day ${i+1}: ${dsa[i].title}`:w.materialTitle,subject,href:'/'+w.materialUrl,dueDate,minutes:90});
   }
  }
  return rows;
