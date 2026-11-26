@@ -17,6 +17,16 @@ function localStore() {
   return globalThis.__alephPlatinumProgressStore;
 }
 
+export function learningStorageError(details, status=0) {
+  const text=String(details||'').toLowerCase();
+  const quota=/quota|daily.*limit|monthly.*limit|max.*requests|limit.*exceed|exceed.*limit|budget.*exceed/.test(text);
+  const throttled=status===429||/rate.?limit|too many requests/.test(text);
+  const access=status===401||status===403;
+  const code=quota?'LEARNING_STORAGE_QUOTA':throttled?'LEARNING_STORAGE_RATE_LIMIT':access?'LEARNING_STORAGE_ACCESS':'LEARNING_STORAGE_UNAVAILABLE';
+  const message=quota?'Learning storage has reached its service usage limit. Saved feedback and notifications could not be loaded.':throttled?'Learning storage is temporarily rate-limited. Retry shortly; do not resubmit completed work.':access?'Learning storage access needs administrator attention. Saved feedback and notifications could not be loaded.':'Learning storage is temporarily unavailable. Saved feedback and notifications could not be loaded.';
+  return Object.assign(new Error(message),{status:503,code});
+}
+
 export async function kvCommand(command) {
   const config = kvConfig();
   if (!config.configured) {
@@ -48,10 +58,11 @@ export async function kvCommand(command) {
 
   if (!result.ok) {
     const details = await result.text();
-    throw new Error(`KV request failed: ${result.status} ${details}`);
+    throw learningStorageError(details,result.status);
   }
 
   const payload = await result.json();
+  if(payload.error) throw learningStorageError(payload.error);
   return payload.result;
 }
 
