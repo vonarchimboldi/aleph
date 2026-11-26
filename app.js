@@ -1,7 +1,7 @@
 const STORAGE_KEY = "learning-studio-data-v2";
 const LEGACY_STORAGE_KEYS = ["learning-studio-data-v1"];
 const SESSION_KEY = "aleph-session";
-const COURSE_PLAN_VERSION = "seeded-user-canonical-workspace-v188";
+const COURSE_PLAN_VERSION = "seeded-user-canonical-workspace-v189";
 const MAX_FEEDBACK_ATTACHMENT_BYTES = 3 * 1024 * 1024;
 const MAX_COMPRESSED_FEEDBACK_BYTES = 2400 * 1024;
 const MAX_FEEDBACK_REQUEST_BYTES = 4 * 1024 * 1024;
@@ -37752,7 +37752,7 @@ function feedbackSurfaceCount() {
 function syncNotificationLearner(learner) {
   if (notificationsController) { notificationsController.setLearner(learner); return; }
   if (!learner) return;
-  notificationsModulePromise ||= import('./notifications.mjs?v=2');
+  notificationsModulePromise ||= import('./notifications.mjs?v=3');
   notificationsModulePromise.then(({createNotificationCenter}) => {
     const signedIn = sessionStorage.getItem(SESSION_KEY) === state.user.name && !state.user.mustChangePassword;
     if (!signedIn) return;
@@ -38314,7 +38314,9 @@ function renderFeedback() {
   if (!generatedEntries.length && !manualNotes.length && !scoreRecords.length) {
     container.innerHTML = notificationsController?.count
       ? '<div class="empty">Other course and quiz feedback will appear here.</div>'
-      : '<div class="empty">No feedback items yet.</div>';
+      : notificationsController?.unavailable
+        ? '<div class="empty" role="alert">Saved feedback could not be checked because the learning service is unavailable. This is not an empty-feedback result. Use Retry notifications above.</div>'
+        : '<div class="empty">No feedback items yet.</div>';
     return;
   }
 

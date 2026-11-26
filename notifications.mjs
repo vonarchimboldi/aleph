@@ -10,16 +10,19 @@ export function createNotificationCenter({root=document,fetcher=fetch,onChange=(
   function draw(){
     const count=unread().length;
     root.querySelectorAll('[data-notification-count],#feedback-unread-count').forEach(b=>{b.textContent=String(count);b.hidden=!count});
-    toggle.setAttribute('aria-label',`Notifications${count?`, ${count} unread`:''}`);
+    toggle.setAttribute('aria-label',error?'Notifications could not refresh':`Notifications${count?`, ${count} unread`:''}`);
     const announcement=root.querySelector('#notifications-announcement');
     if(announcement)announcement.textContent=count?`${count} unread ${count===1?'notification is':'notifications are'} available.`:'';
     panel.querySelector('[data-notification-list]').innerHTML=items.length?rows(items):`<p>${error?'Could not check for notifications.':loaded?"You're all caught up.":'Checking for notifications…'}</p>`;
     const status=panel.querySelector('[data-notification-error]');status.hidden=!error;status.textContent=error&&items.length?'Could not refresh notifications. Showing the last successful check.':'';
-    dashboard.hidden=!count;
-    dashboard.innerHTML=count?`<h3>New for you</h3><p>${count} unread ${count===1?'notification':'notifications'}. Open an item to see more.</p>${rows(unread().slice(0,3))}<button type="button" class="text-btn" data-open-all-feedback>View all notifications</button>`:'';
+    const failure=`<p role="alert">Feedback and notifications could not be loaded. This does not mean there are no saved records. ${items.length?'Showing notices from the last successful check.':'Your saved notices cannot currently be checked.'}</p><button type="button" class="small-btn" data-retry-notifications>Retry notifications</button>`;
+    dashboard.hidden=!count&&!error;
+    dashboard.innerHTML=count?`<h3>New for you</h3><p>${count} unread ${count===1?'notification':'notifications'}. Open an item to see more.</p>${rows(unread().slice(0,3))}<button type="button" class="text-btn" data-open-all-feedback>View all notifications</button>${error?failure:''}`:error?`<h3>Feedback and notifications unavailable</h3>${failure}`:'';
     dashboard.querySelector('[data-open-all-feedback]')?.addEventListener('click',onOpenFeedback);
-    feedback.hidden=!items.length;
-    feedback.innerHTML=items.length?`<h3>Feedback and learning notices</h3><p>Your saved notifications, newest first. Unread status follows you across devices.</p>${rows(items)}`:'';
+    dashboard.querySelector('[data-retry-notifications]')?.addEventListener('click',refresh);
+    feedback.hidden=!items.length&&!error;
+    feedback.innerHTML=items.length?`<h3>Feedback and learning notices</h3><p>Your saved notifications, newest first. Unread status follows you across devices.</p>${rows(items)}${error?failure:''}`:error?`<h3>Feedback and learning notices</h3>${failure}`:'';
+    feedback.querySelector('[data-retry-notifications]')?.addEventListener('click',refresh);
     onChange({count:items.length,unreadCount:count});
   }
   async function refresh(){
@@ -32,7 +35,7 @@ export function createNotificationCenter({root=document,fetcher=fetch,onChange=(
       const data=await response.json();if(token!==epoch)return;
       if(!Array.isArray(data.notifications))throw Error('Invalid notification response');
       const nextItems=data.notifications.filter(n=>{
-        try{const url=new URL(n.href,location.origin);return url.origin===location.origin&&(url.pathname==='/'||/^\/(?:math-diagnostic|math-remedial|calculus-review|dsa-review|dbms-review|psets|gate-da-dbms|DSA%20For%20GATE%20practice)\//.test(url.pathname))}catch{return false}
+        try{const url=new URL(n.href,location.origin);return url.origin===location.origin&&(url.pathname==='/'||/^\/(?:math-diagnostic|math-remedial|calculus-review|dsa-review|dbms-review|ai-review|review-round2|psets|gate-da-dbms|DSA%20For%20GATE%20practice)\//.test(url.pathname))}catch{return false}
       });
       const changed=!loaded||error||JSON.stringify(nextItems)!==JSON.stringify(items);
       items=nextItems;loaded=true;error=false;if(changed)draw();
@@ -59,6 +62,7 @@ export function createNotificationCenter({root=document,fetcher=fetch,onChange=(
   document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible')refresh()});
   return {
     get count(){return items.length},
+    get unavailable(){return error},
     refresh,
     setLearner(next){
       if(next===learner)return;
